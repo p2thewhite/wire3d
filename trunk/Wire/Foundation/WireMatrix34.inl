@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>::Matrix34(bool zero)
+Matrix34<Real>::Matrix34(Bool zero)
 {
 	if (zero)
 	{
@@ -23,10 +23,12 @@ Matrix34<Real>::Matrix34(
 	mEntry[0][1] = m01;
 	mEntry[0][2] = m02;
 	mEntry[0][3] = m03;
+
 	mEntry[1][0] = m10;
 	mEntry[1][1] = m11;
 	mEntry[1][2] = m12;
 	mEntry[1][3] = m13;
+
 	mEntry[2][0] = m20;
 	mEntry[2][1] = m21;
 	mEntry[2][2] = m22;
@@ -76,7 +78,7 @@ Matrix34<Real>& Matrix34<Real>::MakeIdentity()
 	return *this;
 }
 
-//----------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
@@ -142,8 +144,8 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 template <class Real>
 inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
 {
-	Real (* (a))[4] = mEntry;
-	Real (* (b))[4] = rMatrix.mEntry;
+	Real4* a = mEntry;
+	Real4* b = rMatrix.mEntry;
 
 	return Matrix34<Real>(
 		a[0][0]*b[0][0] + a[0][1]*b[1][0] +	a[0][2]*b[2][0],
@@ -161,4 +163,18 @@ inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
 		a[2][0]*b[0][2] + a[2][1]*b[1][2] +	a[2][2]*b[2][2],
 		a[2][0]*b[0][3] + a[2][1]*b[1][3] +	a[2][2]*b[2][3] + a[2][3]
 		);
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real>::operator Real4* ()
+{
+	return mEntry;
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real>::operator const Real4* () const
+{
+	return mEntry;
 }

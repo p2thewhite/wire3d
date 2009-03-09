@@ -16,9 +16,11 @@ template <class Real>
 class Matrix34
 {
 public:
+	typedef Real Real4[4];
+
 	// If zero is true, create the zero matrix.  Otherwise, create the
 	// identity matrix.
-	Matrix34(bool zero = true);
+	Matrix34(Bool zero = true);
 
 	// input mRC is in row R, column C
 	Matrix34(Real m00, Real m01, Real m02, Real m03,
@@ -30,8 +32,9 @@ public:
 
 	Matrix34& FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
 
-	// get a pointer to the 2-dimensional matrix array
-	inline Real (* (Get)())[4] { return mEntry; }
+	// access operators
+	inline operator Real4* ();
+	inline operator const Real4* () const;
 
 	// arithmetic operations
 	inline Matrix34 operator* (Matrix34& rMatrix);

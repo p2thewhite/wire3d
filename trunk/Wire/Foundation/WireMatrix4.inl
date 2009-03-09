@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>::Matrix34(Bool zero)
+Matrix4<Real>::Matrix4(Bool zero)
 {
 	if (zero)
 	{
@@ -14,28 +14,36 @@ Matrix34<Real>::Matrix34(Bool zero)
 
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>::Matrix34(
+Matrix4<Real>::Matrix4(
 	Real m00, Real m01, Real m02, Real m03,
 	Real m10, Real m11, Real m12, Real m13,
-	Real m20, Real m21, Real m22, Real m23)
+	Real m20, Real m21, Real m22, Real m23,
+	Real m30, Real m31, Real m32, Real m33)
 {
 	mEntry[0][0] = m00;
 	mEntry[0][1] = m01;
 	mEntry[0][2] = m02;
 	mEntry[0][3] = m03;
+
 	mEntry[1][0] = m10;
 	mEntry[1][1] = m11;
 	mEntry[1][2] = m12;
 	mEntry[1][3] = m13;
+
 	mEntry[2][0] = m20;
 	mEntry[2][1] = m21;
 	mEntry[2][2] = m22;
 	mEntry[2][3] = m23;
+
+	mEntry[3][0] = m30;
+	mEntry[3][1] = m31;
+	mEntry[3][2] = m32;
+	mEntry[3][3] = m33;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::MakeZero()
+Matrix4<Real>& Matrix4<Real>::MakeZero()
 {
 	mEntry[0][0] = static_cast<Real>(0.0);
 	mEntry[0][1] = static_cast<Real>(0.0);
@@ -52,47 +60,51 @@ Matrix34<Real>& Matrix34<Real>::MakeZero()
 	mEntry[2][2] = static_cast<Real>(0.0);
 	mEntry[2][3] = static_cast<Real>(0.0);
 
+	mEntry[3][0] = static_cast<Real>(0.0);
+	mEntry[3][1] = static_cast<Real>(0.0);
+	mEntry[3][2] = static_cast<Real>(0.0);
+	mEntry[3][3] = static_cast<Real>(0.0);
+
 	return *this;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::MakeIdentity()
+Matrix4<Real>& Matrix4<Real>::MakeIdentity()
 {
-	MTXIdentity(mEntry);
+	mEntry[0][0] = static_cast<Real>(1.0);
+	mEntry[0][1] = static_cast<Real>(0.0);
+	mEntry[0][2] = static_cast<Real>(0.0);
+	mEntry[0][3] = static_cast<Real>(0.0);
+
+	mEntry[1][0] = static_cast<Real>(0.0);
+	mEntry[1][1] = static_cast<Real>(1.0);
+	mEntry[1][2] = static_cast<Real>(0.0);
+	mEntry[1][3] = static_cast<Real>(0.0);
+
+	mEntry[2][0] = static_cast<Real>(0.0);
+	mEntry[2][1] = static_cast<Real>(0.0);
+	mEntry[2][2] = static_cast<Real>(1.0);
+	mEntry[2][3] = static_cast<Real>(0.0);
+
+	mEntry[3][0] = static_cast<Real>(0.0);
+	mEntry[3][1] = static_cast<Real>(0.0);
+	mEntry[3][2] = static_cast<Real>(0.0);
+	mEntry[3][3] = static_cast<Real>(1.0);
+
 	return *this;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
-	Real angle)
-{
-	Vector3<Real>* pAxis = const_cast<Vector3<Real>*>(&rAxis);
-	MTXRotAxisRad(mEntry, reinterpret_cast<Vector*>(pAxis), angle);
-	return *this;
-}
-
-//-------------------------------------------------------------------------
-template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
-{
-	Matrix34<Real> result;
-	MTXConcat(mEntry, rMatrix, result);
-	return result;
-}
-
-
-//-------------------------------------------------------------------------
-template <class Real>
-inline Matrix34<Real>::operator Real4* ()
+inline Matrix4<Real>::operator Real4* ()
 {
 	return mEntry;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real>::operator const Real4* () const
+inline Matrix4<Real>::operator const Real4* () const
 {
 	return mEntry;
 }
