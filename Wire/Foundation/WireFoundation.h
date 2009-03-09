@@ -4,6 +4,7 @@
 
 #include "WireMath.h"
 #include "WireMatrix34.h"
+#include "WireMatrix4.h"
 #include "WireVector3.h"
 #include "WireSystem.h"
 #include "WireTypes.h"

@@ -2,6 +2,7 @@
 #ifndef WIRETYPES_H
 #define WIRETYPES_H
 
+typedef bool Bool;
 typedef double Double;
 typedef int Int;
 typedef float Float;

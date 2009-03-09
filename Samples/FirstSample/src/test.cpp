@@ -42,7 +42,7 @@ int main( int argc, char **argv )
 	u32 xfbHeight;
 
 	Matrix34f view;
-	Mtx44 perspective;
+	Matrix4f perspective;
 	Matrix34f model, modelview;
 
 	float rtri = 0.0f , rquad = 0.0f;
@@ -120,7 +120,7 @@ int main( int argc, char **argv )
 	Vector3f look(0.0f, 0.0f, -1.0f);
 
 	// die casterei hier bleibt natürlich nicht so.
-	guLookAt(view.Get(),
+	guLookAt(view,
 		reinterpret_cast<Vector*>(static_cast<float*>(cam)), 
 		reinterpret_cast<Vector*>(static_cast<float*>(up)), 
 		reinterpret_cast<Vector*>(static_cast<float*>(look)));
@@ -147,10 +147,10 @@ int main( int argc, char **argv )
 
 		model.MakeIdentity();
 		model.FromAxisAngle(triAxis, DegToRad(rtri));
-		guMtxTransApply(model.Get(), model.Get(), -1.5f,0.0f,-6.0f);
+		guMtxTransApply(model, model, -1.5f,0.0f,-6.0f);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
-		GX_LoadPosMtxImm(modelview.Get(), GX_PNMTX0);
+		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
 
 		GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 12);		// Draw A Pyramid
 
@@ -186,10 +186,10 @@ int main( int argc, char **argv )
 
 		model.MakeIdentity();
 		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
-		guMtxTransApply(model.Get(), model.Get(), 1.5f,0.0f,-7.0f);
+		guMtxTransApply(model, model, 1.5f,0.0f,-7.0f);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
-		GX_LoadPosMtxImm(modelview.Get(), GX_PNMTX0);
+		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
 		
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
 
