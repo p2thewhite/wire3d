@@ -60,39 +60,119 @@
 					RelativePath=".\Wire\Foundation\WireFoundation.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireMath.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireMath.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireMatrix34.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireSystem.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireTypes.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Wire\Foundation\WireVector3.h"
-					>
-				</File>
 				<Filter
 					Name="Wii"
 					>
+					<Filter
+						Name="Header Files"
+						>
+						<File
+							RelativePath=".\Wire\Foundation\Wii\WireOgcDefines.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Inline Files"
+						>
+						<File
+							RelativePath=".\Wire\Foundation\Wii\WireMatrix34Wii.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Wire\Foundation\Wii\WireVector3Wii.inl"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Header Files"
+					>
 					<File
-						RelativePath=".\Wire\Foundation\Wii\WireMatrix34Wii.inl"
+						RelativePath=".\Wire\Foundation\WireMath.h"
 						>
 					</File>
 					<File
-						RelativePath=".\Wire\Foundation\Wii\WireOgcDefines.h"
+						RelativePath=".\Wire\Foundation\WireMatrix34.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireMatrix4.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireSystem.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireTypes.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireVector3.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Wire\Foundation\WireMath.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireMatrix34.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireMatrix4.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireVector3.inl"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Wire\Foundation\WireMath.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Wire\Foundation\WireVector3.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Engine"
+				>
+				<File
+					RelativePath=".\Wire\Engine\WireEngine.h"
+					>
+				</File>
+				<Filter
+					Name="Header Files"
+					>
+					<File
+						RelativePath=".\Wire\Engine\WireTransformation.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Wire\Engine\WireTransformation.inl"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Wire\Engine\WireTransformation.cpp"
 						>
 					</File>
 				</Filter>
