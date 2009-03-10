@@ -37,7 +37,7 @@ int main( int argc, char **argv )
  	vec2 = vec1 - vec2;
  	vec2 = vec1 * 10;
 	vec2 = vec1 / 10;
-//	Transformation xForm;
+	Transformation xForm;
 
 	f32 yscale;
 
