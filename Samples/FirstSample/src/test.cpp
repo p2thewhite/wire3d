@@ -17,6 +17,7 @@
 //#undef WIRE_WII
 
 #include "../../../Wire/Foundation/WireFoundation.h"
+#include "../../../Wire/Engine/WireEngine.h"
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
  
@@ -31,11 +32,12 @@ int main( int argc, char **argv )
 {
 	Vector3f vec1(1,1,1);
 	Vector3f vec2(2,2,2);
+	Vector3f vec3 = Vector3f::UNIT_X;
 	vec2 = vec1 + vec2;
  	vec2 = vec1 - vec2;
  	vec2 = vec1 * 10;
 	vec2 = vec1 / 10;
-
+//	Transformation xForm;
 
 	f32 yscale;
 

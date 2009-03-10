@@ -37,6 +37,12 @@ public:
 	inline Real Length() const;
 	inline Real SquaredLength() const;
 
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ZERO;    // (0,0,0)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_X;  // (1,0,0)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_Y;  // (0,1,0)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_Z;  // (0,0,1)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ONE;     // (1,1,1)
+
 private:
 #ifdef WIRE_WII
 	Vector mTuple;
