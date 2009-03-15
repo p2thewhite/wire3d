@@ -32,9 +32,11 @@ public:
 
 	Matrix34& FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
 
-	// access operators
+	// member operators
 	inline operator Real4* ();
 	inline operator const Real4* () const;
+	void SetColumn (int col, const Vector3<Real>& rVector);
+	Vector3<Real> GetColumn (int col) const;
 
 	// arithmetic operations
 	inline Matrix34 operator* (Matrix34& rMatrix);

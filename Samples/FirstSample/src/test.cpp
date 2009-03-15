@@ -30,15 +30,6 @@ using namespace Wire;
 int main( int argc, char **argv )
 //---------------------------------------------------------------------------------
 {
-	Vector3f vec1(1,1,1);
-	Vector3f vec2(2,2,2);
-	Vector3f vec3 = Vector3f::UNIT_X;
-	vec2 = vec1 + vec2;
- 	vec2 = vec1 - vec2;
- 	vec2 = vec1 * 10;
-	vec2 = vec1 / 10;
-	Transformation xForm;
-
 	f32 yscale;
 
 	u32 xfbHeight;
@@ -147,9 +138,8 @@ int main( int argc, char **argv )
 		// do this before drawing
 		GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 
-		model.MakeIdentity();
 		model.FromAxisAngle(triAxis, DegToRad(rtri));
-		guMtxTransApply(model, model, -1.5f,0.0f,-6.0f);
+		model.SetColumn(3, Vector3f(-1.5f,0.0f,-6.0f));
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
 		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
@@ -186,9 +176,8 @@ int main( int argc, char **argv )
 
 		GX_End();
 
-		model.MakeIdentity();
 		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
-		guMtxTransApply(model, model, 1.5f,0.0f,-7.0f);
+		model.SetColumn(3, Vector3f(1.5f,0.0f,-7.0f));
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
 		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
