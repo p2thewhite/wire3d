@@ -20,7 +20,7 @@ BUILD		:=	build
 SOURCES		:=	src
 DATA		:=	data  
 INCLUDES	:=
-LIBWIRE_LIB :=  ../../../Wire/build
+LIBWIRE_LIB :=	../../../Wire/build
 
 #---------------------------------------------------------------------------------
 # options for code generation
