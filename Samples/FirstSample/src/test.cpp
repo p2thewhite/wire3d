@@ -37,6 +37,7 @@ int main( int argc, char **argv )
 	Matrix34f view;
 	Matrix4f perspective;
 	Matrix34f model, modelview;
+	Transformation modelTransform;
 
 	float rtri = 0.0f , rquad = 0.0f;
 
@@ -139,7 +140,9 @@ int main( int argc, char **argv )
 		GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 
 		model.FromAxisAngle(triAxis, DegToRad(rtri));
-		model.SetColumn(3, Vector3f(-1.5f,0.0f,-6.0f));
+		modelTransform.SetMatrix(model);
+		modelTransform.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
+		modelTransform.GetTransformation(model);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
 		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
@@ -177,7 +180,9 @@ int main( int argc, char **argv )
 		GX_End();
 
 		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
-		model.SetColumn(3, Vector3f(1.5f,0.0f,-7.0f));
+		modelTransform.SetMatrix(model);
+		modelTransform.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
+		modelTransform.GetTransformation(model);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
 		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
