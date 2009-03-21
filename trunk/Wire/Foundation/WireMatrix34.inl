@@ -181,7 +181,7 @@ inline Matrix34<Real>::operator const Real4* () const
 
 //-------------------------------------------------------------------------
 template <class Real>
-void Matrix34<Real>::SetColumn(int col, const Vector3<Real>& rVector)
+void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 {
 //	WIRE_ASSERT((0 =< col) && (col < 4));
 	mEntry[0][col] = rVector.X();
@@ -191,7 +191,7 @@ void Matrix34<Real>::SetColumn(int col, const Vector3<Real>& rVector)
 
 //-------------------------------------------------------------------------
 template <class Real>
-Vector3<Real> Matrix34<Real>::GetColumn(int col) const
+Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
 }

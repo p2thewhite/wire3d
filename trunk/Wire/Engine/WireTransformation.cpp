@@ -22,11 +22,22 @@ Transformation::~Transformation()
 }
 
 //-------------------------------------------------------------------------
+void Transformation::SetRotate(const Matrix34f& rMatrix)
+{
+	Vector3f translate = GetTranslate();
+	mMatrix = rMatrix;
+	SetTranslate(translate);
+	mIsIdentity = false;
+	mIsRSMatrix = true;
+}
+
+//-------------------------------------------------------------------------
 void Transformation::SetMatrix(const Matrix34f& rMatrix)
 {
 	mMatrix = rMatrix;
 	mIsIdentity = false;
-	mIsRSMatrix = true;	
+	mIsRSMatrix = false;
+	mIsUniformScale = false;
 }
 
 //-------------------------------------------------------------------------
@@ -60,5 +71,25 @@ void Transformation::SetUniformScale(Float scale)
 //-------------------------------------------------------------------------
 void Transformation::GetTransformation(Matrix34f& rMatrix) const
 {
-	rMatrix = mMatrix;
+	if (mIsRSMatrix)
+	{
+		rMatrix[0][0] = mMatrix[0][0] * mScale.X();
+		rMatrix[0][1] = mMatrix[0][1] * mScale.Y();
+		rMatrix[0][2] = mMatrix[0][2] * mScale.Z();
+		rMatrix[0][3] = mMatrix[0][3];
+
+		rMatrix[1][0] = mMatrix[1][0] * mScale.X();
+		rMatrix[1][1] = mMatrix[1][1] * mScale.Y();
+		rMatrix[1][2] = mMatrix[1][2] * mScale.Z();
+		rMatrix[1][3] = mMatrix[1][3];
+
+		rMatrix[2][0] = mMatrix[2][0] * mScale.X();
+		rMatrix[2][1] = mMatrix[2][1] * mScale.Y();
+		rMatrix[2][2] = mMatrix[2][2] * mScale.Z();
+		rMatrix[2][3] = mMatrix[2][3];
+	}
+	else
+	{
+		rMatrix = mMatrix;
+	}
 }
