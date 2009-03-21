@@ -15,6 +15,8 @@ public:
 	static Real Cos(Real value);
 	static Real Sin(Real value);
 	static Real Sqrt(Real value);
+	static Real FMod(Real x, Real y);
+	
 
 	// common constants
 	/*WIRE_FOUNDATION_ITEM*/ static const Real MAX_REAL;

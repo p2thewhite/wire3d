@@ -130,7 +130,13 @@ int main( int argc, char **argv )
 	Vector3f triAxis = Vector3f(0, 1, 0);
 	Vector3f cubeAxis(1, 1, 1);
 
+	float angle = 0.0f;
+
 	while(1) {
+
+		float scaleFactor = Mathf::Sin(angle);
+		angle += M_PI / 180.0f;
+		angle = Mathf::FMod(angle, M_PI);
 
 		WPAD_ScanPads();
 
@@ -140,8 +146,9 @@ int main( int argc, char **argv )
 		GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 
 		model.FromAxisAngle(triAxis, DegToRad(rtri));
-		modelTransform.SetMatrix(model);
+		modelTransform.SetRotate(model);
 		modelTransform.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
+		modelTransform.SetUniformScale(scaleFactor + 0.5f);
 		modelTransform.GetTransformation(model);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
@@ -180,8 +187,9 @@ int main( int argc, char **argv )
 		GX_End();
 
 		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
-		modelTransform.SetMatrix(model);
+		modelTransform.SetRotate(model);
 		modelTransform.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
+		modelTransform.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
 		modelTransform.GetTransformation(model);
 		modelview = view * model;
 		// load the modelview matrix into matrix memory
@@ -261,8 +269,8 @@ int main( int argc, char **argv )
 
 		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
-
 	}
+
 	return 0;
 }
  

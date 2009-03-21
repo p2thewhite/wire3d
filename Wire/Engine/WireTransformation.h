@@ -23,6 +23,7 @@ public:
 	inline operator Matrix34f ();
  	inline operator const Matrix34f () const;
 
+	void SetRotate(const Matrix34f& rMatrix);
 	void SetMatrix(const Matrix34f& rMatrix);
 	const Matrix34f& GetMatrix() const;
 	void SetTranslate(const Vector3f& rTranslate);

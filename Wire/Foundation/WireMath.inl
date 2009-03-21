@@ -18,3 +18,11 @@ Real Math<Real>::Sqrt(Real value)
 {
 	return static_cast<Real>(sqrt(static_cast<double>(value)));
 }
+
+//-------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::FMod(Real x, Real y)
+{
+	return static_cast<Real>(
+		fmod(static_cast<Double>(x), static_cast<Double>(y)));
+}
