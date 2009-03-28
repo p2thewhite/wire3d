@@ -3,11 +3,45 @@
 #define WIREOGCDEFINES_H
 #include "ogc/gu.h"
 
+#define GX_TEXCOORD_NULL GX_TEXCOORDNULL
+
+#define GXBegin GX_Begin
+#define GXClearVtxDesc GX_ClearVtxDesc
+#define GXCopyDisp GX_CopyDisp
+#define GXDrawDone GX_DrawDone
+#define GXEnd GX_End
+#define GXGetYScaleFactor GX_GetYScaleFactor
+#define GXInit GX_Init
+#define GXLoadPosMtxImm GX_LoadPosMtxImm
+#define GXPosition3f32 GX_Position3f32
+#define GXSetArray GX_SetArray
+#define GXSetColorUpdate GX_SetColorUpdate
+#define GXSetCopyClear GX_SetCopyClear
+#define GXSetCopyFilter GX_SetCopyFilter
+#define GXSetCullMode GX_SetCullMode
+#define GXSetDispCopyDst GX_SetDispCopyDst
+#define GXSetDispCopyGamma GX_SetDispCopyGamma
+#define GXSetDispCopySrc GX_SetDispCopySrc
+#define GXSetDispCopyYScale GX_SetDispCopyYScale
+#define GXSetFieldMode GX_SetFieldMode
+#define GXSetNumChans GX_SetNumChans
+#define GXSetNumTexGens GX_SetNumTexGens
+#define GXSetProjection GX_LoadProjectionMtx
+#define GXSetScissor GX_SetScissor
+#define GXSetViewport GX_SetViewport
+#define GXSetVtxAttrFmt GX_SetVtxAttrFmt
+#define GXSetVtxDesc GX_SetVtxDesc
+#define GXSetTevOp GX_SetTevOp
+#define GXSetTevOrder GX_SetTevOrder
+#define GXSetZMode GX_SetZMode
+
 #define MTXConcat guMtxConcat
 #define MTXIdentity guMtxIdentity
+#define MTXLookAt guLookAt
+#define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
 #define VECAdd guVecAdd
-#define VECSubtract guVecSub
 #define VECScale guVecScale
+#define VECSubtract guVecSub
 
 #endif /* WIREOGCDEFINES_H */
