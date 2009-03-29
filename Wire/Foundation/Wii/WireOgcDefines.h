@@ -7,12 +7,16 @@
 
 #define GXBegin GX_Begin
 #define GXClearVtxDesc GX_ClearVtxDesc
+#define GXColor1x8 GX_Color1x8
 #define GXCopyDisp GX_CopyDisp
 #define GXDrawDone GX_DrawDone
 #define GXEnd GX_End
 #define GXGetYScaleFactor GX_GetYScaleFactor
 #define GXInit GX_Init
+#define GXInvalidateTexAll GX_InvalidateTexAll
+#define GXInvalidateVtxCache GX_InvVtxCache
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
+#define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32
 #define GXSetArray GX_SetArray
 #define GXSetColorUpdate GX_SetColorUpdate
@@ -25,6 +29,7 @@
 #define GXSetDispCopyYScale GX_SetDispCopyYScale
 #define GXSetFieldMode GX_SetFieldMode
 #define GXSetNumChans GX_SetNumChans
+#define GXSetNumTevStages GX_SetNumTevStages
 #define GXSetNumTexGens GX_SetNumTexGens
 #define GXSetProjection GX_LoadProjectionMtx
 #define GXSetScissor GX_SetScissor
@@ -36,6 +41,7 @@
 #define GXSetZMode GX_SetZMode
 
 #define MTXConcat guMtxConcat
+#define MTXFrustum guFrustum
 #define MTXIdentity guMtxIdentity
 #define MTXLookAt guLookAt
 #define MTXPerspective guPerspective
