@@ -18,6 +18,7 @@
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
 #define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32
+#define GXRenderModeObj GXRModeObj
 #define GXSetArray GX_SetArray
 #define GXSetColorUpdate GX_SetColorUpdate
 #define GXSetCopyClear GX_SetCopyClear
@@ -31,6 +32,7 @@
 #define GXSetNumChans GX_SetNumChans
 #define GXSetNumTevStages GX_SetNumTevStages
 #define GXSetNumTexGens GX_SetNumTexGens
+#define GXSetPixelFmt GX_SetPixelFmt
 #define GXSetProjection GX_LoadProjectionMtx
 #define GXSetScissor GX_SetScissor
 #define GXSetViewport GX_SetViewport
@@ -49,5 +51,14 @@
 #define VECAdd guVecAdd
 #define VECScale guVecScale
 #define VECSubtract guVecSub
+
+#define PADInit WPAD_Init
+
+#define VIConfigure VIDEO_Configure
+#define VIFlush VIDEO_Flush
+#define VIInit VIDEO_Init
+#define VISetBlack VIDEO_SetBlack
+#define VISetNextFrameBuffer VIDEO_SetNextFramebuffer
+#define VIWaitForRetrace VIDEO_WaitVSync
 
 #endif /* WIREOGCDEFINES_H */
