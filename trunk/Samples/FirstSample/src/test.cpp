@@ -21,22 +21,21 @@
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
  
-static void *frameBuffer[2] = { NULL, NULL};
-GXRModeObj *rmode;
+static void *FrameBuffer[2] = { NULL, NULL};
+GXRenderModeObj* Rmode;
 
 using namespace Wire;
 
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
+void DEMOInit();
+void DEMOStartVI();
+void DEMOInitGX();
 
 //---------------------------------------------------------------------------------
 int main( int argc, char **argv )
 //---------------------------------------------------------------------------------
 {
-	f32 yscale;
-
-	u32 xfbHeight;
-
 	Matrix34f view;
 	Matrix4f perspective;
 
@@ -45,23 +44,8 @@ int main( int argc, char **argv )
 	u32	fb = 0; 	// initial framebuffer index
 	GXColor background = {0, 0, 0, 0xff};
 
-
-	// init the vi.
-	VIDEO_Init();
-	WPAD_Init();
- 
-	rmode = VIDEO_GetPreferredMode(NULL);
-	
-	// allocate 2 framebuffers for double buffering
-	frameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-	frameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-
-	VIDEO_Configure(rmode);
-	VIDEO_SetNextFramebuffer(frameBuffer[fb]);
-	VIDEO_SetBlack(FALSE);
-	VIDEO_Flush();
-	VIDEO_WaitVSync();
-	if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
+	DEMOInit();
+	DEMOStartVI();
 
 	// setup the fifo and then init the flipper
 	void *gp_fifo = NULL;
@@ -73,19 +57,7 @@ int main( int argc, char **argv )
 	// clears the bg to color and clears the z buffer
 	GXSetCopyClear(background, GX_MAX_Z24);
  
-	// other gx setup
-	GXSetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
-	yscale = GXGetYScaleFactor(rmode->efbHeight,rmode->xfbHeight);
-	xfbHeight = GXSetDispCopyYScale(yscale);
-	GXSetScissor(0,0,rmode->fbWidth,rmode->efbHeight);
-	GXSetDispCopySrc(0,0,rmode->fbWidth,rmode->efbHeight);
-	GXSetDispCopyDst(rmode->fbWidth,xfbHeight);
-	GXSetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
-	GXSetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
- 
-	GXSetCullMode(GX_CULL_NONE);
-	GXCopyDisp(frameBuffer[fb],GX_TRUE);
-	GXSetDispCopyGamma(GX_GM_1_0);
+	DEMOInitGX();
  
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -102,8 +74,8 @@ int main( int argc, char **argv )
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-    f32 w = rmode->viWidth;
-    f32 h = rmode->viHeight;
+    f32 w = Rmode->viWidth;
+    f32 h = Rmode->viHeight;
 	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GXSetProjection(perspective, GX_PERSPECTIVE);
 
@@ -120,8 +92,7 @@ int main( int argc, char **argv )
 		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) exit(0);
 
 		// do this before drawing
-		GXSetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
-
+		GXSetViewport(0,0,Rmode->fbWidth,Rmode->efbHeight,0,1);
 
 		DrawPyramid(rtri, scaleFactor, view);
 		DrawCube(rquad, scaleFactor, view);
@@ -132,13 +103,11 @@ int main( int argc, char **argv )
 		fb ^= 1;		// flip framebuffer
 		GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 		GXSetColorUpdate(GX_TRUE);
-		GXCopyDisp(frameBuffer[fb],GX_TRUE);
+		GXCopyDisp(FrameBuffer[fb],GX_TRUE);
 
-		VIDEO_SetNextFramebuffer(frameBuffer[fb]);
- 
-		VIDEO_Flush();
- 
-		VIDEO_WaitVSync();
+		VISetNextFrameBuffer(FrameBuffer[fb]);
+ 		VIFlush();
+ 		VIWaitForRetrace();
 
 		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
@@ -221,29 +190,6 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 {
 	Matrix34f model, modelview;
 	Transformation modelTransform;
-
-	// setup the vertex descriptor
-// 	GXClearVtxDesc();
-// 	GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
-// 	GXSetVtxDesc(GX_VA_CLR0, GX_INDEX8);
-// 
-// 	// Position has 3 elements (x,y,z), each of type s16,
-// 	// no fractional bits (integers)
-// 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S16, 0);
-// 
-// 	// Color 0 has 4 components (r, g, b, a), each component is 8b.
-// 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
-// 
-// 	// stride = 3 elements (x,y,z) each of type s16
-// 	GXSetArray(GX_VA_POS, Verts_s16, 3*sizeof(s16));
-// 	// stride = 4 elements (r,g,b,a) each of type u8
-// 	GXSetArray(GX_VA_CLR0, Colors_rgba8, 4*sizeof(u8));
-// 
-// 	// Initialize lighting, texgen, and tev parameters
-// 	GXSetNumChans(1); // default, color = vertex color
-// 	GXSetNumTexGens(0); // no texture in this demo
-// 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-// 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
@@ -332,4 +278,49 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 	GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
 
 	GXEnd();									// Done Drawing The Quad 
+}
+
+//-------------------------------------------------------------------------
+void DEMOStartVI()
+{
+	VIConfigure(Rmode);
+	VISetNextFrameBuffer(FrameBuffer[0]);
+	VISetBlack(FALSE);
+	VIFlush();
+	VIWaitForRetrace();
+	if (Rmode->viTVMode & VI_NON_INTERLACE)
+	{
+		VIWaitForRetrace();
+	}
+}
+
+//-------------------------------------------------------------------------
+void DEMOInitGX()
+{
+	GXSetViewport(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight, 0.0f, 1.0f);
+	f32 yScale = GXGetYScaleFactor(Rmode->efbHeight, Rmode->xfbHeight);
+	u32 xfbHeight = GXSetDispCopyYScale(yScale);
+	GXSetScissor(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
+	GXSetDispCopySrc(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
+	GXSetDispCopyDst(Rmode->fbWidth, xfbHeight);
+	GXSetCopyFilter(Rmode->aa, Rmode->sample_pattern, GX_TRUE, Rmode->vfilter);
+	GXSetFieldMode(Rmode->field_rendering,
+		((Rmode->viHeight == 2*Rmode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
+
+	GXSetCullMode(GX_CULL_NONE);
+	GXCopyDisp(FrameBuffer[0], GX_TRUE);
+	GXSetDispCopyGamma(GX_GM_1_0);
+}
+
+//-------------------------------------------------------------------------
+void DEMOInit()
+{
+	VIInit();
+	PADInit();
+
+	Rmode = VIDEO_GetPreferredMode(NULL);
+
+	// allocate 2 framebuffers for double buffering
+	FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
+	FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
 }
