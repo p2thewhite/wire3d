@@ -36,6 +36,7 @@
 #define GXSetProjection GX_LoadProjectionMtx
 #define GXSetScissor GX_SetScissor
 #define GXSetViewport GX_SetViewport
+#define GXSetViewportJitter GX_SetViewportJitter
 #define GXSetVtxAttrFmt GX_SetVtxAttrFmt
 #define GXSetVtxDesc GX_SetVtxDesc
 #define GXSetTevOp GX_SetTevOp
@@ -48,14 +49,17 @@
 #define MTXLookAt guLookAt
 #define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
+#define MTXTrans guMtxTrans
 #define VECAdd guVecAdd
 #define VECScale guVecScale
 #define VECSubtract guVecSub
+#define Vec Vector
 
 #define PADInit WPAD_Init
 
 #define VIConfigure VIDEO_Configure
 #define VIFlush VIDEO_Flush
+#define VIGetNextField VIDEO_GetNextField
 #define VIInit VIDEO_Init
 #define VISetBlack VIDEO_SetBlack
 #define VISetNextFrameBuffer VIDEO_SetNextFramebuffer

@@ -21,63 +21,35 @@
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
  
-static void *FrameBuffer[2] = { NULL, NULL};
+static void* FrameBuffer[2] = { NULL, NULL};
+static void* DemoFifoBuffer;
+unsigned int FrameBufferIndex = 0;
 GXRenderModeObj* Rmode;
 
 using namespace Wire;
 
+void CameraInit(Matrix34f& rView);
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
+
 void DEMOInit();
 void DEMOStartVI();
 void DEMOInitGX();
+void DEMOConfigureMem();
+void DEMOBeforeRender();
+void DEMODoneRender();
+void DEMOSwapBuffers();
 
 //---------------------------------------------------------------------------------
 int main( int argc, char **argv )
 //---------------------------------------------------------------------------------
 {
 	Matrix34f view;
-	Matrix4f perspective;
 
 	float rtri = 0.0f , rquad = 0.0f;
 
-	u32	fb = 0; 	// initial framebuffer index
-	GXColor background = {0, 0, 0, 0xff};
-
 	DEMOInit();
-	DEMOStartVI();
-
-	// setup the fifo and then init the flipper
-	void *gp_fifo = NULL;
-	gp_fifo = memalign(32,DEFAULT_FIFO_SIZE);
-	memset(gp_fifo,0,DEFAULT_FIFO_SIZE);
- 
-	GXInit(gp_fifo,DEFAULT_FIFO_SIZE);
- 
-	// clears the bg to color and clears the z buffer
-	GXSetCopyClear(background, GX_MAX_Z24);
- 
-	DEMOInitGX();
- 
-	// setup our camera at the origin
-	// looking down the -z axis with y up
-	Vector3f cam(0.0f, 0.0f, 0.0f);
-	Vector3f up(0.0f, 1.0f, 0.0f);
-	Vector3f look(0.0f, 0.0f, -1.0f);
-
-	// die casterei hier bleibt natürlich nicht so.
-	MTXLookAt(view,
-		reinterpret_cast<Vector*>(static_cast<float*>(cam)), 
-		reinterpret_cast<Vector*>(static_cast<float*>(up)), 
-		reinterpret_cast<Vector*>(static_cast<float*>(look)));
- 
-	// setup our projection matrix
-	// this creates a perspective matrix with a view angle of 90,
-	// and aspect ratio based on the display resolution
-    f32 w = Rmode->viWidth;
-    f32 h = Rmode->viHeight;
-	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
-	GXSetProjection(perspective, GX_PERSPECTIVE);
+ 	CameraInit(view);
 
 	float angle = 0.0f;
 
@@ -88,26 +60,17 @@ int main( int argc, char **argv )
 		angle = Mathf::FMod(angle, M_PI);
 
 		WPAD_ScanPads();
+		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
+		{
+			exit(0);
+		}
 
-		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) exit(0);
-
-		// do this before drawing
-		GXSetViewport(0,0,Rmode->fbWidth,Rmode->efbHeight,0,1);
+		DEMOBeforeRender();
 
 		DrawPyramid(rtri, scaleFactor, view);
 		DrawCube(rquad, scaleFactor, view);
 
-		// do this stuff after drawing
-		GXDrawDone();
-		
-		fb ^= 1;		// flip framebuffer
-		GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
-		GXSetColorUpdate(GX_TRUE);
-		GXCopyDisp(FrameBuffer[fb],GX_TRUE);
-
-		VISetNextFrameBuffer(FrameBuffer[fb]);
- 		VIFlush();
- 		VIWaitForRetrace();
+		DEMODoneRender();
 
 		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
@@ -281,10 +244,35 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 }
 
 //-------------------------------------------------------------------------
+void CameraInit(Matrix34f& rView)
+{
+	// setup our camera at the origin
+	// looking down the -z axis with y up
+	Vector3f cam(0.0f, 0.0f, 0.0f);
+	Vector3f up(0.0f, 1.0f, 0.0f);
+	Vector3f look(0.0f, 0.0f, -1.0f);
+
+	// die casterei hier bleibt natürlich nicht so.
+	MTXLookAt(rView,
+		reinterpret_cast<Vector*>(static_cast<float*>(cam)), 
+		reinterpret_cast<Vector*>(static_cast<float*>(up)), 
+		reinterpret_cast<Vector*>(static_cast<float*>(look)));
+
+	// setup our projection matrix
+	// this creates a perspective matrix with a view angle of 90,
+	// and aspect ratio based on the display resolution
+	f32 w = Rmode->viWidth;
+	f32 h = Rmode->viHeight;
+	Matrix4f perspective;
+	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
+	GXSetProjection(perspective, GX_PERSPECTIVE);
+}
+
+//-------------------------------------------------------------------------
 void DEMOStartVI()
 {
 	VIConfigure(Rmode);
-	VISetNextFrameBuffer(FrameBuffer[0]);
+	VISetNextFrameBuffer(FrameBuffer[FrameBufferIndex]);
 	VISetBlack(FALSE);
 	VIFlush();
 	VIWaitForRetrace();
@@ -308,8 +296,33 @@ void DEMOInitGX()
 		((Rmode->viHeight == 2*Rmode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
 
 	GXSetCullMode(GX_CULL_NONE);
-	GXCopyDisp(FrameBuffer[0], GX_TRUE);
+
+// 	if (Rmode->aa)
+// 	{
+// 		GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
+// 	}
+// 	else
+// 	{
+// 		GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+// 	}
+
+	// Note that following is an appropriate setting for full-frame AA mode.
+	// You should use "xfbHeight" instead of "efbHeight" to specify actual
+	// view size. Since this library doesn't support such special case, please
+	// call these in each application to override the normal setting.
+// 	GXSetViewport(0.0F, 0.0F, (f32)Rmode->fbWidth, (f32)Rmode->xfbHeight, 
+// 		0.0F, 1.0F);
+// 	GXSetDispCopyYScale(1.0F);
+
+	GXCopyDisp(FrameBuffer[FrameBufferIndex], GX_TRUE);
 	GXSetDispCopyGamma(GX_GM_1_0);
+}
+
+//-------------------------------------------------------------------------
+void DEMOConfigureMem()
+{
+	DemoFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
+	memset(DemoFifoBuffer,0 , DEFAULT_FIFO_SIZE);
 }
 
 //-------------------------------------------------------------------------
@@ -323,4 +336,70 @@ void DEMOInit()
 	// allocate 2 framebuffers for double buffering
 	FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
 	FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
+
+	DEMOStartVI();
+
+	DEMOConfigureMem();
+	GXInit(DemoFifoBuffer, DEFAULT_FIFO_SIZE);
+
+	// clears the bg to color and clears the z buffer
+	GXColor background = {0, 0, 0, 0xff};
+	GXSetCopyClear(background, GX_MAX_Z24);
+
+	DEMOInitGX();
+}
+
+//-------------------------------------------------------------------------
+void DEMOBeforeRender()
+{
+	// Set up viewport (This is inappropriate for full-frame AA.)
+// 	if (Rmode->field_rendering)
+// 	{
+// 		GXSetViewportJitter(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
+// 			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f,
+// 			VIGetNextField());
+// 	}
+// 	else
+	{
+		GXSetViewport(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
+			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f);
+	}
+
+	// Invalidate vertex cache in GP
+//	GXInvalidateVtxCache();
+	// Invalidate texture cache in GP
+//	GXInvalidateTexAll();
+
+}
+
+//-------------------------------------------------------------------------
+void DEMODoneRender()
+{
+	// Wait until everything is drawn and copied into XFB.
+	GXDrawDone();
+
+	FrameBufferIndex ^= 1;		// flip framebuffer
+
+	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
+	// (If you want to control these modes by yourself in your application,
+	//  please comment out this part.)
+	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+	GXSetColorUpdate(GX_TRUE);
+
+	GXCopyDisp(FrameBuffer[FrameBufferIndex], GX_TRUE);
+
+	// Set the next frame buffer
+	DEMOSwapBuffers();
+}
+
+//-------------------------------------------------------------------------
+void DEMOSwapBuffers()
+{
+	// Display the buffer which was just filled by GXCopyDisplay
+	VISetNextFrameBuffer(FrameBuffer[FrameBufferIndex]);
+
+	// Tell VI device driver to write the current VI settings so far
+	VIFlush();
+
+	VIWaitForRetrace();
 }
