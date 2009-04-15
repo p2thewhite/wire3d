@@ -13,6 +13,8 @@
 #define GXEnd GX_End
 #define GXGetYScaleFactor GX_GetYScaleFactor
 #define GXInit GX_Init
+#define GXInitLightColor GX_InitLightColor
+#define GXInitLightPos GX_InitLightPos
 #define GXInvalidateTexAll GX_InvalidateTexAll
 #define GXInvalidateVtxCache GX_InvVtxCache
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
@@ -47,6 +49,7 @@
 #define MTXFrustum guFrustum
 #define MTXIdentity guMtxIdentity
 #define MTXLookAt guLookAt
+#define MTXMultVec guVecMultiply
 #define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
 #define MTXTrans guMtxTrans

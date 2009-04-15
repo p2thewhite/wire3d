@@ -29,6 +29,7 @@ GXRenderModeObj* Rmode;
 using namespace Wire;
 
 void CameraInit(Matrix34f& rView);
+void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
 
@@ -50,20 +51,17 @@ int main( int argc, char **argv )
 
 	DEMOInit();
  	CameraInit(view);
+	DrawInit();
 
 	float angle = 0.0f;
 
-	while(1) {
+	WPAD_ScanPads();
 
+	while(!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
+	{
 		float scaleFactor = Mathf::Sin(angle);
 		angle += M_PI / 180.0f;
 		angle = Mathf::FMod(angle, M_PI);
-
-		WPAD_ScanPads();
-		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
-		{
-			exit(0);
-		}
 
 		DEMOBeforeRender();
 
@@ -74,6 +72,8 @@ int main( int argc, char **argv )
 
 		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
+
+		WPAD_ScanPads();
 	}
 
 	return 0;
@@ -114,6 +114,8 @@ void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view)
 	modelview = view * model;
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm(modelview, GX_PNMTX0);
+
+	GXSetCullMode(GX_CULL_NONE);
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, 12);		// Draw A Pyramid
 
@@ -183,6 +185,7 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 	modelview = view * model;
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm(modelview, GX_PNMTX0);
+	GXSetCullMode(GX_CULL_BACK);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
 
@@ -269,6 +272,14 @@ void CameraInit(Matrix34f& rView)
 }
 
 //-------------------------------------------------------------------------
+void DrawInit()
+{
+	// clears the bg to color and clears the z buffer
+	GXColor background = {0, 0, 0, 0xff};
+	GXSetCopyClear(background, GX_MAX_Z24);
+}
+
+//-------------------------------------------------------------------------
 void DEMOStartVI()
 {
 	VIConfigure(Rmode);
@@ -286,36 +297,35 @@ void DEMOStartVI()
 void DEMOInitGX()
 {
 	GXSetViewport(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight, 0.0f, 1.0f);
+	GXSetScissor(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
 	f32 yScale = GXGetYScaleFactor(Rmode->efbHeight, Rmode->xfbHeight);
 	u32 xfbHeight = GXSetDispCopyYScale(yScale);
-	GXSetScissor(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
 	GXSetDispCopySrc(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
 	GXSetDispCopyDst(Rmode->fbWidth, xfbHeight);
 	GXSetCopyFilter(Rmode->aa, Rmode->sample_pattern, GX_TRUE, Rmode->vfilter);
+	GXSetDispCopyGamma(GX_GM_1_0);
+
 	GXSetFieldMode(Rmode->field_rendering,
 		((Rmode->viHeight == 2*Rmode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
 
-	GXSetCullMode(GX_CULL_NONE);
-
-// 	if (Rmode->aa)
-// 	{
-// 		GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
-// 	}
-// 	else
-// 	{
-// 		GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
-// 	}
+	if (Rmode->aa)
+	{
+		GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
+	}
+	else
+	{
+		GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+	}
 
 	// Note that following is an appropriate setting for full-frame AA mode.
 	// You should use "xfbHeight" instead of "efbHeight" to specify actual
 	// view size. Since this library doesn't support such special case, please
 	// call these in each application to override the normal setting.
-// 	GXSetViewport(0.0F, 0.0F, (f32)Rmode->fbWidth, (f32)Rmode->xfbHeight, 
-// 		0.0F, 1.0F);
-// 	GXSetDispCopyYScale(1.0F);
+// 	GXSetViewport(0.0f, 0.0f, (f32)Rmode->fbWidth, (f32)Rmode->xfbHeight, 
+// 		0.0f, 1.0f);
+// 	GXSetDispCopyYScale(1.0f);
 
 	GXCopyDisp(FrameBuffer[FrameBufferIndex], GX_TRUE);
-	GXSetDispCopyGamma(GX_GM_1_0);
 }
 
 //-------------------------------------------------------------------------
@@ -337,9 +347,8 @@ void DEMOInit()
 	FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
 	FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
 
-	DEMOStartVI();
-
 	DEMOConfigureMem();
+
 	GXInit(DemoFifoBuffer, DEFAULT_FIFO_SIZE);
 
 	// clears the bg to color and clears the z buffer
@@ -347,46 +356,46 @@ void DEMOInit()
 	GXSetCopyClear(background, GX_MAX_Z24);
 
 	DEMOInitGX();
+
+	DEMOStartVI();
 }
 
 //-------------------------------------------------------------------------
 void DEMOBeforeRender()
 {
 	// Set up viewport (This is inappropriate for full-frame AA.)
-// 	if (Rmode->field_rendering)
-// 	{
-// 		GXSetViewportJitter(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
-// 			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f,
-// 			VIGetNextField());
-// 	}
-// 	else
+	if (Rmode->field_rendering)
+	{
+		GXSetViewportJitter(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
+			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f,
+			VIGetNextField());
+	}
+	else
 	{
 		GXSetViewport(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
 			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f);
 	}
 
 	// Invalidate vertex cache in GP
-//	GXInvalidateVtxCache();
+	GXInvalidateVtxCache();
 	// Invalidate texture cache in GP
-//	GXInvalidateTexAll();
-
+	GXInvalidateTexAll();
 }
 
 //-------------------------------------------------------------------------
 void DEMODoneRender()
 {
-	// Wait until everything is drawn and copied into XFB.
-	GXDrawDone();
-
-	FrameBufferIndex ^= 1;		// flip framebuffer
-
 	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
 	// (If you want to control these modes by yourself in your application,
 	//  please comment out this part.)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetColorUpdate(GX_TRUE);
 
-	GXCopyDisp(FrameBuffer[FrameBufferIndex], GX_TRUE);
+	// Issue display copy command
+	GXCopyDisp(FrameBuffer[FrameBufferIndex^1], GX_TRUE);
+
+	// Wait until everything is drawn and copied into XFB.
+	GXDrawDone();
 
 	// Set the next frame buffer
 	DEMOSwapBuffers();
@@ -395,6 +404,8 @@ void DEMODoneRender()
 //-------------------------------------------------------------------------
 void DEMOSwapBuffers()
 {
+	FrameBufferIndex ^= 1;		// flip framebuffer
+
 	// Display the buffer which was just filled by GXCopyDisplay
 	VISetNextFrameBuffer(FrameBuffer[FrameBufferIndex]);
 
