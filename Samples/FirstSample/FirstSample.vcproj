@@ -38,10 +38,26 @@
 	<References>
 	</References>
 	<Files>
-        <File
-            RelativePath=".\src\test.cpp"
-            >
-        </File>
+		<Filter
+			Name="Header Files"
+			>
+			<File
+				RelativePath=".\src\DemoInit.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Source Files"
+			>
+			<File
+				RelativePath=".\src\DemoInit.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

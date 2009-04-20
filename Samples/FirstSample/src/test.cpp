@@ -1,30 +1,6 @@
-/*---------------------------------------------------------------------------------
+#include "DemoInit.h"
 
-	nehe lesson 5 port to GX by WinterMute
-
----------------------------------------------------------------------------------*/
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <malloc.h>
-#include <gccore.h>
-#include <wiiuse/wpad.h>
-
-#ifndef WIRE_WII
-#define WIRE_WII
-#endif
-//#undef WIRE_WII
-
-#include "../../../Wire/Foundation/WireFoundation.h"
-#include "../../../Wire/Engine/WireEngine.h"
-
-#define DEFAULT_FIFO_SIZE	(256*1024)
- 
-static void* FrameBuffer[2] = { NULL, NULL};
-static void* DemoFifoBuffer;
-unsigned int FrameBufferIndex = 0;
-GXRenderModeObj* Rmode;
+DemoInit DEMO;
 
 using namespace Wire;
 
@@ -32,14 +8,6 @@ void CameraInit(Matrix34f& rView);
 void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
-
-void DEMOInit();
-void DEMOStartVI();
-void DEMOInitGX();
-void DEMOConfigureMem();
-void DEMOBeforeRender();
-void DEMODoneRender();
-void DEMOSwapBuffers();
 
 //---------------------------------------------------------------------------------
 int main( int argc, char **argv )
@@ -49,7 +17,7 @@ int main( int argc, char **argv )
 
 	float rtri = 0.0f , rquad = 0.0f;
 
-	DEMOInit();
+	DEMO.Init();
  	CameraInit(view);
 	DrawInit();
 
@@ -63,12 +31,12 @@ int main( int argc, char **argv )
 		angle += M_PI / 180.0f;
 		angle = Mathf::FMod(angle, M_PI);
 
-		DEMOBeforeRender();
+		DEMO.BeforeRender();
 
 		DrawPyramid(rtri, scaleFactor, view);
 		DrawCube(rquad, scaleFactor, view);
 
-		DEMODoneRender();
+		DEMO.DoneRender();
 
 		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
 		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
@@ -264,8 +232,8 @@ void CameraInit(Matrix34f& rView)
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-	f32 w = Rmode->viWidth;
-	f32 h = Rmode->viHeight;
+	f32 w = DEMO.GetRenderMode()->viWidth;
+	f32 h = DEMO.GetRenderMode()->viHeight;
 	Matrix4f perspective;
 	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GXSetProjection(perspective, GX_PERSPECTIVE);
@@ -277,140 +245,4 @@ void DrawInit()
 	// clears the bg to color and clears the z buffer
 	GXColor background = {0, 0, 0, 0xff};
 	GXSetCopyClear(background, GX_MAX_Z24);
-}
-
-//-------------------------------------------------------------------------
-void DEMOStartVI()
-{
-	VIConfigure(Rmode);
-	VISetNextFrameBuffer(FrameBuffer[FrameBufferIndex]);
-	VISetBlack(FALSE);
-	VIFlush();
-	VIWaitForRetrace();
-	if (Rmode->viTVMode & VI_NON_INTERLACE)
-	{
-		VIWaitForRetrace();
-	}
-}
-
-//-------------------------------------------------------------------------
-void DEMOInitGX()
-{
-	GXSetViewport(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight, 0.0f, 1.0f);
-	GXSetScissor(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
-	f32 yScale = GXGetYScaleFactor(Rmode->efbHeight, Rmode->xfbHeight);
-	u32 xfbHeight = GXSetDispCopyYScale(yScale);
-	GXSetDispCopySrc(0.0f, 0.0f, Rmode->fbWidth, Rmode->efbHeight);
-	GXSetDispCopyDst(Rmode->fbWidth, xfbHeight);
-	GXSetCopyFilter(Rmode->aa, Rmode->sample_pattern, GX_TRUE, Rmode->vfilter);
-	GXSetDispCopyGamma(GX_GM_1_0);
-
-	GXSetFieldMode(Rmode->field_rendering,
-		((Rmode->viHeight == 2*Rmode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
-
-	if (Rmode->aa)
-	{
-		GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
-	}
-	else
-	{
-		GXSetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
-	}
-
-	// Note that following is an appropriate setting for full-frame AA mode.
-	// You should use "xfbHeight" instead of "efbHeight" to specify actual
-	// view size. Since this library doesn't support such special case, please
-	// call these in each application to override the normal setting.
-// 	GXSetViewport(0.0f, 0.0f, (f32)Rmode->fbWidth, (f32)Rmode->xfbHeight, 
-// 		0.0f, 1.0f);
-// 	GXSetDispCopyYScale(1.0f);
-
-	GXCopyDisp(FrameBuffer[FrameBufferIndex], GX_TRUE);
-}
-
-//-------------------------------------------------------------------------
-void DEMOConfigureMem()
-{
-	DemoFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
-	memset(DemoFifoBuffer,0 , DEFAULT_FIFO_SIZE);
-}
-
-//-------------------------------------------------------------------------
-void DEMOInit()
-{
-	VIInit();
-	PADInit();
-
-	Rmode = VIDEO_GetPreferredMode(NULL);
-
-	// allocate 2 framebuffers for double buffering
-	FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
-	FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(Rmode));
-
-	DEMOConfigureMem();
-
-	GXInit(DemoFifoBuffer, DEFAULT_FIFO_SIZE);
-
-	// clears the bg to color and clears the z buffer
-	GXColor background = {0, 0, 0, 0xff};
-	GXSetCopyClear(background, GX_MAX_Z24);
-
-	DEMOInitGX();
-
-	DEMOStartVI();
-}
-
-//-------------------------------------------------------------------------
-void DEMOBeforeRender()
-{
-	// Set up viewport (This is inappropriate for full-frame AA.)
-	if (Rmode->field_rendering)
-	{
-		GXSetViewportJitter(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
-			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f,
-			VIGetNextField());
-	}
-	else
-	{
-		GXSetViewport(0.0f, 0.0f, static_cast<float>(Rmode->fbWidth),
-			static_cast<float>(Rmode->efbHeight), 0.0f, 1.0f);
-	}
-
-	// Invalidate vertex cache in GP
-	GXInvalidateVtxCache();
-	// Invalidate texture cache in GP
-	GXInvalidateTexAll();
-}
-
-//-------------------------------------------------------------------------
-void DEMODoneRender()
-{
-	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
-	// (If you want to control these modes by yourself in your application,
-	//  please comment out this part.)
-	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
-	GXSetColorUpdate(GX_TRUE);
-
-	// Issue display copy command
-	GXCopyDisp(FrameBuffer[FrameBufferIndex^1], GX_TRUE);
-
-	// Wait until everything is drawn and copied into XFB.
-	GXDrawDone();
-
-	// Set the next frame buffer
-	DEMOSwapBuffers();
-}
-
-//-------------------------------------------------------------------------
-void DEMOSwapBuffers()
-{
-	FrameBufferIndex ^= 1;		// flip framebuffer
-
-	// Display the buffer which was just filled by GXCopyDisplay
-	VISetNextFrameBuffer(FrameBuffer[FrameBufferIndex]);
-
-	// Tell VI device driver to write the current VI settings so far
-	VIFlush();
-
-	VIWaitForRetrace();
 }
