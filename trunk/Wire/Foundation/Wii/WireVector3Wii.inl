@@ -134,10 +134,9 @@ inline Vector3<Real> Vector3<Real>::operator/ (Real scalar)
 	}
 	else
 	{
-		// TODO: fix this
-		//		quot.mTuple[0] = Math<Real>::MAX_REAL;
-		//		quot.mTuple[1] = Math<Real>::MAX_REAL;
-		//		quot.mTuple[2] = Math<Real>::MAX_REAL;
+		quot.mTuple.x = Math<Real>::MAX_REAL;
+ 		quot.mTuple.y = Math<Real>::MAX_REAL;
+ 		quot.mTuple.z = Math<Real>::MAX_REAL;
 	}
 
 	return quot;
