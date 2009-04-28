@@ -9,9 +9,8 @@ void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
 
-//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 int main( int argc, char **argv )
-//---------------------------------------------------------------------------------
 {
 	Matrix34f view;
 
@@ -38,9 +37,8 @@ int main( int argc, char **argv )
 
 		DEMO.DoneRender();
 
-		rtri+=0.5f;				// Increase The Rotation Variable For The Triangle ( NEW )
-		rquad-=0.15f;			// Decrease The Rotation Variable For The Quad     ( NEW )
-
+		rtri+=0.5f;		// Increase The Rotation Variable For The Triangle
+		rquad-=0.15f;	// Decrease The Rotation Variable For The Quad
 		WPAD_ScanPads();
 	}
 
@@ -157,59 +155,75 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
 
-	GXPosition3f32( 1.0f, 1.0f,-1.0f);	// Top Left of the quad (top)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-	GXPosition3f32(-1.0f, 1.0f,-1.0f);	// Top Right of the quad (top)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-	GXPosition3f32(-1.0f, 1.0f, 1.0f);	// Bottom Right of the quad (top)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-	GXPosition3f32( 1.0f, 1.0f, 1.0f);		// Bottom Left of the quad (top)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
+	Vector3f vertices[] = {
+		Vector3f(1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(1.0f, 1.0f, 1.0f),
 
-	GXPosition3f32( 1.0f,-1.0f, 1.0f);	// Top Left of the quad (bottom)
-	GX_Color3f32(1.0f,0.5f,0.0f);			// Set The Color To Orange
-	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Top Right of the quad (bottom)
-	GX_Color3f32(1.0f,0.5f,0.0f);			// Set The Color To Orange
-	GXPosition3f32(-1.0f,-1.0f,-1.0f);	// Bottom Right of the quad (bottom)
-	GX_Color3f32(1.0f,0.5f,0.0f);			// Set The Color To Orange
-	GXPosition3f32( 1.0f,-1.0f,-1.0f);	// Bottom Left of the quad (bottom)
-	GX_Color3f32(1.0f,0.5f,0.0f);			// Set The Color To Orange
+		Vector3f(1.0f,-1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(1.0f,-1.0f,-1.0f),
 
-	GXPosition3f32( 1.0f, 1.0f, 1.0f);		// Top Right Of The Quad (Front)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32(-1.0f, 1.0f, 1.0f);	// Top Left Of The Quad (Front)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Bottom Left Of The Quad (Front)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32( 1.0f,-1.0f, 1.0f);	// Bottom Right Of The Quad (Front)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
+		Vector3f(1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f, 1.0f),
 
-	GXPosition3f32( 1.0f,-1.0f,-1.0f);	// Bottom Left Of The Quad (Back)
-	GX_Color3f32(1.0f,1.0f,0.0f);			// Set The Color To Yellow
-	GXPosition3f32(-1.0f,-1.0f,-1.0f);	// Bottom Right Of The Quad (Back)
-	GX_Color3f32(1.0f,1.0f,0.0f);			// Set The Color To Yellow
-	GXPosition3f32(-1.0f, 1.0f,-1.0f);	// Top Right Of The Quad (Back)
-	GX_Color3f32(1.0f,1.0f,0.0f);			// Set The Color To Yellow
-	GXPosition3f32( 1.0f, 1.0f,-1.0f);	// Top Left Of The Quad (Back)
-	GX_Color3f32(1.0f,1.0f,0.0f);			// Set The Color To Yellow
+		Vector3f(1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(1.0f, 1.0f,-1.0f),
 
-	GXPosition3f32(-1.0f, 1.0f, 1.0f);	// Top Right Of The Quad (Left)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32(-1.0f, 1.0f,-1.0f);	// Top Left Of The Quad (Left)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32(-1.0f,-1.0f,-1.0f);	// Bottom Left Of The Quad (Left)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Bottom Right Of The Quad (Left)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
 
-	GXPosition3f32( 1.0f, 1.0f,-1.0f);	// Top Right Of The Quad (Right)
-	GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
-	GXPosition3f32( 1.0f, 1.0f, 1.0f);		// Top Left Of The Quad (Right)
-	GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
-	GXPosition3f32( 1.0f,-1.0f, 1.0f);	// Bottom Left Of The Quad (Right)
-	GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
-	GXPosition3f32( 1.0f,-1.0f,-1.0f);	// Bottom Right Of The Quad (Right)		
-	GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
+		Vector3f(1.0f, 1.0f,-1.0f),
+		Vector3f(1.0f, 1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f,-1.0f)
+	};
+
+	Vector3f colors[] = {
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f)
+	};
+
+	for (int i = 0; i < 24; i++)
+	{
+		GXPosition3f32(vertices[i].X(), vertices[i].Y(), vertices[i].Z());
+		GX_Color3f32(colors[i].X(), colors[i].Y(), colors[i].Z());
+	}
 
 	GXEnd();									// Done Drawing The Quad 
 }
