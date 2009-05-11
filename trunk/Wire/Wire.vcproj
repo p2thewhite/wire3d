@@ -156,6 +156,10 @@
 					RelativePath=".\Engine\WireTransformation.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Engine\WireVertexBuffer.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
@@ -182,6 +186,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVertexBuffer.cpp"
 					>
 				</File>
 			</Filter>

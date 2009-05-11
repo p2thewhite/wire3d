@@ -8,10 +8,56 @@ void CameraInit(Matrix34f& rView);
 void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
+void InitCube();
+
+VertexBuffer gCubeVerts(24);
+
+//-------------------------------------------------------------------------
+void InitCube()
+{
+	Vector3f vertices[] = {
+		Vector3f(1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(1.0f, 1.0f, 1.0f),
+
+		Vector3f(1.0f,-1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(1.0f,-1.0f,-1.0f),
+
+		Vector3f(1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f, 1.0f),
+
+		Vector3f(1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(1.0f, 1.0f,-1.0f),
+
+		Vector3f(-1.0f, 1.0f, 1.0f),
+		Vector3f(-1.0f, 1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f,-1.0f),
+		Vector3f(-1.0f,-1.0f, 1.0f),
+
+		Vector3f(1.0f, 1.0f,-1.0f),
+		Vector3f(1.0f, 1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f, 1.0f),
+		Vector3f(1.0f,-1.0f,-1.0f)
+	};
+
+	for (int i = 0; i < 24; i++)
+	{
+		gCubeVerts.Position3(i) = vertices[i];
+	}
+}
 
 //-------------------------------------------------------------------------
 int main( int argc, char **argv )
 {
+	InitCube();
+
 	Matrix34f view;
 
 	float rtri = 0.0f , rquad = 0.0f;
@@ -155,38 +201,6 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
 
-	Vector3f vertices[] = {
-		Vector3f(1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(1.0f, 1.0f, 1.0f),
-
-		Vector3f(1.0f,-1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(1.0f,-1.0f,-1.0f),
-
-		Vector3f(1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f, 1.0f),
-
-		Vector3f(1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(1.0f, 1.0f,-1.0f),
-
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-
-		Vector3f(1.0f, 1.0f,-1.0f),
-		Vector3f(1.0f, 1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f,-1.0f)
-	};
-
 	Vector3f colors[] = {
 		Vector3f(0.0f,1.0f,0.0f),
 		Vector3f(0.0f,1.0f,0.0f),
@@ -221,7 +235,8 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 
 	for (int i = 0; i < 24; i++)
 	{
-		GXPosition3f32(vertices[i].X(), vertices[i].Y(), vertices[i].Z());
+		Vector3f& rVertex = gCubeVerts.Position3(i);
+		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(colors[i].X(), colors[i].Y(), colors[i].Z());
 	}
 

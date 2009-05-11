@@ -122,5 +122,3 @@ bool Pointer<T>::operator!= (const Pointer& rPointer) const
 {
     return mpObject != rPointer.mpObject;
 }
-
-//-------------------------------------------------------------------------
