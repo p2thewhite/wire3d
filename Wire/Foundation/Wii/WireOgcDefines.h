@@ -1,6 +1,7 @@
 #pragma once
 #ifndef WIREOGCDEFINES_H
 #define WIREOGCDEFINES_H
+#include <gctypes.h>
 #include "ogc/gu.h"
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL

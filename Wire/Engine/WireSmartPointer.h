@@ -2,6 +2,8 @@
 #ifndef WIRESMARTPOINTER_H
 #define WIRESMARTPOINTER_H
 
+#include "../Foundation/WireFoundation.h"
+
 namespace Wire
 {
 
@@ -10,7 +12,7 @@ class Pointer
 {
 public:
     // construction and destruction
-    Pointer (T* pObject = 0);
+    Pointer (T* pObject = NULL);
     Pointer (const Pointer& rPointer);
     ~Pointer ();
 
