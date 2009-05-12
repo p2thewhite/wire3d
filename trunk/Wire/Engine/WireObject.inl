@@ -5,7 +5,7 @@ inline void Object::IncrementReferences()
 }
 
 //-------------------------------------------------------------------------
-inline int Object::GetReferences () const
+inline Int Object::GetReferences () const
 {
 	return mReferences;
 }

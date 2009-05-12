@@ -11,23 +11,21 @@ class /*WIRE_GRAPHICS_ITEM*/ VertexBuffer : public Object
 {
 
 public:
-	VertexBuffer(unsigned int vertexQuantity);
+	VertexBuffer(UInt vertexQuantity);
 	virtual ~VertexBuffer();
 
-	Vector3f& Position3(int i);
-	Vector3f Position3(int i) const;
+	Vector3f& Position3(Int i);
+	Vector3f Position3(Int i) const;
 
 private:
 	// The size of a single vertex in the buffer.
-	unsigned int mVertexSize;
+	UInt mVertexSize;
 
 	// The number of vertices in the buffer.
-	unsigned int mVertexQuantity;
+	UInt mVertexQuantity;
 
 	// The vertex buffer data.
-	void* mpChannel;
-
-	Float mChannel[24*3];
+	Float* mpChannel;
 };
 
 }
