@@ -4,7 +4,8 @@
 
 typedef bool Bool;
 typedef double Double;
-typedef int Int;
 typedef float Float;
+typedef int Int;
+typedef unsigned int UInt;
 
-#endif /* WIRE_TYPE_H */
+#endif /* WIRETYPES_H */

@@ -14,13 +14,13 @@ public:
 
 	void IncrementReferences();
 	void DecrementReferences();
-	int GetReferences() const;
+	Int GetReferences() const;
 
 protected:
 	Object();
 
 private:
-	int mReferences;
+	Int mReferences;
 };
 
 typedef Pointer<Object> ObjectPtr;
