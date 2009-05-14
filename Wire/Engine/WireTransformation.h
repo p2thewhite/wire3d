@@ -3,6 +3,7 @@
 #define WIRETRANSFORMATION_H
 
 #include "../Foundation/WireTypes.h"
+#include "../Foundation/WireSystem.h"
 #include "../Foundation/WireMatrix34.h"
 
 namespace Wire

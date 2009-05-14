@@ -1,7 +1,5 @@
 #include "WireVertexBuffer.h"
 
-#include "../Foundation/WireFoundation.h"
-
 using namespace Wire;
 
 //-------------------------------------------------------------------------
