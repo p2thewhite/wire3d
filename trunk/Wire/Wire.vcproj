@@ -157,6 +157,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireVertexAttributes.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireVertexBuffer.h"
 					>
 				</File>
@@ -186,6 +190,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVertexAttributes.cpp"
 					>
 				</File>
 				<File

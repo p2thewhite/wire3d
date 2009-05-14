@@ -100,7 +100,7 @@ inline Matrix34<Real>::operator const Real4* () const
 template <class Real>
 void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 {
-//	WIRE_ASSERT((0 =< col) && (col < 4));
+	WIRE_ASSERT((0 =< col) && (col < 4));
 	mEntry[0][col] = rVector.X();
 	mEntry[1][col] = rVector.Y();
 	mEntry[2][col] = rVector.Z();

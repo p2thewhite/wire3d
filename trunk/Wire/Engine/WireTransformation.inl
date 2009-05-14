@@ -45,13 +45,13 @@ inline Vector3f Transformation::GetTranslate() const
 //-------------------------------------------------------------------------
 inline const Vector3f& Transformation::GetScale() const
 {
-//	WIRE_ASSERT(mIsRSMatrix);
+	WIRE_ASSERT(mIsRSMatrix);
 	return mScale;
 }
 
 //-------------------------------------------------------------------------
 inline Float Transformation::GetUniformScale() const
 {
-//	WIRE_ASSERT(mIsRSMatrix && mIsUniformScale);
+	WIRE_ASSERT(mIsRSMatrix && mIsUniformScale);
 	return mScale.X();
 }

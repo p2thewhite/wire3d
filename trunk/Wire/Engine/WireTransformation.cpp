@@ -50,8 +50,8 @@ void Transformation::SetTranslate(const Vector3f& rTranslate)
 //-------------------------------------------------------------------------
 void Transformation::SetScale(const Vector3f& rScale)
 {
-// 	WIRE_ASSERT(mIsRSMatrix && rScale.X() != 0.0f && rScale.Y() != 0.0f
-// 		&& rScale.Z() != 0.0f);
+ 	WIRE_ASSERT(mIsRSMatrix && rScale.X() != 0.0f && rScale.Y() != 0.0f
+ 		&& rScale.Z() != 0.0f);
 
 	mScale = rScale;
 	mIsIdentity = false;
@@ -61,7 +61,7 @@ void Transformation::SetScale(const Vector3f& rScale)
 //-------------------------------------------------------------------------
 void Transformation::SetUniformScale(Float scale)
 {
-//	WIRE_ASSERT(mIsRSMatrix && (scale != 0.0f));
+	WIRE_ASSERT(mIsRSMatrix && (scale != 0.0f));
 
 	mScale = Vector3f(scale, scale, scale);
 	mIsIdentity = false;

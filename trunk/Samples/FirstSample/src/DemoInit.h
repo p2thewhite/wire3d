@@ -9,11 +9,6 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 
-#ifndef WIRE_WII
-#define WIRE_WII
-#endif
-//#undef WIRE_WII
-
 #include "../../../Wire/Foundation/WireFoundation.h"
 #include "../../../Wire/Engine/WireEngine.h"
 
