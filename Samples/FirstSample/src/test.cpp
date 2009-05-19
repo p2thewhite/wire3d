@@ -10,11 +10,15 @@ void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
 void InitCube();
 
-VertexBuffer gCubeVerts(24);
+VertexBuffer* gpCubeVerts = NULL;
 
 //-------------------------------------------------------------------------
 void InitCube()
 {
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);
+	gpCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
+
 	Vector3f vertices[] = {
 		Vector3f(1.0f, 1.0f,-1.0f),
 		Vector3f(-1.0f, 1.0f,-1.0f),
@@ -49,7 +53,7 @@ void InitCube()
 
 	for (int i = 0; i < 24; i++)
 	{
-		gCubeVerts.Position3(i) = vertices[i];
+		gpCubeVerts->Position3(i) = vertices[i];
 	}
 }
 
@@ -86,6 +90,11 @@ int main( int argc, char **argv )
 		rtri+=0.5f;		// Increase The Rotation Variable For The Triangle
 		rquad-=0.15f;	// Decrease The Rotation Variable For The Quad
 		WPAD_ScanPads();
+	}
+
+	if (gpCubeVerts)
+	{
+		WIRE_DELETE gpCubeVerts;
 	}
 
 	return 0;
@@ -235,7 +244,7 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 
 	for (int i = 0; i < 24; i++)
 	{
-		Vector3f& rVertex = gCubeVerts.Position3(i);
+		Vector3f& rVertex = gpCubeVerts->Position3(i);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(colors[i].X(), colors[i].Y(), colors[i].Z());
 	}
