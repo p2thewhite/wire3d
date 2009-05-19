@@ -19,5 +19,7 @@
 #define WIRE_ASSERT(condition) assert(condition)
 #endif /* WIRE_WII */
 
+#include "WireTypes.h"
+
 #endif /* WIRESYSTEM_H */
 
