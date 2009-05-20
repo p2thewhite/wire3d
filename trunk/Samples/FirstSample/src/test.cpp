@@ -17,7 +17,40 @@ void InitCube()
 {
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
+	attributes.SetColorChannels(3);
 	gpCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
+
+	Vector3f colors[] = {
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+		Vector3f(0.0f,1.0f,0.0f),
+
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+		Vector3f(1.0f,0.5f,0.0f),
+
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+		Vector3f(1.0f,0.0f,0.0f),
+
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+		Vector3f(1.0f,1.0f,0.0f),
+
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+		Vector3f(0.0f,0.0f,1.0f),
+
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f),
+		Vector3f(1.0f,0.0f,1.0f)
+	};
 
 	Vector3f vertices[] = {
 		Vector3f(1.0f, 1.0f,-1.0f),
@@ -51,9 +84,10 @@ void InitCube()
 		Vector3f(1.0f,-1.0f,-1.0f)
 	};
 
-	for (int i = 0; i < 24; i++)
+	for (unsigned int i = 0; i < gpCubeVerts->GetQuantity(); i++)
 	{
 		gpCubeVerts->Position3(i) = vertices[i];
+		gpCubeVerts->Color3(i) = colors[i];
 	}
 }
 
@@ -208,45 +242,14 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 	GXLoadPosMtxImm(modelview, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_BACK);
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
+	GXBegin(GX_QUADS, GX_VTXFMT0, gpCubeVerts->GetQuantity());	// Draw a Cube
 
-	Vector3f colors[] = {
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
-
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
-
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
-
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
-
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
-
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f)
-	};
-
-	for (int i = 0; i < 24; i++)
+	for (unsigned int i = 0; i < gpCubeVerts->GetQuantity(); i++)
 	{
 		Vector3f& rVertex = gpCubeVerts->Position3(i);
+		Vector3f& rColor = gpCubeVerts->Color3(i);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
-		GX_Color3f32(colors[i].X(), colors[i].Y(), colors[i].Z());
+		GX_Color3f32(rColor.X(), rColor.Y(), rColor.Z());
 	}
 
 	GXEnd();									// Done Drawing The Quad 

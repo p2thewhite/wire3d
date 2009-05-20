@@ -14,17 +14,22 @@ public:
 	VertexAttributes();
 	virtual ~VertexAttributes();
 
-	UInt GetChannelQuantity();
+	UInt GetChannelQuantity() const { return mChannelQuantity; }
 
 	void SetPositionChannels(UInt positionChannels);
 	void SetColorChannels(UInt colorChannels);
 	void SetNormalChannels(UInt normalChannels);
 	void SetTCoordChannels(UInt tCoordChannels);
 
-	UInt GetPositionChannels() { return mPositionChannels; }
-	UInt GetColorChannels() { return mColorChannels; }
-	UInt GetNormalChannels() { return mNormalChannels; }
-	UInt GetTCoordChannels() { return mTCoordChannels; }
+	UInt GetPositionChannels() const { return mPositionChannels; }
+	UInt GetColorChannels() const { return mColorChannels; }
+	UInt GetNormalChannels() const { return mNormalChannels; }
+	UInt GetTCoordChannels() const { return mTCoordChannels; }
+
+	UInt GetPositionOffset() const { return mPositionOffset; }
+	UInt GetColorOffset() const { return mColorOffset; }
+	UInt GetNormalOffset() const { return mNormalOffset; }
+	UInt GetTCoordOffset() const { return mTCoordOffset; }
 
 private:
 	void UpdateOffsets();

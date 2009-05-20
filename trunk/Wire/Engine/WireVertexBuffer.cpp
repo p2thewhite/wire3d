@@ -7,12 +7,11 @@ VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 	UInt vertexQuantity, Bool isInterleaved)
 	:
 	mAttributes(rAttributes),
-	mVertexSize(0),
 	mVertexQuantity(vertexQuantity),
 	mpChannel(NULL)
 {
-	mVertexSize = sizeof(Vector3f);
-	mpChannel = WIRE_NEW Float[mVertexQuantity * 3];
+	mpChannel = WIRE_NEW Float[mVertexQuantity * mAttributes.
+		GetChannelQuantity()];
 }
 
 //-------------------------------------------------------------------------
@@ -22,17 +21,39 @@ VertexBuffer::~VertexBuffer()
 }
 
 //-------------------------------------------------------------------------
-Vector3f& VertexBuffer::Position3(Int i)
+Vector3f& VertexBuffer::Position3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
-	Float* pChannel = mpChannel + mVertexSize/sizeof(Float) * i;
+	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetPositionOffset();
 	return *(reinterpret_cast<Vector3f*>(pChannel));
 }
 
 //-------------------------------------------------------------------------
-Vector3f VertexBuffer::Position3(Int i) const
+Vector3f VertexBuffer::Position3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
-	const Float* pChannel = mpChannel + mVertexSize/sizeof(Float) * i;
+	UInt index = mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetPositionOffset();
+	const Float* pChannel = mpChannel + index;
+	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
+}
+
+//-------------------------------------------------------------------------
+Vector3f& VertexBuffer::Color3(UInt i)
+{
+	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
+	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetColorOffset();
+	return *(reinterpret_cast<Vector3f*>(pChannel));
+}
+
+//-------------------------------------------------------------------------
+Vector3f VertexBuffer::Color3(UInt i) const
+{
+	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
+	UInt index = mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetColorOffset();
+	const Float* pChannel = mpChannel + index;
 	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
 }
