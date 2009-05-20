@@ -16,14 +16,16 @@ public:
 		Bool isInterleaved = false);
 	virtual ~VertexBuffer();
 
-	Vector3f& Position3(Int i);
-	Vector3f Position3(Int i) const;
+	UInt GetQuantity() const { return mVertexQuantity; }
+
+	Vector3f& Position3(UInt i);
+	Vector3f Position3(UInt i) const;
+
+	Vector3f& Color3(UInt i);
+	Vector3f Color3(UInt i) const;
 
 private:
 	VertexAttributes mAttributes;
-
-	// The size of a single vertex in the buffer.
-	UInt mVertexSize;
 
 	// The number of vertices in the buffer.
 	UInt mVertexQuantity;
