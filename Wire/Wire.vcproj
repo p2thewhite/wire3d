@@ -145,11 +145,19 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireGeometry.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Engine\WireSmartPointer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSpatial.h"
 					>
 				</File>
 				<File
@@ -185,7 +193,15 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath=".\Engine\WireGeometry.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSpatial.cpp"
 					>
 				</File>
 				<File
