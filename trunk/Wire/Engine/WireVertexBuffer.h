@@ -34,6 +34,8 @@ private:
 	Float* mpChannel;
 };
 
+typedef Pointer<VertexBuffer> VertexBufferPtr;
+
 }
 
 #endif /* WIREVERTEXBUFFER_H */
