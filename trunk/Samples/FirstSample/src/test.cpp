@@ -10,7 +10,7 @@ void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
 void InitCube();
 
-VertexBuffer* gpCubeVerts = NULL;
+Geometry* gpCube = NULL;
 
 //-------------------------------------------------------------------------
 void InitCube()
@@ -18,7 +18,7 @@ void InitCube()
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
 	attributes.SetColorChannels(3);
-	gpCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
+	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
 
 	Vector3f colors[] = {
 		Vector3f(0.0f,1.0f,0.0f),
@@ -84,11 +84,13 @@ void InitCube()
 		Vector3f(1.0f,-1.0f,-1.0f)
 	};
 
-	for (unsigned int i = 0; i < gpCubeVerts->GetQuantity(); i++)
+	for (unsigned int i = 0; i < pCubeVerts->GetQuantity(); i++)
 	{
-		gpCubeVerts->Position3(i) = vertices[i];
-		gpCubeVerts->Color3(i) = colors[i];
+		pCubeVerts->Position3(i) = vertices[i];
+		pCubeVerts->Color3(i) = colors[i];
 	}
+
+	gpCube = WIRE_NEW Geometry(pCubeVerts);
 }
 
 //-------------------------------------------------------------------------
@@ -126,9 +128,9 @@ int main( int argc, char **argv )
 		WPAD_ScanPads();
 	}
 
-	if (gpCubeVerts)
+	if (gpCube)
 	{
-		WIRE_DELETE gpCubeVerts;
+		WIRE_DELETE gpCube;
 	}
 
 	return 0;
@@ -242,12 +244,14 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 	GXLoadPosMtxImm(modelview, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_BACK);
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, gpCubeVerts->GetQuantity());	// Draw a Cube
+	VertexBuffer* pVBuffer = gpCube->VBuffer;
 
-	for (unsigned int i = 0; i < gpCubeVerts->GetQuantity(); i++)
+	GXBegin(GX_QUADS, GX_VTXFMT0, pVBuffer->GetQuantity());	// Draw a Cube
+
+	for (unsigned int i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
-		Vector3f& rVertex = gpCubeVerts->Position3(i);
-		Vector3f& rColor = gpCubeVerts->Color3(i);
+		Vector3f& rVertex = pVBuffer->Position3(i);
+		Vector3f& rColor = pVBuffer->Color3(i);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(rColor.X(), rColor.Y(), rColor.Z());
 	}

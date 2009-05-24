@@ -24,6 +24,7 @@ private:
 };
 
 typedef Pointer<Object> ObjectPtr;
+#include "WireObject.inl"
 
 }
 

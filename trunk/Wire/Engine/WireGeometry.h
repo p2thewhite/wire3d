@@ -13,11 +13,10 @@ class /*WIRE_GRAPHICS_ITEM*/ Geometry : public Spatial
 
 public:
 	Geometry(VertexBuffer* pVBuffer);
-	virtual ~Geometry ();
+	virtual ~Geometry();
 
 	// member access
 	VertexBufferPtr VBuffer;
-
 };
 
 typedef Pointer<Geometry> GeometryPtr;
