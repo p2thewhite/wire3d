@@ -31,7 +31,7 @@ public:
 	Vector3f GetTranslate() const;
 	void SetScale(const Vector3f& rScale);
 	const Vector3f& GetScale() const;
-	void SetUniformScale (Float scale);
+	void SetUniformScale(Float scale);
 	Float GetUniformScale() const;
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
