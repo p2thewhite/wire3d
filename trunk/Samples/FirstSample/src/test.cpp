@@ -7,13 +7,11 @@ using namespace Wire;
 void CameraInit(Matrix34f& rView);
 void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
-void DrawCube(float rquad, float scaleFactor, Matrix34f& view);
-void InitCube();
-
-Geometry* gpCube = NULL;
+void Draw(Geometry* pGeometry, Matrix34f& view);
+Geometry* CreateCube();
 
 //-------------------------------------------------------------------------
-void InitCube()
+Geometry* CreateCube()
 {
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
@@ -90,23 +88,21 @@ void InitCube()
 		pCubeVerts->Color3(i) = colors[i];
 	}
 
-	gpCube = WIRE_NEW Geometry(pCubeVerts);
+	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts);
+	return pCube;
 }
 
 //-------------------------------------------------------------------------
 int main( int argc, char **argv )
 {
-	InitCube();
-
-	Matrix34f view;
-
-	float rtri = 0.0f , rquad = 0.0f;
+	Geometry* pCube = CreateCube();
 
 	DEMO.Init();
+	Matrix34f view;
  	CameraInit(view);
 	DrawInit();
 
-	float angle = 0.0f;
+	float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
 
 	WPAD_ScanPads();
 
@@ -119,7 +115,14 @@ int main( int argc, char **argv )
 		DEMO.BeforeRender();
 
 		DrawPyramid(rtri, scaleFactor, view);
-		DrawCube(rquad, scaleFactor, view);
+
+		Matrix34f model;
+		Vector3f cubeAxis(1, 1, 1);
+		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
+		pCube->Local.SetRotate(model);
+		pCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
+		pCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
+		Draw(pCube, view);
 
 		DEMO.DoneRender();
 
@@ -128,9 +131,9 @@ int main( int argc, char **argv )
 		WPAD_ScanPads();
 	}
 
-	if (gpCube)
+	if (pCube)
 	{
-		WIRE_DELETE gpCube;
+		WIRE_DELETE pCube;
 	}
 
 	return 0;
@@ -208,11 +211,8 @@ void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view)
 }
 
 //-------------------------------------------------------------------------
-void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
+void Draw(Geometry* pGeometry, Matrix34f& view)
 {
-	Matrix34f model, modelview;
-	Transformation modelTransform;
-
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
 	GXClearVtxDesc();
@@ -233,30 +233,25 @@ void DrawCube(float rquad, float scaleFactor, Matrix34f& view)
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
-	Vector3f cubeAxis(1, 1, 1);
-	model.FromAxisAngle(cubeAxis, DegToRad(rquad));
-	modelTransform.SetRotate(model);
-	modelTransform.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
-	modelTransform.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
-	modelTransform.GetTransformation(model);
-	modelview = view * model;
+	Matrix34f model;
+	pGeometry->Local.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(modelview, GX_PNMTX0);
+	GXLoadPosMtxImm(view * model, GX_PNMTX0);
 	GXSetCullMode(GX_CULL_BACK);
 
-	VertexBuffer* pVBuffer = gpCube->VBuffer;
+	const VertexBuffer* pVBuffer = pGeometry->VBuffer;
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, pVBuffer->GetQuantity());	// Draw a Cube
+	GXBegin(GX_QUADS, GX_VTXFMT0, pVBuffer->GetQuantity());
 
 	for (unsigned int i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
-		Vector3f& rVertex = pVBuffer->Position3(i);
-		Vector3f& rColor = pVBuffer->Color3(i);
+		const Vector3f& rVertex = pVBuffer->Position3(i);
+		const Vector3f& rColor = pVBuffer->Color3(i);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(rColor.X(), rColor.Y(), rColor.Z());
 	}
 
-	GXEnd();									// Done Drawing The Quad 
+	GXEnd();
 }
 
 //-------------------------------------------------------------------------
