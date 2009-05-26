@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_GRAPHICS_ITEM*/ Spatial : public Object
+class /*WIRE_ENGINE_ITEM*/ Spatial : public Object
 {
 public:
 	// abstract base class

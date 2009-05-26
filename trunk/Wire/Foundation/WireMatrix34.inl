@@ -37,6 +37,13 @@ Matrix34<Real>::Matrix34(
 
 //-------------------------------------------------------------------------
 template <class Real>
+Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle)
+{
+	FromAxisAngle(rAxis, angle);
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
 Matrix34<Real>& Matrix34<Real>::MakeZero()
 {
 	mEntry[0][0] = static_cast<Real>(0.0);

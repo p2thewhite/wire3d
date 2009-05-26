@@ -8,9 +8,8 @@
 namespace Wire
 {
 
-class /*WIRE_GRAPHICS_ITEM*/ Geometry : public Spatial
+class /*WIRE_ENGINE_ITEM*/ Geometry : public Spatial
 {
-
 public:
 	Geometry(VertexBuffer* pVBuffer);
 	virtual ~Geometry();

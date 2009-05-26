@@ -9,7 +9,7 @@
 namespace Wire
 {
 
-class /*WIRE_GRAPHICS_ITEM*/ Transformation
+class /*WIRE_ENGINE_ITEM*/ Transformation
 {
 public:
 	Transformation();

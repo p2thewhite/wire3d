@@ -11,6 +11,7 @@
 
 #include "../../../Wire/Foundation/WireFoundation.h"
 #include "../../../Wire/Engine/WireEngine.h"
+#include "../../../Wire/Renderer/GXRenderer/WireGXRenderer.h"
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
 

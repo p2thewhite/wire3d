@@ -93,9 +93,11 @@ Geometry* CreateCube()
 }
 
 //-------------------------------------------------------------------------
-int main( int argc, char **argv )
+int main(int argc, char** argv)
 {
 	Geometry* pCube = CreateCube();
+// 	GXRenderer* pRenderer = WIRE_NEW GXRenderer;
+//  	pRenderer->Draw(pCube);
 
 	DEMO.Init();
 	Matrix34f view;
@@ -116,9 +118,7 @@ int main( int argc, char **argv )
 
 		DrawPyramid(rtri, scaleFactor, view);
 
-		Matrix34f model;
-		Vector3f cubeAxis(1, 1, 1);
-		model.FromAxisAngle(cubeAxis, DegToRad(rquad));
+		Matrix34f model(Vector3f(1, 1, 1),DegToRad(rquad));
 		pCube->Local.SetRotate(model);
 		pCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
 		pCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));

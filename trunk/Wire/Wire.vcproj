@@ -153,6 +153,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireSmartPointer.h"
 					>
 				</File>
@@ -201,6 +205,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireSpatial.cpp"
 					>
 				</File>
@@ -216,6 +224,30 @@
 					RelativePath=".\Engine\WireVertexBuffer.cpp"
 					>
 				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Renderer"
+			>
+			<Filter
+				Name="GXRenderer"
+				>
+				<Filter
+					Name="Header Files"
+					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>
