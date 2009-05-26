@@ -27,6 +27,10 @@ public:
 		Real m10, Real m11, Real m12, Real m13,
 		Real m20, Real m21, Real m22, Real m23);
 
+	// Create rotation matrices (positive angle - counterclockwise).  The
+	// angle must be in radians, not degrees.
+	Matrix34(const Vector3<Real>& rkAxis, Real fAngle);
+
 	Matrix34& MakeZero();
 	Matrix34& MakeIdentity();
 

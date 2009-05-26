@@ -2,9 +2,10 @@
 #ifndef WIREENGINE_H
 #define WIREENGINE_H
 
-#include "WireTransformation.h"
 #include "WireGeometry.h"
+#include "WireRenderer.h"
 #include "WireSpatial.h"
+#include "WireTransformation.h"
 #include "WireVertexAttributes.h"
 #include "WireVertexBuffer.h"
 

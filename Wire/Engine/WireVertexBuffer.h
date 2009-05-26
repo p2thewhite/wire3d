@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_GRAPHICS_ITEM*/ VertexBuffer : public Object
+class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object
 {
 
 public:
