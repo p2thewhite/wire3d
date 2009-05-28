@@ -40,11 +40,15 @@ void GXRenderer::DrawElements()
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm((*View) * model, GX_PNMTX0);
 
-	GXSetCullMode(GX_CULL_BACK);
-
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 
-	GXBegin(GX_QUADS, GX_VTXFMT0, pVBuffer->GetQuantity());
+	UChar gxPrimitive = GX_TRIANGLES;
+	if (mpGeometry->Type == Geometry::GT_QUADMESH)
+	{
+		gxPrimitive = GX_QUADS;
+	}
+
+	GXBegin(gxPrimitive, GX_VTXFMT0, pVBuffer->GetQuantity());
 
 	for (unsigned int i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
