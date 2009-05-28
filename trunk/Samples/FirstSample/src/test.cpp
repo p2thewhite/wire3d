@@ -6,7 +6,6 @@ using namespace Wire;
 
 void CameraInit(Matrix34f& rView);
 void DrawInit();
-void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
 Geometry* CreateCube();
 Geometry* CreatePyramid();
 
@@ -142,15 +141,17 @@ Geometry* CreatePyramid()
 		pPyramidVerts->Color3(i) = colors[i];
 	}
 
-	Geometry* pCube = WIRE_NEW TriMesh(pPyramidVerts);
-	return pCube;
+	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts);
+	return pPyramid;
 }
 
 //-------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
+	Renderer* pRenderer = WIRE_NEW GXRenderer;
+
 	Geometry* pCube = CreateCube();
- 	Renderer* pRenderer = WIRE_NEW GXRenderer;
+	Geometry* pPyramid = CreatePyramid();
 
 	DEMO.Init();
 	Matrix34f view;
@@ -168,15 +169,20 @@ int main(int argc, char** argv)
 		angle = Mathf::FMod(angle, M_PI);
 
 		DEMO.BeforeRender();
-
 		pRenderer->View = &view;
 
-		DrawPyramid(rtri, scaleFactor, view);
+		Matrix34f model(Vector3f(0, 1, 0),DegToRad(rtri));
+		pPyramid->Local.SetRotate(model);
+		pPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
+		pPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
+		GXSetCullMode(GX_CULL_NONE);
+		pRenderer->Draw(pPyramid);
 
-		Matrix34f model(Vector3f(1, 1, 1),DegToRad(rquad));
+		model.FromAxisAngle(Vector3f(1, 1, 1),DegToRad(rquad));
 		pCube->Local.SetRotate(model);
 		pCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
 		pCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
+		GXSetCullMode(GX_CULL_BACK);
 		pRenderer->Draw(pCube);
 
 		DEMO.DoneRender();
@@ -186,85 +192,12 @@ int main(int argc, char** argv)
 		WPAD_ScanPads();
 	}
 
-	if (pCube)
-	{
-		WIRE_DELETE pCube;
-	}
+	WIRE_DELETE pCube;
+	WIRE_DELETE pPyramid;
 
 	WIRE_DELETE pRenderer;
 
 	return 0;
-}
-
-//-------------------------------------------------------------------------
-void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view)
-{
-	Matrix34f model, modelview;
-	Transformation modelTransform;
-
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-
-	// setup the vertex attribute table
-	// describes the data
-	// args: vat location 0-7, type of data, data format, size, scale
-	// so for ex. in the first call we are sending position data with
-	// 3 values X,Y,Z of size F32. scale sets the number of fractional
-	// bits for non float data.
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGB8, 0);
-
-	GXSetNumChans(1);
-	GXSetNumTexGens(0);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
-
-	Vector3f triAxis = Vector3f(0, 1, 0);
-	model.FromAxisAngle(triAxis, DegToRad(rtri));
-	modelTransform.SetRotate(model);
-	modelTransform.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
-	modelTransform.SetUniformScale(scaleFactor + 0.5f);
-	modelTransform.GetTransformation(model);
-	modelview = view * model;
-	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(modelview, GX_PNMTX0);
-
-	GXSetCullMode(GX_CULL_NONE);
-
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, 12);		// Draw A Pyramid
-
-	GXPosition3f32( 0.0f, 1.0f, 0.0f);		// Top of Triangle (front)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Left of Triangle (front)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-	GXPosition3f32( 1.0f,-1.0f, 1.0f);	// Right of Triangle (front)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-
-	GXPosition3f32( 0.0f, 1.0f, 0.0f);		// Top of Triangle (Right)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32( 1.0f,-1.0f, 1.0f);	// Left of Triangle (Right)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32( 1.0f,-1.0f,-1.0f);	// Right of Triangle (Right)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-
-	GXPosition3f32( 0.0f, 1.0f, 0.0f);		// Top of Triangle (Back)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32(-1.0f,-1.0f,-1.0f);	// Left of Triangle (Back)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32( 1.0f,-1.0f,-1.0f);	// Right of Triangle (Back)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-
-	GXPosition3f32( 0.0f, 1.0f, 0.0f);		// Top of Triangle (Left)
-	GX_Color3f32(1.0f,0.0f,0.0f);			// Set The Color To Red
-	GXPosition3f32(-1.0f,-1.0f,-1.0f);	// Left of Triangle (Left)
-	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
-	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Right of Triangle (Left)
-	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-
-	GXEnd();
 }
 
 //-------------------------------------------------------------------------
