@@ -2,6 +2,7 @@
 #ifndef WIREOGCDEFINES_H
 #define WIREOGCDEFINES_H
 #include <gctypes.h>
+#include <gccore.h>
 #include "ogc/gu.h"
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL

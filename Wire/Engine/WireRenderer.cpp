@@ -16,4 +16,6 @@ Renderer::~Renderer()
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
+
+	DrawElements();
 }

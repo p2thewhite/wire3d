@@ -153,6 +153,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireQuadMesh.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRenderer.h"
 					>
 				</File>
@@ -166,6 +170,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTransformation.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireTriMesh.h"
 					>
 				</File>
 				<File
@@ -205,6 +213,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireQuadMesh.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRenderer.cpp"
 					>
 				</File>
@@ -214,6 +226,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireTriMesh.cpp"
 					>
 				</File>
 				<File

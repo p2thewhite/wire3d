@@ -19,6 +19,8 @@ public:
 	// The main entry point to drawing in the derived-class renderers.
 	virtual void DrawElements() = 0;
 
+	Matrix34f* View; // Will probably become WireCamera later.
+
 protected:
 	Renderer();	
 
