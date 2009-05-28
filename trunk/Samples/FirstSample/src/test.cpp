@@ -7,8 +7,8 @@ using namespace Wire;
 void CameraInit(Matrix34f& rView);
 void DrawInit();
 void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view);
-void Draw(Geometry* pGeometry, Matrix34f& view);
 Geometry* CreateCube();
+Geometry* CreatePyramid();
 
 //-------------------------------------------------------------------------
 Geometry* CreateCube()
@@ -88,7 +88,61 @@ Geometry* CreateCube()
 		pCubeVerts->Color3(i) = colors[i];
 	}
 
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts);
+	Geometry* pCube = WIRE_NEW QuadMesh(pCubeVerts);
+	return pCube;
+}
+
+//-------------------------------------------------------------------------
+Geometry* CreatePyramid()
+{
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);
+	attributes.SetColorChannels(3);
+	VertexBuffer* pPyramidVerts = WIRE_NEW VertexBuffer(attributes, 12);
+
+	Vector3f colors[] = {
+		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
+		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
+		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
+
+		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
+		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
+
+		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
+		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
+
+		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
+		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		Vector3f(0.0f,1.0f,0.0f)			// Set The Color To Green
+	};
+
+	Vector3f vertices[] = {
+		Vector3f( 0.0f, 1.0f, 0.0f),	// Top of Triangle (front)
+		Vector3f(-1.0f,-1.0f, 1.0f),	// Left of Triangle (front)
+		Vector3f( 1.0f,-1.0f, 1.0f),	// Right of Triangle (front)
+
+		Vector3f( 0.0f, 1.0f, 0.0f),		// Top of Triangle (Right)
+		Vector3f( 1.0f,-1.0f, 1.0f),	// Left of Triangle (Right)
+		Vector3f( 1.0f,-1.0f,-1.0f),	// Right of Triangle (Right)
+
+		Vector3f( 0.0f, 1.0f, 0.0f),		// Top of Triangle (Back)
+		Vector3f(-1.0f,-1.0f,-1.0f),	// Left of Triangle (Back)
+		Vector3f( 1.0f,-1.0f,-1.0f),	// Right of Triangle (Back)
+
+		Vector3f( 0.0f, 1.0f, 0.0f),	// Top of Triangle (Left)
+		Vector3f(-1.0f,-1.0f,-1.0f),	// Left of Triangle (Left)
+		Vector3f(-1.0f,-1.0f, 1.0f)	// Right of Triangle (Left)
+	};
+
+	for (unsigned int i = 0; i < pPyramidVerts->GetQuantity(); i++)
+	{
+		pPyramidVerts->Position3(i) = vertices[i];
+		pPyramidVerts->Color3(i) = colors[i];
+	}
+
+	Geometry* pCube = WIRE_NEW TriMesh(pPyramidVerts);
 	return pCube;
 }
 
@@ -96,8 +150,7 @@ Geometry* CreateCube()
 int main(int argc, char** argv)
 {
 	Geometry* pCube = CreateCube();
-// 	GXRenderer* pRenderer = WIRE_NEW GXRenderer;
-//  	pRenderer->Draw(pCube);
+ 	Renderer* pRenderer = WIRE_NEW GXRenderer;
 
 	DEMO.Init();
 	Matrix34f view;
@@ -116,13 +169,15 @@ int main(int argc, char** argv)
 
 		DEMO.BeforeRender();
 
+		pRenderer->View = &view;
+
 		DrawPyramid(rtri, scaleFactor, view);
 
 		Matrix34f model(Vector3f(1, 1, 1),DegToRad(rquad));
 		pCube->Local.SetRotate(model);
 		pCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
 		pCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
-		Draw(pCube, view);
+		pRenderer->Draw(pCube);
 
 		DEMO.DoneRender();
 
@@ -135,6 +190,8 @@ int main(int argc, char** argv)
 	{
 		WIRE_DELETE pCube;
 	}
+
+	WIRE_DELETE pRenderer;
 
 	return 0;
 }
@@ -206,50 +263,6 @@ void DrawPyramid(float rtri, float scaleFactor, Matrix34f& view)
 	GX_Color3f32(0.0f,0.0f,1.0f);			// Set The Color To Blue
 	GXPosition3f32(-1.0f,-1.0f, 1.0f);	// Right of Triangle (Left)
 	GX_Color3f32(0.0f,1.0f,0.0f);			// Set The Color To Green
-
-	GXEnd();
-}
-
-//-------------------------------------------------------------------------
-void Draw(Geometry* pGeometry, Matrix34f& view)
-{
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-
-	// setup the vertex attribute table
-	// describes the data
-	// args: vat location 0-7, type of data, data format, size, scale
-	// so for ex. in the first call we are sending position data with
-	// 3 values X,Y,Z of size F32. scale sets the number of fractional
-	// bits for non float data.
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGB8, 0);
-
-	GXSetNumChans(1);
-	GXSetNumTexGens(0);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
-	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
-
-	Matrix34f model;
-	pGeometry->Local.GetTransformation(model);
-	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(view * model, GX_PNMTX0);
-	GXSetCullMode(GX_CULL_BACK);
-
-	const VertexBuffer* pVBuffer = pGeometry->VBuffer;
-
-	GXBegin(GX_QUADS, GX_VTXFMT0, pVBuffer->GetQuantity());
-
-	for (unsigned int i = 0; i < pVBuffer->GetQuantity(); i++)
-	{
-		const Vector3f& rVertex = pVBuffer->Position3(i);
-		const Vector3f& rColor = pVBuffer->Color3(i);
-		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
-		GX_Color3f32(rColor.X(), rColor.Y(), rColor.Z());
-	}
 
 	GXEnd();
 }
