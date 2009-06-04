@@ -8,6 +8,7 @@
 #include <malloc.h>
 #include <gccore.h>
 #include <wiiuse/wpad.h>
+#include <ogc/conf.h>
 
 #include "../../../Wire/Foundation/WireFoundation.h"
 #include "../../../Wire/Engine/WireEngine.h"

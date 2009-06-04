@@ -79,6 +79,12 @@ void DemoInit::Init()
 
 	mRmode = VIDEO_GetPreferredMode(NULL);
 
+	if (CONF_GetAspectRatio() == CONF_ASPECT_16_9)
+	{
+		mRmode->viWidth = 678;
+		mRmode->viXOrigin = (VI_MAX_WIDTH_NTSC - 678)/2;
+	}
+
 	// allocate 2 framebuffers for double buffering
 	mFrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
 	mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));

@@ -57,3 +57,41 @@ Vector3f VertexBuffer::Color3(UInt i) const
 	const Float* pChannel = mpChannel + index;
 	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
 }
+
+//-------------------------------------------------------------------------
+Vector3f& VertexBuffer::Normal3(UInt i)
+{
+	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
+	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetNormalOffset();
+	return *(reinterpret_cast<Vector3f*>(pChannel));
+}
+
+//-------------------------------------------------------------------------
+Vector3f VertexBuffer::Normal3(UInt i) const
+{
+	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
+	UInt index = mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetNormalOffset();
+	const Float* pChannel = mpChannel + index;
+	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
+}
+
+//-------------------------------------------------------------------------
+Vector2f& VertexBuffer::TCoord2(UInt i)
+{
+	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
+	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetTCoordOffset();
+	return *(reinterpret_cast<Vector2f*>(pChannel));
+}
+
+//-------------------------------------------------------------------------
+Vector2f VertexBuffer::TCoord2(UInt i) const
+{
+	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
+	UInt index = mAttributes.GetChannelQuantity() * i +
+		mAttributes.GetTCoordOffset();
+	const Float* pChannel = mpChannel + index;
+	return *(reinterpret_cast<Vector2f*>(const_cast<Float*>(pChannel)));
+}

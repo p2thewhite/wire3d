@@ -24,6 +24,12 @@ public:
 	Vector3f& Color3(UInt i);
 	Vector3f Color3(UInt i) const;
 
+	Vector3f& Normal3(UInt i);
+	Vector3f Normal3(UInt i) const;
+
+	Vector2f& TCoord2(UInt i);
+	Vector2f TCoord2(UInt i) const;
+
 private:
 	VertexAttributes mAttributes;
 
