@@ -27,7 +27,7 @@
 				CleanCommandLine="make clean"
 				Output=""
 				PreprocessorDefinitions="WIRE_WII;NDEBUG"
-				IncludeSearchPath="&quot;c:\devkitPro\libogc\include&quot;;&quot;c:\devkitPro\devkitPPC\powerpc-gekko\include&quot;;&quot;c:\devkitPro\devkitPPC\powerpc-gekko\include\machine&quot;;"
+				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
@@ -97,6 +97,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireVector2.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireVector3.h"
 					>
 				</File>
@@ -114,6 +118,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix4.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireVector2.inl"
 					>
 				</File>
 				<File

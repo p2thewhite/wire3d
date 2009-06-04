@@ -27,7 +27,7 @@
 				CleanCommandLine="make clean"
 				Output=""
 				PreprocessorDefinitions="WIRE_WII;NDEBUG"
-				IncludeSearchPath="&quot;c:\devkitPro\libogc\include&quot;;&quot;c:\devkitPro\devkitPPC\powerpc-gekko\include&quot;;&quot;c:\devkitPro\devkitPPC\powerpc-gekko\include\machine&quot;;"
+				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
