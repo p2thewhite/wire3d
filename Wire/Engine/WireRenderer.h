@@ -19,6 +19,10 @@ public:
 	// The main entry point to drawing in the derived-class renderers.
 	virtual void DrawElements() = 0;
 
+	// Access to the color value used for clearing the back buffer.
+	virtual void SetClearColor(const ColorRGBA& rClearColor);
+	const ColorRGBA& GetClearColor() const;
+
 	Matrix34f* View; // Will probably become WireCamera later.
 
 protected:
@@ -26,7 +30,11 @@ protected:
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;
+
+	ColorRGBA mClearColor;
 };
+
+#include "WireRenderer.inl"
 
 }
 

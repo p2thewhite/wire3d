@@ -52,6 +52,10 @@
 					Name="Header Files"
 					>
 					<File
+						RelativePath=".\Foundation\Wii\WireGXApplication.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Foundation\Wii\WireOgcDefines.h"
 						>
 					</File>
@@ -68,10 +72,26 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Foundation\Wii\WireGXApplication.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Header Files"
 				>
+				<File
+					RelativePath=".\Foundation\WireApplication.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireColorRGBA.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Foundation\WireMath.h"
 					>
@@ -109,6 +129,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Foundation\WireColorRGBA.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireMath.inl"
 					>
 				</File>
@@ -132,6 +156,14 @@
 			<Filter
 				Name="Source Files"
 				>
+				<File
+					RelativePath=".\Foundation\WireApplication.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireColorRGBA.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\Foundation\WireMath.cpp"
 					>
@@ -198,6 +230,10 @@
 				>
 				<File
 					RelativePath=".\Engine\WireObject.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireRenderer.inl"
 					>
 				</File>
 				<File

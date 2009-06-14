@@ -19,3 +19,9 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	DrawElements();
 }
+
+//-------------------------------------------------------------------------
+void Renderer::SetClearColor(const ColorRGBA& rClearColor)
+{
+	mClearColor = rClearColor;
+}

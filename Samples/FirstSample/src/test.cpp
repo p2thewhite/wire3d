@@ -5,7 +5,6 @@ DemoInit DEMO;
 using namespace Wire;
 
 void CameraInit(Matrix34f& rView);
-void DrawInit();
 Geometry* CreateCube();
 Geometry* CreatePyramid();
 
@@ -156,7 +155,7 @@ int main(int argc, char** argv)
 	DEMO.Init();
 	Matrix34f view;
  	CameraInit(view);
-	DrawInit();
+ 	pRenderer->SetClearColor(ColorRGBA::BLACK);
 
 	float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
 
@@ -223,12 +222,4 @@ void CameraInit(Matrix34f& rView)
 	Matrix4f perspective;
 	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GXSetProjection(perspective, GX_PERSPECTIVE);
-}
-
-//-------------------------------------------------------------------------
-void DrawInit()
-{
-	// clears the bg to color and clears the z buffer
-	GXColor background = {0, 0, 0, 0xff};
-	GXSetCopyClear(background, GX_MAX_Z24);
 }
