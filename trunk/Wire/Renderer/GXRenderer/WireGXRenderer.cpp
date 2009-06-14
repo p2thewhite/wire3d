@@ -13,6 +13,18 @@ GXRenderer::~GXRenderer()
 }
 
 //-------------------------------------------------------------------------
+void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
+{
+	Parent::SetClearColor(rClearColor);
+
+	mGXClearColor.r = static_cast<UChar>(rClearColor.R() * 255.0f);
+	mGXClearColor.g = static_cast<UChar>(rClearColor.G() * 255.0f);
+	mGXClearColor.b = static_cast<UChar>(rClearColor.B() * 255.0f);
+	mGXClearColor.a = static_cast<UChar>(rClearColor.A() * 255.0f);
+	GXSetCopyClear(mGXClearColor, GX_MAX_Z24);
+}
+
+//-------------------------------------------------------------------------
 void GXRenderer::DrawElements()
 {
 	// setup the vertex descriptor
@@ -50,7 +62,7 @@ void GXRenderer::DrawElements()
 
 	GXBegin(gxPrimitive, GX_VTXFMT0, pVBuffer->GetQuantity());
 
-	for (unsigned int i = 0; i < pVBuffer->GetQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		const Vector3f& rVertex = pVBuffer->Position3(i);
 		const Vector3f& rColor = pVBuffer->Color3(i);

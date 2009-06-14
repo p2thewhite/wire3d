@@ -18,6 +18,7 @@ include $(DEVKITPPC)/wii_rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	Foundation \
+				Foundation/Wii \
 				Engine \
 				Renderer/GXRenderer
 DATA		:=	data  
