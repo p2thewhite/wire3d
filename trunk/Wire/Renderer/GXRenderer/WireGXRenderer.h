@@ -16,8 +16,13 @@ public:
 	GXRenderer();
 	virtual ~GXRenderer();
 
+	virtual Bool BeginScene();
+	virtual void EndScene();
+
 	// The entry point to drawing a geometry object.
 	virtual void DrawElements();
+
+	virtual void DisplayBackBuffer();
 
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 

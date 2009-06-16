@@ -17,9 +17,9 @@ public:
 
 	// Hints about the structure of the transformation.  In the common case
 	// of M = R*S, IsRSMatrix() returns true.
-	Bool IsIdentity () const;
-	Bool IsRSMatrix () const;
-	Bool IsUniformScale () const;
+	Bool IsIdentity() const;
+	Bool IsRSMatrix() const;
+	Bool IsUniformScale() const;
 
 	inline operator Matrix34f ();
  	inline operator const Matrix34f () const;
