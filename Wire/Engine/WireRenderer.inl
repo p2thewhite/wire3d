@@ -12,6 +12,20 @@ inline void Renderer::EndScene()
 }
 
 //-------------------------------------------------------------------------
+inline Int Renderer::GetHeight() const
+{
+	// stub for derived classes
+	return 0;
+}
+
+//-------------------------------------------------------------------------
+inline Int Renderer::GetWidth() const
+{
+	// stub for derived classes
+	return 0;
+}
+
+//-------------------------------------------------------------------------
 inline const ColorRGBA& Renderer::GetClearColor() const
 {
 	return mClearColor;

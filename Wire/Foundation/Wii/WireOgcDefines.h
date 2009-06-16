@@ -4,6 +4,7 @@
 #include <gctypes.h>
 #include <gccore.h>
 #include "ogc/gu.h"
+#include <wiiuse/wpad.h>
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
 

@@ -4,7 +4,7 @@ DemoInit DEMO;
 
 using namespace Wire;
 
-void CameraInit(Matrix34f& rView);
+void CameraInit(Matrix34f& rView, const Renderer* pRenderer);
 Geometry* CreateCube();
 Geometry* CreatePyramid();
 
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 
 	DEMO.Init();
 	Matrix34f view;
- 	CameraInit(view);
+ 	CameraInit(view, pRenderer);
  	pRenderer->SetClearColor(ColorRGBA::BLACK);
 
 	float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
@@ -202,7 +202,7 @@ int main(int argc, char** argv)
 }
 
 //-------------------------------------------------------------------------
-void CameraInit(Matrix34f& rView)
+void CameraInit(Matrix34f& rView, const Renderer* pRenderer)
 {
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -219,6 +219,8 @@ void CameraInit(Matrix34f& rView)
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
+// 	f32 w = pRenderer->GetWidth();
+// 	f32 h = pRenderer->GetHeight();
 	f32 w = DEMO.GetRenderMode()->viWidth;
 	f32 h = DEMO.GetRenderMode()->viHeight;
 	Matrix4f perspective;
