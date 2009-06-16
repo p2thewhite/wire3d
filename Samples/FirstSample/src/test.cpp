@@ -1,6 +1,6 @@
-#include "DemoInit.h"
-
-DemoInit DEMO;
+#include "../../../Wire/Foundation/WireFoundation.h"
+#include "../../../Wire/Engine/WireEngine.h"
+#include "../../../Wire/Renderer/GXRenderer/WireGXRenderer.h"
 
 using namespace Wire;
 
@@ -154,7 +154,6 @@ int main(int argc, char** argv)
 	GeometryPtr spCube = CreateCube();
 	GeometryPtr spPyramid = CreatePyramid();
 
-	DEMO.Init();
 	Matrix34f view;
  	CameraInit(view, pRenderer);
  	pRenderer->SetClearColor(ColorRGBA::BLACK);
@@ -171,7 +170,6 @@ int main(int argc, char** argv)
 
 		pRenderer->View = &view;
 		pRenderer->BeginScene();
-		DEMO.BeforeRender();
 
 		Matrix34f model(Vector3f(0, 1, 0),DegToRad(rtri));
 		spPyramid->Local.SetRotate(model);
@@ -189,7 +187,6 @@ int main(int argc, char** argv)
 
 		pRenderer->EndScene();
 		pRenderer->DisplayBackBuffer();
-		DEMO.DoneRender();
 
 		rtri+=0.5f;		// Increase The Rotation Variable For The Triangle
 		rquad-=0.15f;	// Decrease The Rotation Variable For The Quad
@@ -219,10 +216,8 @@ void CameraInit(Matrix34f& rView, const Renderer* pRenderer)
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-// 	f32 w = pRenderer->GetWidth();
-// 	f32 h = pRenderer->GetHeight();
-	f32 w = DEMO.GetRenderMode()->viWidth;
-	f32 h = DEMO.GetRenderMode()->viHeight;
+ 	f32 w = pRenderer->GetWidth();
+ 	f32 h = pRenderer->GetHeight();
 	Matrix4f perspective;
 	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GXSetProjection(perspective, GX_PERSPECTIVE);
