@@ -308,6 +308,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.inl"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

@@ -29,6 +29,10 @@ public:
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 	const ColorRGBA& GetClearColor() const;
 
+	// Window parameters.
+	virtual Int GetWidth() const;
+	virtual Int GetHeight() const;
+
 	Matrix34f* View; // Will probably become WireCamera later.
 
 protected:

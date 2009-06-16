@@ -26,9 +26,19 @@ public:
 
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
+	virtual Int GetWidth() const;
+	virtual Int GetHeight() const;
+
 private:
 	GXColor mGXClearColor;
+
+	void* mFrameBuffer[2];
+	void* mDemoFifoBuffer;
+	UInt mFrameBufferIndex;
+	GXRenderModeObj* mRmode;
 };
+
+#include "WireGXRenderer.inl"
 
 }
 
