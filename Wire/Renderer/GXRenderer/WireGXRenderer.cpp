@@ -13,6 +13,23 @@ GXRenderer::~GXRenderer()
 }
 
 //-------------------------------------------------------------------------
+Bool GXRenderer::BeginScene()
+{
+	return true;
+}
+
+//-------------------------------------------------------------------------
+void GXRenderer::EndScene()
+{
+}
+
+//-------------------------------------------------------------------------
+void GXRenderer::DisplayBackBuffer()
+{
+
+}
+
+//-------------------------------------------------------------------------
 void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	Parent::SetClearColor(rClearColor);

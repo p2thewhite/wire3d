@@ -149,8 +149,10 @@ int main(int argc, char** argv)
 {
 	Renderer* pRenderer = WIRE_NEW GXRenderer;
 
-	Geometry* pCube = CreateCube();
-	Geometry* pPyramid = CreatePyramid();
+	// The smart pointer automatically deletes the object when it goes out
+	// of scope and no other references to the object exist.
+	GeometryPtr spCube = CreateCube();
+	GeometryPtr spPyramid = CreatePyramid();
 
 	DEMO.Init();
 	Matrix34f view;
@@ -167,32 +169,32 @@ int main(int argc, char** argv)
 		angle += M_PI / 180.0f;
 		angle = Mathf::FMod(angle, M_PI);
 
-		DEMO.BeforeRender();
 		pRenderer->View = &view;
+		pRenderer->BeginScene();
+		DEMO.BeforeRender();
 
 		Matrix34f model(Vector3f(0, 1, 0),DegToRad(rtri));
-		pPyramid->Local.SetRotate(model);
-		pPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
-		pPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
+		spPyramid->Local.SetRotate(model);
+		spPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
+		spPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
 		GXSetCullMode(GX_CULL_NONE);
-		pRenderer->Draw(pPyramid);
+		pRenderer->Draw(spPyramid);
 
 		model.FromAxisAngle(Vector3f(1, 1, 1),DegToRad(rquad));
-		pCube->Local.SetRotate(model);
-		pCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
-		pCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
+		spCube->Local.SetRotate(model);
+		spCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
+		spCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
 		GXSetCullMode(GX_CULL_BACK);
-		pRenderer->Draw(pCube);
+		pRenderer->Draw(spCube);
 
+		pRenderer->EndScene();
+		pRenderer->DisplayBackBuffer();
 		DEMO.DoneRender();
 
 		rtri+=0.5f;		// Increase The Rotation Variable For The Triangle
 		rquad-=0.15f;	// Decrease The Rotation Variable For The Quad
 		WPAD_ScanPads();
 	}
-
-	WIRE_DELETE pCube;
-	WIRE_DELETE pPyramid;
 
 	WIRE_DELETE pRenderer;
 

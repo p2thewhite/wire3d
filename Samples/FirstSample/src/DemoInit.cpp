@@ -137,6 +137,10 @@ void DemoInit::DoneRender()
 	GXCopyDisp(mFrameBuffer[mFrameBufferIndex^1], GX_TRUE);
 
 	// Wait until everything is drawn and copied into XFB.
+	// This stalls until all graphics commands have executed and the
+	// last pixel is written to the frame buffer.
+	// This should only be used in immediate mode rendering.
+	// TODO: use display lists
 	GXDrawDone();
 
 	// Set the next frame buffer

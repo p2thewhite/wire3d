@@ -19,6 +19,12 @@ public:
 	// The main entry point to drawing in the derived-class renderers.
 	virtual void DrawElements() = 0;
 
+	virtual void DisplayBackBuffer() = 0;
+
+	// Support for predraw and postdraw semantics.
+	virtual Bool BeginScene();
+	virtual void EndScene();
+
 	// Access to the color value used for clearing the back buffer.
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 	const ColorRGBA& GetClearColor() const;
