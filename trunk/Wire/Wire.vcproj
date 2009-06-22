@@ -185,6 +185,10 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireCamera.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.h"
 					>
 				</File>
@@ -248,6 +252,10 @@
 			<Filter
 				Name="Source Files"
 				>
+				<File
+					RelativePath=".\Engine\WireCamera.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
 					>

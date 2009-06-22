@@ -57,9 +57,10 @@
 #define MTXRotAxisRad guMtxRotAxisRad
 #define MTXTrans guMtxTrans
 #define VECAdd guVecAdd
+#define VECCrossProduct guVecCross
+#define VECDotProduct guVecDotProduct
 #define VECScale guVecScale
 #define VECSubtract guVecSub
-#define Vec Vector
 
 #define PADInit WPAD_Init
 

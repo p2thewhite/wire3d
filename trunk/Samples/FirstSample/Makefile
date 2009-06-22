@@ -15,12 +15,13 @@ include $(DEVKITPPC)/wii_rules
 # SOURCES is a list of directories containing source code
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
+WIREDIR		:=  ../../../Wire
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	src
 DATA		:=	data  
 INCLUDES	:=
-LIBWIRE_LIB :=	../../../Wire/build
+LIBWIRE_LIB :=	$(WIREDIR)
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -40,7 +41,7 @@ LIBS	:=	-lwiiuse -lbte -logc -lm -lWire
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=
+LIBDIRS	:= $(WIREDIR)
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -84,7 +85,11 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD) \
-					-I$(LIBOGC_INC)
+					-I$(LIBOGC_INC) \
+					-I$(WIREDIR)/Foundation \
+					-I$(WIREDIR)/Foundation/Wii \
+					-I$(WIREDIR)/Engine \
+					-I$(WIREDIR)/Renderer/GXRenderer
 
 #---------------------------------------------------------------------------------
 # build a list of library paths

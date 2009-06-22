@@ -93,6 +93,7 @@ inline Real Vector3<Real>::SquaredLength() const
 //-------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
+const
 {
 	return Vector3(
 		mTuple[0] + rVector.mTuple[0],
@@ -103,6 +104,7 @@ inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
 //-------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
+const
 {
 	return Vector3(
 		mTuple[0] - rVector.mTuple[0],
@@ -112,7 +114,7 @@ inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
 
 //-------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Vector3<Real>::operator* (Real scalar)
+inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 {
 	return Vector3(
 		scalar * mTuple[0],
@@ -122,7 +124,7 @@ inline Vector3<Real> Vector3<Real>::operator* (Real scalar)
 
 //-------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Vector3<Real>::operator/ (Real scalar)
+inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 {
 	Vector3 quot;
 
@@ -151,4 +153,24 @@ inline Vector3<Real> Vector3<Real>::operator- () const
 		-mTuple[0],
 		-mTuple[1],
 		-mTuple[2]);
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
+{
+	return Vector3(
+		mTuple[1]*rVector.mTuple[2] - mTuple[2]*rVector.mTuple[1],
+		mTuple[2]*rVector.mTuple[0] - mTuple[0]*rVector.mTuple[2],
+		mTuple[0]*rVector.mTuple[1] - mTuple[1]*rVector.mTuple[0]);
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::Dot(const Vector3& rVector) const
+{
+	return
+		mTuple[0] * rVector.mTuple[0] +
+		mTuple[1] * rVector.mTuple[1] +
+		mTuple[2] * rVector.mTuple[2];
 }

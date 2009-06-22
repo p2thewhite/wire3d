@@ -101,11 +101,14 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@rm -fr lib
+	@mkdir lib
+	@cp $(BUILD)/libWire.a lib/libWire.a
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) libWire.a
+	@rm -fr $(BUILD) lib
 #---------------------------------------------------------------------------------
 lib: libWire.a
 

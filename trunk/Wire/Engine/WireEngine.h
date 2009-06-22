@@ -2,6 +2,7 @@
 #ifndef WIREENGINE_H
 #define WIREENGINE_H
 
+#include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireQuadMesh.h"
 #include "WireRenderer.h"

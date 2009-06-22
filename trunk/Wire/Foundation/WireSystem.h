@@ -15,6 +15,7 @@
 #include "Wii/WireOgcDefines.h"
 #define WIRE_ASSERT(condition)
 #else
+#include <assert.h>
 #include <cmath>
 #define WIRE_ASSERT(condition) assert(condition)
 #endif /* WIRE_WII */
