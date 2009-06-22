@@ -27,15 +27,18 @@ public:
 	inline Real Z();
 
 	// arithmetic operations
-	inline Vector3 operator+ (const Vector3& rVector);
-	inline Vector3 operator- (const Vector3& rVector);
-	inline Vector3 operator* (Real scalar);
-	inline Vector3 operator/ (Real scalar);
+	inline Vector3 operator+ (const Vector3& rVector) const;
+	inline Vector3 operator- (const Vector3& rVector) const;
+	inline Vector3 operator* (Real scalar) const;
+	inline Vector3 operator/ (Real scalar) const;
 	inline Vector3 operator- () const;
 
 	// vector operations
 	inline Real Length() const;
 	inline Real SquaredLength() const;
+	inline Real Dot(const Vector3& rVector) const;
+
+	inline Vector3 Cross(const Vector3& rVector) const;
 
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ZERO;    // (0,0,0)
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_X;  // (1,0,0)

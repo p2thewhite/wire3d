@@ -97,24 +97,28 @@ inline Real Vector3<Real>::SquaredLength() const
 //-------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
+const
 {
 	Vector3 result;
-	VECAdd(&mTuple, const_cast<Vector*>(&rVector.mTuple), &result.mTuple);
+	VECAdd(const_cast<Vector*>(&mTuple), const_cast<Vector*>(&rVector.
+		mTuple), &result.mTuple);
 	return result;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
+const
 {
 	Vector3 result;
-	VECSubtract(&mTuple, const_cast<Vector*>(&rVector.mTuple), &result.mTuple);
+	VECSubtract(const_cast<Vector*>(&mTuple), const_cast<Vector*>(&rVector.
+		mTuple), &result.mTuple);
 	return result;
 }
 
 //-------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Vector3<Real>::operator* (Real scalar)
+inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 {
 	Vector3 result;
 	VECScale(&mTuple, &result.mTuple, scalar);
@@ -123,7 +127,7 @@ inline Vector3<Real> Vector3<Real>::operator* (Real scalar)
 
 //-------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Vector3<Real>::operator/ (Real scalar)
+inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 {
 	Vector3 quot;
 
@@ -150,4 +154,22 @@ inline Vector3<Real> Vector3<Real>::operator- () const
 		-mTuple.x,
 		-mTuple.y,
 		-mTuple.z);
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
+{
+	Vector3 result;
+	VECCrossProduct(const_cast<Vector*>(&mTuple), 
+		const_cast<Vector*>(&rVector.mTuple), &result.mTuple);
+	return result;
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::Dot(const Vector3& rVector) const
+{
+	return VECDotProduct(const_cast<Vector*>(&mTuple), 
+		const_cast<Vector*>(&rVector.mTuple));
 }

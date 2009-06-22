@@ -1,6 +1,6 @@
-#include "../../../Wire/Foundation/WireFoundation.h"
-#include "../../../Wire/Engine/WireEngine.h"
-#include "../../../Wire/Renderer/GXRenderer/WireGXRenderer.h"
+#include "WireFoundation.h"
+#include "WireEngine.h"
+#include "WireGXRenderer.h"
 
 using namespace Wire;
 
