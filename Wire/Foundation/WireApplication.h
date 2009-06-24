@@ -3,10 +3,11 @@
 #define WIREAPPLICATION_H
 
 #include "WireTypes.h"
-#include "../Engine/WireRenderer.h"
 
 namespace Wire
 {
+
+class Renderer;
 
 class Application
 {

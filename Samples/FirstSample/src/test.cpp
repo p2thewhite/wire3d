@@ -158,17 +158,17 @@ int main(int argc, char** argv)
  	CameraInit(view, pRenderer);
  	pRenderer->SetClearColor(ColorRGBA::BLACK);
 
-	float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
+	Float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
 
 	WPAD_ScanPads();
 
 	while(!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
 	{
-		float scaleFactor = Mathf::Sin(angle);
+		Float scaleFactor = Mathf::Sin(angle);
 		angle += M_PI / 180.0f;
 		angle = Mathf::FMod(angle, M_PI);
 
-		pRenderer->View = &view;
+ 		pRenderer->View = &view;
 		pRenderer->BeginScene();
 
 		Matrix34f model(Vector3f(0, 1, 0),DegToRad(rtri));
@@ -209,9 +209,9 @@ void CameraInit(Matrix34f& rView, const Renderer* pRenderer)
 
 	// die casterei hier bleibt natürlich nicht so.
 	MTXLookAt(rView,
-		reinterpret_cast<Vector*>(static_cast<float*>(cam)), 
-		reinterpret_cast<Vector*>(static_cast<float*>(up)), 
-		reinterpret_cast<Vector*>(static_cast<float*>(look)));
+		reinterpret_cast<Vector*>(static_cast<Float*>(cam)), 
+		reinterpret_cast<Vector*>(static_cast<Float*>(up)), 
+		reinterpret_cast<Vector*>(static_cast<Float*>(look)));
 
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
@@ -219,6 +219,11 @@ void CameraInit(Matrix34f& rView, const Renderer* pRenderer)
  	f32 w = pRenderer->GetWidth();
  	f32 h = pRenderer->GetHeight();
 	Matrix4f perspective;
+
+	Camera camera;
+	camera.LookAt(cam, up, look);
+	camera.SetFrustum(45, (f32)w/h, 0.1F, 300.0F);
+
 	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GXSetProjection(perspective, GX_PERSPECTIVE);
 }

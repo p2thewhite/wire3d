@@ -94,14 +94,14 @@ Bool GXRenderer::BeginScene()
 	// Set up viewport (This is inappropriate for full-frame AA.)
 	if (mRmode->field_rendering)
 	{
-		GXSetViewportJitter(0.0f, 0.0f, static_cast<float>(mRmode->fbWidth),
-			static_cast<float>(mRmode->efbHeight), 0.0f, 1.0f,
+		GXSetViewportJitter(0.0f, 0.0f, static_cast<Float>(mRmode->fbWidth),
+			static_cast<Float>(mRmode->efbHeight), 0.0f, 1.0f,
 			VIGetNextField());
 	}
 	else
 	{
-		GXSetViewport(0.0f, 0.0f, static_cast<float>(mRmode->fbWidth),
-			static_cast<float>(mRmode->efbHeight), 0.0f, 1.0f);
+		GXSetViewport(0.0f, 0.0f, static_cast<Float>(mRmode->fbWidth),
+			static_cast<Float>(mRmode->efbHeight), 0.0f, 1.0f);
 	}
 
 	// Invalidate vertex cache in GP
