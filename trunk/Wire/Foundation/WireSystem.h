@@ -12,6 +12,7 @@
 
 #ifdef WIRE_WII
 #include <math.h>
+#include <float.h>
 #include "Wii/WireOgcDefines.h"
 #define WIRE_ASSERT(condition)
 #else

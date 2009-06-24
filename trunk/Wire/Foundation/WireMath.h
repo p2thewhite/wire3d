@@ -13,13 +13,16 @@ class Math
 {
 public:
 	static Real Cos(Real value);
+	static Real FMod(Real x, Real y);
 	static Real Sin(Real value);
 	static Real Sqrt(Real value);
-	static Real FMod(Real x, Real y);
-	
+	static Real Tan(Real value);
+
 	// common constants
-	// TODO: fix this nasty hack!
-	/*WIRE_FOUNDATION_ITEM*/ static const Real MAX_REAL = 3.402823466e+38F;
+	/*WIRE_FOUNDATION_ITEM*/ static const Real MAX_REAL;
+	/*WIRE_FOUNDATION_ITEM*/ static const Real PI;
+	/*WIRE_FOUNDATION_ITEM*/ static const Real DEG_TO_RAD;
+	/*WIRE_FOUNDATION_ITEM*/ static const Real RAD_TO_DEG;
 };
 
 #include "WireMath.inl"
