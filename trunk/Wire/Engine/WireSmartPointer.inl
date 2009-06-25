@@ -97,28 +97,28 @@ Pointer<T>& Pointer<T>::operator= (const Pointer& rPointer)
 
 //-------------------------------------------------------------------------
 template <class T>
-bool Pointer<T>::operator== (T* pObject) const
+Bool Pointer<T>::operator== (T* pObject) const
 {
     return mpObject == pObject;
 }
 
 //-------------------------------------------------------------------------
 template <class T>
-bool Pointer<T>::operator!= (T* pObject) const
+Bool Pointer<T>::operator!= (T* pObject) const
 {
     return mpObject != pObject;
 }
 
 //-------------------------------------------------------------------------
 template <class T>
-bool Pointer<T>::operator== (const Pointer& rPointer) const
+Bool Pointer<T>::operator== (const Pointer& rPointer) const
 {
     return mpObject == rPointer.mpObject;
 }
 
 //-------------------------------------------------------------------------
 template <class T>
-bool Pointer<T>::operator!= (const Pointer& rPointer) const
+Bool Pointer<T>::operator!= (const Pointer& rPointer) const
 {
     return mpObject != rPointer.mpObject;
 }

@@ -233,6 +233,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Engine\WireCamera.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.inl"
 					>
 				</File>

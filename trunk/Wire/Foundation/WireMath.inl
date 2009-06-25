@@ -1,5 +1,12 @@
 //-------------------------------------------------------------------------
 template <class Real>
+Real Math<Real>::ATan(Real value)
+{
+	return static_cast<Real>(atan(static_cast<Double>(value)));
+}
+
+//-------------------------------------------------------------------------
+template <class Real>
 Real Math<Real>::Cos(Real value)
 {
 	return static_cast<Real>(cos(static_cast<Double>(value)));

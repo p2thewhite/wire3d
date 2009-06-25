@@ -16,7 +16,7 @@ public:
 	GXRenderer();
 	virtual ~GXRenderer();
 
-	virtual Bool BeginScene();
+	virtual Bool BeginScene(Camera* pCamera);
 	virtual void EndScene();
 
 	// The entry point to drawing a geometry object.

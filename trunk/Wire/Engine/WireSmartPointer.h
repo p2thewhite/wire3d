@@ -26,10 +26,10 @@ public:
     Pointer& operator= (const Pointer& rReference);
 
     // comparisons
-    bool operator== (T* pObject) const;
-    bool operator!= (T* pObject) const;
-    bool operator== (const Pointer& rReference) const;
-    bool operator!= (const Pointer& rReference) const;
+    Bool operator== (T* pObject) const;
+    Bool operator!= (T* pObject) const;
+    Bool operator== (const Pointer& rReference) const;
+    Bool operator!= (const Pointer& rReference) const;
 
 protected:
     // the shared object

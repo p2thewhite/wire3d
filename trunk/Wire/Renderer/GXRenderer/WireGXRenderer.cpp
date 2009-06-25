@@ -89,8 +89,16 @@ GXRenderer::~GXRenderer()
 }
 
 //-------------------------------------------------------------------------
-Bool GXRenderer::BeginScene()
+Bool GXRenderer::BeginScene(Camera* pCamera)
 {
+	Parent::BeginScene(pCamera);
+
+	Matrix4f perspective;
+	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
+		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
+		pCamera->GetDMax());
+	GXSetProjection(perspective, GX_PERSPECTIVE);
+
 	// Set up viewport (This is inappropriate for full-frame AA.)
 	if (mRmode->field_rendering)
 	{
@@ -187,7 +195,7 @@ void GXRenderer::DrawElements()
 	Matrix34f model;
 	mpGeometry->Local.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm((*View) * model, GX_PNMTX0);
+	GXLoadPosMtxImm(mpCamera->GetView() * model, GX_PNMTX0);
 
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 
