@@ -1,6 +1,8 @@
 //-------------------------------------------------------------------------
-inline Bool Renderer::BeginScene()
+inline Bool Renderer::BeginScene(Camera* pCamera)
 {
+	mpCamera = pCamera;
+
 	// stub for derived classes
 	return true;
 }

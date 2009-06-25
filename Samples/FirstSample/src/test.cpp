@@ -4,7 +4,6 @@
 
 using namespace Wire;
 
-void CameraInit(Matrix34f& rView, const Renderer* pRenderer);
 Geometry* CreateCube();
 Geometry* CreatePyramid();
 
@@ -148,16 +147,25 @@ Geometry* CreatePyramid()
 int main(int argc, char** argv)
 {
 	Renderer* pRenderer = WIRE_NEW GXRenderer;
+	pRenderer->SetClearColor(ColorRGBA::BLACK);
 
 	// The smart pointer automatically deletes the object when it goes out
 	// of scope and no other references to the object exist.
 	GeometryPtr spCube = CreateCube();
 	GeometryPtr spPyramid = CreatePyramid();
 
-	Matrix34f view;
- 	CameraInit(view, pRenderer);
- 	pRenderer->SetClearColor(ColorRGBA::BLACK);
+	// setup our camera at the origin
+	// looking down the -z axis with y up
+	Vector3f cam(0.0f, 0.0f, 0.0f);
+	Vector3f up(0.0f, 1.0f, 0.0f);
+	Vector3f look(0.0f, 0.0f, -1.0f);
 
+	CameraPtr spCamera = WIRE_NEW Camera;
+	Float width = static_cast<Float>(pRenderer->GetWidth());
+	Float height = static_cast<Float>(pRenderer->GetHeight());
+	spCamera->LookAt(cam, up, look);
+	spCamera->SetFrustum(45, width / height , 0.1f, 300.0f);
+	
 	Float rtri = 0.0f , rquad = 0.0f, angle = 0.0f;
 
 	WPAD_ScanPads();
@@ -168,8 +176,7 @@ int main(int argc, char** argv)
 		angle += M_PI / 180.0f;
 		angle = Mathf::FMod(angle, M_PI);
 
- 		pRenderer->View = &view;
-		pRenderer->BeginScene();
+		pRenderer->BeginScene(spCamera);
 
 		Matrix34f model(Vector3f(0, 1, 0),DegToRad(rtri));
 		spPyramid->Local.SetRotate(model);
@@ -196,34 +203,4 @@ int main(int argc, char** argv)
 	WIRE_DELETE pRenderer;
 
 	return 0;
-}
-
-//-------------------------------------------------------------------------
-void CameraInit(Matrix34f& rView, const Renderer* pRenderer)
-{
-	// setup our camera at the origin
-	// looking down the -z axis with y up
-	Vector3f cam(0.0f, 0.0f, 0.0f);
-	Vector3f up(0.0f, 1.0f, 0.0f);
-	Vector3f look(0.0f, 0.0f, -1.0f);
-
-	// die casterei hier bleibt natürlich nicht so.
-	MTXLookAt(rView,
-		reinterpret_cast<Vector*>(static_cast<Float*>(cam)), 
-		reinterpret_cast<Vector*>(static_cast<Float*>(up)), 
-		reinterpret_cast<Vector*>(static_cast<Float*>(look)));
-
-	// setup our projection matrix
-	// this creates a perspective matrix with a view angle of 90,
-	// and aspect ratio based on the display resolution
- 	f32 w = pRenderer->GetWidth();
- 	f32 h = pRenderer->GetHeight();
-	Matrix4f perspective;
-
-	Camera camera;
-	camera.LookAt(cam, up, look);
-	camera.SetFrustum(45, (f32)w/h, 0.1F, 300.0F);
-
-	MTXPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
-	GXSetProjection(perspective, GX_PERSPECTIVE);
 }

@@ -7,6 +7,8 @@
 namespace Wire
 {
 
+class Camera;
+
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
 public:
@@ -22,7 +24,7 @@ public:
 	virtual void DisplayBackBuffer() = 0;
 
 	// Support for predraw and postdraw semantics.
-	virtual Bool BeginScene();
+	virtual Bool BeginScene(Camera* pCamera);
 	virtual void EndScene();
 
 	// Access to the color value used for clearing the back buffer.
@@ -33,13 +35,14 @@ public:
 	virtual Int GetWidth() const;
 	virtual Int GetHeight() const;
 
-	Matrix34f* View; // Will probably become WireCamera later.
-
 protected:
 	Renderer();	
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;
+
+	// The camera for establishing the view frustum.
+	Camera* mpCamera;
 
 	ColorRGBA mClearColor;
 };
