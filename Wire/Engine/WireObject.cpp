@@ -1,5 +1,4 @@
 #include "WireObject.h"
-#include "../Foundation/WireMemory.h"
 
 using namespace Wire;
 

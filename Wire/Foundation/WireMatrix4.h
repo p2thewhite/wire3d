@@ -2,7 +2,6 @@
 #ifndef WIREMATRIX4_H
 #define WIREMATRIX4_H
 
-#include "WireSystem.h"
 #include "WireTypes.h"
 
 namespace Wire

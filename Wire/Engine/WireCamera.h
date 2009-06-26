@@ -3,6 +3,7 @@
 #define WIRECAMERA_H
 
 #include "WireObject.h"
+#include "../Foundation/WireMatrix34.h"
 
 namespace Wire
 {
