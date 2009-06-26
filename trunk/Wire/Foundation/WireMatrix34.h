@@ -5,7 +5,6 @@
 // Matrix34 is a 4x4 matrix with an implicit 4th row of (0, 0, 0, 1).
 // It is a row-major matrix, thus it is indexed as Matrix[row][column]
 
-#include "WireSystem.h"
 #include "WireTypes.h"
 #include "WireVector3.h"
 

@@ -4,6 +4,8 @@
 
 #include "WireObject.h"
 #include "WireVertexAttributes.h"
+#include "../Foundation/WireVector2.h"
+#include "../Foundation/WireVector3.h"
 
 namespace Wire
 {

@@ -22,6 +22,7 @@
 #endif /* WIRE_WII */
 
 #include "WireTypes.h"
+#include "WireMemory.h"
 
 #endif /* WIRESYSTEM_H */
 

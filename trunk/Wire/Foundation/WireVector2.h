@@ -3,6 +3,7 @@
 #define WIREVECTOR2_H
 
 #include "WireTypes.h"
+#include "WireMath.h"
 
 namespace Wire
 {

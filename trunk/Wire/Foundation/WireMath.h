@@ -3,7 +3,6 @@
 #define WIREMATH_H
 
 #include "WireSystem.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

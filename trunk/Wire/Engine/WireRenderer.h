@@ -2,12 +2,13 @@
 #ifndef WIRERENDERER_H
 #define WIRERENDERER_H
 
-#include "WireGeometry.h"
+#include "../Foundation/WireColorRGBA.h"
 
 namespace Wire
 {
 
 class Camera;
+class Geometry;
 
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
