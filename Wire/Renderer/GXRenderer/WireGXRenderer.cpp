@@ -7,7 +7,7 @@ using namespace Wire;
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 GXRenderer::GXRenderer()
 {
 	mFrameBuffer[0] = NULL;
@@ -84,12 +84,12 @@ GXRenderer::GXRenderer()
 	}
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 GXRenderer::~GXRenderer()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Bool GXRenderer::BeginScene(Camera* pCamera)
 {
 	Parent::BeginScene(pCamera);
@@ -121,12 +121,12 @@ Bool GXRenderer::BeginScene(Camera* pCamera)
 	return true;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void GXRenderer::EndScene()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void GXRenderer::DisplayBackBuffer()
 {
 	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
@@ -158,7 +158,7 @@ void GXRenderer::DisplayBackBuffer()
 	VIWaitForRetrace();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	Parent::SetClearColor(rClearColor);
@@ -170,7 +170,7 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 	GXSetCopyClear(mGXClearColor, GX_MAX_Z24);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void GXRenderer::DrawElements()
 {
 	// setup the vertex descriptor

@@ -113,6 +113,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTArray.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTypes.h"
 					>
 				</File>
@@ -142,6 +146,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix4.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTArray.inl"
 					>
 				</File>
 				<File

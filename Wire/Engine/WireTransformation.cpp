@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Transformation::Transformation()
 //	TODO: mScale(Vector3f::ONE)
 	:
@@ -15,12 +15,12 @@ Transformation::Transformation()
 	mScale = Vector3f(1.0f, 1.0f, 1.0f);  // see TODO
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Transformation::~Transformation()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::SetRotate(const Matrix34f& rMatrix)
 {
 	Vector3f translate = GetTranslate();
@@ -30,7 +30,7 @@ void Transformation::SetRotate(const Matrix34f& rMatrix)
 	mIsRSMatrix = true;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::SetMatrix(const Matrix34f& rMatrix)
 {
 	mMatrix = rMatrix;
@@ -39,14 +39,14 @@ void Transformation::SetMatrix(const Matrix34f& rMatrix)
 	mIsUniformScale = false;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::SetTranslate(const Vector3f& rTranslate)
 {
 	mIsIdentity = false;
 	mMatrix.SetColumn(3, rTranslate);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::SetScale(const Vector3f& rScale)
 {
  	WIRE_ASSERT(mIsRSMatrix && rScale.X() != 0.0f && rScale.Y() != 0.0f
@@ -57,7 +57,7 @@ void Transformation::SetScale(const Vector3f& rScale)
 	mIsUniformScale = false;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::SetUniformScale(Float scale)
 {
 	WIRE_ASSERT(mIsRSMatrix && (scale != 0.0f));
@@ -67,7 +67,7 @@ void Transformation::SetUniformScale(Float scale)
 	mIsUniformScale = true;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Transformation::GetTransformation(Matrix34f& rMatrix) const
 {
 	if (mIsRSMatrix)

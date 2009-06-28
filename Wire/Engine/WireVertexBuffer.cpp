@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 	UInt vertexQuantity, Bool isInterleaved)
 	:
@@ -14,13 +14,13 @@ VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 		GetChannelQuantity()];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 VertexBuffer::~VertexBuffer()
 {
 	WIRE_DELETE[] mpChannel;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f& VertexBuffer::Position3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
@@ -29,7 +29,7 @@ Vector3f& VertexBuffer::Position3(UInt i)
 	return *(reinterpret_cast<Vector3f*>(pChannel));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f VertexBuffer::Position3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
@@ -39,7 +39,7 @@ Vector3f VertexBuffer::Position3(UInt i) const
 	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f& VertexBuffer::Color3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
@@ -48,7 +48,7 @@ Vector3f& VertexBuffer::Color3(UInt i)
 	return *(reinterpret_cast<Vector3f*>(pChannel));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f VertexBuffer::Color3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
@@ -58,7 +58,7 @@ Vector3f VertexBuffer::Color3(UInt i) const
 	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f& VertexBuffer::Normal3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
@@ -67,7 +67,7 @@ Vector3f& VertexBuffer::Normal3(UInt i)
 	return *(reinterpret_cast<Vector3f*>(pChannel));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector3f VertexBuffer::Normal3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
@@ -77,7 +77,7 @@ Vector3f VertexBuffer::Normal3(UInt i) const
 	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector2f& VertexBuffer::TCoord2(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
@@ -86,7 +86,7 @@ Vector2f& VertexBuffer::TCoord2(UInt i)
 	return *(reinterpret_cast<Vector2f*>(pChannel));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Vector2f VertexBuffer::TCoord2(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);

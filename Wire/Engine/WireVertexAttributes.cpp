@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 VertexAttributes::VertexAttributes()
 	:
 	mChannelQuantity(0),
@@ -14,12 +14,12 @@ VertexAttributes::VertexAttributes()
 	ResetOffsets();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 VertexAttributes::~VertexAttributes()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::ResetOffsets()
 {
 	mPositionOffset = -1;
@@ -28,7 +28,7 @@ void VertexAttributes::ResetOffsets()
 	mTCoordOffset = -1;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::SetPositionChannels(UInt positionChannels)
 {
 	WIRE_ASSERT(0 <= positionChannels && positionChannels <= 3);
@@ -37,7 +37,7 @@ void VertexAttributes::SetPositionChannels(UInt positionChannels)
 	UpdateOffsets();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::SetColorChannels(UInt colorChannels)
 {
 	WIRE_ASSERT(0 <= colorChannels && colorChannels <= 4);
@@ -46,7 +46,7 @@ void VertexAttributes::SetColorChannels(UInt colorChannels)
 	UpdateOffsets();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::SetNormalChannels(UInt normalChannels)
 {
 	WIRE_ASSERT(0 <= normalChannels && normalChannels <= 4);
@@ -55,7 +55,7 @@ void VertexAttributes::SetNormalChannels(UInt normalChannels)
 	UpdateOffsets();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::SetTCoordChannels(UInt tCoordChannels)
 {
 	WIRE_ASSERT(0 <= tCoordChannels && tCoordChannels <= 4);
@@ -64,7 +64,7 @@ void VertexAttributes::SetTCoordChannels(UInt tCoordChannels)
 	UpdateOffsets();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void VertexAttributes::UpdateOffsets()
 {
 	mChannelQuantity = 0;

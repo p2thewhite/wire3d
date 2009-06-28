@@ -1,11 +1,11 @@
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Vector2<Real>::Vector2()
 {
 	// uninitialized for performance in array construction
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Vector2<Real>::Vector2(Real x, Real y)
 {
@@ -13,49 +13,49 @@ Vector2<Real>::Vector2(Real x, Real y)
 	mTuple[1] = y;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real>::operator Real* ()
 {
 	return mTuple;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real>::operator const Real* () const
 {
 	return mTuple;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::X() const
 {
 	return mTuple[0];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::X()
 {
 	return mTuple[0];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::Y() const
 {
 	return mTuple[1];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::Y()
 {
 	return mTuple[1];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::Length() const
 {
@@ -64,7 +64,7 @@ inline Real Vector2<Real>::Length() const
 		mTuple[1] * mTuple[1]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector2<Real>::SquaredLength() const
 {
@@ -73,7 +73,7 @@ inline Real Vector2<Real>::SquaredLength() const
 		mTuple[1] * mTuple[1];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real> Vector2<Real>::operator+ (const Vector2& rVector)
 {
@@ -82,7 +82,7 @@ inline Vector2<Real> Vector2<Real>::operator+ (const Vector2& rVector)
 		mTuple[1] + rVector.mTuple[1]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real> Vector2<Real>::operator- (const Vector2& rVector)
 {
@@ -91,7 +91,7 @@ inline Vector2<Real> Vector2<Real>::operator- (const Vector2& rVector)
 		mTuple[1] - rVector.mTuple[1]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real> Vector2<Real>::operator* (Real scalar)
 {
@@ -100,7 +100,7 @@ inline Vector2<Real> Vector2<Real>::operator* (Real scalar)
 		scalar * mTuple[1]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real> Vector2<Real>::operator/ (Real scalar)
 {
@@ -121,7 +121,7 @@ inline Vector2<Real> Vector2<Real>::operator/ (Real scalar)
 	return quot;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector2<Real> Vector2<Real>::operator- () const
 {

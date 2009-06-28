@@ -2,17 +2,17 @@
 
 using namespace Wire;
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Camera::Camera()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Camera::~Camera()
 {
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Camera::LookAt(const Vector3f& cameraPosition,
 	const Vector3f& cameraUp, const Vector3f& target)
 {
@@ -26,7 +26,7 @@ void Camera::LookAt(const Vector3f& cameraPosition,
 		look.X(),	look.Y(),	look.Z(),	-(look.Dot(cameraPosition)));
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Camera::SetFrustum(Float rMin, Float rMax, Float uMin, Float uMax,
 	Float dMin, Float dMax)
 {
@@ -38,7 +38,7 @@ void Camera::SetFrustum(Float rMin, Float rMax, Float uMin, Float uMax,
 	mFrustum[VF_RMAX] = rMax;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Camera::SetFrustum(Float upFovDegrees, Float aspectRatio, Float dMin,
 	Float dMax)
 {
@@ -51,7 +51,7 @@ void Camera::SetFrustum(Float upFovDegrees, Float aspectRatio, Float dMin,
 	mFrustum[VF_DMAX] = dMax;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 void Camera::GetFrustum(Float& rRMin, Float& rRMax, Float& rUMin,
 	Float& rUMax, Float& rDMin, Float& rDMax) const
 {
@@ -63,7 +63,7 @@ void Camera::GetFrustum(Float& rRMin, Float& rRMax, Float& rUMin,
 	rRMax = mFrustum[VF_RMAX];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Bool Camera::GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 	Float& rDMin, Float& rDMax) const
 {
