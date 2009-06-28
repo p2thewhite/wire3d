@@ -1,11 +1,11 @@
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Vector3<Real>::Vector3()
 {
 	// uninitialized for performance in array construction
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Vector3<Real>::Vector3(Real x, Real y, Real z)
 {
@@ -14,63 +14,63 @@ Vector3<Real>::Vector3(Real x, Real y, Real z)
 	mTuple[2] = z;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real>::operator Real* ()
 {
 	return mTuple;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real>::operator const Real* () const
 {
 	return mTuple;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::X() const
 {
 	return mTuple[0];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::X()
 {
 	return mTuple[0];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Y() const
 {
 	return mTuple[1];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Y()
 {
 	return mTuple[1];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Z() const
 {
 	return mTuple[2];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Z()
 {
 	return mTuple[2];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Length() const
 {
@@ -80,7 +80,7 @@ inline Real Vector3<Real>::Length() const
 		mTuple[2] * mTuple[2]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::SquaredLength() const
 {
@@ -90,7 +90,7 @@ inline Real Vector3<Real>::SquaredLength() const
 		mTuple[2] * mTuple[2];
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
 const
@@ -101,7 +101,7 @@ const
 		mTuple[2] + rVector.mTuple[2]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
 const
@@ -112,7 +112,7 @@ const
 		mTuple[2] - rVector.mTuple[2]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 {
@@ -122,7 +122,7 @@ inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 		scalar * mTuple[2]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 {
@@ -145,7 +145,7 @@ inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 	return quot;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::operator- () const
 {
@@ -155,7 +155,7 @@ inline Vector3<Real> Vector3<Real>::operator- () const
 		-mTuple[2]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
 {
@@ -165,7 +165,7 @@ inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
 		mTuple[0]*rVector.mTuple[1] - mTuple[1]*rVector.mTuple[0]);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 {

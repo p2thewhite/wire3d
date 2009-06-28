@@ -1,4 +1,4 @@
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>::Matrix34(Bool zero)
 {
@@ -12,7 +12,7 @@ Matrix34<Real>::Matrix34(Bool zero)
 	}
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>::Matrix34(
 	Real m00, Real m01, Real m02, Real m03,
@@ -35,14 +35,14 @@ Matrix34<Real>::Matrix34(
 	mEntry[2][3] = m23;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle)
 {
 	FromAxisAngle(rAxis, angle);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>& Matrix34<Real>::MakeZero()
 {
@@ -64,7 +64,7 @@ Matrix34<Real>& Matrix34<Real>::MakeZero()
 	return *this;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>& Matrix34<Real>::MakeIdentity()
 {
@@ -85,7 +85,7 @@ Matrix34<Real>& Matrix34<Real>::MakeIdentity()
 	return *this;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
@@ -147,7 +147,7 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	return *this;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
 {
@@ -172,21 +172,21 @@ inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
 		);
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Matrix34<Real>::operator Real4* ()
 {
 	return mEntry;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 inline Matrix34<Real>::operator const Real4* () const
 {
 	return mEntry;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 {
@@ -196,7 +196,7 @@ void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 	mEntry[2][col] = rVector.Z();
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class Real>
 Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
 {

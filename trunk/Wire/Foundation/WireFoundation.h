@@ -8,6 +8,7 @@
 #include "WireMatrix4.h"
 #include "WireMemory.h"
 #include "WireSystem.h"
+#include "WireTArray.h"
 #include "WireTypes.h"
 #include "WireVector2.h"
 #include "WireVector3.h"

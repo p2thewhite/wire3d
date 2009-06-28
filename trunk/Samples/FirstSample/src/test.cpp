@@ -7,7 +7,7 @@ using namespace Wire;
 Geometry* CreateCube();
 Geometry* CreatePyramid();
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Geometry* CreateCube()
 {
 	VertexAttributes attributes;
@@ -89,7 +89,7 @@ Geometry* CreateCube()
 	return pCube;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 Geometry* CreatePyramid()
 {
 	VertexAttributes attributes;
@@ -143,7 +143,7 @@ Geometry* CreatePyramid()
 	return pPyramid;
 }
 
-//-------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 	Renderer* pRenderer = WIRE_NEW GXRenderer;
