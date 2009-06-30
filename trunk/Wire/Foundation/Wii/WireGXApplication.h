@@ -12,17 +12,13 @@ class GXApplication : public Application
 
 public:
 	GXApplication();
-
-	// abstract base class
 	virtual ~GXApplication();
 
-	virtual Bool OnPrecreate();
+	// Entry point to be implemented by the application.  The return value
+	// is an exit code, if desired.
+	virtual int Main();
+
 	virtual Bool OnInitialize();
-	virtual void OnDisplay();
-	virtual void OnTerminate();
-
-protected:
-
 };
 
 }

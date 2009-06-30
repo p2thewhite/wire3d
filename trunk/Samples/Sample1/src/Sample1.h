@@ -9,9 +9,18 @@
 
 class Sample1 : public Wire::GXApplication
 {
-private:
+public:
+	Sample1();
+	virtual ~Sample1();
+
 	Wire::Geometry* CreateCube();
 	Wire::Geometry* CreatePyramid();
+
+	Bool OnInitialize();
+
+	Wire::CameraPtr mspCamera;
+	Wire::GeometryPtr mspCube;
+	Wire::GeometryPtr mspPyramid;
 };
 
 #endif /* SAMPLE1_H */
