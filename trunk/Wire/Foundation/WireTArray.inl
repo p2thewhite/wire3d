@@ -124,7 +124,7 @@ const T& TArray<T>::operator[] (Int i) const
 	return mpArray[i];
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 void TArray<T>::Remove(Int i)
 {
@@ -143,7 +143,7 @@ void TArray<T>::Remove(Int i)
 	mQuantity--;
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 void TArray<T>::RemoveAll()
 {
@@ -155,7 +155,7 @@ void TArray<T>::RemoveAll()
 	mQuantity = 0;
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 void TArray<T>::SetMaxQuantity(Int newMaxQuantity, Bool copy)
 {
@@ -211,14 +211,14 @@ void TArray<T>::SetMaxQuantity(Int newMaxQuantity, Bool copy)
 	}
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 Int TArray<T>::GetMaxQuantity() const
 {
 	return mMaxQuantity;
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 void TArray<T>::SetGrowBy(Int growBy)
 {
@@ -229,9 +229,81 @@ void TArray<T>::SetGrowBy(Int growBy)
 	}
 }
 
-//-------------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 template <class T>
 Int TArray<T>::GetGrowBy() const
 {
 	return mGrowBy;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+void TArray<T>::Append(const T& rElement)
+{
+	if (++mQuantity > mMaxQuantity)
+	{
+		if (mGrowBy > 0)
+		{
+			// Increase the size of the array. In the event rElement is a
+			// reference to something in the current array, the reallocation
+			// in SetMaxQuantity will invalidate the reference. A copy of
+			// rElement is made here to avoid the invalidation.
+			T saveElement(rElement);
+			SetMaxQuantity(mMaxQuantity + mGrowBy, true);
+			mpArray[mQuantity-1] = saveElement;
+			return;
+		}
+
+		// cannot grow the array, overwrite the last element
+		--mQuantity;
+	}
+
+	mpArray[mQuantity-1] = rElement;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+void TArray<T>::SetElement(Int i, const T& rElement)
+{
+	WIRE_ASSERT(i >= 0);
+
+	if (i < 0)
+	{
+		i = 0;
+	}
+
+	if (i >= mQuantity)
+	{
+		if (i >= mMaxQuantity)
+		{
+			if (mGrowBy > 0)
+			{
+				// increase the size of the array
+				if (i+1 >= mMaxQuantity)
+				{
+					int n = 1 + static_cast<Int>(0.5f + (i+1 - mMaxQuantity) /
+						static_cast<Float>(mGrowBy));
+
+					// Increase the size of the array. In the event rtElement
+					// is a reference to something in the current array, the
+					// reallocation in SetMaxQuantity will invalidate the
+					// reference. A copy of rtElement is made here to avoid
+					// the invalidation.
+					T saveElement(rElement);
+					SetMaxQuantity(mMaxQuantity + n * mGrowBy, true);
+					mQuantity = i+1;
+					mpArray[i] = saveElement;
+					return;
+				}
+			}
+			else
+			{
+				// cannot grow the array, overwrite the last element
+				i = mQuantity-1;
+			}
+		}
+		mQuantity = i+1;
+	}
+
+	mpArray[i] = rElement;
 }
