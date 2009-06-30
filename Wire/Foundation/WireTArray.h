@@ -26,6 +26,10 @@ public:
 	T& operator[] (Int i);
 	const T& operator[] (Int i) const;
 
+	// add new element, array will dynamically grow if necessary
+	void Append(const T& rElement);
+	void SetElement(Int i, const T& rElement);
+
 	// Remove the element at the specified index. The elements occurring
 	// after that one are shifted so that the array remains contiguous. After
 	// the shift, but before the decrement on quantity, array[quantity-1] is
@@ -38,7 +42,7 @@ public:
 	void RemoveAll();
 
 	// dynamic growth, new array elements are default constructed
-	void SetMaxQuantity(Int newMaxQuantity, Bool copy);
+	void SetMaxQuantity(Int newMaxQuantity, Bool copy = true);
 	Int GetMaxQuantity() const;
 	void SetGrowBy(Int growBy);
 	Int GetGrowBy() const;
