@@ -7,20 +7,32 @@
 #include "WireGXRenderer.h"
 #include "WireGXApplication.h"
 
-class Sample1 : public Wire::GXApplication
+using namespace Wire;
+
+class Sample1 : public GXApplication
 {
+	typedef GXApplication Parent;
+
 public:
 	Sample1();
 	virtual ~Sample1();
 
-	Wire::Geometry* CreateCube();
-	Wire::Geometry* CreatePyramid();
+	virtual Int Main();
 
-	Bool OnInitialize();
+	virtual Bool OnInitialize();
+	virtual void OnIdle();
 
-	Wire::CameraPtr mspCamera;
-	Wire::GeometryPtr mspCube;
-	Wire::GeometryPtr mspPyramid;
+private:
+	Geometry* CreateCube();
+	Geometry* CreatePyramid();
+
+	CameraPtr mspCamera;
+	GeometryPtr mspCube;
+	GeometryPtr mspPyramid;
+
+	Float mRtri;
+	Float mRquad;
+	Float mAngle;
 };
 
 #endif /* SAMPLE1_H */

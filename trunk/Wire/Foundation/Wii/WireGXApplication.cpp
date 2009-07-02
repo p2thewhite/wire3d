@@ -12,7 +12,31 @@ GXApplication::GXApplication()
 //----------------------------------------------------------------------------
 GXApplication::~GXApplication()
 {
-	// TODO: move to OnTerminate
+	OnTerminate();
+}
+
+//----------------------------------------------------------------------------
+Int GXApplication::Run(Int argumentQuantity, Char* arguments[])
+{
+	return 0;
+}
+
+//----------------------------------------------------------------------------
+Int GXApplication::Main()
+{
+	mpRenderer = WIRE_NEW GXRenderer;
+
+	if (!mpApplication->OnInitialize())
+	{
+
+	}
+
+	return 0;
+}
+
+//----------------------------------------------------------------------------
+void GXApplication::OnTerminate()
+{
 	if (mpRenderer)
 	{
 		WIRE_DELETE mpRenderer;
@@ -21,16 +45,13 @@ GXApplication::~GXApplication()
 }
 
 //----------------------------------------------------------------------------
-Int GXApplication::Main()
+Bool GXApplication::OnInitialize()
 {
-	mpRenderer = WIRE_NEW GXRenderer;
 	mpRenderer->SetClearColor(ColorRGBA::BLACK);
-
-	return 0;
+	return true;
 }
 
 //----------------------------------------------------------------------------
-Bool GXApplication::OnInitialize()
+void GXApplication::OnIdle()
 {
-	return true;
 }
