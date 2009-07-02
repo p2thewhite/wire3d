@@ -22,6 +22,8 @@ public:
 	// Called before main loop.
 	// Returning 'false' quits the application.
 	virtual Bool OnInitialize() = 0;
+	virtual void OnIdle() = 0;
+
 // 
 // 	// Called each render frame.
 // 	virtual void OnDisplay();
@@ -29,10 +31,16 @@ public:
 // 	// Called before terminating the application.
 // 	virtual void OnTerminate();
 // 
-// protected:
+	void SetApplication(Application* pApplication);
+	Application* GetApplication() const;
+
+protected:
 	Application();
 
-//	virtual Int Run(Int argumentQuantity, Char* arguments[]) = 0;
+	virtual Int Run(Int argumentQuantity, Char* arguments[]) = 0;
+
+	// the unique application object
+	Application* mpApplication;
 
 	Renderer* mpRenderer;
 };

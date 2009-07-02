@@ -4,15 +4,13 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Transformation::Transformation()
-//	TODO: mScale(Vector3f::ONE)
 	:
-	mScale(Vector3f(1.0f, 1.0f, 1.0f)),
+	mScale(Vector3f::ONE),
 	mIsIdentity(true),
 	mIsRSMatrix(true),
 	mIsUniformScale(true)
 {
 	mMatrix.MakeIdentity();
-	mScale = Vector3f(1.0f, 1.0f, 1.0f);  // see TODO
 }
 
 //----------------------------------------------------------------------------
