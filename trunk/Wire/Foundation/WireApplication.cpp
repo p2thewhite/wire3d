@@ -1,5 +1,4 @@
 #include "WireApplication.h"
-#include "WireSystem.h"
 
 using namespace Wire;
 

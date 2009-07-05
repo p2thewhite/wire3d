@@ -2,7 +2,7 @@
 #ifndef WIREAPPLICATION_H
 #define WIREAPPLICATION_H
 
-#include "WireTypes.h"
+#include "WireSystem.h"
 
 namespace Wire
 {
