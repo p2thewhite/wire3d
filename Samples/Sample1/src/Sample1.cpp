@@ -183,37 +183,32 @@ Geometry* Sample1::CreatePyramid()
 //----------------------------------------------------------------------------
 void Sample1::OnIdle()
 {
+	Float scaleFactor = Mathf::Sin(mAngle);
+	mAngle += M_PI / 180.0f;
+	mAngle = Mathf::FMod(mAngle, M_PI);
+
+	mpRenderer->BeginScene(mspCamera);
+
+	Matrix34f model(Vector3f(1, 0, 0), Mathf::DEG_TO_RAD * mRtri);
+	mspPyramid->Local.SetRotate(model);
+	mspPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
+	mspPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
+	GXSetCullMode(GX_CULL_NONE);
+	mpRenderer->Draw(mspPyramid);
+
+	model.FromAxisAngle(Vector3f(1, 1, 1), Mathf::DEG_TO_RAD * mRquad);
+	mspCube->Local.SetRotate(model);
+	mspCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
+	mspCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
+	GXSetCullMode(GX_CULL_BACK);
+	mpRenderer->Draw(mspCube);
+
+	mpRenderer->EndScene();
+	mpRenderer->DisplayBackBuffer();
+
+	mRtri+=0.5f;		// Increase The Rotation Variable For The Triangle
+	mRquad-=0.15f;	// Decrease The Rotation Variable For The Quad
 	WPAD_ScanPads();
-
-	while(!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
-	{
-		Float scaleFactor = Mathf::Sin(mAngle);
-		mAngle += M_PI / 180.0f;
-		mAngle = Mathf::FMod(mAngle, M_PI);
-
-		mpRenderer->BeginScene(mspCamera);
-
-		Matrix34f model(Vector3f(1, 0, 0), Mathf::DEG_TO_RAD * mRtri);
-		mspPyramid->Local.SetRotate(model);
-		mspPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
-		mspPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
-		GXSetCullMode(GX_CULL_NONE);
-		mpRenderer->Draw(mspPyramid);
-
-		model.FromAxisAngle(Vector3f(1, 1, 1), Mathf::DEG_TO_RAD * mRquad);
-		mspCube->Local.SetRotate(model);
-		mspCube->Local.SetTranslate(Vector3f(1.5f,0.0f,-7.0f));
-		mspCube->Local.SetScale(Vector3f(scaleFactor + 0.5f, 1.0f, 1.0f));
-		GXSetCullMode(GX_CULL_BACK);
-		mpRenderer->Draw(mspCube);
-
-		mpRenderer->EndScene();
-		mpRenderer->DisplayBackBuffer();
-
-		mRtri+=0.5f;		// Increase The Rotation Variable For The Triangle
-		mRquad-=0.15f;	// Decrease The Rotation Variable For The Quad
-		WPAD_ScanPads();
-	}
 }
 
 //----------------------------------------------------------------------------

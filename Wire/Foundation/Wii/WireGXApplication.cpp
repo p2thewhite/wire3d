@@ -27,7 +27,11 @@ Int GXApplication::Main()
 
 	if (mpApplication->OnInitialize())
 	{
-		mpApplication->OnIdle();
+		WPAD_ScanPads();
+		while(!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
+		{
+			mpApplication->OnIdle();
+		}
 	}
 
 	mpApplication->OnTerminate();
