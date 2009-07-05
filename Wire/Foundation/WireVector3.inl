@@ -174,3 +174,13 @@ inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 		mTuple[1] * rVector.mTuple[1] +
 		mTuple[2] * rVector.mTuple[2];
 }
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
+{
+	return Vector3<Real>(
+		scalar * rVector[0],
+		scalar * rVector[1],
+		scalar * rVector[2]);
+}

@@ -53,6 +53,7 @@
 #define MTXIdentity guMtxIdentity
 #define MTXLookAt guLookAt
 #define MTXMultVec guVecMultiply
+#define MTXMultVecSR guVecMultiplySR
 #define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
 #define MTXTrans guMtxTrans
