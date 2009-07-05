@@ -82,10 +82,38 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
+inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
+const
 {
 	Matrix34<Real> result;
-	MTXConcat(mEntry, rMatrix, result);
+	MTXConcat(const_cast<Real4*>(mEntry), const_cast<Matrix34&>(rMatrix),
+		result);
+	return result;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
+{
+	return Matrix34<Real>(
+		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
+			mEntry[0][3],
+		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
+			mEntry[1][3],
+		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
+			mEntry[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rVector)
+const
+{
+	Vector3<Real> result;
+	Vector3<Real>* pResult = const_cast<Vector3<Real>*>(&result);
+	Vector3<Real>* pVector = const_cast<Vector3<Real>*>(&rVector);
+	MTXMultVecSR(const_cast<Real4*>(mEntry), reinterpret_cast<Vector*>(
+		pVector), reinterpret_cast<Vector*>(pResult));
 	return result;
 }
 
@@ -118,4 +146,17 @@ template <class Real>
 Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix34<Real> Matrix34<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
+{
+	return Matrix34<Real>(
+		mEntry[0][0]*rDiag[0], mEntry[0][1]*rDiag[1], mEntry[0][2]*rDiag[2],
+			mEntry[0][3],
+		mEntry[1][0]*rDiag[0], mEntry[1][1]*rDiag[1], mEntry[1][2]*rDiag[2],
+			mEntry[1][3],
+		mEntry[2][0]*rDiag[0], mEntry[2][1]*rDiag[1], mEntry[2][2]*rDiag[2],
+			mEntry[2][3]);
 }

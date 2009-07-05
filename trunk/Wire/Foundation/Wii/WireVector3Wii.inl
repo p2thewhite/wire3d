@@ -25,7 +25,7 @@ inline Vector3<Real>::operator Real* ()
 template <class Real>
 inline Vector3<Real>::operator const Real* () const
 {
-	return reinterpret_cast<Real*>(&mTuple);
+	return reinterpret_cast<Real*>(const_cast<Vector*>(&mTuple));
 }
 
 //----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ template <class Real>
 inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 {
 	Vector3 result;
-	VECScale(&mTuple, &result.mTuple, scalar);
+	VECScale(const_cast<Vector*>(&mTuple), &result.mTuple, scalar);
 	return result;
 }
 
@@ -134,7 +134,7 @@ inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 	if (scalar != static_cast<Real>(0.0))
 	{
 		Real invScalar = (static_cast<Real>(1.0)) / scalar;
-		VECScale(&mTuple, &quot.mTuple, invScalar);
+		VECScale(const_cast<Vector*>(&mTuple), &quot.mTuple, invScalar);
 	}
 	else
 	{
@@ -172,4 +172,15 @@ inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 {
 	return VECDotProduct(const_cast<Vector*>(&mTuple), 
 		const_cast<Vector*>(&rVector.mTuple));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
+{
+	// TODO: use VECScale
+	return Vector3<Real>(
+		scalar * rVector[0],
+		scalar * rVector[1],
+		scalar * rVector[2]);
 }

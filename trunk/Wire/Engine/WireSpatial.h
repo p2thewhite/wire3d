@@ -15,6 +15,7 @@ public:
 	virtual ~Spatial();
 
 	Transformation Local;
+	Transformation World;
 
 protected:
 	Spatial();

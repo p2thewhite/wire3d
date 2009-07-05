@@ -54,6 +54,10 @@ private:
 #endif
 };
 
+// arithmetic operations
+template <class Real>
+Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector);
+
 #ifdef WIRE_WII
 #include "Wii/WireVector3Wii.inl"
 #else

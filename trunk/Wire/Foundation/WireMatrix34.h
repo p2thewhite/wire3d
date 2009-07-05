@@ -42,7 +42,13 @@ public:
 	Vector3<Real> GetColumn (Int col) const;
 
 	// arithmetic operations
-	inline Matrix34 operator* (Matrix34& rMatrix);
+	inline Matrix34 operator* (const Matrix34& rMatrix) const;
+	inline Matrix34 operator* (Real scalar) const;
+
+	// matrix times vector
+	inline Vector3<Real> operator* (const Vector3<Real>& rVector) const;
+
+	Matrix34 TimesDiagonal(const Vector3<Real>& rDiag) const;
 
 private:
 	Real mEntry[3][4];

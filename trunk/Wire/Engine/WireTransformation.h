@@ -36,6 +36,9 @@ public:
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
 	void GetTransformation(Matrix34f& rMatrix) const;
 
+	// Compute C = A*B.
+	void Product(const Transformation& rA, const Transformation& kB);
+
 private:
 	Matrix34f mMatrix;
 	Vector3f mScale;

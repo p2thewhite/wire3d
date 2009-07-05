@@ -149,10 +149,11 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
+inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
+const
 {
-	Real4* a = mEntry;
-	Real4* b = rMatrix.mEntry;
+	const Real4* a = mEntry;
+	const Real4* b = rMatrix.mEntry;
 
 	return Matrix34<Real>(
 		a[0][0]*b[0][0] + a[0][1]*b[1][0] +	a[0][2]*b[2][0],
@@ -170,6 +171,33 @@ inline Matrix34<Real> Matrix34<Real>::operator* (Matrix34& rMatrix)
 		a[2][0]*b[0][2] + a[2][1]*b[1][2] +	a[2][2]*b[2][2],
 		a[2][0]*b[0][3] + a[2][1]*b[1][3] +	a[2][2]*b[2][3] + a[2][3]
 		);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
+{
+	return Matrix34<Real>(
+		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
+			mEntry[0][3],
+		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
+			mEntry[1][3],
+		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
+			mEntry[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rVector)
+const
+{
+	return Vector3<Real>(
+		mEntry[0][0]*rVector[0] + mEntry[0][1]*rVector[1] + 
+			mEntry[0][2]*rVector[2],
+		mEntry[1][0]*rVector[0] + mEntry[1][1]*rVector[1] + 
+			mEntry[1][2]*rVector[2],
+		mEntry[2][0]*rVector[0] + mEntry[2][1]*rVector[1] +
+			mEntry[2][2]*rVector[2]);
 }
 
 //----------------------------------------------------------------------------
@@ -201,4 +229,17 @@ template <class Real>
 Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix34<Real> Matrix34<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
+{
+	return Matrix34<Real>(
+		mEntry[0][0]*rDiag[0], mEntry[0][1]*rDiag[1], mEntry[0][2]*rDiag[2],
+		mEntry[0][3],
+		mEntry[1][0]*rDiag[0], mEntry[1][1]*rDiag[1], mEntry[1][2]*rDiag[2],
+		mEntry[1][3],
+		mEntry[2][0]*rDiag[0], mEntry[2][1]*rDiag[1], mEntry[2][2]*rDiag[2],
+		mEntry[2][3]);
 }

@@ -90,3 +90,52 @@ void Transformation::GetTransformation(Matrix34f& rMatrix) const
 		rMatrix = mMatrix;
 	}
 }
+
+//----------------------------------------------------------------------------
+void Transformation::Product (const Transformation& rA,
+	const Transformation& rB)
+{
+	if (rA.IsIdentity())
+	{
+		*this = rB;
+		return;
+	}
+
+	if (rB.IsIdentity())
+	{
+		*this = rA;
+		return;
+	}
+
+	if (rA.IsRSMatrix() && rB.IsRSMatrix())
+	{
+		if (rA.IsUniformScale())
+		{
+			SetRotate(rA.mMatrix * rB.mMatrix);
+
+			SetTranslate(rA.GetUniformScale() * (
+				rA.mMatrix * rB.GetTranslate()) + rA.GetTranslate());
+
+			if (rB.IsUniformScale())
+			{
+				SetUniformScale(rA.GetUniformScale() * rB.GetUniformScale());
+			}
+			else
+			{
+				SetScale(rA.GetUniformScale() * rB.GetScale());
+			}
+
+			return;
+		}
+	}
+
+	// In all remaining cases, the matrix cannot be written as R*S*X+T.
+	Matrix34f A = (rA.IsRSMatrix() ?
+		rA.GetMatrix().TimesDiagonal(rA.GetScale()) : rA.GetMatrix());
+
+	Matrix34f B = (rB.IsRSMatrix() ?
+		rB.GetMatrix().TimesDiagonal(rB.GetScale()) : rB.GetMatrix());
+
+	SetMatrix(A * B);
+	SetTranslate(A * rB.GetTranslate() + rA.GetTranslate());
+}
