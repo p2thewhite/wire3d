@@ -12,7 +12,6 @@ GXApplication::GXApplication()
 //----------------------------------------------------------------------------
 GXApplication::~GXApplication()
 {
-	OnTerminate();
 }
 
 //----------------------------------------------------------------------------
@@ -26,10 +25,12 @@ Int GXApplication::Main()
 {
 	mpRenderer = WIRE_NEW GXRenderer;
 
-	if (!mpApplication->OnInitialize())
+	if (mpApplication->OnInitialize())
 	{
-
+		mpApplication->OnIdle();
 	}
+
+	mpApplication->OnTerminate();
 
 	return 0;
 }
