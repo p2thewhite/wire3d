@@ -2,9 +2,7 @@
 #ifndef SAMPLE1_H
 #define SAMPLE1_H
 
-#include "WireFoundation.h"
 #include "WireEngine.h"
-#include "WireGXRenderer.h"
 #include "WireGXApplication.h"
 
 using namespace Wire;

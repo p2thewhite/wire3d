@@ -1,5 +1,4 @@
 #include "WireGXApplication.h"
-#include "../Foundation/WireSystem.h"
 #include "../../Renderer/GXRenderer/WireGXRenderer.h"
 
 using namespace Wire;
@@ -31,6 +30,7 @@ Int GXApplication::Main()
 		while(!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
 		{
 			mpApplication->OnIdle();
+			WPAD_ScanPads();
 		}
 	}
 
