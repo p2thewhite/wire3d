@@ -4,6 +4,9 @@ using namespace Wire;
 
 const ColorRGBA ColorRGBA::BLACK(0.0f, 0.0f, 0.0f, 1.0f);
 const ColorRGBA ColorRGBA::WHITE(1.0f, 1.0f, 1.0f, 1.0f);
+const ColorRGBA ColorRGBA::RED(1.0f, 0.0f, 0.0f, 1.0f);
+const ColorRGBA ColorRGBA::GREEN(0.0f, 1.0f, 0.0f, 1.0f);
+const ColorRGBA ColorRGBA::BLUE(0.0f, 0.0f, 1.0f, 1.0f);
 
 //----------------------------------------------------------------------------
 ColorRGBA::ColorRGBA()

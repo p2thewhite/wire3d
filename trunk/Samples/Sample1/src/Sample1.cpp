@@ -221,8 +221,6 @@ Int Sample1::Main()
 {
 	Parent::Main();
 
-	OnIdle();
-
 	return 0;
 }
 

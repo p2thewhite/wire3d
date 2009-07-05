@@ -27,10 +27,10 @@ public:
 // 
 // 	// Called each render frame.
 // 	virtual void OnDisplay();
-// 
-// 	// Called before terminating the application.
-// 	virtual void OnTerminate();
-// 
+ 
+	// Called before terminating the application.
+	virtual void OnTerminate() = 0;
+
 	void SetApplication(Application* pApplication);
 	Application* GetApplication() const;
 

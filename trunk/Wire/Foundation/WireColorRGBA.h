@@ -24,6 +24,9 @@ public:
 
 	static const ColorRGBA BLACK;
 	static const ColorRGBA WHITE;
+	static const ColorRGBA RED;
+	static const ColorRGBA GREEN;
+	static const ColorRGBA BLUE;
 
 private:
 	Float mTuple[4];
