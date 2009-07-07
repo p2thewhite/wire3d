@@ -18,4 +18,4 @@ typedef Pointer<TriMesh> TriMeshPtr;
 
 }
 
-#endif /* WIRETRIMESH_H */
+#endif

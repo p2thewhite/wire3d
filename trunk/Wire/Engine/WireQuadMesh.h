@@ -18,4 +18,4 @@ typedef Pointer<QuadMesh> QuadMeshPtr;
 
 }
 
-#endif /* WIREQUADMESH_H */
+#endif

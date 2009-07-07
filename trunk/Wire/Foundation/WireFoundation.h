@@ -13,4 +13,4 @@
 #include "WireVector2.h"
 #include "WireVector3.h"
 
-#endif /* WIREFOUNDATION_H */
+#endif

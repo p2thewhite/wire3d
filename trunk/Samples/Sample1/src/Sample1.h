@@ -12,10 +12,14 @@ class Sample1 : public GXApplication
 	typedef GXApplication Parent;
 
 public:
+	static Bool RegisterInitialize();
+	static void Initialize ();
+private:
+	static Bool msInitializeRegistered;
+
+public:
 	Sample1();
 	virtual ~Sample1();
-
-	virtual Int Main();
 
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
@@ -33,4 +37,6 @@ private:
 	Float mAngle;
 };
 
-#endif /* SAMPLE1_H */
+static bool gsInitializeRegisteredSample1 = Sample1::RegisterInitialize();
+
+#endif

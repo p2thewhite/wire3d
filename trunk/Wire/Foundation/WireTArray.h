@@ -58,4 +58,4 @@ private:
 
 }
 
-#endif /* WIRETARRAY_H */
+#endif

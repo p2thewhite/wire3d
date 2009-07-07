@@ -28,4 +28,4 @@ typedef Pointer<Object> ObjectPtr;
 
 }
 
-#endif /* WIREOBJECT_H */
+#endif

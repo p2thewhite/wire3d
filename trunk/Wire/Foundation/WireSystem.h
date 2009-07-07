@@ -24,5 +24,5 @@
 #include "WireTypes.h"
 #include "WireMemory.h"
 
-#endif /* WIRESYSTEM_H */
+#endif
 

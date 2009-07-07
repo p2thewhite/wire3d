@@ -27,4 +27,4 @@ public:
 
 }
 
-#endif /* WIREGXAPPLICATION_H */
+#endif

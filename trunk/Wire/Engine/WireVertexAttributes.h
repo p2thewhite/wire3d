@@ -52,4 +52,4 @@ private:
 
 }
 
-#endif /* WIREVERTEXATTRIBUTES_H */
+#endif

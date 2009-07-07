@@ -31,8 +31,8 @@ public:
 	// Called before terminating the application.
 	virtual void OnTerminate() = 0;
 
-	void SetApplication(Application* pApplication);
-	Application* GetApplication() const;
+	static void SetApplication(Application* pApplication);
+	static Application* GetApplication();
 
 protected:
 	Application();
@@ -40,11 +40,11 @@ protected:
 	virtual Int Run(Int argumentQuantity, Char* arguments[]) = 0;
 
 	// the unique application object
-	Application* mpApplication;
+	static Application* mpApplication;
 
 	Renderer* mpRenderer;
 };
 
 }
 
-#endif /* WIREAPPLICATION_H */
+#endif

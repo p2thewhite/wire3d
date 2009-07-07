@@ -30,4 +30,4 @@ typedef Pointer<Geometry> GeometryPtr;
 
 }
 
-#endif /* WIREGEOMETRY_H */
+#endif

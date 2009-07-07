@@ -52,4 +52,4 @@ private:
 
 }
 
-#endif /* WIRETRANSFORMATION_H */
+#endif

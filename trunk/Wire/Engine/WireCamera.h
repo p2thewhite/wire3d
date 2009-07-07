@@ -79,4 +79,4 @@ typedef Pointer<Camera> CameraPtr;
 
 }
 
-#endif /* WIRECAMERA_H */
+#endif
