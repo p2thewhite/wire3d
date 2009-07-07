@@ -12,4 +12,4 @@
 #include "WireVertexAttributes.h"
 #include "WireVertexBuffer.h"
 
-#endif /* WIREENGINE_H */
+#endif

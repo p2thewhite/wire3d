@@ -64,4 +64,4 @@ typedef Matrix34<Float> Matrix34f;
 
 }
 
-#endif /* WIREMATRIX34_H */
+#endif

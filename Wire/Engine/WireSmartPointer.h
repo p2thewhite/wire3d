@@ -40,4 +40,4 @@ protected:
 
 }
 
-#endif /* WIRESMARTPOINTER_H */
+#endif

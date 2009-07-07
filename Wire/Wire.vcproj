@@ -93,6 +93,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMain.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireMath.h"
 					>
 				</File>
@@ -170,6 +174,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireColorRGBA.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireMain.cpp"
 					>
 				</File>
 				<File

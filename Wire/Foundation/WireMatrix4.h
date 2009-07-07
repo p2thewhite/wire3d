@@ -40,4 +40,4 @@ typedef Matrix4<Float> Matrix4f;
 
 }
 
-#endif /* WIREMATRIX4_H */
+#endif

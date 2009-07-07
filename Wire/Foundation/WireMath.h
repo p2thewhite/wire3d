@@ -32,4 +32,4 @@ typedef Math<Double> Mathd;
 
 }
 
-#endif /* WIREMATH_H */
+#endif

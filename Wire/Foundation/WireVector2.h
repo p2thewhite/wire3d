@@ -45,4 +45,4 @@ typedef Vector2<Float> Vector2f;
 
 }
 
-#endif /* WIREVECTOR2_H */
+#endif

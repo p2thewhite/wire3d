@@ -42,4 +42,4 @@ private:
 
 }
 
-#endif /* WIREGXRENDERER_H */
+#endif

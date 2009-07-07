@@ -25,4 +25,4 @@ typedef Pointer<Spatial> SpatialPtr;
 
 }
 
-#endif /* WIRESPATIAL_H */
+#endif

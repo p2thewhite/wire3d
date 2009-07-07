@@ -2,6 +2,24 @@
 
 using namespace Wire;
 
+Bool Sample1::msInitializeRegistered = false;
+Bool Sample1::RegisterInitialize()
+{
+	if (!msInitializeRegistered)
+	{
+//		Main::AddInitializer(Sample1::Initialize);
+		msInitializeRegistered = true;
+	}
+
+	return msInitializeRegistered;
+}
+
+void Sample1::Initialize ()
+{
+// 	Application::Run = &WindowApplication::Run;
+// 	TheApplication = WM4_NEW classname;
+}
+
 //----------------------------------------------------------------------------
 Sample1::Sample1()
 {
@@ -184,8 +202,8 @@ Geometry* Sample1::CreatePyramid()
 void Sample1::OnIdle()
 {
 	Float scaleFactor = Mathf::Sin(mAngle);
-	mAngle += M_PI / 180.0f;
-	mAngle = Mathf::FMod(mAngle, M_PI);
+	mAngle += Mathf::PI / 180.0f;
+	mAngle = Mathf::FMod(mAngle, Mathf::PI);
 
 	mpRenderer->BeginScene(mspCamera);
 
@@ -209,19 +227,11 @@ void Sample1::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Int Sample1::Main()
-{
-	Parent::Main();
-
-	return 0;
-}
-
-//----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 	Sample1* pSample = WIRE_NEW Sample1;
- 	pSample->SetApplication(pSample);
-
+	Application::SetApplication(pSample);
+	
 	pSample->Main();
 
 	WIRE_DELETE pSample;

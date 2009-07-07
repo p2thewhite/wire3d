@@ -2,6 +2,8 @@
 
 using namespace Wire;
 
+Application* Application::mpApplication = NULL;
+
 //----------------------------------------------------------------------------
 Application::Application()
 	:
@@ -21,7 +23,7 @@ void Application::SetApplication(Application* pApplication)
 }
 
 //----------------------------------------------------------------------------
-Application* Application::GetApplication() const
+Application* Application::GetApplication()
 {
 	return mpApplication;
 }

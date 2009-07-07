@@ -73,4 +73,4 @@
 #define VISetNextFrameBuffer VIDEO_SetNextFramebuffer
 #define VIWaitForRetrace VIDEO_WaitVSync
 
-#endif /* WIREOGCDEFINES_H */
+#endif

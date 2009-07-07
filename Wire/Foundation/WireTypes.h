@@ -10,4 +10,4 @@ typedef int Int;
 typedef unsigned char UChar;
 typedef unsigned int UInt;
 
-#endif /* WIRETYPES_H */
+#endif

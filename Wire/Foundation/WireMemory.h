@@ -5,4 +5,4 @@
 #define WIRE_NEW new
 #define WIRE_DELETE delete
 
-#endif /* WIREMEMORY_H */
+#endif

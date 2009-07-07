@@ -68,4 +68,4 @@ typedef Vector3<Float> Vector3f;
 
 }
 
-#endif /* WIREVECTOR3_H */
+#endif

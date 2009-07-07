@@ -36,4 +36,4 @@ private:
 
 }
 
-#endif /* WIRECOLORRGBA_H */
+#endif
