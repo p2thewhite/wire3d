@@ -14,15 +14,14 @@ public:
 	GXApplication();
 	virtual ~GXApplication();
 
-	// Entry point to be implemented by the application.  The return value
-	// is an exit code, if desired.
-	virtual Int Main();
-
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();
 
-	virtual Int Run(Int argumentQuantity, Char* arguments[]);
+private:
+	// Entry point to be implemented by the application.  The return value
+	// is an exit code, if desired.
+	virtual Int Main(Int argumentQuantity, Char* arguments[]);
 };
 
 }

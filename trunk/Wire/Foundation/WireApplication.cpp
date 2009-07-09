@@ -1,4 +1,5 @@
 #include "WireApplication.h"
+#include "WireMain.h"
 
 using namespace Wire;
 
@@ -28,7 +29,19 @@ Application* Application::GetApplication()
 	return mpApplication;
 }
 
-//-------------------------------------------------------------------------------
-// Int main (Int argumentCount, Char* arguments[])
-// {
-// }
+//----------------------------------------------------------------------------
+Int main(Int argc, Char** argv)
+{
+	Main::Initialize();
+
+	Application* pApplication = Application::GetApplication();
+	if (pApplication)
+	{
+		pApplication->Main(argc, argv);
+
+		WIRE_DELETE pApplication;
+		Application::SetApplication(NULL);
+	}
+
+	return 0;
+}

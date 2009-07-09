@@ -1,4 +1,5 @@
 #include "Sample1.h"
+#include "WireMain.h"
 
 using namespace Wire;
 
@@ -7,7 +8,7 @@ Bool Sample1::RegisterInitialize()
 {
 	if (!msInitializeRegistered)
 	{
-//		Main::AddInitializer(Sample1::Initialize);
+		Main::AddInitializer(Sample1::Initialize);
 		msInitializeRegistered = true;
 	}
 
@@ -16,8 +17,7 @@ Bool Sample1::RegisterInitialize()
 
 void Sample1::Initialize ()
 {
-// 	Application::Run = &WindowApplication::Run;
-// 	TheApplication = WM4_NEW classname;
+ 	SetApplication(WIRE_NEW Sample1);
 }
 
 //----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ void Sample1::OnIdle()
 
 	mpRenderer->BeginScene(mspCamera);
 
-	Matrix34f model(Vector3f(1, 0, 0), Mathf::DEG_TO_RAD * mRtri);
+	Matrix34f model(Vector3f(0, -1, 0), Mathf::DEG_TO_RAD * mRtri);
 	mspPyramid->Local.SetRotate(model);
 	mspPyramid->Local.SetTranslate(Vector3f(-1.5f,0.0f,-6.0f));
 	mspPyramid->Local.SetUniformScale(scaleFactor + 0.5f);
@@ -224,17 +224,4 @@ void Sample1::OnIdle()
 
 	mRtri+=0.5f;		// Increase The Rotation Variable For The Triangle
 	mRquad-=0.15f;	// Decrease The Rotation Variable For The Quad
-}
-
-//----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-	Sample1* pSample = WIRE_NEW Sample1;
-	Application::SetApplication(pSample);
-	
-	pSample->Main();
-
-	WIRE_DELETE pSample;
-
-	return 0;
 }

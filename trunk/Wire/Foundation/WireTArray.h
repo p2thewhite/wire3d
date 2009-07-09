@@ -20,7 +20,7 @@ public:
 	TArray& operator= (const TArray& rObject);
 
 	// element access, index i must be in range
-	int GetQuantity() const;
+	Int GetQuantity() const;
 	T* GetArray();
 	const T* GetArray() const;
 	T& operator[] (Int i);

@@ -9,13 +9,13 @@ using namespace Wire;
 
 class Sample1 : public GXApplication
 {
-	typedef GXApplication Parent;
-
 public:
 	static Bool RegisterInitialize();
 	static void Initialize ();
 private:
 	static Bool msInitializeRegistered;
+
+	typedef GXApplication Parent;
 
 public:
 	Sample1();
@@ -37,6 +37,6 @@ private:
 	Float mAngle;
 };
 
-static bool gsInitializeRegisteredSample1 = Sample1::RegisterInitialize();
+static Bool gsInitializeRegisteredSample1 = Sample1::RegisterInitialize();
 
 #endif

@@ -14,13 +14,7 @@ GXApplication::~GXApplication()
 }
 
 //----------------------------------------------------------------------------
-Int GXApplication::Run(Int argumentQuantity, Char* arguments[])
-{
-	return 0;
-}
-
-//----------------------------------------------------------------------------
-Int GXApplication::Main()
+Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
 	mpRenderer = WIRE_NEW GXRenderer;
 
