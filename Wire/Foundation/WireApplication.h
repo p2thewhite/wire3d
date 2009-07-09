@@ -15,6 +15,8 @@ public:
 	// abstract base class
 	virtual ~Application();
 
+	virtual Int Main(Int argumentQuantity, Char* arguments[]) = 0;
+
 // 	// Called before the creation and initialization of the renderer.
 // 	// Returning 'false' quits the application.
 // 	virtual Bool OnPrecreate();
@@ -24,10 +26,6 @@ public:
 	virtual Bool OnInitialize() = 0;
 	virtual void OnIdle() = 0;
 
-// 
-// 	// Called each render frame.
-// 	virtual void OnDisplay();
- 
 	// Called before terminating the application.
 	virtual void OnTerminate() = 0;
 
@@ -36,8 +34,6 @@ public:
 
 protected:
 	Application();
-
-	virtual Int Run(Int argumentQuantity, Char* arguments[]) = 0;
 
 	// the unique application object
 	static Application* mpApplication;
