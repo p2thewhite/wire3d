@@ -97,6 +97,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMainMCR.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireMath.h"
 					>
 				</File>

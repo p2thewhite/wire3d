@@ -3,22 +3,7 @@
 
 using namespace Wire;
 
-Bool Sample1::msInitializeRegistered = false;
-Bool Sample1::RegisterInitialize()
-{
-	if (!msInitializeRegistered)
-	{
-		Main::AddInitializer(Sample1::Initialize);
-		msInitializeRegistered = true;
-	}
-
-	return msInitializeRegistered;
-}
-
-void Sample1::Initialize ()
-{
- 	SetApplication(WIRE_NEW Sample1);
-}
+WIRE_APPLICATION(Sample1);
 
 //----------------------------------------------------------------------------
 Sample1::Sample1()

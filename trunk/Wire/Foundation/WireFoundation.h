@@ -6,6 +6,8 @@
 #include "WireMath.h"
 #include "WireMatrix34.h"
 #include "WireMatrix4.h"
+#include "WireMain.h"
+#include "WireMainMCR.h"
 #include "WireMemory.h"
 #include "WireSystem.h"
 #include "WireTArray.h"
