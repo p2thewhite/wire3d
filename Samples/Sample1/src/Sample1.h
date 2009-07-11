@@ -4,16 +4,13 @@
 
 #include "WireEngine.h"
 #include "WireGXApplication.h"
+#include "WireMainMCR.h"
 
 using namespace Wire;
 
 class Sample1 : public GXApplication
 {
-public:
-	static Bool RegisterInitialize();
-	static void Initialize ();
-private:
-	static Bool msInitializeRegistered;
+	WIRE_DECLARE_INITIALIZE;
 
 	typedef GXApplication Parent;
 
@@ -37,6 +34,6 @@ private:
 	Float mAngle;
 };
 
-static Bool gsInitializeRegisteredSample1 = Sample1::RegisterInitialize();
+WIRE_REGISTER_INITIALIZE(Sample1);
 
 #endif
