@@ -66,7 +66,7 @@ void Transformation::SetUniformScale(Float scale)
 }
 
 //----------------------------------------------------------------------------
-void Transformation::GetTransformation(Matrix34f& rMatrix) const
+void Transformation::GetTransformation(Matrix34f& rMatrix) /*const*/
 {
 	if (mIsRSMatrix)
 	{

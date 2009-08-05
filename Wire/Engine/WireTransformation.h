@@ -21,7 +21,7 @@ public:
 	Bool IsUniformScale() const;
 
 	inline operator Matrix34f ();
- 	inline operator const Matrix34f () const;
+ 	inline operator const Matrix34f () /*const*/; // TODO: fix for VC
 
 	void SetRotate(const Matrix34f& rMatrix);
 	void SetMatrix(const Matrix34f& rMatrix);
@@ -34,7 +34,7 @@ public:
 	Float GetUniformScale() const;
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
-	void GetTransformation(Matrix34f& rMatrix) const;
+	void GetTransformation(Matrix34f& rMatrix) /*const*/; // TODO: fix for VC
 
 	// Compute C = A*B.
 	void Product(const Transformation& rA, const Transformation& kB);
