@@ -213,6 +213,7 @@ inline Matrix34<Real>::operator const Real4* () const
 {
 	return mEntry;
 }
+//inline Real (* (Get)())[4] { return mEntry; }
 
 //----------------------------------------------------------------------------
 template <class Real>
