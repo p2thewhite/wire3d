@@ -37,7 +37,7 @@ public:
 
 	// member operators
 	inline operator Real4* ();
-	inline operator const Real4* () const;
+//	inline operator const Real4* () const;	// TODO: fix for VC
 	void SetColumn(Int col, const Vector3<Real>& rVector);
 	Vector3<Real> GetColumn(Int col) const;
 
