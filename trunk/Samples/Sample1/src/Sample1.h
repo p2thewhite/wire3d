@@ -3,16 +3,30 @@
 #define SAMPLE1_H
 
 #include "WireEngine.h"
-#include "WireGXApplication.h"
 #include "WireMainMCR.h"
+
+// TODO: clean that ugly mess.
+#ifdef WIRE_WIN
+#include "WireDXApplication.h"
+#else
+#include "WireGXApplication.h"
+#endif
 
 using namespace Wire;
 
+#ifdef WIRE_WIN
+class Sample1 : public DXApplication
+#else
 class Sample1 : public GXApplication
+#endif
 {
 	WIRE_DECLARE_INITIALIZE;
 
+#ifdef WIRE_WIN
+	typedef DXApplication Parent;
+#else
 	typedef GXApplication Parent;
+#endif
 
 public:
 	Sample1();
