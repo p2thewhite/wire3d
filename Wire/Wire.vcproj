@@ -193,6 +193,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="DX"
+				>
+				<Filter
+					Name="Header Files"
+					>
+					<File
+						RelativePath=".\Foundation\DX\WireDXApplication.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Foundation\DX\WireDXApplication.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Engine"
@@ -345,6 +365,26 @@
 					>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.inl"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="DXRenderer"
+				>
+				<Filter
+					Name="Header Files"
+					>
+					<File
+						RelativePath=".\Renderer\DXRenderer\WireDXRenderer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\Renderer\DXRenderer\WireDXRenderer.cpp"
 						>
 					</File>
 				</Filter>

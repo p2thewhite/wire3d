@@ -24,7 +24,7 @@ Real Math<Real>::FMod(Real x, Real y)
 template <class Real>
 Real Math<Real>::Sin(Real value)
 {
-	return static_cast<Real>(sinf(static_cast<Double>(value)));
+	return static_cast<Real>(sin(static_cast<Double>(value)));
 }
 
 //----------------------------------------------------------------------------

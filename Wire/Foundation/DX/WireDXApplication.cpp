@@ -1,30 +1,32 @@
-#include "WireGXApplication.h"
-#include "../../Renderer/GXRenderer/WireGXRenderer.h"
+#include "WireDXApplication.h"
+#include "../../Renderer/DXRenderer/WireDXRenderer.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-GXApplication::GXApplication()
+DXApplication::DXApplication()
 {
 }
 
 //----------------------------------------------------------------------------
-GXApplication::~GXApplication()
+DXApplication::~DXApplication()
 {
 }
 
 //----------------------------------------------------------------------------
-Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
+Int DXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
-	mpRenderer = WIRE_NEW GXRenderer;
+	// Avoid VC warning until this is actually being used
+	argumentQuantity;
+	arguments;
+	
+	mpRenderer = WIRE_NEW DXRenderer;
 
 	if (mpApplication->OnInitialize())
 	{
-		WPAD_ScanPads();
-		while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
+		while (true)
 		{
 			mpApplication->OnIdle();
-			WPAD_ScanPads();
 		}
 	}
 
@@ -34,7 +36,7 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 }
 
 //----------------------------------------------------------------------------
-void GXApplication::OnTerminate()
+void DXApplication::OnTerminate()
 {
 	if (mpRenderer)
 	{
@@ -44,13 +46,13 @@ void GXApplication::OnTerminate()
 }
 
 //----------------------------------------------------------------------------
-Bool GXApplication::OnInitialize()
+Bool DXApplication::OnInitialize()
 {
 	mpRenderer->SetClearColor(ColorRGBA::BLACK);
 	return true;
 }
 
 //----------------------------------------------------------------------------
-void GXApplication::OnIdle()
+void DXApplication::OnIdle()
 {
 }
