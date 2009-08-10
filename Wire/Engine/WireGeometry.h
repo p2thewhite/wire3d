@@ -2,6 +2,7 @@
 #ifndef WIREGEOMETRY_H
 #define WIREGEOMETRY_H
 
+#include "WireIndexBuffer.h"
 #include "WireSpatial.h"
 #include "WireVertexBuffer.h"
 
@@ -18,12 +19,13 @@ public:
 		GT_MAX_QUANTITY
 	};
 
-	Geometry(VertexBuffer* pVBuffer);
+	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 	virtual ~Geometry();
 
 	// member access
 	GeometryType Type;
 	VertexBufferPtr VBuffer;
+	IndexBufferPtr IBuffer;
 };
 
 typedef Pointer<Geometry> GeometryPtr;

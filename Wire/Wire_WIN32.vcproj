@@ -422,6 +422,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireIndexBuffer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.h"
 					>
 				</File>
@@ -491,6 +495,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireIndexBuffer.cpp"
 					>
 				</File>
 				<File

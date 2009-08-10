@@ -10,7 +10,7 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ QuadMesh : public Geometry
 {
 public:
-	QuadMesh(VertexBuffer* pVBuffer);
+	QuadMesh(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 	virtual ~QuadMesh();
 };
 
