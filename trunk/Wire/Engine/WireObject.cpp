@@ -5,7 +5,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Object::Object()
 	:
-	mReferences(NULL)
+	mReferences(0)
 {
 }
 

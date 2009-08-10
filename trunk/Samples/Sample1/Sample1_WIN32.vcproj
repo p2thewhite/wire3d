@@ -64,7 +64,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(ProjectName)d.exe"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)$(TargetName).pdb"
+				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
 			/>
 			<Tool

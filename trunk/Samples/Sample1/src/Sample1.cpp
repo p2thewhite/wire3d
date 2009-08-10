@@ -125,7 +125,7 @@ Geometry* Sample1::CreateCube()
 		pCubeVerts->Color3(i) = colors[i];
 	}
 
-	Geometry* pCube = WIRE_NEW QuadMesh(pCubeVerts);
+	Geometry* pCube = WIRE_NEW QuadMesh(pCubeVerts, NULL);
 	return pCube;
 }
 
@@ -179,7 +179,7 @@ Geometry* Sample1::CreatePyramid()
 		pPyramidVerts->Color3(i) = colors[i];
 	}
 
-	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts);
+	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, NULL);
 	return pPyramid;
 }
 

@@ -3,9 +3,10 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Geometry::Geometry(VertexBuffer* pVBuffer)
+Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
  	:
- 	VBuffer(pVBuffer)
+ 	VBuffer(pVBuffer),
+	IBuffer(pIBuffer)
 {
 }
 

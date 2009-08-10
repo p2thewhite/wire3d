@@ -4,29 +4,15 @@
 
 #include "WireEngine.h"
 #include "WireMainMCR.h"
-
-// TODO: clean that ugly mess.
-#ifdef WIRE_WIN
-#include "WireDXApplication.h"
-#else
-#include "WireGXApplication.h"
-#endif
+#include "WireApplication.h"
 
 using namespace Wire;
 
-#ifdef WIRE_WIN
-class Sample1 : public DXApplication
-#else
-class Sample1 : public GXApplication
-#endif
+class Sample1 : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
 
-#ifdef WIRE_WIN
-	typedef DXApplication Parent;
-#else
-	typedef GXApplication Parent;
-#endif
+	typedef WIREAPPLICATION Parent;
 
 public:
 	Sample1();

@@ -43,4 +43,13 @@ protected:
 
 }
 
+//----------------------------------------------------------------------------
+#ifdef WIRE_WIN
+#include "DX/WireDXApplication.h"
+#define WIREAPPLICATION DXApplication
+#else
+#include "Wii/WireGXApplication.h"
+#define WIREAPPLICATION GXApplication
+#endif
+
 #endif

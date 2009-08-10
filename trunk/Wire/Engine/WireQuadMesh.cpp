@@ -3,9 +3,9 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-QuadMesh::QuadMesh(VertexBuffer* pVBuffer)
+QuadMesh::QuadMesh(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 	:
-	Geometry(pVBuffer)
+	Geometry(pVBuffer, pIBuffer)
 {
 	Type = GT_QUADMESH;
 }
