@@ -1,18 +1,18 @@
 #pragma once
-#ifndef WIREDXAPPLICATION_H
-#define WIREDXAPPLICATION_H
+#ifndef WIREDX9APPLICATION_H
+#define WIREDX9APPLICATION_H
 
 #include "../WireApplication.h"
 
 namespace Wire
 {
 
-class DXApplication : public Application
+class Dx9Application : public Application
 {
 
 public:
-	DXApplication();
-	virtual ~DXApplication();
+	Dx9Application();
+	virtual ~Dx9Application();
 
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();

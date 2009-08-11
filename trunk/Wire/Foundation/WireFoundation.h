@@ -2,6 +2,7 @@
 #ifndef WIREFOUNDATION_H
 #define WIREFOUNDATION_H
 
+#include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireMath.h"
 #include "WireMatrix34.h"
