@@ -45,8 +45,8 @@ protected:
 
 //----------------------------------------------------------------------------
 #ifdef WIRE_WIN
-#include "DX/WireDXApplication.h"
-#define WIREAPPLICATION DXApplication
+#include "Dx9/WireDx9Application.h"
+#define WIREAPPLICATION Dx9Application
 #else
 #include "Wii/WireGXApplication.h"
 #define WIREAPPLICATION GXApplication

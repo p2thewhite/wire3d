@@ -1,26 +1,26 @@
-#include "WireDXApplication.h"
-#include "../../Renderer/DXRenderer/WireDXRenderer.h"
+#include "WireDx9Application.h"
+#include "../../Renderer/Dx9Renderer/WireDx9Renderer.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-DXApplication::DXApplication()
+Dx9Application::Dx9Application()
 {
 }
 
 //----------------------------------------------------------------------------
-DXApplication::~DXApplication()
+Dx9Application::~Dx9Application()
 {
 }
 
 //----------------------------------------------------------------------------
-Int DXApplication::Main(Int argumentQuantity, Char* arguments[])
+Int Dx9Application::Main(Int argumentQuantity, Char* arguments[])
 {
 	// Avoid VC warning until this is actually being used
 	argumentQuantity;
 	arguments;
 	
-	mpRenderer = WIRE_NEW DXRenderer;
+	mpRenderer = WIRE_NEW Dx9Renderer;
 
 	if (mpApplication->OnInitialize())
 	{
@@ -36,7 +36,7 @@ Int DXApplication::Main(Int argumentQuantity, Char* arguments[])
 }
 
 //----------------------------------------------------------------------------
-void DXApplication::OnTerminate()
+void Dx9Application::OnTerminate()
 {
 	if (mpRenderer)
 	{
@@ -46,13 +46,13 @@ void DXApplication::OnTerminate()
 }
 
 //----------------------------------------------------------------------------
-Bool DXApplication::OnInitialize()
+Bool Dx9Application::OnInitialize()
 {
 	mpRenderer->SetClearColor(ColorRGBA::BLACK);
 	return true;
 }
 
 //----------------------------------------------------------------------------
-void DXApplication::OnIdle()
+void Dx9Application::OnIdle()
 {
 }
