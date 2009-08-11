@@ -55,36 +55,36 @@ Geometry* Sample1::CreateCube()
 	attributes.SetColorChannels(3);
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
 
-	Vector3f colors[] = {
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
-		Vector3f(0.0f,1.0f,0.0f),
+	ColorRGB colors[] = {
+		ColorRGB(0.0f,1.0f,0.0f),
+		ColorRGB(0.0f,1.0f,0.0f),
+		ColorRGB(0.0f,1.0f,0.0f),
+		ColorRGB(0.0f,1.0f,0.0f),
 
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
-		Vector3f(1.0f,0.5f,0.0f),
+		ColorRGB(1.0f,0.5f,0.0f),
+		ColorRGB(1.0f,0.5f,0.0f),
+		ColorRGB(1.0f,0.5f,0.0f),
+		ColorRGB(1.0f,0.5f,0.0f),
 
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
-		Vector3f(1.0f,0.0f,0.0f),
+		ColorRGB(1.0f,0.0f,0.0f),
+		ColorRGB(1.0f,0.0f,0.0f),
+		ColorRGB(1.0f,0.0f,0.0f),
+		ColorRGB(1.0f,0.0f,0.0f),
 
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
-		Vector3f(1.0f,1.0f,0.0f),
+		ColorRGB(1.0f,1.0f,0.0f),
+		ColorRGB(1.0f,1.0f,0.0f),
+		ColorRGB(1.0f,1.0f,0.0f),
+		ColorRGB(1.0f,1.0f,0.0f),
 
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
-		Vector3f(0.0f,0.0f,1.0f),
+		ColorRGB(0.0f,0.0f,1.0f),
+		ColorRGB(0.0f,0.0f,1.0f),
+		ColorRGB(0.0f,0.0f,1.0f),
+		ColorRGB(0.0f,0.0f,1.0f),
 
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f),
-		Vector3f(1.0f,0.0f,1.0f)
+		ColorRGB(1.0f,0.0f,1.0f),
+		ColorRGB(1.0f,0.0f,1.0f),
+		ColorRGB(1.0f,0.0f,1.0f),
+		ColorRGB(1.0f,0.0f,1.0f)
 	};
 
 	Vector3f vertices[] = {
@@ -137,22 +137,22 @@ Geometry* Sample1::CreatePyramid()
 	attributes.SetColorChannels(3);
 	VertexBuffer* pPyramidVerts = WIRE_NEW VertexBuffer(attributes, 12);
 
-	Vector3f colors[] = {
-		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
-		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
-		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
+	ColorRGB colors[] = {
+		ColorRGB(1.0f,0.0f,0.0f),			// Set The Color To Red
+		ColorRGB(0.0f,1.0f,0.0f),			// Set The Color To Green
+		ColorRGB(0.0f,0.0f,1.0f),			// Set The Color To Blue
 
-		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
-		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
-		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
+		ColorRGB(1.0f,0.0f,0.0f),			// Set The Color To Red
+		ColorRGB(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		ColorRGB(0.0f,1.0f,0.0f),			// Set The Color To Green
 
-		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
-		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
-		Vector3f(0.0f,1.0f,0.0f),			// Set The Color To Green
+		ColorRGB(1.0f,0.0f,0.0f),			// Set The Color To Red
+		ColorRGB(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		ColorRGB(0.0f,1.0f,0.0f),			// Set The Color To Green
 
-		Vector3f(1.0f,0.0f,0.0f),			// Set The Color To Red
-		Vector3f(0.0f,0.0f,1.0f),			// Set The Color To Blue
-		Vector3f(0.0f,1.0f,0.0f)			// Set The Color To Green
+		ColorRGB(1.0f,0.0f,0.0f),			// Set The Color To Red
+		ColorRGB(0.0f,0.0f,1.0f),			// Set The Color To Blue
+		ColorRGB(0.0f,1.0f,0.0f)			// Set The Color To Green
 	};
 
 	Vector3f vertices[] = {

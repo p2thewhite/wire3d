@@ -4,6 +4,7 @@
 
 #include "WireObject.h"
 #include "WireVertexAttributes.h"
+#include "../Foundation/WireColorRGB.h"
 #include "../Foundation/WireVector2.h"
 #include "../Foundation/WireVector3.h"
 
@@ -22,8 +23,8 @@ public:
 	Vector3f& Position3(UInt i);
 	Vector3f Position3(UInt i) const;
 
-	Vector3f& Color3(UInt i);
-	Vector3f Color3(UInt i) const;
+	ColorRGB& Color3(UInt i);
+	ColorRGB Color3(UInt i) const;
 
 	Vector3f& Normal3(UInt i);
 	Vector3f Normal3(UInt i) const;

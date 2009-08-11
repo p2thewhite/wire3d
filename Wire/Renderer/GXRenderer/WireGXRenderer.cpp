@@ -211,9 +211,9 @@ void GXRenderer::DrawElements()
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		const Vector3f& rVertex = pVBuffer->Position3(i);
-		const Vector3f& rColor = pVBuffer->Color3(i);
+		const ColorRGB& rColor = pVBuffer->Color3(i);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
-		GX_Color3f32(rColor.X(), rColor.Y(), rColor.Z());
+		GX_Color3f32(rColor.R(), rColor.G(), rColor.B());
 	}
 
 	GXEnd();
