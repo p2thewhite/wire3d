@@ -14,8 +14,7 @@ class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object
 {
 
 public:
-	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity,
-		Bool isInterleaved = false);
+	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);
 	virtual ~VertexBuffer();
 
 	UInt GetQuantity() const { return mVertexQuantity; }

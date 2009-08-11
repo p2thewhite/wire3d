@@ -4,7 +4,7 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
-	UInt vertexQuantity, Bool isInterleaved)
+	UInt vertexQuantity)
 	:
 	mAttributes(rAttributes),
 	mVertexQuantity(vertexQuantity),
