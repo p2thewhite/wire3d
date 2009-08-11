@@ -11,12 +11,11 @@ class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Object
 {
 
 public:
-	IndexBuffer(Int quantity, Int size = sizeof(Int));
+	IndexBuffer(UInt quantity);
 	virtual ~IndexBuffer();
 
 private:
-	Int mQuantity;
-	Int mSize;
+	UInt mQuantity;
 	Int* mpIndices;
 };
 

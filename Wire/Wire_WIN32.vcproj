@@ -156,6 +156,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColorRGB.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGBA.h"
 					>
 				</File>
@@ -207,6 +211,10 @@
 			<Filter
 				Name="Inline Files"
 				>
+				<File
+					RelativePath=".\Foundation\WireColorRGB.inl"
+					>
+				</File>
 				<File
 					RelativePath=".\Foundation\WireColorRGBA.inl"
 					>
@@ -298,6 +306,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColorRGB.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGBA.cpp"
 					>
 				</File>
@@ -315,13 +327,13 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="DX"
+				Name="Dx9"
 				>
 				<Filter
 					Name="Header Files"
 					>
 					<File
-						RelativePath=".\Foundation\DX\WireDXApplication.h"
+						RelativePath=".\Foundation\Dx9\WireDx9Application.h"
 						>
 					</File>
 				</Filter>
@@ -329,7 +341,7 @@
 					Name="Source Files"
 					>
 					<File
-						RelativePath=".\Foundation\DX\WireDXApplication.cpp"
+						RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
 						>
 					</File>
 				</Filter>
@@ -383,13 +395,13 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="DXRenderer"
+				Name="Dx9Renderer"
 				>
 				<Filter
 					Name="Header Files"
 					>
 					<File
-						RelativePath=".\Renderer\DXRenderer\WireDXRenderer.h"
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.h"
 						>
 					</File>
 				</Filter>
@@ -397,7 +409,7 @@
 					Name="Source Files"
 					>
 					<File
-						RelativePath=".\Renderer\DXRenderer\WireDXRenderer.cpp"
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>
 					</File>
 				</Filter>
