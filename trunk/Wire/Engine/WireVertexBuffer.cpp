@@ -40,22 +40,22 @@ Vector3f VertexBuffer::Position3(UInt i) const
 }
 
 //----------------------------------------------------------------------------
-Vector3f& VertexBuffer::Color3(UInt i)
+ColorRGB& VertexBuffer::Color3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetColorOffset();
-	return *(reinterpret_cast<Vector3f*>(pChannel));
+	return *(reinterpret_cast<ColorRGB*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-Vector3f VertexBuffer::Color3(UInt i) const
+ColorRGB VertexBuffer::Color3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
 	UInt index = mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetColorOffset();
 	const Float* pChannel = mpChannel + index;
-	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<ColorRGB*>(const_cast<Float*>(pChannel)));
 }
 
 //----------------------------------------------------------------------------
