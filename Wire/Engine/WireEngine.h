@@ -7,6 +7,7 @@
 #include "WireIndexBuffer.h"
 #include "WireQuadMesh.h"
 #include "WireRenderer.h"
+#include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireTransformation.h"
 #include "WireTriMesh.h"

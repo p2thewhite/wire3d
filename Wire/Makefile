@@ -103,7 +103,7 @@ $(BUILD):
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 	@rm -fr lib
 	@mkdir lib
-	@cp $(BUILD)/libWire.a lib/libWire.a
+	@cp -p $(BUILD)/libWire.a lib/libWire.a
 
 #---------------------------------------------------------------------------------
 clean:

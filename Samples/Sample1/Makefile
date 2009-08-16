@@ -122,7 +122,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).dol: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES)
+$(OUTPUT).elf: $(OFILES) $(WIREDIR)/lib/libWire.a
 
 -include $(DEPENDS)
 
