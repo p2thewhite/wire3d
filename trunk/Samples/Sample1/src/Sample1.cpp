@@ -179,6 +179,13 @@ Geometry* Sample1::CreatePyramid()
 		pPyramidVerts->Color3(i) = colors[i];
 	}
 
+	UInt indexQuantity = pPyramidVerts->GetQuantity();
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	for (UInt i = 0; i < indexQuantity; i++)
+	{
+		(*pIndices)[i] = i;
+	}
+
 	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, NULL);
 	return pPyramid;
 }

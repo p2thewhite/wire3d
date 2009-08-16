@@ -7,9 +7,7 @@ IndexBuffer::IndexBuffer(UInt quantity)
 	:
 	mQuantity(quantity)
 {
-	WIRE_ASSERT(mQuantity > 0);
-
-	mpIndices = WIRE_NEW Int[mQuantity];
+	mpIndices = WIRE_NEW UInt[mQuantity];
 }
 
 //----------------------------------------------------------------------------

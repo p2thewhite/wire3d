@@ -14,12 +14,20 @@ public:
 	IndexBuffer(UInt quantity);
 	virtual ~IndexBuffer();
 
+	// Access to indices.
+	UInt operator[] (UInt i) const;
+	UInt& operator[] (UInt i);
+
+	UInt GetIndexQuantity() const;
+
 private:
 	UInt mQuantity;
-	Int* mpIndices;
+	UInt* mpIndices;
 };
 
 typedef Pointer<IndexBuffer> IndexBufferPtr;
+
+#include "WireIndexBuffer.inl"
 
 }
 

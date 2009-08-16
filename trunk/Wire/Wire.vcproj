@@ -293,6 +293,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireIndexBuffer.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.inl"
 					>
 				</File>
