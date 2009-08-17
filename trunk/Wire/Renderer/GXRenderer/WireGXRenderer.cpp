@@ -179,6 +179,8 @@ void GXRenderer::DrawElements()
 	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
 
+	GXSetCullMode(GX_CULL_FRONT);
+
 	// setup the vertex attribute table
 	// describes the data
 	// args: vat location 0-7, type of data, data format, size, scale
@@ -199,6 +201,7 @@ void GXRenderer::DrawElements()
 	GXLoadPosMtxImm(mpCamera->GetView() * model, GX_PNMTX0);
 
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
+	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;
 
 	UChar gxPrimitive = GX_TRIANGLES;
 	if (mpGeometry->Type == Geometry::GT_QUADMESH)
@@ -206,12 +209,13 @@ void GXRenderer::DrawElements()
 		gxPrimitive = GX_QUADS;
 	}
 
-	GXBegin(gxPrimitive, GX_VTXFMT0, pVBuffer->GetQuantity());
+	GXBegin(gxPrimitive, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
 
-	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
+	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
 	{
-		const Vector3f& rVertex = pVBuffer->Position3(i);
-		const ColorRGB& rColor = pVBuffer->Color3(i);
+		UInt index = (*pIBuffer)[i];
+		const Vector3f& rVertex = pVBuffer->Position3(index);
+		const ColorRGB& rColor = pVBuffer->Color3(index);
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(rColor.R(), rColor.G(), rColor.B());
 	}

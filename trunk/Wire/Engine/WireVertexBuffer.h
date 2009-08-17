@@ -18,7 +18,7 @@ public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);
 	virtual ~VertexBuffer();
 
-	UInt GetQuantity() const { return mVertexQuantity; }
+	UInt GetVertexQuantity() const { return mVertexQuantity; }
 
 	Vector3f& Position3(UInt i);
 	Vector3f Position3(UInt i) const;

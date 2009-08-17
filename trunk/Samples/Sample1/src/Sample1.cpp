@@ -50,82 +50,65 @@ Bool Sample1::OnInitialize()
 //----------------------------------------------------------------------------
 Geometry* Sample1::CreateCube()
 {
+	float extent = 1.0f;
+	Vector3f vertices[] = {
+		Vector3f(-extent, -extent, -extent),
+		Vector3f(+extent, -extent, -extent),
+		Vector3f(+extent, +extent, -extent),
+		Vector3f(-extent, +extent, -extent),
+		Vector3f(-extent, -extent, +extent),
+		Vector3f(+extent, -extent, +extent),
+		Vector3f(+extent, +extent, +extent),
+		Vector3f(-extent, +extent, +extent)
+	};
+
+	ColorRGB colors[] = {
+		ColorRGB(1.0f, 0.0f, 0.0f),
+		ColorRGB(0.0f, 1.0f, 0.0f),
+		ColorRGB(0.0f, 0.0f, 1.0f),
+		ColorRGB(1.0f, 1.0f, 0.0f),
+		ColorRGB(1.0f, 0.0f, 1.0f),
+		ColorRGB(0.0f, 1.0f, 1.0f),
+		ColorRGB(1.0f, 1.0f, 1.0f),
+		ColorRGB(0.0f, 0.0f, 0.0f),
+	};
+
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
 	attributes.SetColorChannels(3);
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes, 24);
+	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3f);
+	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+		vertexQuantity);
 
-	ColorRGB colors[] = {
-		ColorRGB(0.0f,1.0f,0.0f),
-		ColorRGB(0.0f,1.0f,0.0f),
-		ColorRGB(0.0f,1.0f,0.0f),
-		ColorRGB(0.0f,1.0f,0.0f),
-
-		ColorRGB(1.0f,0.5f,0.0f),
-		ColorRGB(1.0f,0.5f,0.0f),
-		ColorRGB(1.0f,0.5f,0.0f),
-		ColorRGB(1.0f,0.5f,0.0f),
-
-		ColorRGB(1.0f,0.0f,0.0f),
-		ColorRGB(1.0f,0.0f,0.0f),
-		ColorRGB(1.0f,0.0f,0.0f),
-		ColorRGB(1.0f,0.0f,0.0f),
-
-		ColorRGB(1.0f,1.0f,0.0f),
-		ColorRGB(1.0f,1.0f,0.0f),
-		ColorRGB(1.0f,1.0f,0.0f),
-		ColorRGB(1.0f,1.0f,0.0f),
-
-		ColorRGB(0.0f,0.0f,1.0f),
-		ColorRGB(0.0f,0.0f,1.0f),
-		ColorRGB(0.0f,0.0f,1.0f),
-		ColorRGB(0.0f,0.0f,1.0f),
-
-		ColorRGB(1.0f,0.0f,1.0f),
-		ColorRGB(1.0f,0.0f,1.0f),
-		ColorRGB(1.0f,0.0f,1.0f),
-		ColorRGB(1.0f,0.0f,1.0f)
-	};
-
-	Vector3f vertices[] = {
-		Vector3f(1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(1.0f, 1.0f, 1.0f),
-
-		Vector3f(1.0f,-1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(1.0f,-1.0f,-1.0f),
-
-		Vector3f(1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f, 1.0f),
-
-		Vector3f(1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(1.0f, 1.0f,-1.0f),
-
-		Vector3f(-1.0f, 1.0f, 1.0f),
-		Vector3f(-1.0f, 1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f,-1.0f),
-		Vector3f(-1.0f,-1.0f, 1.0f),
-
-		Vector3f(1.0f, 1.0f,-1.0f),
-		Vector3f(1.0f, 1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f, 1.0f),
-		Vector3f(1.0f,-1.0f,-1.0f)
-	};
-
-	for (UInt i = 0; i < pCubeVerts->GetQuantity(); i++)
+	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
 		pCubeVerts->Color3(i) = colors[i];
 	}
 
-	Geometry* pCube = WIRE_NEW QuadMesh(pCubeVerts, NULL);
+	UInt indices[] = {
+		0, 2, 1,
+		0, 3, 2,
+		0, 1, 5,
+		0, 5, 4,
+		0, 4, 7,
+		0, 7, 3,
+		6, 4, 5,
+		6, 7, 4,
+		6, 5, 1,
+		6, 1, 2,
+		6, 2, 3,
+		6, 3, 7,
+	};
+
+	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	for (UInt i = 0; i < indexQuantity; i++)
+	{
+		(*pIndices)[i] = indices[i];
+	}
+
+	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
 	return pCube;
 }
 
@@ -173,20 +156,20 @@ Geometry* Sample1::CreatePyramid()
 		Vector3f(-1.0f,-1.0f, 1.0f)	// Right of Triangle (Left)
 	};
 
-	for (UInt i = 0; i < pPyramidVerts->GetQuantity(); i++)
+	for (UInt i = 0; i < pPyramidVerts->GetVertexQuantity(); i++)
 	{
 		pPyramidVerts->Position3(i) = vertices[i];
 		pPyramidVerts->Color3(i) = colors[i];
 	}
 
-	UInt indexQuantity = pPyramidVerts->GetQuantity();
+	UInt indexQuantity = pPyramidVerts->GetVertexQuantity();
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
 	for (UInt i = 0; i < indexQuantity; i++)
 	{
 		(*pIndices)[i] = i;
 	}
 
-	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, NULL);
+	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, pIndices);
 	return pPyramid;
 }
 
