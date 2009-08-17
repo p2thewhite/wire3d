@@ -2,19 +2,19 @@
 
 using namespace Wire;
 
-const ColorRGBA ColorRGBA::BLACK(0.0f, 0.0f, 0.0f, 1.0f);
-const ColorRGBA ColorRGBA::WHITE(1.0f, 1.0f, 1.0f, 1.0f);
-const ColorRGBA ColorRGBA::RED(1.0f, 0.0f, 0.0f, 1.0f);
-const ColorRGBA ColorRGBA::GREEN(0.0f, 1.0f, 0.0f, 1.0f);
-const ColorRGBA ColorRGBA::BLUE(0.0f, 0.0f, 1.0f, 1.0f);
+const ColorRGBA ColorRGBA::BLACK(0.0F, 0.0F, 0.0F, 1.0F);
+const ColorRGBA ColorRGBA::WHITE(1.0F, 1.0F, 1.0F, 1.0F);
+const ColorRGBA ColorRGBA::RED(1.0F, 0.0F, 0.0F, 1.0F);
+const ColorRGBA ColorRGBA::GREEN(0.0F, 1.0F, 0.0F, 1.0F);
+const ColorRGBA ColorRGBA::BLUE(0.0F, 0.0F, 1.0F, 1.0F);
 
 //----------------------------------------------------------------------------
 ColorRGBA::ColorRGBA()
 {
-	mTuple[0] = 0.0f;
-	mTuple[1] = 0.0f;
-	mTuple[2] = 0.0f;
-	mTuple[3] = 0.0f;
+	mTuple[0] = 0.0F;
+	mTuple[1] = 0.0F;
+	mTuple[2] = 0.0F;
+	mTuple[3] = 0.0F;
 }
 
 //----------------------------------------------------------------------------

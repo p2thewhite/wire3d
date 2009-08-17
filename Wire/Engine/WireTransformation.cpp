@@ -5,7 +5,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Transformation::Transformation()
 	:
-	mScale(Vector3f::ONE),
+	mScale(Vector3F::ONE),
 	mIsIdentity(true),
 	mIsRSMatrix(true),
 	mIsUniformScale(true)
@@ -19,9 +19,9 @@ Transformation::~Transformation()
 }
 
 //----------------------------------------------------------------------------
-void Transformation::SetRotate(const Matrix34f& rMatrix)
+void Transformation::SetRotate(const Matrix34F& rMatrix)
 {
-	Vector3f translate = GetTranslate();
+	Vector3F translate = GetTranslate();
 	mMatrix = rMatrix;
 	SetTranslate(translate);
 	mIsIdentity = false;
@@ -29,7 +29,7 @@ void Transformation::SetRotate(const Matrix34f& rMatrix)
 }
 
 //----------------------------------------------------------------------------
-void Transformation::SetMatrix(const Matrix34f& rMatrix)
+void Transformation::SetMatrix(const Matrix34F& rMatrix)
 {
 	mMatrix = rMatrix;
 	mIsIdentity = false;
@@ -38,17 +38,17 @@ void Transformation::SetMatrix(const Matrix34f& rMatrix)
 }
 
 //----------------------------------------------------------------------------
-void Transformation::SetTranslate(const Vector3f& rTranslate)
+void Transformation::SetTranslate(const Vector3F& rTranslate)
 {
 	mIsIdentity = false;
 	mMatrix.SetColumn(3, rTranslate);
 }
 
 //----------------------------------------------------------------------------
-void Transformation::SetScale(const Vector3f& rScale)
+void Transformation::SetScale(const Vector3F& rScale)
 {
- 	WIRE_ASSERT(mIsRSMatrix && rScale.X() != 0.0f && rScale.Y() != 0.0f
- 		&& rScale.Z() != 0.0f);
+ 	WIRE_ASSERT(mIsRSMatrix && rScale.X() != 0.0F && rScale.Y() != 0.0F
+ 		&& rScale.Z() != 0.0F);
 
 	mScale = rScale;
 	mIsIdentity = false;
@@ -58,15 +58,15 @@ void Transformation::SetScale(const Vector3f& rScale)
 //----------------------------------------------------------------------------
 void Transformation::SetUniformScale(Float scale)
 {
-	WIRE_ASSERT(mIsRSMatrix && (scale != 0.0f));
+	WIRE_ASSERT(mIsRSMatrix && (scale != 0.0F));
 
-	mScale = Vector3f(scale, scale, scale);
+	mScale = Vector3F(scale, scale, scale);
 	mIsIdentity = false;
 	mIsUniformScale = true;
 }
 
 //----------------------------------------------------------------------------
-void Transformation::GetTransformation(Matrix34f& rMatrix) /*const*/
+void Transformation::GetTransformation(Matrix34F& rMatrix) /*const*/
 {
 	if (mIsRSMatrix)
 	{
@@ -130,10 +130,10 @@ void Transformation::Product (const Transformation& rA,
 	}
 
 	// In all remaining cases, the matrix cannot be written as R*S*X+T.
-	Matrix34f A = (rA.IsRSMatrix() ?
+	Matrix34F A = (rA.IsRSMatrix() ?
 		rA.GetMatrix().TimesDiagonal(rA.GetScale()) : rA.GetMatrix());
 
-	Matrix34f B = (rB.IsRSMatrix() ?
+	Matrix34F B = (rB.IsRSMatrix() ?
 		rB.GetMatrix().TimesDiagonal(rB.GetScale()) : rB.GetMatrix());
 
 	SetMatrix(A * B);

@@ -14,10 +14,10 @@ public:
 	Camera();
 	virtual ~Camera();
 
-	void LookAt(const Vector3f& cameraPosition, const Vector3f& cameraUp,
-		const Vector3f& target);
+	void LookAt(const Vector3F& cameraPosition, const Vector3F& cameraUp,
+		const Vector3F& target);
 
-	Matrix34f& GetView();
+	Matrix34F& GetView();
 
 	// Set the view frustum.  The interval [rmin, rmax] is measured in the
 	// right direction R.  These are the "left" and "right" frustum values.
@@ -67,7 +67,7 @@ private:
 	};
 
 	// Transforms world space to camera space.
-	Matrix34f mView;  
+	Matrix34F mView;  
 
 	Float mFrustum[VF_QUANTITY];
 

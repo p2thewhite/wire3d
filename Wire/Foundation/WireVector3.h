@@ -64,7 +64,7 @@ Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector);
 #include "WireVector3.inl"
 #endif
 
-typedef Vector3<Float> Vector3f;
+typedef Vector3<Float> Vector3F;
 
 }
 

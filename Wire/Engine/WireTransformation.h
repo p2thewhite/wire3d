@@ -20,28 +20,28 @@ public:
 	Bool IsRSMatrix() const;
 	Bool IsUniformScale() const;
 
-	inline operator Matrix34f ();
- 	inline operator const Matrix34f () /*const*/; // TODO: fix for VC
+	inline operator Matrix34F ();
+ 	inline operator const Matrix34F () /*const*/; // TODO: fix for VC
 
-	void SetRotate(const Matrix34f& rMatrix);
-	void SetMatrix(const Matrix34f& rMatrix);
-	const Matrix34f& GetMatrix() const;
-	void SetTranslate(const Vector3f& rTranslate);
-	Vector3f GetTranslate() const;
-	void SetScale(const Vector3f& rScale);
-	const Vector3f& GetScale() const;
+	void SetRotate(const Matrix34F& rMatrix);
+	void SetMatrix(const Matrix34F& rMatrix);
+	const Matrix34F& GetMatrix() const;
+	void SetTranslate(const Vector3F& rTranslate);
+	Vector3F GetTranslate() const;
+	void SetScale(const Vector3F& rScale);
+	const Vector3F& GetScale() const;
 	void SetUniformScale(Float scale);
 	Float GetUniformScale() const;
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
-	void GetTransformation(Matrix34f& rMatrix) /*const*/; // TODO: fix for VC
+	void GetTransformation(Matrix34F& rMatrix) /*const*/; // TODO: fix for VC
 
 	// Compute C = A*B.
 	void Product(const Transformation& rA, const Transformation& kB);
 
 private:
-	Matrix34f mMatrix;
-	Vector3f mScale;
+	Matrix34F mMatrix;
+	Vector3F mScale;
 
 	Bool mIsIdentity;
 	Bool mIsRSMatrix;

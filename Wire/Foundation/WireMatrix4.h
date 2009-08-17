@@ -36,7 +36,7 @@ private:
 
 #include "WireMatrix4.inl"
 
-typedef Matrix4<Float> Matrix4f;
+typedef Matrix4<Float> Matrix4F;
 
 }
 

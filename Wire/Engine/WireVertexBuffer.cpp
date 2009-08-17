@@ -21,22 +21,22 @@ VertexBuffer::~VertexBuffer()
 }
 
 //----------------------------------------------------------------------------
-Vector3f& VertexBuffer::Position3(UInt i)
+Vector3F& VertexBuffer::Position3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetPositionOffset();
-	return *(reinterpret_cast<Vector3f*>(pChannel));
+	return *(reinterpret_cast<Vector3F*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-Vector3f VertexBuffer::Position3(UInt i) const
+Vector3F VertexBuffer::Position3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetPositionChannels() == 3);
 	UInt index = mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetPositionOffset();
 	const Float* pChannel = mpChannel + index;
-	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<Vector3F*>(const_cast<Float*>(pChannel)));
 }
 
 //----------------------------------------------------------------------------
@@ -59,39 +59,39 @@ ColorRGB VertexBuffer::Color3(UInt i) const
 }
 
 //----------------------------------------------------------------------------
-Vector3f& VertexBuffer::Normal3(UInt i)
+Vector3F& VertexBuffer::Normal3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetNormalOffset();
-	return *(reinterpret_cast<Vector3f*>(pChannel));
+	return *(reinterpret_cast<Vector3F*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-Vector3f VertexBuffer::Normal3(UInt i) const
+Vector3F VertexBuffer::Normal3(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);
 	UInt index = mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetNormalOffset();
 	const Float* pChannel = mpChannel + index;
-	return *(reinterpret_cast<Vector3f*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<Vector3F*>(const_cast<Float*>(pChannel)));
 }
 
 //----------------------------------------------------------------------------
-Vector2f& VertexBuffer::TCoord2(UInt i)
+Vector2F& VertexBuffer::TCoord2(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetTCoordOffset();
-	return *(reinterpret_cast<Vector2f*>(pChannel));
+	return *(reinterpret_cast<Vector2F*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-Vector2f VertexBuffer::TCoord2(UInt i) const
+Vector2F VertexBuffer::TCoord2(UInt i) const
 {
 	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
 	UInt index = mAttributes.GetChannelQuantity() * i +
 		mAttributes.GetTCoordOffset();
 	const Float* pChannel = mpChannel + index;
-	return *(reinterpret_cast<Vector2f*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<Vector2F*>(const_cast<Float*>(pChannel)));
 }
