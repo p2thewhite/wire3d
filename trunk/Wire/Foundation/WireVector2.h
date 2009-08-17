@@ -41,7 +41,7 @@ private:
 
 #include "WireVector2.inl"
 
-typedef Vector2<Float> Vector2f;
+typedef Vector2<Float> Vector2F;
 
 }
 

@@ -28,7 +28,7 @@ public:
 
 	// Create rotation matrices (positive angle - counterclockwise).  The
 	// angle must be in radians, not degrees.
-	Matrix34(const Vector3<Real>& rkAxis, Real fAngle);
+	Matrix34(const Vector3<Real>& rAxis, Real angle);
 
 	Matrix34& MakeZero();
 	Matrix34& MakeIdentity();
@@ -60,7 +60,7 @@ private:
 #include "WireMatrix34.inl"
 #endif
 
-typedef Matrix34<Float> Matrix34f;
+typedef Matrix34<Float> Matrix34F;
 
 }
 

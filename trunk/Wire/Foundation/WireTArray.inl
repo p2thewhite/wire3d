@@ -281,7 +281,7 @@ void TArray<T>::SetElement(Int i, const T& rElement)
 				// increase the size of the array
 				if (i+1 >= mMaxQuantity)
 				{
-					Int n = 1 + static_cast<Int>(0.5f + (i+1 - mMaxQuantity) /
+					Int n = 1 + static_cast<Int>(0.5F + (i+1 - mMaxQuantity) /
 						static_cast<Float>(mGrowBy));
 
 					// Increase the size of the array. In the event rtElement

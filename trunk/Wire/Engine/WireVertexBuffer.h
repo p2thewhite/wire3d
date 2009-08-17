@@ -20,17 +20,17 @@ public:
 
 	UInt GetVertexQuantity() const { return mVertexQuantity; }
 
-	Vector3f& Position3(UInt i);
-	Vector3f Position3(UInt i) const;
+	Vector3F& Position3(UInt i);
+	Vector3F Position3(UInt i) const;
 
 	ColorRGB& Color3(UInt i);
 	ColorRGB Color3(UInt i) const;
 
-	Vector3f& Normal3(UInt i);
-	Vector3f Normal3(UInt i) const;
+	Vector3F& Normal3(UInt i);
+	Vector3F Normal3(UInt i) const;
 
-	Vector2f& TCoord2(UInt i);
-	Vector2f TCoord2(UInt i) const;
+	Vector2F& TCoord2(UInt i);
+	Vector2F TCoord2(UInt i) const;
 
 private:
 	VertexAttributes mAttributes;

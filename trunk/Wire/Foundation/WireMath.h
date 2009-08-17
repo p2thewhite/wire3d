@@ -27,8 +27,8 @@ public:
 
 #include "WireMath.inl"
 
-typedef Math<Float> Mathf;
-typedef Math<Double> Mathd;
+typedef Math<Float> MathF;
+typedef Math<Double> MathD;
 
 }
 

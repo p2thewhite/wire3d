@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-inline Matrix34f& Camera::GetView()
+inline Matrix34F& Camera::GetView()
 {
 	return mView;
 }

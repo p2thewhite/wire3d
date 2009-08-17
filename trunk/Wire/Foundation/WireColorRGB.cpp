@@ -2,18 +2,18 @@
 
 using namespace Wire;
 
-const ColorRGB ColorRGB::BLACK(0.0f, 0.0f, 0.0f);
-const ColorRGB ColorRGB::WHITE(1.0f, 1.0f, 1.0f);
-const ColorRGB ColorRGB::RED(1.0f, 0.0f, 0.0f);
-const ColorRGB ColorRGB::GREEN(0.0f, 1.0f, 0.0f);
-const ColorRGB ColorRGB::BLUE(0.0f, 0.0f, 1.0f);
+const ColorRGB ColorRGB::BLACK(0.0F, 0.0F, 0.0F);
+const ColorRGB ColorRGB::WHITE(1.0F, 1.0F, 1.0F);
+const ColorRGB ColorRGB::RED(1.0F, 0.0F, 0.0F);
+const ColorRGB ColorRGB::GREEN(0.0F, 1.0F, 0.0F);
+const ColorRGB ColorRGB::BLUE(0.0F, 0.0F, 1.0F);
 
 //----------------------------------------------------------------------------
 ColorRGB::ColorRGB()
 {
-	mTuple[0] = 0.0f;
-	mTuple[1] = 0.0f;
-	mTuple[2] = 0.0f;
+	mTuple[0] = 0.0F;
+	mTuple[1] = 0.0F;
+	mTuple[2] = 0.0F;
 }
 
 //----------------------------------------------------------------------------

@@ -15,35 +15,35 @@ inline Bool Transformation::IsUniformScale() const
 }
 
 //----------------------------------------------------------------------------
-inline Transformation::operator Matrix34f ()
+inline Transformation::operator Matrix34F ()
 {
-	Matrix34f transformation;
+	Matrix34F transformation;
 	GetTransformation(transformation);
 	return transformation;
 }
 
 //----------------------------------------------------------------------------
-inline Transformation::operator const Matrix34f () /*const*/
+inline Transformation::operator const Matrix34F () /*const*/
 {
-	Matrix34f transformation;
+	Matrix34F transformation;
 	GetTransformation(transformation);
 	return transformation;
 }
 
 //----------------------------------------------------------------------------
-inline const Matrix34f& Transformation::GetMatrix() const
+inline const Matrix34F& Transformation::GetMatrix() const
 {
 	return mMatrix;
 }
 
 //----------------------------------------------------------------------------
-inline Vector3f Transformation::GetTranslate() const
+inline Vector3F Transformation::GetTranslate() const
 {
 	return mMatrix.GetColumn(3);
 }
 
 //----------------------------------------------------------------------------
-inline const Vector3f& Transformation::GetScale() const
+inline const Vector3F& Transformation::GetScale() const
 {
 	WIRE_ASSERT(mIsRSMatrix);
 	return mScale;
