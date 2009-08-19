@@ -23,14 +23,14 @@ public:
 	Vector3F& Position3(UInt i);
 	Vector3F Position3(UInt i) const;
 
-	ColorRGB& Color3(UInt i);
-	ColorRGB Color3(UInt i) const;
+	ColorRGB& Color3(UInt i, UInt unit = 0);
+	ColorRGB Color3(UInt i, UInt unit = 0) const;
 
 	Vector3F& Normal3(UInt i);
 	Vector3F Normal3(UInt i) const;
 
-	Vector2F& TCoord2(UInt i);
-	Vector2F TCoord2(UInt i) const;
+	Vector2F& TCoord2(UInt i, UInt unit = 0);
+	Vector2F TCoord2(UInt i, UInt unit = 0) const;
 
 private:
 	VertexAttributes mAttributes;
