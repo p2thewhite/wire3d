@@ -7,9 +7,8 @@ VertexAttributes::VertexAttributes()
 	:
 	mChannelQuantity(0),
 	mPositionChannels(0),
-	mColorChannels(0),
 	mNormalChannels(0),
-	mTCoordChannels(0)
+	mIsChannelInterleaved(true)
 {
 	ResetOffsets();
 }
@@ -23,9 +22,7 @@ VertexAttributes::~VertexAttributes()
 void VertexAttributes::ResetOffsets()
 {
 	mPositionOffset = -1;
-	mColorOffset = -1;
 	mNormalOffset = -1;
-	mTCoordOffset = -1;
 }
 
 //----------------------------------------------------------------------------
@@ -38,11 +35,18 @@ void VertexAttributes::SetPositionChannels(UInt positionChannels)
 }
 
 //----------------------------------------------------------------------------
-void VertexAttributes::SetColorChannels(UInt colorChannels)
+void VertexAttributes::SetColorChannels(UInt colorChannels, UInt unit)
 {
 	WIRE_ASSERT(0 <= colorChannels && colorChannels <= 4);
 
-	mColorChannels = colorChannels;
+	if (mColorChannels.GetQuantity() <= unit)
+	{
+		mColorChannels.SetElement(unit, colorChannels);
+	}
+	else
+	{
+		mColorChannels[unit] = colorChannels;
+	}
 	UpdateOffsets();
 }
 
@@ -56,11 +60,19 @@ void VertexAttributes::SetNormalChannels(UInt normalChannels)
 }
 
 //----------------------------------------------------------------------------
-void VertexAttributes::SetTCoordChannels(UInt tCoordChannels)
+void VertexAttributes::SetTCoordChannels(UInt tCoordChannels, UInt unit)
 {
 	WIRE_ASSERT(0 <= tCoordChannels && tCoordChannels <= 4);
 
-	mTCoordChannels = tCoordChannels;
+	if (mTCoordChannels.GetQuantity() <= unit)
+	{
+		mTCoordChannels.SetElement(unit, tCoordChannels);
+	}
+	else
+	{
+		mTCoordChannels[unit] = tCoordChannels;
+	}
+
 	UpdateOffsets();
 }
 
@@ -77,10 +89,16 @@ void VertexAttributes::UpdateOffsets()
 		mChannelQuantity += mPositionChannels;
 	}
 
-	if (mColorChannels > 0)
+	if (mColorChannels.GetQuantity() > 0)
 	{
-		mColorOffset = mChannelQuantity;
-		mChannelQuantity += mColorChannels;
+		for (UInt i = 0; i < mColorChannels.GetQuantity(); i++)
+		{
+			if (mColorChannels[i] > 0)
+			{
+				mColorOffset.SetElement(i, mChannelQuantity);
+				mChannelQuantity += mColorChannels[i];
+			}
+		}
 	}
 
 	if (mNormalChannels > 0)
@@ -89,9 +107,15 @@ void VertexAttributes::UpdateOffsets()
 		mChannelQuantity += mNormalChannels;
 	}
 
-	if (mTCoordChannels > 0)
+	if (mTCoordChannels.GetQuantity() > 0)
 	{
-		mTCoordOffset = mChannelQuantity;
-		mChannelQuantity += mTCoordChannels;
+		for (UInt i = 0; i < mTCoordChannels.GetQuantity(); i++)
+		{
+			if (mTCoordChannels[i] > 0)
+			{
+				mTCoordOffset.SetElement(i, mChannelQuantity);
+				mChannelQuantity += mTCoordChannels[i];
+			}
+		}
 	}
 }

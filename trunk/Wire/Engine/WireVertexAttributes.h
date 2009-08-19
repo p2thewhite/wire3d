@@ -3,6 +3,7 @@
 #define WIREVERTEXATTRIBUTES_H
 
 #include "../Foundation/WireSystem.h"
+#include "../Foundation/WireTArray.h"
 
 namespace Wire
 {
@@ -16,20 +17,21 @@ public:
 
 	UInt GetChannelQuantity() const { return mChannelQuantity; }
 
+	void SetInterleaved(Bool isChannelInterleaved);
 	void SetPositionChannels(UInt positionChannels);
-	void SetColorChannels(UInt colorChannels);
+	void SetColorChannels(UInt colorChannels, UInt unit = 0);
 	void SetNormalChannels(UInt normalChannels);
-	void SetTCoordChannels(UInt tCoordChannels);
+	void SetTCoordChannels(UInt tCoordChannels, UInt unit = 0);
 
-	UInt GetPositionChannels() const { return mPositionChannels; }
-	UInt GetColorChannels() const { return mColorChannels; }
-	UInt GetNormalChannels() const { return mNormalChannels; }
-	UInt GetTCoordChannels() const { return mTCoordChannels; }
+	UInt GetPositionChannels() const;
+	UInt GetColorChannels(UInt unit = 0) const;
+	UInt GetNormalChannels() const;
+	UInt GetTCoordChannels(UInt unit = 0) const;
 
-	UInt GetPositionOffset() const { return mPositionOffset; }
-	UInt GetColorOffset() const { return mColorOffset; }
-	UInt GetNormalOffset() const { return mNormalOffset; }
-	UInt GetTCoordOffset() const { return mTCoordOffset; }
+	UInt GetPositionOffset() const;
+	UInt GetColorOffset(UInt unit = 0) const;
+	UInt GetNormalOffset() const;
+	UInt GetTCoordOffset(UInt unit = 0) const;
 
 private:
 	void UpdateOffsets();
@@ -40,15 +42,19 @@ private:
 	Int mPositionChannels;
 	Int mPositionOffset;
 
-	Int mColorChannels;
-	Int mColorOffset;
+	TArray<Int> mColorChannels;
+	TArray<Int> mColorOffset;
 
 	Int mNormalChannels;
 	Int mNormalOffset;
 
-	Int mTCoordChannels;
-	Int mTCoordOffset;
+	TArray<Int> mTCoordChannels;
+	TArray<Int> mTCoordOffset;
+
+	Bool mIsChannelInterleaved;
 };
+
+#include "WireVertexAttributes.inl"
 
 }
 

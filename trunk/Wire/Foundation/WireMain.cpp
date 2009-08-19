@@ -20,7 +20,7 @@ void Main::Initialize()
 {
 	if (smpInitializers)
 	{
-		for (Int i = 0; i < smpInitializers->GetQuantity(); i++)
+		for (UInt i = 0; i < smpInitializers->GetQuantity(); i++)
 		{
 			(*smpInitializers)[i]();
 		}

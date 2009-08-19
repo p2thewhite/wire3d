@@ -40,20 +40,20 @@ Vector3F VertexBuffer::Position3(UInt i) const
 }
 
 //----------------------------------------------------------------------------
-ColorRGB& VertexBuffer::Color3(UInt i)
+ColorRGB& VertexBuffer::Color3(UInt i, UInt unit)
 {
-	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
+	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 3);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
-		mAttributes.GetColorOffset();
+		mAttributes.GetColorOffset(unit);
 	return *(reinterpret_cast<ColorRGB*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-ColorRGB VertexBuffer::Color3(UInt i) const
+ColorRGB VertexBuffer::Color3(UInt i, UInt unit) const
 {
-	WIRE_ASSERT(mAttributes.GetColorChannels() == 3);
+	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 3);
 	UInt index = mAttributes.GetChannelQuantity() * i +
-		mAttributes.GetColorOffset();
+		mAttributes.GetColorOffset(unit);
 	const Float* pChannel = mpChannel + index;
 	return *(reinterpret_cast<ColorRGB*>(const_cast<Float*>(pChannel)));
 }
@@ -78,20 +78,20 @@ Vector3F VertexBuffer::Normal3(UInt i) const
 }
 
 //----------------------------------------------------------------------------
-Vector2F& VertexBuffer::TCoord2(UInt i)
+Vector2F& VertexBuffer::TCoord2(UInt i, UInt unit)
 {
-	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
+	WIRE_ASSERT(mAttributes.GetTCoordChannels(unit) == 2);
 	Float* pChannel = mpChannel + mAttributes.GetChannelQuantity() * i +
-		mAttributes.GetTCoordOffset();
+		mAttributes.GetTCoordOffset(unit);
 	return *(reinterpret_cast<Vector2F*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-Vector2F VertexBuffer::TCoord2(UInt i) const
+Vector2F VertexBuffer::TCoord2(UInt i, UInt unit) const
 {
-	WIRE_ASSERT(mAttributes.GetTCoordChannels() == 2);
+	WIRE_ASSERT(mAttributes.GetTCoordChannels(unit) == 2);
 	UInt index = mAttributes.GetChannelQuantity() * i +
-		mAttributes.GetTCoordOffset();
+		mAttributes.GetTCoordOffset(unit);
 	const Float* pChannel = mpChannel + index;
 	return *(reinterpret_cast<Vector2F*>(const_cast<Float*>(pChannel)));
 }

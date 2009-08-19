@@ -501,6 +501,10 @@
 					RelativePath=".\Engine\WireTransformation.inl"
 					>
 				</File>
+				<File
+					RelativePath=".\Engine\WireVertexAttributes.inl"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
