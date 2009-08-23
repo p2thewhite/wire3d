@@ -63,11 +63,10 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 }
 
 //----------------------------------------------------------------------------
-void SphereBV::TransformBy(const Transformation& rkTransform,
-	BoundingVolume* pkResult)
+void SphereBV::TransformBy(/*const*/ Transformation& rTransform,
+	BoundingVolume* pResult)
 {
-//TODO
-//	Sphere3f& rkTarget = ((SphereBV*)pkResult)->mSphere;
-// 	rkTarget.Center = rkTransform.ApplyForward(mSphere.mCenter);
-// 	rkTarget.Radius = rkTransform.GetNorm()*mSphere.mRadius;
+	Sphere3F& rTarget = ((SphereBV*)pResult)->mSphere;
+	rTarget.mCenter = rTransform.ApplyForward(mSphere.mCenter);
+	rTarget.mRadius = rTransform.GetNorm() * mSphere.mRadius;
 }

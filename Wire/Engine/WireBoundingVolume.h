@@ -32,8 +32,8 @@ public:
 	virtual void ComputeFromData(const VertexBuffer* pVBuffer) = 0;
 
 	// Transform the bounding volume (model-to-world conversion).
-	virtual void TransformBy(const Transformation& rTransform,
-		BoundingVolume* pResult) = 0;
+	virtual void TransformBy(/*const*/ Transformation& rTransform,
+		BoundingVolume* pResult) = 0; // TODO: fix for VC
 
 protected:
 	BoundingVolume();
