@@ -33,6 +33,12 @@ public:
 	inline Vector3 operator/ (Real scalar) const;
 	inline Vector3 operator- () const;
 
+	// arithmetic updates
+	inline Vector3& operator+= (const Vector3& rVector);
+	inline Vector3& operator-= (const Vector3& rVector);
+	inline Vector3& operator*= (Real scalar);
+	inline Vector3& operator/= (Real scalar);
+
 	// vector operations
 	inline Real Length() const;
 	inline Real SquaredLength() const;

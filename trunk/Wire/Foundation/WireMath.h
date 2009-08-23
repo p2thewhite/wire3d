@@ -13,6 +13,7 @@ class Math
 public:
 	static Real ATan(Real value);
 	static Real Cos(Real value);
+	static Real FAbs(Real value);
 	static Real FMod(Real x, Real y);
 	static Real Sin(Real value);
 	static Real Sqrt(Real value);

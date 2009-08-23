@@ -72,6 +72,49 @@ inline Real Vector3<Real>::Z()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
+{
+	VECAdd(&mTuple, const_cast<Vector*>(&rVector.mTuple), &mTuple);
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real>& Vector3<Real>::operator-= (const Vector3& rVector)
+{
+	VECSubtract(&mTuple, const_cast<Vector*>(&rVector.mTuple), &mTuple);
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real>& Vector3<Real>::operator*= (Real scalar)
+{
+	VECScale(&mTuple, &mTuple, scalar);
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real>& Vector3<Real>::operator/= (Real scalar)
+{
+	if (scalar != static_cast<Real>(0.0))
+	{
+		Real invScalar = (static_cast<Real>(1.0)) / scalar;
+		VECScale(&mTuple, &mTuple, invScalar);
+	}
+	else
+	{
+		mTuple.x = Math<Real>::MAX_REAL;
+		mTuple.y = Math<Real>::MAX_REAL;
+		mTuple.z = Math<Real>::MAX_REAL;
+	}
+
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Real Vector3<Real>::Length() const
 {
 //	return VECMag(&mTuple);			// No OGC equivalent exists :(
