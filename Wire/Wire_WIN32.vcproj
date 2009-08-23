@@ -188,6 +188,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireSphere3.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireSystem.h"
 					>
 				</File>
@@ -229,6 +233,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix4.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireSphere3.inl"
 					>
 				</File>
 				<File
@@ -426,6 +434,10 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireBoundingVolume.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCamera.h"
 					>
 				</File>
@@ -455,6 +467,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSpatial.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSphereBV.h"
 					>
 				</File>
 				<File
@@ -498,6 +514,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireSphereBV.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTransformation.inl"
 					>
 				</File>
@@ -509,6 +529,10 @@
 			<Filter
 				Name="Source Files"
 				>
+				<File
+					RelativePath=".\Engine\WireBoundingVolume.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\Engine\WireCamera.cpp"
 					>
@@ -535,6 +559,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSpatial.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSphereBV.cpp"
 					>
 				</File>
 				<File

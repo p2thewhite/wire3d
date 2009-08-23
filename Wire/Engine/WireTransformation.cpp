@@ -92,7 +92,7 @@ void Transformation::GetTransformation(Matrix34F& rMatrix) /*const*/
 }
 
 //----------------------------------------------------------------------------
-void Transformation::Product (const Transformation& rA,
+void Transformation::Product(const Transformation& rA,
 	const Transformation& rB)
 {
 	if (rA.IsIdentity())
@@ -138,4 +138,80 @@ void Transformation::Product (const Transformation& rA,
 
 	SetMatrix(A * B);
 	SetTranslate(A * rB.GetTranslate() + rA.GetTranslate());
+}
+
+//----------------------------------------------------------------------------
+Vector3F Transformation::ApplyForward(const Vector3F& rInput) const
+{
+	if (mIsIdentity)
+	{
+		// Y = X
+		return rInput;
+	}
+
+	if (mIsRSMatrix)
+	{
+		// Y = R*S*X + T
+		Vector3F output(mScale.X() * rInput.X(), mScale.Y() * rInput.Y(),
+			mScale.Z() * rInput.Z());
+		output = mMatrix * output + GetTranslate();
+		return output;
+	}
+
+	// Y = M*X + T
+	Vector3F output = mMatrix * rInput + GetTranslate();
+	return output;
+}
+
+//----------------------------------------------------------------------------
+Float Transformation::GetNorm() const
+{
+	if (mIsRSMatrix)
+	{
+		Float max = MathF::FAbs(mScale.X());
+		if (MathF::FAbs(mScale.Y()) > max)
+		{
+			max = MathF::FAbs(mScale.Y());
+		}
+		if (MathF::FAbs(mScale.Z()) > max)
+		{
+			max = MathF::FAbs(mScale.Z());
+		}
+		return max;
+	}
+
+//TODO implement operator[] for Matrix34
+
+	// A general matrix.  Use the max-row-sum matrix norm.  The spectral
+	// norm (the maximum absolute value of the eigenvalues) is smaller or
+	// equal to this norm.  Therefore, this function returns an approximation
+	// to the maximum scale.
+// 	Float maxRowSum =
+// 		MathF::FAbs(mMatrix[0][0]) +
+// 		MathF::FAbs(mMatrix[0][1]) +
+// 		MathF::FAbs(mMatrix[0][2]);
+// 
+// 	Float rowSum =
+// 		MathF::FAbs(mMatrix[1][0]) +
+// 		MathF::FAbs(mMatrix[1][1]) +
+// 		MathF::FAbs(mMatrix[1][2]);
+// 
+// 	if (rowSum > maxRowSum)
+// 	{
+// 		maxRowSum = rowSum;
+// 	}
+// 
+// 	rowSum =
+// 		MathF::FAbs(mMatrix[2][0]) +
+// 		MathF::FAbs(mMatrix[2][1]) +
+// 		MathF::FAbs(mMatrix[2][2]);
+// 
+// 	if (rowSum > maxRowSum)
+// 	{
+// 		maxRowSum = rowSum;
+// 	}
+// 
+// 	return maxRowSum;
+
+	return 0.0F;
 }

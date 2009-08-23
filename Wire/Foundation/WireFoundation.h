@@ -10,6 +10,7 @@
 #include "WireMain.h"
 #include "WireMainMCR.h"
 #include "WireMemory.h"
+#include "WireSphere3.h"
 #include "WireSystem.h"
 #include "WireTArray.h"
 #include "WireTypes.h"

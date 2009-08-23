@@ -2,6 +2,7 @@
 #ifndef WIREGEOMETRY_H
 #define WIREGEOMETRY_H
 
+#include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
 #include "WireSpatial.h"
 #include "WireVertexBuffer.h"
@@ -19,13 +20,21 @@ public:
 		GT_MAX_QUANTITY
 	};
 
-	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
+	// abstract base class
 	virtual ~Geometry();
 
 	// member access
-	GeometryType Type;
 	VertexBufferPtr VBuffer;
 	IndexBufferPtr IBuffer;
+	BoundingVolumePtr ModelBound;
+
+	GeometryType Type;
+
+protected:
+	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
+
+	// geometric updates
+	virtual void UpdateModelBound ();
 };
 
 typedef Pointer<Geometry> GeometryPtr;

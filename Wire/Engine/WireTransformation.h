@@ -36,6 +36,14 @@ public:
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
 	void GetTransformation(Matrix34F& rMatrix) /*const*/; // TODO: fix for VC
 
+	// For M = R*S, the largest value of S in absolute value is returned.
+	// For general M, the max-row-sum norm is returned (and is guaranteed to
+	// be larger or equal to the largest eigenvalue of S in absolute value).
+	Float GetNorm() const;
+
+	// Compute Y = M*X+T where X is the input point and Y is the output point.
+	Vector3F ApplyForward(const Vector3F& rInput) const;
+
 	// Compute C = A*B.
 	void Product(const Transformation& rA, const Transformation& kB);
 
