@@ -29,8 +29,8 @@ public:
 	virtual void ComputeFromData(const VertexBuffer* pVBuffer);
 
 	// Transform the sphere (model-to-world conversion).
-	virtual void TransformBy(const Transformation& rTransform,
-		BoundingVolume* pResult);
+	virtual void TransformBy(/*const*/ Transformation& rTransform,
+		BoundingVolume* pResult); // TODO: fix for VC
 
 protected:
 	Sphere3F mSphere;

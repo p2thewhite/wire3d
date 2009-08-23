@@ -39,7 +39,7 @@ public:
 	// For M = R*S, the largest value of S in absolute value is returned.
 	// For general M, the max-row-sum norm is returned (and is guaranteed to
 	// be larger or equal to the largest eigenvalue of S in absolute value).
-	Float GetNorm() const;
+	Float GetNorm() /*const*/; // TODO: fix for VC
 
 	// Compute Y = M*X+T where X is the input point and Y is the output point.
 	Vector3F ApplyForward(const Vector3F& rInput) const;

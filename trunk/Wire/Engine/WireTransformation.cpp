@@ -164,7 +164,7 @@ Vector3F Transformation::ApplyForward(const Vector3F& rInput) const
 }
 
 //----------------------------------------------------------------------------
-Float Transformation::GetNorm() const
+Float Transformation::GetNorm() /*const*/
 {
 	if (mIsRSMatrix)
 	{
@@ -180,38 +180,34 @@ Float Transformation::GetNorm() const
 		return max;
 	}
 
-//TODO implement operator[] for Matrix34
-
 	// A general matrix.  Use the max-row-sum matrix norm.  The spectral
 	// norm (the maximum absolute value of the eigenvalues) is smaller or
 	// equal to this norm.  Therefore, this function returns an approximation
 	// to the maximum scale.
-// 	Float maxRowSum =
-// 		MathF::FAbs(mMatrix[0][0]) +
-// 		MathF::FAbs(mMatrix[0][1]) +
-// 		MathF::FAbs(mMatrix[0][2]);
-// 
-// 	Float rowSum =
-// 		MathF::FAbs(mMatrix[1][0]) +
-// 		MathF::FAbs(mMatrix[1][1]) +
-// 		MathF::FAbs(mMatrix[1][2]);
-// 
-// 	if (rowSum > maxRowSum)
-// 	{
-// 		maxRowSum = rowSum;
-// 	}
-// 
-// 	rowSum =
-// 		MathF::FAbs(mMatrix[2][0]) +
-// 		MathF::FAbs(mMatrix[2][1]) +
-// 		MathF::FAbs(mMatrix[2][2]);
-// 
-// 	if (rowSum > maxRowSum)
-// 	{
-// 		maxRowSum = rowSum;
-// 	}
-// 
-// 	return maxRowSum;
+	Float maxRowSum =
+		MathF::FAbs(mMatrix[0][0]) +
+		MathF::FAbs(mMatrix[0][1]) +
+		MathF::FAbs(mMatrix[0][2]);
 
-	return 0.0F;
+	Float rowSum =
+		MathF::FAbs(mMatrix[1][0]) +
+		MathF::FAbs(mMatrix[1][1]) +
+		MathF::FAbs(mMatrix[1][2]);
+
+	if (rowSum > maxRowSum)
+	{
+		maxRowSum = rowSum;
+	}
+
+	rowSum =
+		MathF::FAbs(mMatrix[2][0]) +
+		MathF::FAbs(mMatrix[2][1]) +
+		MathF::FAbs(mMatrix[2][2]);
+
+	if (rowSum > maxRowSum)
+	{
+		maxRowSum = rowSum;
+	}
+
+	return maxRowSum;
 }
