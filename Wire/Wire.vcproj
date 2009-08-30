@@ -121,6 +121,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WirePlane3.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireSphere3.h"
 					>
 				</File>
@@ -166,6 +170,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix4.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WirePlane3.inl"
 					>
 				</File>
 				<File
@@ -253,6 +261,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireCuller.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.h"
 					>
 				</File>
@@ -309,6 +321,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireCuller.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
 					>
 				</File>
@@ -346,6 +362,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCamera.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireCuller.cpp"
 					>
 				</File>
 				<File

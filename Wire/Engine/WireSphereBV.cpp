@@ -38,27 +38,27 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 	{
 		UInt quantity = pVBuffer->GetVertexQuantity();
 
-		mSphere.mCenter = Vector3F::ZERO;
-		mSphere.mRadius = 0.0F;
+		mSphere.Center = Vector3F::ZERO;
+		mSphere.Radius = 0.0F;
 
 		for (UInt i = 0; i < quantity; i++)
 		{
-			mSphere.mCenter += pVBuffer->Position3(i);
+			mSphere.Center += pVBuffer->Position3(i);
 		}
 
-		mSphere.mCenter /= static_cast<Float>(quantity);
+		mSphere.Center /= static_cast<Float>(quantity);
 
 		for (UInt i = 0; i < quantity; i++)
 		{
-			Vector3F diff = pVBuffer->Position3(i) - mSphere.mCenter;
+			Vector3F diff = pVBuffer->Position3(i) - mSphere.Center;
 			Float radiusSqr = diff.SquaredLength();
-			if (radiusSqr > mSphere.mRadius)
+			if (radiusSqr > mSphere.Radius)
 			{
-				mSphere.mRadius = radiusSqr;
+				mSphere.Radius = radiusSqr;
 			}
 		}
 
-		mSphere.mRadius = MathF::Sqrt(mSphere.mRadius);
+		mSphere.Radius = MathF::Sqrt(mSphere.Radius);
 	}
 }
 
@@ -66,7 +66,25 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 void SphereBV::TransformBy(/*const*/ Transformation& rTransform,
 	BoundingVolume* pResult)
 {
-	Sphere3F& rTarget = ((SphereBV*)pResult)->mSphere;
-	rTarget.mCenter = rTransform.ApplyForward(mSphere.mCenter);
-	rTarget.mRadius = rTransform.GetNorm() * mSphere.mRadius;
+	Sphere3F& rTarget = (static_cast<SphereBV*>(pResult))->mSphere;
+	rTarget.Center = rTransform.ApplyForward(mSphere.Center);
+	rTarget.Radius = rTransform.GetNorm() * mSphere.Radius;
+}
+
+//----------------------------------------------------------------------------
+Int SphereBV::WhichSide(const Plane3F& rPlane) const
+{
+	Float distance = rPlane.DistanceTo(mSphere.Center);
+
+	if (distance <= -mSphere.Radius)
+	{
+		return -1;
+	}
+
+	if (distance >= mSphere.Radius)
+	{
+		return +1;
+	}
+
+	return 0;
 }

@@ -43,8 +43,19 @@ public:
 	inline Real Length() const;
 	inline Real SquaredLength() const;
 	inline Real Dot(const Vector3& rVector) const;
+	inline Real Normalize();
 
+	// The cross products are computed using the right-handed rule. Be aware
+	// that some graphics APIs use a left-handed rule.  If you have to compute
+	// a cross product with these functions and send the result to the API
+	// that expects left-handed, you will need to change sign on the vector
+	// (replace each component value c by -c).
 	inline Vector3 Cross(const Vector3& rVector) const;
+
+	// Gram-Schmidt orthonormalization. Take linearly independent vectors
+	// U, V, and W and compute an orthonormal set (unit length, mutually
+	// perpendicular).
+	static void Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW);
 
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ZERO;    // (0,0,0)
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_X;  // (1,0,0)
