@@ -8,23 +8,23 @@ Sphere3<Real>::Sphere3()
 template <class Real>
 Sphere3<Real>::Sphere3(const Vector3<Real>& rCenter, Real radius)
 	:
-	mCenter(rCenter),
-	mRadius(radius)
+	Center(rCenter),
+	Radius(radius)
 {
 }
 //----------------------------------------------------------------------------
 template <class Real>
 Sphere3<Real>::Sphere3(const Sphere3& rSphere)
 	:
-	mCenter(rSphere.mCenter),
-	mRadius(rSphere.mRadius)
+	Center(rSphere.Center),
+	Radius(rSphere.Radius)
 {
 }
 //----------------------------------------------------------------------------
 template <class Real>
 Sphere3<Real>& Sphere3<Real>::operator= (const Sphere3& rSphere)
 {
-	mCenter = rSphere.mCenter;
-	mRadius = rSphere.mRadius;
+	Center = rSphere.Center;
+	Radius = rSphere.Radius;
 	return *this;
 }

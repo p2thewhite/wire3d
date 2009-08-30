@@ -1,25 +1,25 @@
 //----------------------------------------------------------------------------
 inline void SphereBV::SetCenter(const Vector3F& rCenter)
 {
-	mSphere.mCenter = rCenter;
+	mSphere.Center = rCenter;
 }
 
 //----------------------------------------------------------------------------
 inline void SphereBV::SetRadius(Float radius)
 {
-	mSphere.mRadius = radius;
+	mSphere.Radius = radius;
 }
 
 //----------------------------------------------------------------------------
 inline Vector3F SphereBV::GetCenter() const
 {
-	return mSphere.mCenter;
+	return mSphere.Center;
 }
 
 //----------------------------------------------------------------------------
 inline Float SphereBV::GetRadius() const
 {
-	return mSphere.mRadius;
+	return mSphere.Radius;
 }
 
 //----------------------------------------------------------------------------

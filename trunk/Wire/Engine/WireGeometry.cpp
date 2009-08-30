@@ -22,3 +22,9 @@ void Geometry::UpdateModelBound()
 {
 	ModelBound->ComputeFromData(VBuffer);
 }
+
+//----------------------------------------------------------------------------
+void Geometry::UpdateWorldBound()
+{
+	ModelBound->TransformBy(World, WorldBound);
+}

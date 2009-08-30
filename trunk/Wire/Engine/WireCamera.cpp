@@ -24,6 +24,13 @@ void Camera::LookAt(const Vector3F& cameraPosition,
 		right.X(),	right.Y(),	right.Z(),	-(right.Dot(cameraPosition)),
 		up.X(),		up.Y(),		up.Z(),		-(up.Dot(cameraPosition)),
 		look.X(),	look.Y(),	look.Z(),	-(look.Dot(cameraPosition)));
+
+	mLocation = cameraPosition;
+	mDVector = look;
+	mRVector = right;
+	mUVector = up;
+
+	SetAxes(mDVector, mUVector, mRVector);
 }
 
 //----------------------------------------------------------------------------
@@ -79,4 +86,21 @@ Bool Camera::GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 	}
 
 	return false;
+}
+
+//----------------------------------------------------------------------------
+void Camera::SetAxes(const Vector3F& rkDVector, const Vector3F& rkUVector,
+	const Vector3F& rkRVector)
+{
+	mDVector = rkDVector;
+	mUVector = rkUVector;
+	mRVector = rkRVector;
+
+	Float aDet = MathF::FAbs(mDVector.Dot(mUVector.Cross(mRVector)));
+	if (MathF::FAbs(1.0F - aDet) > 0.01F)
+	{
+		// The input vectors do not appear to form an orthonormal set. Time
+		// to renormalize.
+		Vector3F::Orthonormalize(mDVector, mUVector, mRVector);
+	}
 }

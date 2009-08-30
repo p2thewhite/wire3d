@@ -30,14 +30,14 @@ Bool Sample1::OnInitialize()
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
-	Vector3F cam(0.0F, 0.0F, 0.0F);
-	Vector3F up(0.0F, 1.0F, 0.0F);
-	Vector3F look(0.0F, 0.0F, -1.0F);
+	Vector3F cameraPosition(0.0F, 0.0F, 0.0F);
+	Vector3F upDirection(0.0F, 1.0F, 0.0F);
+	Vector3F lookAtPosition(0.0F, 0.0F, -1.0F);
 
 	mspCamera = WIRE_NEW Camera;
 	Float width = static_cast<Float>(mpRenderer->GetWidth());
 	Float height = static_cast<Float>(mpRenderer->GetHeight());
-	mspCamera->LookAt(cam, up, look);
+	mspCamera->LookAt(cameraPosition, upDirection, lookAtPosition);
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 
 	mRtri = 0.0F;

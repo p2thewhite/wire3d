@@ -21,8 +21,8 @@ public:
 	// assignment
 	Sphere3& operator= (const Sphere3& rSphere);
 
-	Vector3<Real> mCenter;
-	Real mRadius;
+	Vector3<Real> Center;
+	Real Radius;
 };
 
 #include "WireSphere3.inl"

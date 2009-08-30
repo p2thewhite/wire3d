@@ -1,4 +1,28 @@
 //----------------------------------------------------------------------------
+inline Vector3F Camera::GetLocation() const
+{
+	return mLocation;
+}
+
+//----------------------------------------------------------------------------
+inline Vector3F Camera::GetDVector() const
+{
+	return mDVector;
+}
+
+//----------------------------------------------------------------------------
+inline Vector3F Camera::GetUVector() const
+{
+	return mUVector;
+}
+
+//----------------------------------------------------------------------------
+inline Vector3F Camera::GetRVector() const
+{
+	return mRVector;
+}
+
+//----------------------------------------------------------------------------
 inline Matrix34F& Camera::GetView()
 {
 	return mView;

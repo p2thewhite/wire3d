@@ -24,6 +24,7 @@ public:
 	/*WIRE_FOUNDATION_ITEM*/ static const Real PI;
 	/*WIRE_FOUNDATION_ITEM*/ static const Real DEG_TO_RAD;
 	/*WIRE_FOUNDATION_ITEM*/ static const Real RAD_TO_DEG;
+	/*WIRE_FOUNDATION_ITEM*/ static const Real ZERO_TOLERANCE;
 };
 
 #include "WireMath.inl"

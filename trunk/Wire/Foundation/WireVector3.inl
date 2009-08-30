@@ -235,3 +235,56 @@ inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
 		scalar * rVector[1],
 		scalar * rVector[2]);
 }
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::Normalize()
+{
+	Real length = Length();
+
+	if (length > Math<Real>::ZERO_TOLERANCE)
+	{
+		Real invLength = (static_cast<Real>(1.0)) / length;
+		mTuple[0] *= invLength;
+		mTuple[1] *= invLength;
+		mTuple[2] *= invLength;
+	}
+	else
+	{
+		length = static_cast<Real>(0.0);
+		mTuple[0] = static_cast<Real>(0.0);
+		mTuple[1] = static_cast<Real>(0.0);
+		mTuple[2] = static_cast<Real>(0.0);
+	}
+
+	return length;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Vector3<Real>::Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW)
+{
+	// If the input vectors are v0, v1, and v2, then the Gram-Schmidt
+	// orthonormalization produces vectors u0, u1, and u2 as follows,
+	//
+	//   u0 = v0/|v0|
+	//   u1 = (v1-(u0*v1)u0)/|v1-(u0*v1)u0|
+	//   u2 = (v2-(u0*v2)u0-(u1*v2)u1)/|v2-(u0*v2)u0-(u1*v2)u1|
+	//
+	// where |A| indicates length of vector A and A*B indicates dot
+	// product of vectors A and B.
+
+	// compute u0
+	rU.Normalize();
+
+	// compute u1
+	Real dot0 = rU.Dot(rV); 
+	rV -= dot0*rU;
+	rV.Normalize();
+
+	// compute u2
+	Real dot1 = rV.Dot(rW);
+	dot0 = rU.Dot(rW);
+	rW -= dot0*rU + dot1*rV;
+	rW.Normalize();
+}

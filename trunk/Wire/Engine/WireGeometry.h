@@ -34,7 +34,8 @@ protected:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 
 	// geometric updates
-	virtual void UpdateModelBound ();
+	virtual void UpdateModelBound();
+	virtual void UpdateWorldBound();
 };
 
 typedef Pointer<Geometry> GeometryPtr;

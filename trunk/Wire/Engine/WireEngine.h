@@ -4,6 +4,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
+#include "WireCuller.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
 #include "WireQuadMesh.h"
