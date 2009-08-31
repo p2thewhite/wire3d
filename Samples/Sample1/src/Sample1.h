@@ -28,6 +28,7 @@ private:
 	CameraPtr mspCamera;
 	GeometryPtr mspCube;
 	GeometryPtr mspPyramid;
+	Culler mCuller;
 
 	Float mRtri;
 	Float mRquad;

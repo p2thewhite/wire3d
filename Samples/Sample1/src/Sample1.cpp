@@ -30,15 +30,18 @@ Bool Sample1::OnInitialize()
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
-	Vector3F cameraPosition(0.0F, 0.0F, 0.0F);
-	Vector3F upDirection(0.0F, 1.0F, 0.0F);
-	Vector3F lookAtPosition(0.0F, 0.0F, -1.0F);
-
+	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
+	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
+	Vector3F up(0.0F, 1.0F, 0.0F);
+	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
+	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
+
 	Float width = static_cast<Float>(mpRenderer->GetWidth());
 	Float height = static_cast<Float>(mpRenderer->GetHeight());
-	mspCamera->LookAt(cameraPosition, upDirection, lookAtPosition);
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+
+	mCuller.SetCamera(mspCamera);
 
 	mRtri = 0.0F;
 	mRquad = 0.0F;
@@ -176,17 +179,33 @@ Geometry* Sample1::CreatePyramid()
 //----------------------------------------------------------------------------
 void Sample1::OnIdle()
 {
+	mCuller.SetFrustum(mspCamera->GetFrustum());
+
 	Float scaleFactor = MathF::Sin(mAngle);
 	mAngle += MathF::PI / 180.0F;
 	mAngle = MathF::FMod(mAngle, MathF::PI);
 
 	mpRenderer->BeginScene(mspCamera);
 
+	Float xOffset = -1.5F - mAngle * 5.5F;
 	Matrix34F model(Vector3F(0, -1, 0), MathF::DEG_TO_RAD * mRtri);
 	mspPyramid->Local.SetRotate(model);
-	mspPyramid->Local.SetTranslate(Vector3F(-1.5F, 0.0F, -6.0F));
+	mspPyramid->Local.SetTranslate(Vector3F(xOffset, 0.0F, -6.0F));
 	mspPyramid->Local.SetUniformScale(scaleFactor + 0.5F);
-	mpRenderer->Draw(mspPyramid);
+	mspPyramid->ModelBound->TransformBy(mspPyramid->Local, mspPyramid->WorldBound);
+	if (!mCuller.IsVisible(mspPyramid->WorldBound))
+	{
+		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
+		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
+		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
+	}
+	else
+	{
+		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
+		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
+		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
+		mpRenderer->Draw(mspPyramid);
+	}
 
 	model.FromAxisAngle(Vector3F(1, 1, 1), MathF::DEG_TO_RAD * mRquad);
 	mspCube->Local.SetRotate(model);

@@ -63,3 +63,9 @@ inline Float Camera::GetRMax() const
 {
 	return mFrustum[VF_RMAX];
 }
+
+//----------------------------------------------------------------------------
+inline const Float* Camera::GetFrustum() const
+{
+	return mFrustum;
+}
