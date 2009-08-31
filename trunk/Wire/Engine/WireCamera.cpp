@@ -5,6 +5,9 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Camera::Camera()
 {
+	SetFrustum(-0.5f,0.5f,-0.5f,0.5f,1.0f,2.0f);
+	SetFrame(Vector3F::ZERO, -Vector3F::UNIT_Z, Vector3F::UNIT_Y,
+		Vector3F::UNIT_X);
 }
 
 //----------------------------------------------------------------------------
@@ -103,4 +106,17 @@ void Camera::SetAxes(const Vector3F& rkDVector, const Vector3F& rkUVector,
 		// to renormalize.
 		Vector3F::Orthonormalize(mDVector, mUVector, mRVector);
 	}
+}
+
+//----------------------------------------------------------------------------
+void Camera::SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
+	const Vector3F& rUVector, const Vector3F& rRVector)
+{
+	mLocation = rLocation;
+	SetAxes(rDVector, rUVector, rRVector);
+
+	mView = Matrix34F(
+		rRVector.X(), rRVector.Y(),	rRVector.Z(), -(rRVector.Dot(rLocation)),
+		rUVector.X(), rUVector.Y(), rUVector.Z(), -(rUVector.Dot(rLocation)),
+		rDVector.X(), rDVector.Y(),	-rDVector.Z(), -(rDVector.Dot(rLocation)));
 }

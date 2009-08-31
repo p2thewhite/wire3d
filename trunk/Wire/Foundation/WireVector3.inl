@@ -37,7 +37,7 @@ inline Real Vector3<Real>::X() const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Real Vector3<Real>::X()
+inline Real& Vector3<Real>::X()
 {
 	return mTuple[0];
 }
@@ -51,7 +51,7 @@ inline Real Vector3<Real>::Y() const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Real Vector3<Real>::Y()
+inline Real& Vector3<Real>::Y()
 {
 	return mTuple[1];
 }
@@ -65,7 +65,7 @@ inline Real Vector3<Real>::Z() const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Real Vector3<Real>::Z()
+inline Real& Vector3<Real>::Z()
 {
 	return mTuple[2];
 }

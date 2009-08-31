@@ -20,11 +20,11 @@ public:
 	inline operator Real* ();
 	inline operator const Real* () const;
 	inline Real X() const;
-	inline Real X();
+	inline Real& X();
 	inline Real Y() const;
-	inline Real Y();
+	inline Real& Y();
 	inline Real Z() const;
-	inline Real Z();
+	inline Real& Z();
 
 	// arithmetic operations
 	inline Vector3 operator+ (const Vector3& rVector) const;

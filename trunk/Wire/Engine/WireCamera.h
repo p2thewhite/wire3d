@@ -14,6 +14,17 @@ public:
 	Camera();
 	virtual ~Camera();
 
+	enum
+	{
+		VF_DMIN     = 0,  // near
+		VF_DMAX     = 1,  // far
+		VF_UMIN     = 2,  // bottom
+		VF_UMAX     = 3,  // top
+		VF_RMIN     = 4,  // left
+		VF_RMAX     = 5,  // right
+		VF_QUANTITY = 6
+	};
+
 	void LookAt(const Vector3F& cameraPosition, const Vector3F& cameraUp,
 		const Vector3F& target);
 
@@ -26,6 +37,14 @@ public:
 
 	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 		const Vector3F& rRVector);
+
+	// The camera frame is always in world coordinates.
+	//   default location  E = (0, 0, 0)
+	//   default direction D = (0, 0,-1)
+	//   default up        U = (0, 1, 0)
+	//   default right     R = (1, 0, 0)
+	void SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
+		const Vector3F& rUVector, const Vector3F& rRVector);
 
 	// Set the view frustum. The interval [rmin, rmax] is measured in the
 	// right direction R. These are the "left" and "right" frustum values.
@@ -54,6 +73,9 @@ public:
 	Bool GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 		Float& rDMin, Float& rDMax) const;
 
+	// Get all the view frustum values simultaneously.
+	const Float* GetFrustum() const;
+
 	// Get the individual frustum values.
 	Float GetDMin() const;
 	Float GetDMax() const;
@@ -63,17 +85,6 @@ public:
 	Float GetRMax() const;
 
 private:
-	enum
-	{
-		VF_DMIN     = 0,  // near
-		VF_DMAX     = 1,  // far
-		VF_UMIN     = 2,  // bottom
-		VF_UMAX     = 3,  // top
-		VF_RMIN     = 4,  // left
-		VF_RMAX     = 5,  // right
-		VF_QUANTITY = 6
-	};
-
 	// Transforms world space to camera space.
 	Matrix34F mView;  
 

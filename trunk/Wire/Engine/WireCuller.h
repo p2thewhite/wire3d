@@ -18,6 +18,11 @@ public:
 	Culler(Int maxQuantity = 0, Int growBy = 0, const Camera* pCamera = 0);
 	virtual ~Culler();
 
+	// Access to the camera, frustum copy, and potentially visible set.
+	void SetCamera(const Camera* pCamera);
+	const Camera* GetCamera() const;
+	void SetFrustum(const Float* pFrustum);
+
 	// Compare the object's world bounding volume against the culling planes.
 	// Only Spatial calls this function.
 	Bool IsVisible(const BoundingVolume* pBV);
@@ -29,13 +34,19 @@ protected:
 	// culling pass over the scene.
 	const Camera* mpCamera;
 
+	// A copy of the view frustum for the input camera. This allows various
+	// subsystems to change the frustum parameters during culling (for
+	// example, the portal system) without affecting the camera, whose initial
+	// state is needed by the renderer.
+	Float mFrustum[Camera::VF_QUANTITY];
+
 	// The world culling planes corresponding to the view frustum plus any
-	// additional user-defined culling planes.  The member m_uiPlaneState
+	// additional user-defined culling planes. The member mPlaneState
 	// represents bit flags to store whether or not a plane is active in the
-	// culling system.  A bit of 1 means the plane is active, otherwise the
-	// plane is inactive.  An active plane is compared to bounding volumes,
-	// whereas an inactive plane is not.  This supports an efficient culling
-	// of a hierarchy.  For example, if a node's bounding volume is inside
+	// culling system. A bit of 1 means the plane is active, otherwise the
+	// plane is inactive. An active plane is compared to bounding volumes,
+	// whereas an inactive plane is not. This supports an efficient culling
+	// of a hierarchy. For example, if a node's bounding volume is inside
 	// the left plane of the view frustum, then the left plane is set to
 	// inactive because the children of the node are automatically all inside
 	// the left plane.

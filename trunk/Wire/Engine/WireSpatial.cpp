@@ -4,6 +4,8 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Spatial::Spatial()
+	:
+	WorldBound(BoundingVolume::Create())
 {
 }
 
