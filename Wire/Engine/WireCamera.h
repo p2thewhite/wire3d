@@ -25,11 +25,6 @@ public:
 		VF_QUANTITY = 6
 	};
 
-	void LookAt(const Vector3F& cameraPosition, const Vector3F& cameraUp,
-		const Vector3F& target);
-
-	Matrix34F& GetView();
-
 	Vector3F GetLocation() const;
 	Vector3F GetDVector() const;
 	Vector3F GetUVector() const;
@@ -85,9 +80,6 @@ public:
 	Float GetRMax() const;
 
 private:
-	// Transforms world space to camera space.
-	Matrix34F mView;  
-
 	// world coordinate frame
 	Vector3F mLocation;
 	Vector3F mDVector;

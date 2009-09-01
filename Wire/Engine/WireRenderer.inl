@@ -2,6 +2,7 @@
 inline Bool Renderer::BeginScene(Camera* pCamera)
 {
 	mpCamera = pCamera;
+	OnFrameChange();
 
 	// stub for derived classes
 	return true;

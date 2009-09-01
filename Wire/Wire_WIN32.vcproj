@@ -338,6 +338,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireSystem.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireVector3.cpp"
 					>
 				</File>

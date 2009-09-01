@@ -3,6 +3,7 @@
 #define WIRERENDERER_H
 
 #include "../Foundation/WireColorRGBA.h"
+#include "../Foundation/WireMatrix34.h"
 
 namespace Wire
 {
@@ -36,6 +37,8 @@ public:
 	virtual Int GetWidth() const;
 	virtual Int GetHeight() const;
 
+	void OnFrameChange();
+
 protected:
 	Renderer();	
 
@@ -46,6 +49,9 @@ protected:
 	Camera* mpCamera;
 
 	ColorRGBA mClearColor;
+
+	// Transforms world space to camera space.
+	Matrix34F mViewMatrix;
 };
 
 #include "WireRenderer.inl"

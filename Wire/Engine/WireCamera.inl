@@ -23,12 +23,6 @@ inline Vector3F Camera::GetRVector() const
 }
 
 //----------------------------------------------------------------------------
-inline Matrix34F& Camera::GetView()
-{
-	return mView;
-}
-
-//----------------------------------------------------------------------------
 inline Float Camera::GetDMin() const
 {
 	return mFrustum[VF_DMIN];

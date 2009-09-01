@@ -62,10 +62,8 @@ void Culler::SetFrustum(const Float* pFrustum)
 	}
 
 	// copy the frustum values
-	size_t uiSize = Camera::VF_QUANTITY * sizeof(Float);
-// TODO:
-//	System::Memcpy(mFrustum, uiSize, pFrustum, uiSize);
-	memcpy(mFrustum, pFrustum, uiSize);
+	size_t size = Camera::VF_QUANTITY * sizeof(Float);
+	System::Memcpy(mFrustum, size, pFrustum, size);
 
 	Float dMin2 = mFrustum[Camera::VF_DMIN] * mFrustum[Camera::VF_DMIN];
 	Float rMin2 = mFrustum[Camera::VF_RMIN] * mFrustum[Camera::VF_RMIN];

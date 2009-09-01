@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class ColorRGB
+class /*WIRE_FOUNDATION_ITEM*/ ColorRGB
 {
 public:
 	ColorRGB();  // initial values (0, 0, 0)

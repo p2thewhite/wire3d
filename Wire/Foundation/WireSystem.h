@@ -26,5 +26,16 @@
 #include "WireTypes.h"
 #include "WireMemory.h"
 
-#endif
+namespace Wire
+{
 
+class /*WIRE_FOUNDATION_ITEM*/ System
+{
+public:
+	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
+		size_t srcSize);
+};
+
+}
+
+#endif
