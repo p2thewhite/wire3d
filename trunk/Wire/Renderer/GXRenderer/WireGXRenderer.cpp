@@ -198,7 +198,10 @@ void GXRenderer::DrawElements()
 	Matrix34F model;
 	mpGeometry->Local.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(mpCamera->GetView() * model, GX_PNMTX0);
+	Matrix34F view = mViewMatrix;
+	view[2][2] = -view[2][2];
+
+	GXLoadPosMtxImm(view * model, GX_PNMTX0);
 
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;

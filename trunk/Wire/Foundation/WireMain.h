@@ -7,7 +7,8 @@
 namespace Wire
 {
 
-class Main
+// TODO: move Main to Engine
+class /*WIRE_FOUNDATION_ITEM*/ Main
 {
 
 public:

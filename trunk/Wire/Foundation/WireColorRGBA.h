@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class ColorRGBA
+class /*WIRE_FOUNDATION_ITEM*/ ColorRGBA
 {
 public:
 	ColorRGBA();  // initial values (0, 0, 0, 0)

@@ -16,27 +16,6 @@ Camera::~Camera()
 }
 
 //----------------------------------------------------------------------------
-void Camera::LookAt(const Vector3F& cameraPosition,
-	const Vector3F& cameraUp, const Vector3F& target)
-{
-	Vector3F look = cameraPosition - target;
-	Vector3F right = cameraUp.Cross(look);
-	Vector3F up = look.Cross(right);
-
-	mView = Matrix34F(
-		right.X(),	right.Y(),	right.Z(),	-(right.Dot(cameraPosition)),
-		up.X(),		up.Y(),		up.Z(),		-(up.Dot(cameraPosition)),
-		look.X(),	look.Y(),	look.Z(),	-(look.Dot(cameraPosition)));
-
-	mLocation = cameraPosition;
-	mDVector = look;
-	mRVector = right;
-	mUVector = up;
-
-	SetAxes(mDVector, mUVector, mRVector);
-}
-
-//----------------------------------------------------------------------------
 void Camera::SetFrustum(Float rMin, Float rMax, Float uMin, Float uMax,
 	Float dMin, Float dMax)
 {
@@ -114,9 +93,4 @@ void Camera::SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
 {
 	mLocation = rLocation;
 	SetAxes(rDVector, rUVector, rRVector);
-
-	mView = Matrix34F(
-		rRVector.X(), rRVector.Y(),	rRVector.Z(), -(rRVector.Dot(rLocation)),
-		rUVector.X(), rUVector.Y(), rUVector.Z(), -(rUVector.Dot(rLocation)),
-		rDVector.X(), rDVector.Y(),	-rDVector.Z(), -(rDVector.Dot(rLocation)));
 }
