@@ -88,3 +88,17 @@ Int SphereBV::WhichSide(const Plane3F& rPlane) const
 
 	return 0;
 }
+
+//----------------------------------------------------------------------------
+void SphereBV::CopyFrom(const BoundingVolume* pInput)
+{
+	mSphere = static_cast<SphereBV*>(const_cast<BoundingVolume*>(pInput))->
+		mSphere;
+}
+
+//----------------------------------------------------------------------------
+void SphereBV::GrowToContain(const BoundingVolume* pInput)
+{
+	mSphere = MergeSpheres(mSphere, static_cast<SphereBV*>(
+		const_cast<BoundingVolume*>(pInput))->mSphere);
+}

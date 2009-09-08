@@ -7,6 +7,7 @@
 #include "WireCuller.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
+#include "WireNode.h"
 #include "WireQuadMesh.h"
 #include "WireRenderer.h"
 #include "WireSmartPointer.h"

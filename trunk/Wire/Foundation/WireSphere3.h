@@ -21,6 +21,9 @@ public:
 	// assignment
 	Sphere3& operator= (const Sphere3& rSphere);
 
+	// Compute the smallest sphere that contains the input spheres.
+	Sphere3 MergeSpheres(const Sphere3& rSphere0, const Sphere3& rSphere1);
+
 	Vector3<Real> Center;
 	Real Radius;
 };

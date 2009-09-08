@@ -27,5 +27,5 @@ void Main::Initialize()
 	}
 
 	WIRE_DELETE smpInitializers;
-	smpInitializers = 0;
+	smpInitializers = NULL;
 }
