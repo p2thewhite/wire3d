@@ -39,6 +39,13 @@ public:
 	// plane, the return value is 0.
 	virtual Int WhichSide(const Plane3F& rPlane) const;
 
+	// Make a copy of the bounding volume.
+	virtual void CopyFrom(const BoundingVolume* pInput);
+
+	// Change the current sphere so that it is the minimum volume sphere that
+	// contains the input sphere as well as its old sphere.
+	virtual void GrowToContain(const BoundingVolume* pInput);
+
 protected:
 	Sphere3F mSphere;
 };

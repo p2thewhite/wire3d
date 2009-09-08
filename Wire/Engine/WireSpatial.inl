@@ -1,16 +1,10 @@
-#include "WireSpatial.h"
-
-using namespace Wire;
-
 //----------------------------------------------------------------------------
-Spatial::Spatial()
-	:
-	WorldBound(BoundingVolume::Create()),
-	mpParent(NULL)
+inline void Spatial::SetParent(Spatial* pParent)
 {
+	mpParent = pParent;
 }
-
 //----------------------------------------------------------------------------
-Spatial::~Spatial()
+inline Spatial* Spatial::GetParent()
 {
+	return mpParent;
 }

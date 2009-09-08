@@ -43,6 +43,13 @@ public:
 	// plane, the return value is 0.
 	virtual Int WhichSide(const Plane3F& rPlane) const = 0;
 
+	// Make a copy of the bounding volume.
+	virtual void CopyFrom(const BoundingVolume* pInput) = 0;
+
+	// Change the current bounding volume so that it contains the input
+	// bounding volume as well as its old bounding volume.
+	virtual void GrowToContain(const BoundingVolume* pInput) = 0;
+
 protected:
 	BoundingVolume();
 };

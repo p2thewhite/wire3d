@@ -25,7 +25,7 @@ bool Culler::IsVisible(const BoundingVolume* pkBound)
 	Int plane = mPlaneQuantity - 1;
 	UInt mask = 1 << plane;
 
-	for (int i = 0; i < mPlaneQuantity; i++, plane--, mask >>= 1)
+	for (Int i = 0; i < mPlaneQuantity; i++, plane--, mask >>= 1)
 	{
 		if (mPlaneState & mask)
 		{
@@ -49,8 +49,6 @@ bool Culler::IsVisible(const BoundingVolume* pkBound)
 
 	return true;
 }
-
-#include <string.h>
 
 //----------------------------------------------------------------------------
 void Culler::SetFrustum(const Float* pFrustum)

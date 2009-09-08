@@ -466,6 +466,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.h"
 					>
 				</File>
@@ -522,6 +526,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireNode.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireObject.inl"
 					>
 				</File>
@@ -531,6 +539,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSmartPointer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSpatial.inl"
 					>
 				</File>
 				<File
@@ -567,6 +579,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNode.cpp"
 					>
 				</File>
 				<File
