@@ -23,7 +23,7 @@ inline Transformation::operator Matrix34F ()
 }
 
 //----------------------------------------------------------------------------
-inline Transformation::operator const Matrix34F () /*const*/
+inline Transformation::operator const Matrix34F () const
 {
 	Matrix34F transformation;
 	GetTransformation(transformation);

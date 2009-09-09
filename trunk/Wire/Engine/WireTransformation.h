@@ -21,7 +21,7 @@ public:
 	Bool IsUniformScale() const;
 
 	inline operator Matrix34F ();
- 	inline operator const Matrix34F () /*const*/; // TODO: fix for VC
+ 	inline operator const Matrix34F () const;
 
 	void SetRotate(const Matrix34F& rMatrix);
 	void SetMatrix(const Matrix34F& rMatrix);
@@ -34,12 +34,12 @@ public:
 	Float GetUniformScale() const;
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
-	void GetTransformation(Matrix34F& rMatrix) /*const*/; // TODO: fix for VC
+	void GetTransformation(Matrix34F& rMatrix) const;
 
 	// For M = R*S, the largest value of S in absolute value is returned.
 	// For general M, the max-row-sum norm is returned (and is guaranteed to
 	// be larger or equal to the largest eigenvalue of S in absolute value).
-	Float GetNorm() /*const*/; // TODO: fix for VC
+	Float GetNorm() const;
 
 	// Compute Y = M*X+T where X is the input point and Y is the output point.
 	Vector3F ApplyForward(const Vector3F& rInput) const;
@@ -48,7 +48,7 @@ public:
 	void Product(const Transformation& rA, const Transformation& kB);
 
 private:
-	Matrix34F mMatrix;
+	mutable Matrix34F mMatrix;	// TODO: fix for VC
 	Vector3F mScale;
 
 	Bool mIsIdentity;

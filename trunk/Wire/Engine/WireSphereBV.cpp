@@ -63,7 +63,7 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 }
 
 //----------------------------------------------------------------------------
-void SphereBV::TransformBy(/*const*/ Transformation& rTransform,
+void SphereBV::TransformBy(const Transformation& rTransform,
 	BoundingVolume* pResult)
 {
 	Sphere3F& rTarget = (static_cast<SphereBV*>(pResult))->mSphere;

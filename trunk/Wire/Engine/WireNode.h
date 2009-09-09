@@ -11,7 +11,7 @@ class /*WIRE_ENGINE_ITEM*/ Node : public Spatial
 {
 
 public:
-	Node();
+	Node(UInt quantity = 0, UInt growBy = 1);
 	virtual ~Node();
 
 	UInt GetQuantity() const;
@@ -23,6 +23,7 @@ public:
 
 protected:
 	// geometric updates
+	virtual void UpdateWorldData(Double appTime);
 	virtual void UpdateWorldBound();
 
 	TArray<SpatialPtr> mChildren;

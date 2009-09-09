@@ -38,11 +38,8 @@ Int Dx9Application::Main(Int argumentQuantity, Char* arguments[])
 //----------------------------------------------------------------------------
 void Dx9Application::OnTerminate()
 {
-	if (mpRenderer)
-	{
-		WIRE_DELETE mpRenderer;
-		mpRenderer = NULL;
-	}
+	WIRE_DELETE mpRenderer;
+	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------
