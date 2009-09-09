@@ -66,7 +66,7 @@ void Transformation::SetUniformScale(Float scale)
 }
 
 //----------------------------------------------------------------------------
-void Transformation::GetTransformation(Matrix34F& rMatrix) /*const*/
+void Transformation::GetTransformation(Matrix34F& rMatrix) const
 {
 	if (mIsRSMatrix)
 	{
@@ -164,7 +164,7 @@ Vector3F Transformation::ApplyForward(const Vector3F& rInput) const
 }
 
 //----------------------------------------------------------------------------
-Float Transformation::GetNorm() /*const*/
+Float Transformation::GetNorm() const
 {
 	if (mIsRSMatrix)
 	{

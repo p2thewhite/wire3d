@@ -13,8 +13,5 @@ IndexBuffer::IndexBuffer(UInt quantity)
 //----------------------------------------------------------------------------
 IndexBuffer::~IndexBuffer()
 {
-	if (mpIndices)
-	{
-		WIRE_DELETE[] mpIndices;
-	}
+	WIRE_DELETE[] mpIndices;
 }

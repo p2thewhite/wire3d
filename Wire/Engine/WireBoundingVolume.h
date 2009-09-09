@@ -33,8 +33,8 @@ public:
 	virtual void ComputeFromData(const VertexBuffer* pVBuffer) = 0;
 
 	// Transform the bounding volume (model-to-world conversion).
-	virtual void TransformBy(/*const*/ Transformation& rTransform,
-		BoundingVolume* pResult) = 0; // TODO: fix for VC
+	virtual void TransformBy(const Transformation& rTransform,
+		BoundingVolume* pResult) = 0;
 
 	// Determine if the bounding volume is one side of the plane, the other
 	// side, or straddles the plane. If it is on the positive side (the

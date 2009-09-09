@@ -196,7 +196,7 @@ void GXRenderer::DrawElements()
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
 	Matrix34F model;
-	mpGeometry->Local.GetTransformation(model);
+	mpGeometry->World.GetTransformation(model);
 	// load the modelview matrix into matrix memory
 	Matrix34F view = mViewMatrix;
 	view[2][2] = -view[2][2];

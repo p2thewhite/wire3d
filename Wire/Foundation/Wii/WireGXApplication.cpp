@@ -36,11 +36,8 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 //----------------------------------------------------------------------------
 void GXApplication::OnTerminate()
 {
-	if (mpRenderer)
-	{
-		WIRE_DELETE mpRenderer;
-		mpRenderer = NULL;
-	}
+	WIRE_DELETE mpRenderer;
+	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------

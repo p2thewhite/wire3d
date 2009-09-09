@@ -29,10 +29,12 @@ private:
 	GeometryPtr mspCube;
 	GeometryPtr mspPyramid;
 	Culler mCuller;
+	NodePtr mspRoot;
 
 	Float mRtri;
 	Float mRquad;
 	Float mAngle;
+
 };
 
 WIRE_REGISTER_INITIALIZE(Sample1);

@@ -3,8 +3,10 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Node::Node()	// TODO: add children array size
+Node::Node(UInt quantity, UInt growBy)
 {
+	mChildren.SetMaxQuantity(quantity);
+	mChildren.SetGrowBy(growBy);
 }
 
 //----------------------------------------------------------------------------
@@ -180,21 +182,36 @@ void Node::UpdateWorldBound()
 		Bool foundFirstBound = false;
 		for (UInt i = 0; i < GetQuantity(); i++)
 		{
-			Spatial* pkChild = mChildren[i];
-			if (pkChild)
+			Spatial* pChild = mChildren[i];
+			if (pChild)
 			{
 				if (foundFirstBound)
 				{
 					// merge current world bound with child world bound
-					WorldBound->GrowToContain(pkChild->WorldBound);
+					WorldBound->GrowToContain(pChild->WorldBound);
 				}
 				else
 				{
 					// set world bound to first non-null child world bound
 					foundFirstBound = true;
-					WorldBound->CopyFrom(pkChild->WorldBound);
+					WorldBound->CopyFrom(pChild->WorldBound);
 				}
 			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Node::UpdateWorldData(Double appTime)
+{
+	Spatial::UpdateWorldData(appTime);
+
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Spatial* pChild = mChildren[i];
+		if (pChild)
+		{
+			pChild->UpdateGS(appTime, false);
 		}
 	}
 }

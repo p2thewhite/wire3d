@@ -29,8 +29,8 @@ public:
 	virtual void ComputeFromData(const VertexBuffer* pVBuffer);
 
 	// Transform the sphere (model-to-world conversion).
-	virtual void TransformBy(/*const*/ Transformation& rTransform,
-		BoundingVolume* pResult); // TODO: fix for VC
+	virtual void TransformBy(const Transformation& rTransform,
+		BoundingVolume* pResult);
 
 	// Determine if the bounding volume is one side of the plane, the other
 	// side, or straddles the plane. If it is on the positive side (the

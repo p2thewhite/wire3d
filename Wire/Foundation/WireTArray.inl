@@ -20,10 +20,7 @@ TArray<T>::TArray(const TArray& rObject)
 template <class T>
 TArray<T>::~TArray()
 {
-	if (mpArray)
-	{
-		WIRE_DELETE[] mpArray;
-	}
+	WIRE_DELETE[] mpArray;
 }
 
 //----------------------------------------------------------------------------
@@ -34,10 +31,7 @@ TArray<T>& TArray<T>::operator= (const TArray& rObject)
 	mMaxQuantity = rObject.mMaxQuantity;
 	mGrowBy = rObject.mGrowBy;
 
-	if (mpArray)
-	{
-		WIRE_DELETE[] mpArray;
-	}
+	WIRE_DELETE[] mpArray;
 
 	if (mMaxQuantity > 0)
 	{
