@@ -4,9 +4,12 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
+#include "WireVisibleSet.h"
 
 namespace Wire
 {
+
+class Spatial;
 
 class /*WIRE_ENGINE_ITEM*/ Culler
 {
@@ -22,12 +25,27 @@ public:
 	void SetCamera(const Camera* pCamera);
 	const Camera* GetCamera() const;
 	void SetFrustum(const Float* pFrustum);
+	VisibleSet& GetVisibleSet();
+
+	// This is the main function you should use for culling within a scene
+	// graph. Traverse the scene and construct the potentially visible set
+	// relative to the world planes.
+	void ComputeVisibleSet(Spatial* pScene);
 
 	// Compare the object's world bounding volume against the culling planes.
 	// Only Spatial calls this function.
 	Bool IsVisible(const BoundingVolume* pBV);
 
+	// The base class behavior creates a VisibleObject from the input and
+	// appends it to the end of the VisibleObject array. Derived classes
+	// may override this behavior; for example, the array might be maintained
+	// as a sorted array for minimizing render state changes or it might be
+	// maintained as a unique list of objects for a portal system.
+	virtual void Insert(Spatial* pObject/*, Effect* pkGlobalEffect*/);
+
 	enum { VS_MAX_PLANE_QUANTITY = 32 };
+	void SetPlaneState(UInt planeState);
+	UInt GetPlaneState() const;
 
 protected:
 	// The input camera has information that might be needed during the
@@ -53,6 +71,9 @@ protected:
 	Int mPlaneQuantity;
 	Plane3F mPlanes[VS_MAX_PLANE_QUANTITY];
 	UInt mPlaneState;
+
+	// The potentially visible set for a call to GetVisibleSet.
+	VisibleSet mVisible;
 };
 
 #include "WireCuller.inl"

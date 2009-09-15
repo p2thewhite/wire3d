@@ -1,4 +1,5 @@
 #include "WireGeometry.h"
+#include "WireCuller.h"
 
 using namespace Wire;
 
@@ -27,4 +28,10 @@ void Geometry::UpdateModelBound()
 void Geometry::UpdateWorldBound()
 {
 	ModelBound->TransformBy(World, WorldBound);
+}
+
+//----------------------------------------------------------------------------
+void Geometry::GetVisibleSet(Culler& rCuller, Bool noCull)
+{
+	rCuller.Insert(this/*, NULL*/);
 }

@@ -223,4 +223,9 @@ void Sample1::OnIdle()
 
 	mRtri += 0.5F;		// Increase The Rotation Variable For The Triangle
 	mRquad -= 0.15F;	// Decrease The Rotation Variable For The Quad
+
+// 	mspPyramid->WorldIsCurrent = true;
+// 	mspCube->WorldIsCurrent = true;
+// 	mspRoot->UpdateGS();
+// 	mCuller.ComputeVisibleSet(mspRoot);
 }

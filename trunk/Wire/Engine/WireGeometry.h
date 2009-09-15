@@ -36,6 +36,9 @@ protected:
 	// geometric updates
 	virtual void UpdateModelBound();
 	virtual void UpdateWorldBound();
+
+	// culling
+	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 };
 
 typedef Pointer<Geometry> GeometryPtr;

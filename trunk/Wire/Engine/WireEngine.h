@@ -17,5 +17,7 @@
 #include "WireTriMesh.h"
 #include "WireVertexAttributes.h"
 #include "WireVertexBuffer.h"
+#include "WireVisibleObject.h"
+#include "WireVisibleSet.h"
 
 #endif

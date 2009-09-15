@@ -1,5 +1,7 @@
 #include "WireCuller.h"
 
+#include "WireSpatial.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
@@ -118,4 +120,16 @@ void Culler::SetFrustum(const Float* pFrustum)
 
 	// all planes are active initially
 	mPlaneState = static_cast<UInt>(~0);
+}
+
+//----------------------------------------------------------------------------
+void Culler::ComputeVisibleSet(Spatial* pScene)
+{
+	WIRE_ASSERT(mpCamera && pScene);
+	if (mpCamera && pScene)
+	{
+		SetFrustum(mpCamera->GetFrustum());
+		mVisible.Clear();
+		pScene->OnGetVisibleSet(*this, false);
+	}
 }
