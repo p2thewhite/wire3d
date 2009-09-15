@@ -509,6 +509,14 @@
 					RelativePath=".\Engine\WireVertexBuffer.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Engine\WireVisibleObject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVisibleSet.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
@@ -555,6 +563,14 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireVertexAttributes.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVisibleObject.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVisibleSet.inl"
 					>
 				</File>
 			</Filter>
@@ -619,6 +635,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireVertexBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVisibleSet.cpp"
 					>
 				</File>
 			</Filter>

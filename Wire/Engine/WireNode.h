@@ -26,6 +26,9 @@ protected:
 	virtual void UpdateWorldData(Double appTime);
 	virtual void UpdateWorldBound();
 
+	// culling
+	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
+
 	TArray<SpatialPtr> mChildren;
 };
 

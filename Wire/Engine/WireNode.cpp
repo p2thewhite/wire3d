@@ -215,3 +215,21 @@ void Node::UpdateWorldData(Double appTime)
 		}
 	}
 }
+
+//----------------------------------------------------------------------------
+void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
+{
+	// TODO: support effects
+
+	// All Geometry objects in the subtree are added to the visible set. If
+	// a global effect is active, the Geometry objects in the subtree will be
+	// drawn using it.
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		Spatial* pChild = mChildren[i];
+		if (pChild)
+		{
+			pChild->OnGetVisibleSet(rCuller, noCull);
+		}
+	}
+}

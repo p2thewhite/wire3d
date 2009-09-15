@@ -9,6 +9,8 @@
 namespace Wire
 {
 
+class Culler;
+
 class /*WIRE_ENGINE_ITEM*/ Spatial : public Object
 {
 public:
@@ -31,6 +33,28 @@ public:
 	BoundingVolumePtr WorldBound;
 	bool WorldBoundIsCurrent;
 
+	// Culling parameters.
+	enum CullingMode
+	{
+		// Determine visibility state by comparing the world bounding volume
+		// to culling planes.
+		CULL_DYNAMIC,
+
+		// Force the object to be culled.  If a Node is culled, its entire
+		// subtree is culled.
+		CULL_ALWAYS,
+
+		// Never cull the object.  If a Node is never culled, its entire
+		// subtree is never culled.  To accomplish this, the first time such
+		// a Node is encountered, the bNoCull parameter is set to 'true' in
+		// the recursive chain GetVisibleSet/OnGetVisibleSet.
+		CULL_NEVER,
+
+		MAX_CULLING_MODE
+	};
+
+	CullingMode Culling;
+
 	// Update of geometric state and controllers. The UpdateGS function
 	// computes world transformations on the downward pass and world bounding
 	// volumes on the upward pass. The UpdateBS function just computes the
@@ -43,6 +67,10 @@ public:
 	// Parent access (Node calls this during attach/detach of children)
 	void SetParent(Spatial* pkParent);
 	Spatial* GetParent();
+
+	// culling
+	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
+	virtual void GetVisibleSet(Culler& rCuller, Bool noCull) = 0;
 
 protected:
 	Spatial();

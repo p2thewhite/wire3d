@@ -1,5 +1,7 @@
 #include "WireSpatial.h"
 
+#include "WireCuller.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
@@ -62,4 +64,26 @@ void Spatial::PropagateBoundToRoot()
 		mpParent->UpdateWorldBound();
 		mpParent->PropagateBoundToRoot();
 	}
+}
+
+//----------------------------------------------------------------------------
+void Spatial::OnGetVisibleSet(Culler& rCuller, Bool noCull)
+{
+	if (Culling == CULL_ALWAYS)
+	{
+		return;
+	}
+
+	if (Culling == CULL_NEVER)
+	{
+		noCull = true;
+	}
+
+	UInt savePlaneState = rCuller.GetPlaneState();
+	if (noCull || rCuller.IsVisible(WorldBound))
+	{
+		GetVisibleSet(rCuller,noCull);
+	}
+
+	rCuller.SetPlaneState(savePlaneState);
 }

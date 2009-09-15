@@ -12,9 +12,9 @@ class Pointer
 {
 public:
     // construction and destruction
-    Pointer (T* pObject = NULL);
-    Pointer (const Pointer& rPointer);
-    ~Pointer ();
+    Pointer(T* pObject = NULL);
+    Pointer(const Pointer& rPointer);
+    ~Pointer();
 
     // implicit conversions
     operator T* () const;
