@@ -446,6 +446,10 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireBindable.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBoundingVolume.h"
 					>
 				</File>
@@ -479,6 +483,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRenderer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireResourceIdentifier.h"
 					>
 				</File>
 				<File
@@ -577,6 +585,10 @@
 			<Filter
 				Name="Source Files"
 				>
+				<File
+					RelativePath=".\Engine\WireBindable.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\Engine\WireBoundingVolume.cpp"
 					>

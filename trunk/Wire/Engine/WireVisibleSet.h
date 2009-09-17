@@ -32,7 +32,7 @@ public:
 	void Clear();
 
 private:
-	TArray<VisibleObject> mVisible; //(32, 32);
+	TArray<VisibleObject> mVisible;
 };
 
 #include "WireVisibleSet.inl"
