@@ -8,12 +8,16 @@
 namespace Wire
 {
 
+class Bindable;
 class Camera;
 class Geometry;
 
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
 public:
+	// Function pointer types for binding and unbinding resources.
+	typedef void (Renderer::*ReleaseFunction)(Bindable*);
+
 	// Abstract API for renderers.  Each graphics API must implement this
 	// layer.
 	virtual ~Renderer();

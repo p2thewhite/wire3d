@@ -2,6 +2,7 @@
 #ifndef WIREENGINE_H
 #define WIREENGINE_H
 
+#include "WireBindable.h"
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
 #include "WireCuller.h"
@@ -10,6 +11,7 @@
 #include "WireNode.h"
 #include "WireQuadMesh.h"
 #include "WireRenderer.h"
+#include "WireResourceIdentifier.h"
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireSphereBV.h"
