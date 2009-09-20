@@ -21,6 +21,8 @@ public:
     T& operator* () const;
     T* operator-> () const;
 
+	T* Get() const;
+
     // assignment
     Pointer& operator= (T* pObject);
     Pointer& operator= (const Pointer& rReference);

@@ -26,8 +26,6 @@ private:
 	Geometry* CreatePyramid();
 
 	CameraPtr mspCamera;
-	GeometryPtr mspCube;
-	GeometryPtr mspPyramid;
 	Culler mCuller;
 	NodePtr mspRoot;
 

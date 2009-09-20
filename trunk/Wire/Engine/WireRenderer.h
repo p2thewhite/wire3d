@@ -11,6 +11,7 @@ namespace Wire
 class Bindable;
 class Camera;
 class Geometry;
+class VisibleSet;
 
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
@@ -22,6 +23,8 @@ public:
 	// layer.
 	virtual ~Renderer();
 
+	// Object drawing.
+	void DrawScene(VisibleSet& rVisibleSet);
 	void Draw(Geometry* pGeometry);
 
 	// The main entry point to drawing in the derived-class renderers.

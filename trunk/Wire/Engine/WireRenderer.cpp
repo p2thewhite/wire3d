@@ -1,5 +1,8 @@
 #include "WireRenderer.h"
+
 #include "WireCamera.h"
+#include "WireGeometry.h"
+#include "WireVisibleSet.h"
 
 using namespace Wire;
 
@@ -19,6 +22,64 @@ void Renderer::Draw(Geometry* pGeometry)
 	mpGeometry = pGeometry;
 
 	DrawElements();
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DrawScene(VisibleSet& rVisibleSet)
+{
+	// NOTE: The stack of 2-tuples is limited to having 64 elements. This
+	// should be plenty, because the chances of having 64 global effects
+	// in the same path is small (that is a *lot* of effects to apply in
+	// one frame). If it needs to be larger for your applications, increase
+	// the maximum size.
+	const Int maxTuples = 64;    // maximum number of stack elements
+	Int indexStack[maxTuples][2];  // elements are (startIndex, finalIndex)
+	Int top = -1;                // stack is initially empty
+
+	const UInt visibleQuantity = rVisibleSet.GetQuantity();
+	VisibleObject* pVisible = rVisibleSet.GetVisible();
+	for (UInt i = 0; i < visibleQuantity; i++)
+	{
+		if (pVisible[i].Object)
+		{
+// TODO: support Effects
+// 			if (pVisible[i].GlobalEffect)
+// 			{
+// 				// Begin the scope of a global effect.
+// 				top++;
+// 				assert(top < maxTuples);
+// 				indexStack[top][0] = i;
+// 				indexStack[top][1] = i;
+// 			}
+// 			else
+			{
+				// Found a leaf Geometry object.
+				if (top == -1)
+				{
+					Draw(static_cast<Geometry*>(pVisible[i].Object));
+				}
+				else
+				{
+					indexStack[top][1]++;
+				}
+			}
+		}
+// 		else
+// 		{
+// 			// End the scope of a global effect.
+//			WIRE_ASSERT(!pVisible[i].GlobalEffect);
+// 			Int min = indexStack[top][0];
+// 			Int max = indexStack[top][1];
+// 
+// 			pVisible[min].GlobalEffect->Draw(this, pVisible[min].Object,
+// 				min+1,max,pVisible);
+// 
+// 			if (--top >= 0)
+// 			{
+// 				indexStack[top][1] = max + 1;
+// 			}
+// 		}
+	}
 }
 
 //----------------------------------------------------------------------------

@@ -25,6 +25,8 @@ public:
 	virtual ~VisibleSet ();
 
 	UInt GetQuantity() const;
+	VisibleObject* GetVisible();
+	VisibleObject& GetVisible(UInt i);
 
 	// Creates a VisibleObject from the input and appends it to the end of the
 	// VisibleObject array.

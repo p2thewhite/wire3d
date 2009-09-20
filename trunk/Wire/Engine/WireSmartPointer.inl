@@ -32,6 +32,13 @@ Pointer<T>::~Pointer()
 
 //----------------------------------------------------------------------------
 template <class T>
+T* Pointer<T>::Get() const
+{
+	return mpObject;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 Pointer<T>::operator T* () const
 {
     return mpObject;
