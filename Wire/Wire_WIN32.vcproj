@@ -458,6 +458,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireController.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCuller.h"
 					>
 				</File>
@@ -487,6 +491,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireResourceIdentifier.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSceneObject.h"
 					>
 				</File>
 				<File
@@ -534,6 +542,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireController.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCuller.inl"
 					>
 				</File>
@@ -551,6 +563,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRenderer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSceneObject.inl"
 					>
 				</File>
 				<File

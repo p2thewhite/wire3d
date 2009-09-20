@@ -47,10 +47,6 @@ Bool Sample1::OnInitialize()
 	mRquad = 0.0F;
 	mAngle = 0.0F;
 
-	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(mspCube);
-	mspRoot->AttachChild(mspPyramid);
-
 	return true;
 }
 
@@ -223,9 +219,4 @@ void Sample1::OnIdle()
 
 	mRtri += 0.5F;		// Increase The Rotation Variable For The Triangle
 	mRquad -= 0.15F;	// Decrease The Rotation Variable For The Quad
-
-// 	mspPyramid->WorldIsCurrent = true;
-// 	mspCube->WorldIsCurrent = true;
-// 	mspRoot->UpdateGS();
-// 	mCuller.ComputeVisibleSet(mspRoot);
 }

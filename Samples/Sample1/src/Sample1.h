@@ -29,7 +29,6 @@ private:
 	GeometryPtr mspCube;
 	GeometryPtr mspPyramid;
 	Culler mCuller;
-	NodePtr mspRoot;
 
 	Float mRtri;
 	Float mRquad;

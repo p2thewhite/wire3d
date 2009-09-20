@@ -23,10 +23,9 @@ Bool Sample2::OnInitialize()
 		return false;
 	}
 
-	// The smart pointer automatically deletes the object when it goes out
-	// of scope and no other references to the object exist.
-	mspCube = CreateCube();
-	mspPyramid = CreatePyramid();
+	mspRoot = WIRE_NEW Node;
+	mspRoot->AttachChild(CreateCube());
+	mspRoot->AttachChild(CreatePyramid());
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -46,10 +45,6 @@ Bool Sample2::OnInitialize()
 	mRtri = 0.0F;
 	mRquad = 0.0F;
 	mAngle = 0.0F;
-
-	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(mspCube);
-	mspRoot->AttachChild(mspPyramid);
 
 	return true;
 }
@@ -189,43 +184,30 @@ void Sample2::OnIdle()
 	mAngle += MathF::PI / 180.0F;
 	mAngle = MathF::FMod(mAngle, MathF::PI);
 
-	mpRenderer->BeginScene(mspCamera);
+	Geometry* pCube = static_cast<Geometry*>(mspRoot->GetChild(0).Get());
+	Geometry* pPyramid = static_cast<Geometry*>(mspRoot->GetChild(1).Get());
 
-	Float xOffset = -1.5F - mAngle * 2.5F;
 	Matrix34F model(Vector3F(0, -1, 0), MathF::DEG_TO_RAD * mRtri);
-	mspPyramid->World.SetRotate(model);
-	mspPyramid->World.SetTranslate(Vector3F(xOffset, 0.0F, -6.0F));
-	mspPyramid->World.SetUniformScale(scaleFactor + 0.5F);
-	mspPyramid->ModelBound->TransformBy(mspPyramid->World, mspPyramid->WorldBound);
-//	mspPyramid->UpdateWorldBound();	// is the same but protected
-	if (!mCuller.IsVisible(mspPyramid->WorldBound))
-	{
-		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
-		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
-		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
-	}
-	else
-	{
-		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
-		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
-		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
-		mpRenderer->Draw(mspPyramid);
-	}
+
+	pPyramid->Local.SetRotate(model);
+	pPyramid->Local.SetTranslate(Vector3F(-1.5F, 0.0F, -10.0F));
+	pPyramid->Local.SetUniformScale(scaleFactor + 0.5F);
 
 	model.FromAxisAngle(Vector3F(1, 1, 1), MathF::DEG_TO_RAD * mRquad);
-	mspCube->World.SetRotate(model);
-	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
-	mspCube->World.SetScale(Vector3F(scaleFactor + 0.5f, 1.0F, 1.0F));
-	mpRenderer->Draw(mspCube);
+	pCube->Local.SetRotate(model);
+	pCube->Local.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
+	pCube->Local.SetScale(Vector3F(scaleFactor + 0.5f, 1.0F, 1.0F));
 
+	mspRoot->Local.SetTranslate(Vector3F::UNIT_X * scaleFactor * 3.0F);
+		
+ 	mspRoot->UpdateGS();
+ 	mCuller.ComputeVisibleSet(mspRoot);
+
+	mpRenderer->BeginScene(mspCamera);
+	mpRenderer->DrawScene(mCuller.GetVisibleSet());
 	mpRenderer->EndScene();
 	mpRenderer->DisplayBackBuffer();
 
 	mRtri += 0.5F;		// Increase The Rotation Variable For The Triangle
 	mRquad -= 0.15F;	// Decrease The Rotation Variable For The Quad
-
-// 	mspPyramid->WorldIsCurrent = true;
-// 	mspCube->WorldIsCurrent = true;
-// 	mspRoot->UpdateGS();
-// 	mCuller.ComputeVisibleSet(mspRoot);
 }

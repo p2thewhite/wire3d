@@ -10,6 +10,7 @@ Spatial::Spatial()
 	WorldIsCurrent(false),
 	WorldBound(BoundingVolume::Create()),
 	WorldBoundIsCurrent(false),
+	Culling(CULL_DYNAMIC),
 	mpParent(NULL)
 {
 }
