@@ -31,7 +31,7 @@ void Geometry::UpdateWorldBound()
 }
 
 //----------------------------------------------------------------------------
-void Geometry::GetVisibleSet(Culler& rCuller, Bool noCull)
+void Geometry::GetVisibleSet(Culler& rCuller, Bool)
 {
 	rCuller.Insert(this/*, NULL*/);
 }

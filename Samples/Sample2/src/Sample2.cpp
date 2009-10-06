@@ -1,4 +1,6 @@
 #include "Sample2.h"
+
+#include "CubeController.h"
 #include "WireMain.h"
 
 using namespace Wire;
@@ -23,8 +25,12 @@ Bool Sample2::OnInitialize()
 		return false;
 	}
 
+	Geometry* pCube = CreateCube();
+	CubeController* pCubeController = WIRE_NEW CubeController;
+	pCube->AttachController(pCubeController);
+
 	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(CreateCube());
+	mspRoot->AttachChild(pCube);
 	mspRoot->AttachChild(CreatePyramid());
 
 	// setup our camera at the origin
@@ -42,8 +48,6 @@ Bool Sample2::OnInitialize()
 
 	mCuller.SetCamera(mspCamera);
 
-	mRtri = 0.0F;
-	mRquad = 0.0F;
 	mAngle = 0.0F;
 
 	return true;
@@ -52,7 +56,7 @@ Bool Sample2::OnInitialize()
 //----------------------------------------------------------------------------
 Geometry* Sample2::CreateCube()
 {
-	float extent = 1.0F;
+	Float extent = 1.0F;
 	Vector3F vertices[] = {
 		Vector3F(-extent, -extent, -extent),
 		Vector3F(+extent, -extent, -extent),
@@ -180,26 +184,18 @@ void Sample2::OnIdle()
 {
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	Float scaleFactor = MathF::Sin(mAngle);
 	mAngle += MathF::PI / 180.0F;
-	mAngle = MathF::FMod(mAngle, MathF::PI);
+	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Geometry* pCube = static_cast<Geometry*>(mspRoot->GetChild(0).Get());
 	Geometry* pPyramid = static_cast<Geometry*>(mspRoot->GetChild(1).Get());
 
-	Matrix34F model(Vector3F(0, -1, 0), MathF::DEG_TO_RAD * mRtri);
+	Matrix34F model(Vector3F(0, -1, 0), mAngle);
+	mspRoot->Local.SetRotate(model);
+	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -8.0F));
 
 	pPyramid->Local.SetRotate(model);
-	pPyramid->Local.SetTranslate(Vector3F(-1.5F, 0.0F, -10.0F));
-	pPyramid->Local.SetUniformScale(scaleFactor + 0.5F);
+	pPyramid->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
 
-	model.FromAxisAngle(Vector3F(1, 1, 1), MathF::DEG_TO_RAD * mRquad);
-	pCube->Local.SetRotate(model);
-	pCube->Local.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
-	pCube->Local.SetScale(Vector3F(scaleFactor + 0.5f, 1.0F, 1.0F));
-
-	mspRoot->Local.SetTranslate(Vector3F::UNIT_X * scaleFactor * 3.0F);
-		
  	mspRoot->UpdateGS();
  	mCuller.ComputeVisibleSet(mspRoot);
 
@@ -207,7 +203,4 @@ void Sample2::OnIdle()
 	mpRenderer->DrawScene(mCuller.GetVisibleSet());
 	mpRenderer->EndScene();
 	mpRenderer->DisplayBackBuffer();
-
-	mRtri += 0.5F;		// Increase The Rotation Variable For The Triangle
-	mRquad -= 0.15F;	// Decrease The Rotation Variable For The Quad
 }

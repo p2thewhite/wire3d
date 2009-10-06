@@ -8,7 +8,8 @@ using namespace Wire;
 Culler::Culler(Int maxQuantity, Int growBy, const Camera* pCamera)
 	:
 	mpCamera(pCamera),
-	mPlaneQuantity(6)
+	mPlaneQuantity(6),
+	mVisible(maxQuantity, growBy)
 {
 	// The data members mFrustum, mPlane, and mPlaneState are uninitialized.
 	// They are initialized in the GetVisibleSet call.
@@ -31,7 +32,7 @@ bool Culler::IsVisible(const BoundingVolume* pkBound)
 	{
 		if (mPlaneState & mask)
 		{
-			int side = pkBound->WhichSide(mPlanes[plane]);
+			Int side = pkBound->WhichSide(mPlanes[plane]);
 
 			if (side < 0)
 			{

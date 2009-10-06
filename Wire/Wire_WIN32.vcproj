@@ -614,6 +614,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireController.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCuller.cpp"
 					>
 				</File>
@@ -639,6 +643,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRenderer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSceneObject.cpp"
 					>
 				</File>
 				<File

@@ -3,7 +3,7 @@
 #define WIRESPATIAL_H
 
 #include "WireBoundingVolume.h"
-#include "WireObject.h"
+#include "WireSceneObject.h"
 #include "WireTransformation.h"
 
 namespace Wire
@@ -11,7 +11,7 @@ namespace Wire
 
 class Culler;
 
-class /*WIRE_ENGINE_ITEM*/ Spatial : public Object
+class /*WIRE_ENGINE_ITEM*/ Spatial : public SceneObject
 {
 public:
 	// abstract base class

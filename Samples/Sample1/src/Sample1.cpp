@@ -53,7 +53,7 @@ Bool Sample1::OnInitialize()
 //----------------------------------------------------------------------------
 Geometry* Sample1::CreateCube()
 {
-	float extent = 1.0F;
+	Float extent = 1.0F;
 	Vector3F vertices[] = {
 		Vector3F(-extent, -extent, -extent),
 		Vector3F(+extent, -extent, -extent),
@@ -187,7 +187,7 @@ void Sample1::OnIdle()
 
 	mpRenderer->BeginScene(mspCamera);
 
-	Float xOffset = -1.5F - mAngle * 5.5F;
+	Float xOffset = -1.5F - mAngle * 4.0F;
 	Matrix34F model(Vector3F(0, -1, 0), MathF::DEG_TO_RAD * mRtri);
 	mspPyramid->World.SetRotate(model);
 	mspPyramid->World.SetTranslate(Vector3F(xOffset, 0.0F, -6.0F));

@@ -42,6 +42,10 @@
 			Name="Header Files"
 			>
 			<File
+				RelativePath=".\src\CubeController.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Sample2.h"
 				>
 			</File>
@@ -49,6 +53,10 @@
 		<Filter
 			Name="Source Files"
 			>
+			<File
+				RelativePath=".\src\CubeController.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\src\Sample2.cpp"
 				>
