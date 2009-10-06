@@ -22,9 +22,10 @@ Int Dx9Application::Main(Int argumentQuantity, Char* arguments[])
 	
 	mpRenderer = WIRE_NEW Dx9Renderer;
 
+	Bool isInfinite = true;
 	if (mpApplication->OnInitialize())
 	{
-		while (true)
+		while (isInfinite)
 		{
 			mpApplication->OnIdle();
 		}

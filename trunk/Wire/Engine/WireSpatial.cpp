@@ -41,7 +41,10 @@ void Spatial::UpdateBS()
 //----------------------------------------------------------------------------
 void Spatial::UpdateWorldData(Double appTime)
 {
-	// TODO: update controllers, states, light
+	// TODO: update states, light
+
+	// update any controllers associated with this object
+	UpdateControllers(appTime);
 
 	// update world transforms
 	if (!WorldIsCurrent)

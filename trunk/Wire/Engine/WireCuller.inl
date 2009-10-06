@@ -10,7 +10,7 @@ inline const Camera* Culler::GetCamera() const
 }
 
 //----------------------------------------------------------------------------
-inline unsigned int Culler::GetPlaneState() const
+inline UInt Culler::GetPlaneState() const
 {
 	return mPlaneState;
 }

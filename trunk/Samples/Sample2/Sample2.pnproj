@@ -1,1 +1,1 @@
-<Project name="Sample2"><Folder name="Header Files"><File path="src\Sample2.h"></File></Folder><Folder name="Source Files"><File path="src\Sample2.cpp"></File></Folder></Project>
+<Project name="Sample2"><Folder name="Header Files"><File path="src\Sample2.h"></File><File path="src\CubeController.h"></File></Folder><Folder name="Source Files"><File path="src\Sample2.cpp"></File><File path="src\CubeController.cpp"></File></Folder></Project>

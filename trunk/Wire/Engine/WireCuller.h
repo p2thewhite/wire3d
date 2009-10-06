@@ -18,7 +18,8 @@ public:
 	// to create the set of potentially visible objects. If the camera is
 	// not passed to the constructor, you should set it using SetCamera before
 	// calling ComputeVisibleSet.
-	Culler(Int maxQuantity = 0, Int growBy = 0, const Camera* pCamera = 0);
+	Culler(Int maxQuantity = VisibleSet::VS_DEFAULT_MAX_QUANTITY, Int growBy =
+		VisibleSet::VS_DEFAULT_GROWBY, const Camera* pCamera = 0);
 	virtual ~Culler();
 
 	// Access to the camera, frustum copy, and potentially visible set.
