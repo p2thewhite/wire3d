@@ -4,7 +4,11 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-GXApplication::GXApplication()
+GXApplication::GXApplication(const ColorRGBA backgroundColor, const Char*
+	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
+	:
+	Application(backgroundColor, pWindowTitle, xPosition, yPosition, width,
+		height)
 {
 }
 
@@ -17,6 +21,7 @@ GXApplication::~GXApplication()
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
 	mpRenderer = WIRE_NEW GXRenderer;
+	mpRenderer->SetClearColor(mBackgroundColor);
 
 	if (mpApplication->OnInitialize())
 	{
@@ -43,7 +48,6 @@ void GXApplication::OnTerminate()
 //----------------------------------------------------------------------------
 Bool GXApplication::OnInitialize()
 {
-	mpRenderer->SetClearColor(ColorRGBA::BLACK);
 	return true;
 }
 

@@ -2,6 +2,7 @@
 #ifndef WIREAPPLICATION_H
 #define WIREAPPLICATION_H
 
+#include "WireColorRGBA.h"
 #include "WireSystem.h"
 
 namespace Wire
@@ -33,12 +34,20 @@ public:
 	static Application* GetApplication();
 
 protected:
-	Application();
+	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
+		Int xPosition, Int yPosition, Int width, Int height);
 
 	// the unique application object
 	static Application* mpApplication;
 
 	Renderer* mpRenderer;
+
+	ColorRGBA mBackgroundColor;
+	const Char* mpWindowTitle;
+	Int mXPosition;
+	Int mYPosition;
+	Int mWidth;
+	Int mHeight;
 };
 
 }

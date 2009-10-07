@@ -9,6 +9,8 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 GXRenderer::GXRenderer()
+	:
+	Renderer(0, 0)
 {
 	mFrameBuffer[0] = NULL;
 	mFrameBuffer[1] = NULL;
@@ -82,6 +84,9 @@ GXRenderer::GXRenderer()
 	{
 		VIWaitForRetrace();
 	}
+
+	mWidth = mRmode->viWidth;
+	mHeight = mRmode->viHeight;
 }
 
 //----------------------------------------------------------------------------

@@ -6,9 +6,16 @@ using namespace Wire;
 Application* Application::mpApplication = NULL;
 
 //----------------------------------------------------------------------------
-Application::Application()
+Application::Application(const ColorRGBA backgroundColor, const Char*
+	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
 	:
-	mpRenderer(NULL)
+	mpRenderer(NULL),
+	mBackgroundColor(backgroundColor),
+	mpWindowTitle(pWindowTitle),
+	mXPosition(xPosition),
+	mYPosition(yPosition),
+	mWidth(width),
+	mHeight(height)
 {
 }
 

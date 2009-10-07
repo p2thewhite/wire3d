@@ -18,14 +18,14 @@ inline void Renderer::EndScene()
 inline Int Renderer::GetHeight() const
 {
 	// stub for derived classes
-	return 480;
+	return mHeight;
 }
 
 //----------------------------------------------------------------------------
 inline Int Renderer::GetWidth() const
 {
 	// stub for derived classes
-	return 640;
+	return mWidth;
 }
 
 //----------------------------------------------------------------------------

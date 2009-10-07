@@ -4,7 +4,11 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Dx9Application::Dx9Application()
+Dx9Application::Dx9Application(const ColorRGBA backgroundColor, const Char*
+	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
+	:
+	Application(backgroundColor, pWindowTitle, xPosition, yPosition, width,
+		height)
 {
 }
 
@@ -20,7 +24,8 @@ Int Dx9Application::Main(Int argumentQuantity, Char* arguments[])
 	argumentQuantity;
 	arguments;
 	
-	mpRenderer = WIRE_NEW Dx9Renderer;
+	mpRenderer = WIRE_NEW Dx9Renderer(mWidth, mHeight);
+	mpRenderer->SetClearColor(mBackgroundColor);
 
 	Bool isInfinite = true;
 	if (mpApplication->OnInitialize())
