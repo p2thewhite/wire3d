@@ -3,7 +3,9 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Dx9Renderer::Dx9Renderer()
+Dx9Renderer::Dx9Renderer(Int width, Int height)
+	:
+	Renderer(width, height)
 {
 }
 

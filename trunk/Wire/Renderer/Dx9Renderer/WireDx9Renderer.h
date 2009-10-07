@@ -13,7 +13,7 @@ class /*WIRE_RENDERER_ITEM*/ Dx9Renderer : public Renderer
 typedef Renderer Parent;
 
 public:
-	Dx9Renderer();
+	Dx9Renderer(Int width, Int height);
 	virtual ~Dx9Renderer();
 
 	// The entry point to drawing a geometry object.

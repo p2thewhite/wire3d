@@ -41,13 +41,13 @@ public:
 	const ColorRGBA& GetClearColor() const;
 
 	// Window parameters.
-	virtual Int GetWidth() const;
-	virtual Int GetHeight() const;
+	Int GetWidth() const;
+	Int GetHeight() const;
 
 	void OnFrameChange();
 
 protected:
-	Renderer();	
+	Renderer(Int width, Int height);
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;
@@ -59,6 +59,10 @@ protected:
 
 	// Transforms world space to camera space.
 	Matrix34F mViewMatrix;
+
+	// Width and height of the backbuffer
+	Int mWidth;
+	Int mHeight;
 };
 
 #include "WireRenderer.inl"

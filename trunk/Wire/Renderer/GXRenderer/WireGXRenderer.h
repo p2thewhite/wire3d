@@ -26,9 +26,6 @@ public:
 
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
-	virtual Int GetWidth() const;
-	virtual Int GetHeight() const;
-
 private:
 	GXColor mGXClearColor;
 

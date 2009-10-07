@@ -7,7 +7,10 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Renderer::Renderer()
+Renderer::Renderer(Int width, Int height)
+	:
+	mWidth(width),
+	mHeight(height)
 {
 }
 
