@@ -31,7 +31,9 @@ public:
 	virtual void OnTerminate() = 0;
 
 	static void SetApplication(Application* pApplication);
-	static Application* GetApplication();
+	static Application* GetApplication(); 
+
+	Renderer* GetRenderer() const;
 
 protected:
 	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
