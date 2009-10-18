@@ -17,12 +17,28 @@ public:
 	Dx9Renderer(HWND hWnd, Int width, Int height);
 	virtual ~Dx9Renderer();
 
+	virtual Bool BeginScene(Camera* pCamera);
+	virtual void EndScene();
+
+	// full window buffer operations
+	virtual void ClearBuffers();
+	virtual void DisplayBackBuffer();
+
 	// The entry point to drawing a geometry object.
 	virtual void DrawElements();
 
-	virtual void DisplayBackBuffer();
-
 protected:
+	// device management
+	void ResetDevice();
+
+	// Resource loading and releasing (to/from video memory).
+	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
+		IndexBuffer* pBuffer);
+	virtual void OnReleaseIBuffer(ResourceIdentifier* pID);
+
+	// Resource enabling and disabling.
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
+
 	LPDIRECT3D9 mpMain;
 	LPDIRECT3DDEVICE9 mpDevice;
 	D3DPRESENT_PARAMETERS mPresent;

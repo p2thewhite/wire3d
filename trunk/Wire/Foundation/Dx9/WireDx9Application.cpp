@@ -156,7 +156,6 @@ void Dx9Application::OnTerminate()
 //----------------------------------------------------------------------------
 Bool Dx9Application::OnInitialize()
 {
-	mpRenderer->SetClearColor(ColorRGBA::BLACK);
 	return true;
 }
 

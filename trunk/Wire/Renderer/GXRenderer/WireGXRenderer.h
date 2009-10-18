@@ -19,12 +19,23 @@ public:
 	virtual Bool BeginScene(Camera* pCamera);
 	virtual void EndScene();
 
+	// full window buffer operations
+	virtual void ClearBuffers();
+	virtual void DisplayBackBuffer();
+
 	// The entry point to drawing a geometry object.
 	virtual void DrawElements();
 
-	virtual void DisplayBackBuffer();
-
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
+
+protected:
+	// Resource loading and releasing (to/from video memory).
+	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
+		IndexBuffer* pBuffer) {};
+	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {};
+
+	// Resource enabling and disabling.
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {};
 
 private:
 	GXColor mGXClearColor;

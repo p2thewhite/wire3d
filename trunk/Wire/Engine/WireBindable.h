@@ -26,9 +26,11 @@ public:
 	UInt GetInfoQuantity(Renderer* pUser) const;
 	ResourceIdentifier* GetIdentifier(UInt i, Renderer* pUser) const;
 
-	void Release ();
+	void Release();
 
 private:
+	friend class Renderer;
+
 	void OnLoad(Renderer* pUser, Renderer::ReleaseFunction release,
 		ResourceIdentifier* pID);
 
