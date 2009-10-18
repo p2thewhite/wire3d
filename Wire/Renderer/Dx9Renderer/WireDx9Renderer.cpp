@@ -67,8 +67,80 @@ Dx9Renderer::~Dx9Renderer()
 }
 
 //----------------------------------------------------------------------------
+void Dx9Renderer::ClearBuffers()
+{
+	DWORD clearColor = D3DCOLOR_COLORVALUE(mClearColor.R(),
+		mClearColor.G(), mClearColor.B(), mClearColor.A());
+
+	msResult = mpDevice->Clear(0, 0,
+		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
+		clearColor, 1.0F/*mClearDepth*/, static_cast<DWORD>(0/*mClearStencil*/));
+	WIRE_ASSERT(SUCCEEDED(msResult));
+}
+
+//----------------------------------------------------------------------------
 void Dx9Renderer::DisplayBackBuffer()
 {
+	msResult = mpDevice->Present(0, 0, 0, 0);
+	if (msResult != D3DERR_DEVICELOST)
+	{
+		WIRE_ASSERT(SUCCEEDED(msResult));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::ResetDevice()
+{
+	msResult = mpDevice->Reset(&mPresent);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+}
+
+//----------------------------------------------------------------------------
+Bool Dx9Renderer::BeginScene(Camera*)
+{
+    msResult = mpDevice->TestCooperativeLevel();
+    
+    switch (msResult)
+    {
+    case D3DERR_DEVICELOST:
+		// TODO: handle device lost
+		return false;
+
+	case D3DERR_DEVICENOTRESET:
+        ResetDevice();
+        break;
+    }
+
+    msResult = mpDevice->BeginScene();
+    WIRE_ASSERT(SUCCEEDED(msResult));
+
+    return true;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::EndScene()
+{
+	msResult = mpDevice->EndScene();
+	WIRE_ASSERT(SUCCEEDED(msResult));
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
+	IndexBuffer* pBuffer)
+{
+
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
+{
+
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
+{
+
 }
 
 //----------------------------------------------------------------------------

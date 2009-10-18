@@ -205,6 +205,7 @@ void Sample2::OnIdle()
  	mspRoot->UpdateGS();
  	mCuller.ComputeVisibleSet(mspRoot);
 
+	mpRenderer->ClearBuffers();
 	mpRenderer->BeginScene(mspCamera);
 	mpRenderer->DrawScene(mCuller.GetVisibleSet());
 	mpRenderer->EndScene();

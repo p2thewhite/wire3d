@@ -185,6 +185,7 @@ void Sample1::OnIdle()
 	mAngle += MathF::PI / 180.0F;
 	mAngle = MathF::FMod(mAngle, MathF::PI);
 
+	mpRenderer->ClearBuffers();
 	mpRenderer->BeginScene(mspCamera);
 
 	Float xOffset = -1.5F - mAngle * 4.0F;

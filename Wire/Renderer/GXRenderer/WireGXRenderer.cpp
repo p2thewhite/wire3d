@@ -132,6 +132,12 @@ void GXRenderer::EndScene()
 }
 
 //----------------------------------------------------------------------------
+void GXRenderer::ClearBuffers()
+{
+	// TODO: implement!
+}
+
+//----------------------------------------------------------------------------
 void GXRenderer::DisplayBackBuffer()
 {
 	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.

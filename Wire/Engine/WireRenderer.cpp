@@ -2,6 +2,7 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
+#include "WireIndexBuffer.h"
 #include "WireVisibleSet.h"
 
 using namespace Wire;
@@ -20,9 +21,55 @@ Renderer::~Renderer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::LoadIBuffer(IndexBuffer* pIBuffer)
+{
+ 	if (!pIBuffer)
+	{
+		return;
+	}
+
+ 	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
+	if (!pID)
+	{
+		OnLoadIBuffer(pID, pIBuffer);
+		pIBuffer->OnLoad(this, &Renderer::ReleaseIBuffer, pID);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::ReleaseIBuffer(Bindable* pIBuffer)
+{
+	if (!pIBuffer)
+	{
+		return;
+	}
+
+	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
+	if (pID)
+	{
+		OnReleaseIBuffer(pID);
+		pIBuffer->OnRelease(this, pID);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::EnableIBuffer ()
+{
+ 	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+ 	LoadIBuffer(pIBuffer);
+ 	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
+ 	WIRE_ASSERT(pID);
+ 	OnEnableIBuffer(pID);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
+
+	// Enable the index buffer. The connectivity information is the same
+	// across all effects and all passes per effect.
+//	EnableIBuffer();
 
 	DrawElements();
 }
