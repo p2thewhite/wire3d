@@ -59,13 +59,15 @@ protected:
 	void ReleaseIBuffer(Bindable* pIBuffer);
 
 	// Resource enabling and disabling.
-	void EnableIBuffer();
+	virtual void EnableIBuffer();
+	virtual void DisableIBuffer();
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer) = 0;
 	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;

@@ -29,6 +29,10 @@ public:
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
 protected:
+	// Resource enabling and disabling.
+	virtual void EnableIBuffer() {};
+	virtual void DisableIBuffer() {};
+
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer) {};
@@ -36,6 +40,7 @@ protected:
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {};
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {};
 
 private:
 	GXColor mGXClearColor;

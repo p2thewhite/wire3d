@@ -31,6 +31,9 @@ protected:
 	// device management
 	void ResetDevice();
 
+	// Resource enabling and disabling.
+	virtual void DisableIBuffer() {};
+
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer);
@@ -38,6 +41,7 @@ protected:
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
+	virtual void OnDisableIBuffer(ResourceIdentifier*) {};
 
 	LPDIRECT3D9 mpMain;
 	LPDIRECT3DDEVICE9 mpDevice;
