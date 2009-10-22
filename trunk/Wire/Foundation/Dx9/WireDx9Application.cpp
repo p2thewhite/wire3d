@@ -31,6 +31,8 @@ Dx9Application::Dx9Application(const ColorRGBA backgroundColor, const Char*
 //----------------------------------------------------------------------------
 Dx9Application::~Dx9Application()
 {
+	WIRE_DELETE mpRenderer;
+	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -149,8 +151,6 @@ Int Dx9Application::Main(Int, Char*[])
 //----------------------------------------------------------------------------
 void Dx9Application::OnTerminate()
 {
-	WIRE_DELETE mpRenderer;
-	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------

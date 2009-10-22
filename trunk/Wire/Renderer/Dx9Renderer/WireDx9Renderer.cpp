@@ -1,5 +1,7 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9Resources.h"
+
 using namespace Wire;
 
 HRESULT Dx9Renderer::msResult = 0;
@@ -126,21 +128,81 @@ void Dx9Renderer::EndScene()
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
-	IndexBuffer* pBuffer)
+	IndexBuffer* pIBuffer)
 {
+	// The index buffer is encountered the first time.
+ 	IBufferID* pResource = WIRE_NEW IBufferID;
+ 	rID = pResource;
 
+	UInt quantity = pIBuffer->GetIndexQuantity();
+	UInt* pIndices = pIBuffer->GetData();
+	UInt indexBufferSize = quantity * sizeof(UInt);
+
+	// Create the index buffer.
+	D3DFORMAT format = mSupports32BitIndices ? D3DFMT_INDEX32 :
+		D3DFMT_INDEX16;
+	LPDIRECT3DINDEXBUFFER9 pD3DIBuffer;
+	msResult = mpDevice->CreateIndexBuffer(indexBufferSize,
+		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &pD3DIBuffer, NULL);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+ 
+	// Copy the index buffer data from system memory to video memory.
+	Char* pLockedIBuffer;
+	msResult = pD3DIBuffer->Lock(0, indexBufferSize,
+		(void**)(&pLockedIBuffer), 0);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	if (mSupports32BitIndices)
+	{
+		System::Memcpy(pLockedIBuffer, indexBufferSize, pIndices,
+			indexBufferSize);
+	}
+	else
+	{
+		if ((quantity % 3) == 0)
+		{
+			for (UInt i = 0; i < quantity; i+=3)
+			{
+				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
+					pIndices[i]);
+				((UShort*)pLockedIBuffer)[i+1] = static_cast<UShort>(
+					pIndices[i+1]);
+				((UShort*)pLockedIBuffer)[i+2] = static_cast<UShort>(
+					pIndices[i+2]);
+			}
+		}
+		else
+		{
+			for (UInt i = 0; i < quantity; i++)
+			{
+				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
+					pIndices[i]);
+			}
+		}
+	}
+
+	msResult = pD3DIBuffer->Unlock();
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	// Generate the binding information and save it.
+	pResource->ID = pD3DIBuffer;
 }
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 {
-
+	IBufferID* pResource = static_cast<IBufferID*>(pID);
+	pResource->ID->Release();
+	WIRE_DELETE pResource;
 }
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
-
+	// Bind the current index buffer.
+	IBufferID* pResource = static_cast<IBufferID*>(pID);
+	msResult = mpDevice->SetIndices(pResource->ID);
+	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
 //----------------------------------------------------------------------------

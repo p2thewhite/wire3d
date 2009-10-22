@@ -64,7 +64,7 @@ ResourceIdentifier* Bindable::GetIdentifier(UInt i, Renderer* pUser) const
 	}
 
 	// The resource is not yet bound to the renderer.
-	return 0;
+	return NULL;
 }
 
 //----------------------------------------------------------------------------

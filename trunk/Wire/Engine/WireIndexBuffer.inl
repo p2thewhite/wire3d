@@ -5,6 +5,18 @@ inline UInt IndexBuffer::GetIndexQuantity() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt* IndexBuffer::GetData()
+{
+	return mpIndices;
+}
+
+//----------------------------------------------------------------------------
+inline const UInt* IndexBuffer::GetData() const
+{
+	return mpIndices;
+}
+
+//----------------------------------------------------------------------------
 inline UInt IndexBuffer::operator[] (UInt i) const
 {
 	WIRE_ASSERT(i < mQuantity);

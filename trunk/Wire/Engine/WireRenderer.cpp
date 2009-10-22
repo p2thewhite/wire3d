@@ -63,15 +63,27 @@ void Renderer::EnableIBuffer ()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::DisableIBuffer()
+{
+	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
+	WIRE_ASSERT(pID);
+	OnDisableIBuffer(pID);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
 
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
-//	EnableIBuffer();
+	EnableIBuffer();
 
 	DrawElements();
+
+	// Disable the index buffer.
+	DisableIBuffer();
 }
 
 //----------------------------------------------------------------------------
