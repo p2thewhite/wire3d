@@ -61,6 +61,18 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	msResult = mpMain->CreateDevice(D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL, hWnd, behaviorFlags, &mPresent, &mpDevice);
 	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	// Turn off lighting (DX defaults to lighting on).
+	msResult = mpDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	// Turn off culling
+	msResult = mpDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	// Turn on the zbuffer
+	msResult = mpDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
 //----------------------------------------------------------------------------
@@ -83,7 +95,7 @@ void Dx9Renderer::ClearBuffers()
 //----------------------------------------------------------------------------
 void Dx9Renderer::DisplayBackBuffer()
 {
-	msResult = mpDevice->Present(0, 0, 0, 0);
+	msResult = mpDevice->Present(NULL, NULL, NULL, NULL);
 	if (msResult != D3DERR_DEVICELOST)
 	{
 		WIRE_ASSERT(SUCCEEDED(msResult));

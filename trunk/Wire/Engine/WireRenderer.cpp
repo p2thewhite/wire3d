@@ -56,6 +56,7 @@ void Renderer::ReleaseIBuffer(Bindable* pIBuffer)
 void Renderer::EnableIBuffer ()
 {
  	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	// TODO: have LoadIBuffer return pID
  	LoadIBuffer(pIBuffer);
  	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
  	WIRE_ASSERT(pID);

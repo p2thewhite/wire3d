@@ -20,8 +20,7 @@ GXApplication::~GXApplication()
 //----------------------------------------------------------------------------
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
-	mpRenderer = WIRE_NEW GXRenderer;
-	mpRenderer->SetClearColor(mBackgroundColor);
+	mpRenderer = WIRE_NEW GXRenderer(mBackgroundColor);
 
 	if (mpApplication->OnInitialize())
 	{
