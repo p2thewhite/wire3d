@@ -8,15 +8,10 @@ using namespace Wire;
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
 //----------------------------------------------------------------------------
-GXRenderer::GXRenderer()
+GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	:
 	Renderer(0, 0)
 {
-	mFrameBuffer[0] = NULL;
-	mFrameBuffer[1] = NULL;
-
-	mFrameBufferIndex = 0;
-
 	VIInit();
 	PADInit();
 
@@ -31,6 +26,7 @@ GXRenderer::GXRenderer()
 	// allocate 2 framebuffers for double buffering
 	mFrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
 	mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
+	mFrameBufferIndex = 0;
 
 	// ConfigureMem
 	mDemoFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
@@ -39,8 +35,7 @@ GXRenderer::GXRenderer()
 	GXInit(mDemoFifoBuffer, DEFAULT_FIFO_SIZE);
 
 	// clears the bg to color and clears the z buffer
-	GXColor background = {0, 0, 0, 0xff};
-	GXSetCopyClear(background, GX_MAX_Z24);
+	SetClearColor(rClearColor);
 
 	// InitGX
 	GXSetViewport(0.0F, 0.0F, mRmode->fbWidth, mRmode->efbHeight, 0.0F, 1.0F);
@@ -73,6 +68,7 @@ GXRenderer::GXRenderer()
 	// 	GXSetDispCopyYScale(1.0F);
 
 	GXCopyDisp(mFrameBuffer[mFrameBufferIndex], GX_TRUE);
+	mIsFrameBufferDirty = false;
 
 	// StartVI
 	VIConfigure(mRmode);
@@ -134,7 +130,10 @@ void GXRenderer::EndScene()
 //----------------------------------------------------------------------------
 void GXRenderer::ClearBuffers()
 {
-	// TODO: implement!
+	if (mIsFrameBufferDirty)
+	{
+		GXCopyDisp(mFrameBuffer[mFrameBufferIndex^1], GX_TRUE);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -148,6 +147,7 @@ void GXRenderer::DisplayBackBuffer()
 
 	// Issue display copy command
 	GXCopyDisp(mFrameBuffer[mFrameBufferIndex^1], GX_TRUE);
+	mIsFrameBufferDirty = false;
 
 	// Wait until everything is drawn and copied into XFB.
 	// This stalls until all graphics commands have executed and the
@@ -184,6 +184,8 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 //----------------------------------------------------------------------------
 void GXRenderer::DrawElements()
 {
+	mIsFrameBufferDirty = true;
+
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
 	GXClearVtxDesc();

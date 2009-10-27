@@ -13,7 +13,7 @@ class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 typedef Renderer Parent;
 
 public:
-	GXRenderer();
+	GXRenderer(const ColorRGBA& rClearColor);
 	virtual ~GXRenderer();
 
 	virtual Bool BeginScene(Camera* pCamera);
@@ -45,10 +45,13 @@ protected:
 private:
 	GXColor mGXClearColor;
 
+	GXRenderModeObj* mRmode;
+
 	void* mFrameBuffer[2];
 	void* mDemoFifoBuffer;
 	UInt mFrameBufferIndex;
-	GXRenderModeObj* mRmode;
+	Bool mIsFrameBufferDirty;
+
 };
 
 #include "WireGXRenderer.inl"
