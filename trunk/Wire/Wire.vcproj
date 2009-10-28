@@ -293,10 +293,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireQuadMesh.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireRenderer.h"
 					>
 				</File>
@@ -401,6 +397,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireVertexBuffer.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireVisibleObject.inl"
 					>
 				</File>
@@ -446,10 +446,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireQuadMesh.cpp"
 					>
 				</File>
 				<File

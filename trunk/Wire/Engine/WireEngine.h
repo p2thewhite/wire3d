@@ -10,7 +10,6 @@
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
 #include "WireNode.h"
-#include "WireQuadMesh.h"
 #include "WireRenderer.h"
 #include "WireResourceIdentifier.h"
 #include "WireSceneObject.h"

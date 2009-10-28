@@ -219,13 +219,7 @@ void GXRenderer::DrawElements()
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;
 
-	UChar gxPrimitive = GX_TRIANGLES;
-	if (mpGeometry->Type == Geometry::GT_QUADMESH)
-	{
-		gxPrimitive = GX_QUADS;
-	}
-
-	GXBegin(gxPrimitive, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
 
 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
 	{

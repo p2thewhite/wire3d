@@ -5,7 +5,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Camera::Camera()
 {
-	SetFrustum(-0.5f,0.5f,-0.5f,0.5f,1.0f,2.0f);
+	SetFrustum(-0.5F, 0.5F, -0.5F, 0.5F, 1.0F, 2.0F);
 	SetFrame(Vector3F::ZERO, -Vector3F::UNIT_Z, Vector3F::UNIT_Y,
 		Vector3F::UNIT_X);
 }

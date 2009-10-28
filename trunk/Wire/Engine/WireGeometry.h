@@ -16,7 +16,6 @@ public:
 	enum GeometryType
 	{
 		GT_TRIMESH,
-		GT_QUADMESH,
 		GT_MAX_QUANTITY
 	};
 
@@ -28,7 +27,7 @@ public:
 	IndexBufferPtr IBuffer;
 	BoundingVolumePtr ModelBound;
 
-	GeometryType Type;
+//	GeometryType Type;
 
 protected:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);

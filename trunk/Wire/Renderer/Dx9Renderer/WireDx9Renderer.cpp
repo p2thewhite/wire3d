@@ -1,6 +1,7 @@
 #include "WireDx9Renderer.h"
 
 #include "WireDx9Resources.h"
+#include <d3dx9.h>
 
 using namespace Wire;
 
@@ -220,4 +221,45 @@ void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 //----------------------------------------------------------------------------
 void Dx9Renderer::DrawElements()
 {
+	static Float test = 0;
+	test = test + 0.001f;
+	MathF::FMod(test, MathF::TWO_PI);
+
+	// Set up world matrix
+	D3DXMATRIXA16 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	D3DXMatrixRotationX( &matWorld, test );
+	mpDevice->SetTransform( D3DTS_WORLD, &matWorld );
+
+	// Set up our view matrix. A view matrix can be defined given an eye point,
+	// a point to lookAt, and a direction for which way is up. Here, we set the
+	// eye five units back along the z-axis and up three units, look at the
+	// origin, and define "up" to be in the y-direction.
+	D3DXVECTOR3 vEyePt( 0.0f, 0.0f, 5.0f );
+	D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 1.0f );
+	D3DXVECTOR3 vUpVec( 0.0f, 1.0f, 0.0f );
+	D3DXMATRIXA16 matView;
+	D3DXMatrixLookAtLH( &matView, &vEyePt, &vLookatPt, &vUpVec );
+	mpDevice->SetTransform( D3DTS_VIEW, &matView );
+
+	// For the projection matrix, we set up a perspective transform (which
+	// transforms geometry from 3D view space to 2D viewport space, with
+	// a perspective divide making objects smaller in the distance). To build
+	// a perspective transform, we need the field of view (1/4 pi is common),
+	// the aspect ratio, and the near and far clipping planes (which define at
+	// what distances geometry should be no longer be rendered).
+	D3DXMATRIXA16 matProj;
+	D3DXMatrixPerspectiveFovLH( &matProj, D3DX_PI/4, 1.0f, 0.1F, 300.0F );
+	mpDevice->SetTransform( D3DTS_PROJECTION, &matProj );
+
+	UShort indices[1000];
+	for (UInt i = 0; i < mpGeometry->IBuffer->GetIndexQuantity(); i++)
+	{
+		indices[i] = static_cast<UShort>(mpGeometry->IBuffer->GetData()[i]);
+	}
+
+	mpDevice->SetFVF(D3DFVF_XYZ);
+	mpDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mpGeometry->VBuffer->GetVertexQuantity(),
+		mpGeometry->IBuffer->GetIndexQuantity() / 3, &indices,
+		D3DFMT_INDEX16, mpGeometry->VBuffer->GetData(), sizeof(Float) * 6);
 }

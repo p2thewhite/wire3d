@@ -7,7 +7,7 @@ TriMesh::TriMesh(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 	:
 	Geometry(pVBuffer, pIBuffer)
 {
-	Type = GT_TRIMESH;
+//	Type = GT_TRIMESH;
 }
 
 //----------------------------------------------------------------------------
