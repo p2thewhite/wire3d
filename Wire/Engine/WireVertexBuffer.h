@@ -32,6 +32,9 @@ public:
 	Vector2F& TCoord2(UInt i, UInt unit = 0);
 	Vector2F TCoord2(UInt i, UInt unit = 0) const;
 
+	Float* GetData();
+	const Float* GetData() const;
+
 private:
 	VertexAttributes mAttributes;
 
@@ -43,6 +46,8 @@ private:
 };
 
 typedef Pointer<VertexBuffer> VertexBufferPtr;
+
+#include "WireVertexBuffer.inl"
 
 }
 
