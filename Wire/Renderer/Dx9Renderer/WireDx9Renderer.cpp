@@ -68,7 +68,7 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	// Turn off culling
-	msResult = mpDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+	msResult = mpDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	// Turn on the zbuffer
@@ -223,7 +223,7 @@ void Dx9Renderer::DrawElements()
 {
 	static Float test = 0;
 	test = test + 0.001f;
-	MathF::FMod(test, MathF::TWO_PI);
+	test = MathF::FMod(test, MathF::TWO_PI);
 
 	// Set up world matrix
 	D3DXMATRIXA16 matWorld;
@@ -258,8 +258,27 @@ void Dx9Renderer::DrawElements()
 		indices[i] = static_cast<UShort>(mpGeometry->IBuffer->GetData()[i]);
 	}
 
-	mpDevice->SetFVF(D3DFVF_XYZ);
+	struct CUSTOMVERTEX
+	{
+		D3DXVECTOR3 position; // The position
+		D3DCOLOR    color;    // The color
+	};
+
+	CUSTOMVERTEX vertices[1000];
+	for (UInt i = 0; i < mpGeometry->VBuffer->GetVertexQuantity(); i++)
+	{
+		Vector3F& rVec = mpGeometry->VBuffer->Position3(i);
+		vertices[i].position = D3DXVECTOR3(rVec.X(), rVec.Y(), rVec.Z());
+		ColorRGB& rCol = mpGeometry->VBuffer->Color3(i);
+		UInt r = static_cast<UInt>(rCol.R() * 255.0F);
+		UInt g = static_cast<UInt>(rCol.G() * 255.0F);
+		UInt b = static_cast<UInt>(rCol.B() * 255.0F);
+		D3DCOLOR col = (0xff << 24) + (r << 16) + (g << 8) + b;
+		vertices[i].color = col;
+	}
+
+	mpDevice->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
 	mpDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mpGeometry->VBuffer->GetVertexQuantity(),
 		mpGeometry->IBuffer->GetIndexQuantity() / 3, &indices,
-		D3DFMT_INDEX16, mpGeometry->VBuffer->GetData(), sizeof(Float) * 6);
+		D3DFMT_INDEX16, &vertices, sizeof(CUSTOMVERTEX));
 }
