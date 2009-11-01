@@ -4,6 +4,7 @@
 
 #include "../Foundation/WireTypes.h"
 #include "../Foundation/WireMatrix34.h"
+#include "../Foundation/WireMatrix4.h"
 
 namespace Wire
 {
@@ -35,6 +36,10 @@ public:
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
 	void GetTransformation(Matrix34F& rMatrix) const;
+
+	// Pack the transformation into a 4-by-4 matrix, stored so that it may be
+	// applied to 1-by-4 vectors on the left.
+	void GetHomogeneous(Matrix4F& rHMatrix) const;
 
 	// For M = R*S, the largest value of S in absolute value is returned.
 	// For general M, the max-row-sum norm is returned (and is guaranteed to
