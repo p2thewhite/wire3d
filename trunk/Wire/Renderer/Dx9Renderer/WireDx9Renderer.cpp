@@ -111,9 +111,25 @@ void Dx9Renderer::ResetDevice()
 }
 
 //----------------------------------------------------------------------------
-Bool Dx9Renderer::BeginScene(Camera*)
+Bool Dx9Renderer::BeginScene(Camera* pCamera)
 {
-    msResult = mpDevice->TestCooperativeLevel();
+	Parent::BeginScene(pCamera);
+ 
+	Float n = pCamera->GetDMin();
+	Float f = pCamera->GetDMax();
+	Float b = pCamera->GetUMin();
+	Float t = pCamera->GetUMax();
+	Float l = pCamera->GetRMin();
+	Float r = pCamera->GetRMax();
+	D3DXMATRIXA16 matProj(
+		2.0F*n/(r-l),	0.0F,			(r+l)/(r-l),	0.0F,
+		0.0F,			2.0F*n/(t-b),	(t+b)/(t-b),	0.0F,
+		0.0F,			0.0F,			f/(f-n),		1.0F,
+		0.0F,			0.0F,			-n*f/(f-n),		0.0F);
+
+	mpDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+
+	msResult = mpDevice->TestCooperativeLevel();
     
     switch (msResult)
     {
@@ -129,7 +145,7 @@ Bool Dx9Renderer::BeginScene(Camera*)
     msResult = mpDevice->BeginScene();
     WIRE_ASSERT(SUCCEEDED(msResult));
 
-    return true;
+	return true;
 }
 
 //----------------------------------------------------------------------------
@@ -226,31 +242,20 @@ void Dx9Renderer::DrawElements()
 	test = MathF::FMod(test, MathF::TWO_PI);
 
 	// Set up world matrix
-	D3DXMATRIXA16 matWorld;
-	D3DXMatrixIdentity(&matWorld);
-	D3DXMatrixRotationX( &matWorld, test );
-	mpDevice->SetTransform( D3DTS_WORLD, &matWorld );
+	Matrix4F world;
+	mpGeometry->World.GetHomogeneous(world);
+	mpDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
 	// Set up our view matrix. A view matrix can be defined given an eye point,
 	// a point to lookAt, and a direction for which way is up. Here, we set the
 	// eye five units back along the z-axis and up three units, look at the
 	// origin, and define "up" to be in the y-direction.
-	D3DXVECTOR3 vEyePt( 0.0f, 0.0f, 5.0f );
+	D3DXVECTOR3 vEyePt( 0.0f, 0.0f, 3.0f );
 	D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 1.0f );
 	D3DXVECTOR3 vUpVec( 0.0f, 1.0f, 0.0f );
 	D3DXMATRIXA16 matView;
 	D3DXMatrixLookAtLH( &matView, &vEyePt, &vLookatPt, &vUpVec );
 	mpDevice->SetTransform( D3DTS_VIEW, &matView );
-
-	// For the projection matrix, we set up a perspective transform (which
-	// transforms geometry from 3D view space to 2D viewport space, with
-	// a perspective divide making objects smaller in the distance). To build
-	// a perspective transform, we need the field of view (1/4 pi is common),
-	// the aspect ratio, and the near and far clipping planes (which define at
-	// what distances geometry should be no longer be rendered).
-	D3DXMATRIXA16 matProj;
-	D3DXMatrixPerspectiveFovLH( &matProj, D3DX_PI/4, 1.0f, 0.1F, 300.0F );
-	mpDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 
 	UShort indices[1000];
 	for (UInt i = 0; i < mpGeometry->IBuffer->GetIndexQuantity(); i++)

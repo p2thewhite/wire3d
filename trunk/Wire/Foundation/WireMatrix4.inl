@@ -103,8 +103,8 @@ inline Matrix4<Real>::operator Real4* ()
 }
 
 //----------------------------------------------------------------------------
-template <class Real>
-inline Matrix4<Real>::operator const Real4* () const
-{
-	return mEntry;
-}
+// template <class Real>
+// inline Matrix4<Real>::operator const Real4* () const
+// {
+// 	return mEntry;
+// }

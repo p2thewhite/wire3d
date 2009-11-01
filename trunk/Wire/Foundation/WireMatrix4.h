@@ -28,7 +28,7 @@ public:
 
 	// access operators
 	inline operator Real4* ();
-	inline operator const Real4* () const;
+//	inline operator const Real4* () const; // TODO: fix for VC
 
 private:
 	Real mEntry[4][4];

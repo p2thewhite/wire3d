@@ -92,6 +92,46 @@ void Transformation::GetTransformation(Matrix34F& rMatrix) const
 }
 
 //----------------------------------------------------------------------------
+void Transformation::GetHomogeneous(Matrix4F& rHMatrix) const
+{
+	if (mIsRSMatrix)
+	{
+		rHMatrix[0][0] = mMatrix[0][0] * mScale.X();
+		rHMatrix[0][1] = mMatrix[1][0] * mScale.X();
+		rHMatrix[0][2] = mMatrix[2][0] * mScale.X();
+		rHMatrix[0][3] = 0.0F;
+		rHMatrix[1][0] = mMatrix[0][1] * mScale.Y();
+		rHMatrix[1][1] = mMatrix[1][1] * mScale.Y();
+		rHMatrix[1][2] = mMatrix[2][1] * mScale.Y();
+		rHMatrix[1][3] = 0.0F;
+		rHMatrix[2][0] = mMatrix[0][2] * mScale.Z();
+		rHMatrix[2][1] = mMatrix[1][2] * mScale.Z();
+		rHMatrix[2][2] = mMatrix[2][2] * mScale.Z();
+		rHMatrix[2][3] = 0.0F;
+	}
+	else
+	{
+		rHMatrix[0][0] = mMatrix[0][0];
+		rHMatrix[0][1] = mMatrix[1][0];
+		rHMatrix[0][2] = mMatrix[2][0];
+		rHMatrix[0][3] = 0.0F;
+		rHMatrix[1][0] = mMatrix[0][1];
+		rHMatrix[1][1] = mMatrix[1][1];
+		rHMatrix[1][2] = mMatrix[2][1];
+		rHMatrix[1][3] = 0.0F;
+		rHMatrix[2][0] = mMatrix[0][2];
+		rHMatrix[2][1] = mMatrix[1][2];
+		rHMatrix[2][2] = mMatrix[2][2];
+		rHMatrix[2][3] = 0.0F;
+	}
+
+	rHMatrix[3][0] = mMatrix[0][3];
+	rHMatrix[3][1] = mMatrix[1][3];
+	rHMatrix[3][2] = mMatrix[2][3];
+	rHMatrix[3][3] = 1.0F;
+}
+
+//----------------------------------------------------------------------------
 void Transformation::Product(const Transformation& rA,
 	const Transformation& rB)
 {
