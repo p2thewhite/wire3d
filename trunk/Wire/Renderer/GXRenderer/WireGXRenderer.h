@@ -19,6 +19,9 @@ public:
 	virtual Bool BeginScene(Camera* pCamera);
 	virtual void EndScene();
 
+	// Apply camera changes to platform specific renderer.
+	virtual void OnFrameChange();
+
 	// full window buffer operations
 	virtual void ClearBuffers();
 	virtual void DisplayBackBuffer();
@@ -52,6 +55,8 @@ private:
 	UInt mFrameBufferIndex;
 	Bool mIsFrameBufferDirty;
 
+	// Transforms world space to camera space.
+	Matrix34F mViewMatrix;
 };
 
 #include "WireGXRenderer.inl"
