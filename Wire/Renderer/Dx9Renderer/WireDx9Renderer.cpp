@@ -237,10 +237,6 @@ void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 //----------------------------------------------------------------------------
 void Dx9Renderer::DrawElements()
 {
-	static Float test = 0;
-	test = test + 0.001f;
-	test = MathF::FMod(test, MathF::TWO_PI);
-
 	// Set up world matrix
 	Matrix4F world;
 	mpGeometry->World.GetHomogeneous(world);
@@ -286,4 +282,39 @@ void Dx9Renderer::DrawElements()
 	mpDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mpGeometry->VBuffer->GetVertexQuantity(),
 		mpGeometry->IBuffer->GetIndexQuantity() / 3, &indices,
 		D3DFMT_INDEX16, &vertices, sizeof(CUSTOMVERTEX));
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnFrameChange()
+{
+	Vector3F eye = mpCamera->GetLocation();
+	Vector3F rVector = mpCamera->GetRVector();
+	Vector3F uVector = mpCamera->GetUVector();
+	Vector3F dVector = mpCamera->GetDVector();
+
+// zaxis = normal(At - Eye)
+// xaxis = normal(cross(Up, zaxis))
+// yaxis = cross(zaxis, xaxis)
+//     
+//  xaxis.x           yaxis.x           zaxis.x          0
+//  xaxis.y           yaxis.y           zaxis.y          0
+//  xaxis.z           yaxis.z           zaxis.z          0
+// -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  l
+
+	mViewMatrix[0][0] = rVector[0];
+	mViewMatrix[0][1] = uVector[0];
+	mViewMatrix[0][2] = dVector[0];
+	mViewMatrix[0][3] = 0.0f;
+	mViewMatrix[1][0] = rVector[1];
+	mViewMatrix[1][1] = uVector[1];
+	mViewMatrix[1][2] = dVector[1];
+	mViewMatrix[1][3] = 0.0f;
+	mViewMatrix[2][0] = rVector[2];
+	mViewMatrix[2][1] = uVector[2];
+	mViewMatrix[2][2] = dVector[2];
+	mViewMatrix[2][3] = 0.0f;
+	mViewMatrix[3][0] = -rVector.Dot(eye);
+	mViewMatrix[3][1] = -uVector.Dot(eye);
+	mViewMatrix[3][2] = -dVector.Dot(eye);
+	mViewMatrix[3][3] = 1.0f;
 }

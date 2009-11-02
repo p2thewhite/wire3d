@@ -3,7 +3,6 @@
 #define WIRERENDERER_H
 
 #include "../Foundation/WireColorRGBA.h"
-#include "../Foundation/WireMatrix34.h"
 
 namespace Wire
 {
@@ -25,6 +24,9 @@ public:
 	// Support for predraw and postdraw semantics.
 	virtual Bool BeginScene(Camera* pCamera);
 	virtual void EndScene();
+
+	// Apply camera changes to platform specific renderer.
+	virtual void OnFrameChange() = 0;
 
 	// Support for full-sized window buffer operations. The values used for
 	// clearing are specified by SetClearColor().
@@ -48,8 +50,6 @@ public:
 
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
-
-	void OnFrameChange();
 
 protected:
 	Renderer(Int width, Int height);
@@ -76,9 +76,6 @@ protected:
 	Camera* mpCamera;
 
 	ColorRGBA mClearColor;
-
-	// Transforms world space to camera space.
-	Matrix34F mViewMatrix;
 
 	// Width and height of the backbuffer
 	Int mWidth;
