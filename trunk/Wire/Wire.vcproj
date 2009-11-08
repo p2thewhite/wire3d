@@ -507,6 +507,14 @@
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXResourcesED.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXResourcesLR.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Inline Files"
@@ -537,6 +545,14 @@
 					>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesED.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
 						>
 					</File>
 				</Filter>

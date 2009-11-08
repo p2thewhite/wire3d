@@ -1,6 +1,5 @@
 #include "WireDx9Renderer.h"
 
-#include "WireDx9Resources.h"
 #include <d3dx9.h>
 
 using namespace Wire;
@@ -67,12 +66,8 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	msResult = mpDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	// Turn off culling
-	msResult = mpDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
-	WIRE_ASSERT(SUCCEEDED(msResult));
-
-	// Turn on the zbuffer
-	msResult = mpDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+	// Set culling to clockwise
+	msResult = mpDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
@@ -114,7 +109,7 @@ void Dx9Renderer::ResetDevice()
 Bool Dx9Renderer::BeginScene(Camera* pCamera)
 {
 	Parent::BeginScene(pCamera);
- 
+
 	Float n = pCamera->GetDMin();
 	Float f = pCamera->GetDMax();
 	Float b = pCamera->GetUMin();
@@ -128,6 +123,9 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 		0.0F,			0.0F,			-n*f/(f-n),		0.0F);
 
 	mpDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+	mpDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(
+		&mViewMatrix));
+
 
 	msResult = mpDevice->TestCooperativeLevel();
     
@@ -156,102 +154,12 @@ void Dx9Renderer::EndScene()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
-	IndexBuffer* pIBuffer)
-{
-	// The index buffer is encountered the first time.
- 	IBufferID* pResource = WIRE_NEW IBufferID;
- 	rID = pResource;
-
-	UInt quantity = pIBuffer->GetIndexQuantity();
-	UInt* pIndices = pIBuffer->GetData();
-	UInt indexBufferSize = quantity * sizeof(UInt);
-
-	// Create the index buffer.
-	D3DFORMAT format = mSupports32BitIndices ? D3DFMT_INDEX32 :
-		D3DFMT_INDEX16;
-	LPDIRECT3DINDEXBUFFER9 pD3DIBuffer;
-	msResult = mpDevice->CreateIndexBuffer(indexBufferSize,
-		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &pD3DIBuffer, NULL);
-	WIRE_ASSERT(SUCCEEDED(msResult));
- 
-	// Copy the index buffer data from system memory to video memory.
-	Char* pLockedIBuffer;
-	msResult = pD3DIBuffer->Lock(0, indexBufferSize,
-		(void**)(&pLockedIBuffer), 0);
-	WIRE_ASSERT(SUCCEEDED(msResult));
-
-	if (mSupports32BitIndices)
-	{
-		System::Memcpy(pLockedIBuffer, indexBufferSize, pIndices,
-			indexBufferSize);
-	}
-	else
-	{
-		if ((quantity % 3) == 0)
-		{
-			for (UInt i = 0; i < quantity; i+=3)
-			{
-				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
-					pIndices[i]);
-				((UShort*)pLockedIBuffer)[i+1] = static_cast<UShort>(
-					pIndices[i+1]);
-				((UShort*)pLockedIBuffer)[i+2] = static_cast<UShort>(
-					pIndices[i+2]);
-			}
-		}
-		else
-		{
-			for (UInt i = 0; i < quantity; i++)
-			{
-				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
-					pIndices[i]);
-			}
-		}
-	}
-
-	msResult = pD3DIBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(msResult));
-
-	// Generate the binding information and save it.
-	pResource->ID = pD3DIBuffer;
-}
-
-//----------------------------------------------------------------------------
-void Dx9Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
-{
-	IBufferID* pResource = static_cast<IBufferID*>(pID);
-	pResource->ID->Release();
-	WIRE_DELETE pResource;
-}
-
-//----------------------------------------------------------------------------
-void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
-{
-	// Bind the current index buffer.
-	IBufferID* pResource = static_cast<IBufferID*>(pID);
-	msResult = mpDevice->SetIndices(pResource->ID);
-	WIRE_ASSERT(SUCCEEDED(msResult));
-}
-
-//----------------------------------------------------------------------------
 void Dx9Renderer::DrawElements()
 {
 	// Set up world matrix
 	Matrix4F world;
 	mpGeometry->World.GetHomogeneous(world);
 	mpDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
-
-	// Set up our view matrix. A view matrix can be defined given an eye point,
-	// a point to lookAt, and a direction for which way is up. Here, we set the
-	// eye five units back along the z-axis and up three units, look at the
-	// origin, and define "up" to be in the y-direction.
-	D3DXVECTOR3 vEyePt( 0.0f, 0.0f, 3.0f );
-	D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 1.0f );
-	D3DXVECTOR3 vUpVec( 0.0f, 1.0f, 0.0f );
-	D3DXMATRIXA16 matView;
-	D3DXMatrixLookAtLH( &matView, &vEyePt, &vLookatPt, &vUpVec );
-	mpDevice->SetTransform( D3DTS_VIEW, &matView );
 
 	UShort indices[1000];
 	for (UInt i = 0; i < mpGeometry->IBuffer->GetIndexQuantity(); i++)
@@ -292,29 +200,20 @@ void Dx9Renderer::OnFrameChange()
 	Vector3F uVector = mpCamera->GetUVector();
 	Vector3F dVector = mpCamera->GetDVector();
 
-// zaxis = normal(At - Eye)
-// xaxis = normal(cross(Up, zaxis))
-// yaxis = cross(zaxis, xaxis)
-//     
-//  xaxis.x           yaxis.x           zaxis.x          0
-//  xaxis.y           yaxis.y           zaxis.y          0
-//  xaxis.z           yaxis.z           zaxis.z          0
-// -dot(xaxis, eye)  -dot(yaxis, eye)  -dot(zaxis, eye)  l
-
 	mViewMatrix[0][0] = rVector[0];
 	mViewMatrix[0][1] = uVector[0];
 	mViewMatrix[0][2] = dVector[0];
-	mViewMatrix[0][3] = 0.0f;
+	mViewMatrix[0][3] = 0.0F;
 	mViewMatrix[1][0] = rVector[1];
 	mViewMatrix[1][1] = uVector[1];
 	mViewMatrix[1][2] = dVector[1];
-	mViewMatrix[1][3] = 0.0f;
+	mViewMatrix[1][3] = 0.0F;
 	mViewMatrix[2][0] = rVector[2];
 	mViewMatrix[2][1] = uVector[2];
 	mViewMatrix[2][2] = dVector[2];
-	mViewMatrix[2][3] = 0.0f;
+	mViewMatrix[2][3] = 0.0F;
 	mViewMatrix[3][0] = -rVector.Dot(eye);
 	mViewMatrix[3][1] = -uVector.Dot(eye);
 	mViewMatrix[3][2] = -dVector.Dot(eye);
-	mViewMatrix[3][3] = 1.0f;
+	mViewMatrix[3][3] = 1.0F;
 }

@@ -60,7 +60,7 @@ Bool Camera::GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 	&&  mFrustum[VF_UMIN] == -mFrustum[VF_UMAX])
 	{
 		Float tmp = mFrustum[VF_UMAX] / mFrustum[VF_DMIN];
-		rUpFovDegrees = 2.0f * MathF::ATan(tmp) * MathF::RAD_TO_DEG;
+		rUpFovDegrees = 2.0F * MathF::ATan(tmp) * MathF::RAD_TO_DEG;
 		rAspectRatio = mFrustum[VF_RMAX] / mFrustum[VF_UMAX];
 		rDMin = mFrustum[VF_DMIN];
 		rDMax = mFrustum[VF_DMAX];

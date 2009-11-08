@@ -1,4 +1,16 @@
 //----------------------------------------------------------------------------
+inline UInt VertexAttributes::GetChannelQuantity() const
+{
+	return mChannelQuantity;
+}
+
+//----------------------------------------------------------------------------
+inline UInt VertexAttributes::GetColorChannelQuantity() const
+{
+	return mColorChannels.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
 inline void VertexAttributes::SetInterleaved(Bool isChannelInterleaved)
 {
 	mIsChannelInterleaved = isChannelInterleaved;
