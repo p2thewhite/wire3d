@@ -12,6 +12,7 @@ class Camera;
 class Geometry;
 class IndexBuffer;
 class ResourceIdentifier;
+class VertexBuffer;
 class VisibleSet;
 
 class /*WIRE_ENGINE_ITEM*/ Renderer
@@ -57,10 +58,12 @@ protected:
 	// Resource loading and releasing.
 	void LoadIBuffer(IndexBuffer* pIBuffer);
 	void ReleaseIBuffer(Bindable* pIBuffer);
+	void LoadVBuffer(VertexBuffer* pVBuffer);
 
 	// Resource enabling and disabling.
 	virtual void EnableIBuffer();
 	virtual void DisableIBuffer();
+	virtual void EnableVBuffer();
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
@@ -68,6 +71,9 @@ protected:
 	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
+
+ 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
+ 		VertexBuffer* pVBuffer) = 0;
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;

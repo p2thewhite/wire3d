@@ -3,6 +3,7 @@
 #include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
+#include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
 using namespace Wire;
@@ -73,6 +74,61 @@ void Renderer::DisableIBuffer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::LoadVBuffer(VertexBuffer* pVBuffer)
+{
+	if (!pVBuffer)
+	{
+		return;
+	}
+
+ 	// Search for a matching vertex buffer that was used during previous
+ 	// passes.
+ 	ResourceIdentifier* pID = 0;
+ 	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
+ 	{
+ 		pID = pVBuffer->GetIdentifier(i, this);
+ 		if (pID)
+ 		{
+// 			if (rkIAttr == *(Attributes*)pkID)
+ 			{
+ 				// Found a matching vertex buffer in video memory.
+ 				return;
+ 			}
+ 		}
+ 	}
+ 
+ 	// The vertex buffer is encountered the first time.
+  	OnLoadVBuffer(pID, pVBuffer);
+//  	pVBuffer->OnLoad(this, &Renderer::ReleaseVBuffer,pkID);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::EnableVBuffer()
+{
+	VertexBuffer* pVBuffer = mpGeometry->VBuffer;
+	LoadVBuffer(pVBuffer);
+
+ 	ResourceIdentifier* pID = 0;
+ 	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
+ 	{
+ 		pID = pVBuffer->GetIdentifier(i, this);
+ 		if (pID)
+		{
+//			if (rkIAttr == *(Attributes*)pkID)
+			{
+				// Found a matching vertex buffer in video memory.
+				break;
+			}
+		}
+	}
+
+ 	WIRE_ASSERT(pID);
+// 
+// 	OnEnableVBuffer(pkID);
+// 	return pkID;
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
@@ -80,6 +136,8 @@ void Renderer::Draw(Geometry* pGeometry)
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
 	EnableIBuffer();
+
+	EnableVBuffer();
 
 	DrawElements();
 

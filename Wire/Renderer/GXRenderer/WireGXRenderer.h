@@ -41,6 +41,9 @@ protected:
 		IndexBuffer* pBuffer) {};
 	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {};
 
+	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
+		VertexBuffer* pVBuffer);
+
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {};
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {};

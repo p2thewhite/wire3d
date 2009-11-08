@@ -2,6 +2,7 @@
 #ifndef WIREVERTEXBUFFER_H
 #define WIREVERTEXBUFFER_H
 
+#include "WireBindable.h"
 #include "WireObject.h"
 #include "WireVertexAttributes.h"
 #include "../Foundation/WireColorRGB.h"
@@ -11,7 +12,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object
+class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object, public Bindable
 {
 
 public:
@@ -34,6 +35,8 @@ public:
 
 	Float* GetData();
 	const Float* GetData() const;
+
+	const VertexAttributes& GetAttributes() const;
 
 private:
 	VertexAttributes mAttributes;

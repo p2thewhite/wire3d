@@ -10,9 +10,16 @@ namespace Wire
 class /*WIRE_RENDERER_ITEM*/ IBufferID : public ResourceIdentifier
 {
 public:
-	LPDIRECT3DINDEXBUFFER9 ID;
+	IDirect3DIndexBuffer9* ID;
 };
 
+class /*WIRE_RENDERER_ITEM*/ VBufferID : public ResourceIdentifier
+{
+public:
+	IDirect3DVertexBuffer9* ID;
+	IDirect3DVertexDeclaration9* Declaration;
+	UInt VertexSize;
+};
 
 }
 

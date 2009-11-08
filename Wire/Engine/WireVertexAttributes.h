@@ -15,7 +15,8 @@ public:
 	VertexAttributes();
 	virtual ~VertexAttributes();
 
-	UInt GetChannelQuantity() const { return mChannelQuantity; }
+	UInt GetChannelQuantity() const;
+	UInt GetColorChannelQuantity() const;
 
 	void SetInterleaved(Bool isChannelInterleaved);
 	void SetPositionChannels(UInt positionChannels);
