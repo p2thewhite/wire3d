@@ -36,6 +36,8 @@ protected:
 	virtual void EnableIBuffer() {};
 	virtual void DisableIBuffer() {};
 
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {};
+
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer) {};
@@ -43,6 +45,7 @@ protected:
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) {};
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {};

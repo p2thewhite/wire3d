@@ -1,6 +1,7 @@
 #include "WireDx9Renderer.h"
 
 #include "WireDx9Resources.h"
+#include <d3dx9.h>
 
 using namespace Wire;
 
@@ -19,7 +20,7 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 	// Create the index buffer.
 	D3DFORMAT format = mSupports32BitIndices ? D3DFMT_INDEX32 :
 		D3DFMT_INDEX16;
-	LPDIRECT3DINDEXBUFFER9 pD3DIBuffer;
+	IDirect3DIndexBuffer9* pD3DIBuffer;
 	msResult = mpDevice->CreateIndexBuffer(indexBufferSize,
 		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &pD3DIBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(msResult));
@@ -27,7 +28,7 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 	// Copy the index buffer data from system memory to video memory.
 	Char* pLockedIBuffer;
 	msResult = pD3DIBuffer->Lock(0, indexBufferSize,
-		(void**)(&pLockedIBuffer), 0);
+		reinterpret_cast<void**>(&pLockedIBuffer), 0);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	if (mSupports32BitIndices)
@@ -41,20 +42,20 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 		{
 			for (UInt i = 0; i < quantity; i+=3)
 			{
-				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
-					pIndices[i]);
-				((UShort*)pLockedIBuffer)[i+1] = static_cast<UShort>(
-					pIndices[i+1]);
-				((UShort*)pLockedIBuffer)[i+2] = static_cast<UShort>(
-					pIndices[i+2]);
+				reinterpret_cast<UShort*>(pLockedIBuffer)[i] =
+					static_cast<UShort>(pIndices[i]);
+				reinterpret_cast<UShort*>(pLockedIBuffer)[i+1] =
+					static_cast<UShort>(pIndices[i+1]);
+				reinterpret_cast<UShort*>(pLockedIBuffer)[i+2] =
+					static_cast<UShort>(pIndices[i+2]);
 			}
 		}
 		else
 		{
 			for (UInt i = 0; i < quantity; i++)
 			{
-				((UShort*)pLockedIBuffer)[i] = static_cast<UShort>(
-					pIndices[i]);
+				reinterpret_cast<UShort*>(pLockedIBuffer)[i] =
+					static_cast<UShort>(pIndices[i]);
 			}
 		}
 	}
@@ -87,7 +88,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	element.Method = D3DDECLMETHOD_DEFAULT;
  
  	UInt vertexSize = 0;
-	UInt channels;
+	UInt channels = 0;
 
 	const VertexAttributes& rIAttr = pVBuffer->GetAttributes();
  
@@ -114,7 +115,9 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 			elements.Append(element);
  		}
  	}
- 
+
+	WIRE_ASSERT(channels > 0);
+
  	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
  	elements.Append(sentinel);
  
@@ -128,25 +131,63 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	// value is 4 floats but is packed into 1 float.
 //	Float* afCompatible = 0;  // allocated by BuildCompatibleArray
 // 	pVBuffer->BuildCompatibleArray(rIAttr,true,channels,afCompatible);
-// 
-// 	// Create the vertex buffer.
-// 	UInt uiVBSize = (unsigned int)(channels*sizeof(float));
-// 	LPDIRECT3DVERTEXBUFFER9 pqVBuffer;
-// 	msResult = m_pqDevice->CreateVertexBuffer(uiVBSize,0,0,D3DPOOL_MANAGED,
-// 		&pqVBuffer,0);
-// 	WIRE_ASSERT(SUCCEEDED(msResult));
-// 
-// 	// Copy the vertex buffer data from system memory to video memory.
-// 	float* afVBData;
-// 	msResult = pqVBuffer->Lock(0,uiVBSize,(void**)(&afVBData),0);
-// 	WIRE_ASSERT(SUCCEEDED(msResult));
-// 	System::Memcpy(afVBData,uiVBSize,afCompatible,uiVBSize);
-// 	msResult = pqVBuffer->Unlock();
-// 	WIRE_ASSERT(SUCCEEDED(msResult));
-// 
+ 
+ 	// Create the vertex buffer.
+	UInt vbSize = (static_cast<UInt>(channels * sizeof(Float)) + sizeof(DWORD)) * pVBuffer->GetVertexQuantity();
+// 	UInt vbSize = static_cast<UInt>(channels * sizeof(Float));
+ 	IDirect3DVertexBuffer9* pD3DVBuffer;
+ 	msResult = mpDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
+ 		&pD3DVBuffer, NULL);
+ 	WIRE_ASSERT(SUCCEEDED(msResult));
+ 
+ 	// Copy the vertex buffer data from system memory to video memory.
+ 	Float* pVBData;
+ 	msResult = pD3DVBuffer->Lock(0, vbSize, reinterpret_cast<void**>(
+		&pVBData), 0);
+ 	WIRE_ASSERT(SUCCEEDED(msResult));
+
+
+
+
+
+	struct CUSTOMVERTEX
+	{
+		D3DXVECTOR3 position; // The position
+		D3DCOLOR    color;    // The color
+	};
+
+	CUSTOMVERTEX vertices[1000];
+	for (UInt i = 0; i < mpGeometry->VBuffer->GetVertexQuantity(); i++)
+	{
+		Vector3F& rVec = mpGeometry->VBuffer->Position3(i);
+		vertices[i].position = D3DXVECTOR3(rVec.X(), rVec.Y(), rVec.Z());
+		ColorRGB& rCol = mpGeometry->VBuffer->Color3(i);
+		UInt r = static_cast<UInt>(rCol.R() * 255.0F);
+		UInt g = static_cast<UInt>(rCol.G() * 255.0F);
+		UInt b = static_cast<UInt>(rCol.B() * 255.0F);
+		D3DCOLOR col = (0xff << 24) + (r << 16) + (g << 8) + b;
+		vertices[i].color = col;
+	}
+
+
+	System::Memcpy(pVBData, vbSize, vertices, vbSize);
+
+//	System::Memcpy(pVBData, vbSize, afCompatible, vbSize);
+	msResult = pD3DVBuffer->Unlock();
+ 	WIRE_ASSERT(SUCCEEDED(msResult));
+ 
 // 	WIRE_DELETE[] afCompatible;
-// 
-// 	// Generate the binding information and save it.
-// 	pResource->ID = pqVBuffer;
-// 	pResource->VertexSize = vertexSize;
+ 
+ 	// Generate the binding information and save it.
+ 	pResource->ID = pD3DVBuffer;
+ 	pResource->VertexSize = vertexSize;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnReleaseVBuffer (ResourceIdentifier* pID)
+{
+	VBufferID* pResource = static_cast<VBufferID*>(pID);
+	pResource->ID->Release();
+	pResource->Declaration->Release();
+	WIRE_DELETE pResource;
 }

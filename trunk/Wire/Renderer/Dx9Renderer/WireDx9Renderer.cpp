@@ -161,35 +161,10 @@ void Dx9Renderer::DrawElements()
 	mpGeometry->World.GetHomogeneous(world);
 	mpDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
-	UShort indices[1000];
-	for (UInt i = 0; i < mpGeometry->IBuffer->GetIndexQuantity(); i++)
-	{
-		indices[i] = static_cast<UShort>(mpGeometry->IBuffer->GetData()[i]);
-	}
-
-	struct CUSTOMVERTEX
-	{
-		D3DXVECTOR3 position; // The position
-		D3DCOLOR    color;    // The color
-	};
-
-	CUSTOMVERTEX vertices[1000];
-	for (UInt i = 0; i < mpGeometry->VBuffer->GetVertexQuantity(); i++)
-	{
-		Vector3F& rVec = mpGeometry->VBuffer->Position3(i);
-		vertices[i].position = D3DXVECTOR3(rVec.X(), rVec.Y(), rVec.Z());
-		ColorRGB& rCol = mpGeometry->VBuffer->Color3(i);
-		UInt r = static_cast<UInt>(rCol.R() * 255.0F);
-		UInt g = static_cast<UInt>(rCol.G() * 255.0F);
-		UInt b = static_cast<UInt>(rCol.B() * 255.0F);
-		D3DCOLOR col = (0xff << 24) + (r << 16) + (g << 8) + b;
-		vertices[i].color = col;
-	}
-
-	mpDevice->SetFVF(D3DFVF_XYZ|D3DFVF_DIFFUSE);
-	mpDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, mpGeometry->VBuffer->GetVertexQuantity(),
-		mpGeometry->IBuffer->GetIndexQuantity() / 3, &indices,
-		D3DFMT_INDEX16, &vertices, sizeof(CUSTOMVERTEX));
+	msResult = mpDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
+		mpGeometry->VBuffer->GetVertexQuantity(), 0,
+		mpGeometry->IBuffer->GetIndexQuantity()/3);
+	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
 //----------------------------------------------------------------------------

@@ -58,12 +58,14 @@ protected:
 	// Resource loading and releasing.
 	void LoadIBuffer(IndexBuffer* pIBuffer);
 	void ReleaseIBuffer(Bindable* pIBuffer);
+
 	void LoadVBuffer(VertexBuffer* pVBuffer);
+	void ReleaseVBuffer(Bindable* pVBuffer);
 
 	// Resource enabling and disabling.
 	virtual void EnableIBuffer();
 	virtual void DisableIBuffer();
-	virtual void EnableVBuffer();
+	virtual ResourceIdentifier* EnableVBuffer();
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
@@ -74,6 +76,8 @@ protected:
 
  	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
  		VertexBuffer* pVBuffer) = 0;
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;
