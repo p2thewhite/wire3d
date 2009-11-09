@@ -98,12 +98,32 @@ void Renderer::LoadVBuffer(VertexBuffer* pVBuffer)
  	}
  
  	// The vertex buffer is encountered the first time.
-  	OnLoadVBuffer(pID, pVBuffer);
-//  	pVBuffer->OnLoad(this, &Renderer::ReleaseVBuffer,pkID);
+ 	OnLoadVBuffer(pID, pVBuffer);
+  	pVBuffer->OnLoad(this, &Renderer::ReleaseVBuffer, pID);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EnableVBuffer()
+void Renderer::ReleaseVBuffer(Bindable* pVBuffer)
+{
+	if (!pVBuffer)
+	{
+		return;
+	}
+
+	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
+	{
+		ResourceIdentifier* pID = pVBuffer->GetIdentifier(i, this);
+		if (pID)
+		{
+			OnReleaseVBuffer(pID);
+			pVBuffer->OnRelease(this, pID);
+			return;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+ResourceIdentifier* Renderer::EnableVBuffer()
 {
 	VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	LoadVBuffer(pVBuffer);
@@ -123,9 +143,9 @@ void Renderer::EnableVBuffer()
 	}
 
  	WIRE_ASSERT(pID);
-// 
-// 	OnEnableVBuffer(pkID);
-// 	return pkID;
+ 
+	OnEnableVBuffer(pID);
+ 	return pID;
 }
 
 //----------------------------------------------------------------------------
@@ -137,7 +157,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	// across all effects and all passes per effect.
 	EnableIBuffer();
 
-	EnableVBuffer();
+	ResourceIdentifier* pID = EnableVBuffer();
 
 	DrawElements();
 

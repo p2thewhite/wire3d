@@ -44,10 +44,13 @@ protected:
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
 	virtual void OnDisableIBuffer(ResourceIdentifier*) {};
+
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
 	LPDIRECT3D9 mpMain;
 	LPDIRECT3DDEVICE9 mpDevice;
