@@ -21,7 +21,7 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 	D3DFORMAT format = mSupports32BitIndices ? D3DFMT_INDEX32 :
 		D3DFMT_INDEX16;
 	IDirect3DIndexBuffer9* pD3DIBuffer;
-	msResult = mpDevice->CreateIndexBuffer(indexBufferSize,
+	msResult = mpD3DDevice->CreateIndexBuffer(indexBufferSize,
 		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &pD3DIBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
@@ -121,7 +121,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
  	elements.Append(sentinel);
  
- 	msResult = mpDevice->CreateVertexDeclaration(&elements[0],
+ 	msResult = mpD3DDevice->CreateVertexDeclaration(&elements[0],
 		&pResource->Declaration);
  	WIRE_ASSERT(SUCCEEDED(msResult));
  
@@ -136,7 +136,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	UInt vbSize = (static_cast<UInt>(channels * sizeof(Float)) + sizeof(DWORD)) * pVBuffer->GetVertexQuantity();
 // 	UInt vbSize = static_cast<UInt>(channels * sizeof(Float));
  	IDirect3DVertexBuffer9* pD3DVBuffer;
- 	msResult = mpDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
+ 	msResult = mpD3DDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
  		&pD3DVBuffer, NULL);
  	WIRE_ASSERT(SUCCEEDED(msResult));
  

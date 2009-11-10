@@ -52,8 +52,9 @@ protected:
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
-	LPDIRECT3D9 mpMain;
-	LPDIRECT3DDEVICE9 mpDevice;
+private:
+	IDirect3D9* mpD3D;
+	IDirect3DDevice9* mpD3DDevice;
 	D3DPRESENT_PARAMETERS mPresent;
 	Bool mSupports32BitIndices;
 

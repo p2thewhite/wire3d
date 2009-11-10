@@ -9,10 +9,12 @@ HRESULT Dx9Renderer::msResult = 0;
 //----------------------------------------------------------------------------
 Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	:
-	Renderer(width, height)
+	Renderer(width, height),
+	mpD3D(NULL),
+	mpD3DDevice(NULL)
 {
-	mpMain = Direct3DCreate9(D3D_SDK_VERSION);
-	WIRE_ASSERT(mpMain);
+	mpD3D = Direct3DCreate9(D3D_SDK_VERSION);
+	WIRE_ASSERT(mpD3D);
 
 	mPresent.BackBufferWidth = width;
 	mPresent.BackBufferHeight = height;
@@ -39,7 +41,7 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 
 	// Query the device for its capabilities.
 	D3DCAPS9 deviceCaps;
-	msResult = mpMain->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+	msResult = mpD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
 		&deviceCaps);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
@@ -58,22 +60,31 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 		behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
 	}
 
-	msResult = mpMain->CreateDevice(D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL, hWnd, behaviorFlags, &mPresent, &mpDevice);
+	msResult = mpD3D->CreateDevice(D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL, hWnd, behaviorFlags, &mPresent, &mpD3DDevice);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	// Turn off lighting (DX defaults to lighting on).
-	msResult = mpDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	msResult = mpD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	// Set culling to clockwise
-	msResult = mpDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+	msResult = mpD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
 //----------------------------------------------------------------------------
 Dx9Renderer::~Dx9Renderer()
 {
+	if (mpD3DDevice)
+	{
+		mpD3DDevice->Release();
+	}
+
+	if (mpD3D)
+	{
+		mpD3D->Release();
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -82,7 +93,7 @@ void Dx9Renderer::ClearBuffers()
 	DWORD clearColor = D3DCOLOR_COLORVALUE(mClearColor.R(),
 		mClearColor.G(), mClearColor.B(), mClearColor.A());
 
-	msResult = mpDevice->Clear(0, 0,
+	msResult = mpD3DDevice->Clear(0, 0,
 		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
 		clearColor, 1.0F/*mClearDepth*/, static_cast<DWORD>(0/*mClearStencil*/));
 	WIRE_ASSERT(SUCCEEDED(msResult));
@@ -91,7 +102,7 @@ void Dx9Renderer::ClearBuffers()
 //----------------------------------------------------------------------------
 void Dx9Renderer::DisplayBackBuffer()
 {
-	msResult = mpDevice->Present(NULL, NULL, NULL, NULL);
+	msResult = mpD3DDevice->Present(NULL, NULL, NULL, NULL);
 	if (msResult != D3DERR_DEVICELOST)
 	{
 		WIRE_ASSERT(SUCCEEDED(msResult));
@@ -101,7 +112,7 @@ void Dx9Renderer::DisplayBackBuffer()
 //----------------------------------------------------------------------------
 void Dx9Renderer::ResetDevice()
 {
-	msResult = mpDevice->Reset(&mPresent);
+	msResult = mpD3DDevice->Reset(&mPresent);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
@@ -122,12 +133,12 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 		0.0F,			0.0F,			f/(f-n),		1.0F,
 		0.0F,			0.0F,			-n*f/(f-n),		0.0F);
 
-	mpDevice->SetTransform(D3DTS_PROJECTION, &matProj);
-	mpDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(
+	mpD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+	mpD3DDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(
 		&mViewMatrix));
 
 
-	msResult = mpDevice->TestCooperativeLevel();
+	msResult = mpD3DDevice->TestCooperativeLevel();
     
     switch (msResult)
     {
@@ -140,7 +151,7 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
         break;
     }
 
-    msResult = mpDevice->BeginScene();
+    msResult = mpD3DDevice->BeginScene();
     WIRE_ASSERT(SUCCEEDED(msResult));
 
 	return true;
@@ -149,7 +160,7 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 //----------------------------------------------------------------------------
 void Dx9Renderer::EndScene()
 {
-	msResult = mpDevice->EndScene();
+	msResult = mpD3DDevice->EndScene();
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
@@ -159,9 +170,10 @@ void Dx9Renderer::DrawElements()
 	// Set up world matrix
 	Matrix4F world;
 	mpGeometry->World.GetHomogeneous(world);
-	mpDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
+	mpD3DDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
+		&world));
 
-	msResult = mpDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
+	msResult = mpD3DDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
 		mpGeometry->VBuffer->GetVertexQuantity(), 0,
 		mpGeometry->IBuffer->GetIndexQuantity()/3);
 	WIRE_ASSERT(SUCCEEDED(msResult));
