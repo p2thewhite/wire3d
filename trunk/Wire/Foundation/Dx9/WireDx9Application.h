@@ -21,7 +21,7 @@ public:
 	virtual void OnTerminate();
 	virtual void OnIdle();
 
-	Int GetWindowID() const { return mWindowID; } // TODO: move to .inl
+	Int GetWindowID() const;
 
 private:
 	// Entry point to be implemented by the application.  The return value

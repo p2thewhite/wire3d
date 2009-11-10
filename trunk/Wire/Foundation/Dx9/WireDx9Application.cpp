@@ -80,6 +80,12 @@ LRESULT CALLBACK MsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 }
 
 //----------------------------------------------------------------------------
+Int Dx9Application::GetWindowID() const
+{
+	return mWindowID;
+}
+
+//----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {
 	// register the window class

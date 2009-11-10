@@ -17,6 +17,11 @@ VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 //----------------------------------------------------------------------------
 VertexBuffer::~VertexBuffer()
 {
+	// Inform all renderers using this vertex buffer that it is being
+	// destroyed. This allows the renderer to free up any associated
+	// resources.
+	Release();
+
 	WIRE_DELETE[] mpChannel;
 }
 
