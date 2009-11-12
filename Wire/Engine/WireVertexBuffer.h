@@ -36,6 +36,20 @@ public:
 	Float* GetData();
 	const Float* GetData() const;
 
+	Float* GetPosition(UInt i = 0);
+	const Float* GetPosition(UInt i = 0) const;
+
+ 	Float* GetColor(UInt i = 0, UInt unit = 0);
+ 	const Float* GetColor(UInt i = 0, UInt unit = 0) const;
+
+	Float* GetNormal(UInt i = 0);
+	const Float* GetNormal(UInt i = 0) const;
+
+	Float* GetTCoord(UInt i = 0, UInt unit = 0);
+	const Float* GetTCoord(UInt i = 0, UInt unit = 0) const;
+
+	UInt GetPositionStride() const;
+
 	const VertexAttributes& GetAttributes() const;
 
 private:
