@@ -179,7 +179,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnReleaseVBuffer (ResourceIdentifier* pID)
+void Dx9Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	pResource->ID->Release();
