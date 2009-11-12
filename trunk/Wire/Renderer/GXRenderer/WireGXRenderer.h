@@ -33,23 +33,25 @@ public:
 
 protected:
 	// Resource enabling and disabling.
-	virtual void EnableIBuffer() {};
-	virtual void DisableIBuffer() {};
+	virtual void EnableIBuffer() {}
+	virtual void DisableIBuffer() {}
 
-	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {};
+	virtual ResourceIdentifier* EnableVBuffer() { return NULL; }
+
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {}
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer) {};
-	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {};
+	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {}
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
-	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) {};
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) {}
 
 	// Resource enabling and disabling.
-	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {};
-	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {};
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
 
 private:
 	GXColor mGXClearColor;
