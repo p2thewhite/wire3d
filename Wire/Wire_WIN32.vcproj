@@ -382,6 +382,10 @@
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXResources.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Inline Files"

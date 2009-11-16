@@ -23,6 +23,7 @@
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
 #define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32
+#define GXColor1u32 GX_Color1u32
 #define GXRenderModeObj GXRModeObj
 #define GXSetArray GX_SetArray
 #define GXSetColorUpdate GX_SetColorUpdate

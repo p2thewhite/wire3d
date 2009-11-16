@@ -47,13 +47,15 @@ protected:
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
-	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) {}
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
 
 private:
+	void Convert(const VertexBuffer* pSrc, Float* pDst);
+
 	GXColor mGXClearColor;
 
 	GXRenderModeObj* mRmode;

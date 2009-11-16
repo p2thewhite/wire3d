@@ -141,34 +141,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 		&pVBData), 0);
  	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	for (UInt i = 0; i < mpGeometry->VBuffer->GetVertexQuantity(); i++)
-	{
-		// the number of elements minus D3DDECL_END
-		UInt elementCount = elements.GetQuantity()-1;
-		for (UInt j = 0; j < elementCount; j++)
-		{
-						
-		}
-	}
-
-	struct CUSTOMVERTEX
-	{
-		D3DXVECTOR3 position; // The position
-		D3DCOLOR    color;    // The color
-	};
-
-	CUSTOMVERTEX* pVertices = reinterpret_cast<CUSTOMVERTEX*>(pVBData);
-	for (UInt i = 0; i < mpGeometry->VBuffer->GetVertexQuantity(); i++)
-	{
-		Vector3F& rVec = mpGeometry->VBuffer->Position3(i);
-		pVertices[i].position = D3DXVECTOR3(rVec.X(), rVec.Y(), rVec.Z());
-		ColorRGB& rCol = mpGeometry->VBuffer->Color3(i);
-		UInt r = static_cast<UInt>(rCol.R() * 255.0F);
-		UInt g = static_cast<UInt>(rCol.G() * 255.0F);
-		UInt b = static_cast<UInt>(rCol.B() * 255.0F);
-		D3DCOLOR col = (0xff << 24) + (r << 16) + (g << 8) + b;
-		pVertices[i].color = col;
-	}
+	Convert(pVBuffer, pVBData);
 
 	msResult = pD3DVBuffer->Unlock();
  	WIRE_ASSERT(SUCCEEDED(msResult));
@@ -176,6 +149,50 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	// Generate the binding information and save it.
  	pResource->ID = pD3DVBuffer;
  	pResource->VertexSize = vertexSize;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::Convert(const VertexBuffer* pSrc, Float* pDst)
+{
+	const VertexAttributes& rIAttr = pSrc->GetAttributes();
+
+	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	{
+		if (rIAttr.GetPositionChannels() > 0)
+		{
+			const Float* pPosition = pSrc->GetPosition(i);
+			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
+			{
+				*pDst++ = pPosition[k];
+			}
+		}
+
+		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
+		{
+			if (rIAttr.GetColorChannels(unit) > 0)
+			{
+				const Float* pColor = pSrc->GetColor(i, unit);
+				D3DCOLOR color = 0xffffffff;
+				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
+				{
+					color = color << 8;
+					color |= static_cast<UChar>(pColor[k] * 255.0F);
+				}
+
+				if (rIAttr.GetColorChannels(unit) == 4)
+				{
+					UChar alpha = static_cast<UChar>(color);
+					color = color >> 8;
+					color |= alpha << 24;
+				}
+
+				DWORD* pColorDst = reinterpret_cast<DWORD*>(pDst);
+				*pColorDst++ = color;
+				pDst = reinterpret_cast<Float*>(pColorDst);
+			}
+		}
+	}
 }
 
 //----------------------------------------------------------------------------
