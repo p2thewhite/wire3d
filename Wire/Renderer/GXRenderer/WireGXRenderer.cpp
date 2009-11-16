@@ -231,19 +231,19 @@ void GXRenderer::DrawElements()
 // 	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
 // 	WIRE_ASSERT(pID);
 // 	const VBufferID* pResource = static_cast<const VBufferID*>(pID);
-// 	const UChar* pVBData = reinterpret_cast<const UChar*>(pResource->ID);
+// 	UChar* pVBData = reinterpret_cast<UChar*>(pResource->ID);
 // 
 // 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
 // 	{
 // 		UInt index = (*pIBuffer)[i];
 // 
-// 		const Float* pVertex = reinterpret_cast<const Float*>(pVBData +
-// 			pResource->VertexSize * index);
-// 		GXPosition3f32(pVBData[0], pVBData[1], pVBData[2]);
+// 		Float* pVertex = reinterpret_cast<Float*>(pVBData + pResource->
+// 			VertexSize * index);
+// 		GXPosition3f32(*pVertex, *(pVertex+1), *(pVertex+2));
 // 
 // 		const UInt* pColor = reinterpret_cast<const UInt*>(pVBData +
 // 			pResource->VertexSize * index + sizeof(Float) * 3);
-// 		GXColor1u32(pColor[0]);
+// 		GXColor1u32(*pColor);
 // 	}
 
 	GXEnd();
