@@ -1,5 +1,6 @@
 #include "WireGXRenderer.h"
 #include "../Foundation/WireMatrix4.h"
+#include "WireGXResources.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
 
@@ -226,6 +227,24 @@ void GXRenderer::DrawElements()
 		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
 		GX_Color3f32(rColor.R(), rColor.G(), rColor.B());
 	}
+
+// 	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
+// 	WIRE_ASSERT(pID);
+// 	const VBufferID* pResource = static_cast<const VBufferID*>(pID);
+// 	const UChar* pVBData = reinterpret_cast<const UChar*>(pResource->ID);
+// 
+// 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
+// 	{
+// 		UInt index = (*pIBuffer)[i];
+// 
+// 		const Float* pVertex = reinterpret_cast<const Float*>(pVBData +
+// 			pResource->VertexSize * index);
+// 		GXPosition3f32(pVBData[0], pVBData[1], pVBData[2]);
+// 
+// 		const UInt* pColor = reinterpret_cast<const UInt*>(pVBData +
+// 			pResource->VertexSize * index + sizeof(Float) * 3);
+// 		GXColor1u32(pColor[0]);
+// 	}
 
 	GXEnd();
 }

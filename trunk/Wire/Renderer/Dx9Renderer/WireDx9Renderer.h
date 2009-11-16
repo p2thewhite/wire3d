@@ -53,6 +53,8 @@ protected:
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
 private:
+	void Convert(const VertexBuffer* pSrc, Float* pDst);
+
 	IDirect3D9* mpD3D;
 	IDirect3DDevice9* mpD3DDevice;
 	D3DPRESENT_PARAMETERS mPresent;
