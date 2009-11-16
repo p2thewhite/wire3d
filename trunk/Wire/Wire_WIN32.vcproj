@@ -528,6 +528,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireImage.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireIndexBuffer.h"
 					>
 				</File>
@@ -681,6 +685,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireImage.cpp"
 					>
 				</File>
 				<File

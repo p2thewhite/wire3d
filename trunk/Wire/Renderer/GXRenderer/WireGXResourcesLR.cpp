@@ -9,8 +9,6 @@ using namespace Wire;
 void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VertexBuffer* pVBuffer)
 {
-	return;
-
 	VBufferID* pResource = WIRE_NEW VBufferID;
 	rID = pResource;
 
@@ -87,8 +85,6 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, Float* pDst)
 //----------------------------------------------------------------------------
 void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
-	return;
-
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	WIRE_DELETE pResource->ID;
 	WIRE_DELETE pResource;
