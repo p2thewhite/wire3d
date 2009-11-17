@@ -36,8 +36,6 @@ protected:
 	virtual void EnableIBuffer() {}
 	virtual void DisableIBuffer() {}
 
-	virtual ResourceIdentifier* EnableVBuffer() { return NULL; }
-
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {}
 
 	// Resource loading and releasing (to/from video memory).

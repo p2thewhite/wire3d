@@ -86,6 +86,6 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, Float* pDst)
 void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
-	WIRE_DELETE pResource->ID;
+	free(pResource->ID);		// allocated using memalign, not using new
 	WIRE_DELETE pResource;
 }

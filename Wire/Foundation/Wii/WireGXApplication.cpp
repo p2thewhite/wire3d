@@ -15,6 +15,8 @@ GXApplication::GXApplication(const ColorRGBA backgroundColor, const Char*
 //----------------------------------------------------------------------------
 GXApplication::~GXApplication()
 {
+	WIRE_DELETE mpRenderer;
+	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -40,8 +42,6 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 //----------------------------------------------------------------------------
 void GXApplication::OnTerminate()
 {
-	WIRE_DELETE mpRenderer;
-	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------

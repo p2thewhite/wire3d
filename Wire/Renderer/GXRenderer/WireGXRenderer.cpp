@@ -202,7 +202,7 @@ void GXRenderer::DrawElements()
 	// 3 values X,Y,Z of size F32. scale sets the number of fractional
 	// bits for non float data.
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGB8, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 
 	GXSetNumChans(1);
 	GXSetNumTexGens(0);
@@ -214,37 +214,27 @@ void GXRenderer::DrawElements()
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm(model * mViewMatrix, GX_PNMTX0);
 
-	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
+	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
+	WIRE_ASSERT(pID);
+	const VBufferID* pResource = static_cast<const VBufferID*>(pID);
+	UChar* pVBData = reinterpret_cast<UChar*>(pResource->ID);
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
 
 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
 	{
 		UInt index = (*pIBuffer)[i];
-		const Vector3F& rVertex = pVBuffer->Position3(index);
-		const ColorRGB& rColor = pVBuffer->Color3(index);
-		GXPosition3f32(rVertex.X(), rVertex.Y(), rVertex.Z());
-		GX_Color3f32(rColor.R(), rColor.G(), rColor.B());
-	}
 
-// 	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
-// 	WIRE_ASSERT(pID);
-// 	const VBufferID* pResource = static_cast<const VBufferID*>(pID);
-// 	UChar* pVBData = reinterpret_cast<UChar*>(pResource->ID);
-// 
-// 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
-// 	{
-// 		UInt index = (*pIBuffer)[i];
-// 
-// 		Float* pVertex = reinterpret_cast<Float*>(pVBData + pResource->
-// 			VertexSize * index);
-// 		GXPosition3f32(*pVertex, *(pVertex+1), *(pVertex+2));
-// 
-// 		const UInt* pColor = reinterpret_cast<const UInt*>(pVBData +
-// 			pResource->VertexSize * index + sizeof(Float) * 3);
-// 		GXColor1u32(*pColor);
-// 	}
+		Float* pVertex = reinterpret_cast<Float*>(pVBData + pResource->
+			VertexSize * index);
+		const UInt* pColor = reinterpret_cast<const UInt*>(pVBData +
+			pResource->VertexSize * index + sizeof(Float) * 3);
+
+		GXPosition3f32(*pVertex, *(pVertex+1), *(pVertex+2));
+		GXColor1u32(*pColor);
+	}
 
 	GXEnd();
 }
