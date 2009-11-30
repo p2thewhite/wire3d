@@ -3,6 +3,7 @@
 #define WIREGXRENDERER_H
 
 #include "../../Engine/WireEngine.h"
+#include "WireGXResources.h"
 
 namespace Wire
 {
@@ -52,7 +53,7 @@ protected:
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
 
 private:
-	void Convert(const VertexBuffer* pSrc, Float* pDst);
+	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 
 	GXColor mGXClearColor;
 

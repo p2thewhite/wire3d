@@ -1,6 +1,5 @@
 #include "WireGXRenderer.h"
 
-#include "WireGXResources.h"
 #include <malloc.h>
 
 using namespace Wire;
@@ -12,19 +11,15 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VBufferID* pResource = WIRE_NEW VBufferID;
 	rID = pResource;
 
-	UInt vertexSize = 0;
-	UInt channels = 0;
 	const VertexAttributes& rIAttr = pVBuffer->GetAttributes();
 
 	pResource->Elements = WIRE_NEW TArray<VBufferID::VertexElement>(2);
 
 	VBufferID::VertexElement element;
 
-	if (rIAttr.GetPositionChannels() > 0)
+	UInt channels = rIAttr.GetPositionChannels();
+	if (channels > 0)
 	{
-		channels = rIAttr.GetPositionChannels();
-		vertexSize += channels * sizeof(Float);
-
  		element.Data = memalign(32, channels * sizeof(Float) * pVBuffer->
  			GetVertexQuantity());
  		element.Attr = GX_VA_POS;
@@ -37,8 +32,6 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	{
 		if (rIAttr.GetColorChannels(unit) > 0)
 		{
-			vertexSize += sizeof(UInt);
-	
  			element.Data = memalign(32, sizeof(UInt) * pVBuffer->
  				GetVertexQuantity());
  			element.Attr = GX_VA_CLR0;
@@ -48,28 +41,31 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 		}
 	}
 
-	WIRE_ASSERT(channels > 0);
-
-	pResource->ID = static_cast<Float*>(memalign(32, vertexSize * pVBuffer->
-		GetVertexQuantity()));
-	pResource->VertexSize = vertexSize;
-
-	Convert(pVBuffer, pResource->ID);
+	WIRE_ASSERT(pResource->Elements->GetQuantity() > 0);
+	Convert(pVBuffer, pResource);
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::Convert(const VertexBuffer* pSrc, Float* pDst)
+void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 {
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
+	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+
+	UInt vertexOffset = 0;
+	UInt colorOffset = 0;
 
 	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
 	{
+		UInt index = 0;
+
 		if (rIAttr.GetPositionChannels() > 0)
 		{
 			const Float* pPosition = pSrc->GetPosition(i);
+			Float* pDst = static_cast<Float*>(rElements[index++].Data);
+
 			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
 			{
-				*pDst++ = pPosition[k];
+				pDst[vertexOffset++] = pPosition[k];
 			}
 		}
 
@@ -92,9 +88,8 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, Float* pDst)
 					color |= 0xff;
 				}
 
-				UInt* pColorDst = reinterpret_cast<UInt*>(pDst);
-				*pColorDst++ = color;
-				pDst = reinterpret_cast<Float*>(pColorDst);
+				UInt* pDst = static_cast<UInt*>(rElements[index++].Data);
+ 				pDst[colorOffset++] = color;
 			}
 		}
 	}
@@ -111,6 +106,5 @@ void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 	}
 
 	WIRE_DELETE pResource->Elements;
-	free(pResource->ID);			// allocated using memalign, not using new
 	WIRE_DELETE pResource;
 }

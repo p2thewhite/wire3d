@@ -18,8 +18,6 @@ public:
 		UChar CompType;
 	};
 
-	Float* ID;
-	UInt VertexSize;
 	TArray<VertexElement>* Elements;
 };
 
