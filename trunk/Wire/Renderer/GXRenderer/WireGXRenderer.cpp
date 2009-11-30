@@ -200,7 +200,8 @@ void GXRenderer::DrawElements()
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
 	GXClearVtxDesc();
-	const TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+	const TArray<VBufferID::VertexElement>& rElements = *(pResource->
+		Elements);
 	for (UInt i = 0; i < rElements.GetQuantity(); i++)
 	{
 		GXSetVtxDesc(rElements[i].Attr, GX_DIRECT);
@@ -212,25 +213,22 @@ void GXRenderer::DrawElements()
 
 	GXSetNumChans(1);
 	GXSetNumTexGens(0);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL, GX_COLOR0A0);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+		GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
 	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;
-	UChar* pVBData = reinterpret_cast<UChar*>(pResource->ID);
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
 
 	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
 	{
 		UInt index = (*pIBuffer)[i];
+		Float* pVertices = static_cast<Float*>(rElements[0].Data) + index * 3;
+		UInt* pColors = static_cast<UInt*>(rElements[1].Data) + index;
 
-		Float* pVertex = reinterpret_cast<Float*>(pVBData + pResource->
-			VertexSize * index);
-		const UInt* pColor = reinterpret_cast<const UInt*>(pVBData +
-			pResource->VertexSize * index + sizeof(Float) * 3);
-
-		GXPosition3f32(*pVertex, *(pVertex+1), *(pVertex+2));
-		GXColor1u32(*pColor);
+		GXPosition3f32(pVertices[0], pVertices[1], pVertices[2]);
+		GXColor1u32(pColors[0]);
 	}
 
 	GXEnd();
