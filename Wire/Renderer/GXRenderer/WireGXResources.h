@@ -13,6 +13,7 @@ public:
 	struct VertexElement
 	{
 		void* Data;
+		UInt Size;
 		UChar Attr;
 		UChar CompCnt;
 		UChar CompType;

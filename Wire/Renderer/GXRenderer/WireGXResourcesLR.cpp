@@ -9,40 +9,49 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VertexBuffer* pVBuffer)
 {
 	VBufferID* pResource = WIRE_NEW VBufferID;
+	pResource->Elements = WIRE_NEW TArray<VBufferID::VertexElement>(2);
 	rID = pResource;
 
-	const VertexAttributes& rIAttr = pVBuffer->GetAttributes();
-
-	pResource->Elements = WIRE_NEW TArray<VBufferID::VertexElement>(2);
-
+	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
 	VBufferID::VertexElement element;
+	UInt vertexCount = pVBuffer->GetVertexQuantity();
 
+	const VertexAttributes& rIAttr = pVBuffer->GetAttributes();
 	UInt channels = rIAttr.GetPositionChannels();
 	if (channels > 0)
 	{
- 		element.Data = memalign(32, channels * sizeof(Float) * pVBuffer->
- 			GetVertexQuantity());
+		element.Size = channels * sizeof(Float) * vertexCount;
+ 		element.Data = memalign(32, element.Size);
  		element.Attr = GX_VA_POS;
  		element.CompCnt = GX_POS_XYZ;
  		element.CompType = GX_F32;
- 		pResource->Elements->Append(element);
+ 		rElements.Append(element);
 	}
 
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
 	{
 		if (rIAttr.GetColorChannels(unit) > 0)
 		{
- 			element.Data = memalign(32, sizeof(UInt) * pVBuffer->
- 				GetVertexQuantity());
+			element.Size = sizeof(UInt) * vertexCount;
+			element.Data = memalign(32, element.Size);
  			element.Attr = GX_VA_CLR0;
  			element.CompCnt = GX_CLR_RGBA;
  			element.CompType = GX_RGBA8;
- 			pResource->Elements->Append(element);
+ 			rElements.Append(element);
 		}
 	}
 
 	WIRE_ASSERT(pResource->Elements->GetQuantity() > 0);
 	Convert(pVBuffer, pResource);
+
+ 	for (UInt i = 0; i < rElements.GetQuantity(); i++)
+ 	{
+ 		// TODO: use DCStoreRangeNoSync to accumulate stores, then PPCSync()
+ 		DCStoreRange(rElements[i].Data, rElements[i].Size);
+ 	}
+
+	// Invalidate vertex cache in GP
+	GXInvalidateVtxCache();
 }
 
 //----------------------------------------------------------------------------
