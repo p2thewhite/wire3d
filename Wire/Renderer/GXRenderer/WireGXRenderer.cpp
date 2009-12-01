@@ -202,9 +202,10 @@ void GXRenderer::DrawElements()
 		Elements);
 	for (UInt i = 0; i < rElements.GetQuantity(); i++)
 	{
-		GXSetVtxDesc(rElements[i].Attr, GX_DIRECT);
+		GXSetVtxDesc(rElements[i].Attr, GX_INDEX16);
 		GXSetVtxAttrFmt(GX_VTXFMT0, rElements[i].Attr, rElements[i].CompCnt,
 			rElements[i].CompType, 0);
+		GXSetArray(rElements[i].Attr, rElements[i].Data, rElements[i].Stride);
 	}
 
 	GXSetCullMode(GX_CULL_BACK);
@@ -215,18 +216,15 @@ void GXRenderer::DrawElements()
 		GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
-	const IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
 
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, pIBuffer->GetIndexQuantity());
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
 
-	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i++)
+	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
 	{
-		UInt index = (*pIBuffer)[i];
-		Float* pVertices = static_cast<Float*>(rElements[0].Data) + index * 3;
-		UInt* pColors = static_cast<UInt*>(rElements[1].Data) + index;
-
-		GXPosition3f32(pVertices[0], pVertices[1], pVertices[2]);
-		GXColor1u32(pColors[0]);
+		UInt index = rIBuffer[i];
+		GXPosition1x16(static_cast<UShort>(index));
+		GXColor1x16(static_cast<UShort>(index));
 	}
 
 	GXEnd();
