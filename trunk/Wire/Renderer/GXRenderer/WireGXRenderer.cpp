@@ -115,8 +115,6 @@ Bool GXRenderer::BeginScene(Camera* pCamera)
 			static_cast<Float>(mRmode->efbHeight), 0.0F, 1.0F);
 	}
 
-	// Invalidate vertex cache in GP
-	GXInvalidateVtxCache();
 	// Invalidate texture cache in GP
 	GXInvalidateTexAll();
 
@@ -142,7 +140,7 @@ void GXRenderer::DisplayBackBuffer()
 {
 	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
 	// (If you want to control these modes by yourself in your application,
-	//  please comment out this part.)
+	// please comment out this part.)
 	GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 	GXSetColorUpdate(GX_TRUE);
 
