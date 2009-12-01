@@ -10,6 +10,7 @@
 
 #define GXBegin GX_Begin
 #define GXClearVtxDesc GX_ClearVtxDesc
+#define GXColor1x16 GX_Color1x16
 #define GXColor1x8 GX_Color1x8
 #define GXCopyDisp GX_CopyDisp
 #define GXDrawDone GX_DrawDone
@@ -21,6 +22,7 @@
 #define GXInvalidateTexAll GX_InvalidateTexAll
 #define GXInvalidateVtxCache GX_InvVtxCache
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
+#define GXPosition1x16 GX_Position1x16
 #define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32
 #define GXColor1u32 GX_Color1u32

@@ -20,7 +20,8 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	UInt channels = rIAttr.GetPositionChannels();
 	if (channels > 0)
 	{
-		element.Size = channels * sizeof(Float) * vertexCount;
+		element.Stride = channels * sizeof(Float);
+		element.Size = element.Stride * vertexCount;
  		element.Data = memalign(32, element.Size);
  		element.Attr = GX_VA_POS;
  		element.CompCnt = GX_POS_XYZ;
@@ -32,7 +33,8 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	{
 		if (rIAttr.GetColorChannels(unit) > 0)
 		{
-			element.Size = sizeof(UInt) * vertexCount;
+			element.Stride = sizeof(UInt);
+			element.Size = element.Size * vertexCount;
 			element.Data = memalign(32, element.Size);
  			element.Attr = GX_VA_CLR0;
  			element.CompCnt = GX_CLR_RGBA;

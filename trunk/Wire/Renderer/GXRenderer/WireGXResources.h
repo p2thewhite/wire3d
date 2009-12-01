@@ -14,6 +14,7 @@ public:
 	{
 		void* Data;
 		UInt Size;
+		UChar Stride;
 		UChar Attr;
 		UChar CompCnt;
 		UChar CompType;
