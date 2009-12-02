@@ -25,6 +25,8 @@ public:
 	// Called before main loop.
 	// Returning 'false' quits the application.
 	virtual Bool OnInitialize() = 0;
+
+	// Called by the main loop
 	virtual void OnIdle() = 0;
 
 	// Called before terminating the application.
@@ -34,6 +36,12 @@ public:
 	static Application* GetApplication(); 
 
 	Renderer* GetRenderer() const;
+
+	// Key identifiers. These are platform-specific, so classes that
+	// implement the Application interfaces must define these variables.
+	// They are not defined by Application.
+	UInt KEY_TERMINATE;  // default KEY_ESCAPE, redefine as desired
+	static const UInt KEY_ESCAPE;
 
 protected:
 	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
