@@ -18,6 +18,8 @@ using namespace Wire;
 #define PtrToInt(p)  ((INT)(INT_PTR)(p))
 #endif
 
+const UInt Application::KEY_ESCAPE = VK_ESCAPE;
+
 //----------------------------------------------------------------------------
 Dx9Application::Dx9Application(const ColorRGBA backgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
@@ -62,6 +64,18 @@ LRESULT CALLBACK MsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 			return 0;
 		}
 
+	case WM_CHAR:
+		{
+			UChar key = static_cast<UChar>(wParam);
+
+			// quit application if the KEY_TERMINATE key is pressed
+			if (key == pApp->KEY_TERMINATE)
+			{
+				PostQuitMessage(0);
+				return 0;
+			}
+		}
+
 	case WM_ERASEBKGND:
 		{
 			// This tells Windows not to erase the background (and that the
@@ -88,6 +102,8 @@ Int Dx9Application::GetWindowID() const
 //----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {
+	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
+
 	// register the window class
 	static char sWindowClass[] = "Wire Application";
 	WNDCLASS wc;
