@@ -14,7 +14,6 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	Renderer(0, 0)
 {
 	VIInit();
-	PADInit();
 
 	mRmode = VIDEO_GetPreferredMode(NULL);
 

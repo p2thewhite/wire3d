@@ -18,6 +18,8 @@ CubeController::~CubeController()
 //----------------------------------------------------------------------------
 Bool CubeController::Update(Double appTime)
 {
+	Double lastTime = mLastAppTime;
+
 	if (!Controller::Update(appTime))
 	{
 		// update has already been performed at 'appTime'.
@@ -26,7 +28,8 @@ Bool CubeController::Update(Double appTime)
 
 	Geometry* pCube = static_cast<Geometry*>(mpObject);
 
-	mAngle += MathF::PI / 90.0F;
+	Double elapsed = appTime - lastTime;
+	mAngle += static_cast<Float>(elapsed) * 2.0F;
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	Matrix34F model(Vector3F(1, 1, 1), mAngle);

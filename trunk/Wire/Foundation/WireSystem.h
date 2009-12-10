@@ -34,6 +34,15 @@ class /*WIRE_FOUNDATION_ITEM*/ System
 public:
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
+
+	static Double GetTime();
+
+private:
+	static Bool msInitializedTime;
+	static Long msInitialSec;
+#ifdef WIRE_WIN
+	static Long msInitialUSec;
+#endif
 };
 
 }
