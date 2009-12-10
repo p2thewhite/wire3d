@@ -3,7 +3,8 @@
 #define WIREOGCDEFINES_H
 #include <gctypes.h>
 #include <gccore.h>
-#include "ogc/gu.h"
+#include <ogc/gu.h>
+#include <ogc/lwp_watchdog.h>
 #include <wiiuse/wpad.h>
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL

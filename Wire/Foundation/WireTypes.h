@@ -7,6 +7,7 @@ typedef char Char;
 typedef double Double;
 typedef float Float;
 typedef int Int;
+typedef long Long;
 typedef short Short;
 typedef unsigned char UChar;
 typedef unsigned int UInt;

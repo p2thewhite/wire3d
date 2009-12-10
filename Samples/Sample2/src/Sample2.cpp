@@ -55,6 +55,7 @@ Bool Sample2::OnInitialize()
 	mCuller.SetCamera(mspCamera);
 
 	mAngle = 0.0F;
+	mLastTime = System::GetTime();
 
 	return true;
 }
@@ -188,9 +189,13 @@ Geometry* Sample2::CreatePyramid()
 //----------------------------------------------------------------------------
 void Sample2::OnIdle()
 {
+	Double time = System::GetTime();
+	Double elapsedTime = time - mLastTime;
+	mLastTime = time;
+
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	mAngle += MathF::PI / 180.0F;
+	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	Geometry* pPyramid = static_cast<Geometry*>(mspRoot->GetChild(1).Get());
@@ -202,7 +207,7 @@ void Sample2::OnIdle()
 	pPyramid->Local.SetRotate(model);
 	pPyramid->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
 
- 	mspRoot->UpdateGS();
+ 	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);
 
 	mpRenderer->ClearBuffers();

@@ -8,7 +8,7 @@ using namespace Wire;
 Controller::Controller()
 {
 	mpObject = NULL;
-	mLastAppTime = -MathD::MAX_REAL;
+	mLastAppTime = 0;
 }
 
 //----------------------------------------------------------------------------

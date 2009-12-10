@@ -30,6 +30,7 @@ private:
 	NodePtr mspRoot;
 
 	Float mAngle;
+	Double mLastTime;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample2);

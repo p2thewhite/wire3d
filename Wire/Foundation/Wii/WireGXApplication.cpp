@@ -27,9 +27,11 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	mpRenderer = WIRE_NEW GXRenderer(mBackgroundColor);
 	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
+	// VIInit must be called before PADInit
+	PADInit();
+	WPAD_ScanPads();
 	if (mpApplication->OnInitialize())
 	{
-		WPAD_ScanPads();
 		while (!(WPAD_ButtonsDown(0) & mpApplication->KEY_TERMINATE))
 		{
 			mpApplication->OnIdle();
