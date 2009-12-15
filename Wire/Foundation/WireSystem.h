@@ -36,11 +36,14 @@ public:
 		size_t srcSize);
 
 	static Double GetTime();
+	static void Print(const Char* pFormat, ...);
 
 private:
 	static Bool msInitializedTime;
+#ifdef WIRE_WII
+	static ULongLong msInitialTicks;
+#else
 	static Long msInitialSec;
-#ifdef WIRE_WIN
 	static Long msInitialUSec;
 #endif
 };

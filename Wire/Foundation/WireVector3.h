@@ -65,6 +65,7 @@ public:
 
 private:
 #ifdef WIRE_WII
+#include "Wii/WireOgcDefines.h"
 	Vector mTuple;
 #else
 	Real mTuple[3];

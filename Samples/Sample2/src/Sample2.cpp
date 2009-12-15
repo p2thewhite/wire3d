@@ -193,6 +193,9 @@ void Sample2::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
+	System::Print("%f, %f\n", static_cast<Float>(time),
+		static_cast<Float>(elapsedTime));
+
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
 	mAngle += static_cast<Float>(elapsedTime);
