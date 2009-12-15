@@ -7,6 +7,8 @@
 #include <ogc/lwp_watchdog.h>
 #include <wiiuse/wpad.h>
 
+typedef guVector Vector;
+
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
 
 #define GXBegin GX_Begin

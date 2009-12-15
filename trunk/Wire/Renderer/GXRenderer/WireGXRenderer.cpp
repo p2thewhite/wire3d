@@ -28,6 +28,10 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
 	mFrameBufferIndex = 0;
 
+	// Initialize the console, required for printf
+	console_init(mFrameBuffer[0], 20, 20, mRmode->fbWidth, mRmode->xfbHeight,
+		mRmode->fbWidth * VI_DISPLAY_PIX_SZ);
+
 	// ConfigureMem
 	mDemoFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
 	memset(mDemoFifoBuffer,0 , DEFAULT_FIFO_SIZE);
@@ -128,6 +132,12 @@ void GXRenderer::EndScene()
 //----------------------------------------------------------------------------
 void GXRenderer::ClearBuffers()
 {
+	// The console understands VT terminal escape codes
+	// This positions the cursor on row 2, column 0
+	// we can use variables for this with format codes too
+	// e.g. printf ("\x1b[%d;%dH", row, column );
+	System::Print("\x1b[4;0H");
+
 	if (mIsFrameBufferDirty)
 	{
 		GXCopyDisp(mFrameBuffer[mFrameBufferIndex^1], GX_TRUE);
