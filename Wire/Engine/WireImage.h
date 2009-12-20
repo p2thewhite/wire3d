@@ -21,14 +21,15 @@ public:
 	// deleting the input array.
 
 	// 2D image
-	Image(FormatMode format, UChar* pData);
+	Image(FormatMode format, UInt width, UInt height, UChar* pData);
 
 	virtual ~Image();
 
 private:
 	FormatMode mFormat;
 	UChar* mpData;
-
+	UInt mWidth;
+	UInt mHeight;
 };
 
 typedef Pointer<Image> ImagePtr;

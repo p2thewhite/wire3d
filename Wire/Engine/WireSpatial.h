@@ -3,6 +3,7 @@
 #define WIRESPATIAL_H
 
 #include "WireBoundingVolume.h"
+#include "WireGlobalState.h"
 #include "WireSceneObject.h"
 #include "WireTransformation.h"
 
@@ -64,6 +65,9 @@ public:
 	void UpdateGS(Double appTime = -MathD::MAX_REAL, Bool isInitiator = true);
 	void UpdateBS();
 
+	// update of render state
+	virtual void UpdateRS(TArray<GlobalState*>* pStack = NULL);
+
 	// Parent access (Node calls this during attach/detach of children)
 	void SetParent(Spatial* pkParent);
 	Spatial* GetParent();
@@ -71,6 +75,14 @@ public:
 	// culling
 	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull) = 0;
+
+	// global state
+	UInt GetGlobalStateQuantity() const;
+	GlobalState* GetGlobalState(UInt i) const;
+	GlobalState* GetGlobalState(GlobalState::StateType type) const;
+	void AttachGlobalState(GlobalState* pState);
+	void DetachGlobalState(GlobalState::StateType type);
+	void DetachAllGlobalStates();
 
 protected:
 	Spatial();
@@ -80,8 +92,18 @@ protected:
 	virtual void UpdateWorldBound() = 0;
 	void PropagateBoundToRoot();
 
+	// render state updates
+	void PropagateStateFromRoot(TArray<GlobalState*>* pStack);
+	void PushState(TArray<GlobalState*>* pStack);
+	void PopState(TArray<GlobalState*>* pStack);
+	virtual void UpdateState(TArray<GlobalState*>* pStack) = 0;
+
+private:
 	// support for hierarchical scene graph
 	Spatial* mpParent;
+
+	// global render state
+	TArray<GlobalStatePtr> mGlobalStates;
 };
 
 typedef Pointer<Spatial> SpatialPtr;

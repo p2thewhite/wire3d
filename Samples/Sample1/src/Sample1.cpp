@@ -200,12 +200,14 @@ void Sample1::OnIdle()
 		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
 		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
 		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
+//		mspCube->VBuffer->Release();
 	}
 	else
 	{
 		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
 		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
 		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
+//		mspCube->VBuffer->Release();
 		mpRenderer->Draw(mspPyramid);
 	}
 

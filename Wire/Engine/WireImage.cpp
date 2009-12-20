@@ -3,13 +3,17 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Image::Image(FormatMode format, UChar* pData)
+Image::Image(FormatMode format, UInt width, UInt height, UChar* pData)
+	:
+	mFormat(format),
+	mpData(pData),
+	mWidth(width),
+	mHeight(height)
 {
- 	mFormat = format;
- 	mpData = pData;
 }
 
 //----------------------------------------------------------------------------
 Image::~Image()
 {
+	WIRE_DELETE[] mpData;
 }

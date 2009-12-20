@@ -34,6 +34,7 @@ class /*WIRE_FOUNDATION_ITEM*/ System
 public:
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
+	static void Memset(void* pDst, int value, size_t count);
 
 	static Double GetTime();
 	static void Print(const Char* pFormat, ...);

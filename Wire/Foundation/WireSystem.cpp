@@ -38,6 +38,12 @@ void* System::Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 }
 
 //----------------------------------------------------------------------------
+void System::Memset(void* pDst, int value, size_t count)
+{
+	memset(pDst, value, count);
+}
+
+//----------------------------------------------------------------------------
 Double System::GetTime()
 {
 #ifdef WIRE_WII
