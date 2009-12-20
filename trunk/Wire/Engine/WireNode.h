@@ -26,6 +26,9 @@ protected:
 	virtual void UpdateWorldData(Double appTime);
 	virtual void UpdateWorldBound();
 
+	// render state updates
+	virtual void UpdateState(TArray<GlobalState*>* pStack);
+
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 

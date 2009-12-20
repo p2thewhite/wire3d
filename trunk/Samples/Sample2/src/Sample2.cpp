@@ -57,6 +57,7 @@ Bool Sample2::OnInitialize()
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
 
+	mspRoot->UpdateRS();
 	return true;
 }
 

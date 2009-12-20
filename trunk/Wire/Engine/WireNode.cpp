@@ -217,6 +217,19 @@ void Node::UpdateWorldData(Double appTime)
 }
 
 //----------------------------------------------------------------------------
+void Node::UpdateState(TArray<GlobalState*>* pStack)
+{
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		Spatial* pChild = mChildren[i];
+		if (pChild)
+		{
+			pChild->UpdateRS(pStack);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
 	// TODO: support effects

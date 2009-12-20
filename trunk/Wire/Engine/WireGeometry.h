@@ -28,6 +28,7 @@ public:
 	BoundingVolumePtr ModelBound;
 
 //	GeometryType Type;
+	GlobalStatePtr States[GlobalState::MAX_STATE_TYPE];
 
 protected:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
@@ -35,6 +36,9 @@ protected:
 	// geometric updates
 	virtual void UpdateModelBound();
 	virtual void UpdateWorldBound();
+
+	// render state updates
+	virtual void UpdateState(TArray<GlobalState*>* pStack);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);

@@ -8,6 +8,7 @@
 #include "WireController.h"
 #include "WireCuller.h"
 #include "WireGeometry.h"
+#include "WireGlobalState.h"
 #include "WireImage.h"
 #include "WireIndexBuffer.h"
 #include "WireNode.h"

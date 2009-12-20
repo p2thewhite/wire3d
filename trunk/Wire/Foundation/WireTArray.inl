@@ -117,6 +117,13 @@ void TArray<T>::Remove(UInt i)
 
 //----------------------------------------------------------------------------
 template <class T>
+void TArray<T>::RemoveLast()
+{
+	Remove(mQuantity-1);
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 void TArray<T>::RemoveAll()
 {
 	for (UInt i = 0; i < mQuantity; i++)

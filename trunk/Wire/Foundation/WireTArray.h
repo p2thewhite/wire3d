@@ -37,6 +37,7 @@ public:
 	// reconstructed using the default constructor for class T. Then the
 	// quantity is decremented.
 	void Remove(UInt i);
+	void RemoveLast();
 
 	// all elements are set to the default object of class T
 	void RemoveAll();

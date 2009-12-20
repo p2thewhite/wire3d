@@ -528,6 +528,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireGlobalState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireImage.h"
 					>
 				</File>
@@ -685,6 +689,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireGlobalState.cpp"
 					>
 				</File>
 				<File
