@@ -43,9 +43,9 @@ Bool Sample1::OnInitialize()
 
 	mCuller.SetCamera(mspCamera);
 
-	mRtri = 0.0F;
-	mRquad = 0.0F;
 	mAngle = 0.0F;
+
+	mLastTime = System::GetTime();
 
 	return true;
 }
@@ -179,20 +179,24 @@ Geometry* Sample1::CreatePyramid()
 //----------------------------------------------------------------------------
 void Sample1::OnIdle()
 {
+	Double time = System::GetTime();
+	Double elapsedTime = time - mLastTime;
+	mLastTime = time;
+
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	Float scaleFactor = MathF::Sin(mAngle);
-	mAngle += MathF::PI / 180.0F;
-	mAngle = MathF::FMod(mAngle, MathF::PI);
+	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
+	mAngle += static_cast<Float>(elapsedTime);
+	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	mpRenderer->ClearBuffers();
 	mpRenderer->BeginScene(mspCamera);
 
-	Float xOffset = -1.5F - mAngle * 4.0F;
-	Matrix34F model(Vector3F(0, -1, 0), MathF::DEG_TO_RAD * mRtri);
+	Float angle = MathF::FMod(mAngle * 2.0F, MathF::TWO_PI);
+	Float xOffset = -1.5F - angle;
+	Matrix34F model(Vector3F(0, -1, 0), angle);
 	mspPyramid->World.SetRotate(model);
 	mspPyramid->World.SetTranslate(Vector3F(xOffset, 0.0F, -6.0F));
-	mspPyramid->World.SetUniformScale(scaleFactor + 0.5F);
 	mspPyramid->ModelBound->TransformBy(mspPyramid->World, mspPyramid->WorldBound);
 //	mspPyramid->UpdateWorldBound();	// is the same but protected
 	if (!mCuller.IsVisible(mspPyramid->WorldBound))
@@ -211,15 +215,12 @@ void Sample1::OnIdle()
 		mpRenderer->Draw(mspPyramid);
 	}
 
-	model.FromAxisAngle(Vector3F(1, 1, 1), MathF::DEG_TO_RAD * mRquad);
+	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle);
 	mspCube->World.SetRotate(model);
 	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
-	mspCube->World.SetScale(Vector3F(scaleFactor + 0.5f, 1.0F, 1.0F));
+	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
 	mpRenderer->Draw(mspCube);
 
 	mpRenderer->EndScene();
 	mpRenderer->DisplayBackBuffer();
-
-	mRtri += 0.5F;		// Increase The Rotation Variable For The Triangle
-	mRquad -= 0.15F;	// Decrease The Rotation Variable For The Quad
 }

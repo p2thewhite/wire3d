@@ -197,7 +197,7 @@ void GXRenderer::DrawElements()
 	Matrix34F model;
 	mpGeometry->World.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(model * mViewMatrix, GX_PNMTX0);
+	GXLoadPosMtxImm(mViewMatrix * model, GX_PNMTX0);
 
 	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
@@ -217,7 +217,7 @@ void GXRenderer::DrawElements()
 		GXSetArray(rElements[i].Attr, rElements[i].Data, rElements[i].Stride);
 	}
 
-	GXSetCullMode(GX_CULL_BACK);
+	GXSetCullMode(GX_CULL_FRONT);
 
 	GXSetNumChans(1);
 	GXSetNumTexGens(0);
@@ -255,7 +255,7 @@ void GXRenderer::OnFrameChange()
 	mViewMatrix[2][1] = dVector[1];
 	mViewMatrix[0][2] = rVector[2];
 	mViewMatrix[1][2] = uVector[2];
-	mViewMatrix[2][2] = dVector[2];
+	mViewMatrix[2][2] = -dVector[2];
 	mViewMatrix[0][3] = -rVector.Dot(eye);
 	mViewMatrix[1][3] = -uVector.Dot(eye);
 	mViewMatrix[2][3] = -dVector.Dot(eye);

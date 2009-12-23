@@ -30,10 +30,9 @@ private:
 	GeometryPtr mspPyramid;
 	Culler mCuller;
 
-	Float mRtri;
-	Float mRquad;
 	Float mAngle;
 
+	Double mLastTime;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample1);
