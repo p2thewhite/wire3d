@@ -1,5 +1,4 @@
 #include "Sample1.h"
-#include "WireMain.h"
 
 using namespace Wire;
 

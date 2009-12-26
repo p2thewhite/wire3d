@@ -56,5 +56,7 @@ Int main(Int argc, Char** argv)
 		Application::SetApplication(NULL);
 	}
 
+	Main::Terminate();
+
 	return 0;
 }

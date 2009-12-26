@@ -2,6 +2,7 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
+#include "WireGlobalState.h"
 #include "WireIndexBuffer.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
@@ -229,3 +230,12 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 	mClearColor = rClearColor;
 }
 
+//----------------------------------------------------------------------------
+void Renderer::SetGlobalState(GlobalStatePtr spStates[])
+{
+	GlobalState* pState = spStates[GlobalState::CULL];
+	if (pState)
+	{
+		SetCullState(static_cast<CullState*>(pState));
+	}
+}

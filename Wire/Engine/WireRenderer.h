@@ -3,12 +3,15 @@
 #define WIRERENDERER_H
 
 #include "../Foundation/WireColorRGBA.h"
+#include "WireCullState.h"
+#include "WireSmartPointer.h"
 
 namespace Wire
 {
 
 class Bindable;
 class Camera;
+class CullState;
 class Geometry;
 class IndexBuffer;
 class ResourceIdentifier;
@@ -55,6 +58,11 @@ public:
 protected:
 	Renderer(Int width, Int height);
 
+	// Global render state management.
+	void SetGlobalState(GlobalStatePtr spStates[]);
+//	void RestoreGlobalState(GlobalStatePtr aspkState[]);
+	virtual void SetCullState(CullState* pState);
+
 	// Resource loading and releasing.
 	void LoadIBuffer(IndexBuffer* pIBuffer);
 	void ReleaseIBuffer(Bindable* pIBuffer);
@@ -78,6 +86,9 @@ protected:
  		VertexBuffer* pVBuffer) = 0;
 	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
+
+	// Global render states.
+	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
 
 	// Current Geometry object for drawing.
 	Geometry* mpGeometry;

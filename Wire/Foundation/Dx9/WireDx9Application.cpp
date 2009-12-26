@@ -140,7 +140,7 @@ Int Dx9Application::Main(Int, Char*[])
 		UpdateWindow(hWnd);
 
 		// start the message pump
-		bool isApplicationRunning = true;
+		Bool isApplicationRunning = true;
 		while (isApplicationRunning)
 		{
 			MSG msg;

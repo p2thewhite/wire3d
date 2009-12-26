@@ -524,6 +524,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireCullState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.h"
 					>
 				</File>
@@ -685,6 +689,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCuller.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireCullState.cpp"
 					>
 				</File>
 				<File

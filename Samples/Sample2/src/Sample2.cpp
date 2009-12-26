@@ -1,7 +1,6 @@
 #include "Sample2.h"
 
 #include "CubeController.h"
-#include "WireMain.h"
 
 using namespace Wire;
 
@@ -38,6 +37,9 @@ Bool Sample2::OnInitialize()
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(pCube);
 	mspRoot->AttachChild(CreatePyramid());
+	mspRoot->AttachChild(CreateCube());
+	mspRoot->GetChild(mspRoot->GetQuantity()-1)->Local.SetScale(
+		Vector3F(0.5F, 1, 0.5F));
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up

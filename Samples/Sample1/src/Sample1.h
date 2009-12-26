@@ -3,7 +3,6 @@
 #define SAMPLE1_H
 
 #include "WireEngine.h"
-#include "WireMainMCR.h"
 #include "WireApplication.h"
 
 using namespace Wire;
