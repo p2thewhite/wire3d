@@ -3,6 +3,7 @@
 #define WIREMAIN_H
 
 #include "WireTArray.h"
+#include "WireMainMCR.h"
 
 namespace Wire
 {
@@ -15,12 +16,16 @@ public:
 	typedef void (*Initializer)();
 	typedef TArray<Initializer> InitializerArray;
 	static void AddInitializer(Initializer initializer);
-
 	static void Initialize();
 
-private:
-	static InitializerArray* smpInitializers;
+	typedef void (*Terminator)();
+	typedef TArray<Terminator> TerminatorArray;
+	static void AddTerminator(Terminator terminator);
+	static void Terminate();
 
+private:
+	static InitializerArray* mpsInitializers;
+	static TerminatorArray* mpsTerminators;
 };
 
 }

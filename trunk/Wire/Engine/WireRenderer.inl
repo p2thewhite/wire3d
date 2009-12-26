@@ -31,3 +31,9 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 {
 	return mClearColor;
 }
+
+//----------------------------------------------------------------------------
+inline void Renderer::SetCullState(CullState* pState)
+{
+	mspStates[GlobalState::CULL] = pState;
+}

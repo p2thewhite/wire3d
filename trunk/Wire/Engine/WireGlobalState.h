@@ -3,6 +3,7 @@
 #define WIREGLOBALSTATE_H
 
 #include "WireObject.h"
+#include "../Foundation/WireMain.h"
 
 namespace Wire
 {

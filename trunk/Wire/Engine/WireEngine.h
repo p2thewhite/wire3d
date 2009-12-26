@@ -7,6 +7,7 @@
 #include "WireCamera.h"
 #include "WireController.h"
 #include "WireCuller.h"
+#include "WireCullState.h"
 #include "WireGeometry.h"
 #include "WireGlobalState.h"
 #include "WireImage.h"

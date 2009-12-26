@@ -3,6 +3,7 @@
 #define WIREAPPLICATION_H
 
 #include "WireColorRGBA.h"
+#include "WireMain.h"
 #include "WireSystem.h"
 
 namespace Wire

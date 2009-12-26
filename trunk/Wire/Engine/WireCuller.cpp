@@ -21,7 +21,7 @@ Culler::~Culler()
 }
 
 //----------------------------------------------------------------------------
-bool Culler::IsVisible(const BoundingVolume* pkBound)
+Bool Culler::IsVisible(const BoundingVolume* pBound)
 {
 	// Start with the last pushed plane, which is potentially the most
 	// restrictive plane.
@@ -32,7 +32,7 @@ bool Culler::IsVisible(const BoundingVolume* pkBound)
 	{
 		if (mPlaneState & mask)
 		{
-			Int side = pkBound->WhichSide(mPlanes[plane]);
+			Int side = pBound->WhichSide(mPlanes[plane]);
 
 			if (side < 0)
 			{

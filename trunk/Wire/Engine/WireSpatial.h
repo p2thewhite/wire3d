@@ -25,14 +25,14 @@ public:
 	// controllers need this capability.
 	Transformation Local;
 	Transformation World;
-	bool WorldIsCurrent;
+	Bool WorldIsCurrent;
 
 	// World bound access. In some situations you might want to set the
 	// world bound directly and bypass the Spatial::UpdateGS() mechanism. If
 	// WorldBound is set directly, the WorldBoundIsCurrent flag should be set
 	// to true.
 	BoundingVolumePtr WorldBound;
-	bool WorldBoundIsCurrent;
+	Bool WorldBoundIsCurrent;
 
 	// Culling parameters.
 	enum CullingMode

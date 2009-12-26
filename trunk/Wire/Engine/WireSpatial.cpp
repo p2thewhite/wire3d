@@ -144,7 +144,7 @@ void Spatial::DetachGlobalState(GlobalState::StateType type)
 //----------------------------------------------------------------------------
 void Spatial::UpdateRS(TArray<GlobalState*>* pStack)
 {
-	bool isInitiator = (pStack == NULL);
+	Bool isInitiator = (pStack == NULL);
 
 	if (isInitiator)
 	{
