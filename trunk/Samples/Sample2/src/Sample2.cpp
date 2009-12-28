@@ -37,13 +37,18 @@ Bool Sample2::OnInitialize()
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(pCube);
-	mspRoot->AttachChild(CreatePyramid());
 	mspRoot->AttachChild(pCube2);
+	mspRoot->AttachChild(CreatePyramid());
 	pCube2->Local.SetScale(Vector3F(0.5F, 1, 0.5F));
 
 	CullState* pCullState = WIRE_NEW CullState;
-	pCullState->CullFace = CullState::CT_FRONT;
+	pCullState->CullFace = CullState::CM_FRONT;
 	pCube2->AttachGlobalState(pCullState);
+
+	ZBufferState* pZBufferState = WIRE_NEW ZBufferState;
+	pZBufferState->Compare = ZBufferState::CF_ALWAYS;
+	pZBufferState->Writable = false;
+	pCube2->AttachGlobalState(pZBufferState);
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up

@@ -19,6 +19,7 @@ public:
 	enum StateType
 	{
 		CULL,
+		ZBUFFER,
 		MAX_STATE_TYPE
 	};
 

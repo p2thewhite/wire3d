@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-DWORD Dx9Renderer::msCullType[CullState::CT_QUANTITY] = 
+DWORD Dx9Renderer::msCullType[CullState::CM_QUANTITY] = 
 {
 	D3DCULL_CCW,  // CullState::FT_CCW (front CCW -> cull backface CCW in DX)
 	D3DCULL_CW,   // CullState::FT_CW  (front CW -> cull backface CW in DX)

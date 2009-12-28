@@ -1,31 +1,32 @@
-#include "WireCullState.h"
+#include "WireZBufferState.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_INITIALIZE(CullState);
-WIRE_IMPLEMENT_TERMINATE(CullState);
+WIRE_IMPLEMENT_INITIALIZE(ZBufferState);
+WIRE_IMPLEMENT_TERMINATE(ZBufferState);
 
 //----------------------------------------------------------------------------
-void CullState::Initialize()
+void ZBufferState::Initialize()
 {
-	Default[CULL] = WIRE_NEW CullState;
+	Default[ZBUFFER] = WIRE_NEW ZBufferState;
 }
 
 //----------------------------------------------------------------------------
-void CullState::Terminate()
+void ZBufferState::Terminate()
 {
-	Default[CULL] = NULL;
+	Default[ZBUFFER] = NULL;
 }
 
 //----------------------------------------------------------------------------
-CullState::CullState()
+ZBufferState::ZBufferState()
 	:
 	Enabled(true),
-	CullFace(CM_BACK)
+	Writable(true),
+	Compare(CF_LEQUAL)
 {
 }
 
 //----------------------------------------------------------------------------
-CullState::~CullState()
+ZBufferState::~ZBufferState()
 {
 }

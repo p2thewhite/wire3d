@@ -5,6 +5,7 @@
 #include "../Foundation/WireColorRGBA.h"
 #include "WireCullState.h"
 #include "WireSmartPointer.h"
+#include "WireZBufferState.h"
 
 namespace Wire
 {
@@ -55,7 +56,9 @@ public:
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
 	virtual void SetCullState(CullState* pState);
+	virtual void SetZBufferState(ZBufferState* pState);
 	CullState* GetCullState();
+	ZBufferState* GetZBufferState();
 
 protected:
 	Renderer(Int width, Int height);

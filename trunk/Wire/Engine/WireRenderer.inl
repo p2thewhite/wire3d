@@ -39,8 +39,20 @@ inline void Renderer::SetCullState(CullState* pState)
 }
 
 //----------------------------------------------------------------------------
+inline void Renderer::SetZBufferState(ZBufferState* pState)
+{
+	mspStates[GlobalState::ZBUFFER] = pState;
+}
+
+//----------------------------------------------------------------------------
 inline CullState* Renderer::GetCullState()
 {
 	// TODO: use StaticCast rtti
 	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
+}
+
+//----------------------------------------------------------------------------
+inline ZBufferState* Renderer::GetZBufferState()
+{
+	return static_cast<ZBufferState*>(mspStates[GlobalState::ZBUFFER].Get());
 }
