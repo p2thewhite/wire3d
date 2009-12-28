@@ -37,3 +37,10 @@ inline void Renderer::SetCullState(CullState* pState)
 {
 	mspStates[GlobalState::CULL] = pState;
 }
+
+//----------------------------------------------------------------------------
+inline CullState* Renderer::GetCullState()
+{
+	// TODO: use StaticCast rtti
+	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
+}

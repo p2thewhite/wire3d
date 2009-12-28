@@ -87,6 +87,9 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 
 	mWidth = mRmode->viWidth;
 	mHeight = mRmode->viHeight;
+
+	// Initialize global render state to default settings.
+	SetGlobalState(GlobalState::Default);
 }
 
 //----------------------------------------------------------------------------
@@ -216,8 +219,6 @@ void GXRenderer::DrawElements()
 			rElements[i].CompType, 0);
 		GXSetArray(rElements[i].Attr, rElements[i].Data, rElements[i].Stride);
 	}
-
-	GXSetCullMode(GX_CULL_FRONT);
 
 	GXSetNumChans(1);
 	GXSetNumTexGens(0);

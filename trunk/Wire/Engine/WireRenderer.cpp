@@ -2,7 +2,6 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
-#include "WireGlobalState.h"
 #include "WireIndexBuffer.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
@@ -154,6 +153,8 @@ void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
 
+	SetGlobalState(mpGeometry->States);
+
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
 	EnableIBuffer();
@@ -164,6 +165,8 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	// Disable the index buffer.
 	DisableIBuffer();
+
+	RestoreGlobalState(mpGeometry->States);
 }
 
 //----------------------------------------------------------------------------
@@ -236,6 +239,18 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 	GlobalState* pState = spStates[GlobalState::CULL];
 	if (pState)
 	{
+		SetCullState(static_cast<CullState*>(pState));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
+{
+	GlobalState* pState;
+
+	if (spStates[GlobalState::CULL])
+	{
+		pState = GlobalState::Default[GlobalState::CULL];
 		SetCullState(static_cast<CullState*>(pState));
 	}
 }

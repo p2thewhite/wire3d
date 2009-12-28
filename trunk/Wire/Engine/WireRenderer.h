@@ -11,7 +11,6 @@ namespace Wire
 
 class Bindable;
 class Camera;
-class CullState;
 class Geometry;
 class IndexBuffer;
 class ResourceIdentifier;
@@ -55,13 +54,15 @@ public:
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
+	virtual void SetCullState(CullState* pState);
+	CullState* GetCullState();
+
 protected:
 	Renderer(Int width, Int height);
 
 	// Global render state management.
 	void SetGlobalState(GlobalStatePtr spStates[]);
-//	void RestoreGlobalState(GlobalStatePtr aspkState[]);
-	virtual void SetCullState(CullState* pState);
+	void RestoreGlobalState(GlobalStatePtr spStates[]);
 
 	// Resource loading and releasing.
 	void LoadIBuffer(IndexBuffer* pIBuffer);
