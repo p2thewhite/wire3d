@@ -52,6 +52,9 @@ protected:
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
 
+	// global render state management
+	virtual void SetCullState(CullState* pState);
+
 private:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 
@@ -66,6 +69,8 @@ private:
 
 	// Transforms world space to camera space.
 	Matrix34F mViewMatrix;
+
+	static UChar msCullType[];
 };
 
 #include "WireGXRenderer.inl"

@@ -532,6 +532,10 @@
 					Name="Source Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXCullState.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 					</File>
@@ -571,6 +575,10 @@
 				<Filter
 					Name="Source Files"
 					>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9CullState.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>

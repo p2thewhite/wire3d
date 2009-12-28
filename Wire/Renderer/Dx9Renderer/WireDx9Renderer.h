@@ -52,6 +52,9 @@ protected:
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
+	// global render state management
+	virtual void SetCullState(CullState* pState);
+
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
@@ -63,6 +66,8 @@ private:
 	static HRESULT msResult;
 
 	Matrix4F mViewMatrix;
+
+	static DWORD msCullType[];
 };
 
 }

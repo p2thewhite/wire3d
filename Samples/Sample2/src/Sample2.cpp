@@ -31,15 +31,19 @@ Bool Sample2::OnInitialize()
 	}
 
 	Geometry* pCube = CreateCube();
+	Geometry* pCube2 = CreateCube();
 	CubeController* pCubeController = WIRE_NEW CubeController;
 	pCube->AttachController(pCubeController);
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(pCube);
 	mspRoot->AttachChild(CreatePyramid());
-	mspRoot->AttachChild(CreateCube());
-	mspRoot->GetChild(mspRoot->GetQuantity()-1)->Local.SetScale(
-		Vector3F(0.5F, 1, 0.5F));
+	mspRoot->AttachChild(pCube2);
+	pCube2->Local.SetScale(Vector3F(0.5F, 1, 0.5F));
+
+	CullState* pCullState = WIRE_NEW CullState;
+	pCullState->CullFace = CullState::CT_FRONT;
+	pCube2->AttachGlobalState(pCullState);
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
