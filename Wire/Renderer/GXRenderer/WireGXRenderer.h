@@ -54,6 +54,7 @@ protected:
 
 	// global render state management
 	virtual void SetCullState(CullState* pState);
+	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
@@ -71,6 +72,7 @@ private:
 	Matrix34F mViewMatrix;
 
 	static UChar msCullType[];
+	static UChar msZBufferCompare[];
 };
 
 #include "WireGXRenderer.inl"

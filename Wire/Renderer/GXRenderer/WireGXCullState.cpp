@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-UChar GXRenderer::msCullType[CullState::CT_QUANTITY] = 
+UChar GXRenderer::msCullType[CullState::CM_QUANTITY] = 
 {
 	GX_CULL_BACK,
 	GX_CULL_FRONT

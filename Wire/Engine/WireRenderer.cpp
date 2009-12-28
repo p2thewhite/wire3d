@@ -241,6 +241,12 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 	{
 		SetCullState(static_cast<CullState*>(pState));
 	}
+
+	pState = spStates[GlobalState::ZBUFFER];
+	if (pState)
+	{
+		SetZBufferState(static_cast<ZBufferState*>(pState));
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -252,5 +258,11 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::CULL];
 		SetCullState(static_cast<CullState*>(pState));
+	}
+
+	if (spStates[GlobalState::ZBUFFER])
+	{
+		pState = GlobalState::Default[GlobalState::ZBUFFER];
+		SetZBufferState(static_cast<ZBufferState*>(pState));
 	}
 }

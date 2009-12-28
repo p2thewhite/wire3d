@@ -352,6 +352,10 @@
 					RelativePath=".\Engine\WireVisibleSet.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Engine\WireZBufferState.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
@@ -508,6 +512,10 @@
 					RelativePath=".\Engine\WireVisibleSet.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Engine\WireZBufferState.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -545,6 +553,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXResourcesLR.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
 						>
 					</File>
 				</Filter>
@@ -589,6 +601,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9ZBufferState.cpp"
 						>
 					</File>
 				</Filter>

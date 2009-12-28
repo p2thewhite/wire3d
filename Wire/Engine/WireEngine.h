@@ -25,5 +25,6 @@
 #include "WireVertexBuffer.h"
 #include "WireVisibleObject.h"
 #include "WireVisibleSet.h"
+#include "WireZBufferState.h"
 
 #endif

@@ -54,6 +54,7 @@ protected:
 
 	// global render state management
 	virtual void SetCullState(CullState* pState);
+	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
@@ -68,6 +69,7 @@ private:
 	Matrix4F mViewMatrix;
 
 	static DWORD msCullType[];
+	static DWORD msZBufferCompare[];
 };
 
 }

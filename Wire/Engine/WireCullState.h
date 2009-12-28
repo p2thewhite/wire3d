@@ -20,13 +20,13 @@ public:
 
 	enum CullMode
 	{
-		CT_FRONT,  // cull front-facing triangles
-		CT_BACK,   // cull back-facing triangles
-		CT_QUANTITY
+		CM_FRONT,  // cull front-facing triangles
+		CM_BACK,   // cull back-facing triangles
+		CM_QUANTITY
 	};
 
 	Bool Enabled;         // default: true
-	CullMode CullFace;    // default: CT_BACK
+	CullMode CullFace;    // default: CM_BACK
 };
 
 WIRE_REGISTER_INITIALIZE(CullState);
