@@ -50,6 +50,10 @@ Bool Sample2::OnInitialize()
 	pZBufferState->Writable = false;
 	pCube2->AttachGlobalState(pZBufferState);
 
+	AlphaState* pAlphaState = WIRE_NEW AlphaState;
+	pAlphaState->BlendEnabled = true;
+	pCube2->AttachGlobalState(pAlphaState);
+
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
@@ -87,20 +91,20 @@ Geometry* Sample2::CreateCube()
 		Vector3F(-extent, +extent, +extent)
 	};
 
-	ColorRGB colors[] = {
-		ColorRGB(1.0F, 0.0F, 0.0F),
-		ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F),
-		ColorRGB(0.0F, 1.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 1.0F),
-		ColorRGB(0.0F, 0.0F, 0.0F),
+	ColorRGBA colors[] = {
+		ColorRGBA(1.0F, 0.0F, 0.0F, 1.0F),
+		ColorRGBA(0.0F, 1.0F, 0.0F, 1.0F),
+		ColorRGBA(0.0F, 0.0F, 1.0F, 0.0F),
+		ColorRGBA(1.0F, 1.0F, 0.0F, 0.0F),
+		ColorRGBA(1.0F, 0.0F, 1.0F, 1.0F),
+		ColorRGBA(0.0F, 1.0F, 1.0F, 1.0F),
+		ColorRGBA(1.0F, 1.0F, 1.0F, 0.0F),
+		ColorRGBA(0.0F, 0.0F, 0.0F, 0.0F),
 	};
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(3);
+	attributes.SetColorChannels(4);
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
@@ -108,7 +112,7 @@ Geometry* Sample2::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
-		pCubeVerts->Color3(i) = colors[i];
+		pCubeVerts->Color4(i) = colors[i];
 	}
 
 	UInt indices[] = {

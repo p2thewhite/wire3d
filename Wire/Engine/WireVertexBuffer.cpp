@@ -58,6 +58,22 @@ ColorRGB VertexBuffer::Color3(UInt i, UInt unit) const
 }
 
 //----------------------------------------------------------------------------
+ColorRGBA& VertexBuffer::Color4(UInt i, UInt unit)
+{
+	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 4);
+	Float* pChannel = GetColor(i, unit);
+	return *(reinterpret_cast<ColorRGBA*>(pChannel));
+}
+
+//----------------------------------------------------------------------------
+ColorRGBA VertexBuffer::Color4(UInt i, UInt unit) const
+{
+	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 4);
+	const Float* pChannel = GetColor(i, unit);
+	return *(reinterpret_cast<ColorRGBA*>(const_cast<Float*>(pChannel)));
+}
+
+//----------------------------------------------------------------------------
 Vector3F& VertexBuffer::Normal3(UInt i)
 {
 	WIRE_ASSERT(mAttributes.GetNormalChannels() == 3);

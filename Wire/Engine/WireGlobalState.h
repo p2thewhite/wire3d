@@ -18,6 +18,7 @@ public:
 	// supported global states
 	enum StateType
 	{
+		ALPHA,
 		CULL,
 		ZBUFFER,
 		MAX_STATE_TYPE

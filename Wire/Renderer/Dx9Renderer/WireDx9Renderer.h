@@ -53,6 +53,7 @@ protected:
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
 	// global render state management
+	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 
@@ -68,6 +69,8 @@ private:
 
 	Matrix4F mViewMatrix;
 
+	static DWORD msAlphaSrcBlend[];
+	static DWORD msAlphaDstBlend[];
 	static DWORD msCullType[];
 	static DWORD msZBufferCompare[];
 };

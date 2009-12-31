@@ -30,7 +30,9 @@ typedef guVector Vector;
 #define GXPosition3f32 GX_Position3f32
 #define GXColor1u32 GX_Color1u32
 #define GXRenderModeObj GXRModeObj
+#define GXSetAlphaUpdate GX_SetAlphaUpdate
 #define GXSetArray GX_SetArray
+#define GXSetBlendMode GX_SetBlendMode
 #define GXSetColorUpdate GX_SetColorUpdate
 #define GXSetCopyClear GX_SetCopyClear
 #define GXSetCopyFilter GX_SetCopyFilter

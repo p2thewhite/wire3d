@@ -2,6 +2,7 @@
 #ifndef WIREENGINE_H
 #define WIREENGINE_H
 
+#include "WireAlphaState.h"
 #include "WireBindable.h"
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
