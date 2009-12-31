@@ -257,6 +257,10 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireAlphaState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBindable.h"
 					>
 				</File>
@@ -429,6 +433,10 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath=".\Engine\WireAlphaState.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBindable.cpp"
 					>
 				</File>
@@ -540,6 +548,10 @@
 					Name="Source Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXAlphaState.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXCullState.cpp"
 						>
 					</File>
@@ -587,6 +599,10 @@
 				<Filter
 					Name="Source Files"
 					>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9AlphaState.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9CullState.cpp"
 						>

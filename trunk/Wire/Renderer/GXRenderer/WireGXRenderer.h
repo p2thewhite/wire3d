@@ -53,6 +53,7 @@ protected:
 	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
 
 	// global render state management
+	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 
@@ -71,6 +72,8 @@ private:
 	// Transforms world space to camera space.
 	Matrix34F mViewMatrix;
 
+	static UChar msAlphaSrcBlend[];
+	static UChar msAlphaDstBlend[];
 	static UChar msCullType[];
 	static UChar msZBufferCompare[];
 };

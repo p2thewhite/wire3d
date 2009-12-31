@@ -3,6 +3,7 @@
 #define WIRERENDERER_H
 
 #include "../Foundation/WireColorRGBA.h"
+#include "WireAlphaState.h"
 #include "WireCullState.h"
 #include "WireSmartPointer.h"
 #include "WireZBufferState.h"
@@ -55,8 +56,10 @@ public:
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
+	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
+	AlphaState* GetAlphaState();
 	CullState* GetCullState();
 	ZBufferState* GetZBufferState();
 

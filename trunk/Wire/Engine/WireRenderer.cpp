@@ -236,7 +236,13 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 //----------------------------------------------------------------------------
 void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 {
-	GlobalState* pState = spStates[GlobalState::CULL];
+	GlobalState* pState = spStates[GlobalState::ALPHA];
+	if (pState)
+	{
+		SetAlphaState(static_cast<AlphaState*>(pState));
+	}
+
+	pState = spStates[GlobalState::CULL];
 	if (pState)
 	{
 		SetCullState(static_cast<CullState*>(pState));
@@ -253,6 +259,12 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 {
 	GlobalState* pState;
+
+	if (spStates[GlobalState::ALPHA])
+	{
+		pState = GlobalState::Default[GlobalState::ALPHA];
+		SetAlphaState(static_cast<AlphaState*>(pState));
+	}
 
 	if (spStates[GlobalState::CULL])
 	{

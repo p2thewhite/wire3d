@@ -33,6 +33,12 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 }
 
 //----------------------------------------------------------------------------
+inline void Renderer::SetAlphaState(AlphaState* pState)
+{
+	mspStates[GlobalState::ALPHA] = pState;
+}
+
+//----------------------------------------------------------------------------
 inline void Renderer::SetCullState(CullState* pState)
 {
 	mspStates[GlobalState::CULL] = pState;
@@ -45,9 +51,15 @@ inline void Renderer::SetZBufferState(ZBufferState* pState)
 }
 
 //----------------------------------------------------------------------------
-inline CullState* Renderer::GetCullState()
+inline AlphaState* Renderer::GetAlphaState()
 {
 	// TODO: use StaticCast rtti
+	return static_cast<AlphaState*>(mspStates[GlobalState::ALPHA].Get());
+}
+
+//----------------------------------------------------------------------------
+inline CullState* Renderer::GetCullState()
+{
 	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
 }
 

@@ -27,6 +27,9 @@ public:
 	ColorRGB& Color3(UInt i, UInt unit = 0);
 	ColorRGB Color3(UInt i, UInt unit = 0) const;
 
+	ColorRGBA& Color4(UInt i, UInt unit = 0);
+	ColorRGBA Color4(UInt i, UInt unit = 0) const;
+
 	Vector3F& Normal3(UInt i);
 	Vector3F Normal3(UInt i) const;
 
