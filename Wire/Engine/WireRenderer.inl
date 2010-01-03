@@ -45,6 +45,12 @@ inline void Renderer::SetCullState(CullState* pState)
 }
 
 //----------------------------------------------------------------------------
+inline void Renderer::SetWireframeState(WireframeState* pState)
+{
+	mspStates[GlobalState::WIREFRAME] = pState;
+}
+
+//----------------------------------------------------------------------------
 inline void Renderer::SetZBufferState(ZBufferState* pState)
 {
 	mspStates[GlobalState::ZBUFFER] = pState;
@@ -61,6 +67,13 @@ inline AlphaState* Renderer::GetAlphaState()
 inline CullState* Renderer::GetCullState()
 {
 	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
+}
+
+//----------------------------------------------------------------------------
+inline WireframeState* Renderer::GetWireframeState()
+{
+	return static_cast<WireframeState*>(
+		mspStates[GlobalState::WIREFRAME].Get());
 }
 
 //----------------------------------------------------------------------------

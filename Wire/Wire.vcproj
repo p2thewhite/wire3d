@@ -357,6 +357,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireWireframeState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireZBufferState.h"
 					>
 				</File>
@@ -521,6 +525,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireWireframeState.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireZBufferState.cpp"
 					>
 				</File>
@@ -617,6 +625,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9WireframeState.cpp"
 						>
 					</File>
 					<File

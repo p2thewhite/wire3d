@@ -20,6 +20,7 @@ public:
 	{
 		ALPHA,
 		CULL,
+		WIREFRAME,
 		ZBUFFER,
 		MAX_STATE_TYPE
 	};

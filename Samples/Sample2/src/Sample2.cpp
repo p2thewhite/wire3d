@@ -32,14 +32,20 @@ Bool Sample2::OnInitialize()
 
 	Geometry* pCube = CreateCube();
 	Geometry* pCube2 = CreateCube();
+	Geometry* pCube3 = CreateCube();
 	CubeController* pCubeController = WIRE_NEW CubeController;
 	pCube->AttachController(pCubeController);
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(pCube);
 	mspRoot->AttachChild(pCube2);
+	mspRoot->AttachChild(pCube3);
 	mspRoot->AttachChild(CreatePyramid());
+
+	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -12.0F));
+	pCube2->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
 	pCube2->Local.SetScale(Vector3F(0.5F, 1, 0.5F));
+	pCube3->Local.SetTranslate(Vector3F(0.0F, 2.5F, 0.0F));
 
 	CullState* pCullState = WIRE_NEW CullState;
 	pCullState->CullFace = CullState::CM_FRONT;
@@ -53,6 +59,10 @@ Bool Sample2::OnInitialize()
 	AlphaState* pAlphaState = WIRE_NEW AlphaState;
 	pAlphaState->BlendEnabled = true;
 	pCube2->AttachGlobalState(pAlphaState);
+
+	WireframeState* pWireframeState = WIRE_NEW WireframeState;
+	pWireframeState->Enabled = true;
+	pCube3->AttachGlobalState(pWireframeState);
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -217,14 +227,12 @@ void Sample2::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Geometry* pPyramid = static_cast<Geometry*>(mspRoot->GetChild(1).Get());
+	Geometry* pCube2 = static_cast<Geometry*>(mspRoot->GetChild(3).Get());
 
 	Matrix34F model(Vector3F(0, -1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
-	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -8.0F));
 
-	pPyramid->Local.SetRotate(model);
-	pPyramid->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
+	pCube2->Local.SetRotate(model);
 
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);

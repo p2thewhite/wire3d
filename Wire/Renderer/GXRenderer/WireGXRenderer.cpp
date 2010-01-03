@@ -228,13 +228,44 @@ void GXRenderer::DrawElements()
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
 
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
-
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+	const WireframeState* pWireframeState = GetWireframeState();
+	if (pWireframeState && pWireframeState->Enabled)
 	{
-		UInt index = rIBuffer[i];
-		GXPosition1x16(static_cast<UShort>(index));
-		GXColor1x16(static_cast<UShort>(index));
+		GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
+
+		for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
+		{
+			UInt index = rIBuffer[i];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+			index = rIBuffer[i+1];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+
+			index = rIBuffer[i+1];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+			index = rIBuffer[i+2];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+
+			index = rIBuffer[i+2];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+			index = rIBuffer[i];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+		}
+	}
+	else
+	{
+		GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
+		for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+		{
+			UInt index = rIBuffer[i];
+			GXPosition1x16(static_cast<UShort>(index));
+			GXColor1x16(static_cast<UShort>(index));
+		}
 	}
 
 	GXEnd();
