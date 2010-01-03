@@ -55,6 +55,7 @@ protected:
 	// global render state management
 	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
+	virtual void SetWireframeState(WireframeState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 
 private:

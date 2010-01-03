@@ -6,6 +6,7 @@
 #include "WireAlphaState.h"
 #include "WireCullState.h"
 #include "WireSmartPointer.h"
+#include "WireWireframeState.h"
 #include "WireZBufferState.h"
 
 namespace Wire
@@ -58,9 +59,11 @@ public:
 
 	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
+	virtual void SetWireframeState(WireframeState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 	AlphaState* GetAlphaState();
 	CullState* GetCullState();
+	WireframeState* GetWireframeState();
 	ZBufferState* GetZBufferState();
 
 protected:

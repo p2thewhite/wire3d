@@ -248,6 +248,12 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 		SetCullState(static_cast<CullState*>(pState));
 	}
 
+	pState = spStates[GlobalState::WIREFRAME];
+	if (pState)
+	{
+		SetWireframeState(static_cast<WireframeState*>(pState));
+	}
+
 	pState = spStates[GlobalState::ZBUFFER];
 	if (pState)
 	{
@@ -270,6 +276,12 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::CULL];
 		SetCullState(static_cast<CullState*>(pState));
+	}
+
+	if (spStates[GlobalState::WIREFRAME])
+	{
+		pState = GlobalState::Default[GlobalState::WIREFRAME];
+		SetWireframeState(static_cast<WireframeState*>(pState));
 	}
 
 	if (spStates[GlobalState::ZBUFFER])
