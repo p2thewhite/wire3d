@@ -248,6 +248,12 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 		SetCullState(static_cast<CullState*>(pState));
 	}
 
+	pState = spStates[GlobalState::FOG];
+	if (pState)
+	{
+		SetFogState(static_cast<FogState*>(pState));
+	}
+
 	pState = spStates[GlobalState::WIREFRAME];
 	if (pState)
 	{
@@ -276,6 +282,12 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::CULL];
 		SetCullState(static_cast<CullState*>(pState));
+	}
+
+	if (spStates[GlobalState::FOG])
+	{
+		pState = GlobalState::Default[GlobalState::FOG];
+		SetFogState(static_cast<FogState*>(pState));
 	}
 
 	if (spStates[GlobalState::WIREFRAME])

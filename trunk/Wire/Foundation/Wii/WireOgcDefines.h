@@ -42,6 +42,7 @@ typedef guVector Vector;
 #define GXSetDispCopySrc GX_SetDispCopySrc
 #define GXSetDispCopyYScale GX_SetDispCopyYScale
 #define GXSetFieldMode GX_SetFieldMode
+#define GXSetFog GX_SetFog
 #define GXSetNumChans GX_SetNumChans
 #define GXSetNumTevStages GX_SetNumTevStages
 #define GXSetNumTexGens GX_SetNumTexGens

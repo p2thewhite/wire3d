@@ -45,6 +45,12 @@ inline void Renderer::SetCullState(CullState* pState)
 }
 
 //----------------------------------------------------------------------------
+inline void Renderer::SetFogState(FogState* pState)
+{
+	mspStates[GlobalState::FOG] = pState;
+}
+
+//----------------------------------------------------------------------------
 inline void Renderer::SetWireframeState(WireframeState* pState)
 {
 	mspStates[GlobalState::WIREFRAME] = pState;
@@ -67,6 +73,12 @@ inline AlphaState* Renderer::GetAlphaState()
 inline CullState* Renderer::GetCullState()
 {
 	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
+}
+
+//----------------------------------------------------------------------------
+inline FogState* Renderer::GetFogState()
+{
+	return static_cast<FogState*>(mspStates[GlobalState::FOG].Get());
 }
 
 //----------------------------------------------------------------------------

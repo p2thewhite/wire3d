@@ -439,6 +439,26 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXFogState.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 						<FileConfiguration
@@ -547,6 +567,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9FogState.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>
 					</File>
@@ -605,6 +629,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCullState.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireFogState.h"
 					>
 				</File>
 				<File
@@ -785,6 +813,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCullState.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireFogState.cpp"
 					>
 				</File>
 				<File
