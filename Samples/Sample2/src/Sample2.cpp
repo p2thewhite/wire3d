@@ -64,6 +64,13 @@ Bool Sample2::OnInitialize()
 	pWireframeState->Enabled = true;
 	pCube3->AttachGlobalState(pWireframeState);
 
+	FogState* pFogState = WIRE_NEW FogState;
+	pFogState->Enabled = true;
+	pFogState->Color = ColorRGB(0, 0, 0.2F);
+	pFogState->Start = 11.0F;
+	pFogState->End = 13.0F;
+	mspRoot->AttachGlobalState(pFogState);
+
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);

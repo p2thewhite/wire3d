@@ -55,6 +55,7 @@ protected:
 	// global render state management
 	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
+	virtual void SetFogState(FogState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
@@ -75,6 +76,7 @@ private:
 	static UChar msAlphaSrcBlend[];
 	static UChar msAlphaDstBlend[];
 	static UChar msCullType[];
+	static UChar msFogDensity[];
 	static UChar msZBufferCompare[];
 };
 

@@ -285,6 +285,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireFogState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.h"
 					>
 				</File>
@@ -465,6 +469,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireFogState.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
 					>
 				</File>
@@ -564,6 +572,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXFogState.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 					</File>
@@ -613,6 +625,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9CullState.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9FogState.cpp"
 						>
 					</File>
 					<File

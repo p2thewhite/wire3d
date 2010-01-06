@@ -5,6 +5,7 @@
 #include "../Foundation/WireColorRGBA.h"
 #include "WireAlphaState.h"
 #include "WireCullState.h"
+#include "WireFogState.h"
 #include "WireSmartPointer.h"
 #include "WireWireframeState.h"
 #include "WireZBufferState.h"
@@ -59,10 +60,12 @@ public:
 
 	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
+	virtual void SetFogState(FogState* pState);
 	virtual void SetWireframeState(WireframeState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 	AlphaState* GetAlphaState();
 	CullState* GetCullState();
+	FogState* GetFogState();
 	WireframeState* GetWireframeState();
 	ZBufferState* GetZBufferState();
 
