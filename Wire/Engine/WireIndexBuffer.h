@@ -10,6 +10,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Object, public Bindable
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	IndexBuffer(UInt quantity);

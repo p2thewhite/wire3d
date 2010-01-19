@@ -65,31 +65,29 @@ inline void Renderer::SetZBufferState(ZBufferState* pState)
 //----------------------------------------------------------------------------
 inline AlphaState* Renderer::GetAlphaState()
 {
-	// TODO: use StaticCast rtti
-	return static_cast<AlphaState*>(mspStates[GlobalState::ALPHA].Get());
+	return StaticCast<AlphaState>(mspStates[GlobalState::ALPHA]);
 }
 
 //----------------------------------------------------------------------------
 inline CullState* Renderer::GetCullState()
 {
-	return static_cast<CullState*>(mspStates[GlobalState::CULL].Get());
+	return StaticCast<CullState>(mspStates[GlobalState::CULL]);
 }
 
 //----------------------------------------------------------------------------
 inline FogState* Renderer::GetFogState()
 {
-	return static_cast<FogState*>(mspStates[GlobalState::FOG].Get());
+	return StaticCast<FogState>(mspStates[GlobalState::FOG]);
 }
 
 //----------------------------------------------------------------------------
 inline WireframeState* Renderer::GetWireframeState()
 {
-	return static_cast<WireframeState*>(
-		mspStates[GlobalState::WIREFRAME].Get());
+	return StaticCast<WireframeState>(mspStates[GlobalState::WIREFRAME]);
 }
 
 //----------------------------------------------------------------------------
 inline ZBufferState* Renderer::GetZBufferState()
 {
-	return static_cast<ZBufferState*>(mspStates[GlobalState::ZBUFFER].Get());
+	return StaticCast<ZBufferState>(mspStates[GlobalState::ZBUFFER]);
 }

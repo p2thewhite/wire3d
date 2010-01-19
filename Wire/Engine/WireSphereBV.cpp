@@ -2,6 +2,8 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(SphereBV, BoundingVolume);
+
 //----------------------------------------------------------------------------
 // The factory function of BoundingVolume creates SphereBV objects. You may
 // delete this and allow another bounding volume class to be the default.

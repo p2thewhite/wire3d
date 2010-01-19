@@ -9,6 +9,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ ZBufferState : public GlobalState
 {
+	WIRE_DECLARE_RTTI;
 	WIRE_DECLARE_INITIALIZE;
 	WIRE_DECLARE_TERMINATE;
 

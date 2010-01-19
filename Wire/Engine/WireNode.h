@@ -9,6 +9,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ Node : public Spatial
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	Node(UInt quantity = 0, UInt growBy = 1);

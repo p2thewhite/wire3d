@@ -9,6 +9,8 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ TriMesh : public Geometry
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	TriMesh(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 	virtual ~TriMesh();

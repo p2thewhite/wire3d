@@ -2,6 +2,8 @@
 
 using namespace Wire;
 
+const Rtti Object::Type(NULL);
+
 //----------------------------------------------------------------------------
 Object::Object()
 	:

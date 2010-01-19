@@ -21,6 +21,7 @@
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireSphereBV.h"
+#include "WireTexture.h"
 #include "WireTransformation.h"
 #include "WireTriMesh.h"
 #include "WireVertexAttributes.h"

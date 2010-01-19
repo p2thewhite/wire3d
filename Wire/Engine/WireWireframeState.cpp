@@ -2,6 +2,7 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(WireframeState, GlobalState);
 WIRE_IMPLEMENT_INITIALIZE(WireframeState);
 WIRE_IMPLEMENT_TERMINATE(WireframeState);
 
