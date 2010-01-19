@@ -14,6 +14,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object, public Bindable
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);

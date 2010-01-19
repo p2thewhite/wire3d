@@ -11,6 +11,7 @@ class SceneObject;
 
 class /*WIRE_ENGINE_ITEM*/ Controller : public Object
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	// destruction (abstract base class)

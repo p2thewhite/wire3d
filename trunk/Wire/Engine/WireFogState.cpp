@@ -2,6 +2,7 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(FogState, GlobalState);
 WIRE_IMPLEMENT_INITIALIZE(FogState);
 WIRE_IMPLEMENT_TERMINATE(FogState);
 

@@ -2,6 +2,7 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(CullState, GlobalState);
 WIRE_IMPLEMENT_INITIALIZE(CullState);
 WIRE_IMPLEMENT_TERMINATE(CullState);
 

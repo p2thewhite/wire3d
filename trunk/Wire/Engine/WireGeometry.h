@@ -12,6 +12,8 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ Geometry : public Spatial
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	enum GeometryType
 	{

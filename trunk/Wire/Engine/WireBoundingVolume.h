@@ -13,6 +13,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ BoundingVolume : public Object
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	// abstract base class

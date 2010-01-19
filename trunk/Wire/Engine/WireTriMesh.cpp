@@ -2,6 +2,8 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(TriMesh, Geometry);
+
 //----------------------------------------------------------------------------
 TriMesh::TriMesh(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 	:

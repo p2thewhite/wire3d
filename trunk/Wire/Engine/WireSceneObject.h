@@ -11,6 +11,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ SceneObject : public Object
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	virtual ~SceneObject();

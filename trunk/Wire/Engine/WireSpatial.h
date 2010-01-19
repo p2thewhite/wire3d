@@ -14,6 +14,8 @@ class Culler;
 
 class /*WIRE_ENGINE_ITEM*/ Spatial : public SceneObject
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	// abstract base class
 	virtual ~Spatial();

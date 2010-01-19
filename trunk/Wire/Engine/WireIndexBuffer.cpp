@@ -2,6 +2,8 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(IndexBuffer, Object);
+
 //----------------------------------------------------------------------------
 IndexBuffer::IndexBuffer(UInt quantity)
 	:

@@ -10,6 +10,7 @@ namespace Wire
 
 class /*WIRE_ENGINE_ITEM*/ GlobalState : public Object
 {
+	WIRE_DECLARE_RTTI;
 
 public:
 	// abstract base class

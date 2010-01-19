@@ -2,6 +2,7 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI(AlphaState, GlobalState);
 WIRE_IMPLEMENT_INITIALIZE(AlphaState);
 WIRE_IMPLEMENT_TERMINATE(AlphaState);
 
