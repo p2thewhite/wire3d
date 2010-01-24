@@ -28,7 +28,7 @@ inline VisibleSet& Culler::GetVisibleSet()
 }
 
 //----------------------------------------------------------------------------
-inline void Culler::Insert(Spatial* pObject/*, Effect* pGlobalEffect*/)
+inline void Culler::Insert(Spatial* pObject, Effect* pGlobalEffect)
 {
-	mVisible.Insert(pObject/*, pGlobalEffect*/);
+	mVisible.Insert(pObject, pGlobalEffect);
 }

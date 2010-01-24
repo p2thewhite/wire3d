@@ -1,5 +1,7 @@
 #include "WireNode.h"
 
+#include "WireCuller.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Node, Spatial);
@@ -234,7 +236,12 @@ void Node::UpdateState(TArray<GlobalState*>* pStack)
 //----------------------------------------------------------------------------
 void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
-	// TODO: support effects
+	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	{
+		// This is a global effect. Place a 'begin' marker in the visible
+		// set to indicate the effect is active.
+		rCuller.Insert(this, mEffects[i]);
+	}
 
 	// All Geometry objects in the subtree are added to the visible set. If
 	// a global effect is active, the Geometry objects in the subtree will be
@@ -246,5 +253,12 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 		{
 			pChild->OnGetVisibleSet(rCuller, noCull);
 		}
+	}
+
+	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	{
+		// Place an 'end' marker in the visible set to indicate that the
+		// global effect is inactive.
+		rCuller.Insert(NULL, NULL);
 	}
 }

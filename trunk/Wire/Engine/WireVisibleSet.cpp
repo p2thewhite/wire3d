@@ -15,9 +15,10 @@ VisibleSet::~VisibleSet()
 }
 
 //----------------------------------------------------------------------------
-void VisibleSet::Insert(Spatial* pObject/*, Effect* pGlobalEffect*/)
+void VisibleSet::Insert(Spatial* pObject, Effect* pGlobalEffect)
 {
 	VisibleObject visible;
 	visible.Object = pObject;
+	visible.GlobalEffect = pGlobalEffect;
 	mVisible.Append(visible);
 }

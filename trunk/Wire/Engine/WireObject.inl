@@ -46,16 +46,16 @@ inline Bool Object::IsDerivedTypeOf(const Object* pObj) const
 
 //----------------------------------------------------------------------------
 template <class T>
-T* StaticCast(Object* pObj)
+inline T* StaticCast(Object* pObj)
 {
-	return (T*)pObj;
+	return static_cast<T*>(pObj);
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-const T* StaticCast(const Object* pObj)
+inline const T* StaticCast(const Object* pObj)
 {
-	return (const T*)pObj;
+	return static_cast<const T*>(pObj);
 }
 
 //----------------------------------------------------------------------------

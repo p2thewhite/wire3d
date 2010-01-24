@@ -30,7 +30,7 @@ public:
 
 	// Creates a VisibleObject from the input and appends it to the end of the
 	// VisibleObject array.
-	void Insert(Spatial* pkObject/*, Effect* pGlobalEffect*/);
+	void Insert(Spatial* pkObject, Effect* pGlobalEffect);
 	void Clear();
 
 private:
