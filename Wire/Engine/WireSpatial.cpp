@@ -220,3 +220,34 @@ void Spatial::PopState(TArray<GlobalState*>* pStack)
 	}
 }
 
+//----------------------------------------------------------------------------
+void Spatial::AttachEffect(Effect* pEffect)
+{
+	WIRE_ASSERT(pEffect);
+
+	// Check if the effect is already in the list.
+	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	{
+		if (mEffects[i] == pEffect)
+		{
+			// The effect already exists, so do nothing.
+			return;
+		}
+	}
+
+	// The effect is not in the current list, so add it.
+	mEffects.Append(pEffect);
+}
+
+//----------------------------------------------------------------------------
+void Spatial::DetachEffect(Effect* pEffect)
+{
+	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	{
+		if (mEffects[i] == pEffect)
+		{
+			mEffects.Remove(i);
+			return;
+		}
+	}
+}

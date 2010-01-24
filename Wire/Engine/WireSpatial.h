@@ -3,6 +3,7 @@
 #define WIRESPATIAL_H
 
 #include "WireBoundingVolume.h"
+#include "WireEffect.h"
 #include "WireGlobalState.h"
 #include "WireSceneObject.h"
 #include "WireTransformation.h"
@@ -86,6 +87,13 @@ public:
 	void DetachGlobalState(GlobalState::StateType type);
 	void DetachAllGlobalStates();
 
+	// effect state
+	UInt GetEffectQuantity() const;
+	Effect* GetEffect(UInt i) const;
+	void AttachEffect(Effect* pEffect);
+	void DetachEffect(Effect* pEffect);
+	void DetachAllEffects();
+
 protected:
 	Spatial();
 
@@ -100,12 +108,18 @@ protected:
 	void PopState(TArray<GlobalState*>* pStack);
 	virtual void UpdateState(TArray<GlobalState*>* pStack) = 0;
 
-private:
+protected:
 	// support for hierarchical scene graph
 	Spatial* mpParent;
 
 	// global render state
 	TArray<GlobalStatePtr> mGlobalStates;
+
+	// Effect state. If the effect is attached to a Geometry object, it
+	// applies to that object alone. If the effect is attached to a Node
+	// object, it applies to all Geometry objects in the subtree rooted at
+	// the Node.
+	TArray<EffectPtr> mEffects;
 };
 
 typedef Pointer<Spatial> SpatialPtr;

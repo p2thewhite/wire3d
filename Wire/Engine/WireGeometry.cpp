@@ -48,5 +48,5 @@ void Geometry::UpdateState(TArray<GlobalState*>* pStack)
 //----------------------------------------------------------------------------
 void Geometry::GetVisibleSet(Culler& rCuller, Bool)
 {
-	rCuller.Insert(this/*, NULL*/);
+	rCuller.Insert(this, NULL);
 }

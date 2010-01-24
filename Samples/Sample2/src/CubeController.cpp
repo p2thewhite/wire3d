@@ -26,7 +26,7 @@ Bool CubeController::Update(Double appTime)
 		return false;
 	}
 
-	Geometry* pCube = static_cast<Geometry*>(mpObject);
+	Geometry* pCube = StaticCast<Geometry>(mpObject);
 
 	Double elapsed = appTime - lastTime;
 	mAngle += static_cast<Float>(elapsed) * 2.0F;

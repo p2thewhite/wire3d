@@ -7,6 +7,7 @@
 namespace Wire
 {
 
+class Effect;
 class Spatial;
 
 class /*WIRE_ENGINE_ITEM*/ VisibleObject
@@ -14,7 +15,7 @@ class /*WIRE_ENGINE_ITEM*/ VisibleObject
 
 public:
 	Spatial* Object;
-//	Effect* GlobalEffect;
+	Effect* GlobalEffect;
 
 	Bool IsDrawable() const;
 };

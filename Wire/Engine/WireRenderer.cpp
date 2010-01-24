@@ -201,7 +201,7 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 				// Found a leaf Geometry object.
 				if (top == -1)
 				{
-					Draw(static_cast<Geometry*>(pVisible[i].Object));
+					Draw(StaticCast<Geometry>(pVisible[i].Object));
 				}
 				else
 				{
@@ -239,31 +239,31 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 	GlobalState* pState = spStates[GlobalState::ALPHA];
 	if (pState)
 	{
-		SetAlphaState(static_cast<AlphaState*>(pState));
+		SetAlphaState(StaticCast<AlphaState>(pState));
 	}
 
 	pState = spStates[GlobalState::CULL];
 	if (pState)
 	{
-		SetCullState(static_cast<CullState*>(pState));
+		SetCullState(StaticCast<CullState>(pState));
 	}
 
 	pState = spStates[GlobalState::FOG];
 	if (pState)
 	{
-		SetFogState(static_cast<FogState*>(pState));
+		SetFogState(StaticCast<FogState>(pState));
 	}
 
 	pState = spStates[GlobalState::WIREFRAME];
 	if (pState)
 	{
-		SetWireframeState(static_cast<WireframeState*>(pState));
+		SetWireframeState(StaticCast<WireframeState>(pState));
 	}
 
 	pState = spStates[GlobalState::ZBUFFER];
 	if (pState)
 	{
-		SetZBufferState(static_cast<ZBufferState*>(pState));
+		SetZBufferState(StaticCast<ZBufferState>(pState));
 	}
 }
 
@@ -275,30 +275,30 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	if (spStates[GlobalState::ALPHA])
 	{
 		pState = GlobalState::Default[GlobalState::ALPHA];
-		SetAlphaState(static_cast<AlphaState*>(pState));
+		SetAlphaState(StaticCast<AlphaState>(pState));
 	}
 
 	if (spStates[GlobalState::CULL])
 	{
 		pState = GlobalState::Default[GlobalState::CULL];
-		SetCullState(static_cast<CullState*>(pState));
+		SetCullState(StaticCast<CullState>(pState));
 	}
 
 	if (spStates[GlobalState::FOG])
 	{
 		pState = GlobalState::Default[GlobalState::FOG];
-		SetFogState(static_cast<FogState*>(pState));
+		SetFogState(StaticCast<FogState>(pState));
 	}
 
 	if (spStates[GlobalState::WIREFRAME])
 	{
 		pState = GlobalState::Default[GlobalState::WIREFRAME];
-		SetWireframeState(static_cast<WireframeState*>(pState));
+		SetWireframeState(StaticCast<WireframeState>(pState));
 	}
 
 	if (spStates[GlobalState::ZBUFFER])
 	{
 		pState = GlobalState::Default[GlobalState::ZBUFFER];
-		SetZBufferState(static_cast<ZBufferState*>(pState));
+		SetZBufferState(StaticCast<ZBufferState>(pState));
 	}
 }

@@ -285,6 +285,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireEffect.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireFogState.h"
 					>
 				</File>
@@ -482,6 +486,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCullState.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireEffect.cpp"
 					>
 				</File>
 				<File

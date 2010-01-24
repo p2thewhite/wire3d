@@ -28,3 +28,22 @@ inline void Spatial::DetachAllGlobalStates()
 {
 	mGlobalStates.RemoveAll();
 }
+
+//----------------------------------------------------------------------------
+inline UInt Spatial::GetEffectQuantity() const
+{
+	return mEffects.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline Effect* Spatial::GetEffect(UInt i) const
+{
+	WIRE_ASSERT(0 <= i && i < mEffects.GetQuantity());
+	return StaticCast<Effect>(mEffects[i]);
+}
+
+//----------------------------------------------------------------------------
+inline void Spatial::DetachAllEffects()
+{
+	mEffects.RemoveAll();
+}
