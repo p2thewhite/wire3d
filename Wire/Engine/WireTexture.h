@@ -35,13 +35,30 @@ public:
 	Texture(Image* pImage);
 	virtual ~Texture();
 
+	Image* GetImage();
+	const Image* GetImage() const;
+
+	// Access to filter modes. The default is LINEAR.
+	virtual void SetFilterType(FilterType filterType);
+	FilterType GetFilterType() const;
+
+	// Access to wrap modes. The defaults are WT_CLAMP.
+	void SetWrapType(UInt i, WrapType wrapType);
+	WrapType GetWrapType(UInt i) const;
+
+	// Access to the anisotropy value for image filtering.
+	void SetAnisotropyValue(Float anisotropy);
+	Float GetAnisotropyValue() const;
+
 private:
 	ImagePtr mspImage;
 	FilterType mFilterType;	// default = FT_LINEAR
 	WrapType mWarpType[2];	// default = WT_CLAMP
+	Float mAnisotropy;		// default = 1.0F
 };
 
 typedef Pointer<Texture> TexturePtr;
+#include "WireTexture.inl"
 
 }
 

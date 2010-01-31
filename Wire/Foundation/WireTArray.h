@@ -48,6 +48,9 @@ public:
 	void SetGrowBy(UInt growBy);
 	UInt GetGrowBy() const;
 
+	// set the quantity without con-/destructing array elements
+	void SetQuantity(UInt newQuantity, Bool copy = true);
+
 private:
 	UInt mQuantity;
 	UInt mMaxQuantity;

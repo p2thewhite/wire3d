@@ -34,9 +34,6 @@ protected:
 	// device management
 	void ResetDevice();
 
-	// Resource enabling and disabling.
-	virtual void DisableIBuffer() {};
-
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer);
@@ -46,11 +43,16 @@ protected:
 		VertexBuffer* pVBuffer);
 	virtual void OnReleaseVBuffer(ResourceIdentifier* pID);
 
+	virtual void OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture);
+	virtual void OnReleaseTexture(ResourceIdentifier* pID);
+
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
-	virtual void OnDisableIBuffer(ResourceIdentifier*) {};
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
+
+	virtual void OnEnableTexture(ResourceIdentifier* pID);
+	virtual void OnDisableTexture(ResourceIdentifier* pID);
 
 	// global render state management
 	virtual void SetAlphaState(AlphaState* pState);
@@ -76,6 +78,10 @@ private:
 	static DWORD msCullType[];
 	static DWORD msFogDensity[];
 	static DWORD msZBufferCompare[];
+	static DWORD msTexMinFilter[];
+	static DWORD msTexMipFilter[];
+	static DWORD msTexWrapMode[];
+	static D3DFORMAT ms_aeImageFormat[];
 };
 
 }

@@ -3,10 +3,13 @@
 #include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
+#include "WireTexture.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
 using namespace Wire;
+
+Float Renderer::msMaxAnisotropy = 1.0f;
 
 //----------------------------------------------------------------------------
 Renderer::Renderer(Int width, Int height)
@@ -62,15 +65,6 @@ void Renderer::EnableIBuffer ()
  	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
  	WIRE_ASSERT(pID);
  	OnEnableIBuffer(pID);
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DisableIBuffer()
-{
-	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
-	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
-	WIRE_ASSERT(pID);
-	OnDisableIBuffer(pID);
 }
 
 //----------------------------------------------------------------------------
@@ -149,6 +143,55 @@ ResourceIdentifier* Renderer::EnableVBuffer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::LoadTexture(Texture* pTexture)
+{
+	if (!pTexture)
+	{
+		return;
+	}
+
+	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+	if (!pID)
+	{
+		OnLoadTexture(pID, pTexture);
+		pTexture->OnLoad(this, &Renderer::ReleaseTexture, pID);
+	}
+}
+//----------------------------------------------------------------------------
+void Renderer::ReleaseTexture(Bindable* pTexture)
+{
+	if (!pTexture)
+	{
+		return;
+	}
+
+	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+	if (pID)
+	{
+		OnReleaseTexture(pID);
+		pTexture->OnRelease(this, pID);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::EnableTexture(Texture* pTexture)
+{
+	WIRE_ASSERT(pTexture);
+	LoadTexture(pTexture);
+	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+	WIRE_ASSERT(pID);
+	OnEnableTexture(pID);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DisableTexture(Texture* pTexture)
+{
+	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+	WIRE_ASSERT(pID);
+	OnDisableTexture(pID);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
@@ -158,13 +201,9 @@ void Renderer::Draw(Geometry* pGeometry)
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
 	EnableIBuffer();
-
-	ResourceIdentifier* pID = EnableVBuffer();
+	EnableVBuffer();
 
 	DrawElements();
-
-	// Disable the index buffer.
-	DisableIBuffer();
 
 	RestoreGlobalState(mpGeometry->States);
 }

@@ -25,6 +25,7 @@
 #include "WireSpatial.h"
 #include "WireSphereBV.h"
 #include "WireTexture.h"
+#include "WireTextureEffect.h"
 #include "WireTransformation.h"
 #include "WireTriMesh.h"
 #include "WireVertexAttributes.h"

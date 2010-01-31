@@ -353,6 +353,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireTextureEffect.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTransformation.h"
 					>
 				</File>
@@ -401,6 +405,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireImage.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
 					>
 				</File>
@@ -434,6 +442,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSphereBV.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireTexture.inl"
 					>
 				</File>
 				<File
@@ -545,6 +557,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireTextureEffect.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
 					>
 				</File>
@@ -621,14 +637,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.inl"
 						>
 					</File>
 				</Filter>
