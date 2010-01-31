@@ -38,9 +38,9 @@ Bool Sample2::OnInitialize()
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(pCube);
+	mspRoot->AttachChild(CreatePyramid());
 	mspRoot->AttachChild(pCube2);
 	mspRoot->AttachChild(pCube3);
-	mspRoot->AttachChild(CreatePyramid());
 
 	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -12.0F));
 	pCube2->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
@@ -234,12 +234,8 @@ void Sample2::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Geometry* pCube2 = static_cast<Geometry*>(mspRoot->GetChild(3).Get());
-
 	Matrix34F model(Vector3F(0, -1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
-
-	pCube2->Local.SetRotate(model);
 
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);

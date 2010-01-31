@@ -18,6 +18,7 @@ class Camera;
 class Geometry;
 class IndexBuffer;
 class ResourceIdentifier;
+class Texture;
 class VertexBuffer;
 class VisibleSet;
 
@@ -83,22 +84,36 @@ protected:
 	void LoadVBuffer(VertexBuffer* pVBuffer);
 	void ReleaseVBuffer(Bindable* pVBuffer);
 
+	void LoadTexture(Texture* pTexture);
+	void ReleaseTexture(Bindable* pTexture);
+
 	// Resource enabling and disabling.
 	virtual void EnableIBuffer();
-	virtual void DisableIBuffer();
-	virtual ResourceIdentifier* EnableVBuffer();
+	ResourceIdentifier* EnableVBuffer();
+
+	void EnableTexture(Texture* pTexture);
+ 	void DisableTexture(Texture* pTexture);
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer) = 0;
 	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
 
  	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
  		VertexBuffer* pVBuffer) = 0;
 	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnLoadTexture(ResourceIdentifier*& rID,
+		Texture* pTexture) = 0;
+	virtual void OnReleaseTexture(ResourceIdentifier* pID) = 0;
+
+	// Resource enabling and disabling.
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
+
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
 
 	// Global render states.
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
@@ -114,6 +129,8 @@ protected:
 	// Width and height of the backbuffer
 	Int mWidth;
 	Int mHeight;
+
+	static Float msMaxAnisotropy;
 };
 
 #include "WireRenderer.inl"

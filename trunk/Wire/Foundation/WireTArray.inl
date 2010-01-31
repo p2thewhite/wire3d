@@ -200,6 +200,18 @@ void TArray<T>::SetGrowBy(UInt growBy)
 
 //----------------------------------------------------------------------------
 template <class T>
+void TArray<T>::SetQuantity(UInt newQuantity, Bool copy)
+{
+	if (newQuantity > mMaxQuantity)
+	{
+		SetMaxQuantity(newQuantity, copy);
+	}
+	
+	mQuantity = newQuantity;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 UInt TArray<T>::GetGrowBy() const
 {
 	return mGrowBy;

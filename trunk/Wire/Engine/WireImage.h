@@ -15,7 +15,7 @@ public:
 	enum FormatMode
 	{
 		FM_RGB888,
-		FM_RGB8888,
+		FM_RGBA8888,
 		FM_QUANTITY
 	};
 
@@ -24,17 +24,21 @@ public:
 
 	// 2D image
 	Image(FormatMode format, UInt width, UInt height, UChar* pData);
-
 	virtual ~Image();
+
+	UChar* GetData() const;
+	FormatMode GetFormat() const;
+	UInt GetQuantity() const;
+	UInt GetBound(UInt i) const;
 
 private:
 	FormatMode mFormat;
 	UChar* mpData;
-	UInt mWidth;
-	UInt mHeight;
+	UInt mBound[2];
 };
 
 typedef Pointer<Image> ImagePtr;
+#include "WireImage.inl"
 
 }
 

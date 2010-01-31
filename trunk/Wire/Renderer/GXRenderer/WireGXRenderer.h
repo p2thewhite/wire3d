@@ -35,9 +35,6 @@ public:
 protected:
 	// Resource enabling and disabling.
 	virtual void EnableIBuffer() {}
-	virtual void DisableIBuffer() {}
-
-	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {}
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
@@ -48,9 +45,17 @@ protected:
 		VertexBuffer* pVBuffer);
 	virtual void OnReleaseVBuffer(ResourceIdentifier* pID);
 
+	virtual void OnLoadTexture(ResourceIdentifier*& rID,
+		Texture* pTexture) {} 	// TODO
+	virtual void OnReleaseTexture(ResourceIdentifier* pkID) {} 	// TODO
+
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
-	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {}
+
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {}
+
+	virtual void OnEnableTexture(ResourceIdentifier* pID) {}  // TODO
+	virtual void OnDisableTexture(ResourceIdentifier* pID) {}  // TODO
 
 	// global render state management
 	virtual void SetAlphaState(AlphaState* pState);
@@ -79,8 +84,6 @@ private:
 	static UChar msFogDensity[];
 	static UChar msZBufferCompare[];
 };
-
-#include "WireGXRenderer.inl"
 
 }
 

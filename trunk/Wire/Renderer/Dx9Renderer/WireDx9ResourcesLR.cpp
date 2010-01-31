@@ -1,9 +1,16 @@
 #include "WireDx9Renderer.h"
 
 #include "WireDx9Resources.h"
-#include <d3dx9.h>
+#include <d3d9.h>
+#include <d3dx9tex.h>
 
 using namespace Wire;
+
+D3DFORMAT Dx9Renderer::ms_aeImageFormat[Image::FM_QUANTITY] =
+{
+	D3DFMT_A8R8G8B8,      // Image::FM_RGB888
+	D3DFMT_A8R8G8B8,      // Image::FM_RGBA8888
+};
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
@@ -201,5 +208,105 @@ void Dx9Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	pResource->ID->Release();
 	pResource->Declaration->Release();
+	WIRE_DELETE pResource;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+{
+	// The texture is encountered the first time. Set up the texture unit
+	// in hardware that will manage this texture.
+	TextureID* pResource = WIRE_NEW TextureID;
+	pResource->TextureObject = pTexture;
+	rID = pResource;
+
+	// Copy the image data from system memory to video memory.
+	const Image* pImage = pTexture->GetImage();
+	WIRE_ASSERT(pImage);
+
+	// Windows stores BGR (lowest byte to highest byte), but Wild Magic
+	// stores RGB.  The byte ordering must be reversed.
+
+	int iQuantity, iByteQuantity = 0;
+	UChar* aucSrc = pImage->GetData();
+	UChar* aucRSrc = 0;
+	Bool bOwnRSrc = true;
+	int i, iSrcBase = 0, iRSrcBase = 0;
+	Image::FormatMode eFormat = pImage->GetFormat();
+	D3DFORMAT eD3DFormat = ms_aeImageFormat[eFormat];
+
+	if (aucSrc)
+	{
+		switch (eFormat)
+		{
+		case Image::FM_RGB888:
+			// Swap R and B and pad to an RGBA image.
+			iQuantity = pImage->GetQuantity();
+			iByteQuantity = 4*iQuantity;
+			aucRSrc = WIRE_NEW unsigned char[iByteQuantity];
+			for (i = 0; i < iQuantity; i++, iSrcBase += 3, iRSrcBase += 4)
+			{
+				aucRSrc[iRSrcBase    ] = aucSrc[iSrcBase + 2];
+				aucRSrc[iRSrcBase + 1] = aucSrc[iSrcBase + 1];
+				aucRSrc[iRSrcBase + 2] = aucSrc[iSrcBase    ];
+				aucRSrc[iRSrcBase + 3] = 255;
+			}
+			break;
+
+		case Image::FM_RGBA8888:
+			iQuantity = pImage->GetQuantity();
+			iByteQuantity = 4*iQuantity;
+			aucRSrc = WIRE_NEW unsigned char[iByteQuantity];
+			for (i = 0; i < iQuantity; i++, iSrcBase += 4, iRSrcBase += 4)
+			{
+				aucRSrc[iRSrcBase    ] = aucSrc[iSrcBase + 2];
+				aucRSrc[iRSrcBase + 1] = aucSrc[iSrcBase + 1];
+				aucRSrc[iRSrcBase + 2] = aucSrc[iSrcBase    ];
+				aucRSrc[iRSrcBase + 3] = aucSrc[iSrcBase + 3];
+			}
+			break;
+
+		default:
+			// There is no need to preprocess depth or intensity images. The
+			// floating-point formats and the 16/32-bit integer formats are
+			// already RGB/RGBA.
+			aucRSrc = aucSrc;
+			bOwnRSrc = false;
+			break;
+		}
+	}
+
+	DWORD dwUsage = D3DUSAGE_AUTOGENMIPMAP;
+	D3DPOOL kPool = D3DPOOL_MANAGED;
+	D3DLOCKED_RECT kLockRect;
+	LPDIRECT3DTEXTURE9 pkDXTexture;
+
+	msResult = D3DXCreateTexture(mpD3DDevice, pImage->GetBound(0),
+		pImage->GetBound(1), 0, dwUsage, eD3DFormat, kPool, &pkDXTexture);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	if (aucRSrc)
+	{
+		msResult = pkDXTexture->LockRect(0, &kLockRect, 0, 0);
+		WIRE_ASSERT(SUCCEEDED(msResult));
+		memcpy(kLockRect.pBits, aucRSrc, iByteQuantity);
+		msResult = pkDXTexture->UnlockRect(0);
+		WIRE_ASSERT(SUCCEEDED(msResult));
+	}
+
+	pResource->ID = pkDXTexture;
+
+	if (bOwnRSrc)
+	{
+		WIRE_DELETE[] aucRSrc;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnReleaseTexture(ResourceIdentifier* pID)
+{
+	TextureID* pResource = static_cast<TextureID*>(pID);
+	msResult = pResource->ID->Release();
+	WIRE_ASSERT(SUCCEEDED(msResult));
 	WIRE_DELETE pResource;
 }

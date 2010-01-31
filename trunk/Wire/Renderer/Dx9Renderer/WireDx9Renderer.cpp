@@ -68,6 +68,8 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	msResult = mpD3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
+	msMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
+
 	// Initialize global render state to default settings.
 	SetGlobalState(GlobalState::Default);
 }
