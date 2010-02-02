@@ -1,5 +1,5 @@
 #include "WireGXApplication.h"
-#include "../../Renderer/GXRenderer/WireGXRenderer.h"
+#include "WireGXRenderer.h"
 
 using namespace Wire;
 

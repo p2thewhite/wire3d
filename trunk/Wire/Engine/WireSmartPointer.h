@@ -2,7 +2,7 @@
 #ifndef WIRESMARTPOINTER_H
 #define WIRESMARTPOINTER_H
 
-#include "../Foundation/WireSystem.h"
+#include "WireSystem.h"
 
 namespace Wire
 {

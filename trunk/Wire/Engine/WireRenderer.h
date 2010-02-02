@@ -2,8 +2,8 @@
 #ifndef WIRERENDERER_H
 #define WIRERENDERER_H
 
-#include "../Foundation/WireColorRGBA.h"
 #include "WireAlphaState.h"
+#include "WireColorRGBA.h"
 #include "WireCullState.h"
 #include "WireFogState.h"
 #include "WireSmartPointer.h"

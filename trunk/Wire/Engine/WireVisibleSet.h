@@ -3,7 +3,7 @@
 #define WIREVISIBLESET_H
 
 #include "WireVisibleObject.h"
-#include "../Foundation/WireTArray.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

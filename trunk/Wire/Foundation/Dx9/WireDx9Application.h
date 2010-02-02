@@ -2,8 +2,8 @@
 #ifndef WIREDX9APPLICATION_H
 #define WIREDX9APPLICATION_H
 
-#include "../WireApplication.h"
-#include "../WireColorRGBA.h"
+#include "WireApplication.h"
+#include "WireColorRGBA.h"
 
 namespace Wire
 {

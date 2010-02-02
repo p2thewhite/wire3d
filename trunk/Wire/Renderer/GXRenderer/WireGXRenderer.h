@@ -2,11 +2,14 @@
 #ifndef WIREGXRENDERER_H
 #define WIREGXRENDERER_H
 
-#include "../../Engine/WireEngine.h"
-#include "WireGXResources.h"
+#include "WireCamera.h"
+#include "WireMatrix34.h"
+#include "WireRenderer.h"
 
 namespace Wire
 {
+
+class VBufferID;
 
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {

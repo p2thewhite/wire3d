@@ -2,8 +2,8 @@
 #ifndef WIREVERTEXATTRIBUTES_H
 #define WIREVERTEXATTRIBUTES_H
 
-#include "../Foundation/WireSystem.h"
-#include "../Foundation/WireTArray.h"
+#include "WireSystem.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

@@ -1,5 +1,7 @@
 #include "WireGXRenderer.h"
 
+#include "WireGXResources.h"
+#include "WireVertexBuffer.h"
 #include <malloc.h>
 
 using namespace Wire;

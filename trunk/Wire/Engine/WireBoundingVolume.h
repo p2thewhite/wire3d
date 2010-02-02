@@ -3,9 +3,9 @@
 #define WIREBOUNDINGVOLUME_H
 
 #include "WireObject.h"
-#include "../Foundation/WirePlane3.h"
-#include "../Foundation/WireVector3.h"
+#include "WirePlane3.h"
 #include "WireTransformation.h"
+#include "WireVector3.h"
 #include "WireVertexBuffer.h"
 
 namespace Wire

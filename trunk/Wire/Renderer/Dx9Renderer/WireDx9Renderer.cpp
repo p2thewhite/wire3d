@@ -1,5 +1,7 @@
 #include "WireDx9Renderer.h"
 
+#include "WireCamera.h"
+#include "WireGeometry.h"
 #include <d3dx9.h>
 
 using namespace Wire;

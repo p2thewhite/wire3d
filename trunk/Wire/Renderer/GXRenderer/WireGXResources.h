@@ -2,7 +2,8 @@
 #ifndef WIREGXRESOURCES_H
 #define WIREGXRESOURCES_H
 
-#include "../../Engine/WireResourceIdentifier.h"
+#include "WireResourceIdentifier.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

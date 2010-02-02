@@ -4,7 +4,7 @@
 
 #include "WireController.h"
 #include "WireObject.h"
-#include "../Foundation/WireTArray.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

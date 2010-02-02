@@ -3,11 +3,11 @@
 #define WIREVERTEXBUFFER_H
 
 #include "WireBindable.h"
+#include "WireColorRGB.h"
 #include "WireObject.h"
 #include "WireVertexAttributes.h"
-#include "../Foundation/WireColorRGB.h"
-#include "../Foundation/WireVector2.h"
-#include "../Foundation/WireVector3.h"
+#include "WireVector2.h"
+#include "WireVector3.h"
 
 namespace Wire
 {

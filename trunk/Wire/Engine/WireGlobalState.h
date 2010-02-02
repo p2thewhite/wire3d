@@ -2,8 +2,8 @@
 #ifndef WIREGLOBALSTATE_H
 #define WIREGLOBALSTATE_H
 
+#include "WireMain.h"
 #include "WireObject.h"
-#include "../Foundation/WireMain.h"
 
 namespace Wire
 {

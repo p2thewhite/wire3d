@@ -22,7 +22,9 @@ SOURCES		:=	Foundation \
 				Engine \
 				Renderer/GXRenderer
 DATA		:=	data  
-INCLUDES	:=
+INCLUDES	:=	Foundation \
+				Engine \
+				Renderer/GXRenderer
 
 #---------------------------------------------------------------------------------
 # options for code generation

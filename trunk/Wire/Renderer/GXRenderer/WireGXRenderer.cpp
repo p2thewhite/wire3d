@@ -1,6 +1,8 @@
 #include "WireGXRenderer.h"
-#include "../Foundation/WireMatrix4.h"
+
+#include "WireGeometry.h"
 #include "WireGXResources.h"
+#include "WireMatrix4.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
 

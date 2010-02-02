@@ -2,8 +2,8 @@
 #ifndef WIRESPHEREBV_H
 #define WIRESPHEREBV_H
 
-#include "../Foundation/WireSphere3.h"
 #include "WireBoundingVolume.h"
+#include "WireSphere3.h"
 
 namespace Wire
 {
