@@ -2,8 +2,8 @@
 #ifndef WIREFOGSTATE_H
 #define WIREFOGSTATE_H
 
+#include "WireColorRGB.h"
 #include "WireGlobalState.h"
-#include "../Foundation/WireColorRGB.h"
 
 namespace Wire
 {

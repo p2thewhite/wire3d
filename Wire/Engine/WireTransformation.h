@@ -2,9 +2,9 @@
 #ifndef WIRETRANSFORMATION_H
 #define WIRETRANSFORMATION_H
 
-#include "../Foundation/WireTypes.h"
-#include "../Foundation/WireMatrix34.h"
-#include "../Foundation/WireMatrix4.h"
+#include "WireMatrix34.h"
+#include "WireMatrix4.h"
+#include "WireTypes.h"
 
 namespace Wire
 {

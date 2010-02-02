@@ -1,6 +1,6 @@
 #include "WireController.h"
 
-#include "../Foundation/WireMath.h"
+#include "WireMath.h"
 
 using namespace Wire;
 

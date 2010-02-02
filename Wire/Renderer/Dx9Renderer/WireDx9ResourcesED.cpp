@@ -1,5 +1,6 @@
 #include "WireDx9Renderer.h"
 
+#include "WireTexture.h"
 #include "WireDx9Resources.h"
 
 using namespace Wire;

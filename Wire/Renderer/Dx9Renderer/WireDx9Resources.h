@@ -2,7 +2,7 @@
 #ifndef WIREDX9RESOURCES_H
 #define WIREDX9RESOURCES_H
 
-#include "../../Engine/WireResourceIdentifier.h"
+#include "WireResourceIdentifier.h"
 
 namespace Wire
 {

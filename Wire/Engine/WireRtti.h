@@ -2,8 +2,8 @@
 #ifndef WIRERTTI_H
 #define WIRERTTI_H
 
-#include "../Foundation/WireSystem.h"
 #include "WireRttiMCR.h"
+#include "WireSystem.h"
 
 namespace Wire
 {

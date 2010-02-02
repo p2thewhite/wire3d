@@ -1,6 +1,9 @@
 #include "WireDx9Renderer.h"
 
 #include "WireDx9Resources.h"
+#include "WireIndexBuffer.h"
+#include "WireTexture.h"
+#include "WireVertexBuffer.h"
 #include <d3d9.h>
 #include <d3dx9tex.h>
 

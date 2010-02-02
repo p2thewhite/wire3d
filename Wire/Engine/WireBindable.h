@@ -4,7 +4,7 @@
 
 #include "WireRenderer.h"
 #include "WireResourceIdentifier.h"
-#include "../Foundation/WireTArray.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

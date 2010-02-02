@@ -2,7 +2,8 @@
 #ifndef WIREDX9RENDERER_H
 #define WIREDX9RENDERER_H
 
-#include "../../Engine/WireEngine.h"
+#include "WireMatrix4.h"
+#include "WireRenderer.h"
 #include <d3d9.h>
 
 namespace Wire
