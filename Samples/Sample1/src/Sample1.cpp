@@ -53,7 +53,7 @@ Bool Sample1::OnInitialize()
 Geometry* Sample1::CreateCube()
 {
 	Float extent = 1.0F;
-	Vector3F vertices[] = {
+	const Vector3F vertices[] = {
 		Vector3F(-extent, -extent, -extent),
 		Vector3F(+extent, -extent, -extent),
 		Vector3F(+extent, +extent, -extent),
@@ -64,7 +64,7 @@ Geometry* Sample1::CreateCube()
 		Vector3F(-extent, +extent, +extent)
 	};
 
-	ColorRGB colors[] = {
+	const ColorRGB colors[] = {
 		ColorRGB(1.0F, 0.0F, 0.0F),
 		ColorRGB(0.0F, 1.0F, 0.0F),
 		ColorRGB(0.0F, 0.0F, 1.0F),
@@ -75,10 +75,23 @@ Geometry* Sample1::CreateCube()
 		ColorRGB(0.0F, 0.0F, 0.0F),
 	};
 
+	const Vector2F uvs[] = {
+		Vector2F(0, 0),
+		Vector2F(extent, 0),
+		Vector2F(extent, extent),
+		Vector2F(0, extent),
+		Vector2F(0, 0),
+		Vector2F(extent, 0),
+		Vector2F(extent, extent),
+		Vector2F(0, extent)
+	};
+
 	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(3);
+	attributes.SetPositionChannels(3);  // channels: X, Y, Z
+	attributes.SetColorChannels(3);		// channels: R, G, B
+	attributes.SetTCoordChannels(2);	// channels: U, V
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
@@ -86,6 +99,7 @@ Geometry* Sample1::CreateCube()
 	{
 		pCubeVerts->Position3(i) = vertices[i];
 		pCubeVerts->Color3(i) = colors[i];
+		pCubeVerts->TCoord2(i) = uvs[i];
 	}
 
 	UInt indices[] = {
@@ -111,7 +125,39 @@ Geometry* Sample1::CreateCube()
 	}
 
 	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
+	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	Texture* pTexture = CreateTexture();
+	pTextureEffect->Textures.Append(pTexture);
+	pCube->AttachEffect(pTextureEffect);
+
 	return pCube;
+}
+
+//----------------------------------------------------------------------------
+Texture* Sample1::CreateTexture()
+{
+	const UInt width = 256;
+	const UInt height = 256;
+
+	Image::FormatMode format = Image::FM_RGB888;
+	const UInt bytesPerPixel = 3;
+
+	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
+	UChar* pDst = pData;
+
+	for (UInt y = 0; y < height; y++)
+	{
+		for (UInt x = 0; x < width; x++)
+		{
+			*pDst++ = x * 8;
+			*pDst++ = x * 8;
+			*pDst++ = (x+y) / 2;
+		}
+	}
+
+	Image* pImage = WIRE_NEW Image(format, width, height, pData);
+	Texture* pTexture = WIRE_NEW Texture(pImage);
+	return pTexture;
 }
 
 //----------------------------------------------------------------------------
@@ -200,16 +246,16 @@ void Sample1::OnIdle()
 //	mspPyramid->UpdateWorldBound();	// is the same but protected
 	if (!mCuller.IsVisible(mspPyramid->WorldBound))
 	{
-		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
-		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
-		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
+// 		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
+// 		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
+// 		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
 //		mspCube->VBuffer->Release();
 	}
 	else
 	{
-		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
-		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
-		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
+// 		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
+// 		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
+// 		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
 //		mspCube->VBuffer->Release();
 		mpRenderer->Draw(mspPyramid);
 	}

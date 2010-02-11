@@ -9,7 +9,7 @@
 
 using namespace Wire;
 
-D3DFORMAT Dx9Renderer::ms_aeImageFormat[Image::FM_QUANTITY] =
+D3DFORMAT Dx9Renderer::msImageFormat[Image::FM_QUANTITY] =
 {
 	D3DFMT_A8R8G8B8,      // Image::FM_RGB888
 	D3DFMT_A8R8G8B8,      // Image::FM_RGBA8888
@@ -129,6 +129,20 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  		}
  	}
 
+	for (UInt unit = 0; unit < rIAttr.GetTCoordChannelQuantity(); unit++)
+	{
+		channels = rIAttr.GetTCoordChannels(unit);
+		if (channels > 0)
+		{
+			element.Offset = static_cast<WORD>(vertexSize);
+			vertexSize += channels * sizeof(Float);
+			element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels-1);
+			element.Usage = D3DDECLUSAGE_TEXCOORD;
+			element.UsageIndex = static_cast<BYTE>(unit);
+			elements.Append(element);
+		}
+	}
+
 	WIRE_ASSERT(channels > 0);
 
  	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
@@ -202,6 +216,20 @@ void Dx9Renderer::Convert(const VertexBuffer* pSrc, Float* pDst)
 				pDst = reinterpret_cast<Float*>(pColorDst);
 			}
 		}
+
+		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
+		{
+			UInt channels = rIAttr.GetTCoordChannels(unit);
+			if (channels > 0)
+			{
+				const Float* pTCoords = pSrc->GetTCoord(i, unit);
+				for (UInt k = 0; k < channels; k++)
+				{
+					*pDst++ = pTCoords[k];
+				}
+			}
+		}
 	}
 }
 
@@ -230,78 +258,85 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	// Windows stores BGR (lowest byte to highest byte), but Wild Magic
 	// stores RGB.  The byte ordering must be reversed.
 
-	int iQuantity, iByteQuantity = 0;
-	UChar* aucSrc = pImage->GetData();
-	UChar* aucRSrc = 0;
-	Bool bOwnRSrc = true;
-	int i, iSrcBase = 0, iRSrcBase = 0;
-	Image::FormatMode eFormat = pImage->GetFormat();
-	D3DFORMAT eD3DFormat = ms_aeImageFormat[eFormat];
+	UChar* pSrc = pImage->GetData();
+	UChar* pDst = 0;
+	UInt byteQuantity = 0;
+	Image::FormatMode format = pImage->GetFormat();
 
-	if (aucSrc)
+	if (pSrc)
 	{
-		switch (eFormat)
+		UInt quantity;
+		UInt srcOffset = 0;
+		UInt dstOffset = 0;
+
+		switch (format)
 		{
 		case Image::FM_RGB888:
 			// Swap R and B and pad to an RGBA image.
-			iQuantity = pImage->GetQuantity();
-			iByteQuantity = 4*iQuantity;
-			aucRSrc = WIRE_NEW unsigned char[iByteQuantity];
-			for (i = 0; i < iQuantity; i++, iSrcBase += 3, iRSrcBase += 4)
+			quantity = pImage->GetQuantity();
+			byteQuantity = 4 * quantity;
+			pDst = WIRE_NEW UChar[byteQuantity];
+			for (UInt i = 0; i < quantity; i++)
 			{
-				aucRSrc[iRSrcBase    ] = aucSrc[iSrcBase + 2];
-				aucRSrc[iRSrcBase + 1] = aucSrc[iSrcBase + 1];
-				aucRSrc[iRSrcBase + 2] = aucSrc[iSrcBase    ];
-				aucRSrc[iRSrcBase + 3] = 255;
+				pDst[dstOffset    ] = pSrc[srcOffset + 2];
+				pDst[dstOffset + 1] = pSrc[srcOffset + 1];
+				pDst[dstOffset + 2] = pSrc[srcOffset    ];
+				pDst[dstOffset + 3] = 255;
+				srcOffset += 3;
+				dstOffset += 4;
 			}
+
 			break;
 
 		case Image::FM_RGBA8888:
-			iQuantity = pImage->GetQuantity();
-			iByteQuantity = 4*iQuantity;
-			aucRSrc = WIRE_NEW unsigned char[iByteQuantity];
-			for (i = 0; i < iQuantity; i++, iSrcBase += 4, iRSrcBase += 4)
+			quantity = pImage->GetQuantity();
+			byteQuantity = 4 * quantity;
+			pDst = WIRE_NEW UChar[byteQuantity];
+			for (UInt i = 0; i < quantity; i++)
 			{
-				aucRSrc[iRSrcBase    ] = aucSrc[iSrcBase + 2];
-				aucRSrc[iRSrcBase + 1] = aucSrc[iSrcBase + 1];
-				aucRSrc[iRSrcBase + 2] = aucSrc[iSrcBase    ];
-				aucRSrc[iRSrcBase + 3] = aucSrc[iSrcBase + 3];
+				pDst[dstOffset    ] = pSrc[srcOffset + 2];
+				pDst[dstOffset + 1] = pSrc[srcOffset + 1];
+				pDst[dstOffset + 2] = pSrc[srcOffset    ];
+				pDst[dstOffset + 3] = pSrc[srcOffset + 3];
+				srcOffset += 4;
+				dstOffset += 4;
 			}
+
 			break;
 
 		default:
 			// There is no need to preprocess depth or intensity images. The
 			// floating-point formats and the 16/32-bit integer formats are
 			// already RGB/RGBA.
-			aucRSrc = aucSrc;
-			bOwnRSrc = false;
+			pDst = pSrc;
 			break;
 		}
 	}
 
-	DWORD dwUsage = D3DUSAGE_AUTOGENMIPMAP;
-	D3DPOOL kPool = D3DPOOL_MANAGED;
-	D3DLOCKED_RECT kLockRect;
-	LPDIRECT3DTEXTURE9 pkDXTexture;
+	DWORD usage = D3DUSAGE_AUTOGENMIPMAP;
+	D3DPOOL pool = D3DPOOL_MANAGED;
+	D3DLOCKED_RECT lockRect;
+	LPDIRECT3DTEXTURE9 pD3DTexture;
 
 	msResult = D3DXCreateTexture(mpD3DDevice, pImage->GetBound(0),
-		pImage->GetBound(1), 0, dwUsage, eD3DFormat, kPool, &pkDXTexture);
+		pImage->GetBound(1), 0, usage, msImageFormat[format], pool,
+		&pD3DTexture);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	if (aucRSrc)
+	if (pDst)
 	{
-		msResult = pkDXTexture->LockRect(0, &kLockRect, 0, 0);
+		msResult = pD3DTexture->LockRect(0, &lockRect, 0, 0);
 		WIRE_ASSERT(SUCCEEDED(msResult));
-		memcpy(kLockRect.pBits, aucRSrc, iByteQuantity);
-		msResult = pkDXTexture->UnlockRect(0);
+		memcpy(lockRect.pBits, pDst, byteQuantity);
+		msResult = pD3DTexture->UnlockRect(0);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 
-	pResource->ID = pkDXTexture;
+	pResource->ID = pD3DTexture;
 
-	if (bOwnRSrc)
+	if (pSrc != pDst)
 	{
-		WIRE_DELETE[] aucRSrc;
+		WIRE_DELETE[] pDst;
 	}
 }
 

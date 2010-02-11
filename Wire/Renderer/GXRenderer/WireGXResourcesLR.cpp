@@ -121,3 +121,20 @@ void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 	WIRE_DELETE pResource->Elements;
 	WIRE_DELETE pResource;
 }
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+{
+	// The texture is encountered the first time. Set up the texture unit
+	// in hardware that will manage this texture.
+	TextureID* pResource = WIRE_NEW TextureID;
+	pResource->TextureObject = pTexture;
+	rID = pResource;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnReleaseTexture(ResourceIdentifier* pID)
+{
+	TextureID* pResource = static_cast<TextureID*>(pID);
+	WIRE_DELETE pResource;
+}

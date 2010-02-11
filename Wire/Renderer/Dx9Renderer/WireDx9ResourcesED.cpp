@@ -53,101 +53,111 @@ void Dx9Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnEnableTexture (ResourceIdentifier* pkID)
+void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
 {
-	TextureID* pkResource = (TextureID*)pkID;
-	Texture* pkTexture = pkResource->TextureObject;
+	TextureID* pResource = static_cast<TextureID*>(pID);
+	Texture* pTexture = pResource->TextureObject;
 
-	int iTextureUnit = 0;
+	UInt unit = 0;
 
 	// Anisotropic filtering value.
-	float fAnisotropy = pkTexture->GetAnisotropyValue();
-	if (1.0F < fAnisotropy && fAnisotropy <= msMaxAnisotropy)
+	Float anisotropy = pTexture->GetAnisotropyValue();
+	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
 	{
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MAXANISOTROPY, (DWORD)fAnisotropy);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
+			static_cast<DWORD>(anisotropy));
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MAXANISOTROPY, (DWORD)1.0f);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
+			static_cast<DWORD>(1.0F));
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 
 	// Set the filter mode.
-	Texture::FilterType eFType = pkTexture->GetFilterType();
-	if (eFType == Texture::FT_NEAREST)
+	Texture::FilterType filterType = pTexture->GetFilterType();
+	if (filterType == Texture::FT_NEAREST)
 	{
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+			D3DTEXF_POINT);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 	else
 	{
-		if (1.0F < fAnisotropy && fAnisotropy <= msMaxAnisotropy)
+		if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
 		{
-			msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-				D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+			msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+				D3DTEXF_ANISOTROPIC);
 			WIRE_ASSERT(SUCCEEDED(msResult));
 		}
 		else
 		{
-			msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-				D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+			msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+				D3DTEXF_LINEAR);
 			WIRE_ASSERT(SUCCEEDED(msResult));
 		}
 	}
 
 	// Set the mipmap mode.
-	if (1.0F < fAnisotropy && fAnisotropy <= msMaxAnisotropy)
+	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
 	{
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
+			D3DTEXF_ANISOTROPIC);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
+			D3DTEXF_ANISOTROPIC);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MINFILTER, msTexMinFilter[eFType]);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
+			msTexMinFilter[filterType]);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 
-		msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-			D3DSAMP_MIPFILTER, msTexMipFilter[eFType]);
+		msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
+			msTexMipFilter[filterType]);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 
 	// Set the border color (for clamp to border).
-	const ColorRGBA rkBorderColor(ColorRGBA::BLACK); //pkTexture->GetBorderColor();
-	msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-		D3DSAMP_BORDERCOLOR, D3DCOLOR_COLORVALUE(rkBorderColor.R(),
-		rkBorderColor.G(), rkBorderColor.B(), rkBorderColor.A()));
+	const ColorRGBA borderColor(ColorRGBA::BLACK); //pTexture->GetBorderColor();
+	msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_BORDERCOLOR,
+		D3DCOLOR_COLORVALUE(borderColor.R(), borderColor.G(), borderColor.B(),
+		borderColor.A()));
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-		D3DSAMP_ADDRESSU, msTexWrapMode[pkTexture->GetWrapType(0)]);
+	msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU,
+		msTexWrapMode[pTexture->GetWrapType(0)]);
 	WIRE_ASSERT(SUCCEEDED(msResult));
-	msResult = mpD3DDevice->SetSamplerState(iTextureUnit,
-		D3DSAMP_ADDRESSV, msTexWrapMode[pkTexture->GetWrapType(1)]);
+	msResult = mpD3DDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV,
+		msTexWrapMode[pTexture->GetWrapType(1)]);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	msResult = mpD3DDevice->SetTexture(iTextureUnit, pkResource->ID);
+	msResult = mpD3DDevice->SetTexture(unit, pResource->ID);
+	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	// TODO: introduce ApplyMode
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_MODULATE );
+	WIRE_ASSERT(SUCCEEDED(msResult));
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLORARG1, D3DTA_TEXTURE );
+	WIRE_ASSERT(SUCCEEDED(msResult));
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
+	WIRE_ASSERT(SUCCEEDED(msResult));
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP,   D3DTOP_DISABLE );
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnDisableTexture(ResourceIdentifier*)
 {
-	int iTextureUnit = 0;
+	UInt unit = 0;
 
-	msResult = mpD3DDevice->SetTextureStageState(iTextureUnit,
-		D3DTSS_COLOROP, D3DTOP_DISABLE);
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLOROP,
+		D3DTOP_DISABLE);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
-	msResult = mpD3DDevice->SetTexture(iTextureUnit, 0);
+	msResult = mpD3DDevice->SetTexture(unit, 0);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 }

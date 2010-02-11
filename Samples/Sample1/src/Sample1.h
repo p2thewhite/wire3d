@@ -23,6 +23,7 @@ public:
 private:
 	Geometry* CreateCube();
 	Geometry* CreatePyramid();
+	Texture* CreateTexture();
 
 	CameraPtr mspCamera;
 	GeometryPtr mspCube;
