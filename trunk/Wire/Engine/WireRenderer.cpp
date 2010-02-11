@@ -4,6 +4,7 @@
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
 #include "WireTexture.h"
+#include "WireTextureEffect.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
@@ -157,6 +158,7 @@ void Renderer::LoadTexture(Texture* pTexture)
 		pTexture->OnLoad(this, &Renderer::ReleaseTexture, pID);
 	}
 }
+
 //----------------------------------------------------------------------------
 void Renderer::ReleaseTexture(Bindable* pTexture)
 {
@@ -203,7 +205,30 @@ void Renderer::Draw(Geometry* pGeometry)
 	EnableIBuffer();
 	EnableVBuffer();
 
+	Texture* pTexture = NULL;
+	if (mpGeometry->GetEffectQuantity() > 0)
+	{
+		TextureEffect* pTextureEffect = DynamicCast<TextureEffect>(
+			mpGeometry->GetEffect(0));
+
+		if (pTextureEffect)
+		{
+			if (pTextureEffect->Textures.GetQuantity() > 0)
+			{
+				pTexture = pTextureEffect->Textures[0];
+				WIRE_ASSERT(pTexture);
+			}
+		}
+
+		EnableTexture(pTexture);
+	}
+
 	DrawElements();
+
+	if (pTexture)
+	{
+		DisableTexture(pTexture);
+	}
 
 	RestoreGlobalState(mpGeometry->States);
 }

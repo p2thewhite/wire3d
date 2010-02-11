@@ -108,7 +108,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// register the window class
-	static char sWindowClass[] = "Wire Application";
+	static Char sWindowClass[] = "Wire Application";
 	WNDCLASS wc;
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc   = MsWindowEventHandler;

@@ -3,6 +3,7 @@
 #define WIRETEXTUREEFFECT_H
 
 #include "WireEffect.h"
+#include "WireTexture.h"
 
 namespace Wire
 {
@@ -15,6 +16,7 @@ public:
 	TextureEffect();
 	virtual ~TextureEffect();
 
+	TArray<TexturePtr> Textures;
 };
 
 typedef Pointer<TextureEffect> TextureEffectPtr;

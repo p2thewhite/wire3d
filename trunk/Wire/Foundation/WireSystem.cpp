@@ -38,7 +38,7 @@ void* System::Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 }
 
 //----------------------------------------------------------------------------
-void System::Memset(void* pDst, int value, size_t count)
+void System::Memset(void* pDst, Int value, size_t count)
 {
 	memset(pDst, value, count);
 }

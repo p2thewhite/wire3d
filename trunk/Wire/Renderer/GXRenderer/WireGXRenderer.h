@@ -41,16 +41,15 @@ protected:
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
-		IndexBuffer* pBuffer) {};
+		IndexBuffer* pBuffer) {}
 	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {}
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
 	virtual void OnReleaseVBuffer(ResourceIdentifier* pID);
 
-	virtual void OnLoadTexture(ResourceIdentifier*& rID,
-		Texture* pTexture) {} 	// TODO
-	virtual void OnReleaseTexture(ResourceIdentifier* pkID) {} 	// TODO
+	virtual void OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture);
+	virtual void OnReleaseTexture(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}

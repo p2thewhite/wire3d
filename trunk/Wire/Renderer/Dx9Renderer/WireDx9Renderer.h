@@ -82,7 +82,7 @@ private:
 	static DWORD msTexMinFilter[];
 	static DWORD msTexMipFilter[];
 	static DWORD msTexWrapMode[];
-	static D3DFORMAT ms_aeImageFormat[];
+	static D3DFORMAT msImageFormat[];
 };
 
 }

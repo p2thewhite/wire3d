@@ -18,4 +18,7 @@ Texture::Texture(Image* pImage)
 //----------------------------------------------------------------------------
 Texture::~Texture()
 {
+	// Inform all renderers using this texture that it is being destroyed.
+	// This allows the renderer to free up any associated resources.
+	Release();
 }

@@ -17,6 +17,7 @@ public:
 
 	UInt GetChannelQuantity() const;
 	UInt GetColorChannelQuantity() const;
+	UInt GetTCoordChannelQuantity() const;
 
 	void SetInterleaved(Bool isChannelInterleaved);
 	void SetPositionChannels(UInt positionChannels);
