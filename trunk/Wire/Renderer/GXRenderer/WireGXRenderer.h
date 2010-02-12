@@ -54,7 +54,7 @@ protected:
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
 
-	virtual void OnEnableVBuffer(ResourceIdentifier* pID) {}
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 
 	virtual void OnEnableTexture(ResourceIdentifier* pID) {}  // TODO
 	virtual void OnDisableTexture(ResourceIdentifier* pID) {}  // TODO

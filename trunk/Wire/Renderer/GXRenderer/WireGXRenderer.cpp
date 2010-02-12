@@ -204,24 +204,6 @@ void GXRenderer::DrawElements()
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm(mViewMatrix * model, GX_PNMTX0);
 
-	const VertexBuffer* pVBuffer = mpGeometry->VBuffer;
-	const ResourceIdentifier* pID = pVBuffer->GetIdentifier(0, this);
-	WIRE_ASSERT(pID);
-	const VBufferID* pResource = static_cast<const VBufferID*>(pID);
-
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-	const TArray<VBufferID::VertexElement>& rElements = *(pResource->
-		Elements);
-	for (UInt i = 0; i < rElements.GetQuantity(); i++)
-	{
-		GXSetVtxDesc(rElements[i].Attr, GX_INDEX16);
-		GXSetVtxAttrFmt(GX_VTXFMT0, rElements[i].Attr, rElements[i].CompCnt,
-			rElements[i].CompType, 0);
-		GXSetArray(rElements[i].Attr, rElements[i].Data, rElements[i].Stride);
-	}
-
 	GXSetNumChans(1);
 	GXSetNumTexGens(0);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
