@@ -25,6 +25,7 @@ public:
 
 	// Apply camera changes to platform specific renderer.
 	virtual void OnFrameChange();
+	virtual void OnViewportChange();
 
 	// full window buffer operations
 	virtual void ClearBuffers();

@@ -81,6 +81,11 @@ public:
 	Float GetRMin() const;
 	Float GetRMax() const;
 
+	// viewport (contained in [0,1]^2)
+	void SetViewport(Float left, Float right, Float top, Float bottom);
+	void GetViewport(Float& rLeft, Float& rRight, Float& rTop,
+		Float& rBottom);
+
 private:
 	// world coordinate frame
 	Vector3F mLocation;
@@ -88,7 +93,14 @@ private:
 	Vector3F mUVector;
 	Vector3F mRVector;
 
+	// view frustum (near, far, bottom, top, left, right)
 	Float mFrustum[VF_QUANTITY];
+
+	// viewport
+	Float mPortLeft;
+	Float mPortRight;
+	Float mPortTop;
+	Float mPortBottom;
 };
 
 typedef Pointer<Camera> CameraPtr;

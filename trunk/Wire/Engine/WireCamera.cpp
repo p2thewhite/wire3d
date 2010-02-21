@@ -8,6 +8,7 @@ WIRE_IMPLEMENT_RTTI(Camera, Object);
 Camera::Camera()
 {
 	SetFrustum(-0.5F, 0.5F, -0.5F, 0.5F, 1.0F, 2.0F);
+	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
 	SetFrame(Vector3F::ZERO, -Vector3F::UNIT_Z, Vector3F::UNIT_Y,
 		Vector3F::UNIT_X);
 }
@@ -95,4 +96,23 @@ void Camera::SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
 {
 	mLocation = rLocation;
 	SetAxes(rDVector, rUVector, rRVector);
+}
+
+//----------------------------------------------------------------------------
+void Camera::SetViewport(Float left, Float right, Float top, Float bottom)
+{
+	mPortLeft = left;
+	mPortRight = right;
+	mPortTop = top;
+	mPortBottom = bottom;
+}
+
+//----------------------------------------------------------------------------
+void Camera::GetViewport(Float& rLeft, Float& rRight, Float& rTop,
+	Float& rBottom)
+{
+	rLeft = mPortLeft;
+	rRight = mPortRight;
+	rTop = mPortTop;
+	rBottom = mPortBottom;
 }

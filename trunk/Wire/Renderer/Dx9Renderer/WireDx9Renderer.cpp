@@ -117,6 +117,9 @@ void Dx9Renderer::ResetDevice()
 {
 	msResult = mpD3DDevice->Reset(&mPresent);
 	WIRE_ASSERT(SUCCEEDED(msResult));
+
+	OnViewportChange();
+	OnFrameChange();
 }
 
 //----------------------------------------------------------------------------
@@ -139,7 +142,6 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 	mpD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 	mpD3DDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(
 		&mViewMatrix));
-
 
 	msResult = mpD3DDevice->TestCooperativeLevel();
     
@@ -206,4 +208,31 @@ void Dx9Renderer::OnFrameChange()
 	mViewMatrix[3][1] = -uVector.Dot(eye);
 	mViewMatrix[3][2] = -dVector.Dot(eye);
 	mViewMatrix[3][3] = 1.0F;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnViewportChange()
+{
+	Float left;
+	Float right;
+	Float top;
+	Float bottom;
+
+	mpCamera->GetViewport(left, right, top, bottom);
+
+	// DirectX defines the full-sized viewport to have origin at the upper
+	// left corner of the screen. Wire uses the OpenGL convention that
+	// 'bottom' specifies the relative distance from the bottom of the
+	// screen. DirectX needs a specification of relative distance from the
+	// top of the screen, which is 1 - 'top'.
+	D3DVIEWPORT9 viewport;
+	viewport.X = static_cast<DWORD>(left * mWidth);
+	viewport.Y = static_cast<DWORD>((1.0F - top) * mHeight);// See note above.
+	viewport.Width = static_cast<DWORD>((right - left) * mWidth);
+	viewport.Height = static_cast<DWORD>((top - bottom) * mHeight);
+	viewport.MinZ = 0.0F;
+	viewport.MaxZ = 1.0F;
+
+	msResult = mpD3DDevice->SetViewport(&viewport);
+	WIRE_ASSERT(SUCCEEDED(msResult));
 }
