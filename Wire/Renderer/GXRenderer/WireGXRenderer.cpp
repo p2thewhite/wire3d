@@ -44,8 +44,6 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	SetClearColor(rClearColor);
 
 	// InitGX
-	GXSetViewport(0.0F, 0.0F, mRmode->fbWidth, mRmode->efbHeight, 0.0F, 1.0F);
-	GXSetScissor(0.0F, 0.0F, mRmode->fbWidth, mRmode->efbHeight);
 	f32 yScale = GXGetYScaleFactor(mRmode->efbHeight, mRmode->xfbHeight);
 	u32 xfbHeight = GXSetDispCopyYScale(yScale);
 	GXSetDispCopySrc(0.0F, 0.0F, mRmode->fbWidth, mRmode->efbHeight);
@@ -87,8 +85,8 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 		VIWaitForRetrace();
 	}
 
-	mWidth = mRmode->viWidth;
-	mHeight = mRmode->viHeight;
+	mWidth = mRmode->fbWidth;
+	mHeight = mRmode->efbHeight;
 
 	// Initialize global render state to default settings.
 	SetGlobalState(GlobalState::Default);
@@ -109,19 +107,6 @@ Bool GXRenderer::BeginScene(Camera* pCamera)
 		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
 		pCamera->GetDMax());
 	GXSetProjection(perspective, GX_PERSPECTIVE);
-
-	// Set up viewport (This is inappropriate for full-frame AA.)
-	if (mRmode->field_rendering)
-	{
-		GXSetViewportJitter(0.0F, 0.0F, static_cast<Float>(mRmode->fbWidth),
-			static_cast<Float>(mRmode->efbHeight), 0.0F, 1.0F,
-			VIGetNextField());
-	}
-	else
-	{
-		GXSetViewport(0.0F, 0.0F, static_cast<Float>(mRmode->fbWidth),
-			static_cast<Float>(mRmode->efbHeight), 0.0F, 1.0F);
-	}
 
 	// Invalidate texture cache in GP
 	GXInvalidateTexAll();
@@ -275,4 +260,37 @@ void GXRenderer::OnFrameChange()
 	mViewMatrix[0][3] = -rVector.Dot(eye);
 	mViewMatrix[1][3] = -uVector.Dot(eye);
 	mViewMatrix[2][3] = -dVector.Dot(eye);
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnViewportChange()
+{
+	Float left;
+	Float right;
+	Float top;
+	Float bottom;
+
+	// GX defines the full-sized viewport to have origin at the upper
+	// left corner of the screen. Wire uses the OpenGL convention that
+	// 'bottom' specifies the relative distance from the bottom of the
+	// screen. GX needs a specification of relative distance from the
+	// top of the screen, which is 1 - 'top'.
+	mpCamera->GetViewport(left, right, top, bottom);
+	Float originX = left * static_cast<Float>(mWidth);
+	Float width = (right - left) *  static_cast<Float>(mWidth);
+	Float originY = (1.0F - top) * static_cast<Float>(mRmode->xfbHeight);
+	Float height = (top - bottom) * static_cast<Float>(mRmode->xfbHeight);
+
+	// Set up viewport (This is inappropriate for full-frame AA.)
+	if (mRmode->field_rendering)
+	{
+		GXSetViewportJitter(originX, originY, width, height, 0.0F, 1.0F,
+			VIGetNextField());
+	}
+	else
+	{
+		GXSetViewport(originX, originY, width, height, 0.0F, 1.0F);
+	}
+
+	GXSetScissor(originX, originY, width, height);
 }

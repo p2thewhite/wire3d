@@ -35,6 +35,7 @@ public:
 
 	// Apply camera changes to platform specific renderer.
 	virtual void OnFrameChange() = 0;
+	virtual void OnViewportChange() = 0;
 
 	// Support for full-sized window buffer operations. The values used for
 	// clearing are specified by SetClearColor().
