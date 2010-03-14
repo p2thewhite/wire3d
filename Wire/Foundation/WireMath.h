@@ -12,6 +12,7 @@ class Math
 {
 public:
 	static Real ATan(Real value);
+    static Real ATan2(Real y, Real x);
 	static Real Cos(Real value);
 	static Real FAbs(Real value);
 	static Real FMod(Real x, Real y);

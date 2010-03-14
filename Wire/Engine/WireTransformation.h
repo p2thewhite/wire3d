@@ -52,6 +52,10 @@ public:
 	// Compute C = A*B.
 	void Product(const Transformation& rA, const Transformation& kB);
 
+    // Compute X = M^{-1}*(Y-T) where Y is the input point and X is the output
+    // point.
+    Vector3F ApplyInverse(const Vector3F& rInput) const;
+
 private:
 	mutable Matrix34F mMatrix;	// TODO: fix for VC
 	Vector3F mScale;

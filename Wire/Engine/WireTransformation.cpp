@@ -251,3 +251,49 @@ Float Transformation::GetNorm() const
 
 	return maxRowSum;
 }
+
+//----------------------------------------------------------------------------
+Vector3F Transformation::ApplyInverse(const Vector3F& rInput) const
+{
+    if (mIsIdentity)
+    {
+        // X = Y
+        return rInput;
+    }
+
+    Vector3F output = rInput - GetTranslate();
+    if (mIsRSMatrix)
+    {
+        // X = S^{-1}*R^t*(Y - T)
+		output = output * GetMatrix();
+        if (mIsUniformScale)
+        {
+            output /= GetUniformScale();
+        }
+        else
+        {
+            // The direct inverse scaling is
+            //   output.X() /= scale.X();
+            //   output.Y() /= scale.Y();
+            //   output.Z() /= scale.Z();
+            // When division is much more expensive than multiplication,
+            // three divisions are replaced by one division and ten
+            // multiplications.
+			Vector3F scale = GetScale();
+            Float sxy = scale.X() * scale.Y();
+            Float sxz = scale.X() * scale.Z();
+            Float syz = scale.Y() * scale.Z();
+            Float invDet = 1.0F / (sxy * scale.Z());
+            output.X() *= invDet * syz;
+            output.Y() *= invDet * sxz;
+            output.Z() *= invDet * sxy;
+        }
+    }
+    else
+    {
+        // X = M^{-1}*(Y - T)
+        output = GetMatrix().Inverse() * output;
+    }
+
+    return output;
+}

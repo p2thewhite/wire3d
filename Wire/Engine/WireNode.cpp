@@ -36,7 +36,7 @@ UInt Node::AttachChild(Spatial* pChild)
 	// If you want this not to happen, hang onto the child via a smart
 	// pointer. For example,
 	//
-	//     Node* pNode0 = WM4_NEW Node;
+	//     Node* pNode0 = WIRE_NEW Node;
 	//     Spatial* pChild0 = <...>;
 	//     pNode0->AttachChild(pChild0);  // child at index 0
 	//     Node* pNode1 = <...>;
@@ -123,7 +123,7 @@ SpatialPtr Node::SetChild(UInt i, Spatial* pChild)
 	// If you want this not to happen, hang onto the child via a smart
 	// pointer. For example,
 	//
-	//     Node* pNode0 = WM4_NEW Node;
+	//     Node* pNode0 = WIRE_NEW Node;
 	//     Spatial* pChild0 = <...>;
 	//     pNode0->AttachChild(pChild0);  // child at index 0
 	//     Node* pNode1 = <...>;

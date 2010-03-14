@@ -133,6 +133,20 @@ inline Matrix34<Real>::operator Real4* ()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Real Matrix34<Real>::operator() (UInt row, UInt col) const
+{
+	return mEntry[row][col];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real& Matrix34<Real>::operator() (UInt row, UInt col)
+{
+	return mEntry[row][col];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 {
 	WIRE_ASSERT((0 <= col) && (col < 4));
@@ -159,4 +173,68 @@ Matrix34<Real> Matrix34<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
 			mEntry[1][3],
 		mEntry[2][0]*rDiag[0], mEntry[2][1]*rDiag[1], mEntry[2][2]*rDiag[2],
 			mEntry[2][3]);
+}
+
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix34<Real> Matrix34<Real>::Inverse() const
+{
+	// Invert a 3x3 using cofactors. This is faster than using a generic
+	// Gaussian elimination because of the loop overhead of such a method.
+
+	Matrix34 inverse;
+
+	inverse.mEntry[0][0] = mEntry[1][1]*mEntry[2][2] - 
+		mEntry[1][2]*mEntry[2][1];
+	inverse.mEntry[0][1] = mEntry[0][2]*mEntry[2][1] - 
+		mEntry[0][1]*mEntry[2][2];
+	inverse.mEntry[0][2] = mEntry[0][1]*mEntry[1][2] - 
+		mEntry[0][2]*mEntry[1][1];
+	inverse.mEntry[1][0] = mEntry[1][2]*mEntry[2][0] - 
+		mEntry[1][0]*mEntry[2][2];
+	inverse.mEntry[1][1] = mEntry[0][0]*mEntry[2][2] - 
+		mEntry[0][2]*mEntry[2][0];
+	inverse.mEntry[1][2] = mEntry[0][2]*mEntry[1][0] - 
+		mEntry[0][0]*mEntry[1][2];
+	inverse.mEntry[2][0] = mEntry[1][0]*mEntry[2][1] - 
+		mEntry[1][1]*mEntry[2][0];
+	inverse.mEntry[2][1] = mEntry[0][1]*mEntry[2][0] - 
+		mEntry[0][0]*mEntry[2][1];
+	inverse.mEntry[2][2] = mEntry[0][0]*mEntry[1][1] - 
+		mEntry[0][1]*mEntry[1][0];
+
+	Real det =
+		mEntry[0][0]*inverse.mEntry[0][0] +
+		mEntry[0][1]*inverse.mEntry[1][0] +
+		mEntry[0][2]*inverse.mEntry[2][0];
+
+	if (Math<Real>::FAbs(det) <= Math<Real>::ZERO_TOLERANCE)
+	{
+		return ZERO;
+	}
+
+	Real invDet = (static_cast<Real>(1.0)) / det;
+	inverse.mEntry[0][0] *= invDet;
+	inverse.mEntry[0][1] *= invDet;
+	inverse.mEntry[0][2] *= invDet;
+	inverse.mEntry[1][0] *= invDet;
+	inverse.mEntry[1][1] *= invDet;
+	inverse.mEntry[1][2] *= invDet;
+	inverse.mEntry[2][0] *= invDet;
+	inverse.mEntry[2][1] *= invDet;
+	inverse.mEntry[2][2] *= invDet;
+
+	return inverse;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> operator* (const Vector3<Real>& rV,
+	const Matrix34<Real>& rM)
+{
+	return Vector3<Real>(
+		rV[0]*rM(0, 0) + rV[1]*rM(1, 0) + rV[2]*rM(2, 0),
+		rV[0]*rM(0, 1) + rV[1]*rM(1, 1) + rV[2]*rM(2, 1),
+		rV[0]*rM(0, 2) + rV[1]*rM(1, 2) + rV[2]*rM(2, 2));
 }

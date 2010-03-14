@@ -258,10 +258,10 @@ void TArray<T>::SetElement(UInt i, const T& rElement)
 					UInt n = 1 + static_cast<Int>(0.5F + (i+1 - mMaxQuantity) /
 						static_cast<Float>(mGrowBy));
 
-					// Increase the size of the array. In the event rtElement
+					// Increase the size of the array. In the event rElement
 					// is a reference to something in the current array, the
 					// reallocation in SetMaxQuantity will invalidate the
-					// reference. A copy of rtElement is made here to avoid
+					// reference. A copy of rElement is made here to avoid
 					// the invalidation.
 					T saveElement(rElement);
 					SetMaxQuantity(mMaxQuantity + n * mGrowBy, true);
