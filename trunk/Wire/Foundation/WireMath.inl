@@ -7,6 +7,14 @@ Real Math<Real>::ATan(Real value)
 
 //----------------------------------------------------------------------------
 template <class Real>
+Real Math<Real>::ATan2(Real y, Real x)
+{
+    return static_cast<Real>(atan2(static_cast<Double>(y),
+		static_cast<Double>(x)));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Real Math<Real>::Cos(Real value)
 {
 	return static_cast<Real>(cos(static_cast<Double>(value)));

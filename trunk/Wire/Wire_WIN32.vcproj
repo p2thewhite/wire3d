@@ -344,6 +344,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMatrix34.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireSystem.cpp"
 					>
 				</File>
@@ -604,6 +608,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireBillboardNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBindable.h"
 					>
 				</File>
@@ -625,6 +633,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCullState.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireDLodNode.h"
 					>
 				</File>
 				<File
@@ -692,6 +704,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireSwitchNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTexture.h"
 					>
 				</File>
@@ -736,6 +752,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Engine\WireBillboardNode.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCamera.inl"
 					>
 				</File>
@@ -745,6 +765,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCuller.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireDLodNode.inl"
 					>
 				</File>
 				<File
@@ -788,6 +812,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireSwitchNode.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTexture.inl"
 					>
 				</File>
@@ -820,6 +848,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireBillboardNode.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBindable.cpp"
 					>
 				</File>
@@ -841,6 +873,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCullState.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireDLodNode.cpp"
 					>
 				</File>
 				<File
@@ -893,6 +929,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSphereBV.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireSwitchNode.cpp"
 					>
 				</File>
 				<File

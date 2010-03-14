@@ -3,12 +3,14 @@
 #define WIREENGINE_H
 
 #include "WireAlphaState.h"
+#include "WireBillboardNode.h"
 #include "WireBindable.h"
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
 #include "WireController.h"
 #include "WireCuller.h"
 #include "WireCullState.h"
+#include "WireDLodNode.h"
 #include "WireEffect.h"
 #include "WireFogState.h"
 #include "WireGeometry.h"
@@ -24,6 +26,7 @@
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireSphereBV.h"
+#include "WireSwitchNode.h"
 #include "WireTexture.h"
 #include "WireTextureEffect.h"
 #include "WireTransformation.h"

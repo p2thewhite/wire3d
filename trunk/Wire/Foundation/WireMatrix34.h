@@ -38,6 +38,8 @@ public:
 	// member operators
 	inline operator Real4* ();
 //	inline operator const Real4* () const;	// TODO: fix for VC
+    inline Real operator() (UInt row, UInt col) const;
+    inline Real& operator() (UInt row, UInt col);
 	void SetColumn(Int col, const Vector3<Real>& rVector);
 	Vector3<Real> GetColumn(Int col) const;
 
@@ -49,10 +51,20 @@ public:
 	inline Vector3<Real> operator* (const Vector3<Real>& rVector) const;
 
 	Matrix34 TimesDiagonal(const Vector3<Real>& rDiag) const;
+    Matrix34 Inverse() const;
+
+    // special matrices
+    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 ZERO;
+    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 IDENTITY;
 
 private:
 	Real mEntry[3][4];
 };
+
+// v^T * M
+template <class Real>
+inline Vector3<Real> operator* (const Vector3<Real>& rV,
+    const Matrix34<Real>& rM);
 
 #ifdef WIRE_WII
 #include "Wii/WireMatrix34Wii.inl"
