@@ -1,5 +1,6 @@
 #include "WireGXRenderer.h"
 
+#include "WireGeometry.h"
 #include "WireGXResources.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>
@@ -71,6 +72,9 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 
 	// Invalidate vertex cache in GP
 	GXInvalidateVtxCache();
+
+	pResource->DisplayList = NULL;
+	pResource->DisplayListSize = 0;
 }
 
 //----------------------------------------------------------------------------
@@ -147,6 +151,7 @@ void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 		free(rElements[i].Data);	// allocated using memalign, not using new
 	}
 
+	free(pResource->DisplayList);	// allocated using memalign, not using new
 	WIRE_DELETE pResource->Elements;
 	WIRE_DELETE pResource;
 }

@@ -22,6 +22,9 @@ public:
 	};
 
 	TArray<VertexElement>* Elements;
+
+	void* DisplayList;
+	UInt DisplayListSize;
 };
 
 class /*WIRE_RENDERER_ITEM*/ TextureID : public ResourceIdentifier

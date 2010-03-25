@@ -20,8 +20,8 @@ public:
 	//   {
 	//   public:  Attributes IAttr;
 	//   }
-	//   VBufferIdentifier* pkID = <some identifier>;
-	//   Attributes& rkIAttr = *(Attributes*)pkID;
+	//   VBufferIdentifier* pID = <some identifier>;
+	//   Attributes& rIAttr = *(Attributes*)pID;
 
 	~ResourceIdentifier() {/**/}
 

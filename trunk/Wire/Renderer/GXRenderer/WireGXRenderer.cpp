@@ -180,6 +180,34 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
+void GXRenderer::Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer)
+{
+	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
+	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+	{
+		UInt index = rIBuffer[i];
+
+		for (UInt j = 0; j < rElements.GetQuantity(); j++)
+		{
+			switch (rElements[j].Attr)
+			{
+			case GX_VA_POS:
+				GXPosition1x16(static_cast<UShort>(index));
+				break;
+
+			case GX_VA_CLR0:
+				GXColor1x16(static_cast<UShort>(index));
+				break;
+			}
+		}
+	}
+
+	GXEnd();
+}
+
+//----------------------------------------------------------------------------
 void GXRenderer::DrawElements()
 {
 	mIsFrameBufferDirty = true;
@@ -225,19 +253,21 @@ void GXRenderer::DrawElements()
 			GXPosition1x16(static_cast<UShort>(index));
 			GXColor1x16(static_cast<UShort>(index));
 		}
+
+		GXEnd();
 	}
 	else
 	{
-		GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
-		for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+		if (mCurrentVBuffer->DisplayList)
 		{
-			UInt index = rIBuffer[i];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
+			GXCallDisplayList(mCurrentVBuffer->DisplayList,
+				mCurrentVBuffer->DisplayListSize);
+		}
+		else
+		{
+			Draw(mCurrentVBuffer, rIBuffer);
 		}
 	}
-
-	GXEnd();
 }
 
 //----------------------------------------------------------------------------

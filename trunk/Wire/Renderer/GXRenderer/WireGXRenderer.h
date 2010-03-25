@@ -68,6 +68,8 @@ protected:
 
 private:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
+	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
+	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
 
 	GXColor mGXClearColor;
 
@@ -77,6 +79,8 @@ private:
 	void* mDemoFifoBuffer;
 	UInt mFrameBufferIndex;
 	Bool mIsFrameBufferDirty;
+
+	VBufferID* mCurrentVBuffer;
 
 	// Transforms world space to camera space.
 	Matrix34F mViewMatrix;
