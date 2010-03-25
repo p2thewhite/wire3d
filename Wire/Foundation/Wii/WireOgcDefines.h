@@ -12,12 +12,15 @@ typedef guVector Vector;
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
 
 #define GXBegin GX_Begin
+#define GXBeginDisplayList GX_BeginDispList
+#define GXCallDisplayList GX_CallDispList
 #define GXClearVtxDesc GX_ClearVtxDesc
 #define GXColor1x16 GX_Color1x16
 #define GXColor1x8 GX_Color1x8
 #define GXCopyDisp GX_CopyDisp
 #define GXDrawDone GX_DrawDone
 #define GXEnd GX_End
+#define GXEndDisplayList GX_EndDispList
 #define GXGetYScaleFactor GX_GetYScaleFactor
 #define GXInit GX_Init
 #define GXInitLightColor GX_InitLightColor

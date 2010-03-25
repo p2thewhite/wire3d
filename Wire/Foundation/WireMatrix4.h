@@ -2,6 +2,17 @@
 #ifndef WIREMATRIX4_H
 #define WIREMATRIX4_H
 
+// Matrix operations are applied on the left. For example, given a matrix M
+// and a vector V, matrix-times-vector is M*V. That is, V is treated as a
+// column vector. Some graphics APIs use V*M where V is treated as a row
+// vector. In this context the "M" matrix is really a transpose of the M as
+// represented in Wire. Similarly, to apply two matrix operations M0 and M1,
+// in that order, you compute M1*M0 so that the transform of a vector is
+// (M1*M0)*V = M1*(M0*V). Some graphics APIs use M0*M1, but again these
+// matrices are the transpose of those as represented in Wire. You must
+// therefore be careful about how you interface the transformation code with
+// graphics APIS.
+
 #include "WireTypes.h"
 
 namespace Wire
