@@ -182,7 +182,7 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 //----------------------------------------------------------------------------
 void GXRenderer::Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer)
 {
-	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
 	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
@@ -258,14 +258,22 @@ void GXRenderer::DrawElements()
 	}
 	else
 	{
-		if (mCurrentVBuffer->DisplayList)
+		TArray<VBufferID::DisplayList>& rDisplayLists = mpVBufferID->
+			DisplayLists;
+		Bool foundDL = false;
+		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 		{
-			GXCallDisplayList(mCurrentVBuffer->DisplayList,
-				mCurrentVBuffer->DisplayListSize);
+			if (rDisplayLists[i].RegisteredIBuffer == mpIBufferID)
+			{
+				foundDL = true;
+				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
+					DLSize);
+			}
 		}
-		else
+
+		if (!foundDL)
 		{
-			Draw(mCurrentVBuffer, rIBuffer);
+			Draw(mpVBufferID, rIBuffer);
 		}
 	}
 }

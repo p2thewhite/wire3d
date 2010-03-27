@@ -10,6 +10,8 @@ using namespace Wire;
 void GXRenderer::CreateDisplayList(VBufferID* pResource, const IndexBuffer&
 	rIBuffer)
 {
+	VBufferID::DisplayList DL;
+
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe
 	const UInt tempDLSize = 65536;
@@ -18,13 +20,17 @@ void GXRenderer::CreateDisplayList(VBufferID* pResource, const IndexBuffer&
 
 	GXBeginDisplayList(pTempDL, tempDLSize);
 	Draw(pResource, rIBuffer);
-	pResource->DisplayListSize = GXEndDisplayList();
 
-	pResource->DisplayList = memalign(32, pResource->DisplayListSize);
-	System::Memcpy(pResource->DisplayList, pResource->DisplayListSize,
-		pTempDL, pResource->DisplayListSize);
+	DL.DLSize = GXEndDisplayList();
+	DL.DL = memalign(32, DL.DLSize);
+	System::Memcpy(DL.DL, DL.DLSize, pTempDL, DL.DLSize);
+	free(pTempDL);
 
-	DCFlushRange(pResource->DisplayList, pResource->DisplayListSize);
+	DCFlushRange(DL.DL, DL.DLSize);
+
+	DL.RegisteredIBuffer = mpIBufferID;
+	mpIBufferID->RegisteredVBuffers.Append(pResource);
+	pResource->DisplayLists.Append(DL);
 }
 
 //----------------------------------------------------------------------------
@@ -35,8 +41,7 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
 	GXClearVtxDesc();
-	const TArray<VBufferID::VertexElement>& rElements = *(pResource->
-		Elements);
+	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
 	// TODO: add GX texture handling
 	for (UInt i = 0; i < 2/*rElements.GetQuantity()*/; i++)
@@ -47,10 +52,29 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 		GXSetArray(rElements[i].Attr, rElements[i].Data, rElements[i].Stride);
 	}
 
-	if (!pResource->DisplayList)
+	// Check if there is a displaylist for this Vertex- and Indexbuffer
+	// combination.
+	TArray<VBufferID::DisplayList>& rDisplayLists = pResource->DisplayLists;
+	Bool foundDL = false;
+	for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
+	{
+		if (rDisplayLists[i].RegisteredIBuffer == mpIBufferID)
+		{
+			foundDL = true;
+		}
+	}
+
+	if (!foundDL)
 	{
 		CreateDisplayList(pResource, *(mpGeometry->IBuffer));
 	}
 
-	mCurrentVBuffer = pResource;
+	mpVBufferID = pResource;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
+{
+	IBufferID* pResource = static_cast<IBufferID*>(pID);
+	mpIBufferID = pResource;
 }

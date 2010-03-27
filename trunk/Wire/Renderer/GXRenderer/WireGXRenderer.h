@@ -10,6 +10,7 @@ namespace Wire
 {
 
 class VBufferID;
+class IBufferID;
 
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
@@ -37,13 +38,10 @@ public:
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
 protected:
-	// Resource enabling and disabling.
-	virtual void EnableIBuffer() {}
-
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
-		IndexBuffer* pBuffer) {}
-	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) {}
+		IndexBuffer* pBuffer);
+	virtual void OnReleaseIBuffer(ResourceIdentifier* pID);
 
 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
 		VertexBuffer* pVBuffer);
@@ -53,9 +51,11 @@ protected:
 	virtual void OnReleaseTexture(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling.
-	virtual void OnEnableIBuffer(ResourceIdentifier* pID) {}
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) {/**/}
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
+	virtual void OnDisableVBuffer(ResourceIdentifier* pID) {/**/}
 
 	virtual void OnEnableTexture(ResourceIdentifier* pID) {}  // TODO
 	virtual void OnDisableTexture(ResourceIdentifier* pID) {}  // TODO
@@ -80,7 +80,8 @@ private:
 	UInt mFrameBufferIndex;
 	Bool mIsFrameBufferDirty;
 
-	VBufferID* mCurrentVBuffer;
+	VBufferID* mpVBufferID;
+	IBufferID* mpIBufferID;
 
 	// Transforms world space to camera space.
 	Matrix34F mViewMatrix;

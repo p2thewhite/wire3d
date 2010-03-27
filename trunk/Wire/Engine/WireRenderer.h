@@ -89,8 +89,11 @@ protected:
 	void ReleaseTexture(Bindable* pTexture);
 
 	// Resource enabling and disabling.
-	virtual void EnableIBuffer();
+	void EnableIBuffer();
+	void DisableIBuffer();
+
 	ResourceIdentifier* EnableVBuffer();
+	void DisableVBuffer(ResourceIdentifier* pID);
 
 	void EnableTexture(Texture* pTexture);
  	void DisableTexture(Texture* pTexture);
@@ -110,8 +113,10 @@ protected:
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableVBuffer(ResourceIdentifier* pID) = 0;
 
 	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
 	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
