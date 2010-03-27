@@ -69,6 +69,15 @@ void Renderer::EnableIBuffer ()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::DisableIBuffer ()
+{
+	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
+	WIRE_ASSERT(pID);
+	OnDisableIBuffer(pID);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::LoadVBuffer(VertexBuffer* pVBuffer)
 {
 	if (!pVBuffer)
@@ -144,6 +153,12 @@ ResourceIdentifier* Renderer::EnableVBuffer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::DisableVBuffer(ResourceIdentifier* pID)
+{
+	OnDisableVBuffer(pID);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::LoadTexture(Texture* pTexture)
 {
 	if (!pTexture)
@@ -203,7 +218,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
 	EnableIBuffer();
-	EnableVBuffer();
+	ResourceIdentifier* pID = EnableVBuffer();
 
 	Texture* pTexture = NULL;
 	if (mpGeometry->GetEffectQuantity() > 0)
@@ -225,10 +240,14 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	DrawElements();
 
+	DisableVBuffer(pID);
+
 	if (pTexture)
 	{
 		DisableTexture(pTexture);
 	}
+
+	DisableIBuffer();
 
 	RestoreGlobalState(mpGeometry->States);
 }

@@ -21,10 +21,22 @@ public:
 		UChar CompType;
 	};
 
-	TArray<VertexElement>* Elements;
+	struct DisplayList
+	{
+		void* DL;
+		UInt DLSize;
+		IBufferID* RegisteredIBuffer;
+	};
 
-	void* DisplayList;
-	UInt DisplayListSize;
+	TArray<VertexElement> Elements;
+	TArray<DisplayList> DisplayLists;
+};
+
+class /*WIRE_RENDERER_ITEM*/ IBufferID : public ResourceIdentifier
+{
+public:
+	TArray<VBufferID*> RegisteredVBuffers;
+
 };
 
 class /*WIRE_RENDERER_ITEM*/ TextureID : public ResourceIdentifier

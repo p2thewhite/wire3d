@@ -12,10 +12,9 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VertexBuffer* pVBuffer)
 {
 	VBufferID* pResource = WIRE_NEW VBufferID;
-	pResource->Elements = WIRE_NEW TArray<VBufferID::VertexElement>(2);
 	rID = pResource;
 
-	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 	VBufferID::VertexElement element;
 	UInt vertexCount = pVBuffer->GetVertexQuantity();
 
@@ -61,7 +60,7 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 		}
 	}
 
-	WIRE_ASSERT(pResource->Elements->GetQuantity() > 0);
+	WIRE_ASSERT(pResource->Elements.GetQuantity() > 0);
 	Convert(pVBuffer, pResource);
 
  	for (UInt i = 0; i < rElements.GetQuantity(); i++)
@@ -72,16 +71,13 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 
 	// Invalidate vertex cache in GP
 	GXInvalidateVtxCache();
-
-	pResource->DisplayList = NULL;
-	pResource->DisplayListSize = 0;
 }
 
 //----------------------------------------------------------------------------
 void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 {
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
 	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
 	{
@@ -145,14 +141,63 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
-	TArray<VBufferID::VertexElement>& rElements = *(pResource->Elements);
+	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 	for (UInt i = 0; i < rElements.GetQuantity(); i++)
 	{
 		free(rElements[i].Data);	// allocated using memalign, not using new
 	}
 
-	free(pResource->DisplayList);	// allocated using memalign, not using new
-	WIRE_DELETE pResource->Elements;
+	TArray<VBufferID::DisplayList>& rDisplayLists = pResource->
+		DisplayLists;
+	for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
+	{
+		free(rDisplayLists[i].DL);	// allocated using memalign, not using new
+	
+		TArray<VBufferID*>& rVBufferIDs = rDisplayLists[i].RegisteredIBuffer->
+			RegisteredVBuffers;
+		for (UInt j = 0; j < rVBufferIDs.GetQuantity(); j++)
+		{
+			if (rVBufferIDs[j] == pResource)
+			{
+				rVBufferIDs.Remove(j);
+				break;
+			}
+		}
+	}
+	
+	WIRE_DELETE pResource;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer)
+{
+	// The texture is encountered the first time. Set up the texture unit
+	// in hardware that will manage this texture.
+	IBufferID* pResource = WIRE_NEW IBufferID;
+	rID = pResource;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnReleaseIBuffer(ResourceIdentifier* pID)
+{
+	IBufferID* pResource = static_cast<IBufferID*>(pID);
+	TArray<VBufferID*>& rVBufferIDs = pResource->RegisteredVBuffers; 
+	for (UInt i = 0; i < rVBufferIDs.GetQuantity(); i++)
+	{
+		TArray<VBufferID::DisplayList>& rDisplayLists = rVBufferIDs[i]->
+			DisplayLists;
+
+		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
+		{
+			if (rDisplayLists[j].RegisteredIBuffer == pResource)
+			{
+				free(rDisplayLists[i].DL);	// allocated using memalign
+				rDisplayLists.Remove(j);
+				break;
+			}
+		}
+	}
+
 	WIRE_DELETE pResource;
 }
 
