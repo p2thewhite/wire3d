@@ -50,10 +50,10 @@ protected:
 
 	// Resource enabling and disabling.
 	virtual void OnEnableIBuffer(ResourceIdentifier* pID);
-	virtual void OnDisableIBuffer (ResourceIdentifier* pID) {/**/}
+	virtual void OnDisableIBuffer (ResourceIdentifier*) {/**/}
 
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
-	virtual void OnDisableVBuffer(ResourceIdentifier* pID) {/**/}
+	virtual void OnDisableVBuffer(ResourceIdentifier*) {/**/}
 
 	virtual void OnEnableTexture(ResourceIdentifier* pID);
 	virtual void OnDisableTexture(ResourceIdentifier* pID);

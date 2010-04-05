@@ -2,10 +2,17 @@
 
 #include "WireGeometry.h"
 #include "WireGXResources.h"
+#include "WireTexture.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>
 
 using namespace Wire;
+
+UChar GXRenderer::msImageFormat[Image::FM_QUANTITY] =
+{
+	GX_TF_RGBA8,      // Image::FM_RGB888
+	GX_TF_RGBA8,      // Image::FM_RGBA8888
+};
 
 //----------------------------------------------------------------------------
 void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
@@ -101,7 +108,7 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 			if (rIAttr.GetColorChannels(unit) > 0)
 			{
 				const Float* pColor = pSrc->GetColor(i, unit);
-				UInt color = 0xffffffff;
+				UInt color = 0xFFFFFFFF;
 				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
 				{
 					color = color << 8;
@@ -111,7 +118,7 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 				if (rIAttr.GetColorChannels(unit) == 3)
 				{
 					color = color << 8;
-					color |= 0xff;
+					color |= 0xFF;
 				}
 
 				UInt* pDst = static_cast<UInt*>(rElements[index++].Data);
@@ -122,7 +129,7 @@ void GXRenderer::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
 		UInt tChannelQuantity = rIAttr.GetTCoordChannelQuantity();
 		for (UInt unit = 0; unit < tChannelQuantity; unit++)
 		{
-			if (rIAttr.GetColorChannels(unit) > 0)
+			if (rIAttr.GetTCoordChannels(unit) > 0)
 			{
 				const Float* pUv = pSrc->GetTCoord(i, unit);
 				Float* pDst = static_cast<Float*>(rElements[index++].Data);
@@ -209,11 +216,61 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	TextureID* pResource = WIRE_NEW TextureID;
 	pResource->TextureObject = pTexture;
 	rID = pResource;
+
+	// Copy the image data from system memory to video memory.
+	const Image* pImage = pTexture->GetImage();
+	WIRE_ASSERT(pImage);
+
+	UInt quantity = pImage->GetQuantity();
+	UChar* pSrc = pImage->GetData();
+	pResource->Image = memalign(32, quantity * 4);
+	UChar* pDst = static_cast<UChar*>(pResource->Image);
+	WIRE_ASSERT(pDst);
+	Image::FormatMode format = pImage->GetFormat();
+	
+	if (pSrc)
+	{
+		switch (pImage->GetFormat())
+		{
+		case Image::FM_RGBA8888:
+			for (UInt i = 0; i < quantity; i++)
+			{
+				*pDst++ = *pSrc++;
+				*pDst++ = *pSrc++;
+				*pDst++ = *pSrc++;
+				*pDst++ = *pSrc++;
+			}
+
+			break;
+
+		case Image::FM_RGB888:
+			for (UInt i = 0; i < quantity; i++)
+			{
+ 				*pDst++ = *pSrc++;
+ 				*pDst++ = *pSrc++;
+ 				*pDst++ = *pSrc++;
+				*pDst++ = 0xFF;
+			}
+
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	DCStoreRange(pResource->Image, quantity * 4);
+	GXInvalidateTexAll();
+
+ 	GXInitTexObj(&pResource->TexObj, pResource->Image, pImage->GetBound(0),
+		pImage->GetBound(1), msImageFormat[format], msTexWrapMode[pTexture->
+		GetWrapType(0)], msTexWrapMode[pTexture->GetWrapType(1)], GX_FALSE);
 }
 
 //----------------------------------------------------------------------------
 void GXRenderer::OnReleaseTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
+	free(pResource->Image);	// allocated using memalign, not using new
 	WIRE_DELETE pResource;
 }

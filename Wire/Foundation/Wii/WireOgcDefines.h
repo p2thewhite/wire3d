@@ -15,6 +15,7 @@ typedef guVector Vector;
 #define GXBeginDisplayList GX_BeginDispList
 #define GXCallDisplayList GX_CallDispList
 #define GXClearVtxDesc GX_ClearVtxDesc
+#define GXColor1u32 GX_Color1u32
 #define GXColor1x16 GX_Color1x16
 #define GXColor1x8 GX_Color1x8
 #define GXCopyDisp GX_CopyDisp
@@ -25,13 +26,14 @@ typedef guVector Vector;
 #define GXInit GX_Init
 #define GXInitLightColor GX_InitLightColor
 #define GXInitLightPos GX_InitLightPos
+#define GXInitTexObj GX_InitTexObj
 #define GXInvalidateTexAll GX_InvalidateTexAll
 #define GXInvalidateVtxCache GX_InvVtxCache
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
+#define GXLoadTexObj GX_LoadTexObj
 #define GXPosition1x16 GX_Position1x16
 #define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32
-#define GXColor1u32 GX_Color1u32
 #define GXRenderModeObj GXRModeObj
 #define GXSetAlphaUpdate GX_SetAlphaUpdate
 #define GXSetArray GX_SetArray
@@ -52,12 +54,15 @@ typedef guVector Vector;
 #define GXSetPixelFmt GX_SetPixelFmt
 #define GXSetProjection GX_LoadProjectionMtx
 #define GXSetScissor GX_SetScissor
+#define GXSetTexCoordGen GX_SetTexCoordGen
 #define GXSetViewport GX_SetViewport
 #define GXSetViewportJitter GX_SetViewportJitter
 #define GXSetVtxAttrFmt GX_SetVtxAttrFmt
 #define GXSetVtxDesc GX_SetVtxDesc
 #define GXSetTevOp GX_SetTevOp
 #define GXSetTevOrder GX_SetTevOrder
+#define GXTexCoord1x16 GX_TexCoord1x16
+#define GXTexCoord2f32 GX_TexCoord2f32
 #define GXSetZMode GX_SetZMode
 
 #define MTXConcat guMtxConcat

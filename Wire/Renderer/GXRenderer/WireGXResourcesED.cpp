@@ -2,9 +2,37 @@
 
 #include "WireGeometry.h"
 #include "WireGXResources.h"
+#include "WireTexture.h"
 #include <malloc.h>
 
 using namespace Wire;
+
+UChar GXRenderer::msTexMinFilter[Texture::FT_QUANTITY] =
+{
+	GX_NEAR,			// Texture::FT_NEAREST
+	GX_LINEAR,			// Texture::FT_LINEAR
+	GX_NEAR_MIP_NEAR,	// Texture::FT_NEAREST_NEAREST
+	GX_NEAR_MIP_LIN,	// Texture::FT_NEAREST_LINEAR
+	GX_LIN_MIP_NEAR,	// Texture::FT_LINEAR_NEAREST
+	GX_LIN_MIP_LIN,		// Texture::FT_LINEAR_LINEAR
+};
+	
+UChar GXRenderer::msTexMipFilter[Texture::FT_QUANTITY] =
+{
+	GX_NEAR,	// Texture::FT_NEAREST
+	GX_NEAR,	// Texture::FT_LINEAR
+	GX_NEAR,	// Texture::FT_NEAREST_NEAREST
+	GX_LINEAR,	// Texture::FT_NEAREST_LINEAR
+	GX_NEAR,	// Texture::FT_LINEAR_NEAREST
+	GX_LINEAR,	// Texture::FT_LINEAR_LINEAR
+};
+
+UChar GXRenderer::msTexWrapMode[Texture::WT_QUANTITY] =
+{
+	GX_CLAMP,	// Texture::WT_CLAMP
+	GX_REPEAT,	// Texture::WT_REPEAT
+	GX_MIRROR,	// Texture::WT_MIRRORED_REPEAT
+};
 
 //----------------------------------------------------------------------------
 void GXRenderer::CreateDisplayList(VBufferID* pResource, const IndexBuffer&
@@ -43,8 +71,7 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 	GXClearVtxDesc();
 	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
-	// TODO: add GX texture handling
-	for (UInt i = 0; i < 2/*rElements.GetQuantity()*/; i++)
+	for (UInt i = 0; i < rElements.GetQuantity(); i++)
 	{
 		GXSetVtxDesc(rElements[i].Attr, GX_INDEX16);
 		GXSetVtxAttrFmt(GX_VTXFMT0, rElements[i].Attr, rElements[i].CompCnt,
@@ -77,4 +104,25 @@ void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
 	mpIBufferID = pResource;
+
+	GXSetNumTexGens(0);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+		GX_COLOR0A0);
+	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
+{
+	TextureID* pResource = static_cast<TextureID*>(pID);
+	Texture* pTex = pResource->TextureObject;
+
+	GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
+	GXSetNumTexGens(1);
+
+	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+
+	// set texture
+	GXLoadTexObj(&pResource->TexObj, GX_TEXMAP0);
 }
