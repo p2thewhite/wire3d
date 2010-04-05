@@ -187,18 +187,22 @@ void GXRenderer::Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer)
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
 	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
 	{
-		UInt index = rIBuffer[i];
+		UShort index = static_cast<UShort>(rIBuffer[i]);
 
 		for (UInt j = 0; j < rElements.GetQuantity(); j++)
 		{
 			switch (rElements[j].Attr)
 			{
 			case GX_VA_POS:
-				GXPosition1x16(static_cast<UShort>(index));
+				GXPosition1x16(index);
 				break;
 
 			case GX_VA_CLR0:
-				GXColor1x16(static_cast<UShort>(index));
+				GXColor1x16(index);
+				break;
+
+			case GX_VA_TEX0:
+				GXTexCoord1x16(index);
 				break;
 			}
 		}
@@ -218,10 +222,10 @@ void GXRenderer::DrawElements()
 	GXLoadPosMtxImm(mViewMatrix * model, GX_PNMTX0);
 
 	GXSetNumChans(1);
-	GXSetNumTexGens(0);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
-		GX_COLOR0A0);
-	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+//	GXSetNumTexGens(0);
+// 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+// 		GX_COLOR0A0);
+// 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
 

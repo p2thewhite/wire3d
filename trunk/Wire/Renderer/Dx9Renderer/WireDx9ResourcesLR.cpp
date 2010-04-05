@@ -281,7 +281,7 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 				pDst[dstOffset    ] = pSrc[srcOffset + 2];
 				pDst[dstOffset + 1] = pSrc[srcOffset + 1];
 				pDst[dstOffset + 2] = pSrc[srcOffset    ];
-				pDst[dstOffset + 3] = 255;
+				pDst[dstOffset + 3] = 0xFF;
 				srcOffset += 3;
 				dstOffset += 4;
 			}

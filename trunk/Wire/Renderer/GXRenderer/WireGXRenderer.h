@@ -57,7 +57,7 @@ protected:
 	virtual void OnEnableVBuffer(ResourceIdentifier* pID);
 	virtual void OnDisableVBuffer(ResourceIdentifier* pID) {/**/}
 
-	virtual void OnEnableTexture(ResourceIdentifier* pID) {}  // TODO
+	virtual void OnEnableTexture(ResourceIdentifier* pID);
 	virtual void OnDisableTexture(ResourceIdentifier* pID) {}  // TODO
 
 	// global render state management
@@ -91,6 +91,10 @@ private:
 	static UChar msCullType[];
 	static UChar msFogDensity[];
 	static UChar msZBufferCompare[];
+ 	static UChar msTexMinFilter[];
+ 	static UChar msTexMipFilter[];
+ 	static UChar msTexWrapMode[];
+	static UChar msImageFormat[];
 };
 
 }

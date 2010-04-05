@@ -149,8 +149,8 @@ Texture* Sample1::CreateTexture()
 	{
 		for (UInt x = 0; x < width; x++)
 		{
-			*pDst++ = x * 8;
-			*pDst++ = x * 8;
+			*pDst++ = x * 2;
+			*pDst++ = x * 2;
 			*pDst++ = (x+y) / 2;
 		}
 	}
