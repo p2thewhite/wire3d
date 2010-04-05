@@ -139,7 +139,7 @@ void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	// TODO: introduce ApplyMode
-	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_MODULATE );
 	WIRE_ASSERT(SUCCEEDED(msResult));
 	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 	WIRE_ASSERT(SUCCEEDED(msResult));

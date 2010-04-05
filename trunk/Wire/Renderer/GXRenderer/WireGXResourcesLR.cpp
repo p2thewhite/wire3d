@@ -10,8 +10,8 @@ using namespace Wire;
 
 UChar GXRenderer::msImageFormat[Image::FM_QUANTITY] =
 {
-	GX_TF_RGBA8,      // Image::FM_RGB888
-	GX_TF_RGBA8,      // Image::FM_RGBA8888
+	GX_TF_RGB565,      // Image::FM_RGB888
+	GX_TF_RGB5A3,      // Image::FM_RGBA8888
 };
 
 //----------------------------------------------------------------------------
@@ -222,34 +222,47 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	WIRE_ASSERT(pImage);
 
 	UInt quantity = pImage->GetQuantity();
+	UInt bpp = 2;
 	UChar* pSrc = pImage->GetData();
-	pResource->Image = memalign(32, quantity * 4);
+	pResource->Image = memalign(32, quantity * bpp);
 	UChar* pDst = static_cast<UChar*>(pResource->Image);
 	WIRE_ASSERT(pDst);
 	Image::FormatMode format = pImage->GetFormat();
-	
+	UShort width = pImage->GetBound(0);
+	UShort height = pImage->GetBound(1);
+
 	if (pSrc)
 	{
-		switch (pImage->GetFormat())
+		switch (format)
 		{
 		case Image::FM_RGBA8888:
 			for (UInt i = 0; i < quantity; i++)
 			{
-				*pDst++ = *pSrc++;
-				*pDst++ = *pSrc++;
-				*pDst++ = *pSrc++;
-				*pDst++ = *pSrc++;
+// 				*pDst++ = *pSrc++;
+// 				*pDst++ = *pSrc++;
+// 				*pDst++ = *pSrc++;
+// 				*pDst++ = *pSrc++;
 			}
 
 			break;
 
-		case Image::FM_RGB888:
-			for (UInt i = 0; i < quantity; i++)
+		case Image::FM_RGB888:	// GX_TF_RGB565
+			for (UInt ty = 0; ty < height / 4; ty++)
 			{
- 				*pDst++ = *pSrc++;
- 				*pDst++ = *pSrc++;
- 				*pDst++ = *pSrc++;
-				*pDst++ = 0xFF;
+				for (UInt tx = 0; tx < width / 4; tx++)
+				{
+					for (UInt y = 0; y < 4; y++)
+					{
+						for (UInt x = 0; x < 4; x++)
+						{
+							UInt offset = (ty<<2)*width+(tx<<2)+y*width+x;
+							UShort rgb565 = RGB888toRGB565(pSrc+offset*3);
+
+							*pDst++ = static_cast<UChar>(rgb565 >> 8);
+							*pDst++ = static_cast<UChar>(rgb565);
+						}
+					}
+				}
 			}
 
 			break;
@@ -259,12 +272,12 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 		}
 	}
 
-	DCStoreRange(pResource->Image, quantity * 4);
+	DCStoreRange(pResource->Image, quantity * bpp);
 	GXInvalidateTexAll();
 
- 	GXInitTexObj(&pResource->TexObj, pResource->Image, pImage->GetBound(0),
-		pImage->GetBound(1), msImageFormat[format], msTexWrapMode[pTexture->
-		GetWrapType(0)], msTexWrapMode[pTexture->GetWrapType(1)], GX_FALSE);
+ 	GXInitTexObj(&pResource->TexObj, pResource->Image, width, height,
+		msImageFormat[format], msTexWrapMode[pTexture->GetWrapType(0)],
+		msTexWrapMode[pTexture->GetWrapType(1)], GX_FALSE);
 }
 
 //----------------------------------------------------------------------------

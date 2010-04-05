@@ -92,3 +92,21 @@ inline ZBufferState* Renderer::GetZBufferState()
 {
 	return StaticCast<ZBufferState>(mspStates[GlobalState::ZBUFFER]);
 }
+
+//----------------------------------------------------------------------------
+inline UShort Renderer::RGB888toRGB565(UChar* pRGB888)
+{
+	UShort rgb565 = static_cast<UShort>(*pRGB888++);		// red
+	rgb565 &= 0xF8;
+	rgb565 = rgb565 << 8;
+
+	UShort component = static_cast<UShort>(*pRGB888++);		// green
+	component &= 0xFC;
+	rgb565 |= component << 3;
+
+	component = static_cast<UShort>(*pRGB888);				// blue
+	component &= 0xF8;
+	rgb565 |= component >> 3;
+
+	return rgb565;
+}
