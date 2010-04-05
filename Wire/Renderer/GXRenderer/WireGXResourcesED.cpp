@@ -114,15 +114,31 @@ void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 //----------------------------------------------------------------------------
 void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 {
-	TextureID* pResource = static_cast<TextureID*>(pID);
-	Texture* pTex = pResource->TextureObject;
+	TextureID* pTexID = static_cast<TextureID*>(pID);
+	Texture* pTex = pTexID->TextureObject;
 
 	GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
 	GXSetNumTexGens(1);
 
-	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
+	GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
 
+	UChar magFilter = pTex->GetFilterType() == Texture::FT_NEAREST ?
+		GX_NEAR : GX_LINEAR;
+	GXInitTexObjFilter(&pTexID->TexObj, msTexMinFilter[pTex->GetFilterType()],
+		magFilter);
+	GXInitTexObjWrapMode(&pTexID->TexObj, msTexWrapMode[pTex->GetWrapType(0)],
+		msTexWrapMode[pTex->GetWrapType(1)]);
+
+	Float anisotropy = static_cast<UInt>(pTex->GetAnisotropyValue());
+	UChar anisoEnum = GX_ANISO_1;
+	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
+	{
+		anisoEnum = anisotropy - 3.0F > 0.0F ? GX_ANISO_4 : GX_ANISO_2;
+	}
+
+	GXInitTexObjMaxAniso(&pTexID->TexObj, anisoEnum);
+
 	// set texture
-	GXLoadTexObj(&pResource->TexObj, GX_TEXMAP0);
+	GXLoadTexObj(&pTexID->TexObj, GX_TEXMAP0);
 }

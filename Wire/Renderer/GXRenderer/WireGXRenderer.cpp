@@ -15,6 +15,8 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	:
 	Renderer(0, 0)
 {
+	msMaxAnisotropy = 4.0F;
+
 	VIInit();
 
 	mRmode = VIDEO_GetPreferredMode(NULL);

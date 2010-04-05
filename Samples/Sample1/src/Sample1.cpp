@@ -151,7 +151,7 @@ Texture* Sample1::CreateTexture()
 		{
 			*pDst++ = x * 2;
 			*pDst++ = x * 2;
-			*pDst++ = (x+y) / 2;
+			*pDst++ = x * 2;
 		}
 	}
 
