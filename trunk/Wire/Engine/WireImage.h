@@ -16,6 +16,8 @@ public:
 	{
 		FM_RGB888,
 		FM_RGBA8888,
+		FM_RGB565,
+		FM_RGBA4444,
 		FM_QUANTITY
 	};
 
@@ -30,6 +32,7 @@ public:
 	FormatMode GetFormat() const;
 	UInt GetQuantity() const;
 	UInt GetBound(UInt i) const;
+	UInt GetBytesPerPixel() const;
 
 private:
 	FormatMode mFormat;

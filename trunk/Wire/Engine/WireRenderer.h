@@ -71,6 +71,9 @@ public:
 	WireframeState* GetWireframeState();
 	ZBufferState* GetZBufferState();
 
+	static UShort RGB888ToRGB565(UChar* pRGB888);
+	static UShort RGBA8888ToRGBA4443(UChar* pRGBA8888);
+
 protected:
 	Renderer(Int width, Int height);
 
@@ -120,8 +123,6 @@ protected:
 
 	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
 	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
-
-	UShort RGB888toRGB565(UChar* pRGB888);
 
 	// Global render states.
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];

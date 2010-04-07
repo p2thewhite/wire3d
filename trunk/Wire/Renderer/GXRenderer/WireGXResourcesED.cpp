@@ -120,7 +120,7 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 	GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
 	GXSetNumTexGens(1);
 
-	GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
+	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
 
 	UChar magFilter = pTex->GetFilterType() == Texture::FT_NEAREST ?

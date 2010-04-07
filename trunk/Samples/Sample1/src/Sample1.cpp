@@ -139,19 +139,23 @@ Texture* Sample1::CreateTexture()
 	const UInt width = 256;
 	const UInt height = 256;
 
-	Image::FormatMode format = Image::FM_RGB888;
-	const UInt bytesPerPixel = 3;
+	Image::FormatMode format = Image::FM_RGB565;
+	const UInt bytesPerPixel = 2;
 
 	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
-	UChar* pDst = pData;
+	UShort* pDst = reinterpret_cast<UShort*>(pData);
 
 	for (UInt y = 0; y < height; y++)
 	{
+		UInt temp;
 		for (UInt x = 0; x < width; x++)
 		{
-			*pDst++ = x * 2;
-			*pDst++ = x * 2;
-			*pDst++ = x * 2;
+			UChar* pTemp = reinterpret_cast<UChar*>(&temp);
+			*pTemp++ = x * 4;
+			*pTemp++ = x * 2;
+			*pTemp++ = x;
+
+			*pDst++ = Renderer::RGB888ToRGB565(pTemp - 3);
 		}
 	}
 

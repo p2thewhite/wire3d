@@ -71,6 +71,13 @@ private:
 	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
 
+	void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width, UShort height,
+		UChar* pDst);
+	void ConvertRGB888ToTiles(UChar* pSrc, UShort width, UShort height,
+		UChar* pDst);
+	void ConvertRGB565ToTiles(UChar* pSrc, UShort width, UShort height,
+		UChar* pDst);
+
 	GXColor mGXClearColor;
 
 	GXRenderModeObj* mRmode;
