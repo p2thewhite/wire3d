@@ -11,8 +11,10 @@ using namespace Wire;
 
 D3DFORMAT Dx9Renderer::msImageFormat[Image::FM_QUANTITY] =
 {
-	D3DFMT_A8R8G8B8,      // Image::FM_RGB888
-	D3DFMT_A8R8G8B8,      // Image::FM_RGBA8888
+	D3DFMT_A8R8G8B8,	// Image::FM_RGB888
+	D3DFMT_A8R8G8B8,	// Image::FM_RGBA8888
+	D3DFMT_R5G6B5,		// Image::FM_RGB565
+	D3DFMT_A4R4G4B4,	// Image::FM_RGBA4443
 };
 
 //----------------------------------------------------------------------------
@@ -260,12 +262,14 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 
 	UChar* pSrc = pImage->GetData();
 	UChar* pDst = 0;
-	UInt byteQuantity = 0;
+	UInt quantity = pImage->GetQuantity();
+	UInt bpp = pImage->GetBytesPerPixel();
+	bpp = (bpp == 3) ? 4 : bpp;
+	UInt byteQuantity = quantity * bpp;
 	Image::FormatMode format = pImage->GetFormat();
 
 	if (pSrc)
 	{
-		UInt quantity;
 		UInt srcOffset = 0;
 		UInt dstOffset = 0;
 
@@ -273,8 +277,6 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 		{
 		case Image::FM_RGB888:
 			// Swap R and B and pad to an RGBA image.
-			quantity = pImage->GetQuantity();
-			byteQuantity = 4 * quantity;
 			pDst = WIRE_NEW UChar[byteQuantity];
 			for (UInt i = 0; i < quantity; i++)
 			{
@@ -289,8 +291,6 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 			break;
 
 		case Image::FM_RGBA8888:
-			quantity = pImage->GetQuantity();
-			byteQuantity = 4 * quantity;
 			pDst = WIRE_NEW UChar[byteQuantity];
 			for (UInt i = 0; i < quantity; i++)
 			{

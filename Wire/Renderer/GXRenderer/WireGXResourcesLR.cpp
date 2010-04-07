@@ -10,8 +10,10 @@ using namespace Wire;
 
 UChar GXRenderer::msImageFormat[Image::FM_QUANTITY] =
 {
-	GX_TF_RGB565,      // Image::FM_RGB888
-	GX_TF_RGB5A3,      // Image::FM_RGBA8888
+	GX_TF_RGBA8,	// Image::FM_RGB888
+	GX_TF_RGBA8,	// Image::FM_RGBA8888
+	GX_TF_RGB565,	// Image::FM_RGB565
+	GX_TF_RGB5A3,	// Image::FM_RGBA4443
 };
 
 //----------------------------------------------------------------------------
@@ -222,7 +224,8 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	WIRE_ASSERT(pImage);
 
 	UInt quantity = pImage->GetQuantity();
-	UInt bpp = 2;
+	UInt bpp = pImage->GetBytesPerPixel();
+	bpp = (bpp == 3) ? 4 : bpp;
 	UChar* pSrc = pImage->GetData();
 	pResource->Image = memalign(32, quantity * bpp);
 	UChar* pDst = static_cast<UChar*>(pResource->Image);
@@ -236,35 +239,15 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 		switch (format)
 		{
 		case Image::FM_RGBA8888:
-			for (UInt i = 0; i < quantity; i++)
-			{
-// 				*pDst++ = *pSrc++;
-// 				*pDst++ = *pSrc++;
-// 				*pDst++ = *pSrc++;
-// 				*pDst++ = *pSrc++;
-			}
-
+			ConvertRGBA8888ToTiles(pSrc, width, height, pDst);
 			break;
 
-		case Image::FM_RGB888:	// GX_TF_RGB565
-			for (UInt ty = 0; ty < height / 4; ty++)
-			{
-				for (UInt tx = 0; tx < width / 4; tx++)
-				{
-					for (UInt y = 0; y < 4; y++)
-					{
-						for (UInt x = 0; x < 4; x++)
-						{
-							UInt offset = (ty<<2)*width+(tx<<2)+y*width+x;
-							UShort rgb565 = RGB888toRGB565(pSrc+offset*3);
+		case Image::FM_RGB888:
+			ConvertRGB888ToTiles(pSrc, width, height, pDst);
+			break;
 
-							*pDst++ = static_cast<UChar>(rgb565 >> 8);
-							*pDst++ = static_cast<UChar>(rgb565);
-						}
-					}
-				}
-			}
-
+		case Image::FM_RGB565:
+			ConvertRGB565ToTiles(pSrc, width, height, pDst);
 			break;
 
 		default:
@@ -286,4 +269,93 @@ void GXRenderer::OnReleaseTexture(ResourceIdentifier* pID)
 	TextureID* pResource = static_cast<TextureID*>(pID);
 	free(pResource->Image);	// allocated using memalign, not using new
 	WIRE_DELETE pResource;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	for (UInt ty = 0; ty < height / 4; ty++)
+	{
+		for (UInt tx = 0; tx < width / 4; tx++)
+		{
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+
+					*pDst++ = *(pSrc + offset*4 + 3);
+					*pDst++ = *(pSrc + offset*4);
+				}
+			}
+
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UChar* pSrcTemp = pSrc + offset*4 + 1;
+
+					*pDst++ = *pSrcTemp++;
+					*pDst++ = *pSrcTemp;
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	for (UInt ty = 0; ty < height / 4; ty++)
+	{
+		for (UInt tx = 0; tx < width / 4; tx++)
+		{
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+
+					*pDst++ = 0xFF;
+					*pDst++ = *(pSrc + offset*3);
+				}
+			}
+
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UChar* pSrcTemp = pSrc + offset*3 + 1;
+
+					*pDst++ = *pSrcTemp++;
+					*pDst++ = *pSrcTemp;
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::ConvertRGB565ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	for (UInt ty = 0; ty < height / 4; ty++)
+	{
+		for (UInt tx = 0; tx < width / 4; tx++)
+		{
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					*pDst++ = *(pSrc+offset*2);
+					*pDst++ = *(pSrc+offset*2 + 1);
+				}
+			}
+		}
+	}
 }

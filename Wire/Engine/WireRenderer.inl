@@ -94,7 +94,7 @@ inline ZBufferState* Renderer::GetZBufferState()
 }
 
 //----------------------------------------------------------------------------
-inline UShort Renderer::RGB888toRGB565(UChar* pRGB888)
+inline UShort Renderer::RGB888ToRGB565(UChar* pRGB888)
 {
 	UShort rgb565 = static_cast<UShort>(*pRGB888++);		// red
 	rgb565 &= 0xF8;
@@ -109,4 +109,25 @@ inline UShort Renderer::RGB888toRGB565(UChar* pRGB888)
 	rgb565 |= component >> 3;
 
 	return rgb565;
+}
+
+//----------------------------------------------------------------------------
+inline UShort Renderer::RGBA8888ToRGBA4443(UChar* pRGBA8888)
+{
+	UShort rgba4443 = static_cast<UShort>(*pRGBA8888++);		// red
+	rgba4443 &= 0xF0;
+	rgba4443 = rgba4443 << 7;
+
+	UShort component = static_cast<UShort>(*pRGBA8888++);		// green
+	component &= 0xF0;
+	rgba4443 |= component << 3;
+
+	component = static_cast<UShort>(*pRGBA8888++);				// blue
+	component &= 0xF0;
+	rgba4443 |= component >> 1;
+
+	component = static_cast<UShort>(*pRGBA8888);				// alpha
+	rgba4443 |= component >> 5;
+
+	return rgba4443;
 }
