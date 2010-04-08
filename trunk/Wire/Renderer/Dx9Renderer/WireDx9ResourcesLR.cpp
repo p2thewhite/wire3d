@@ -14,7 +14,7 @@ D3DFORMAT Dx9Renderer::msImageFormat[Image::FM_QUANTITY] =
 	D3DFMT_A8R8G8B8,	// Image::FM_RGB888
 	D3DFMT_A8R8G8B8,	// Image::FM_RGBA8888
 	D3DFMT_R5G6B5,		// Image::FM_RGB565
-	D3DFMT_A4R4G4B4,	// Image::FM_RGBA4443
+	D3DFMT_A4R4G4B4,	// Image::FM_RGBA4444
 };
 
 //----------------------------------------------------------------------------
@@ -199,7 +199,7 @@ void Dx9Renderer::Convert(const VertexBuffer* pSrc, Float* pDst)
 			if (rIAttr.GetColorChannels(unit) > 0)
 			{
 				const Float* pColor = pSrc->GetColor(i, unit);
-				D3DCOLOR color = 0xffffffff;
+				D3DCOLOR color = 0xFFFFFFFF;
 				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
 				{
 					color = color << 8;
@@ -294,12 +294,39 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 			pDst = WIRE_NEW UChar[byteQuantity];
 			for (UInt i = 0; i < quantity; i++)
 			{
-				pDst[dstOffset    ] = pSrc[srcOffset + 2];
-				pDst[dstOffset + 1] = pSrc[srcOffset + 1];
-				pDst[dstOffset + 2] = pSrc[srcOffset    ];
-				pDst[dstOffset + 3] = pSrc[srcOffset + 3];
+				pDst[srcOffset    ] = pSrc[srcOffset + 2];
+				pDst[srcOffset + 1] = pSrc[srcOffset + 1];
+				pDst[srcOffset + 2] = pSrc[srcOffset    ];
+				pDst[srcOffset + 3] = pSrc[srcOffset + 3];
 				srcOffset += 4;
-				dstOffset += 4;
+			}
+
+			break;
+
+		case Image::FM_RGB565:
+			pDst = WIRE_NEW UChar[byteQuantity];
+			for (UInt i = 0; i < quantity; i++)
+			{
+				pDst[srcOffset] = pSrc[srcOffset+1];
+				pDst[srcOffset+1] = pSrc[srcOffset];
+				srcOffset += 2;
+			}
+
+			break;
+
+		case Image::FM_RGBA4444:
+			pDst = WIRE_NEW UChar[byteQuantity];
+			for (UInt i = 0; i < quantity; i++)
+			{
+				UShort texel = static_cast<UShort>(pSrc[srcOffset]);
+				texel = texel << 8;
+				texel |= static_cast<UShort>(pSrc[srcOffset+1]);
+				UShort texelRGB = (texel & 0xFFF0) >> 4;
+				UShort texelA = (texel & 0x0F) << 12;
+				texel = texelRGB | texelA;
+				pDst[srcOffset] = static_cast<UChar>(texel);
+				pDst[srcOffset+1] = static_cast<UChar>(texel >> 8);
+				srcOffset += 2;
 			}
 
 			break;

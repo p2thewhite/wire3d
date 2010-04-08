@@ -13,7 +13,7 @@ UChar GXRenderer::msImageFormat[Image::FM_QUANTITY] =
 	GX_TF_RGBA8,	// Image::FM_RGB888
 	GX_TF_RGBA8,	// Image::FM_RGBA8888
 	GX_TF_RGB565,	// Image::FM_RGB565
-	GX_TF_RGB5A3,	// Image::FM_RGBA4443
+	GX_TF_RGB5A3,	// Image::FM_RGBA4444
 };
 
 //----------------------------------------------------------------------------
@@ -250,6 +250,10 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 			ConvertRGB565ToTiles(pSrc, width, height, pDst);
 			break;
 
+		case Image::FM_RGBA4444:
+			ConvertRGBA4444ToTiles(pSrc, width, height, pDst);
+			break;
+
 		default:
 			break;
 		}
@@ -354,6 +358,33 @@ void GXRenderer::ConvertRGB565ToTiles(UChar* pSrc, UShort width,
 					UInt offset = (ty*width+tx)*4+y*width+x;
 					*pDst++ = *(pSrc+offset*2);
 					*pDst++ = *(pSrc+offset*2 + 1);
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	for (UInt ty = 0; ty < height / 4; ty++)
+	{
+		for (UInt tx = 0; tx < width / 4; tx++)
+		{
+			for (UInt y = 0; y < 4; y++)
+			{
+				for (UInt x = 0; x < 4; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UShort texel = static_cast<UShort>(*(pSrc + offset*2));
+					texel = texel << 8;
+					texel |= static_cast<UShort>(*(pSrc + offset*2 + 1));
+					UShort texelRGB = (texel & 0xFFF0) >> 4;
+					UShort texelA = (texel & 0x0e) << 11;
+					texel = texelRGB | texelA;
+					*pDst++ = static_cast<UChar>(texel >> 8);
+					*pDst++ = static_cast<UChar>(texel);
 				}
 			}
 		}
