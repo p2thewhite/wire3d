@@ -112,22 +112,22 @@ inline UShort Renderer::RGB888ToRGB565(UChar* pRGB888)
 }
 
 //----------------------------------------------------------------------------
-inline UShort Renderer::RGBA8888ToRGBA4443(UChar* pRGBA8888)
+inline UShort Renderer::RGBA8888ToRGBA4444(UChar* pRGBA8888)
 {
-	UShort rgba4443 = static_cast<UShort>(*pRGBA8888++);		// red
-	rgba4443 &= 0xF0;
-	rgba4443 = rgba4443 << 7;
+	UShort rgba4444 = static_cast<UShort>(*pRGBA8888++);		// red
+	rgba4444 &= 0xF0;
+	rgba4444 = rgba4444 << 8;
 
 	UShort component = static_cast<UShort>(*pRGBA8888++);		// green
 	component &= 0xF0;
-	rgba4443 |= component << 3;
+	rgba4444 |= component << 4;
 
 	component = static_cast<UShort>(*pRGBA8888++);				// blue
 	component &= 0xF0;
-	rgba4443 |= component >> 1;
+	rgba4444 |= component;
 
 	component = static_cast<UShort>(*pRGBA8888);				// alpha
-	rgba4443 |= component >> 5;
+	rgba4444 |= component >> 4;
 
-	return rgba4443;
+	return rgba4444;
 }

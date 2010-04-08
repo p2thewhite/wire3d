@@ -72,7 +72,7 @@ public:
 	ZBufferState* GetZBufferState();
 
 	static UShort RGB888ToRGB565(UChar* pRGB888);
-	static UShort RGBA8888ToRGBA4443(UChar* pRGBA8888);
+	static UShort RGBA8888ToRGBA4444(UChar* pRGBA8888);
 
 protected:
 	Renderer(Int width, Int height);

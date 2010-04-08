@@ -77,6 +77,8 @@ private:
 		UChar* pDst);
 	void ConvertRGB565ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
+	void ConvertRGBA4444ToTiles(UChar* pSrc, UShort width, UShort height,
+		UChar* pDst);
 
 	GXColor mGXClearColor;
 
