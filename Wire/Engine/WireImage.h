@@ -33,8 +33,18 @@ public:
 	UInt GetQuantity() const;
 	UInt GetBound(UInt i) const;
 	UInt GetBytesPerPixel() const;
+	static UInt GetBytesPerPixel(FormatMode format);
+	void GenerateMipmaps();
+
+	static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
+	static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
+	static void RGB565ToRGB888(UChar* pSrc565, UChar* pDst888);
+	static void RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888);
 
 private:
+	Bool IsPowerOfTwo(UInt value) const;
+	void GenerateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
+
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];
