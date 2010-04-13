@@ -25,7 +25,8 @@ public:
 	// deleting the input array.
 
 	// 2D image
-	Image(FormatMode format, UInt width, UInt height, UChar* pData);
+	Image(FormatMode format, UInt width, UInt height, UChar* pData,
+		Bool createMipmaps = true);
 	virtual ~Image();
 
 	UChar* GetData() const;
@@ -34,7 +35,9 @@ public:
 	UInt GetBound(UInt i) const;
 	UInt GetBytesPerPixel() const;
 	static UInt GetBytesPerPixel(FormatMode format);
-	void GenerateMipmaps();
+	void CreateMipmaps();
+	UInt GetMipmapCount() const;
+	UChar* GetMipmap(UInt i) const;
 
 	static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
 	static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
@@ -43,11 +46,13 @@ public:
 
 private:
 	Bool IsPowerOfTwo(UInt value) const;
-	void GenerateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
+	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
+	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];
+	Bool mHasMipmaps;
 };
 
 typedef Pointer<Image> ImagePtr;
