@@ -262,7 +262,7 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 
 	UChar* pSrc = pImage->GetData();
 	UChar* pDst = 0;
-	UInt quantity = pImage->GetQuantity();
+	UInt quantity = pImage->GetTotalQuantity();
 	UInt bpp = pImage->GetBytesPerPixel();
 	bpp = (bpp == 3) ? 4 : bpp;
 	UInt byteQuantity = quantity * bpp;
@@ -340,22 +340,43 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 		}
 	}
 
-	DWORD usage = D3DUSAGE_AUTOGENMIPMAP;
+	DWORD usage = 0;
 	D3DPOOL pool = D3DPOOL_MANAGED;
-	D3DLOCKED_RECT lockRect;
 	LPDIRECT3DTEXTURE9 pD3DTexture;
+	const UInt mipmapCount = pImage->GetMipmapCount();
 
 	msResult = D3DXCreateTexture(mpD3DDevice, pImage->GetBound(0),
-		pImage->GetBound(1), 0, usage, msImageFormat[format], pool,
+		pImage->GetBound(1), mipmapCount, usage, msImageFormat[format], pool,
 		&pD3DTexture);
 	WIRE_ASSERT(SUCCEEDED(msResult));
 
 	if (pDst)
 	{
-		msResult = pD3DTexture->LockRect(0, &lockRect, 0, 0);
-		WIRE_ASSERT(SUCCEEDED(msResult));
-		memcpy(lockRect.pBits, pDst, byteQuantity);
-		msResult = pD3DTexture->UnlockRect(0);
+		IDirect3DSurface9* pD3DSurface = NULL;
+
+		for (UInt i = 0; i < mipmapCount; i++)
+		{
+			msResult = pD3DTexture->GetSurfaceLevel(i, &pD3DSurface);
+			WIRE_ASSERT(SUCCEEDED(msResult) && pD3DSurface);
+
+			RECT r;
+			UInt pitch	= pImage->GetBound(0, i);
+			r.bottom	= pImage->GetBound(1, i);
+			r.right		= pitch;
+			r.top		= 0;
+			r.left		= 0;
+			UInt offset = pImage->GetMipmapOffset(i);
+
+			msResult = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
+				pDst+offset, msImageFormat[format], pitch * bpp, NULL, &r,
+				D3DX_FILTER_NONE, 0xFF000000);
+			WIRE_ASSERT(SUCCEEDED(msResult));
+
+			pD3DSurface->Release();
+		}
+
+		// mark the texture as dirty
+		msResult = pD3DTexture->AddDirtyRect(NULL);
 		WIRE_ASSERT(SUCCEEDED(msResult));
 	}
 

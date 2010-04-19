@@ -17,16 +17,27 @@ inline UInt Image::GetQuantity() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Image::GetBound(UInt i) const
+inline Bool Image::HasMipmaps() const
 {
-	WIRE_ASSERT(0 <= i && i < 2);
-	return mBound[i];
+	return mHasMipmaps;
 }
 
 //----------------------------------------------------------------------------
 inline Bool Image::IsPowerOfTwo(UInt value) const
 {
 	return ((value & (value-1)) == 0);
+}
+
+//----------------------------------------------------------------------------
+inline UInt Image::GetBytesPerPixel() const
+{
+	return GetBytesPerPixel(mFormat);
+}
+
+//----------------------------------------------------------------------------
+inline UInt Image::GetBytesPerPixel(FormatMode format)
+{
+	return sImageBpp[format];
 }
 
 //----------------------------------------------------------------------------

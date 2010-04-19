@@ -1,1 +1,1 @@
-<Project name="Sample1"><Folder name="Header Files"><File path="src\Sample1.h"></File></Folder><Folder name="Source Files"><File path="src\Sample1.cpp"></File></Folder></Project>
+<Project name="Sample1"><Folder name="Header Files"><File path="src\Sample1.h"></File><File path="src\PerlinNoise.h"></File></Folder><Folder name="Source Files"><File path="src\Sample1.cpp"></File><File path="src\PerlinNoise.cpp"></File></Folder></Project>
