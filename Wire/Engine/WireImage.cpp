@@ -4,6 +4,14 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Image, Object);
 
+const UChar Image::sImageBpp[] =
+{
+	3,	// FM_RGB888,
+	4,	// FM_RGBA8888,
+	2,	// FM_RGB565,
+	2	// FM_RGBA4444,
+};
+
 //----------------------------------------------------------------------------
 Image::Image(FormatMode format, UInt width, UInt height, UChar* pData,
 	Bool createMipmaps)
@@ -31,30 +39,32 @@ Image::~Image()
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetBytesPerPixel() const
+UInt Image::GetBound(UInt i, UInt level) const
 {
-	return GetBytesPerPixel(mFormat);
-}
-
-//----------------------------------------------------------------------------
-UInt Image::GetBytesPerPixel(FormatMode format)
-{
-	switch (format)
+	WIRE_ASSERT(0 <= i && i < 2);
+	if (GetMipmapCount() <= level)
 	{
-	case FM_RGB888:
-		return 3;
-
-	case FM_RGBA8888:
-		return 4;
-
-	case FM_RGB565:
-	case FM_RGBA4444:
-		return 2;
-	default:
-		break;
+		return 0;
 	}
 
-	return 0;
+	UInt width = mBound[0];
+	UInt height = mBound[1];
+	UInt currentLevel = 0;
+
+	while ((width > 1 || height > 1) && (currentLevel < level))
+	{
+		width = width >> 1;
+		height = height >> 1;
+		currentLevel++;
+	}
+
+	switch (i)
+	{
+	case 0: return width;
+	case 1: return height;
+	default: WIRE_ASSERT(false);
+		return 0;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -62,10 +72,10 @@ UInt Image::GetMipmapCount() const
 {
 	if (!mHasMipmaps)
 	{
-		return 0;
+		return 1;
 	}
 
-	UInt mipmapCount = 0;
+	UInt mipmapCount = 1;
 	UInt width = mBound[0];
 	UInt height = mBound[1];
 
@@ -80,28 +90,68 @@ UInt Image::GetMipmapCount() const
 }
 
 //----------------------------------------------------------------------------
-UChar* Image::GetMipmap(UInt i) const
+UInt Image::GetMipmapQuantity(UInt level) const
 {
-	if (!mHasMipmaps || GetMipmapCount() < i)
+	UInt width = mBound[0];
+	UInt height = mBound[1];
+	UInt currentLevel = 0;
+
+	while ((width > 1 || height > 1) && currentLevel < level)
 	{
-		return NULL;
+		currentLevel++;
+		width = width > 1 ? width >> 1 : width;
+		height = height > 1 ? height >> 1 : height;
+	}
+
+	return width * height;
+}
+
+//----------------------------------------------------------------------------
+UInt Image::GetTotalQuantity() const
+{
+	UInt totalQuantity = 0;
+	for (UInt i = 0; i < GetMipmapCount(); i++)
+	{
+		totalQuantity += GetMipmapQuantity(i);
+	}
+
+	return totalQuantity;
+}
+
+//----------------------------------------------------------------------------
+UInt Image::GetMipmapOffset(UInt level) const
+{
+	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
+	{
+		return 0;
 	}
 
 	UInt width = mBound[0];
 	UInt height = mBound[1];
 	UInt bpp = GetBytesPerPixel();
 	UInt offset = 0;
-	UInt level = 0;
+	UInt currentLevel = 0;
 
-	while ((width > 1 || height > 1) && level <= i)
+	while ((width > 1 || height > 1) && currentLevel < level)
 	{
 		offset += width * height * bpp;
-		level++;
+		currentLevel++;
 		width = width > 1 ? width >> 1 : width;
 		height = height > 1 ? height >> 1 : height;
 	}
 
-	return mpData + offset;
+	return offset;
+}
+
+//----------------------------------------------------------------------------
+UChar* Image::GetMipmap(UInt level) const
+{
+	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
+	{
+		return NULL;
+	}
+
+	return mpData + GetMipmapOffset(level);
 }
 
 //----------------------------------------------------------------------------

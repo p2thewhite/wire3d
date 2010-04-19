@@ -29,6 +29,13 @@ Real Math<Real>::FAbs(Real value)
 
 //----------------------------------------------------------------------------
 template <class Real>
+Real Math<Real>::Floor(Real value)
+{
+	return static_cast<Real>(floor(static_cast<Double>(value)));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Real Math<Real>::FMod(Real x, Real y)
 {
 	return static_cast<Real>(

@@ -32,12 +32,17 @@ public:
 	UChar* GetData() const;
 	FormatMode GetFormat() const;
 	UInt GetQuantity() const;
-	UInt GetBound(UInt i) const;
+	UInt GetBound(UInt i, UInt level = 0) const;
 	UInt GetBytesPerPixel() const;
 	static UInt GetBytesPerPixel(FormatMode format);
+
+	Bool HasMipmaps() const;
 	void CreateMipmaps();
 	UInt GetMipmapCount() const;
-	UChar* GetMipmap(UInt i) const;
+	UInt GetMipmapQuantity(UInt level) const;
+	UChar* GetMipmap(UInt level) const;
+	UInt GetMipmapOffset(UInt level) const;
+	UInt GetTotalQuantity() const;
 
 	static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
 	static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
@@ -49,6 +54,7 @@ private:
 	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 
+	static const UChar sImageBpp[];
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];

@@ -1,5 +1,7 @@
 #include "Sample1.h"
 
+#include "PerlinNoise.h"	// we use Perlin noise to create a texture
+
 using namespace Wire;
 
 WIRE_APPLICATION(Sample1);
@@ -137,32 +139,40 @@ Geometry* Sample1::CreateCube()
 Texture* Sample1::CreateTexture()
 {
 	const UInt width = 256;
-	const UInt height = 256;
+	const UInt height = 64;
 
-	Image::FormatMode format = Image::FM_RGBA4444;
+	Image::FormatMode format = Image::FM_RGB565;
 	const UInt bytesPerPixel = Image::GetBytesPerPixel(format);
 
 	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
 	UChar* pDst = reinterpret_cast<UChar*>(pData);
+
+	PerlinNoise noise(0.5, 8);
 
 	for (UInt y = 0; y < height; y++)
 	{
 		UInt temp;
 		for (UInt x = 0; x < width; x++)
 		{
+			Float val = noise.EvaluateAtPos(
+				static_cast<Float>(x)/static_cast<Float>(width),
+				static_cast<Float>(y)/static_cast<Float>(height));
+ 			val = MathF::Cos(10 * val);
+ 			UChar t = static_cast<UChar>(val*127 + 127);
+
 			UChar* pTemp = reinterpret_cast<UChar*>(&temp);
-			*pTemp++ = x * 4;
-			*pTemp++ = x * 2;
-			*pTemp++ = x;
+			*pTemp++ = t;
+			*pTemp++ = t;
+			*pTemp++ = ~t;
 			*pTemp = 0xFF;
 
- 			Image::RGBA8888ToRGBA4444(pTemp - 3, pDst);
-// 			Image::RGB888ToRGB565(pTemp - 3, pDst);
+// 			Image::RGBA8888ToRGBA4444(pTemp - 3, pDst);
+ 			Image::RGB888ToRGB565(pTemp - 3, pDst);
  			pDst += 2;
 		}
 	}
 
-	Image* pImage = WIRE_NEW Image(format, width, height, pData);
+	Image* pImage = WIRE_NEW Image(format, width, height, pData, false);
 	Texture* pTexture = WIRE_NEW Texture(pImage);
 	return pTexture;
 }
@@ -237,7 +247,7 @@ void Sample1::OnIdle()
 
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
+// 	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
@@ -270,7 +280,8 @@ void Sample1::OnIdle()
 	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle);
 	mspCube->World.SetRotate(model);
 	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
-	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
+//	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
+//	mspCube->World.SetUniformScale(2.0F);
 	mpRenderer->Draw(mspCube);
 
 	mpRenderer->EndScene();

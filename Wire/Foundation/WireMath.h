@@ -15,6 +15,7 @@ public:
     static Real ATan2(Real y, Real x);
 	static Real Cos(Real value);
 	static Real FAbs(Real value);
+	static Real Floor(Real value);
 	static Real FMod(Real x, Real y);
 	static Real Sin(Real value);
 	static Real Sqrt(Real value);
