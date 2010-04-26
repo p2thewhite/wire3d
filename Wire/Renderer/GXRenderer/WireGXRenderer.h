@@ -11,6 +11,7 @@ namespace Wire
 
 class VBufferID;
 class IBufferID;
+class Image;
 
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
@@ -71,6 +72,8 @@ private:
 	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
 
+	UInt GetTotalImageMemory(const Image* pImage, const UInt bpp) const;
+
 	void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
 	void ConvertRGB888ToTiles(UChar* pSrc, UShort width, UShort height,
@@ -79,6 +82,8 @@ private:
 		UChar* pDst);
 	void ConvertRGBA4444ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
+	void GetTileCount(UInt& rTilesYCount, UShort& rHeight, UInt& rTilesXCount,
+		UShort &rWidth);
 
 	GXColor mGXClearColor;
 
@@ -101,7 +106,6 @@ private:
 	static UChar msFogDensity[];
 	static UChar msZBufferCompare[];
  	static UChar msTexMinFilter[];
- 	static UChar msTexMipFilter[];
  	static UChar msTexWrapMode[];
 	static UChar msImageFormat[];
 };

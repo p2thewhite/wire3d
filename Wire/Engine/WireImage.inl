@@ -11,9 +11,16 @@ inline Image::FormatMode Image::GetFormat() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Image::GetQuantity() const
+inline UInt Image::GetQuantity(UInt level) const
 {
-	return mBound[0] * mBound[1];
+	if (level == 0)
+	{
+		return mBound[0] * mBound[1];
+	}
+	else
+	{
+		return GetBound(0, level) * GetBound(1, level);
+	}
 }
 
 //----------------------------------------------------------------------------

@@ -219,52 +219,62 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	pResource->TextureObject = pTexture;
 	rID = pResource;
 
-	// Copy the image data from system memory to video memory.
 	const Image* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
-	UInt quantity = pImage->GetQuantity();
 	UInt bpp = pImage->GetBytesPerPixel();
 	bpp = (bpp == 3) ? 4 : bpp;
-	UChar* pSrc = pImage->GetData();
-	pResource->Image = memalign(32, quantity * bpp);
+	UInt totalMemory = GetTotalImageMemory(pImage, bpp);
+
+	pResource->Image = memalign(32, totalMemory);
 	UChar* pDst = static_cast<UChar*>(pResource->Image);
 	WIRE_ASSERT(pDst);
 	Image::FormatMode format = pImage->GetFormat();
-	UShort width = pImage->GetBound(0);
-	UShort height = pImage->GetBound(1);
 
-	if (pSrc)
+	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
 	{
-		switch (format)
+		UChar* pSrc = pImage->GetMipmap(mipLevel);
+		UShort width = pImage->GetBound(0, mipLevel);
+		UShort height = pImage->GetBound(1, mipLevel);
+
+		if (pSrc)
 		{
-		case Image::FM_RGBA8888:
-			ConvertRGBA8888ToTiles(pSrc, width, height, pDst);
-			break;
+			switch (format)
+			{
+			case Image::FM_RGBA8888:
+				ConvertRGBA8888ToTiles(pSrc, width, height, pDst);
+				break;
 
-		case Image::FM_RGB888:
-			ConvertRGB888ToTiles(pSrc, width, height, pDst);
-			break;
+			case Image::FM_RGB888:
+				ConvertRGB888ToTiles(pSrc, width, height, pDst);
+				break;
 
-		case Image::FM_RGB565:
-			ConvertRGB565ToTiles(pSrc, width, height, pDst);
-			break;
+			case Image::FM_RGB565:
+				ConvertRGB565ToTiles(pSrc, width, height, pDst);
+				break;
 
-		case Image::FM_RGBA4444:
-			ConvertRGBA4444ToTiles(pSrc, width, height, pDst);
-			break;
+			case Image::FM_RGBA4444:
+				ConvertRGBA4444ToTiles(pSrc, width, height, pDst);
+				break;
 
-		default:
-			break;
+			default:
+				break;
+			}
 		}
+
+		UInt offset = width * height * bpp;
+		pDst += (offset < 32) ? 32 : offset;
 	}
 
-	DCStoreRange(pResource->Image, quantity * bpp);
+	DCStoreRange(pResource->Image, totalMemory);
 	GXInvalidateTexAll();
 
- 	GXInitTexObj(&pResource->TexObj, pResource->Image, width, height,
+	UShort width = pImage->GetBound(0);
+	UShort height = pImage->GetBound(1);
+	UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
+	GXInitTexObj(&pResource->TexObj, pResource->Image, width, height,
 		msImageFormat[format], msTexWrapMode[pTexture->GetWrapType(0)],
-		msTexWrapMode[pTexture->GetWrapType(1)], GX_FALSE);
+		msTexWrapMode[pTexture->GetWrapType(1)], usesMipmaps);
 }
 
 //----------------------------------------------------------------------------
@@ -279,28 +289,32 @@ void GXRenderer::OnReleaseTexture(ResourceIdentifier* pID)
 void GXRenderer::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 	UShort height, UChar* pDst)
 {
-	for (UInt ty = 0; ty < height / 4; ty++)
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
-		for (UInt tx = 0; tx < width / 4; tx++)
+		for (UInt tx = 0; tx < tilesXCount; tx++)
 		{
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
-
 					*pDst++ = *(pSrc + offset*4 + 3);
 					*pDst++ = *(pSrc + offset*4);
 				}
 			}
 
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
 					UChar* pSrcTemp = pSrc + offset*4 + 1;
-
 					*pDst++ = *pSrcTemp++;
 					*pDst++ = *pSrcTemp;
 				}
@@ -313,24 +327,29 @@ void GXRenderer::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 void GXRenderer::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
 	UShort height, UChar* pDst)
 {
-	for (UInt ty = 0; ty < height / 4; ty++)
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
-		for (UInt tx = 0; tx < width / 4; tx++)
+		for (UInt tx = 0; tx < tilesXCount; tx++)
 		{
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
-
 					*pDst++ = 0xFF;
 					*pDst++ = *(pSrc + offset*3);
 				}
 			}
 
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
 					UChar* pSrcTemp = pSrc + offset*3 + 1;
@@ -347,13 +366,19 @@ void GXRenderer::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
 void GXRenderer::ConvertRGB565ToTiles(UChar* pSrc, UShort width,
 	UShort height, UChar* pDst)
 {
-	for (UInt ty = 0; ty < height / 4; ty++)
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
-		for (UInt tx = 0; tx < width / 4; tx++)
+		for (UInt tx = 0; tx < tilesXCount; tx++)
 		{
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
 					*pDst++ = *(pSrc+offset*2);
@@ -368,13 +393,19 @@ void GXRenderer::ConvertRGB565ToTiles(UChar* pSrc, UShort width,
 void GXRenderer::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
 	UShort height, UChar* pDst)
 {
-	for (UInt ty = 0; ty < height / 4; ty++)
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
-		for (UInt tx = 0; tx < width / 4; tx++)
+		for (UInt tx = 0; tx < tilesXCount; tx++)
 		{
-			for (UInt y = 0; y < 4; y++)
+			for (UInt y = 0; y < yCount; y++)
 			{
-				for (UInt x = 0; x < 4; x++)
+				for (UInt x = 0; x < xCount; x++)
 				{
 					UInt offset = (ty*width+tx)*4+y*width+x;
 					UShort texel = static_cast<UShort>(*(pSrc + offset*2));
@@ -388,5 +419,46 @@ void GXRenderer::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
 				}
 			}
 		}
+	}
+}
+
+//----------------------------------------------------------------------------
+UInt GXRenderer::GetTotalImageMemory(const Image* pImage, const UInt bpp)
+	const
+{
+	UInt totalMemory = 0;
+	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
+	{
+		UInt mipMemoryUsed = pImage->GetQuantity(mipLevel) * bpp;
+		mipMemoryUsed = mipMemoryUsed < 32 ? 32 : mipMemoryUsed;
+		totalMemory += mipMemoryUsed;
+	}
+
+	return totalMemory;
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
+	UInt& rTilesXCount, UShort& rWidth)
+{
+	rTilesYCount = rHeight / 4;
+	rTilesXCount = rWidth / 4;
+
+	if (rHeight < 4)
+	{
+		rTilesYCount = 1;
+	}
+	else
+	{
+		rHeight = 4;
+	}
+
+	if (rWidth < 4)
+	{
+		rTilesXCount = 1;
+	}
+	else
+	{
+		rWidth = 4;
 	}
 }

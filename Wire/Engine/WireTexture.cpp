@@ -11,6 +11,11 @@ Texture::Texture(Image* pImage)
 	mFilterType(FT_LINEAR),
 	mAnisotropy(1.0F)
 {
+	if (pImage->HasMipmaps())
+	{
+		mFilterType = FT_LINEAR_LINEAR;
+	}
+
 	mWarpType[0] = WT_CLAMP;
 	mWarpType[1] = WT_CLAMP;
 }
