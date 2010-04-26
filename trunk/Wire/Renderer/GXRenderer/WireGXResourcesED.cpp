@@ -16,16 +16,6 @@ UChar GXRenderer::msTexMinFilter[Texture::FT_QUANTITY] =
 	GX_LIN_MIP_NEAR,	// Texture::FT_LINEAR_NEAREST
 	GX_LIN_MIP_LIN,		// Texture::FT_LINEAR_LINEAR
 };
-	
-UChar GXRenderer::msTexMipFilter[Texture::FT_QUANTITY] =
-{
-	GX_NEAR,	// Texture::FT_NEAREST
-	GX_NEAR,	// Texture::FT_LINEAR
-	GX_NEAR,	// Texture::FT_NEAREST_NEAREST
-	GX_LINEAR,	// Texture::FT_NEAREST_LINEAR
-	GX_NEAR,	// Texture::FT_LINEAR_NEAREST
-	GX_LINEAR,	// Texture::FT_LINEAR_LINEAR
-};
 
 UChar GXRenderer::msTexWrapMode[Texture::WT_QUANTITY] =
 {
@@ -123,21 +113,22 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
 
-	UChar magFilter = pTex->GetFilterType() == Texture::FT_NEAREST ?
-		GX_NEAR : GX_LINEAR;
-	GXInitTexObjFilter(&pTexID->TexObj, msTexMinFilter[pTex->GetFilterType()],
-		magFilter);
 	GXInitTexObjWrapMode(&pTexID->TexObj, msTexWrapMode[pTex->GetWrapType(0)],
 		msTexWrapMode[pTex->GetWrapType(1)]);
 
 	Float anisotropy = static_cast<UInt>(pTex->GetAnisotropyValue());
 	UChar anisoEnum = GX_ANISO_1;
+	UChar doEdgeLod = GX_FALSE;
 	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
 	{
-		anisoEnum = anisotropy - 3.0F > 0.0F ? GX_ANISO_4 : GX_ANISO_2;
+		anisoEnum = (anisotropy - 3.0F) > 0.0F ? GX_ANISO_4 : GX_ANISO_2;
+		doEdgeLod = GX_TRUE;
 	}
 
-	GXInitTexObjMaxAniso(&pTexID->TexObj, anisoEnum);
+	UChar magFilter = pTex->GetFilterType() == Texture::FT_NEAREST ?
+		GX_NEAR : GX_LINEAR;
+  	GXInitTexObjLOD(&pTexID->TexObj, msTexMinFilter[pTex->GetFilterType()],
+  		magFilter, 0, 10.0F, 0, GX_FALSE, doEdgeLod, anisoEnum);
 
 	// set texture
 	GXLoadTexObj(&pTexID->TexObj, GX_TEXMAP0);

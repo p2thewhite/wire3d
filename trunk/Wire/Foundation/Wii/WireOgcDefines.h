@@ -28,6 +28,7 @@ typedef guVector Vector;
 #define GXInitLightPos GX_InitLightPos
 #define GXInitTexObj GX_InitTexObj
 #define GXInitTexObjFilter GX_InitTexObjFilterMode
+#define GXInitTexObjLOD GX_InitTexObjLOD
 #define GXInitTexObjMaxAniso GX_InitTexObjMaxAniso
 #define GXInitTexObjWrapMode GX_InitTexObjWrapMode
 #define GXInvalidateTexAll GX_InvalidateTexAll
