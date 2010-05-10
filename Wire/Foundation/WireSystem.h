@@ -41,12 +41,6 @@ public:
 
 private:
 	static Bool msInitializedTime;
-#ifdef WIRE_WII
-	static ULongLong msInitialTicks;
-#else
-	static Long msInitialSec;
-	static Long msInitialUSec;
-#endif
 };
 
 }

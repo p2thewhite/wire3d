@@ -267,58 +267,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Wii"
-				>
-				<Filter
-					Name="Header Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireGXApplication.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Foundation\Wii\WireOgcDefines.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireMatrix34Wii.inl"
-						>
-					</File>
-					<File
-						RelativePath=".\Foundation\Wii\WireVector3Wii.inl"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Source Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireGXApplication.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
 				Name="Source Files"
 				Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 				UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
@@ -357,23 +305,91 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Dx9"
+				Name="Platforms"
 				>
 				<Filter
-					Name="Header Files"
+					Name="Wii"
 					>
-					<File
-						RelativePath=".\Foundation\Dx9\WireDx9Application.h"
+					<Filter
+						Name="Header Files"
 						>
-					</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireGXApplication.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireOgcDefines.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Inline Files"
+						>
+						<File
+							RelativePath=".\Foundation\Wii\WireMatrix34Wii.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireSystemWii.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireVector3Wii.inl"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Source Files"
+						>
+						<File
+							RelativePath=".\Foundation\Wii\WireGXApplication.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
-					Name="Source Files"
+					Name="Dx9"
 					>
-					<File
-						RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
+					<Filter
+						Name="Header Files"
 						>
-					</File>
+						<File
+							RelativePath=".\Foundation\Dx9\WireDx9Application.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Source Files"
+						>
+						<File
+							RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Inlines Files"
+						>
+						<File
+							RelativePath=".\Foundation\Dx9\WireSystemDx9.inl"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>
