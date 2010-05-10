@@ -46,42 +46,6 @@
 				>
 			</File>
 			<Filter
-				Name="Wii"
-				>
-				<Filter
-					Name="Header Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireGXApplication.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Foundation\Wii\WireOgcDefines.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireMatrix34Wii.inl"
-						>
-					</File>
-					<File
-						RelativePath=".\Foundation\Wii\WireVector3Wii.inl"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Source Files"
-					>
-					<File
-						RelativePath=".\Foundation\Wii\WireGXApplication.cpp"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
 				Name="Header Files"
 				>
 				<File
@@ -230,23 +194,75 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Dx9"
+				Name="Platforms"
 				>
 				<Filter
-					Name="Header Files"
+					Name="Dx9"
 					>
-					<File
-						RelativePath=".\Foundation\Dx9\WireDx9Application.h"
+					<Filter
+						Name="Header Files"
 						>
-					</File>
+						<File
+							RelativePath=".\Foundation\Dx9\WireDx9Application.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Source Files"
+						>
+						<File
+							RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Inline Files"
+						>
+						<File
+							RelativePath=".\Foundation\Dx9\WireSystemDx9.inl"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
-					Name="Source Files"
+					Name="Wii"
 					>
-					<File
-						RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
+					<Filter
+						Name="Header Files"
 						>
-					</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireGXApplication.h"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireOgcDefines.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Inline Files"
+						>
+						<File
+							RelativePath=".\Foundation\Wii\WireMatrix34Wii.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireSystemWii.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Foundation\Wii\WireVector3Wii.inl"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Source Files"
+						>
+						<File
+							RelativePath=".\Foundation\Wii\WireGXApplication.cpp"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>
