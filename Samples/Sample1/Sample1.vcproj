@@ -37,7 +37,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory="build/$(ConfigurationName)"
 			ConfigurationType="0"
 			>
 			<Tool
