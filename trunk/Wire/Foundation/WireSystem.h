@@ -22,7 +22,11 @@
 	#include <stddef.h>
 	#include <assert.h>
 	#include <cmath>
-	#define WIRE_ASSERT(expression) assert(expression)
+	#ifdef WIRE_DEBUG
+		#define WIRE_ASSERT(expression) assert(expression)
+	#else
+		#define WIRE_ASSERT(expression)
+	#endif
 #endif /* WIRE_WII */
 
 #include <float.h>
