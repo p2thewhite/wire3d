@@ -107,11 +107,16 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 	TextureID* pTexID = static_cast<TextureID*>(pID);
 	Texture* pTex = pTexID->TextureObject;
 
-	GXSetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
+	const UInt unit = mCurrentSampler;
+
+	GXSetTexCoordGen(GX_TEXCOORD0 + unit, GX_TG_MTX2x4, GX_TG_TEX0 + unit,
+		GX_IDENTITY);
 	GXSetNumTexGens(1);
 
+	// TODO:
 	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0 + unit, GX_TEXMAP0 + unit,
+		GX_COLOR0A0);
 
 	GXInitTexObjWrapMode(&pTexID->TexObj, msTexWrapMode[pTex->GetWrapType(0)],
 		msTexWrapMode[pTex->GetWrapType(1)]);
@@ -131,5 +136,5 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
   		magFilter, 0, 10.0F, 0, GX_FALSE, doEdgeLod, anisoEnum);
 
 	// set texture
-	GXLoadTexObj(&pTexID->TexObj, GX_TEXMAP0);
+	GXLoadTexObj(&pTexID->TexObj, GX_TEXMAP0 + unit);
 }

@@ -71,6 +71,8 @@ private:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
+	void DrawWireframe(const VBufferID* pResource, const IndexBuffer&
+		rIBuffer);
 
 	UInt GetTotalImageMemory(const Image* pImage, const UInt bpp) const;
 
@@ -87,7 +89,7 @@ private:
 
 	GXColor mGXClearColor;
 
-	GXRenderModeObj* mRmode;
+	GXRenderModeObj* mRMode;
 
 	void* mFrameBuffer[2];
 	void* mDemoFifoBuffer;
@@ -108,6 +110,12 @@ private:
  	static UChar msTexMinFilter[];
  	static UChar msTexWrapMode[];
 	static UChar msImageFormat[];
+
+public:
+	 // internally used by System::Assert
+	void* GetFramebuffer() { return mFrameBuffer[0]; }
+	void SetFramebufferIndex(UInt i) { mFrameBufferIndex = i; }
+	GXRenderModeObj* GetRenderMode() { return mRMode; }
 };
 
 }

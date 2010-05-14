@@ -40,14 +40,3 @@ void System::Memset(void* pDst, Int value, size_t count)
 {
 	memset(pDst, value, count);
 }
-
-//----------------------------------------------------------------------------
-void System::Print(const Char* pFormat, ...)
-{
-	va_list args;
-	va_start(args, pFormat);
-
-	vprintf(pFormat, args);
-
-	va_end(args);
-}
