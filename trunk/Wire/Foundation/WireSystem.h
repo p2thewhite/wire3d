@@ -3,22 +3,26 @@
 #define WIRESYSTEM_H
 
 #ifdef WIRE_WIN
-#ifdef WIRE_WII
-#undef WIRE_WII
-#endif /* WIRE_WII */
+	#ifdef WIRE_WII
+		#undef WIRE_WII
+	#endif /* WIRE_WII */
 #else
-#define WIRE_WII
+	#define WIRE_WII
 #endif /* WIRE_WIN */
 
 #ifdef WIRE_WII
-#include <math.h>
-#include "Wii/WireOgcDefines.h"
-#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
+	#include <math.h>
+	#include "Wii/WireOgcDefines.h"
+	#ifdef WIRE_DEBUG
+		#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
+	#else
+		#define WIRE_ASSERT(expression)
+	#endif
 #else
-#include <stddef.h>
-#include <assert.h>
-#include <cmath>
-#define WIRE_ASSERT(expression) assert(expression)
+	#include <stddef.h>
+	#include <assert.h>
+	#include <cmath>
+	#define WIRE_ASSERT(expression) assert(expression)
 #endif /* WIRE_WII */
 
 #include <float.h>
