@@ -16,7 +16,8 @@ Float Renderer::msMaxAnisotropy = 1.0f;
 Renderer::Renderer(Int width, Int height)
 	:
 	mWidth(width),
-	mHeight(height)
+	mHeight(height),
+	mCurrentSampler(0)
 {
 }
 
@@ -220,6 +221,10 @@ void Renderer::Draw(Geometry* pGeometry)
 	EnableIBuffer();
 	ResourceIdentifier* pID = EnableVBuffer();
 
+	// Keep track of the current sampler to be used in enabling the
+	// textures.
+	mCurrentSampler = 0;
+
 	Texture* pTexture = NULL;
 	if (mpGeometry->GetEffectQuantity() > 0)
 	{
@@ -236,17 +241,21 @@ void Renderer::Draw(Geometry* pGeometry)
 		}
 
 		EnableTexture(pTexture);
+		mCurrentSampler++;
 	}
 
 	DrawElements();
 
-	DisableVBuffer(pID);
-
+	// Keep track of the current sampler to be used in disabling the
+	// textures.
+	mCurrentSampler = 0;
 	if (pTexture)
 	{
 		DisableTexture(pTexture);
 	}
 
+
+	DisableVBuffer(pID);
 	DisableIBuffer();
 
 	RestoreGlobalState(mpGeometry->States);

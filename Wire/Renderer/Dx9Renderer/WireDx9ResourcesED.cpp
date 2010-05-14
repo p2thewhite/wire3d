@@ -58,7 +58,7 @@ void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	TextureID* pResource = static_cast<TextureID*>(pID);
 	Texture* pTexture = pResource->TextureObject;
 
-	UInt unit = 0;
+	const UInt unit = mCurrentSampler;
 
 	// Anisotropic filtering value.
 	Float anisotropy = pTexture->GetAnisotropyValue();
@@ -152,7 +152,7 @@ void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
 //----------------------------------------------------------------------------
 void Dx9Renderer::OnDisableTexture(ResourceIdentifier*)
 {
-	UInt unit = 0;
+	const UInt unit = mCurrentSampler;
 
 	msResult = mpD3DDevice->SetTextureStageState(unit, D3DTSS_COLOROP,
 		D3DTOP_DISABLE);

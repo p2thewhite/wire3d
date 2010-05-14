@@ -19,22 +19,18 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 
 	VIInit();
 
-	mRmode = VIDEO_GetPreferredMode(NULL);
+	mRMode = VIDEO_GetPreferredMode(NULL);
 
 	if (CONF_GetAspectRatio() == CONF_ASPECT_16_9)
 	{
-		mRmode->viWidth = 678;
-		mRmode->viXOrigin = (VI_MAX_WIDTH_NTSC - 678)/2;
+		mRMode->viWidth = 678;
+		mRMode->viXOrigin = (VI_MAX_WIDTH_NTSC - 678)/2;
 	}
 
 	// allocate 2 framebuffers for double buffering
-	mFrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
-	mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRmode));
+	mFrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRMode));
+	mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(mRMode));
 	mFrameBufferIndex = 0;
-
-	// Initialize the console, required for printf
-	console_init(mFrameBuffer[0], 20, 20, mRmode->fbWidth, mRmode->xfbHeight,
-		mRmode->fbWidth * VI_DISPLAY_PIX_SZ);
 
 	// ConfigureMem
 	mDemoFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
@@ -46,17 +42,17 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	SetClearColor(rClearColor);
 
 	// InitGX
-	f32 yScale = GXGetYScaleFactor(mRmode->efbHeight, mRmode->xfbHeight);
+	f32 yScale = GXGetYScaleFactor(mRMode->efbHeight, mRMode->xfbHeight);
 	u32 xfbHeight = GXSetDispCopyYScale(yScale);
-	GXSetDispCopySrc(0.0F, 0.0F, mRmode->fbWidth, mRmode->efbHeight);
-	GXSetDispCopyDst(mRmode->fbWidth, xfbHeight);
-	GXSetCopyFilter(mRmode->aa, mRmode->sample_pattern, GX_TRUE, mRmode->vfilter);
+	GXSetDispCopySrc(0.0F, 0.0F, mRMode->fbWidth, mRMode->efbHeight);
+	GXSetDispCopyDst(mRMode->fbWidth, xfbHeight);
+	GXSetCopyFilter(mRMode->aa, mRMode->sample_pattern, GX_TRUE, mRMode->vfilter);
 	GXSetDispCopyGamma(GX_GM_1_0);
 
-	GXSetFieldMode(mRmode->field_rendering,
-		((mRmode->viHeight == 2*mRmode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
+	GXSetFieldMode(mRMode->field_rendering,
+		((mRMode->viHeight == 2*mRMode->xfbHeight) ? GX_ENABLE:GX_DISABLE));
 
-	if (mRmode->aa)
+	if (mRMode->aa)
 	{
 		GXSetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
 	}
@@ -77,18 +73,18 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	mIsFrameBufferDirty = false;
 
 	// StartVI
-	VIConfigure(mRmode);
+	VIConfigure(mRMode);
 	VISetNextFrameBuffer(mFrameBuffer[mFrameBufferIndex]);
 	VISetBlack(FALSE);
 	VIFlush();
 	VIWaitForRetrace();
-	if (mRmode->viTVMode & VI_NON_INTERLACE)
+	if (mRMode->viTVMode & VI_NON_INTERLACE)
 	{
 		VIWaitForRetrace();
 	}
 
-	mWidth = mRmode->fbWidth;
-	mHeight = mRmode->efbHeight;
+	mWidth = mRMode->fbWidth;
+	mHeight = mRMode->efbHeight;
 
 	// Initialize global render state to default settings.
 	SetGlobalState(GlobalState::Default);
@@ -146,19 +142,15 @@ void GXRenderer::DisplayBackBuffer()
 	GXSetColorUpdate(GX_TRUE);
 
 	// Issue display copy command
-	GXCopyDisp(mFrameBuffer[mFrameBufferIndex^1], GX_TRUE);
+	mFrameBufferIndex ^= 1;		// flip framebuffer
+	GXCopyDisp(mFrameBuffer[mFrameBufferIndex], GX_TRUE);
 	mIsFrameBufferDirty = false;
 
 	// Wait until everything is drawn and copied into XFB.
 	// This stalls until all graphics commands have executed and the
 	// last pixel is written to the frame buffer.
 	// This should only be used in immediate mode rendering.
-	// TODO: use display lists
 	GXDrawDone();
-
-	// Set the next frame buffer
-	// SwapBuffers
-	mFrameBufferIndex ^= 1;		// flip framebuffer
 
 	// Display the buffer which was just filled by GXCopyDisplay
 	VISetNextFrameBuffer(mFrameBuffer[mFrameBufferIndex]);
@@ -206,6 +198,70 @@ void GXRenderer::Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer)
 			case GX_VA_TEX0:
 				GXTexCoord1x16(index);
 				break;
+
+			default:
+				WIRE_ASSERT(false);
+			}
+		}
+	}
+
+	GXEnd();
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::DrawWireframe(const VBufferID* pResource, const IndexBuffer& 
+	rIBuffer)
+{
+	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
+
+	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
+
+	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
+	{
+		for (UInt k = 0; k < 3; k++)
+		{
+			UShort index = rIBuffer[i + k];
+			for (UInt j = 0; j < rElements.GetQuantity(); j++)
+			{
+				switch (rElements[j].Attr)
+				{
+				case GX_VA_POS:
+					GXPosition1x16(index);
+					break;
+
+				case GX_VA_CLR0:
+					GXColor1x16(index);
+					break;
+
+				case GX_VA_TEX0:
+					GXTexCoord1x16(index);
+					break;
+
+				default:
+					WIRE_ASSERT(false);
+				}		
+			}
+
+			for (UInt j = 0; j < rElements.GetQuantity(); j++)
+			{
+				index = rIBuffer[i + ((k+1) > 2 ? 0 : k)];
+				switch (rElements[j].Attr)
+				{
+				case GX_VA_POS:
+					GXPosition1x16(index);
+					break;
+
+				case GX_VA_CLR0:
+					GXColor1x16(index);
+					break;
+
+				case GX_VA_TEX0:
+					GXTexCoord1x16(index);
+					break;
+
+				default:
+					WIRE_ASSERT(false);
+				}
 			}
 		}
 	}
@@ -234,33 +290,7 @@ void GXRenderer::DrawElements()
 	const WireframeState* pWireframeState = GetWireframeState();
 	if (pWireframeState && pWireframeState->Enabled)
 	{
-		GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
-
-		for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
-		{
-			UInt index = rIBuffer[i];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-			index = rIBuffer[i+1];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-
-			index = rIBuffer[i+1];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-			index = rIBuffer[i+2];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-
-			index = rIBuffer[i+2];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-			index = rIBuffer[i];
-			GXPosition1x16(static_cast<UShort>(index));
-			GXColor1x16(static_cast<UShort>(index));
-		}
-
-		GXEnd();
+		DrawWireframe(mpVBufferID, rIBuffer);
 	}
 	else
 	{
@@ -322,11 +352,11 @@ void GXRenderer::OnViewportChange()
 	mpCamera->GetViewport(left, right, top, bottom);
 	Float originX = left * static_cast<Float>(mWidth);
 	Float width = (right - left) *  static_cast<Float>(mWidth);
-	Float originY = (1.0F - top) * static_cast<Float>(mRmode->xfbHeight);
-	Float height = (top - bottom) * static_cast<Float>(mRmode->xfbHeight);
+	Float originY = (1.0F - top) * static_cast<Float>(mRMode->xfbHeight);
+	Float height = (top - bottom) * static_cast<Float>(mRMode->xfbHeight);
 
 	// Set up viewport (This is inappropriate for full-frame AA.)
-	if (mRmode->field_rendering)
+	if (mRMode->field_rendering)
 	{
 		GXSetViewportJitter(originX, originY, width, height, 0.0F, 1.0F,
 			VIGetNextField());

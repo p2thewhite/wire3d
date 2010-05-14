@@ -29,3 +29,22 @@ Double System::GetTime()
 
 	return 0.001 * static_cast<Double>(1000*deltaSec + deltaUSec/1000);
 }
+
+//----------------------------------------------------------------------------
+void System::Print(const Char* pFormat, ...)
+{
+	va_list args;
+	va_start(args, pFormat);
+
+	vprintf(pFormat, args);
+
+	va_end(args);
+}
+
+//----------------------------------------------------------------------------
+void System::Assert(const Char* pExpression, const Char* pFile,
+					Int lineNumber)
+{
+	Print("Assertion failed, %s, %s, line %d", pExpression, pFile,
+		lineNumber);
+}

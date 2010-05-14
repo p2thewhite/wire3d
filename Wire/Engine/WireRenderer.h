@@ -136,6 +136,8 @@ protected:
 	Int mWidth;
 	Int mHeight;
 
+	UInt mCurrentSampler;
+
 	static Float msMaxAnisotropy;
 };
 

@@ -13,12 +13,12 @@
 #ifdef WIRE_WII
 #include <math.h>
 #include "Wii/WireOgcDefines.h"
-#define WIRE_ASSERT(condition)
+#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
 #else
 #include <stddef.h>
 #include <assert.h>
 #include <cmath>
-#define WIRE_ASSERT(condition) assert(condition)
+#define WIRE_ASSERT(expression) assert(expression)
 #endif /* WIRE_WII */
 
 #include <float.h>
@@ -38,6 +38,8 @@ public:
 
 	static Double GetTime();
 	static void Print(const Char* pFormat, ...);
+	static void Assert(const Char* pExpression, const Char* pFile,
+		Int lineNumber);
 
 private:
 	static Bool msInitializedTime;

@@ -22,6 +22,7 @@
 #include "WireRenderer.h"
 #include "WireResourceIdentifier.h"
 #include "WireRtti.h"
+#include "WireRttiMCR.h"
 #include "WireSceneObject.h"
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
