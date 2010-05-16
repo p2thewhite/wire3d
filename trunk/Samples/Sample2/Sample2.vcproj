@@ -24,7 +24,7 @@
 			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’"
-				ReBuildCommandLine="rm -fr build $(ProjectName).elf $(ProjectName).dol&#x0D;&#x0A;make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’&#x0D;&#x0A;"
+				ReBuildCommandLine="make clean&#x0D;&#x0A;make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’&#x0D;&#x0A;"
 				CleanCommandLine="make clean"
 				Output=""
 				PreprocessorDefinitions="WIRE_WII;NDEBUG"
@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’"
-				ReBuildCommandLine="rm -fr build $(ProjectName).elf $(ProjectName).dol&#x0D;&#x0A;make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’&#x0D;&#x0A;"
+				ReBuildCommandLine="make clean&#x0D;&#x0A;make -r 2&gt;&amp;1 | sed -e &apos;s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’&#x0D;&#x0A;"
 				CleanCommandLine="make clean"
 				Output=""
 				PreprocessorDefinitions="WIRE_WII;NDEBUG;WIRE_DEBUG"
