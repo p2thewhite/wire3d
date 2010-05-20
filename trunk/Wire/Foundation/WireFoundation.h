@@ -15,6 +15,7 @@
 #include "WireSphere3.h"
 #include "WireSystem.h"
 #include "WireTArray.h"
+#include "WireTMap.h"
 #include "WireTypes.h"
 #include "WireVector2.h"
 #include "WireVector3.h"

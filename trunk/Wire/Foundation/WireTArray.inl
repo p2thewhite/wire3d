@@ -244,6 +244,19 @@ void TArray<T>::Append(const T& rElement)
 
 //----------------------------------------------------------------------------
 template <class T>
+void TArray<T>::Insert(UInt i, const T& rElement)
+{
+	SetQuantity(GetQuantity()+1);
+	for (UInt j = GetQuantity()-1; j > 0 && j > i; j--)
+	{
+		mpArray[j] = mpArray[j-1];
+	}
+
+	mpArray[i] = rElement;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 void TArray<T>::SetElement(UInt i, const T& rElement)
 {
 	if (i >= mQuantity)
