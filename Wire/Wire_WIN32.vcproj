@@ -210,6 +210,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTMap.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTypes.h"
 					>
 				</File>
@@ -255,6 +259,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTArray.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTMap.inl"
 					>
 				</File>
 				<File

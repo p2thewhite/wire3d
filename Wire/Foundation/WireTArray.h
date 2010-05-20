@@ -28,6 +28,7 @@ public:
 
 	// add new element, array will dynamically grow if necessary
 	void Append(const T& rElement);
+	void Insert(UInt i, const T& rElement);
 	void SetElement(UInt i, const T& rElement);
 
 	// Remove the element at the specified index. The elements occurring
