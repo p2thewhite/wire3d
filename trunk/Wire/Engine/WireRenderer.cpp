@@ -320,12 +320,6 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetClearColor(const ColorRGBA& rClearColor)
-{
-	mClearColor = rClearColor;
-}
-
-//----------------------------------------------------------------------------
 void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 {
 	GlobalState* pState = spStates[GlobalState::ALPHA];

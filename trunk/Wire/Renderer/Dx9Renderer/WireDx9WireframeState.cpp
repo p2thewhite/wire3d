@@ -1,21 +1,24 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9RendererData.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
 void Dx9Renderer::SetWireframeState(WireframeState* pState)
 {
-	Renderer::SetWireframeState(pState);
+	mspStates[GlobalState::WIREFRAME] = pState;
 
+	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	HRESULT hr;
     if (pState->Enabled)
     {
-        msResult = mpD3DDevice->SetRenderState(D3DRS_FILLMODE,
-			D3DFILL_WIREFRAME);
-        WIRE_ASSERT(SUCCEEDED(msResult));
+        hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+        WIRE_ASSERT(SUCCEEDED(hr));
     }
     else
     {
-        msResult = mpD3DDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-        WIRE_ASSERT(SUCCEEDED(msResult));
+        hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+        WIRE_ASSERT(SUCCEEDED(hr));
     }
 }

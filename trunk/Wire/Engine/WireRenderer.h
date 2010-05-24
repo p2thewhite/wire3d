@@ -30,8 +30,9 @@ public:
 	virtual ~Renderer();
 
 	// Support for predraw and postdraw semantics.
-	virtual Bool BeginScene(Camera* pCamera);
-	virtual void EndScene();
+	Bool OnBeginScene(Camera* pCamera);
+	virtual Bool BeginScene(Camera* pCamera) = 0;
+	virtual void EndScene() = 0;
 
 	// Apply camera changes to platform specific renderer.
 	virtual void OnFrameChange() = 0;
@@ -50,7 +51,7 @@ public:
 	void Draw(Geometry* pGeometry);
 
 	// Access to the color value used for clearing the back buffer.
-	virtual void SetClearColor(const ColorRGBA& rClearColor);
+	virtual void SetClearColor(const ColorRGBA& rClearColor) = 0;
 	const ColorRGBA& GetClearColor() const;
 
 	// Window parameters.
@@ -60,11 +61,11 @@ public:
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
-	virtual void SetAlphaState(AlphaState* pState);
-	virtual void SetCullState(CullState* pState);
-	virtual void SetFogState(FogState* pState);
-	virtual void SetWireframeState(WireframeState* pState);
-	virtual void SetZBufferState(ZBufferState* pState);
+	virtual void SetAlphaState(AlphaState* pState) = 0;
+	virtual void SetCullState(CullState* pState) = 0;
+	virtual void SetFogState(FogState* pState) = 0;
+	virtual void SetWireframeState(WireframeState* pState) = 0;
+	virtual void SetZBufferState(ZBufferState* pState) = 0;
 	AlphaState* GetAlphaState();
 	CullState* GetCullState();
 	FogState* GetFogState();

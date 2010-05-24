@@ -98,7 +98,7 @@ GXRenderer::~GXRenderer()
 //----------------------------------------------------------------------------
 Bool GXRenderer::BeginScene(Camera* pCamera)
 {
-	Parent::BeginScene(pCamera);
+	OnBeginScene(pCamera);
 
 	Matrix4F perspective;
 	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
@@ -110,11 +110,6 @@ Bool GXRenderer::BeginScene(Camera* pCamera)
 	GXInvalidateTexAll();
 
 	return true;
-}
-
-//----------------------------------------------------------------------------
-void GXRenderer::EndScene()
-{
 }
 
 //----------------------------------------------------------------------------
@@ -164,7 +159,7 @@ void GXRenderer::DisplayBackBuffer()
 //----------------------------------------------------------------------------
 void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 {
-	Parent::SetClearColor(rClearColor);
+	mClearColor = rClearColor;
 
 	mGXClearColor.r = static_cast<UChar>(rClearColor.R() * 255.0F);
 	mGXClearColor.g = static_cast<UChar>(rClearColor.G() * 255.0F);
