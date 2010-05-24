@@ -12,7 +12,7 @@ UChar GXRenderer::msFogDensity[FogState::DF_QUANTITY] =
 //----------------------------------------------------------------------------
 void GXRenderer::SetFogState(FogState* pState)
 {
-	Renderer::SetFogState(pState);
+	mspStates[GlobalState::FOG] = pState;
 
 	if (pState->Enabled)
 	{

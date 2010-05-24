@@ -29,7 +29,7 @@ UChar GXRenderer::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 //----------------------------------------------------------------------------
 void GXRenderer::SetAlphaState(AlphaState* pState)
 {
-	Renderer::SetAlphaState(pState);
+	mspStates[GlobalState::ALPHA] = pState;
 
 	if (pState->BlendEnabled)
 	{

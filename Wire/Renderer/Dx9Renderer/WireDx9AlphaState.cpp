@@ -1,8 +1,10 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9RendererData.h"
+
 using namespace Wire;
 
-DWORD Dx9Renderer::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
+DWORD PdrRendererData::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // AlphaState::SBM_ZERO
 	D3DBLEND_ONE,           // AlphaState::SBM_ONE
@@ -14,7 +16,7 @@ DWORD Dx9Renderer::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 	D3DBLEND_INVDESTALPHA,  // AlphaState::SBM_ONE_MINUS_DST_ALPHA
 };
 
-DWORD Dx9Renderer::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
+DWORD PdrRendererData::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // AlphaState::DBM_ZERO
 	D3DBLEND_ONE,           // AlphaState::DBM_ONE
@@ -29,23 +31,28 @@ DWORD Dx9Renderer::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Dx9Renderer::SetAlphaState(AlphaState* pState)
 {
-	Renderer::SetAlphaState(pState);
+	mspStates[GlobalState::ALPHA] = pState;
 
+	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	HRESULT hr;
 	if (pState->BlendEnabled)
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		WIRE_ASSERT(SUCCEEDED(hr));
 
-		DWORD srcBlend = msAlphaSrcBlend[pState->SrcBlend];
-		DWORD dstBlend = msAlphaDstBlend[pState->DstBlend];
+		DWORD srcBlend = PdrRendererData::msAlphaSrcBlend[pState->SrcBlend];
+		DWORD dstBlend = PdrRendererData::msAlphaDstBlend[pState->DstBlend];
 
-		msResult = mpD3DDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
-		msResult = mpD3DDevice->SetRenderState(D3DRS_DESTBLEND, dstBlend);
-		msResult = mpD3DDevice->SetRenderState(D3DRS_BLENDFACTOR, 0);
+		hr = rDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		hr = rDevice->SetRenderState(D3DRS_DESTBLEND, dstBlend);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		hr = rDevice->SetRenderState(D3DRS_BLENDFACTOR, 0);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 }

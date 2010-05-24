@@ -1,5 +1,6 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9RendererData.h"
 #include "WireDx9Resources.h"
 #include "WireIndexBuffer.h"
 #include "WireTexture.h"
@@ -9,7 +10,7 @@
 
 using namespace Wire;
 
-D3DFORMAT Dx9Renderer::msImageFormat[Image::FM_QUANTITY] =
+D3DFORMAT PdrRendererData::msImageFormat[Image::FM_QUANTITY] =
 {
 	D3DFMT_A8R8G8B8,	// Image::FM_RGB888
 	D3DFMT_A8R8G8B8,	// Image::FM_RGBA8888
@@ -30,7 +31,7 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 	UInt indexBufferSize = quantity * sizeof(UInt);
 	D3DFORMAT format = D3DFMT_INDEX32;
 
-	if (!mSupports32BitIndices)
+	if (!mpData->mSupports32BitIndices)
 	{
 		indexBufferSize = quantity * sizeof(UShort);
 		format = D3DFMT_INDEX16;
@@ -38,17 +39,18 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 
 	// Create the index buffer.
 	IDirect3DIndexBuffer9* pD3DIBuffer;
-	msResult = mpD3DDevice->CreateIndexBuffer(indexBufferSize,
+	HRESULT hr;
+	hr = mpData->mpD3DDevice->CreateIndexBuffer(indexBufferSize,
 		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &pD3DIBuffer, NULL);
-	WIRE_ASSERT(SUCCEEDED(msResult));
+	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Copy the index buffer data from system memory to video memory.
 	Char* pLockedIBuffer;
-	msResult = pD3DIBuffer->Lock(0, indexBufferSize,
-		reinterpret_cast<void**>(&pLockedIBuffer), 0);
-	WIRE_ASSERT(SUCCEEDED(msResult));
+	hr = pD3DIBuffer->Lock(0, indexBufferSize, reinterpret_cast<void**>(
+		&pLockedIBuffer), 0);
+	WIRE_ASSERT(SUCCEEDED(hr));
 
-	if (mSupports32BitIndices)
+	if (mpData->mSupports32BitIndices)
 	{
 		System::Memcpy(pLockedIBuffer, indexBufferSize, pIndices,
 			indexBufferSize);
@@ -75,8 +77,8 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 		}
 	}
 
-	msResult = pD3DIBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(msResult));
+	hr = pD3DIBuffer->Unlock();
+	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Generate the binding information and save it.
 	pResource->ID = pD3DIBuffer;
@@ -150,27 +152,28 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
  	elements.Append(sentinel);
  
- 	msResult = mpD3DDevice->CreateVertexDeclaration(&elements[0],
-		&pResource->Declaration);
- 	WIRE_ASSERT(SUCCEEDED(msResult));
+	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	HRESULT hr;
+ 	hr = rDevice->CreateVertexDeclaration(&elements[0], &pResource->
+		Declaration);
+ 	WIRE_ASSERT(SUCCEEDED(hr));
  
  	// Create the vertex buffer.
 	UInt vbSize = vertexSize * pVBuffer->GetVertexQuantity();
  	IDirect3DVertexBuffer9* pD3DVBuffer;
- 	msResult = mpD3DDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
+ 	hr = rDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
  		&pD3DVBuffer, NULL);
- 	WIRE_ASSERT(SUCCEEDED(msResult));
+ 	WIRE_ASSERT(SUCCEEDED(hr));
  
  	// Copy the vertex buffer data from system memory to video memory.
  	Float* pVBData;
- 	msResult = pD3DVBuffer->Lock(0, vbSize, reinterpret_cast<void**>(
-		&pVBData), 0);
- 	WIRE_ASSERT(SUCCEEDED(msResult));
+ 	hr = pD3DVBuffer->Lock(0, vbSize, reinterpret_cast<void**>(&pVBData), 0);
+ 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	Convert(pVBuffer, pVBData);
 
-	msResult = pD3DVBuffer->Unlock();
- 	WIRE_ASSERT(SUCCEEDED(msResult));
+	hr = pD3DVBuffer->Unlock();
+ 	WIRE_ASSERT(SUCCEEDED(hr));
  
  	// Generate the binding information and save it.
  	pResource->ID = pD3DVBuffer;
@@ -257,9 +260,8 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	const Image* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
-	// Windows stores BGR (lowest byte to highest byte), but Wild Magic
-	// stores RGB.  The byte ordering must be reversed.
-
+	// Windows stores BGR (lowest byte to highest byte), but Wire stores RGB.
+	// The byte ordering must be reversed.
 	UChar* pSrc = pImage->GetData();
 	UChar* pDst = 0;
 	UInt quantity = pImage->GetTotalQuantity();
@@ -345,10 +347,11 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	LPDIRECT3DTEXTURE9 pD3DTexture;
 	const UInt mipmapCount = pImage->GetMipmapCount();
 
-	msResult = D3DXCreateTexture(mpD3DDevice, pImage->GetBound(0),
-		pImage->GetBound(1), mipmapCount, usage, msImageFormat[format], pool,
-		&pD3DTexture);
-	WIRE_ASSERT(SUCCEEDED(msResult));
+	HRESULT hr;
+	hr = D3DXCreateTexture(mpData->mpD3DDevice, pImage->GetBound(0),
+		pImage->GetBound(1), mipmapCount, usage,
+		PdrRendererData::msImageFormat[format], pool, &pD3DTexture);
+	WIRE_ASSERT(SUCCEEDED(hr));
 
 	if (pDst)
 	{
@@ -356,8 +359,8 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 
 		for (UInt i = 0; i < mipmapCount; i++)
 		{
-			msResult = pD3DTexture->GetSurfaceLevel(i, &pD3DSurface);
-			WIRE_ASSERT(SUCCEEDED(msResult) && pD3DSurface);
+			hr = pD3DTexture->GetSurfaceLevel(i, &pD3DSurface);
+			WIRE_ASSERT(SUCCEEDED(hr) && pD3DSurface);
 
 			RECT r;
 			UInt pitch	= pImage->GetBound(0, i);
@@ -367,17 +370,17 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 			r.left		= 0;
 			UInt offset = pImage->GetMipmapOffset(i);
 
-			msResult = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
-				pDst+offset, msImageFormat[format], pitch * bpp, NULL, &r,
-				D3DX_FILTER_NONE, 0xFF000000);
-			WIRE_ASSERT(SUCCEEDED(msResult));
+			hr = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
+				pDst+offset, PdrRendererData::msImageFormat[format], pitch * bpp,
+				NULL, &r, D3DX_FILTER_NONE, 0xFF000000);
+			WIRE_ASSERT(SUCCEEDED(hr));
 
 			pD3DSurface->Release();
 		}
 
 		// mark the texture as dirty
-		msResult = pD3DTexture->AddDirtyRect(NULL);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = pD3DTexture->AddDirtyRect(NULL);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
 	pResource->ID = pD3DTexture;
@@ -392,7 +395,8 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 void Dx9Renderer::OnReleaseTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
-	msResult = pResource->ID->Release();
-	WIRE_ASSERT(SUCCEEDED(msResult));
+	HRESULT hr;
+	hr = pResource->ID->Release();
+	WIRE_ASSERT(SUCCEEDED(hr));
 	WIRE_DELETE pResource;
 }

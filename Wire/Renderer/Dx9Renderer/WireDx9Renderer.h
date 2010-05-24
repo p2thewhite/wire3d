@@ -9,17 +9,17 @@
 namespace Wire
 {
 
+class PdrRendererData;
+
 class /*WIRE_RENDERER_ITEM*/ Dx9Renderer : public Renderer
 {
-
-typedef Renderer Parent;
 
 public:
 	Dx9Renderer(HWND hWnd, Int width, Int height);
 	virtual ~Dx9Renderer();
 
-	virtual Bool BeginScene(Camera* pCamera);
-	virtual void EndScene();
+	Bool BeginScene(Camera* pCamera);
+	void EndScene();
 
 	// Apply camera changes to platform specific renderer.
 	virtual void OnFrameChange();
@@ -31,6 +31,8 @@ public:
 
 	// The entry point to drawing a geometry object.
 	virtual void DrawElements();
+
+	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
 protected:
 	// device management
@@ -68,25 +70,10 @@ protected:
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
-	IDirect3D9* mpD3D;
-	IDirect3DDevice9* mpD3DDevice;
-	D3DPRESENT_PARAMETERS mPresent;
-	Bool mSupports32BitIndices;
-
-	static HRESULT msResult;
-
-	Matrix4F mViewMatrix;
-
-	static DWORD msAlphaSrcBlend[];
-	static DWORD msAlphaDstBlend[];
-	static DWORD msCullType[];
-	static DWORD msFogDensity[];
-	static DWORD msZBufferCompare[];
-	static DWORD msTexMinFilter[];
-	static DWORD msTexMipFilter[];
-	static DWORD msTexWrapMode[];
-	static D3DFORMAT msImageFormat[];
+	PdrRendererData* mpData;
 };
+
+#include "WireDx9Renderer.inl"
 
 }
 

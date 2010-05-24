@@ -17,7 +17,7 @@ UChar GXRenderer::msZBufferCompare[ZBufferState::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void GXRenderer::SetZBufferState(ZBufferState* pState)
 {
-	Renderer::SetZBufferState(pState);
+	mspStates[GlobalState::ZBUFFER] = pState;
 
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;
 	UChar writable = pState->Writable ? GX_TRUE : GX_FALSE;

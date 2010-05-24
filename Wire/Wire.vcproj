@@ -690,6 +690,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRendererData.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXResources.h"
 						>
 					</File>
@@ -726,6 +730,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.inl"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Dx9Renderer"
@@ -735,6 +747,10 @@
 					>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererData.h"
 						>
 					</File>
 					<File
@@ -775,6 +791,14 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9ZBufferState.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.inl"
 						>
 					</File>
 				</Filter>

@@ -11,7 +11,7 @@ UChar GXRenderer::msCullType[CullState::CM_QUANTITY] =
 //----------------------------------------------------------------------------
 void GXRenderer::SetCullState(CullState* pState)
 {
-	Renderer::SetCullState(pState);
+	mspStates[GlobalState::CULL] = pState;
 
 	if (pState->Enabled)
 	{

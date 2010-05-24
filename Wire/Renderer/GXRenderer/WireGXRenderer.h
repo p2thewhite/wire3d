@@ -16,14 +16,12 @@ class Image;
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
 
-typedef Renderer Parent;
-
 public:
 	GXRenderer(const ColorRGBA& rClearColor);
 	virtual ~GXRenderer();
 
-	virtual Bool BeginScene(Camera* pCamera);
-	virtual void EndScene();
+	Bool BeginScene(Camera* pCamera);
+	void EndScene();
 
 	// Apply camera changes to platform specific renderer.
 	virtual void OnFrameChange();
@@ -65,6 +63,7 @@ protected:
 	virtual void SetAlphaState(AlphaState* pState);
 	virtual void SetCullState(CullState* pState);
 	virtual void SetFogState(FogState* pState);
+	virtual void SetWireframeState(WireframeState* pState);
 	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
@@ -117,6 +116,8 @@ public:
 	void SetFramebufferIndex(UInt i) { mFrameBufferIndex = i; }
 	GXRenderModeObj* GetRenderMode() { return mRMode; }
 };
+
+#include "WireGXRenderer.inl"
 
 }
 

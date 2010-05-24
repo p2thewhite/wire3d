@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-inline Bool Renderer::BeginScene(Camera* pCamera)
+inline Bool Renderer::OnBeginScene(Camera* pCamera)
 {
 	mpCamera = pCamera;
 	OnFrameChange();
@@ -7,12 +7,6 @@ inline Bool Renderer::BeginScene(Camera* pCamera)
 
 	// stub for derived classes
 	return true;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::EndScene()
-{
-	// stub for derived classes
 }
 
 //----------------------------------------------------------------------------
@@ -31,36 +25,6 @@ inline Int Renderer::GetWidth() const
 inline const ColorRGBA& Renderer::GetClearColor() const
 {
 	return mClearColor;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::SetAlphaState(AlphaState* pState)
-{
-	mspStates[GlobalState::ALPHA] = pState;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::SetCullState(CullState* pState)
-{
-	mspStates[GlobalState::CULL] = pState;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::SetFogState(FogState* pState)
-{
-	mspStates[GlobalState::FOG] = pState;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::SetWireframeState(WireframeState* pState)
-{
-	mspStates[GlobalState::WIREFRAME] = pState;
-}
-
-//----------------------------------------------------------------------------
-inline void Renderer::SetZBufferState(ZBufferState* pState)
-{
-	mspStates[GlobalState::ZBUFFER] = pState;
 }
 
 //----------------------------------------------------------------------------

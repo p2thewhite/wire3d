@@ -1,8 +1,10 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9RendererData.h"
+
 using namespace Wire;
 
-DWORD Dx9Renderer::msZBufferCompare[ZBufferState::CF_QUANTITY] = 
+DWORD PdrRendererData::msZBufferCompare[ZBufferState::CF_QUANTITY] = 
 {
 	D3DCMP_NEVER,           // ZBufferState::CF_NEVER
 	D3DCMP_LESS,            // ZBufferState::CF_LESS
@@ -17,28 +19,30 @@ DWORD Dx9Renderer::msZBufferCompare[ZBufferState::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Dx9Renderer::SetZBufferState(ZBufferState* pState)
 {
-	Renderer::SetZBufferState(pState);
+	mspStates[GlobalState::ZBUFFER] = pState;
 
+	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	HRESULT hr;
 	if (pState->Enabled)
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ZFUNC,
-			msZBufferCompare[pState->Compare]);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ZFUNC,
+			PdrRendererData::msZBufferCompare[pState->Compare]);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
 	if (pState->Writable)
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 }

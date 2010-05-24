@@ -1,8 +1,10 @@
 #include "WireDx9Renderer.h"
 
+#include "WireDx9RendererData.h"
+
 using namespace Wire;
 
-DWORD Dx9Renderer::msCullType[CullState::CM_QUANTITY] = 
+DWORD PdrRendererData::msCullType[CullState::CM_QUANTITY] = 
 {
 	D3DCULL_CCW,  // CullState::FT_CCW (front CCW -> cull backface CCW in DX)
 	D3DCULL_CW,   // CullState::FT_CW  (front CW -> cull backface CW in DX)
@@ -11,17 +13,19 @@ DWORD Dx9Renderer::msCullType[CullState::CM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Dx9Renderer::SetCullState(CullState* pState)
 {
-	Renderer::SetCullState(pState);
+	mspStates[GlobalState::CULL] = pState;
 
+	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	HRESULT hr;
 	if (pState->Enabled)
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_CULLMODE,
-			msCullType[pState->CullFace]);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_CULLMODE,
+			PdrRendererData::msCullType[pState->CullFace]);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else
 	{
-		msResult = mpD3DDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		WIRE_ASSERT(SUCCEEDED(msResult));
+		hr = rDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 }
