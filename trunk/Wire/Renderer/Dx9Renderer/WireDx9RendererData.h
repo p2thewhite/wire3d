@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIRERENDERERDATA_H
-#define WIRERENDERERDATA_H
+#ifndef WIREPDRRENDERERDATA_H
+#define WIREPDRRENDERERDATA_H
 
 namespace Wire
 {
