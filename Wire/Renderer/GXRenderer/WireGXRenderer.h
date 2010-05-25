@@ -9,6 +9,7 @@
 namespace Wire
 {
 
+class PdrRendererData;
 class VBufferID;
 class IBufferID;
 class Image;
@@ -67,6 +68,8 @@ protected:
 	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
+	PdrRendererData* mpData;
+
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
@@ -86,21 +89,6 @@ private:
 	void GetTileCount(UInt& rTilesYCount, UShort& rHeight, UInt& rTilesXCount,
 		UShort &rWidth);
 
-	GXColor mGXClearColor;
-
-	GXRenderModeObj* mRMode;
-
-	void* mFrameBuffer[2];
-	void* mDemoFifoBuffer;
-	UInt mFrameBufferIndex;
-	Bool mIsFrameBufferDirty;
-
-	VBufferID* mpVBufferID;
-	IBufferID* mpIBufferID;
-
-	// Transforms world space to camera space.
-	Matrix34F mViewMatrix;
-
 	static UChar msAlphaSrcBlend[];
 	static UChar msAlphaDstBlend[];
 	static UChar msCullType[];
@@ -112,9 +100,9 @@ private:
 
 public:
 	 // internally used by System::Assert
-	void* GetFramebuffer() { return mFrameBuffer[0]; }
-	void SetFramebufferIndex(UInt i) { mFrameBufferIndex = i; }
-	GXRenderModeObj* GetRenderMode() { return mRMode; }
+	void* GetFramebuffer();
+	void SetFramebufferIndex(UInt i);
+	GXRenderModeObj* GetRenderMode();
 };
 
 #include "WireGXRenderer.inl"

@@ -1,6 +1,7 @@
 #include "WireGXRenderer.h"
 
 #include "WireGeometry.h"
+#include "WireGXRendererData.h"
 #include "WireGXResources.h"
 #include "WireTexture.h"
 #include <malloc.h>
@@ -46,8 +47,9 @@ void GXRenderer::CreateDisplayList(VBufferID* pResource, const IndexBuffer&
 
 	DCFlushRange(DL.DL, DL.DLSize);
 
-	DL.RegisteredIBuffer = mpIBufferID;
-	mpIBufferID->RegisteredVBuffers.Append(pResource);
+	IBufferID*& rIBufferID = mpData->mpIBufferID;
+	DL.RegisteredIBuffer = rIBufferID;
+	rIBufferID->RegisteredVBuffers.Append(pResource);
 	pResource->DisplayLists.Append(DL);
 }
 
@@ -75,7 +77,7 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 	Bool foundDL = false;
 	for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 	{
-		if (rDisplayLists[i].RegisteredIBuffer == mpIBufferID)
+		if (rDisplayLists[i].RegisteredIBuffer == mpData->mpIBufferID)
 		{
 			foundDL = true;
 		}
@@ -86,14 +88,14 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 		CreateDisplayList(pResource, *(mpGeometry->IBuffer));
 	}
 
-	mpVBufferID = pResource;
+	mpData->mpVBufferID = pResource;
 }
 
 //----------------------------------------------------------------------------
 void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
-	mpIBufferID = pResource;
+	mpData->mpIBufferID = pResource;
 
 	GXSetNumTexGens(0);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
