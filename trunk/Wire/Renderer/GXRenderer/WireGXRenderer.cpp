@@ -1,6 +1,7 @@
 #include "WireGXRenderer.h"
 
 #include "WireGeometry.h"
+#include "WireImage.h"
 #include "WireGXRendererData.h"
 #include "WireGXResources.h"
 #include "WireMatrix4.h"
@@ -182,102 +183,6 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer)
-{
-	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
-
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
-	{
-		UShort index = static_cast<UShort>(rIBuffer[i]);
-
-		for (UInt j = 0; j < rElements.GetQuantity(); j++)
-		{
-			switch (rElements[j].Attr)
-			{
-			case GX_VA_POS:
-				GXPosition1x16(index);
-				break;
-
-			case GX_VA_CLR0:
-				GXColor1x16(index);
-				break;
-
-			case GX_VA_TEX0:
-				GXTexCoord1x16(index);
-				break;
-
-			default:
-				WIRE_ASSERT(false);
-			}
-		}
-	}
-
-	GXEnd();
-}
-
-//----------------------------------------------------------------------------
-void GXRenderer::DrawWireframe(const VBufferID* pResource, const IndexBuffer& 
-	rIBuffer)
-{
-	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
-
-	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
-
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
-	{
-		for (UInt k = 0; k < 3; k++)
-		{
-			UShort index = rIBuffer[i + k];
-			for (UInt j = 0; j < rElements.GetQuantity(); j++)
-			{
-				switch (rElements[j].Attr)
-				{
-				case GX_VA_POS:
-					GXPosition1x16(index);
-					break;
-
-				case GX_VA_CLR0:
-					GXColor1x16(index);
-					break;
-
-				case GX_VA_TEX0:
-					GXTexCoord1x16(index);
-					break;
-
-				default:
-					WIRE_ASSERT(false);
-				}		
-			}
-
-			for (UInt j = 0; j < rElements.GetQuantity(); j++)
-			{
-				index = rIBuffer[i + ((k+1) > 2 ? 0 : k)];
-				switch (rElements[j].Attr)
-				{
-				case GX_VA_POS:
-					GXPosition1x16(index);
-					break;
-
-				case GX_VA_CLR0:
-					GXColor1x16(index);
-					break;
-
-				case GX_VA_TEX0:
-					GXTexCoord1x16(index);
-					break;
-
-				default:
-					WIRE_ASSERT(false);
-				}
-			}
-		}
-	}
-
-	GXEnd();
-}
-
-//----------------------------------------------------------------------------
 void GXRenderer::DrawElements()
 {
 	mpData->mIsFrameBufferDirty = true;
@@ -300,7 +205,7 @@ void GXRenderer::DrawElements()
 
 	if (pWireframeState && pWireframeState->Enabled)
 	{
-		DrawWireframe(rVBufferID, rIBuffer);
+		mpData->DrawWireframe(rVBufferID, rIBuffer);
 	}
 	else
 	{
@@ -319,7 +224,7 @@ void GXRenderer::DrawElements()
 
 		if (!foundDL)
 		{
-			Draw(rVBufferID, rIBuffer);
+			mpData->Draw(rVBufferID, rIBuffer);
 		}
 	}
 }
@@ -398,4 +303,371 @@ void GXRenderer::SetFramebufferIndex(UInt i)
 GXRenderModeObj* GXRenderer::GetRenderMode()
 {
 	return mpData->mRMode;
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
+{
+	const VertexAttributes& rIAttr = pSrc->GetAttributes();
+	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
+
+	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	{
+		UInt index = 0;
+
+		if (rIAttr.GetPositionChannels() > 0)
+		{
+			const Float* pPosition = pSrc->GetPosition(i);
+			Float* pDst = static_cast<Float*>(rElements[index++].Data);
+			UInt channelCount = rIAttr.GetPositionChannels();
+
+			for (UInt k = 0; k < channelCount; k++)
+			{
+				pDst[i*channelCount+k] = pPosition[k];
+			}
+		}
+
+		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
+		{
+			if (rIAttr.GetColorChannels(unit) > 0)
+			{
+				const Float* pColor = pSrc->GetColor(i, unit);
+				UInt color = 0xFFFFFFFF;
+				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
+				{
+					color = color << 8;
+					color |= static_cast<UChar>(pColor[k] * 255.0F);
+				}
+
+				if (rIAttr.GetColorChannels(unit) == 3)
+				{
+					color = color << 8;
+					color |= 0xFF;
+				}
+
+				UInt* pDst = static_cast<UInt*>(rElements[index++].Data);
+				pDst[i] = color;
+			}
+		}
+
+		UInt tChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		for (UInt unit = 0; unit < tChannelQuantity; unit++)
+		{
+			if (rIAttr.GetTCoordChannels(unit) > 0)
+			{
+				const Float* pUv = pSrc->GetTCoord(i, unit);
+				Float* pDst = static_cast<Float*>(rElements[index++].Data);
+				UInt channelCount = rIAttr.GetTCoordChannels(unit);
+
+				for (UInt k = 0; k < channelCount; k++)
+				{
+					pDst[i*channelCount+k] = pUv[k];
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
+	{
+		for (UInt tx = 0; tx < tilesXCount; tx++)
+		{
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					*pDst++ = *(pSrc + offset*4 + 3);
+					*pDst++ = *(pSrc + offset*4);
+				}
+			}
+
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UChar* pSrcTemp = pSrc + offset*4 + 1;
+					*pDst++ = *pSrcTemp++;
+					*pDst++ = *pSrcTemp;
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
+	{
+		for (UInt tx = 0; tx < tilesXCount; tx++)
+		{
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					*pDst++ = 0xFF;
+					*pDst++ = *(pSrc + offset*3);
+				}
+			}
+
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UChar* pSrcTemp = pSrc + offset*3 + 1;
+
+					*pDst++ = *pSrcTemp++;
+					*pDst++ = *pSrcTemp;
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ConvertRGB565ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
+	{
+		for (UInt tx = 0; tx < tilesXCount; tx++)
+		{
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					*pDst++ = *(pSrc+offset*2);
+					*pDst++ = *(pSrc+offset*2 + 1);
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
+	UShort height, UChar* pDst)
+{
+	UInt tilesYCount;
+	UInt tilesXCount;
+	UShort yCount = height;
+	UShort xCount = width;
+	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
+
+	for (UInt ty = 0; ty < tilesYCount; ty++)
+	{
+		for (UInt tx = 0; tx < tilesXCount; tx++)
+		{
+			for (UInt y = 0; y < yCount; y++)
+			{
+				for (UInt x = 0; x < xCount; x++)
+				{
+					UInt offset = (ty*width+tx)*4+y*width+x;
+					UShort texel = static_cast<UShort>(*(pSrc + offset*2));
+					texel = texel << 8;
+					texel |= static_cast<UShort>(*(pSrc + offset*2 + 1));
+					UShort texelRGB = (texel & 0xFFF0) >> 4;
+					UShort texelA = (texel & 0x0e) << 11;
+					texel = texelRGB | texelA;
+					*pDst++ = static_cast<UChar>(texel >> 8);
+					*pDst++ = static_cast<UChar>(texel);
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+UInt PdrRendererData::GetTotalImageMemory(const Image* pImage, const UInt bpp)
+	const
+{
+	UInt totalMemory = 0;
+	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
+	{
+		UInt mipMemoryUsed = pImage->GetQuantity(mipLevel) * bpp;
+		mipMemoryUsed = mipMemoryUsed < 32 ? 32 : mipMemoryUsed;
+		totalMemory += mipMemoryUsed;
+	}
+
+	return totalMemory;
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
+	UInt& rTilesXCount, UShort& rWidth)
+{
+	rTilesYCount = rHeight / 4;
+	rTilesXCount = rWidth / 4;
+
+	if (rHeight < 4)
+	{
+		rTilesYCount = 1;
+	}
+	else
+	{
+		rHeight = 4;
+	}
+
+	if (rWidth < 4)
+	{
+		rTilesXCount = 1;
+	}
+	else
+	{
+		rWidth = 4;
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::CreateDisplayList(VBufferID* pResource,
+	const IndexBuffer& rIBuffer)
+{
+	VBufferID::DisplayList DL;
+
+	// Note that the display-list buffer area must be forced out of
+	// the CPU cache since it will be written using the write-gather pipe
+	const UInt tempDLSize = 65536;
+	void* pTempDL = memalign(32, tempDLSize);
+	DCInvalidateRange(pTempDL, tempDLSize);
+
+	GXBeginDisplayList(pTempDL, tempDLSize);
+	Draw(pResource, rIBuffer);
+
+	DL.DLSize = GXEndDisplayList();
+	DL.DL = memalign(32, DL.DLSize);
+	System::Memcpy(DL.DL, DL.DLSize, pTempDL, DL.DLSize);
+	free(pTempDL);
+
+	DCFlushRange(DL.DL, DL.DLSize);
+
+	IBufferID*& rIBufferID = mpIBufferID;
+	DL.RegisteredIBuffer = rIBufferID;
+	rIBufferID->RegisteredVBuffers.Append(pResource);
+	pResource->DisplayLists.Append(DL);
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::Draw(const VBufferID* pResource,
+	const IndexBuffer& rIBuffer)
+{
+	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
+
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
+	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+	{
+		UShort index = static_cast<UShort>(rIBuffer[i]);
+
+		for (UInt j = 0; j < rElements.GetQuantity(); j++)
+		{
+			switch (rElements[j].Attr)
+			{
+			case GX_VA_POS:
+				GXPosition1x16(index);
+				break;
+
+			case GX_VA_CLR0:
+				GXColor1x16(index);
+				break;
+
+			case GX_VA_TEX0:
+				GXTexCoord1x16(index);
+				break;
+
+			default:
+				WIRE_ASSERT(false);
+			}
+		}
+	}
+
+	GXEnd();
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::DrawWireframe(const VBufferID* pResource,
+	const IndexBuffer& rIBuffer)
+{
+	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
+
+	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
+
+	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
+	{
+		for (UInt k = 0; k < 3; k++)
+		{
+			UShort index = rIBuffer[i + k];
+			for (UInt j = 0; j < rElements.GetQuantity(); j++)
+			{
+				switch (rElements[j].Attr)
+				{
+				case GX_VA_POS:
+					GXPosition1x16(index);
+					break;
+
+				case GX_VA_CLR0:
+					GXColor1x16(index);
+					break;
+
+				case GX_VA_TEX0:
+					GXTexCoord1x16(index);
+					break;
+
+				default:
+					WIRE_ASSERT(false);
+				}		
+			}
+
+			for (UInt j = 0; j < rElements.GetQuantity(); j++)
+			{
+				index = rIBuffer[i + ((k+1) > 2 ? 0 : k)];
+				switch (rElements[j].Attr)
+				{
+				case GX_VA_POS:
+					GXPosition1x16(index);
+					break;
+
+				case GX_VA_CLR0:
+					GXColor1x16(index);
+					break;
+
+				case GX_VA_TEX0:
+					GXTexCoord1x16(index);
+					break;
+
+				default:
+					WIRE_ASSERT(false);
+				}
+			}
+		}
+	}
+
+	GXEnd();
 }

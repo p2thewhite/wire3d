@@ -10,9 +10,6 @@ namespace Wire
 {
 
 class PdrRendererData;
-class VBufferID;
-class IBufferID;
-class Image;
 
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
@@ -69,34 +66,6 @@ protected:
 
 private:
 	PdrRendererData* mpData;
-
-	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
-	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
-	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
-	void DrawWireframe(const VBufferID* pResource, const IndexBuffer&
-		rIBuffer);
-
-	UInt GetTotalImageMemory(const Image* pImage, const UInt bpp) const;
-
-	void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void ConvertRGB888ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void ConvertRGB565ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void ConvertRGBA4444ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void GetTileCount(UInt& rTilesYCount, UShort& rHeight, UInt& rTilesXCount,
-		UShort &rWidth);
-
-	static UChar msAlphaSrcBlend[];
-	static UChar msAlphaDstBlend[];
-	static UChar msCullType[];
-	static UChar msFogDensity[];
-	static UChar msZBufferCompare[];
- 	static UChar msTexMinFilter[];
- 	static UChar msTexWrapMode[];
-	static UChar msImageFormat[];
 
 public:
 	 // internally used by System::Assert

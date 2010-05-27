@@ -1,8 +1,10 @@
 #include "WireGXRenderer.h"
 
+#include "WireGXRendererData.h"
+
 using namespace Wire;
 
-UChar GXRenderer::msCullType[CullState::CM_QUANTITY] = 
+UChar PdrRendererData::msCullType[CullState::CM_QUANTITY] = 
 {
 	GX_CULL_BACK,
 	GX_CULL_FRONT
@@ -15,7 +17,7 @@ void GXRenderer::SetCullState(CullState* pState)
 
 	if (pState->Enabled)
 	{
-		GXSetCullMode(msCullType[pState->CullFace]);
+		GXSetCullMode(PdrRendererData::msCullType[pState->CullFace]);
 	}
 	else
 	{

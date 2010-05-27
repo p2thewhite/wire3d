@@ -5,11 +5,15 @@
 namespace Wire
 {
 
+class VertexBuffer;
+
 class PdrRendererData
 {
 public:
 	PdrRendererData() {}
 	~PdrRendererData() {}
+
+	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	// Platform-dependent data
 	IDirect3D9* mpD3D;
