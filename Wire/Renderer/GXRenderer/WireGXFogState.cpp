@@ -1,8 +1,10 @@
 #include "WireGXRenderer.h"
 
+#include "WireGXRendererData.h"
+
 using namespace Wire;
 
-UChar GXRenderer::msFogDensity[FogState::DF_QUANTITY] =
+UChar PdrRendererData::msFogDensity[FogState::DF_QUANTITY] =
 {
 	GX_FOG_PERSP_LIN,	// FogState::DF_LINEAR
 	GX_FOG_ORTHO_EXP,   // FogState::DF_EXP
@@ -18,8 +20,9 @@ void GXRenderer::SetFogState(FogState* pState)
 	{
  		GXColor color = { pState->Color.R() * 255.0F, pState->Color.G() *
 			255.0F, pState->Color.B() * 255.0F, 255};
-		GXSetFog(msFogDensity[pState->DensityFunc], pState->Start,
-			pState->End, mpCamera->GetDMin(), mpCamera->GetDMax(), color);
+		GXSetFog(PdrRendererData::msFogDensity[pState->DensityFunc],
+			pState->Start, pState->End, mpCamera->GetDMin(), mpCamera->
+			GetDMax(), color);
 	}
 	else
 	{

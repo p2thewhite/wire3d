@@ -68,8 +68,6 @@ protected:
 	virtual void SetZBufferState(ZBufferState* pState);
 
 private:
-	void Convert(const VertexBuffer* pSrc, Float* pDst);
-
 	PdrRendererData* mpData;
 };
 

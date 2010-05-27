@@ -170,7 +170,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	hr = pD3DVBuffer->Lock(0, vbSize, reinterpret_cast<void**>(&pVBData), 0);
  	WIRE_ASSERT(SUCCEEDED(hr));
 
-	Convert(pVBuffer, pVBData);
+	mpData->Convert(pVBuffer, pVBData);
 
 	hr = pD3DVBuffer->Unlock();
  	WIRE_ASSERT(SUCCEEDED(hr));
@@ -178,64 +178,6 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
  	// Generate the binding information and save it.
  	pResource->ID = pD3DVBuffer;
  	pResource->VertexSize = vertexSize;
-}
-
-//----------------------------------------------------------------------------
-void Dx9Renderer::Convert(const VertexBuffer* pSrc, Float* pDst)
-{
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
-	{
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* pPosition = pSrc->GetPosition(i);
-			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
-			{
-				*pDst++ = pPosition[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* pColor = pSrc->GetColor(i, unit);
-				D3DCOLOR color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 4)
-				{
-					UChar alpha = static_cast<UChar>(color);
-					color = color >> 8;
-					color |= alpha << 24;
-				}
-
-				DWORD* pColorDst = reinterpret_cast<DWORD*>(pDst);
-				*pColorDst++ = color;
-				pDst = reinterpret_cast<Float*>(pColorDst);
-			}
-		}
-
-		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
-		{
-			UInt channels = rIAttr.GetTCoordChannels(unit);
-			if (channels > 0)
-			{
-				const Float* pTCoords = pSrc->GetTCoord(i, unit);
-				for (UInt k = 0; k < channels; k++)
-				{
-					*pDst++ = pTCoords[k];
-				}
-			}
-		}
-	}
 }
 
 //----------------------------------------------------------------------------
