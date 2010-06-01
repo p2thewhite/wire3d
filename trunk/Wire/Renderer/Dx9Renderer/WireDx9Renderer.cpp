@@ -2,17 +2,18 @@
 
 #include "WireCamera.h"
 #include "WireDx9RendererData.h"
+#include "WireDx9RendererInput.h"
 #include "WireGeometry.h"
 #include <d3dx9.h>
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
+Dx9Renderer::Dx9Renderer(PdrRendererInput& rInput)
 	:
-	Renderer(width, height)
+	Renderer(rInput.Width, rInput.Height)
 {
-	mpData = WIRE_NEW PdrRendererData;
+	mpData = WIRE_NEW PdrRendererData(this);
 	WIRE_ASSERT(mpData);
 
 	IDirect3D9*& rD3D = mpData->mpD3D;
@@ -20,11 +21,11 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	WIRE_ASSERT(rD3D);
 
 	D3DPRESENT_PARAMETERS& rPresent = mpData->mPresent;
-	rPresent.BackBufferWidth = width;
-	rPresent.BackBufferHeight = height;
+	rPresent.BackBufferWidth = rInput.Width;
+	rPresent.BackBufferHeight = rInput.Height;
 	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	rPresent.BackBufferCount = 1;
-	rPresent.hDeviceWindow = hWnd;
+	rPresent.hDeviceWindow = rInput.WindowHandle;
 	rPresent.Windowed = true;
 	rPresent.Flags = 0;
 	rPresent.FullScreen_RefreshRateInHz = 0;
@@ -67,8 +68,8 @@ Dx9Renderer::Dx9Renderer(HWND hWnd, Int width, Int height)
 	}
 
 	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
-	hr = rD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-		behaviorFlags, &rPresent, &rDevice);
+	hr = rD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+		rInput.WindowHandle, behaviorFlags, &rPresent, &rDevice);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Turn off lighting (DX defaults to lighting on).
@@ -122,17 +123,6 @@ void Dx9Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::ResetDevice()
-{
-	HRESULT hr;
-	hr = mpData->mpD3DDevice->Reset(&mpData->mPresent);
-	WIRE_ASSERT(SUCCEEDED(hr));
-
-	OnViewportChange();
-	OnFrameChange();
-}
-
-//----------------------------------------------------------------------------
 Bool Dx9Renderer::BeginScene(Camera* pCamera)
 {
 	OnBeginScene(pCamera);
@@ -164,7 +154,7 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 		return false;
 
 	case D3DERR_DEVICENOTRESET:
-        ResetDevice();
+        mpData->ResetDevice();
         break;
     }
 
@@ -251,6 +241,24 @@ void Dx9Renderer::OnViewportChange()
 	HRESULT hr;
 	hr = mpData->mpD3DDevice->SetViewport(&viewport);
 	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+PdrRendererData::PdrRendererData(Renderer* pRenderer)
+	:
+	mpRenderer(pRenderer)
+{
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ResetDevice()
+{
+	HRESULT hr;
+	hr = mpD3DDevice->Reset(&mPresent);
+	WIRE_ASSERT(SUCCEEDED(hr));
+
+	mpRenderer->OnViewportChange();
+	mpRenderer->OnFrameChange();
 }
 
 //----------------------------------------------------------------------------

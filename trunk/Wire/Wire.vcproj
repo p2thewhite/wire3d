@@ -694,6 +694,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXRendererInput.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXResources.h"
 						>
 					</File>
@@ -751,6 +755,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererData.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererInput.h"
 						>
 					</File>
 					<File

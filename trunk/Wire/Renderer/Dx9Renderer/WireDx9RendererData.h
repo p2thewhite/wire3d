@@ -10,8 +10,10 @@ class VertexBuffer;
 class PdrRendererData
 {
 public:
-	PdrRendererData() {}
-	~PdrRendererData() {}
+	PdrRendererData(Renderer* pRenderer);
+
+	// device management
+	void ResetDevice();
 
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
@@ -32,6 +34,9 @@ public:
  	static DWORD msTexMipFilter[];
  	static DWORD msTexWrapMode[];
  	static D3DFORMAT msImageFormat[];
+
+private:
+	Renderer* mpRenderer;
 };
 
 }

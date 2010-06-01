@@ -1,5 +1,7 @@
 #include "WireGXApplication.h"
+
 #include "WireGXRenderer.h"
+#include "WireGXRendererInput.h"
 
 using namespace Wire;
 
@@ -24,7 +26,9 @@ GXApplication::~GXApplication()
 //----------------------------------------------------------------------------
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
-	mpRenderer = WIRE_NEW GXRenderer(mBackgroundColor);
+	PdrRendererInput input;
+	input.BackgroundColor = mBackgroundColor;
+	mpRenderer = WIRE_NEW GXRenderer(input);
 	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// VIInit must be called before PADInit
