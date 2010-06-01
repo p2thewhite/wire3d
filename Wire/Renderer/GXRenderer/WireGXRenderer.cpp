@@ -3,6 +3,7 @@
 #include "WireGeometry.h"
 #include "WireImage.h"
 #include "WireGXRendererData.h"
+#include "WireGXRendererInput.h"
 #include "WireGXResources.h"
 #include "WireMatrix4.h"
 #include <malloc.h>		// for memalign
@@ -13,13 +14,13 @@ using namespace Wire;
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
 //----------------------------------------------------------------------------
-GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
+GXRenderer::GXRenderer(PdrRendererInput& rInput)
 	:
 	Renderer(0, 0)
 {
 	msMaxAnisotropy = 4.0F;
 
-	mpData = WIRE_NEW PdrRendererData;
+	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);
 
 	VIInit();
@@ -48,7 +49,7 @@ GXRenderer::GXRenderer(const ColorRGBA& rClearColor)
 	GXInit(rFifoBuffer, DEFAULT_FIFO_SIZE);
 
 	// clears the bg to color and clears the z buffer
-	SetClearColor(rClearColor);
+	SetClearColor(rInput.BackgroundColor);
 
 	// InitGX
 	f32 yScale = GXGetYScaleFactor(rRMode->efbHeight, rRMode->xfbHeight);
@@ -284,25 +285,6 @@ void GXRenderer::OnViewportChange()
 	}
 
 	GXSetScissor(originX, originY, width, height);
-}
-
-// internally used by System::Assert
-//----------------------------------------------------------------------------
-void* GXRenderer::GetFramebuffer()
-{
-	return mpData->mFrameBuffer[0];
-}
-
-//----------------------------------------------------------------------------
-void GXRenderer::SetFramebufferIndex(UInt i)
-{
-	mpData->mFrameBufferIndex = i;
-}
-
-//----------------------------------------------------------------------------
-GXRenderModeObj* GXRenderer::GetRenderMode()
-{
-	return mpData->mRMode;
 }
 
 //----------------------------------------------------------------------------
@@ -671,3 +653,23 @@ void PdrRendererData::DrawWireframe(const VBufferID* pResource,
 
 	GXEnd();
 }
+
+// internally used by System::Assert
+//----------------------------------------------------------------------------
+void* PdrRendererData::GetFramebuffer()
+{
+	return mFrameBuffer[0];
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::SetFramebufferIndex(UInt i)
+{
+	mFrameBufferIndex = i;
+}
+
+//----------------------------------------------------------------------------
+GXRenderModeObj* PdrRendererData::GetRenderMode()
+{
+	return mRMode;
+}
+

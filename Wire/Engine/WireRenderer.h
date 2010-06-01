@@ -29,23 +29,6 @@ public:
 	// layer.
 	virtual ~Renderer();
 
-	// Support for predraw and postdraw semantics.
-	Bool OnBeginScene(Camera* pCamera);
-	virtual Bool BeginScene(Camera* pCamera) = 0;
-	virtual void EndScene() = 0;
-
-	// Apply camera changes to platform specific renderer.
-	virtual void OnFrameChange() = 0;
-	virtual void OnViewportChange() = 0;
-
-	// Support for full-sized window buffer operations. The values used for
-	// clearing are specified by SetClearColor().
-	virtual void ClearBuffers() = 0;
-	virtual void DisplayBackBuffer() = 0;
-
-	// The main entry point to drawing in the derived-class renderers.
-	virtual void DrawElements() = 0;
-
 	// Object drawing.
 	void DrawScene(VisibleSet& rVisibleSet);
 	void Draw(Geometry* pGeometry);
@@ -61,11 +44,7 @@ public:
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
-	virtual void SetAlphaState(AlphaState* pState) = 0;
-	virtual void SetCullState(CullState* pState) = 0;
-	virtual void SetFogState(FogState* pState) = 0;
-	virtual void SetWireframeState(WireframeState* pState) = 0;
-	virtual void SetZBufferState(ZBufferState* pState) = 0;
+	// Render state handling
 	AlphaState* GetAlphaState();
 	CullState* GetCullState();
 	FogState* GetFogState();
@@ -99,29 +78,6 @@ protected:
 	void EnableTexture(Texture* pTexture);
  	void DisableTexture(Texture* pTexture);
 
-	// Resource loading and releasing (to/from video memory).
-	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
-		IndexBuffer* pBuffer) = 0;
-	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
-
- 	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
- 		VertexBuffer* pVBuffer) = 0;
-	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
-
-	virtual void OnLoadTexture(ResourceIdentifier*& rID,
-		Texture* pTexture) = 0;
-	virtual void OnReleaseTexture(ResourceIdentifier* pID) = 0;
-
-	// Resource enabling and disabling.
-	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
-
-	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableVBuffer(ResourceIdentifier* pID) = 0;
-
-	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
-
 	// Global render states.
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
 
@@ -140,6 +96,55 @@ protected:
 	UInt mCurrentSampler;
 
 	static Float msMaxAnisotropy;
+
+// Platform-dependent portion of the Renderer
+public:
+	// Support for predraw and postdraw semantics.
+	Bool OnBeginScene(Camera* pCamera);
+	virtual Bool BeginScene(Camera* pCamera) = 0;
+	virtual void EndScene() = 0;
+
+	// Apply camera changes to platform specific renderer.
+	virtual void OnFrameChange() = 0;
+	virtual void OnViewportChange() = 0;
+
+	// Support for full-sized window buffer operations. The values used for
+	// clearing are specified by SetClearColor().
+	virtual void ClearBuffers() = 0;
+	virtual void DisplayBackBuffer() = 0;
+
+	// The main entry point to drawing in the derived-class renderers.
+	virtual void DrawElements() = 0;
+
+	// Render state handling
+	virtual void SetAlphaState(AlphaState* pState) = 0;
+	virtual void SetCullState(CullState* pState) = 0;
+	virtual void SetFogState(FogState* pState) = 0;
+	virtual void SetWireframeState(WireframeState* pState) = 0;
+	virtual void SetZBufferState(ZBufferState* pState) = 0;
+
+	// Resource loading and releasing (to/from video memory).
+	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
+		IndexBuffer* pBuffer) = 0;
+	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
+		VertexBuffer* pVBuffer) = 0;
+	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnLoadTexture(ResourceIdentifier*& rID,
+		Texture* pTexture) = 0;
+	virtual void OnReleaseTexture(ResourceIdentifier* pID) = 0;
+
+	// Resource enabling and disabling.
+	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableVBuffer(ResourceIdentifier* pID) = 0;
+
+	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
+	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
 };
 
 #include "WireRenderer.inl"

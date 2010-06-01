@@ -12,9 +12,6 @@ class VBufferID;
 class PdrRendererData
 {
 public:
-	PdrRendererData() {}
-	~PdrRendererData() {}
-
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 
 	UInt GetTotalImageMemory(const Image* pImage, const UInt bpp) const;
@@ -34,6 +31,11 @@ public:
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void DrawWireframe(const VBufferID* pResource, const IndexBuffer&
 		rIBuffer);
+
+	// internally used by System::Assert
+	void* GetFramebuffer();
+	void SetFramebufferIndex(UInt i);
+	GXRenderModeObj* GetRenderMode();
 
 	// Platform-dependent data
 	void* mFifoBuffer;
@@ -59,6 +61,9 @@ public:
 	static UChar msTexMinFilter[];
 	static UChar msTexWrapMode[];
 	static UChar msImageFormat[];
+
+private:
+	Renderer* mpRenderer;
 };
 
 }

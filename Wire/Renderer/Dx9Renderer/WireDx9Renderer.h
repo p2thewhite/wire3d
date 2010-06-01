@@ -10,12 +10,13 @@ namespace Wire
 {
 
 class PdrRendererData;
+class PdrRendererInput;
 
 class /*WIRE_RENDERER_ITEM*/ Dx9Renderer : public Renderer
 {
 
 public:
-	Dx9Renderer(HWND hWnd, Int width, Int height);
+	Dx9Renderer(PdrRendererInput& rInput);
 	virtual ~Dx9Renderer();
 
 	Bool BeginScene(Camera* pCamera);
@@ -35,9 +36,6 @@ public:
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
 
 protected:
-	// device management
-	void ResetDevice();
-
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
 		IndexBuffer* pBuffer);

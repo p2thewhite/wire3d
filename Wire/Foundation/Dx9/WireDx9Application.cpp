@@ -1,5 +1,7 @@
 #include "WireDx9Application.h"
+
 #include "WireDx9Renderer.h"
+#include "WireDx9RendererInput.h"
 
 #include <Windows.h>
 
@@ -133,7 +135,12 @@ Int Dx9Application::Main(Int, Char*[])
 
 	mWindowID = PtrToInt(hWnd);
 
-	mpRenderer = WIRE_NEW Dx9Renderer(hWnd, mWidth, mHeight);
+	PdrRendererInput input;
+	input.WindowHandle = hWnd;
+	input.Width = mWidth;
+	input.Height = mHeight;
+
+	mpRenderer = WIRE_NEW Dx9Renderer(input);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
 	if (mpApplication->OnInitialize())

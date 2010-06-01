@@ -10,12 +10,14 @@ namespace Wire
 {
 
 class PdrRendererData;
+class PdrRendererInput;
 
 class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
 
 public:
-	GXRenderer(const ColorRGBA& rClearColor);
+//	GXRenderer(const ColorRGBA& rClearColor);
+	GXRenderer(PdrRendererInput& rInput);
 	virtual ~GXRenderer();
 
 	Bool BeginScene(Camera* pCamera);
@@ -33,6 +35,9 @@ public:
 	virtual void DrawElements();
 
 	virtual void SetClearColor(const ColorRGBA& rClearColor);
+
+	// use by System::Assert on Wii
+	PdrRendererData* GetRendererData() { return mpData; }
 
 protected:
 	// Resource loading and releasing (to/from video memory).
@@ -66,12 +71,6 @@ protected:
 
 private:
 	PdrRendererData* mpData;
-
-public:
-	 // internally used by System::Assert
-	void* GetFramebuffer();
-	void SetFramebufferIndex(UInt i);
-	GXRenderModeObj* GetRenderMode();
 };
 
 #include "WireGXRenderer.inl"
