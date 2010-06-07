@@ -69,8 +69,6 @@ private:
 	PdrRendererData* mpData;
 };
 
-#include "WireDx9Renderer.inl"
-
 }
 
 #endif

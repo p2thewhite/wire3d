@@ -318,3 +318,9 @@ void PdrRendererData::Convert(const VertexBuffer* pSrc, Float* pDst)
 		}
 	}
 }
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::SetClearColor(const ColorRGBA& rClearColor)
+{
+	mClearColor = rClearColor;
+}
