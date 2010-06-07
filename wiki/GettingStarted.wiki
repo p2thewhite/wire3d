@@ -1,7 +1,5 @@
 #summary How to setup your system to use Wire3D.
 
-This page describes how to configure your system's environment in order to use Wire3D.
-
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
   * Install Visual Studio 2005 or later
