@@ -734,14 +734,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.inl"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Dx9Renderer"
@@ -799,14 +791,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9ZBufferState.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.inl"
 						>
 					</File>
 				</Filter>

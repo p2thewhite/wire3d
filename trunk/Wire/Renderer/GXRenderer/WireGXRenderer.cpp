@@ -654,6 +654,17 @@ void PdrRendererData::DrawWireframe(const VBufferID* pResource,
 	GXEnd();
 }
 
+//----------------------------------------------------------------------------
+void GXRenderer::EndScene()
+{
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::SetWireframeState(WireframeState* pState)
+{
+	mspStates[GlobalState::WIREFRAME] = pState;
+}
+
 // internally used by System::Assert
 //----------------------------------------------------------------------------
 void* PdrRendererData::GetFramebuffer()

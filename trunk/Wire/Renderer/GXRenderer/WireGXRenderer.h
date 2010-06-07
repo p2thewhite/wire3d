@@ -16,7 +16,6 @@ class /*WIRE_RENDERER_ITEM*/ GXRenderer : public Renderer
 {
 
 public:
-//	GXRenderer(const ColorRGBA& rClearColor);
 	GXRenderer(PdrRendererInput& rInput);
 	virtual ~GXRenderer();
 
@@ -72,8 +71,6 @@ protected:
 private:
 	PdrRendererData* mpData;
 };
-
-#include "WireGXRenderer.inl"
 
 }
 
