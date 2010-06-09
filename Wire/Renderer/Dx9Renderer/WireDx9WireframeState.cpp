@@ -5,7 +5,7 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetWireframeState(WireframeState* pState)
+void Renderer::SetWireframeState(WireframeState* pState)
 {
 	mspStates[GlobalState::WIREFRAME] = pState;
 

@@ -44,6 +44,11 @@ void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
+void Dx9Renderer::OnDisableIBuffer(ResourceIdentifier*)
+{
+}
+
+//----------------------------------------------------------------------------
 void Dx9Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
@@ -54,6 +59,11 @@ void Dx9Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 	WIRE_ASSERT(SUCCEEDED(hr));
 	hr = rDevice->SetVertexDeclaration(pResource->Declaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void Dx9Renderer::OnDisableVBuffer(ResourceIdentifier*)
+{
 }
 
 //----------------------------------------------------------------------------

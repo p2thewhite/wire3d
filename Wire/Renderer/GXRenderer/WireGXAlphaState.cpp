@@ -29,7 +29,7 @@ UChar PdrRendererData::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetAlphaState(AlphaState* pState)
+void Renderer::SetAlphaState(AlphaState* pState)
 {
 	mspStates[GlobalState::ALPHA] = pState;
 

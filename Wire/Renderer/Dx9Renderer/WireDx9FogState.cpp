@@ -12,7 +12,7 @@ DWORD PdrRendererData::msFogDensity[FogState::DF_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetFogState(FogState* pState)
+void Renderer::SetFogState(FogState* pState)
 {
 	mspStates[GlobalState::FOG] = pState;
 

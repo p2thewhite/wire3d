@@ -11,7 +11,7 @@ UChar PdrRendererData::msCullType[CullState::CM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetCullState(CullState* pState)
+void Renderer::SetCullState(CullState* pState)
 {
 	mspStates[GlobalState::CULL] = pState;
 

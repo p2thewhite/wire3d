@@ -2,6 +2,9 @@
 #ifndef WIREPDRRENDERERDATA_H
 #define WIREPDRRENDERERDATA_H
 
+#include "WireMatrix4.h"
+#include <d3d9.h>
+
 namespace Wire
 {
 

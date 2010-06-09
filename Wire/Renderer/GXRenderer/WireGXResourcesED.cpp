@@ -64,6 +64,11 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
+void GXRenderer::OnDisableVBuffer(ResourceIdentifier* pID)
+{
+}
+
+//----------------------------------------------------------------------------
 void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
@@ -73,6 +78,11 @@ void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 		GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnDisableIBuffer(ResourceIdentifier* pID)
+{
 }
 
 //----------------------------------------------------------------------------
@@ -113,4 +123,10 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 
 	// set texture
 	GXLoadTexObj(&pTexID->TexObj, GX_TEXMAP0 + unit);
+}
+
+//----------------------------------------------------------------------------
+void GXRenderer::OnDisableTexture(ResourceIdentifier* pID)
+{
+  // TODO
 }

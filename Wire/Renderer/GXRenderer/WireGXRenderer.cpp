@@ -1,5 +1,6 @@
 #include "WireGXRenderer.h"
 
+#include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireImage.h"
 #include "WireGXRendererData.h"
@@ -108,7 +109,7 @@ GXRenderer::~GXRenderer()
 }
 
 //----------------------------------------------------------------------------
-Bool GXRenderer::BeginScene(Camera* pCamera)
+Bool Renderer::BeginScene(Camera* pCamera)
 {
 	OnBeginScene(pCamera);
 
@@ -125,7 +126,7 @@ Bool GXRenderer::BeginScene(Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::ClearBuffers()
+void Renderer::ClearBuffers()
 {
 	// The console understands VT terminal escape codes
 	// This positions the cursor on row 2, column 0
@@ -140,7 +141,7 @@ void GXRenderer::ClearBuffers()
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::DisplayBackBuffer()
+void Renderer::DisplayBackBuffer()
 {
 	// Set Z/Color update to make sure eFB will be cleared at GXCopyDisp.
 	// (If you want to control these modes by yourself in your application,
@@ -170,7 +171,7 @@ void GXRenderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
+void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	mClearColor = rClearColor;
 
@@ -184,7 +185,7 @@ void GXRenderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::DrawElements()
+void Renderer::DrawElements()
 {
 	mpData->mIsFrameBufferDirty = true;
 
@@ -231,7 +232,7 @@ void GXRenderer::DrawElements()
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnFrameChange()
+void Renderer::OnFrameChange()
 {
 	Vector3F eye = mpCamera->GetLocation();
 	Vector3F rVector = mpCamera->GetRVector();
@@ -254,7 +255,7 @@ void GXRenderer::OnFrameChange()
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnViewportChange()
+void Renderer::OnViewportChange()
 {
 	Float left;
 	Float right;
@@ -655,12 +656,12 @@ void PdrRendererData::DrawWireframe(const VBufferID* pResource,
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::EndScene()
+void Renderer::EndScene()
 {
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetWireframeState(WireframeState* pState)
+void Renderer::SetWireframeState(WireframeState* pState)
 {
 	mspStates[GlobalState::WIREFRAME] = pState;
 }

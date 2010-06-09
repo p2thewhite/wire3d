@@ -17,7 +17,7 @@ DWORD PdrRendererData::msZBufferCompare[ZBufferState::CF_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetZBufferState(ZBufferState* pState)
+void Renderer::SetZBufferState(ZBufferState* pState)
 {
 	mspStates[GlobalState::ZBUFFER] = pState;
 
