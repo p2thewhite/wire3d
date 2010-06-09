@@ -1,5 +1,6 @@
 #include "WireGXRenderer.h"
 
+#include "WireCamera.h"
 #include "WireGXRendererData.h"
 
 using namespace Wire;
@@ -12,7 +13,7 @@ UChar PdrRendererData::msFogDensity[FogState::DF_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetFogState(FogState* pState)
+void Renderer::SetFogState(FogState* pState)
 {
 	mspStates[GlobalState::FOG] = pState;
 

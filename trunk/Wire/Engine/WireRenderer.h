@@ -17,6 +17,7 @@ class Bindable;
 class Camera;
 class Geometry;
 class IndexBuffer;
+class PdrRendererData;
 class ResourceIdentifier;
 class Texture;
 class VertexBuffer;
@@ -34,7 +35,6 @@ public:
 	void Draw(Geometry* pGeometry);
 
 	// Access to the color value used for clearing the back buffer.
-	virtual void SetClearColor(const ColorRGBA& rClearColor) = 0;
 	const ColorRGBA& GetClearColor() const;
 
 	// Window parameters.
@@ -50,6 +50,9 @@ public:
 	FogState* GetFogState();
 	WireframeState* GetWireframeState();
 	ZBufferState* GetZBufferState();
+
+	// use by System::Assert on Wii
+	PdrRendererData* GetRendererData() { return mpData; }
 
 protected:
 	Renderer(Int width, Int height);
@@ -97,31 +100,35 @@ protected:
 
 	static Float msMaxAnisotropy;
 
+	PdrRendererData* mpData;
+	
 // Platform-dependent portion of the Renderer
 public:
 	// Support for predraw and postdraw semantics.
 	Bool OnBeginScene(Camera* pCamera);
-	virtual Bool BeginScene(Camera* pCamera) = 0;
-	virtual void EndScene() = 0;
+	Bool BeginScene(Camera* pCamera);
+	void EndScene();
 
 	// Apply camera changes to platform specific renderer.
-	virtual void OnFrameChange() = 0;
-	virtual void OnViewportChange() = 0;
+	void OnFrameChange();
+	void OnViewportChange();
 
 	// Support for full-sized window buffer operations. The values used for
 	// clearing are specified by SetClearColor().
-	virtual void ClearBuffers() = 0;
-	virtual void DisplayBackBuffer() = 0;
+	void ClearBuffers();
+	void DisplayBackBuffer();
 
 	// The main entry point to drawing in the derived-class renderers.
-	virtual void DrawElements() = 0;
+	void DrawElements();
+
+	void SetClearColor(const ColorRGBA& rClearColor);
 
 	// Render state handling
-	virtual void SetAlphaState(AlphaState* pState) = 0;
-	virtual void SetCullState(CullState* pState) = 0;
-	virtual void SetFogState(FogState* pState) = 0;
-	virtual void SetWireframeState(WireframeState* pState) = 0;
-	virtual void SetZBufferState(ZBufferState* pState) = 0;
+	void SetAlphaState(AlphaState* pState);
+	void SetCullState(CullState* pState);
+	void SetFogState(FogState* pState);
+	void SetWireframeState(WireframeState* pState);
+	void SetZBufferState(ZBufferState* pState);
 
 	// Resource loading and releasing (to/from video memory).
 	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,

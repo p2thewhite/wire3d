@@ -99,7 +99,7 @@ Dx9Renderer::~Dx9Renderer()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::ClearBuffers()
+void Renderer::ClearBuffers()
 {
 	DWORD clearColor = D3DCOLOR_COLORVALUE(mClearColor.R(),
 		mClearColor.G(), mClearColor.B(), mClearColor.A());
@@ -112,7 +112,7 @@ void Dx9Renderer::ClearBuffers()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::DisplayBackBuffer()
+void Renderer::DisplayBackBuffer()
 {
 	HRESULT hr;
 	hr = mpData->mpD3DDevice->Present(NULL, NULL, NULL, NULL);
@@ -123,7 +123,7 @@ void Dx9Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
-Bool Dx9Renderer::BeginScene(Camera* pCamera)
+Bool Renderer::BeginScene(Camera* pCamera)
 {
 	OnBeginScene(pCamera);
 
@@ -165,7 +165,7 @@ Bool Dx9Renderer::BeginScene(Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::EndScene()
+void Renderer::EndScene()
 {
 	HRESULT hr;
 	hr = mpData->mpD3DDevice->EndScene();
@@ -173,7 +173,7 @@ void Dx9Renderer::EndScene()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::DrawElements()
+void Renderer::DrawElements()
 {
 	// Set up world matrix
 	Matrix4F world;
@@ -189,7 +189,7 @@ void Dx9Renderer::DrawElements()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnFrameChange()
+void Renderer::OnFrameChange()
 {
 	Vector3F eye = mpCamera->GetLocation();
 	Vector3F rVector = mpCamera->GetRVector();
@@ -216,7 +216,7 @@ void Dx9Renderer::OnFrameChange()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnViewportChange()
+void Renderer::OnViewportChange()
 {
 	Float left;
 	Float right;
@@ -320,7 +320,7 @@ void PdrRendererData::Convert(const VertexBuffer* pSrc, Float* pDst)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetClearColor(const ColorRGBA& rClearColor)
+void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	mClearColor = rClearColor;
 }

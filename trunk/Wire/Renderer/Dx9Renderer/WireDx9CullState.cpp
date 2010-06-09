@@ -11,7 +11,7 @@ DWORD PdrRendererData::msCullType[CullState::CM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetCullState(CullState* pState)
+void Renderer::SetCullState(CullState* pState)
 {
 	mspStates[GlobalState::CULL] = pState;
 

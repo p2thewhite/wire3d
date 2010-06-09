@@ -17,7 +17,7 @@ UChar PdrRendererData::msZBufferCompare[ZBufferState::CF_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::SetZBufferState(ZBufferState* pState)
+void Renderer::SetZBufferState(ZBufferState* pState)
 {
 	mspStates[GlobalState::ZBUFFER] = pState;
 

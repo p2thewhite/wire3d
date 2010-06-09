@@ -29,7 +29,7 @@ DWORD PdrRendererData::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::SetAlphaState(AlphaState* pState)
+void Renderer::SetAlphaState(AlphaState* pState)
 {
 	mspStates[GlobalState::ALPHA] = pState;
 

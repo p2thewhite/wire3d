@@ -2,6 +2,8 @@
 #ifndef WIREPDRRENDERERDATA_H
 #define WIREPDRRENDERERDATA_H
 
+#include "WireMatrix34.h"
+
 namespace Wire
 {
 

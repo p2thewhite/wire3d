@@ -2,6 +2,8 @@
 #ifndef WIREPDRRENDERERINPUT_H
 #define WIREPDRRENDERERINPUT_H
 
+#include <d3d9.h>
+
 namespace Wire
 {
 
