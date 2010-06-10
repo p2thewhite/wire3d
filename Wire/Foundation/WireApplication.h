@@ -46,7 +46,7 @@ public:
 
 protected:
 	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
-		Int xPosition, Int yPosition, Int width, Int height);
+		Int xPosition, Int yPosition, UInt width, UInt height);
 
 	// the unique application object
 	static Application* mpApplication;
@@ -57,8 +57,8 @@ protected:
 	const Char* mpWindowTitle;
 	Int mXPosition;
 	Int mYPosition;
-	Int mWidth;
-	Int mHeight;
+	UInt mWidth;
+	UInt mHeight;
 };
 
 }

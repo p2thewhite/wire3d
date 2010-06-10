@@ -1,6 +1,6 @@
 #include "WireDx9Application.h"
 
-#include "WireDx9Renderer.h"
+#include "WireRenderer.h"
 #include "WireDx9RendererInput.h"
 
 #include <Windows.h>
@@ -137,10 +137,8 @@ Int Dx9Application::Main(Int, Char*[])
 
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
-	input.Width = mWidth;
-	input.Height = mHeight;
 
-	mpRenderer = WIRE_NEW Dx9Renderer(input);
+	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
 	if (mpApplication->OnInitialize())

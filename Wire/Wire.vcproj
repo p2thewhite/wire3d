@@ -686,10 +686,6 @@
 					Name="Header Files"
 					>
 					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRendererData.h"
 						>
 					</File>
@@ -741,10 +737,6 @@
 				<Filter
 					Name="Header Files"
 					>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.h"
-						>
-					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererData.h"
 						>

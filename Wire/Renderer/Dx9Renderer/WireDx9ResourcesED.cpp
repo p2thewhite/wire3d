@@ -1,4 +1,4 @@
-#include "WireDx9Renderer.h"
+#include "WireRenderer.h"
 
 #include "WireDx9RendererData.h"
 #include "WireDx9Resources.h"
@@ -34,7 +34,7 @@ DWORD PdrRendererData::msTexWrapMode[Texture::WT_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
+void Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
 	// Bind the current index buffer.
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
@@ -44,12 +44,12 @@ void Dx9Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnDisableIBuffer(ResourceIdentifier*)
+void Renderer::OnDisableIBuffer(ResourceIdentifier*)
 {
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
+void Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
@@ -62,12 +62,12 @@ void Dx9Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnDisableVBuffer(ResourceIdentifier*)
+void Renderer::OnDisableVBuffer(ResourceIdentifier*)
 {
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
+void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
 	Texture* pTexture = pResource->TextureObject;
@@ -167,7 +167,7 @@ void Dx9Renderer::OnEnableTexture(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnDisableTexture(ResourceIdentifier*)
+void Renderer::OnDisableTexture(ResourceIdentifier*)
 {
 	const UInt unit = mCurrentSampler;
 

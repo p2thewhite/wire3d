@@ -1,4 +1,4 @@
-#include "WireDx9Renderer.h"
+#include "WireRenderer.h"
 
 #include "WireCamera.h"
 #include "WireDx9RendererData.h"
@@ -9,10 +9,10 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Dx9Renderer::Dx9Renderer(PdrRendererInput& rInput)
-	:
-	Renderer(rInput.Width, rInput.Height)
+Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 {
+	Initialize(width, height);
+
 	mpData = WIRE_NEW PdrRendererData(this);
 	WIRE_ASSERT(mpData);
 
@@ -21,8 +21,8 @@ Dx9Renderer::Dx9Renderer(PdrRendererInput& rInput)
 	WIRE_ASSERT(rD3D);
 
 	D3DPRESENT_PARAMETERS& rPresent = mpData->mPresent;
-	rPresent.BackBufferWidth = rInput.Width;
-	rPresent.BackBufferHeight = rInput.Height;
+	rPresent.BackBufferWidth = width;
+	rPresent.BackBufferHeight = height;
 	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	rPresent.BackBufferCount = 1;
 	rPresent.hDeviceWindow = rInput.WindowHandle;
@@ -83,7 +83,7 @@ Dx9Renderer::Dx9Renderer(PdrRendererInput& rInput)
 }
 
 //----------------------------------------------------------------------------
-Dx9Renderer::~Dx9Renderer()
+Renderer::~Renderer()
 {
 	if (mpData->mpD3DDevice)
 	{

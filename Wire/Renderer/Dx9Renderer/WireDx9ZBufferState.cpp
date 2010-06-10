@@ -1,4 +1,4 @@
-#include "WireDx9Renderer.h"
+#include "WireRenderer.h"
 
 #include "WireDx9RendererData.h"
 

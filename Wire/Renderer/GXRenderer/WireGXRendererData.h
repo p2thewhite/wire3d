@@ -9,7 +9,9 @@ namespace Wire
 
 class IBufferID;
 class Image;
+class IndexBuffer;
 class VBufferID;
+class VertexBuffer;
 
 class PdrRendererData
 {

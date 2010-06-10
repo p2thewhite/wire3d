@@ -1,4 +1,4 @@
-#include "WireDx9Renderer.h"
+#include "WireRenderer.h"
 
 #include "WireDx9RendererData.h"
 #include "WireDx9Resources.h"
@@ -19,7 +19,7 @@ D3DFORMAT PdrRendererData::msImageFormat[Image::FM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
+void Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 	IndexBuffer* pIBuffer)
 {
 	// The index buffer is encountered the first time.
@@ -85,7 +85,7 @@ void Dx9Renderer::OnLoadIBuffer(ResourceIdentifier*& rID,
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
+void Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
 	pResource->ID->Release();
@@ -93,7 +93,7 @@ void Dx9Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
+void Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VertexBuffer* pVBuffer)
 {
  	VBufferID* pResource = WIRE_NEW VBufferID;
@@ -181,7 +181,7 @@ void Dx9Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
+void Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	pResource->ID->Release();
@@ -190,7 +190,7 @@ void Dx9Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 {
 	// The texture is encountered the first time. Set up the texture unit
 	// in hardware that will manage this texture.
@@ -334,7 +334,7 @@ void Dx9Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Dx9Renderer::OnReleaseTexture(ResourceIdentifier* pID)
+void Renderer::OnReleaseTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
 	HRESULT hr;

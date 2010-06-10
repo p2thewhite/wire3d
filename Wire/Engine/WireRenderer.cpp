@@ -13,17 +13,11 @@ using namespace Wire;
 Float Renderer::msMaxAnisotropy = 1.0f;
 
 //----------------------------------------------------------------------------
-Renderer::Renderer(Int width, Int height)
-	:
-	mWidth(width),
-	mHeight(height),
-	mCurrentSampler(0)
+void Renderer::Initialize(UInt width, UInt height)
 {
-}
-
-//----------------------------------------------------------------------------
-Renderer::~Renderer()
-{
+	mWidth = width;
+	mHeight = height;
+	mCurrentSampler = 0;
 }
 
 //----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-#include "WireGXRenderer.h"
+#include "WireRenderer.h"
 
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
@@ -18,7 +18,7 @@ UChar PdrRendererData::msImageFormat[Image::FM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
+void Renderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 	VertexBuffer* pVBuffer)
 {
 	VBufferID* pResource = WIRE_NEW VBufferID;
@@ -84,7 +84,7 @@ void GXRenderer::OnLoadVBuffer(ResourceIdentifier*& rID,
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
+void Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
@@ -115,7 +115,7 @@ void GXRenderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer)
+void Renderer::OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer)
 {
 	// The texture is encountered the first time. Set up the texture unit
 	// in hardware that will manage this texture.
@@ -124,7 +124,7 @@ void GXRenderer::OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnReleaseIBuffer(ResourceIdentifier* pID)
+void Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
 	TArray<VBufferID*>& rVBufferIDs = pResource->RegisteredVBuffers; 
@@ -148,7 +148,7 @@ void GXRenderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 {
 	// The texture is encountered the first time. Set up the texture unit
 	// in hardware that will manage this texture.
@@ -217,7 +217,7 @@ void GXRenderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnReleaseTexture(ResourceIdentifier* pID)
+void Renderer::OnReleaseTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
 	free(pResource->Image);	// allocated using memalign, not using new

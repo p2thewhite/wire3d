@@ -18,6 +18,7 @@ class Camera;
 class Geometry;
 class IndexBuffer;
 class PdrRendererData;
+class PdrRendererInput;
 class ResourceIdentifier;
 class Texture;
 class VertexBuffer;
@@ -26,9 +27,12 @@ class VisibleSet;
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
 public:
-	// Abstract API for renderers.  Each graphics API must implement this
-	// layer.
-	virtual ~Renderer();
+	Renderer(PdrRendererInput& rInput, UInt width, UInt height);
+	~Renderer();
+
+	// The platform-dependent constructor must call this function first before
+	// doing any of its own work.
+	void Initialize(UInt width, UInt height);
 
 	// Object drawing.
 	void DrawScene(VisibleSet& rVisibleSet);
@@ -38,8 +42,8 @@ public:
 	const ColorRGBA& GetClearColor() const;
 
 	// Window parameters.
-	Int GetWidth() const;
-	Int GetHeight() const;
+	UInt GetWidth() const;
+	UInt GetHeight() const;
 
 	// Function pointer types for binding and unbinding resources.
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
@@ -55,8 +59,6 @@ public:
 	PdrRendererData* GetRendererData() { return mpData; }
 
 protected:
-	Renderer(Int width, Int height);
-
 	// Global render state management.
 	void SetGlobalState(GlobalStatePtr spStates[]);
 	void RestoreGlobalState(GlobalStatePtr spStates[]);
@@ -93,8 +95,8 @@ protected:
 	ColorRGBA mClearColor;
 
 	// Width and height of the backbuffer
-	Int mWidth;
-	Int mHeight;
+	UInt mWidth;
+	UInt mHeight;
 
 	UInt mCurrentSampler;
 
@@ -131,27 +133,24 @@ public:
 	void SetZBufferState(ZBufferState* pState);
 
 	// Resource loading and releasing (to/from video memory).
-	virtual void OnLoadIBuffer(ResourceIdentifier*& rID,
-		IndexBuffer* pBuffer) = 0;
-	virtual void OnReleaseIBuffer(ResourceIdentifier* pID) = 0;
+	void OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer);
+	void OnReleaseIBuffer(ResourceIdentifier* pID);
 
-	virtual void OnLoadVBuffer(ResourceIdentifier*& rID,
-		VertexBuffer* pVBuffer) = 0;
-	virtual void OnReleaseVBuffer(ResourceIdentifier* pID) = 0;
+	void OnLoadVBuffer(ResourceIdentifier*& rID, VertexBuffer* pVBuffer);
+	void OnReleaseVBuffer(ResourceIdentifier* pID);
 
-	virtual void OnLoadTexture(ResourceIdentifier*& rID,
-		Texture* pTexture) = 0;
-	virtual void OnReleaseTexture(ResourceIdentifier* pID) = 0;
+	void OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture);
+	void OnReleaseTexture(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling.
-	virtual void OnEnableIBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableIBuffer(ResourceIdentifier* pID) = 0;
+	void OnEnableIBuffer(ResourceIdentifier* pID);
+	void OnDisableIBuffer(ResourceIdentifier* pID);
 
-	virtual void OnEnableVBuffer(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableVBuffer(ResourceIdentifier* pID) = 0;
+	void OnEnableVBuffer(ResourceIdentifier* pID);
+	void OnDisableVBuffer(ResourceIdentifier* pID);
 
-	virtual void OnEnableTexture(ResourceIdentifier* pID) = 0;
-	virtual void OnDisableTexture(ResourceIdentifier* pID) = 0;
+	void OnEnableTexture(ResourceIdentifier* pID);
+	void OnDisableTexture(ResourceIdentifier* pID);
 };
 
 #include "WireRenderer.inl"

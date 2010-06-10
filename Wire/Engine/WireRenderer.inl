@@ -10,13 +10,13 @@ inline Bool Renderer::OnBeginScene(Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-inline Int Renderer::GetHeight() const
+inline UInt Renderer::GetHeight() const
 {
 	return mHeight;
 }
 
 //----------------------------------------------------------------------------
-inline Int Renderer::GetWidth() const
+inline UInt Renderer::GetWidth() const
 {
 	return mWidth;
 }
