@@ -1,6 +1,6 @@
 #include "WireApplication.h"
-#include "WireGXRenderer.h"
 #include "WireGXRendererData.h"
+#include "WireRenderer.h"
 #include <stdlib.h>
 
 //----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ void System::Print(const Char* pFormat, ...)
 	if (!sIsInitialized)
 	{
 		Application* pApp = Application::GetApplication();
-		GXRenderer* pRenderer = static_cast<GXRenderer*>(pApp->GetRenderer());
+		Renderer* pRenderer = pApp->GetRenderer();
 		PdrRendererData* pData = pRenderer->GetRendererData();
 		void* pFrameBuffer = pData->GetFramebuffer();
 		GXRenderModeObj* pRMode = pData->GetRenderMode();
@@ -54,7 +54,7 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Int lineNumber)
 {
 	Application* pApp = Application::GetApplication();
-	GXRenderer* pRenderer = static_cast<GXRenderer*>(pApp->GetRenderer());
+	Renderer* pRenderer = pApp->GetRenderer();
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();

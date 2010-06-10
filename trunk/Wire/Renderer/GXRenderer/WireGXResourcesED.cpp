@@ -1,4 +1,4 @@
-#include "WireGXRenderer.h"
+#include "WireRenderer.h"
 
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
@@ -26,7 +26,7 @@ UChar PdrRendererData::msTexWrapMode[Texture::WT_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
+void Renderer::OnEnableVBuffer(ResourceIdentifier* pID)
 {
 	VBufferID* pResource = static_cast<VBufferID*>(pID);
 
@@ -64,12 +64,12 @@ void GXRenderer::OnEnableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnDisableVBuffer(ResourceIdentifier* pID)
+void Renderer::OnDisableVBuffer(ResourceIdentifier* pID)
 {
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
+void Renderer::OnEnableIBuffer(ResourceIdentifier* pID)
 {
 	IBufferID* pResource = static_cast<IBufferID*>(pID);
 	mpData->mpIBufferID = pResource;
@@ -81,12 +81,12 @@ void GXRenderer::OnEnableIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnDisableIBuffer(ResourceIdentifier* pID)
+void Renderer::OnDisableIBuffer(ResourceIdentifier* pID)
 {
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
+void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 {
 	TextureID* pTexID = static_cast<TextureID*>(pID);
 	Texture* pTex = pTexID->TextureObject;
@@ -126,7 +126,7 @@ void GXRenderer::OnEnableTexture(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void GXRenderer::OnDisableTexture(ResourceIdentifier* pID)
+void Renderer::OnDisableTexture(ResourceIdentifier* pID)
 {
   // TODO
 }

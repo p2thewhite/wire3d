@@ -12,8 +12,6 @@ class PdrRendererInput
 
 public:
 	HWND WindowHandle;
-	Int Width;
-	Int Height;
 };
 
 }

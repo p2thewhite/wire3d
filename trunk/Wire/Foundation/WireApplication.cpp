@@ -7,7 +7,7 @@ Application* Application::mpApplication = NULL;
 
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA backgroundColor, const Char*
-	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
+	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height)
 	:
 	mpRenderer(NULL),
 	mBackgroundColor(backgroundColor),

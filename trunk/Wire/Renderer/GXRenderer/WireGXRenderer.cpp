@@ -1,4 +1,4 @@
-#include "WireGXRenderer.h"
+#include "WireRenderer.h"
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
@@ -15,10 +15,9 @@ using namespace Wire;
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
 //----------------------------------------------------------------------------
-GXRenderer::GXRenderer(PdrRendererInput& rInput)
-	:
-	Renderer(0, 0)
+Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 {
+	Initialize(width, height);
 	msMaxAnisotropy = 4.0F;
 
 	mpData = WIRE_NEW PdrRendererData();
@@ -103,7 +102,7 @@ GXRenderer::GXRenderer(PdrRendererInput& rInput)
 }
 
 //----------------------------------------------------------------------------
-GXRenderer::~GXRenderer()
+Renderer::~Renderer()
 {
 	WIRE_DELETE mpData;
 }

@@ -1,4 +1,4 @@
-#include "WireGXRenderer.h"
+#include "WireRenderer.h"
 
 #include "WireCamera.h"
 #include "WireGXRendererData.h"
