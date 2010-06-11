@@ -34,18 +34,18 @@ public:
 	// doing any of its own work.
 	void Initialize(UInt width, UInt height);
 
-	// Object drawing.
+	// Object drawing
 	void DrawScene(VisibleSet& rVisibleSet);
 	void Draw(Geometry* pGeometry);
 
-	// Access to the color value used for clearing the back buffer.
+	// Access to the color value used for clearing the back buffer
 	const ColorRGBA& GetClearColor() const;
 
-	// Window parameters.
+	// Backbuffer parameters
 	UInt GetWidth() const;
 	UInt GetHeight() const;
 
-	// Function pointer types for binding and unbinding resources.
+	// Function pointer types for binding and unbinding resources
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
 	// Render state handling
@@ -59,11 +59,11 @@ public:
 	PdrRendererData* GetRendererData() { return mpData; }
 
 protected:
-	// Global render state management.
+	// Global render state management
 	void SetGlobalState(GlobalStatePtr spStates[]);
 	void RestoreGlobalState(GlobalStatePtr spStates[]);
 
-	// Resource loading and releasing.
+	// Resource loading and releasing
 	void LoadIBuffer(IndexBuffer* pIBuffer);
 	void ReleaseIBuffer(Bindable* pIBuffer);
 
@@ -73,7 +73,7 @@ protected:
 	void LoadTexture(Texture* pTexture);
 	void ReleaseTexture(Bindable* pTexture);
 
-	// Resource enabling and disabling.
+	// Resource enabling and disabling
 	void EnableIBuffer();
 	void DisableIBuffer();
 
@@ -83,33 +83,34 @@ protected:
 	void EnableTexture(Texture* pTexture);
  	void DisableTexture(Texture* pTexture);
 
-	// Global render states.
+	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
 
-	// Current Geometry object for drawing.
+	// Current Geometry object for drawing
 	Geometry* mpGeometry;
 
-	// The camera for establishing the view frustum.
+	// The camera for establishing the view frustum
 	Camera* mpCamera;
 
+	// The color used for clearing the backbuffer
 	ColorRGBA mClearColor;
 
 	// Width and height of the backbuffer
 	UInt mWidth;
 	UInt mHeight;
 
-	UInt mCurrentSampler;
+	// Maximum anisotropy value supported for texture filtering by the device
+	Float mMaxAnisotropy;
 
-	static Float msMaxAnisotropy;
+	UInt mCurrentSampler;
 
 	PdrRendererData* mpData;
 	
 // Platform-dependent portion of the Renderer
 public:
-	// Support for predraw and postdraw semantics.
-	Bool OnBeginScene(Camera* pCamera);
-	Bool BeginScene(Camera* pCamera);
-	void EndScene();
+	// Support for predraw and postdraw semantics
+	Bool PreDraw(Camera* pCamera);
+	void PostDraw();
 
 	// Apply camera changes to platform specific renderer.
 	void OnFrameChange();
@@ -120,7 +121,7 @@ public:
 	void ClearBuffers();
 	void DisplayBackBuffer();
 
-	// The main entry point to drawing in the derived-class renderers.
+	// The main entry point to drawing in the derived-class renderers
 	void DrawElements();
 
 	void SetClearColor(const ColorRGBA& rClearColor);
@@ -132,7 +133,7 @@ public:
 	void SetWireframeState(WireframeState* pState);
 	void SetZBufferState(ZBufferState* pState);
 
-	// Resource loading and releasing (to/from video memory).
+	// Resource loading and releasing (to/from video memory)
 	void OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer);
 	void OnReleaseIBuffer(ResourceIdentifier* pID);
 
@@ -142,7 +143,7 @@ public:
 	void OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture);
 	void OnReleaseTexture(ResourceIdentifier* pID);
 
-	// Resource enabling and disabling.
+	// Resource enabling and disabling
 	void OnEnableIBuffer(ResourceIdentifier* pID);
 	void OnDisableIBuffer(ResourceIdentifier* pID);
 

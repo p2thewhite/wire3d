@@ -68,7 +68,7 @@ public:
 	void UpdateGS(Double appTime = -MathD::MAX_REAL, Bool isInitiator = true);
 	void UpdateBS();
 
-	// update of render state
+	// Update of render state
 	virtual void UpdateRS(TArray<GlobalState*>* pStack = NULL);
 
 	// Parent access (Node calls this during attach/detach of children)

@@ -252,7 +252,7 @@ void Sample1::OnIdle()
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	mpRenderer->ClearBuffers();
-	mpRenderer->BeginScene(mspCamera);
+	mpRenderer->PreDraw(mspCamera);
 
 	Float angle = MathF::FMod(mAngle * 2.0F, MathF::TWO_PI);
 	Float xOffset = -1.5F - angle;
@@ -284,6 +284,6 @@ void Sample1::OnIdle()
 //	mspCube->World.SetUniformScale(2.0F);
 	mpRenderer->Draw(mspCube);
 
-	mpRenderer->EndScene();
+	mpRenderer->PostDraw();
 	mpRenderer->DisplayBackBuffer();
 }

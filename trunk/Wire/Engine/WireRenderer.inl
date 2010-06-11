@@ -1,15 +1,4 @@
 //----------------------------------------------------------------------------
-inline Bool Renderer::OnBeginScene(Camera* pCamera)
-{
-	mpCamera = pCamera;
-	OnFrameChange();
-	OnViewportChange();
-
-	// stub for derived classes
-	return true;
-}
-
-//----------------------------------------------------------------------------
 inline UInt Renderer::GetHeight() const
 {
 	return mHeight;
