@@ -18,7 +18,7 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 {
 	Initialize(width, height);
-	msMaxAnisotropy = 4.0F;
+	mMaxAnisotropy = 4.0F;
 
 	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);
@@ -108,9 +108,11 @@ Renderer::~Renderer()
 }
 
 //----------------------------------------------------------------------------
-Bool Renderer::BeginScene(Camera* pCamera)
+Bool Renderer::PreDraw(Camera* pCamera)
 {
-	OnBeginScene(pCamera);
+	mpCamera = pCamera;
+	OnFrameChange();
+	OnViewportChange();
 
 	Matrix4F perspective;
 	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
@@ -655,7 +657,7 @@ void PdrRendererData::DrawWireframe(const VBufferID* pResource,
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EndScene()
+void Renderer::PostDraw()
 {
 }
 

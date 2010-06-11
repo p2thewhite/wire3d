@@ -76,7 +76,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	msMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
+	mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
 
 	// Initialize global render state to default settings.
 	SetGlobalState(GlobalState::Default);
@@ -123,9 +123,11 @@ void Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
-Bool Renderer::BeginScene(Camera* pCamera)
+Bool Renderer::PreDraw(Camera* pCamera)
 {
-	OnBeginScene(pCamera);
+	mpCamera = pCamera;
+	OnFrameChange();
+	OnViewportChange();
 
 	Float n = pCamera->GetDMin();
 	Float f = pCamera->GetDMax();
@@ -165,7 +167,7 @@ Bool Renderer::BeginScene(Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EndScene()
+void Renderer::PostDraw()
 {
 	HRESULT hr;
 	hr = mpData->mpD3DDevice->EndScene();

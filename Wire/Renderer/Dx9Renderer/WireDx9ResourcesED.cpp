@@ -79,7 +79,7 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 
 	// Anisotropic filtering value.
 	Float anisotropy = pTexture->GetAnisotropyValue();
-	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
+	if (1.0F < anisotropy && anisotropy <= mMaxAnisotropy)
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
 			static_cast<DWORD>(anisotropy));
@@ -102,7 +102,7 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	}
 	else
 	{
-		if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
+		if (1.0F < anisotropy && anisotropy <= mMaxAnisotropy)
 		{
 			hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
 				D3DTEXF_ANISOTROPIC);
@@ -117,7 +117,7 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	}
 
 	// Set the mipmap mode.
-	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
+	if (1.0F < anisotropy && anisotropy <= mMaxAnisotropy)
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
 			D3DTEXF_ANISOTROPIC);

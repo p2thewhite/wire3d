@@ -109,7 +109,7 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	Float anisotropy = static_cast<UInt>(pTex->GetAnisotropyValue());
 	UChar anisoEnum = GX_ANISO_1;
 	UChar doEdgeLod = GX_FALSE;
-	if (1.0F < anisotropy && anisotropy <= msMaxAnisotropy)
+	if (1.0F < anisotropy && anisotropy <= mMaxAnisotropy)
 	{
 		anisoEnum = (anisotropy - 3.0F) > 0.0F ? GX_ANISO_4 : GX_ANISO_2;
 		doEdgeLod = GX_TRUE;
