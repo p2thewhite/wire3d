@@ -1,17 +1,17 @@
 //----------------------------------------------------------------------------
-inline UChar* Image::GetData() const
+inline UChar* Image2D::GetData() const
 {
 	return mpData;
 }
 
 //----------------------------------------------------------------------------
-inline Image::FormatMode Image::GetFormat() const
+inline Image2D::FormatMode Image2D::GetFormat() const
 {
 	return mFormat;
 }
 
 //----------------------------------------------------------------------------
-inline UInt Image::GetQuantity(UInt level) const
+inline UInt Image2D::GetQuantity(UInt level) const
 {
 	if (level == 0)
 	{
@@ -24,31 +24,31 @@ inline UInt Image::GetQuantity(UInt level) const
 }
 
 //----------------------------------------------------------------------------
-inline Bool Image::HasMipmaps() const
+inline Bool Image2D::HasMipmaps() const
 {
 	return mHasMipmaps;
 }
 
 //----------------------------------------------------------------------------
-inline Bool Image::IsPowerOfTwo(UInt value) const
+inline Bool Image2D::IsPowerOfTwo(UInt value) const
 {
 	return ((value & (value-1)) == 0);
 }
 
 //----------------------------------------------------------------------------
-inline UInt Image::GetBytesPerPixel() const
+inline UInt Image2D::GetBytesPerPixel() const
 {
 	return GetBytesPerPixel(mFormat);
 }
 
 //----------------------------------------------------------------------------
-inline UInt Image::GetBytesPerPixel(FormatMode format)
+inline UInt Image2D::GetBytesPerPixel(FormatMode format)
 {
 	return sImageBpp[format];
 }
 
 //----------------------------------------------------------------------------
-inline void Image::RGB888ToRGB565(UChar* pSrc888, UChar* pDst565)
+inline void Image2D::RGB888ToRGB565(UChar* pSrc888, UChar* pDst565)
 {
 	UShort rgb565 = static_cast<UShort>(*pSrc888++);		// red
 	rgb565 &= 0xF8;
@@ -67,7 +67,7 @@ inline void Image::RGB888ToRGB565(UChar* pSrc888, UChar* pDst565)
 }
 
 //----------------------------------------------------------------------------
-inline void Image::RGBA8888ToRGBA4444(UChar* pSrc8888, UChar* pDst4444)
+inline void Image2D::RGBA8888ToRGBA4444(UChar* pSrc8888, UChar* pDst4444)
 {
 	UShort rgba4444 = static_cast<UShort>(*pSrc8888++);		// red
 	rgba4444 &= 0xF0;
@@ -89,7 +89,7 @@ inline void Image::RGBA8888ToRGBA4444(UChar* pSrc8888, UChar* pDst4444)
 }
 
 //----------------------------------------------------------------------------
-inline void Image::RGB565ToRGB888(UChar* pSrc565, UChar* pDst888)
+inline void Image2D::RGB565ToRGB888(UChar* pSrc565, UChar* pDst888)
 {
 	*pDst888++ = *pSrc565 & 0xF8;
 	UChar gHigh = (*pSrc565++ & 0x07) << 5;
@@ -99,7 +99,7 @@ inline void Image::RGB565ToRGB888(UChar* pSrc565, UChar* pDst888)
 }
 
 //----------------------------------------------------------------------------
-inline void Image::RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888)
+inline void Image2D::RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888)
 {
 	*pDst8888++ = *pSrc4444 & 0xF0;
 	*pDst8888++ = (*pSrc4444++ & 0x0F) << 4;

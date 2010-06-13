@@ -36,7 +36,7 @@ public:
  	static DWORD msTexMinFilter[];
  	static DWORD msTexMipFilter[];
  	static DWORD msTexWrapMode[];
- 	static D3DFORMAT msImageFormat[];
+ 	static D3DFORMAT msImage2DFormat[];
 
 private:
 	Renderer* mpRenderer;

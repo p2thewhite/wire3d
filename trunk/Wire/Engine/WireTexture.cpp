@@ -5,7 +5,7 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Texture, Object);
 
 //----------------------------------------------------------------------------
-Texture::Texture(Image* pImage)
+Texture::Texture(Image2D* pImage)
 	:
 	mspImage(pImage),
 	mFilterType(FT_LINEAR),

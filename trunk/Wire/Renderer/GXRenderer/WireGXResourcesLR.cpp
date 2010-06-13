@@ -9,12 +9,12 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::msImageFormat[Image::FM_QUANTITY] =
+UChar PdrRendererData::msImage2DFormat[Image2D::FM_QUANTITY] =
 {
-	GX_TF_RGBA8,	// Image::FM_RGB888
-	GX_TF_RGBA8,	// Image::FM_RGBA8888
-	GX_TF_RGB565,	// Image::FM_RGB565
-	GX_TF_RGB5A3,	// Image::FM_RGBA4444
+	GX_TF_RGBA8,	// Image2D::FM_RGB888
+	GX_TF_RGBA8,	// Image2D::FM_RGBA8888
+	GX_TF_RGB565,	// Image2D::FM_RGB565
+	GX_TF_RGB5A3,	// Image2D::FM_RGBA4444
 };
 
 //----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	pResource->TextureObject = pTexture;
 	rID = pResource;
 
-	const Image* pImage = pTexture->GetImage();
+	const Image2D* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
 	UInt bpp = pImage->GetBytesPerPixel();
@@ -166,7 +166,7 @@ void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	pResource->Image = memalign(32, totalMemory);
 	UChar* pDst = static_cast<UChar*>(pResource->Image);
 	WIRE_ASSERT(pDst);
-	Image::FormatMode format = pImage->GetFormat();
+	Image2D::FormatMode format = pImage->GetFormat();
 
 	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
 	{
@@ -178,19 +178,19 @@ void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 		{
 			switch (format)
 			{
-			case Image::FM_RGBA8888:
+			case Image2D::FM_RGBA8888:
 				mpData->ConvertRGBA8888ToTiles(pSrc, width, height, pDst);
 				break;
 
-			case Image::FM_RGB888:
+			case Image2D::FM_RGB888:
 				mpData->ConvertRGB888ToTiles(pSrc, width, height, pDst);
 				break;
 
-			case Image::FM_RGB565:
+			case Image2D::FM_RGB565:
 				mpData->ConvertRGB565ToTiles(pSrc, width, height, pDst);
 				break;
 
-			case Image::FM_RGBA4444:
+			case Image2D::FM_RGBA4444:
 				mpData->ConvertRGBA4444ToTiles(pSrc, width, height, pDst);
 				break;
 
@@ -210,7 +210,7 @@ void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
 	UShort height = pImage->GetBound(1);
 	UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
 	GXInitTexObj(&pResource->TexObj, pResource->Image, width, height,
-		PdrRendererData::msImageFormat[format],
+		PdrRendererData::msImage2DFormat[format],
 		PdrRendererData::msTexWrapMode[pTexture->GetWrapType(0)],
 		PdrRendererData::msTexWrapMode[pTexture->GetWrapType(1)],
 		usesMipmaps);

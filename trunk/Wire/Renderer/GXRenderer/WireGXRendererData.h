@@ -8,7 +8,7 @@ namespace Wire
 {
 
 class IBufferID;
-class Image;
+class Image2D;
 class IndexBuffer;
 class VBufferID;
 class VertexBuffer;
@@ -18,7 +18,7 @@ class PdrRendererData
 public:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 
-	UInt GetTotalImageMemory(const Image* pImage, const UInt bpp) const;
+	UInt GetTotalImageMemory(const Image2D* pImage, const UInt bpp) const;
 
 	void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
@@ -64,7 +64,7 @@ public:
 	static UChar msZBufferCompare[];
 	static UChar msTexMinFilter[];
 	static UChar msTexWrapMode[];
-	static UChar msImageFormat[];
+	static UChar msImage2DFormat[];
 
 private:
 	Renderer* mpRenderer;

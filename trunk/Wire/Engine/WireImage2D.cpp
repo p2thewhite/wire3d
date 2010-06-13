@@ -1,10 +1,10 @@
-#include "WireImage.h"
+#include "WireImage2D.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Image, Object);
+WIRE_IMPLEMENT_RTTI(Image2D, Object);
 
-const UChar Image::sImageBpp[] =
+const UChar Image2D::sImageBpp[] =
 {
 	3,	// FM_RGB888,
 	4,	// FM_RGBA8888,
@@ -13,7 +13,7 @@ const UChar Image::sImageBpp[] =
 };
 
 //----------------------------------------------------------------------------
-Image::Image(FormatMode format, UInt width, UInt height, UChar* pData,
+Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 	Bool createMipmaps)
 	:
 	mFormat(format),
@@ -33,13 +33,13 @@ Image::Image(FormatMode format, UInt width, UInt height, UChar* pData,
 }
 
 //----------------------------------------------------------------------------
-Image::~Image()
+Image2D::~Image2D()
 {
 	WIRE_DELETE[] mpData;
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetBound(UInt i, UInt level) const
+UInt Image2D::GetBound(UInt i, UInt level) const
 {
 	WIRE_ASSERT(0 <= i && i < 2);
 	if (GetMipmapCount() <= level)
@@ -68,7 +68,7 @@ UInt Image::GetBound(UInt i, UInt level) const
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetMipmapCount() const
+UInt Image2D::GetMipmapCount() const
 {
 	if (!mHasMipmaps)
 	{
@@ -90,7 +90,7 @@ UInt Image::GetMipmapCount() const
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetMipmapQuantity(UInt level) const
+UInt Image2D::GetMipmapQuantity(UInt level) const
 {
 	UInt width = mBound[0];
 	UInt height = mBound[1];
@@ -107,7 +107,7 @@ UInt Image::GetMipmapQuantity(UInt level) const
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetTotalQuantity() const
+UInt Image2D::GetTotalQuantity() const
 {
 	UInt totalQuantity = 0;
 	for (UInt i = 0; i < GetMipmapCount(); i++)
@@ -119,7 +119,7 @@ UInt Image::GetTotalQuantity() const
 }
 
 //----------------------------------------------------------------------------
-UInt Image::GetMipmapOffset(UInt level) const
+UInt Image2D::GetMipmapOffset(UInt level) const
 {
 	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
 	{
@@ -144,7 +144,7 @@ UInt Image::GetMipmapOffset(UInt level) const
 }
 
 //----------------------------------------------------------------------------
-UChar* Image::GetMipmap(UInt level) const
+UChar* Image2D::GetMipmap(UInt level) const
 {
 	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
 	{
@@ -155,7 +155,7 @@ UChar* Image::GetMipmap(UInt level) const
 }
 
 //----------------------------------------------------------------------------
-void Image::CreateMipmaps()
+void Image2D::CreateMipmaps()
 {
 	UInt width = mBound[0];
 	UInt height = mBound[1];
@@ -191,7 +191,7 @@ void Image::CreateMipmaps()
 }
 
 //----------------------------------------------------------------------------
-void Image::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
+void Image2D::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 {
 	if (width == 1 && height == 1)
 	{
@@ -321,7 +321,7 @@ void Image::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 }
 
 //----------------------------------------------------------------------------
-void Image::CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height)
+void Image2D::CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 {
 	UInt bpp = GetBytesPerPixel();
 

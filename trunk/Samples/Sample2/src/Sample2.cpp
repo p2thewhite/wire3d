@@ -33,15 +33,24 @@ Bool Sample2::OnInitialize()
 	Geometry* pCube = CreateCube();
 	Geometry* pCube2 = CreateCube();
 	Geometry* pCube3 = CreateCube();
-	CubeController* pCubeController = WIRE_NEW CubeController;
-	pCube->AttachController(pCubeController);
+//	CubeController* pCubeController = WIRE_NEW CubeController;
+//	pCube->AttachController(pCubeController);
 
+//	mspRoot = WIRE_NEW DLodNode;
 	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(pCube);
+//	mspRoot->AttachChild(pCube);
 	mspRoot->AttachChild(CreatePyramid());
 	mspRoot->AttachChild(pCube2);
 	mspRoot->AttachChild(pCube3);
+/*
+    mspRoot->SetModelDistance(0, 0.0F, 7.0F);
+    mspRoot->SetModelDistance(1, 7.0F, 8.0F);
+    mspRoot->SetModelDistance(2, 8.0F, 9.0F);
+    mspRoot->SetModelDistance(3, 9.0F, 40.0F);
 
+    // set model LOD center
+    mspRoot->ModelCenter() = Vector3F::ZERO;
+*/
 	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -12.0F));
 	pCube2->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
 	pCube2->Local.SetScale(Vector3F(0.5F, 1, 0.5F));
@@ -88,6 +97,11 @@ Bool Sample2::OnInitialize()
 
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
+
+	BillboardNode* pBillboard = WIRE_NEW BillboardNode(mspCamera);
+	mspRoot->AttachChild(pBillboard);
+	pBillboard->AttachChild(pCube);
+	pBillboard->Local.SetTranslate(Vector3F(2.5F, 0.0F, 0.0F));
 
 	mspRoot->UpdateRS();
 	return true;
@@ -226,16 +240,22 @@ void Sample2::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
+	if (time > 2)
+	{
+		WIRE_ASSERT(false);
+	}
+	
 	System::Print("%f, %f\n", static_cast<Float>(time),
-		static_cast<Float>(elapsedTime));
+ 		static_cast<Float>(elapsedTime));
 
 	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	mAngle += static_cast<Float>(elapsedTime);
+	mAngle += static_cast<Float>(elapsedTime * 2.0F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	Matrix34F model(Vector3F(0, -1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
+//	mspRoot->Local.SetTranslate(Vector3F(0, 0, -1) * mAngle + Vector3F(0, 0, -5));
 
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);

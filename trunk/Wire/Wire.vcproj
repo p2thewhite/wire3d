@@ -229,30 +229,6 @@
 				<Filter
 					Name="Dx9"
 					>
-					<Filter
-						Name="Header Files"
-						>
-						<File
-							RelativePath=".\Foundation\Dx9\WireDx9Application.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Source Files"
-						>
-						<File
-							RelativePath=".\Foundation\Dx9\WireDx9Application.cpp"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="Inline Files"
-						>
-						<File
-							RelativePath=".\Foundation\Dx9\WireSystemDx9.inl"
-							>
-						</File>
-					</Filter>
 				</Filter>
 				<Filter
 					Name="Wii"
@@ -359,7 +335,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.h"
+					RelativePath=".\Engine\WireImage2D.h"
 					>
 				</File>
 				<File
@@ -475,7 +451,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.inl"
+					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>
 				<File
@@ -599,7 +575,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.cpp"
+					RelativePath=".\Engine\WireImage2D.cpp"
 					>
 				</File>
 				<File
@@ -697,6 +673,10 @@
 						RelativePath=".\Renderer\GXRenderer\WireGXResources.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Source Files"
@@ -726,6 +706,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
 						>
 					</File>
@@ -734,58 +718,6 @@
 			<Filter
 				Name="Dx9Renderer"
 				>
-				<Filter
-					Name="Header Files"
-					>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererData.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererInput.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Resources.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Source Files"
-					>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9AlphaState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9CullState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9FogState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesED.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9WireframeState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ZBufferState.cpp"
-						>
-					</File>
-				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

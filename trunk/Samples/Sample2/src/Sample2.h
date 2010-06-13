@@ -26,6 +26,7 @@ private:
 
 	CameraPtr mspCamera;
 	Culler mCuller;
+//	DLodNodePtr mspRoot;
 	NodePtr mspRoot;
 
 	Float mAngle;
