@@ -141,8 +141,8 @@ Texture* Sample1::CreateTexture()
 	const UInt width = 256;
 	const UInt height = 64;
 
-	Image::FormatMode format = Image::FM_RGB565;
-	const UInt bytesPerPixel = Image::GetBytesPerPixel(format);
+	Image2D::FormatMode format = Image2D::FM_RGB565;
+	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
 
 	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
 	UChar* pDst = reinterpret_cast<UChar*>(pData);
@@ -166,13 +166,13 @@ Texture* Sample1::CreateTexture()
 			*pTemp++ = ~t;
 			*pTemp = 0xFF;
 
-// 			Image::RGBA8888ToRGBA4444(pTemp - 3, pDst);
- 			Image::RGB888ToRGB565(pTemp - 3, pDst);
+// 			Image2D::RGBA8888ToRGBA4444(pTemp - 3, pDst);
+ 			Image2D::RGB888ToRGB565(pTemp - 3, pDst);
  			pDst += 2;
 		}
 	}
 
-	Image* pImage = WIRE_NEW Image(format, width, height, pData, false);
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
 	Texture* pTexture = WIRE_NEW Texture(pImage);
 	return pTexture;
 }
@@ -277,9 +277,12 @@ void Sample1::OnIdle()
 		mpRenderer->Draw(mspPyramid);
 	}
 
-	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle);
-	mspCube->World.SetRotate(model);
-	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
+
+ 	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -3.0F - mAngle * 2.0F));
+
+//	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle);
+//	mspCube->World.SetRotate(model);
+//	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
 //	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
 //	mspCube->World.SetUniformScale(2.0F);
 	mpRenderer->Draw(mspCube);

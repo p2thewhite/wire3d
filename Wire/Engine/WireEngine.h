@@ -15,7 +15,7 @@
 #include "WireFogState.h"
 #include "WireGeometry.h"
 #include "WireGlobalState.h"
-#include "WireImage.h"
+#include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireNode.h"
 #include "WireObject.h"

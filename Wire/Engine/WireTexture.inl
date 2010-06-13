@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------
-inline Image* Texture::GetImage()
+inline Image2D* Texture::GetImage()
 {
 	return mspImage;
 }
 
 //----------------------------------------------------------------------------
-inline const Image* Texture::GetImage() const
+inline const Image2D* Texture::GetImage() const
 {
 	return mspImage;
 }

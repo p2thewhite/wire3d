@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Image : public Object
+class /*WIRE_ENGINE_ITEM*/ Image2D : public Object
 {
 	WIRE_DECLARE_RTTI;
 
@@ -21,13 +21,12 @@ public:
 		FM_QUANTITY
 	};
 
-	// Construction and destruction. Image accepts responsibility for
+	// Construction and destruction. Image2D accepts responsibility for
 	// deleting the input array.
 
-	// 2D image
-	Image(FormatMode format, UInt width, UInt height, UChar* pData,
+	Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 		Bool createMipmaps = true);
-	virtual ~Image();
+	virtual ~Image2D();
 
 	// Pointer to the image (i.e. mipmap level 0)
 	UChar* GetData() const;
@@ -70,8 +69,8 @@ private:
 	Bool mHasMipmaps;
 };
 
-typedef Pointer<Image> ImagePtr;
-#include "WireImage.inl"
+typedef Pointer<Image2D> Image2DPtr;
+#include "WireImage2D.inl"
 
 }
 

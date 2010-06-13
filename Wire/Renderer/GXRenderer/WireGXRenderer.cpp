@@ -2,7 +2,7 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
-#include "WireImage.h"
+#include "WireImage2D.h"
 #include "WireGXRendererData.h"
 #include "WireGXRendererInput.h"
 #include "WireGXResources.h"
@@ -491,8 +491,8 @@ void PdrRendererData::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
 }
 
 //----------------------------------------------------------------------------
-UInt PdrRendererData::GetTotalImageMemory(const Image* pImage, const UInt bpp)
-	const
+UInt PdrRendererData::GetTotalImageMemory(const Image2D* pImage,
+	const UInt bpp) const
 {
 	UInt totalMemory = 0;
 	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)

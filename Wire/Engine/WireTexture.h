@@ -3,7 +3,7 @@
 #define WIRETEXTURE_H
 
 #include "WireBindable.h"
-#include "WireImage.h"
+#include "WireImage2D.h"
 
 namespace Wire
 {
@@ -32,11 +32,11 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture(Image* pImage);
+	Texture(Image2D* pImage);
 	virtual ~Texture();
 
-	Image* GetImage();
-	const Image* GetImage() const;
+	Image2D* GetImage();
+	const Image2D* GetImage() const;
 
 	// Access to filter modes. The default is LINEAR.
 	virtual void SetFilterType(FilterType filterType);
@@ -51,7 +51,7 @@ public:
 	Float GetAnisotropyValue() const;
 
 private:
-	ImagePtr mspImage;
+	Image2DPtr mspImage;
 	FilterType mFilterType;	// default = FT_LINEAR
 	WrapType mWarpType[2];	// default = WT_CLAMP
 	Float mAnisotropy;		// default = 1.0F

@@ -422,6 +422,10 @@
 						RelativePath=".\Renderer\GXRenderer\WireGXResources.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Source Files"
@@ -547,6 +551,26 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
 						>
 						<FileConfiguration
@@ -586,6 +610,10 @@
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Resources.h"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Source Files"
@@ -612,6 +640,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.cpp"
 						>
 					</File>
 					<File
@@ -688,7 +720,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.h"
+					RelativePath=".\Engine\WireImage2D.h"
 					>
 				</File>
 				<File
@@ -804,7 +836,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.inl"
+					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>
 				<File
@@ -928,7 +960,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireImage.cpp"
+					RelativePath=".\Engine\WireImage2D.cpp"
 					>
 				</File>
 				<File
