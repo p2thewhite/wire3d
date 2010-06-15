@@ -3,7 +3,7 @@
 #define WIRETEXTUREEFFECT_H
 
 #include "WireEffect.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 
 namespace Wire
 {

@@ -2,35 +2,35 @@
 
 #include "WireDx9RendererData.h"
 #include "WireDx9Resources.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 
 using namespace Wire;
 
-DWORD PdrRendererData::msTexMinFilter[Texture::FT_QUANTITY] =
+DWORD PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
 {
-	D3DTEXF_POINT,  // Texture::FT_NEAREST
-	D3DTEXF_LINEAR, // Texture::FT_LINEAR
-	D3DTEXF_POINT,  // Texture::FT_NEAREST_NEAREST
-	D3DTEXF_POINT,  // Texture::FT_NEAREST_LINEAR
-	D3DTEXF_LINEAR, // Texture::FT_LINEAR_NEAREST
-	D3DTEXF_LINEAR, // Texture::FT_LINEAR_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_NEAREST
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_LINEAR
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::msTexMipFilter[Texture::FT_QUANTITY] =
+DWORD PdrRendererData::msTexMipFilter[Texture2D::FT_QUANTITY] =
 {
-	D3DTEXF_NONE,   // Texture::FT_NEAREST
-	D3DTEXF_NONE,   // Texture::FT_LINEAR
-	D3DTEXF_POINT,  // Texture::FT_NEAREST_NEAREST
-	D3DTEXF_LINEAR, // Texture::FT_NEAREST_LINEAR
-	D3DTEXF_POINT,  // Texture::FT_LINEAR_NEAREST
-	D3DTEXF_LINEAR, // Texture::FT_LINEAR_LINEAR
+	D3DTEXF_NONE,   // Texture2D::FT_NEAREST
+	D3DTEXF_NONE,   // Texture2D::FT_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_NEAREST_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_LINEAR_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::msTexWrapMode[Texture::WT_QUANTITY] =
+DWORD PdrRendererData::msTexWrapMode[Texture2D::WT_QUANTITY] =
 {
-	D3DTADDRESS_CLAMP,      // Texture::WT_CLAMP
-	D3DTADDRESS_WRAP,       // Texture::WT_REPEAT
-	D3DTADDRESS_MIRROR,     // Texture::WT_MIRRORED_REPEAT
+	D3DTADDRESS_CLAMP,      // Texture2D::WT_CLAMP
+	D3DTADDRESS_WRAP,       // Texture2D::WT_REPEAT
+	D3DTADDRESS_MIRROR,     // Texture2D::WT_MIRRORED_REPEAT
 };
 
 //----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ void Renderer::OnDisableVBuffer(ResourceIdentifier*)
 void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 {
 	TextureID* pResource = static_cast<TextureID*>(pID);
-	Texture* pTexture = pResource->TextureObject;
+	Texture2D* pTexture = pResource->TextureObject;
 
 	const UInt unit = mCurrentSampler;
 
@@ -93,8 +93,8 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 	}
 
 	// Set the filter mode.
-	Texture::FilterType filterType = pTexture->GetFilterType();
-	if (filterType == Texture::FT_NEAREST)
+	Texture2D::FilterType filterType = pTexture->GetFilterType();
+	if (filterType == Texture2D::FT_NEAREST)
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
 			D3DTEXF_POINT);
