@@ -21,13 +21,6 @@ public:
 	UInt VertexSize;
 };
 
-class /*WIRE_RENDERER_ITEM*/ TextureID : public ResourceIdentifier
-{
-public:
-	IDirect3DBaseTexture9* ID;
-	Texture2D* TextureObject;
-};
-
 }
 
 #endif

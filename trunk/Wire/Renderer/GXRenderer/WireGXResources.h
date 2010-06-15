@@ -39,14 +39,6 @@ public:
 
 };
 
-class /*WIRE_RENDERER_ITEM*/ TextureID : public ResourceIdentifier
-{
-public:
-	Texture2D* TextureObject;
-	void* Image;
-	GXTexObj TexObj;
-};
-
 }
 
 #endif

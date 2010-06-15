@@ -78,9 +78,6 @@ protected:
 	void LoadVBuffer(VertexBuffer* pVBuffer);
 	void ReleaseVBuffer(Bindable* pVBuffer);
 
-	void LoadTexture(Texture2D* pTexture);
-	void ReleaseTexture(Bindable* pTexture);
-
 	// Resource enabling and disabling
 	void EnableIBuffer();
 	void DisableIBuffer();

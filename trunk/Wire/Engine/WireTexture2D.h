@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Texture2D : public Object, public Bindable
+class /*WIRE_ENGINE_ITEM*/ Texture2D : public Object
 {
 	WIRE_DECLARE_RTTI;
 

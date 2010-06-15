@@ -208,46 +208,9 @@ void Renderer::DisableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::LoadTexture(Texture2D* pTexture)
-{
-	if (!pTexture)
-	{
-		return;
-	}
-
-	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-	if (!pID)
-	{
-		OnLoadTexture(pID, pTexture);
-		pTexture->OnLoad(this, &Renderer::ReleaseTexture, pID);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::ReleaseTexture(Bindable* pTexture)
-{
-	if (!pTexture)
-	{
-		return;
-	}
-
-	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-	if (pID)
-	{
-		OnReleaseTexture(pID);
-		pTexture->OnRelease(this, pID);
-	}
-}
-
-//----------------------------------------------------------------------------
 void Renderer::EnableTexture(Texture2D* pTexture)
 {
 	WIRE_ASSERT(pTexture);
-// 	LoadTexture(pTexture);
-// 	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-// 	WIRE_ASSERT(pID);
-// 	OnEnableTexture(pID);
-
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
 	{
@@ -263,10 +226,6 @@ void Renderer::EnableTexture(Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::DisableTexture(Texture2D* pTexture)
 {
-// 	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-// 	WIRE_ASSERT(pID);
-// 	OnDisableTexture(pID);
-
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
