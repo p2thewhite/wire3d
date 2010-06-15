@@ -411,6 +411,10 @@
 					Name="Header Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRendererData.h"
 						>
 					</File>
@@ -424,6 +428,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.h"
 						>
 					</File>
 				</Filter>
@@ -472,6 +480,26 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXFogState.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
@@ -571,6 +599,26 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
 						>
 						<FileConfiguration
@@ -599,6 +647,10 @@
 					Name="Header Files"
 					>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9IndexBuffer.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9RendererData.h"
 						>
 					</File>
@@ -612,6 +664,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.h"
 						>
 					</File>
 				</Filter>
@@ -631,6 +687,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9IndexBuffer.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>
 					</File>
@@ -644,6 +704,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp"
 						>
 					</File>
 					<File
