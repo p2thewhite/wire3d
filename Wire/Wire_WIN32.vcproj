@@ -772,7 +772,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTexture.h"
+					RelativePath=".\Engine\WireTexture2D.h"
 					>
 				</File>
 				<File
@@ -880,7 +880,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTexture.inl"
+					RelativePath=".\Engine\WireTexture2D.inl"
 					>
 				</File>
 				<File
@@ -1000,7 +1000,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTexture.cpp"
+					RelativePath=".\Engine\WireTexture2D.cpp"
 					>
 				</File>
 				<File

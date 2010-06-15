@@ -3,12 +3,20 @@
 #include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 #include "WireTextureEffect.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
+#ifdef WIRE_WII
+#include "WireGXTexture2D.h"
+#else
+#include "WireDx9Texture2D.h"
+#endif
+
 using namespace Wire;
+
+Renderer* Renderer::smRenderer = NULL;
 
 //----------------------------------------------------------------------------
 void Renderer::Initialize(UInt width, UInt height)
@@ -17,6 +25,53 @@ void Renderer::Initialize(UInt width, UInt height)
 	mHeight = height;
 	mCurrentSampler = 0;
 	mMaxAnisotropy = 1.0F;
+	smRenderer = this;
+}
+
+//----------------------------------------------------------------------------
+PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
+{
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+
+	if (!pValue)
+	{
+		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pTexture);
+		mTexture2DMap.Insert(pTexture, pPdrTexture);
+		return pPdrTexture;
+	}
+
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const Texture2D* pTexture)
+{
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+
+	if (pValue)
+	{
+		WIRE_DELETE *pValue;
+		mTexture2DMap.Remove(pTexture);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::UnbindAll(const Texture2D* pTexture)
+{
+	smRenderer->Unbind(pTexture);
+}
+
+//----------------------------------------------------------------------------
+PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
+{
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	return NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -153,7 +208,7 @@ void Renderer::DisableVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::LoadTexture(Texture* pTexture)
+void Renderer::LoadTexture(Texture2D* pTexture)
 {
 	if (!pTexture)
 	{
@@ -185,21 +240,43 @@ void Renderer::ReleaseTexture(Bindable* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EnableTexture(Texture* pTexture)
+void Renderer::EnableTexture(Texture2D* pTexture)
 {
 	WIRE_ASSERT(pTexture);
-	LoadTexture(pTexture);
-	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-	WIRE_ASSERT(pID);
-	OnEnableTexture(pID);
+// 	LoadTexture(pTexture);
+// 	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+// 	WIRE_ASSERT(pID);
+// 	OnEnableTexture(pID);
+
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	if (pValue)
+	{
+		(*pValue)->Enable(this, pTexture, mCurrentSampler);
+	}
+	else
+	{
+		PdrTexture2D* pPdrTexture =	Bind(pTexture);
+		pPdrTexture->Enable(this, pTexture, mCurrentSampler);
+	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DisableTexture(Texture* pTexture)
+void Renderer::DisableTexture(Texture2D* pTexture)
 {
-	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
-	WIRE_ASSERT(pID);
-	OnDisableTexture(pID);
+// 	ResourceIdentifier* pID = pTexture->GetIdentifier(this);
+// 	WIRE_ASSERT(pID);
+// 	OnDisableTexture(pID);
+
+	WIRE_ASSERT(pTexture);
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	if (pValue)
+	{
+		(*pValue)->Disable(this, mCurrentSampler);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Texture is not bound
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -218,7 +295,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	// textures.
 	mCurrentSampler = 0;
 
-	Texture* pTexture = NULL;
+	Texture2D* pTexture = NULL;
 	if (mpGeometry->GetEffectQuantity() > 0)
 	{
 		TextureEffect* pTextureEffect = DynamicCast<TextureEffect>(

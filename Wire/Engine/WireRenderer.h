@@ -7,6 +7,7 @@
 #include "WireCullState.h"
 #include "WireFogState.h"
 #include "WireSmartPointer.h"
+#include "WireTMap.h"
 #include "WireWireframeState.h"
 #include "WireZBufferState.h"
 
@@ -19,8 +20,9 @@ class Geometry;
 class IndexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
+class PdrTexture2D;
 class ResourceIdentifier;
-class Texture;
+class Texture2D;
 class VertexBuffer;
 class VisibleSet;
 
@@ -44,6 +46,7 @@ public:
 	// Backbuffer parameters
 	UInt GetWidth() const;
 	UInt GetHeight() const;
+	Float GetMaxAnisotropy() const;
 
 	// Function pointer types for binding and unbinding resources
 	typedef void (Renderer::*ReleaseFunction)(Bindable*);
@@ -55,8 +58,13 @@ public:
 	WireframeState* GetWireframeState();
 	ZBufferState* GetZBufferState();
 
-	// use by System::Assert on Wii
-	PdrRendererData* GetRendererData() { return mpData; }
+	PdrRendererData* GetRendererData();
+
+	// 2D texture management.
+	PdrTexture2D* Bind(const Texture2D* pTexture);
+	void Unbind(const Texture2D* pTexture);
+	static void UnbindAll(const Texture2D* pTexture);
+	PdrTexture2D* GetResource(const Texture2D* PdrTexture2D);
 
 protected:
 	// Global render state management
@@ -70,7 +78,7 @@ protected:
 	void LoadVBuffer(VertexBuffer* pVBuffer);
 	void ReleaseVBuffer(Bindable* pVBuffer);
 
-	void LoadTexture(Texture* pTexture);
+	void LoadTexture(Texture2D* pTexture);
 	void ReleaseTexture(Bindable* pTexture);
 
 	// Resource enabling and disabling
@@ -80,8 +88,8 @@ protected:
 	ResourceIdentifier* EnableVBuffer();
 	void DisableVBuffer(ResourceIdentifier* pID);
 
-	void EnableTexture(Texture* pTexture);
- 	void DisableTexture(Texture* pTexture);
+	void EnableTexture(Texture2D* pTexture);
+ 	void DisableTexture(Texture2D* pTexture);
 
 	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
@@ -104,9 +112,12 @@ protected:
 
 	UInt mCurrentSampler;
 
+	static Renderer* smRenderer;
 	PdrRendererData* mpData;
 	
-// Platform-dependent portion of the Renderer
+	TMap<const Texture2D*, PdrTexture2D*> mTexture2DMap;
+
+	// Platform-dependent portion of the Renderer
 public:
 	// Support for predraw and postdraw semantics
 	Bool PreDraw(Camera* pCamera);
@@ -140,7 +151,7 @@ public:
 	void OnLoadVBuffer(ResourceIdentifier*& rID, VertexBuffer* pVBuffer);
 	void OnReleaseVBuffer(ResourceIdentifier* pID);
 
-	void OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture);
+	void OnLoadTexture(ResourceIdentifier*& rID, Texture2D* pTexture);
 	void OnReleaseTexture(ResourceIdentifier* pID);
 
 	// Resource enabling and disabling

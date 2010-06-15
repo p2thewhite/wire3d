@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Texture : public Object, public Bindable
+class /*WIRE_ENGINE_ITEM*/ Texture2D : public Object, public Bindable
 {
 	WIRE_DECLARE_RTTI;
 
@@ -32,8 +32,8 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture(Image2D* pImage);
-	virtual ~Texture();
+	Texture2D(Image2D* pImage);
+	virtual ~Texture2D();
 
 	Image2D* GetImage();
 	const Image2D* GetImage() const;
@@ -57,8 +57,8 @@ private:
 	Float mAnisotropy;		// default = 1.0F
 };
 
-typedef Pointer<Texture> TexturePtr;
-#include "WireTexture.inl"
+typedef Pointer<Texture2D> TexturePtr;
+#include "WireTexture2D.inl"
 
 }
 

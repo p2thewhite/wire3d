@@ -11,6 +11,12 @@ inline UInt Renderer::GetWidth() const
 }
 
 //----------------------------------------------------------------------------
+inline Float Renderer::GetMaxAnisotropy() const
+{
+	return mMaxAnisotropy;
+}
+
+//----------------------------------------------------------------------------
 inline const ColorRGBA& Renderer::GetClearColor() const
 {
 	return mClearColor;
@@ -44,4 +50,10 @@ inline WireframeState* Renderer::GetWireframeState()
 inline ZBufferState* Renderer::GetZBufferState()
 {
 	return StaticCast<ZBufferState>(mspStates[GlobalState::ZBUFFER]);
+}
+
+//----------------------------------------------------------------------------
+inline PdrRendererData* Renderer::GetRendererData()
+{
+	return mpData;
 }

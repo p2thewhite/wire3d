@@ -3,7 +3,7 @@
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
 #include "WireGXResources.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>
 
@@ -148,7 +148,7 @@ void Renderer::OnReleaseIBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture2D* pTexture)
 {
 	// The texture is encountered the first time. Set up the texture unit
 	// in hardware that will manage this texture.

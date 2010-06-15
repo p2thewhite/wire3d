@@ -128,7 +128,7 @@ Geometry* Sample1::CreateCube()
 
 	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	Texture* pTexture = CreateTexture();
+	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
 	pCube->AttachEffect(pTextureEffect);
 
@@ -136,7 +136,7 @@ Geometry* Sample1::CreateCube()
 }
 
 //----------------------------------------------------------------------------
-Texture* Sample1::CreateTexture()
+Texture2D* Sample1::CreateTexture()
 {
 	const UInt width = 256;
 	const UInt height = 64;
@@ -173,7 +173,7 @@ Texture* Sample1::CreateTexture()
 	}
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
-	Texture* pTexture = WIRE_NEW Texture(pImage);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	return pTexture;
 }
 

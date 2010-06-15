@@ -3,7 +3,7 @@
 #include "WireDx9RendererData.h"
 #include "WireDx9Resources.h"
 #include "WireIndexBuffer.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
 #include <d3d9.h>
 #include <d3dx9tex.h>
@@ -190,7 +190,7 @@ void Renderer::OnReleaseVBuffer(ResourceIdentifier* pID)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture* pTexture)
+void Renderer::OnLoadTexture(ResourceIdentifier*& rID, Texture2D* pTexture)
 {
 	// The texture is encountered the first time. Set up the texture unit
 	// in hardware that will manage this texture.

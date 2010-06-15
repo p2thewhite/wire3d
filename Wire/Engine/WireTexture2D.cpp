@@ -1,11 +1,11 @@
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Texture, Object);
+WIRE_IMPLEMENT_RTTI(Texture2D, Object);
 
 //----------------------------------------------------------------------------
-Texture::Texture(Image2D* pImage)
+Texture2D::Texture2D(Image2D* pImage)
 	:
 	mspImage(pImage),
 	mFilterType(FT_LINEAR),
@@ -21,9 +21,9 @@ Texture::Texture(Image2D* pImage)
 }
 
 //----------------------------------------------------------------------------
-Texture::~Texture()
+Texture2D::~Texture2D()
 {
 	// Inform all renderers using this texture that it is being destroyed.
 	// This allows the renderer to free up any associated resources.
-	Release();
+    Renderer::UnbindAll(this);
 }

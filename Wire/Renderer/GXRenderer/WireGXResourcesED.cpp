@@ -3,26 +3,26 @@
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
 #include "WireGXResources.h"
-#include "WireTexture.h"
+#include "WireTexture2D.h"
 #include <malloc.h>
 
 using namespace Wire;
 
-UChar PdrRendererData::msTexMinFilter[Texture::FT_QUANTITY] =
+UChar PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
 {
-	GX_NEAR,			// Texture::FT_NEAREST
-	GX_LINEAR,			// Texture::FT_LINEAR
-	GX_NEAR_MIP_NEAR,	// Texture::FT_NEAREST_NEAREST
-	GX_NEAR_MIP_LIN,	// Texture::FT_NEAREST_LINEAR
-	GX_LIN_MIP_NEAR,	// Texture::FT_LINEAR_NEAREST
-	GX_LIN_MIP_LIN,		// Texture::FT_LINEAR_LINEAR
+	GX_NEAR,			// Texture2D::FT_NEAREST
+	GX_LINEAR,			// Texture2D::FT_LINEAR
+	GX_NEAR_MIP_NEAR,	// Texture2D::FT_NEAREST_NEAREST
+	GX_NEAR_MIP_LIN,	// Texture2D::FT_NEAREST_LINEAR
+	GX_LIN_MIP_NEAR,	// Texture2D::FT_LINEAR_NEAREST
+	GX_LIN_MIP_LIN,		// Texture2D::FT_LINEAR_LINEAR
 };
 
-UChar PdrRendererData::msTexWrapMode[Texture::WT_QUANTITY] =
+UChar PdrRendererData::msTexWrapMode[Texture2D::WT_QUANTITY] =
 {
-	GX_CLAMP,	// Texture::WT_CLAMP
-	GX_REPEAT,	// Texture::WT_REPEAT
-	GX_MIRROR,	// Texture::WT_MIRRORED_REPEAT
+	GX_CLAMP,	// Texture2D::WT_CLAMP
+	GX_REPEAT,	// Texture2D::WT_REPEAT
+	GX_MIRROR,	// Texture2D::WT_MIRRORED_REPEAT
 };
 
 //----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ void Renderer::OnDisableIBuffer(ResourceIdentifier* pID)
 void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 {
 	TextureID* pTexID = static_cast<TextureID*>(pID);
-	Texture* pTex = pTexID->TextureObject;
+	Texture2D* pTex = pTexID->TextureObject;
 
 	const UInt unit = mCurrentSampler;
 
@@ -115,7 +115,7 @@ void Renderer::OnEnableTexture(ResourceIdentifier* pID)
 		doEdgeLod = GX_TRUE;
 	}
 
-	UChar magFilter = pTex->GetFilterType() == Texture::FT_NEAREST ?
+	UChar magFilter = pTex->GetFilterType() == Texture2D::FT_NEAREST ?
 		GX_NEAR : GX_LINEAR;
 	GXInitTexObjLOD(&pTexID->TexObj, PdrRendererData::msTexMinFilter[pTex->
 		GetFilterType()], magFilter, 0, 10.0F, 0, GX_FALSE, doEdgeLod,
