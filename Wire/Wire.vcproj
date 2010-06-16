@@ -662,6 +662,10 @@
 					Name="Header Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRendererData.h"
 						>
 					</File>
@@ -675,6 +679,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.h"
 						>
 					</File>
 				</Filter>
@@ -694,6 +702,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 					</File>
@@ -707,6 +719,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.cpp"
 						>
 					</File>
 					<File

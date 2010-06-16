@@ -1,0 +1,54 @@
+#include "WireGXIndexBuffer.h"
+
+#include "WireIndexBuffer.h"
+#include "WireGXRendererData.h"
+#include "WireGXVertexBuffer.h"
+#include "WireRenderer.h"
+#include <malloc.h>
+
+using namespace Wire;
+
+//----------------------------------------------------------------------------
+PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
+	pIndexBuffer)
+{
+	// Nothing to do.
+}
+
+//----------------------------------------------------------------------------
+PdrIndexBuffer::~PdrIndexBuffer()
+{
+	for (UInt i = 0; i < mVBuffers.GetQuantity(); i++)
+	{
+		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists = mVBuffers[i]->
+			mDisplayLists;
+
+		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
+		{
+			if (rDisplayLists[j].RegisteredIBuffer == this)
+			{
+				free(rDisplayLists[i].DL);	// allocated using memalign
+				rDisplayLists.Remove(j);
+				break;
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
+	pIndexBuffer)
+{
+	pRenderer->GetRendererData()->mpPdrIBuffer = this;
+
+	GXSetNumTexGens(0);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+		GX_COLOR0A0);
+	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Disable(Renderer* pRenderer)
+{
+	// Nothing to do.
+}

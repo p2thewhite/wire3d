@@ -9,9 +9,13 @@
 #include "WireVisibleSet.h"
 
 #ifdef WIRE_WII
+#include "WireGXIndexBuffer.h"
 #include "WireGXTexture2D.h"
+#include "WireGXVertexBuffer.h"
 #else
+#include "WireDx9IndexBuffer.h"
 #include "WireDx9Texture2D.h"
+#include "WireDx9VertexBuffer.h"
 #endif
 
 using namespace Wire;
@@ -26,6 +30,100 @@ void Renderer::Initialize(UInt width, UInt height)
 	mCurrentSampler = 0;
 	mMaxAnisotropy = 1.0F;
 	smRenderer = this;
+}
+
+//----------------------------------------------------------------------------
+PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
+{
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+
+	if (!pValue)
+	{
+		PdrIndexBuffer* pPdrIndexBuffer = WIRE_NEW PdrIndexBuffer(this,
+			pIndexBuffer);
+		mIndexBufferMap.Insert(pIndexBuffer, pPdrIndexBuffer);
+		return pPdrIndexBuffer;
+	}
+
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
+{
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+
+	if (pValue)
+	{
+		WIRE_DELETE *pValue;
+		mIndexBufferMap.Remove(pIndexBuffer);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
+{
+	smRenderer->Unbind(pIndexBuffer);
+}
+
+//----------------------------------------------------------------------------
+PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
+{
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+
+	if (!pValue)
+	{
+		PdrVertexBuffer* pPdrVertexBuffer = WIRE_NEW PdrVertexBuffer(this,
+			pVertexBuffer);
+		mVertexBufferMap.Insert(pVertexBuffer, pPdrVertexBuffer);
+		return pPdrVertexBuffer;
+	}
+
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+
+	if (pValue)
+	{
+		WIRE_DELETE *pValue;
+		mVertexBufferMap.Remove(pVertexBuffer);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
+{
+	smRenderer->Unbind(pVertexBuffer);
+}
+
+//----------------------------------------------------------------------------
+PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	return NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -109,7 +207,22 @@ void Renderer::ReleaseIBuffer(Bindable* pIBuffer)
 //----------------------------------------------------------------------------
 void Renderer::EnableIBuffer ()
 {
- 	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
+	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
+	WIRE_ASSERT(pIndexBuffer);
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Enable(this, pIndexBuffer);
+	}
+	else
+	{
+		PdrIndexBuffer* pPdrTexture =	Bind(pIndexBuffer);
+		pPdrTexture->Enable(this, pIndexBuffer);
+	}
+
+	return;
+	
+	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
 	// TODO: have LoadIBuffer return pID
  	LoadIBuffer(pIBuffer);
  	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
@@ -120,6 +233,20 @@ void Renderer::EnableIBuffer ()
 //----------------------------------------------------------------------------
 void Renderer::DisableIBuffer ()
 {
+	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
+	WIRE_ASSERT(pIndexBuffer);
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Index buffer is not bound
+	}
+
+	return;
+
 	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
 	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
 	WIRE_ASSERT(pID);
@@ -178,6 +305,22 @@ void Renderer::ReleaseVBuffer(Bindable* pVBuffer)
 //----------------------------------------------------------------------------
 ResourceIdentifier* Renderer::EnableVBuffer()
 {
+	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
+	WIRE_ASSERT(pVertexBuffer);
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Enable(this, pVertexBuffer);
+	}
+	else
+	{
+		PdrVertexBuffer* pPdrTexture =	Bind(pVertexBuffer);
+		pPdrTexture->Enable(this, pVertexBuffer);
+	}
+
+	return NULL;
+
+
 	VertexBuffer* pVBuffer = mpGeometry->VBuffer;
 	LoadVBuffer(pVBuffer);
 
@@ -204,6 +347,20 @@ ResourceIdentifier* Renderer::EnableVBuffer()
 //----------------------------------------------------------------------------
 void Renderer::DisableVBuffer(ResourceIdentifier* pID)
 {
+	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
+	WIRE_ASSERT(pVertexBuffer);
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Vertex buffer is not bound
+	}
+
+	return;
+
 	OnDisableVBuffer(pID);
 }
 
