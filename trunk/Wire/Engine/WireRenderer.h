@@ -18,6 +18,8 @@ class Bindable;
 class Camera;
 class Geometry;
 class IndexBuffer;
+class PdrIndexBuffer;
+class PdrVertexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
 class PdrTexture2D;
@@ -60,11 +62,26 @@ public:
 
 	PdrRendererData* GetRendererData();
 
-	// 2D texture management.
+	// Index buffer management
+	PdrIndexBuffer* Bind(const IndexBuffer* pIndexBuffer);
+	void Unbind(const IndexBuffer* pIndexBuffer);
+	static void UnbindAll(const IndexBuffer* pIndexBuffer);
+	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
+
+	// Vertex buffer management
+	PdrVertexBuffer* Bind(const VertexBuffer* pVertexBuffer);
+	void Unbind(const VertexBuffer* pVertexBuffer);
+	static void UnbindAll(const VertexBuffer* pVertexBuffer);
+	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
+
+	// 2D texture management
 	PdrTexture2D* Bind(const Texture2D* pTexture);
 	void Unbind(const Texture2D* pTexture);
 	static void UnbindAll(const Texture2D* pTexture);
-	PdrTexture2D* GetResource(const Texture2D* PdrTexture2D);
+	PdrTexture2D* GetResource(const Texture2D* pTexture);
+
+	// Current Geometry object for drawing
+	Geometry* mpGeometry;
 
 protected:
 	// Global render state management
@@ -91,9 +108,6 @@ protected:
 	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
 
-	// Current Geometry object for drawing
-	Geometry* mpGeometry;
-
 	// The camera for establishing the view frustum
 	Camera* mpCamera;
 
@@ -112,6 +126,8 @@ protected:
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;
 	
+	TMap<const IndexBuffer*, PdrIndexBuffer*> mIndexBufferMap;
+	TMap<const VertexBuffer*, PdrVertexBuffer*> mVertexBufferMap;
 	TMap<const Texture2D*, PdrTexture2D*> mTexture2DMap;
 
 	// Platform-dependent portion of the Renderer

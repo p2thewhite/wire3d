@@ -3,6 +3,7 @@
 #define WIREPDRRENDERERDATA_H
 
 #include "WireMatrix34.h"
+#include "WireGXVertexBuffer.h"
 
 namespace Wire
 {
@@ -17,6 +18,8 @@ class PdrRendererData
 {
 public:
 	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
+	void Convert(const VertexBuffer* pSrc,
+		TArray<PdrVertexBuffer::VertexElement>& rElements);
 
 	UInt GetTotalImageMemory(const Image2D* pImage, const UInt bpp) const;
 
@@ -32,8 +35,14 @@ public:
 		UShort &rWidth);
 
 	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
+	void CreateDisplayList(PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
+		rIBuffer);
 	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
+	void Draw(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
+		rIBuffer);
 	void DrawWireframe(const VBufferID* pResource, const IndexBuffer&
+		rIBuffer);
+	void DrawWireframe(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
 
 	// internally used by System::Assert
@@ -47,6 +56,9 @@ public:
 
 	VBufferID* mpVBufferID;
 	IBufferID* mpIBufferID;
+
+	PdrVertexBuffer* mpPdrVBuffer;
+	PdrIndexBuffer* mpPdrIBuffer;
 
 	GXRenderModeObj* mRMode;
 	GXColor mGXClearColor;
