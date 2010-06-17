@@ -1,5 +1,7 @@
 #include "WireTexture2D.h"
 
+#include "WireRenderer.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Texture2D, Object);

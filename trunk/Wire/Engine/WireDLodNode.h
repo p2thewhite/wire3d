@@ -7,6 +7,8 @@
 namespace Wire
 {
 
+class Camera;
+
 class /*WIRE_ENGINE_ITEM*/ DLodNode : public SwitchNode
 {
 	WIRE_DECLARE_RTTI;

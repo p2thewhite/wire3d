@@ -1,5 +1,7 @@
 #include "WireVertexBuffer.h"
 
+#include "WireRenderer.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(VertexBuffer, Object);
@@ -22,7 +24,7 @@ VertexBuffer::~VertexBuffer()
 	// Inform all renderers using this vertex buffer that it is being
 	// destroyed. This allows the renderer to free up any associated
 	// resources.
-	Release();
+	Renderer::UnbindAll(this);
 
 	WIRE_DELETE[] mpChannel;
 }

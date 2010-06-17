@@ -266,23 +266,23 @@ void Sample1::OnIdle()
 // 		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
 // 		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
 // 		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
-//		mspCube->VBuffer->Release();
+// 		Renderer::UnbindAll(mspCube->VBuffer);
 	}
 	else
 	{
 // 		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
 // 		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
 // 		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
-//		mspCube->VBuffer->Release();
+// 		Renderer::UnbindAll(mspCube->VBuffer);
 		mpRenderer->Draw(mspPyramid);
 	}
 
 
  	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -3.0F - mAngle * 2.0F));
 
-//	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle);
-//	mspCube->World.SetRotate(model);
-//	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
+	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle * 2.0F);
+ 	mspCube->World.SetRotate(model);
+// 	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
 //	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
 //	mspCube->World.SetUniformScale(2.0F);
 	mpRenderer->Draw(mspCube);

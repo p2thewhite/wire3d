@@ -7,6 +7,8 @@
 namespace Wire
 {
 
+class Camera;
+
 class /*WIRE_ENGINE_ITEM*/ BillboardNode : public Node
 {
 	WIRE_DECLARE_RTTI;

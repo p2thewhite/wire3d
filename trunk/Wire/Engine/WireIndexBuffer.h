@@ -2,13 +2,12 @@
 #ifndef WIREINDEXBUFFER_H
 #define WIREINDEXBUFFER_H
 
-#include "WireBindable.h"
 #include "WireObject.h"
 
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Object, public Bindable
+class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Object
 {
 	WIRE_DECLARE_RTTI;
 

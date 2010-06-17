@@ -7,6 +7,41 @@
 
 using namespace Wire;
 
+D3DFORMAT PdrRendererData::msImage2DFormat[Image2D::FM_QUANTITY] =
+{
+	D3DFMT_A8R8G8B8,	// Image2D::FM_RGB888
+	D3DFMT_A8R8G8B8,	// Image2D::FM_RGBA8888
+	D3DFMT_R5G6B5,		// Image2D::FM_RGB565
+	D3DFMT_A4R4G4B4,	// Image2D::FM_RGBA4444
+};
+
+DWORD PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
+{
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_NEAREST
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_LINEAR
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
+};
+
+DWORD PdrRendererData::msTexMipFilter[Texture2D::FT_QUANTITY] =
+{
+	D3DTEXF_NONE,   // Texture2D::FT_NEAREST
+	D3DTEXF_NONE,   // Texture2D::FT_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_NEAREST_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_NEAREST_LINEAR
+	D3DTEXF_POINT,  // Texture2D::FT_LINEAR_NEAREST
+	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
+};
+
+DWORD PdrRendererData::msTexWrapMode[Texture2D::WT_QUANTITY] =
+{
+	D3DTADDRESS_CLAMP,      // Texture2D::WT_CLAMP
+	D3DTADDRESS_WRAP,       // Texture2D::WT_REPEAT
+	D3DTADDRESS_MIRROR,     // Texture2D::WT_MIRRORED_REPEAT
+};
+
 //----------------------------------------------------------------------------
 PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 {
