@@ -173,39 +173,7 @@ PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::LoadIBuffer(IndexBuffer* pIBuffer)
-{
- 	if (!pIBuffer)
-	{
-		return;
-	}
-
- 	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
-	if (!pID)
-	{
-		OnLoadIBuffer(pID, pIBuffer);
-		pIBuffer->OnLoad(this, &Renderer::ReleaseIBuffer, pID);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::ReleaseIBuffer(Bindable* pIBuffer)
-{
-	if (!pIBuffer)
-	{
-		return;
-	}
-
-	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
-	if (pID)
-	{
-		OnReleaseIBuffer(pID);
-		pIBuffer->OnRelease(this, pID);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::EnableIBuffer ()
+void Renderer::EnableIBuffer()
 {
 	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
 	WIRE_ASSERT(pIndexBuffer);
@@ -219,19 +187,10 @@ void Renderer::EnableIBuffer ()
 		PdrIndexBuffer* pPdrTexture =	Bind(pIndexBuffer);
 		pPdrTexture->Enable(this, pIndexBuffer);
 	}
-
-	return;
-	
-	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
-	// TODO: have LoadIBuffer return pID
- 	LoadIBuffer(pIBuffer);
- 	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
- 	WIRE_ASSERT(pID);
- 	OnEnableIBuffer(pID);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DisableIBuffer ()
+void Renderer::DisableIBuffer()
 {
 	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
 	WIRE_ASSERT(pIndexBuffer);
@@ -244,66 +203,10 @@ void Renderer::DisableIBuffer ()
 	{
 		WIRE_ASSERT(false); // Index buffer is not bound
 	}
-
-	return;
-
-	IndexBuffer* pIBuffer = mpGeometry->IBuffer;
-	ResourceIdentifier* pID = pIBuffer->GetIdentifier(this);
-	WIRE_ASSERT(pID);
-	OnDisableIBuffer(pID);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::LoadVBuffer(VertexBuffer* pVBuffer)
-{
-	if (!pVBuffer)
-	{
-		return;
-	}
-
- 	// Search for a matching vertex buffer that was used during previous
- 	// passes.
- 	ResourceIdentifier* pID = 0;
- 	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
- 	{
- 		pID = pVBuffer->GetIdentifier(i, this);
- 		if (pID)
- 		{
-// 			if (rkIAttr == *(Attributes*)pkID)
- 			{
- 				// Found a matching vertex buffer in video memory.
- 				return;
- 			}
- 		}
- 	}
- 
- 	// The vertex buffer is encountered the first time.
- 	OnLoadVBuffer(pID, pVBuffer);
-  	pVBuffer->OnLoad(this, &Renderer::ReleaseVBuffer, pID);
-}
-
-//----------------------------------------------------------------------------
-void Renderer::ReleaseVBuffer(Bindable* pVBuffer)
-{
-	if (!pVBuffer)
-	{
-		return;
-	}
-
-	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
-	{
-		ResourceIdentifier* pID = pVBuffer->GetIdentifier(i, this);
-		if (pID)
-		{
-			OnReleaseVBuffer(pID);
-			pVBuffer->OnRelease(this, pID);
-			return;
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
-ResourceIdentifier* Renderer::EnableVBuffer()
+void Renderer::EnableVBuffer()
 {
 	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
 	WIRE_ASSERT(pVertexBuffer);
@@ -317,35 +220,10 @@ ResourceIdentifier* Renderer::EnableVBuffer()
 		PdrVertexBuffer* pPdrTexture =	Bind(pVertexBuffer);
 		pPdrTexture->Enable(this, pVertexBuffer);
 	}
-
-	return NULL;
-
-
-	VertexBuffer* pVBuffer = mpGeometry->VBuffer;
-	LoadVBuffer(pVBuffer);
-
- 	ResourceIdentifier* pID = 0;
- 	for (UInt i = 0; i < pVBuffer->GetInfoQuantity(); i++)
- 	{
- 		pID = pVBuffer->GetIdentifier(i, this);
- 		if (pID)
-		{
-//			if (rkIAttr == *(Attributes*)pkID)
-			{
-				// Found a matching vertex buffer in video memory.
-				break;
-			}
-		}
-	}
-
- 	WIRE_ASSERT(pID);
- 
-	OnEnableVBuffer(pID);
- 	return pID;
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DisableVBuffer(ResourceIdentifier* pID)
+void Renderer::DisableVBuffer()
 {
 	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
 	WIRE_ASSERT(pVertexBuffer);
@@ -358,10 +236,6 @@ void Renderer::DisableVBuffer(ResourceIdentifier* pID)
 	{
 		WIRE_ASSERT(false); // Vertex buffer is not bound
 	}
-
-	return;
-
-	OnDisableVBuffer(pID);
 }
 
 //----------------------------------------------------------------------------
@@ -405,7 +279,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
 	EnableIBuffer();
-	ResourceIdentifier* pID = EnableVBuffer();
+	EnableVBuffer();
 
 	// Keep track of the current sampler to be used in enabling the
 	// textures.
@@ -440,8 +314,7 @@ void Renderer::Draw(Geometry* pGeometry)
 		DisableTexture(pTexture);
 	}
 
-
-	DisableVBuffer(pID);
+	DisableVBuffer();
 	DisableIBuffer();
 
 	RestoreGlobalState(mpGeometry->States);

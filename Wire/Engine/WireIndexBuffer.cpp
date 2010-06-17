@@ -1,5 +1,7 @@
 #include "WireIndexBuffer.h"
 
+#include "WireRenderer.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(IndexBuffer, Object);
@@ -18,7 +20,7 @@ IndexBuffer::~IndexBuffer()
 	// Inform all renderers using this index buffer that it is being
 	// destroyed. This allows the renderer to free up any associated
 	// resources.
-	Release();
+	Renderer::UnbindAll(this);
 
 	WIRE_DELETE[] mpIndices;
 }

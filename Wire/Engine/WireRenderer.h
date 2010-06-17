@@ -23,7 +23,6 @@ class PdrVertexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
 class PdrTexture2D;
-class ResourceIdentifier;
 class Texture2D;
 class VertexBuffer;
 class VisibleSet;
@@ -49,9 +48,6 @@ public:
 	UInt GetWidth() const;
 	UInt GetHeight() const;
 	Float GetMaxAnisotropy() const;
-
-	// Function pointer types for binding and unbinding resources
-	typedef void (Renderer::*ReleaseFunction)(Bindable*);
 
 	// Render state handling
 	AlphaState* GetAlphaState();
@@ -88,20 +84,11 @@ protected:
 	void SetGlobalState(GlobalStatePtr spStates[]);
 	void RestoreGlobalState(GlobalStatePtr spStates[]);
 
-	// Resource loading and releasing
-	void LoadIBuffer(IndexBuffer* pIBuffer);
-	void ReleaseIBuffer(Bindable* pIBuffer);
-
-	void LoadVBuffer(VertexBuffer* pVBuffer);
-	void ReleaseVBuffer(Bindable* pVBuffer);
-
 	// Resource enabling and disabling
 	void EnableIBuffer();
 	void DisableIBuffer();
-
-	ResourceIdentifier* EnableVBuffer();
-	void DisableVBuffer(ResourceIdentifier* pID);
-
+	void EnableVBuffer();
+	void DisableVBuffer();
 	void EnableTexture(Texture2D* pTexture);
  	void DisableTexture(Texture2D* pTexture);
 
@@ -156,26 +143,6 @@ public:
 	void SetFogState(FogState* pState);
 	void SetWireframeState(WireframeState* pState);
 	void SetZBufferState(ZBufferState* pState);
-
-	// Resource loading and releasing (to/from video memory)
-	void OnLoadIBuffer(ResourceIdentifier*& rID, IndexBuffer* pBuffer);
-	void OnReleaseIBuffer(ResourceIdentifier* pID);
-
-	void OnLoadVBuffer(ResourceIdentifier*& rID, VertexBuffer* pVBuffer);
-	void OnReleaseVBuffer(ResourceIdentifier* pID);
-
-	void OnLoadTexture(ResourceIdentifier*& rID, Texture2D* pTexture);
-	void OnReleaseTexture(ResourceIdentifier* pID);
-
-	// Resource enabling and disabling
-	void OnEnableIBuffer(ResourceIdentifier* pID);
-	void OnDisableIBuffer(ResourceIdentifier* pID);
-
-	void OnEnableVBuffer(ResourceIdentifier* pID);
-	void OnDisableVBuffer(ResourceIdentifier* pID);
-
-	void OnEnableTexture(ResourceIdentifier* pID);
-	void OnDisableTexture(ResourceIdentifier* pID);
 };
 
 #include "WireRenderer.inl"

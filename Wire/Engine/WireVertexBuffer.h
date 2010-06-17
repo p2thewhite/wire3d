@@ -2,8 +2,8 @@
 #ifndef WIREVERTEXBUFFER_H
 #define WIREVERTEXBUFFER_H
 
-#include "WireBindable.h"
 #include "WireColorRGB.h"
+#include "WireColorRGBA.h"
 #include "WireObject.h"
 #include "WireVertexAttributes.h"
 #include "WireVector2.h"
@@ -12,7 +12,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object, public Bindable
+class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object
 {
 	WIRE_DECLARE_RTTI;
 

@@ -7,6 +7,31 @@
 
 using namespace Wire;
 
+UChar PdrRendererData::msImage2DFormat[Image2D::FM_QUANTITY] =
+{
+	GX_TF_RGBA8,	// Image2D::FM_RGB888
+	GX_TF_RGBA8,	// Image2D::FM_RGBA8888
+	GX_TF_RGB565,	// Image2D::FM_RGB565
+	GX_TF_RGB5A3,	// Image2D::FM_RGBA4444
+};
+
+UChar PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
+{
+	GX_NEAR,			// Texture2D::FT_NEAREST
+	GX_LINEAR,			// Texture2D::FT_LINEAR
+	GX_NEAR_MIP_NEAR,	// Texture2D::FT_NEAREST_NEAREST
+	GX_NEAR_MIP_LIN,	// Texture2D::FT_NEAREST_LINEAR
+	GX_LIN_MIP_NEAR,	// Texture2D::FT_LINEAR_NEAREST
+	GX_LIN_MIP_LIN,		// Texture2D::FT_LINEAR_LINEAR
+};
+
+UChar PdrRendererData::msTexWrapMode[Texture2D::WT_QUANTITY] =
+{
+	GX_CLAMP,	// Texture2D::WT_CLAMP
+	GX_REPEAT,	// Texture2D::WT_REPEAT
+	GX_MIRROR,	// Texture2D::WT_MIRRORED_REPEAT
+};
+
 //----------------------------------------------------------------------------
 PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 {

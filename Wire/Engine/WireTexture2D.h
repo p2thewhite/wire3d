@@ -2,7 +2,6 @@
 #ifndef WIRETEXTURE_H
 #define WIRETEXTURE_H
 
-#include "WireBindable.h"
 #include "WireImage2D.h"
 
 namespace Wire
@@ -57,7 +56,7 @@ private:
 	Float mAnisotropy;		// default = 1.0F
 };
 
-typedef Pointer<Texture2D> TexturePtr;
+typedef Pointer<Texture2D> Texture2DPtr;
 #include "WireTexture2D.inl"
 
 }

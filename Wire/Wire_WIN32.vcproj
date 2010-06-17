@@ -659,10 +659,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Resources.h"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.h"
 						>
 					</File>
@@ -692,14 +688,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesED.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ResourcesLR.cpp"
 						>
 					</File>
 					<File
@@ -737,10 +725,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireBillboardNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBindable.h"
 					>
 				</File>
 				<File
@@ -801,10 +785,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRenderer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireResourceIdentifier.h"
 					>
 				</File>
 				<File
@@ -977,10 +957,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireBillboardNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBindable.cpp"
 					>
 				</File>
 				<File

@@ -4,7 +4,6 @@
 
 #include "WireAlphaState.h"
 #include "WireBillboardNode.h"
-#include "WireBindable.h"
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
 #include "WireController.h"
@@ -20,7 +19,6 @@
 #include "WireNode.h"
 #include "WireObject.h"
 #include "WireRenderer.h"
-#include "WireResourceIdentifier.h"
 #include "WireRtti.h"
 #include "WireRttiMCR.h"
 #include "WireSceneObject.h"

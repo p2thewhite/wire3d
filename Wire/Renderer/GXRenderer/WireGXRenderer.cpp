@@ -6,7 +6,6 @@
 #include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
 #include "WireGXRendererInput.h"
-#include "WireGXResources.h"
 #include "WireGXVertexBuffer.h"
 #include "WireMatrix4.h"
 #include <malloc.h>		// for memalign
@@ -24,8 +23,6 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 
 	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);
-	mpData->mpVBufferID = NULL;
-	mpData->mpIBufferID = NULL;
 
 	VIInit();
 
@@ -209,63 +206,31 @@ void Renderer::DrawElements()
 
 	const WireframeState* pWireframeState = GetWireframeState();
 
-	if (mpData->mpVBufferID)
+	PdrVertexBuffer*& rPdrVBuffer = mpData->mpPdrVBuffer;
+
+	if (pWireframeState && pWireframeState->Enabled)
 	{
-		VBufferID*& rVBufferID = mpData->mpVBufferID;
-
-		if (pWireframeState && pWireframeState->Enabled)
-		{
-			mpData->DrawWireframe(rVBufferID, rIBuffer);
-		}
-		else
-		{
-			TArray<VBufferID::DisplayList>& rDisplayLists = rVBufferID->
-				DisplayLists;
-			Bool foundDL = false;
-			for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
-			{
-				if (rDisplayLists[i].RegisteredIBuffer == mpData->mpIBufferID)
-				{
-					foundDL = true;
-					GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
-						DLSize);
-				}
-			}
-
-			if (!foundDL)
-			{
-				mpData->Draw(rVBufferID, rIBuffer);
-			}
-		}
+		mpData->DrawWireframe(rPdrVBuffer, rIBuffer);
 	}
 	else
 	{
-		PdrVertexBuffer*& rPdrVBuffer = mpData->mpPdrVBuffer;
+		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
+			rPdrVBuffer->mDisplayLists;
 
-		if (pWireframeState && pWireframeState->Enabled)
+		Bool foundDL = false;
+		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 		{
-			mpData->DrawWireframe(rPdrVBuffer, rIBuffer);
+			if (rDisplayLists[i].RegisteredIBuffer == mpData->mpPdrIBuffer)
+			{
+				foundDL = true;
+				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
+					DLSize);
+			}
 		}
-		else
+
+		if (!foundDL)
 		{
-			TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
-				rPdrVBuffer->mDisplayLists;
-
-			Bool foundDL = false;
-			for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
-			{
-				if (rDisplayLists[i].RegisteredIBuffer == mpData->mpPdrIBuffer)
-				{
-					foundDL = true;
-					GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
-						DLSize);
-				}
-			}
-
-			if (!foundDL)
-			{
-				mpData->Draw(rPdrVBuffer, rIBuffer);
-			}
+			mpData->Draw(rPdrVBuffer, rIBuffer);
 		}
 	}
 }
@@ -332,70 +297,6 @@ void PdrRendererData::Convert(const VertexBuffer* pSrc,
 	TArray<PdrVertexBuffer::VertexElement>& rElements)
 {
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
-	{
-		UInt index = 0;
-
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* pPosition = pSrc->GetPosition(i);
-			Float* pDst = static_cast<Float*>(rElements[index++].Data);
-			UInt channelCount = rIAttr.GetPositionChannels();
-
-			for (UInt k = 0; k < channelCount; k++)
-			{
-				pDst[i*channelCount+k] = pPosition[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* pColor = pSrc->GetColor(i, unit);
-				UInt color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 3)
-				{
-					color = color << 8;
-					color |= 0xFF;
-				}
-
-				UInt* pDst = static_cast<UInt*>(rElements[index++].Data);
-				pDst[i] = color;
-			}
-		}
-
-		UInt tChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tChannelQuantity; unit++)
-		{
-			if (rIAttr.GetTCoordChannels(unit) > 0)
-			{
-				const Float* pUv = pSrc->GetTCoord(i, unit);
-				Float* pDst = static_cast<Float*>(rElements[index++].Data);
-				UInt channelCount = rIAttr.GetTCoordChannels(unit);
-
-				for (UInt k = 0; k < channelCount; k++)
-				{
-					pDst[i*channelCount+k] = pUv[k];
-				}
-			}
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
-void PdrRendererData::Convert(const VertexBuffer* pSrc, VBufferID* pResource)
-{
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-	TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
 	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
 	{
@@ -662,34 +563,6 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::CreateDisplayList(VBufferID* pResource,
-	const IndexBuffer& rIBuffer)
-{
-	VBufferID::DisplayList DL;
-
-	// Note that the display-list buffer area must be forced out of
-	// the CPU cache since it will be written using the write-gather pipe
-	const UInt tempDLSize = 65536;
-	void* pTempDL = memalign(32, tempDLSize);
-	DCInvalidateRange(pTempDL, tempDLSize);
-
-	GXBeginDisplayList(pTempDL, tempDLSize);
-	Draw(pResource, rIBuffer);
-
-	DL.DLSize = GXEndDisplayList();
-	DL.DL = memalign(32, DL.DLSize);
-	System::Memcpy(DL.DL, DL.DLSize, pTempDL, DL.DLSize);
-	free(pTempDL);
-
-	DCFlushRange(DL.DL, DL.DLSize);
-
-	IBufferID*& rIBufferID = mpIBufferID;
-	DL.RegisteredIBuffer = rIBufferID;
-	rIBufferID->RegisteredVBuffers.Append(pResource);
-	pResource->DisplayLists.Append(DL);
-}
-
-//----------------------------------------------------------------------------
 void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
@@ -727,108 +600,11 @@ void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::Draw(const VBufferID* pResource,
-	const IndexBuffer& rIBuffer)
-{
-	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
-
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
-	{
-		UShort index = static_cast<UShort>(rIBuffer[i]);
-
-		for (UInt j = 0; j < rElements.GetQuantity(); j++)
-		{
-			switch (rElements[j].Attr)
-			{
-			case GX_VA_POS:
-				GXPosition1x16(index);
-				break;
-
-			case GX_VA_CLR0:
-				GXColor1x16(index);
-				break;
-
-			case GX_VA_TEX0:
-				GXTexCoord1x16(index);
-				break;
-
-			default:
-				WIRE_ASSERT(false);
-			}
-		}
-	}
-
-	GXEnd();
-}
-
-//----------------------------------------------------------------------------
 void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
 	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
 		mElements;
-
-	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
-
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
-	{
-		for (UInt k = 0; k < 3; k++)
-		{
-			UShort index = rIBuffer[i + k];
-			for (UInt j = 0; j < rElements.GetQuantity(); j++)
-			{
-				switch (rElements[j].Attr)
-				{
-				case GX_VA_POS:
-					GXPosition1x16(index);
-					break;
-
-				case GX_VA_CLR0:
-					GXColor1x16(index);
-					break;
-
-				case GX_VA_TEX0:
-					GXTexCoord1x16(index);
-					break;
-
-				default:
-					WIRE_ASSERT(false);
-				}		
-			}
-
-			for (UInt j = 0; j < rElements.GetQuantity(); j++)
-			{
-				index = rIBuffer[i + ((k+1) > 2 ? 0 : k)];
-				switch (rElements[j].Attr)
-				{
-				case GX_VA_POS:
-					GXPosition1x16(index);
-					break;
-
-				case GX_VA_CLR0:
-					GXColor1x16(index);
-					break;
-
-				case GX_VA_TEX0:
-					GXTexCoord1x16(index);
-					break;
-
-				default:
-					WIRE_ASSERT(false);
-				}
-			}
-		}
-	}
-
-	GXEnd();
-}
-
-//----------------------------------------------------------------------------
-void PdrRendererData::DrawWireframe(const VBufferID* pResource,
-	const IndexBuffer& rIBuffer)
-{
-	const TArray<VBufferID::VertexElement>& rElements = pResource->Elements;
 
 	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
 

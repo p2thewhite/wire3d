@@ -8,16 +8,13 @@
 namespace Wire
 {
 
-class IBufferID;
 class Image2D;
 class IndexBuffer;
-class VBufferID;
 class VertexBuffer;
 
 class PdrRendererData
 {
 public:
-	void Convert(const VertexBuffer* pSrc, VBufferID* pResource);
 	void Convert(const VertexBuffer* pSrc,
 		TArray<PdrVertexBuffer::VertexElement>& rElements);
 
@@ -34,13 +31,9 @@ public:
 	void GetTileCount(UInt& rTilesYCount, UShort& rHeight, UInt& rTilesXCount,
 		UShort &rWidth);
 
-	void CreateDisplayList(VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void CreateDisplayList(PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
-	void Draw(const VBufferID* pResource, const IndexBuffer& rIBuffer);
 	void Draw(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
-		rIBuffer);
-	void DrawWireframe(const VBufferID* pResource, const IndexBuffer&
 		rIBuffer);
 	void DrawWireframe(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
@@ -53,9 +46,6 @@ public:
 	// Platform-dependent data
 	void* mFifoBuffer;
 	void* mFrameBuffer[2];
-
-	VBufferID* mpVBufferID;
-	IBufferID* mpIBufferID;
 
 	PdrVertexBuffer* mpPdrVBuffer;
 	PdrIndexBuffer* mpPdrIBuffer;
