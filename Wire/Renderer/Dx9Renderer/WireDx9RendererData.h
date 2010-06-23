@@ -18,7 +18,7 @@ public:
 	// device management
 	void ResetDevice();
 
-	void Convert(const VertexBuffer* pSrc, Float* pDst);
+	static void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	// Platform-dependent data
 	IDirect3D9* mpD3D;

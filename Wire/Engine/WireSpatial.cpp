@@ -137,7 +137,7 @@ void Spatial::DetachGlobalState(GlobalState::StateType type)
 
 		if (pState->GetStateType() == type)
 		{
-			mGlobalStates.Remove(i);
+			mGlobalStates.RemoveAt(i);
 			return;
 		}
 	}
@@ -246,7 +246,7 @@ void Spatial::DetachEffect(Effect* pEffect)
 	{
 		if (mEffects[i] == pEffect)
 		{
-			mEffects.Remove(i);
+			mEffects.RemoveAt(i);
 			return;
 		}
 	}

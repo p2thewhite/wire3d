@@ -62,35 +62,39 @@ public:
 	PdrIndexBuffer* Bind(const IndexBuffer* pIndexBuffer);
 	void Unbind(const IndexBuffer* pIndexBuffer);
 	static void UnbindAll(const IndexBuffer* pIndexBuffer);
+	void Enable(const IndexBuffer* pIndexBuffer);
+	void Disable(const IndexBuffer* pIndexBuffer);
 	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 
 	// Vertex buffer management
 	PdrVertexBuffer* Bind(const VertexBuffer* pVertexBuffer);
 	void Unbind(const VertexBuffer* pVertexBuffer);
 	static void UnbindAll(const VertexBuffer* pVertexBuffer);
+	void Enable(const VertexBuffer* pVertexBuffer);
+	void Disable(const VertexBuffer* pVertexBuffer);
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// 2D texture management
 	PdrTexture2D* Bind(const Texture2D* pTexture);
 	void Unbind(const Texture2D* pTexture);
 	static void UnbindAll(const Texture2D* pTexture);
+	void Enable(Texture2D* pTexture);
+	void Disable(Texture2D* pTexture);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
 
 	// Current Geometry object for drawing
 	Geometry* mpGeometry;
 
-protected:
+private:
 	// Global render state management
 	void SetGlobalState(GlobalStatePtr spStates[]);
 	void RestoreGlobalState(GlobalStatePtr spStates[]);
 
-	// Resource enabling and disabling
-	void EnableIBuffer();
-	void DisableIBuffer();
-	void EnableVBuffer();
-	void DisableVBuffer();
-	void EnableTexture(Texture2D* pTexture);
- 	void DisableTexture(Texture2D* pTexture);
+	// Support for destructor. Destroy any remaining resources that the
+	// application did not explicitly release.
+	void DestroyAllIndexBuffers();
+ 	void DestroyAllTexture2Ds();
+	void DestroyAllVertexBuffers();
 
 	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];

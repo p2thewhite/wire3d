@@ -15,21 +15,21 @@ class VertexBuffer;
 class PdrRendererData
 {
 public:
-	void Convert(const VertexBuffer* pSrc,
-		TArray<PdrVertexBuffer::VertexElement>& rElements);
+	static void Convert(const VertexBuffer* pSrc, TArray<PdrVertexBuffer::
+		VertexElement>& rElements);
 
-	UInt GetTotalImageMemory(const Image2D* pImage, const UInt bpp) const;
+	static UInt GetTotalImageMemory(const Image2D* pImage, UInt bpp);
 
-	void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width, UShort height,
+	static void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
+		UShort height, UChar* pDst);
+	static void ConvertRGB888ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
-	void ConvertRGB888ToTiles(UChar* pSrc, UShort width, UShort height,
+	static void ConvertRGB565ToTiles(UChar* pSrc, UShort width, UShort height,
 		UChar* pDst);
-	void ConvertRGB565ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void ConvertRGBA4444ToTiles(UChar* pSrc, UShort width, UShort height,
-		UChar* pDst);
-	void GetTileCount(UInt& rTilesYCount, UShort& rHeight, UInt& rTilesXCount,
-		UShort &rWidth);
+	static void ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
+		UShort height, UChar* pDst);
+	static void GetTileCount(UInt& rTilesYCount, UShort& rHeight,
+		UInt& rTilesXCount, UShort &rWidth);
 
 	void CreateDisplayList(PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);

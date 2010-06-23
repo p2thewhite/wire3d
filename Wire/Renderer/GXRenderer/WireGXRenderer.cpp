@@ -215,7 +215,7 @@ void Renderer::DrawElements()
 	else
 	{
 		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
-			rPdrVBuffer->mDisplayLists;
+			rPdrVBuffer->GetDisplayLists();
 
 		Bool foundDL = false;
 		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
@@ -494,8 +494,7 @@ void PdrRendererData::ConvertRGBA4444ToTiles(UChar* pSrc, UShort width,
 }
 
 //----------------------------------------------------------------------------
-UInt PdrRendererData::GetTotalImageMemory(const Image2D* pImage,
-	const UInt bpp) const
+UInt PdrRendererData::GetTotalImageMemory(const Image2D* pImage, UInt bpp)
 {
 	UInt totalMemory = 0;
 	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
@@ -556,10 +555,10 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 
 	DCFlushRange(DL.DL, DL.DLSize);
 
-	PdrIndexBuffer*& rIBufferID = mpPdrIBuffer;
-	DL.RegisteredIBuffer = rIBufferID;
-	rIBufferID->mVBuffers.Append(pPdrVBuffer);
-	pPdrVBuffer->mDisplayLists.Append(DL);
+	PdrIndexBuffer*& rPdrIndexBuffer = mpPdrIBuffer;
+	DL.RegisteredIBuffer = rPdrIndexBuffer;
+	rPdrIndexBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
+	pPdrVBuffer->GetDisplayLists().Append(DL);
 }
 
 //----------------------------------------------------------------------------
@@ -567,7 +566,7 @@ void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
 	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
-		mElements;
+		GetVertexElements();
 
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
 	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
@@ -604,7 +603,7 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
 	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
-		mElements;
+		GetVertexElements();
 
 	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
 

@@ -98,7 +98,7 @@ const T& TArray<T>::operator[] (UInt i) const
 
 //----------------------------------------------------------------------------
 template <class T>
-void TArray<T>::Remove(UInt i)
+void TArray<T>::RemoveAt(UInt i)
 {
 	WIRE_ASSERT(i < mQuantity);
 	if (i >= mQuantity)
@@ -117,9 +117,25 @@ void TArray<T>::Remove(UInt i)
 
 //----------------------------------------------------------------------------
 template <class T>
+bool TArray<T>::Remove(const T& rElement)
+{
+	for (UInt i = 0; i < mQuantity; i++)
+	{
+		if (mpArray[i] == rElement)
+		{
+			Remove(i);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 void TArray<T>::RemoveLast()
 {
-	Remove(mQuantity-1);
+	RemoveAt(mQuantity-1);
 }
 
 //----------------------------------------------------------------------------

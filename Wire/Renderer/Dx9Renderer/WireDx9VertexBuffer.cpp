@@ -11,8 +11,6 @@ using namespace Wire;
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	pVertexBuffer)
 {
-	PdrRendererData& rData = *(pRenderer->GetRendererData());
-
 	TArray<D3DVERTEXELEMENT9> elements(8);
 	D3DVERTEXELEMENT9 element;
 	element.Stream = 0;
@@ -66,7 +64,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
 	elements.Append(sentinel);
 
-	IDirect3DDevice9*& rDevice = rData.mpD3DDevice;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->mpD3DDevice;
 	HRESULT hr;
 	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpVertexDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -83,7 +81,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		0);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	rData.Convert(pVertexBuffer, pVBData);
+	PdrRendererData::Convert(pVertexBuffer, pVBData);
 
 	hr = mpVertexBuffer->Unlock();
 	WIRE_ASSERT(SUCCEEDED(hr));

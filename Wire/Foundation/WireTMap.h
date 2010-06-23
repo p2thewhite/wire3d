@@ -2,7 +2,7 @@
 #ifndef WIRETMAP_H
 #define WIRETMAP_H
 
-#include "WireSystem.h"
+#include "WireTArray.h"
 
 namespace Wire
 {

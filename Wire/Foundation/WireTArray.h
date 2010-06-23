@@ -31,16 +31,23 @@ public:
 	void Insert(UInt i, const T& rElement);
 	void SetElement(UInt i, const T& rElement);
 
-	// Remove the element at the specified index. The elements occurring
+	// Remove the element or at the specified index. The elements occurring
 	// after that one are shifted so that the array remains contiguous. After
 	// the shift, but before the decrement on quantity, array[quantity-1] is
 	// a duplicate of array[quantity-2]. The element at index quantity-1 is
 	// reconstructed using the default constructor for class T. Then the
 	// quantity is decremented.
-	void Remove(UInt i);
+
+	// Remove the element. Return value indicates if the operation succeeded.
+	Bool Remove(const T& rElement);
+
+	// Remove the element at the specified index. 
+	void RemoveAt(UInt i);
+
+	// Remove the last element of the array.
 	void RemoveLast();
 
-	// all elements are set to the default object of class T
+	// All elements are set to the default object of class T.
 	void RemoveAll();
 
 	// dynamic growth, new array elements are default constructed
