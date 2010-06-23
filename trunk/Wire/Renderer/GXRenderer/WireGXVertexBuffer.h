@@ -38,10 +38,13 @@ public:
 	void Enable(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	void Disable(Renderer* pRenderer);
 
-	TArray<DisplayList> mDisplayLists;
-	TArray<VertexElement> mElements;
+	TArray<DisplayList>& GetDisplayLists() { return mDisplayLists; }
+	const TArray<VertexElement>& GetVertexElements() const
+		{ return mElements; }
 
 private:
+	TArray<DisplayList> mDisplayLists;
+	TArray<VertexElement> mElements;
 
 };
 

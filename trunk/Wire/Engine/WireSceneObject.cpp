@@ -55,7 +55,7 @@ void SceneObject::DetachController(Controller* pController)
 			pController->SetObject(NULL);
 
 			// Remove the controller from the list.
-			mControllers.Remove(i);
+			mControllers.RemoveAt(i);
 
 			return;
 		}

@@ -67,6 +67,37 @@ void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Enable(const IndexBuffer* pIndexBuffer)
+{
+	WIRE_ASSERT(pIndexBuffer);
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Enable(this, pIndexBuffer);
+	}
+	else
+	{
+		PdrIndexBuffer* pPdrTexture =	Bind(pIndexBuffer);
+		pPdrTexture->Enable(this, pIndexBuffer);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const IndexBuffer* pIndexBuffer)
+{
+	WIRE_ASSERT(pIndexBuffer);
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Index buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
 PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 {
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
@@ -111,6 +142,37 @@ void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
 {
 	smRenderer->Unbind(pVertexBuffer);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const VertexBuffer* pVertexBuffer)
+{
+	WIRE_ASSERT(pVertexBuffer);
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Enable(this, pVertexBuffer);
+	}
+	else
+	{
+		PdrVertexBuffer* pPdrTexture =	Bind(pVertexBuffer);
+		pPdrTexture->Enable(this, pVertexBuffer);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const VertexBuffer* pVertexBuffer)
+{
+	WIRE_ASSERT(pVertexBuffer);
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Vertex buffer is not bound
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -160,86 +222,7 @@ void Renderer::UnbindAll(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
-{
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
-
-	if (pValue)
-	{
-		return *pValue;
-	}
-
-	return NULL;
-}
-
-//----------------------------------------------------------------------------
-void Renderer::EnableIBuffer()
-{
-	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
-	WIRE_ASSERT(pIndexBuffer);
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-	if (pValue)
-	{
-		(*pValue)->Enable(this, pIndexBuffer);
-	}
-	else
-	{
-		PdrIndexBuffer* pPdrTexture =	Bind(pIndexBuffer);
-		pPdrTexture->Enable(this, pIndexBuffer);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DisableIBuffer()
-{
-	IndexBuffer* pIndexBuffer = mpGeometry->IBuffer;
-	WIRE_ASSERT(pIndexBuffer);
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-	if (pValue)
-	{
-		(*pValue)->Disable(this);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Index buffer is not bound
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::EnableVBuffer()
-{
-	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
-	WIRE_ASSERT(pVertexBuffer);
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-	if (pValue)
-	{
-		(*pValue)->Enable(this, pVertexBuffer);
-	}
-	else
-	{
-		PdrVertexBuffer* pPdrTexture =	Bind(pVertexBuffer);
-		pPdrTexture->Enable(this, pVertexBuffer);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DisableVBuffer()
-{
-	VertexBuffer* pVertexBuffer = mpGeometry->VBuffer;
-	WIRE_ASSERT(pVertexBuffer);
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-	if (pValue)
-	{
-		(*pValue)->Disable(this);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex buffer is not bound
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::EnableTexture(Texture2D* pTexture)
+void Renderer::Enable(Texture2D* pTexture)
 {
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
@@ -255,7 +238,7 @@ void Renderer::EnableTexture(Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DisableTexture(Texture2D* pTexture)
+void Renderer::Disable(Texture2D* pTexture)
 {
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
@@ -270,6 +253,37 @@ void Renderer::DisableTexture(Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
+PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
+{
+	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DestroyAllIndexBuffers()
+{
+
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DestroyAllVertexBuffers()
+{
+
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DestroyAllTexture2Ds()
+{
+
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
@@ -278,8 +292,8 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
-	EnableIBuffer();
-	EnableVBuffer();
+	Enable(mpGeometry->IBuffer);
+	Enable(mpGeometry->VBuffer);
 
 	// Keep track of the current sampler to be used in enabling the
 	// textures.
@@ -300,7 +314,7 @@ void Renderer::Draw(Geometry* pGeometry)
 			}
 		}
 
-		EnableTexture(pTexture);
+		Enable(pTexture);
 		mCurrentSampler++;
 	}
 
@@ -311,11 +325,11 @@ void Renderer::Draw(Geometry* pGeometry)
 	mCurrentSampler = 0;
 	if (pTexture)
 	{
-		DisableTexture(pTexture);
+		Disable(pTexture);
 	}
 
-	DisableVBuffer();
-	DisableIBuffer();
+	Disable(mpGeometry->VBuffer);
+	Disable(mpGeometry->IBuffer);
 
 	RestoreGlobalState(mpGeometry->States);
 }

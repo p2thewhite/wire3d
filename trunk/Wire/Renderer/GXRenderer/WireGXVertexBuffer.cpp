@@ -10,8 +10,7 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
-	pVertexBuffer)
+PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 {
 	VertexElement element;
 	UInt vertexCount = pVertexBuffer->GetVertexQuantity();
@@ -59,7 +58,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	}
 
 	WIRE_ASSERT(mElements.GetQuantity() > 0);
-	pRenderer->GetRendererData()->Convert(pVertexBuffer, mElements);
+	PdrRendererData::Convert(pVertexBuffer, mElements);
 
 	for (UInt i = 0; i < mElements.GetQuantity(); i++)
 	{
@@ -84,13 +83,13 @@ PdrVertexBuffer::~PdrVertexBuffer()
 		free(mDisplayLists[i].DL);	// allocated using memalign, not using new
 
 		TArray<PdrVertexBuffer*>& rVBuffers =
-			mDisplayLists[i].RegisteredIBuffer->mVBuffers;
+			mDisplayLists[i].RegisteredIBuffer->GetPdrVBuffers();
 
 		for (UInt j = 0; j < rVBuffers.GetQuantity(); j++)
 		{
 			if (rVBuffers[j] == this)
 			{
-				rVBuffers.Remove(j);
+				rVBuffers.RemoveAt(j);
 				break;
 			}
 		}

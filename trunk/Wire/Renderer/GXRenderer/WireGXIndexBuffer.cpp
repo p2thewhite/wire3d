@@ -18,17 +18,17 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
-	for (UInt i = 0; i < mVBuffers.GetQuantity(); i++)
+	for (UInt i = 0; i < mPdrVBuffers.GetQuantity(); i++)
 	{
-		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists = mVBuffers[i]->
-			mDisplayLists;
+		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists = mPdrVBuffers[i]->
+			GetDisplayLists();
 
 		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
 		{
 			if (rDisplayLists[j].RegisteredIBuffer == this)
 			{
 				free(rDisplayLists[i].DL);	// allocated using memalign
-				rDisplayLists.Remove(j);
+				rDisplayLists.RemoveAt(j);
 				break;
 			}
 		}

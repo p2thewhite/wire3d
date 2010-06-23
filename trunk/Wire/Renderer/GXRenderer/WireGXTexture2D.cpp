@@ -38,11 +38,9 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	const Image2D* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
-	PdrRendererData& rPdrData = *(pRenderer->GetRendererData());
-
 	UInt bpp = pImage->GetBytesPerPixel();
 	bpp = (bpp == 3) ? 4 : bpp;
-	UInt totalMemory = rPdrData.GetTotalImageMemory(pImage, bpp);
+	UInt totalMemory = PdrRendererData::GetTotalImageMemory(pImage, bpp);
 
 	mpImage = memalign(32, totalMemory);
 	UChar* pDst = static_cast<UChar*>(mpImage);
@@ -60,19 +58,23 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 			switch (format)
 			{
 			case Image2D::FM_RGBA8888:
-				rPdrData.ConvertRGBA8888ToTiles(pSrc, width, height, pDst);
+				PdrRendererData::ConvertRGBA8888ToTiles(pSrc, width, height,
+					pDst);
 				break;
 
 			case Image2D::FM_RGB888:
-				rPdrData.ConvertRGB888ToTiles(pSrc, width, height, pDst);
+				PdrRendererData::ConvertRGB888ToTiles(pSrc, width, height,
+					pDst);
 				break;
 
 			case Image2D::FM_RGB565:
-				rPdrData.ConvertRGB565ToTiles(pSrc, width, height, pDst);
+				PdrRendererData::ConvertRGB565ToTiles(pSrc, width, height,
+					pDst);
 				break;
 
 			case Image2D::FM_RGBA4444:
-				rPdrData.ConvertRGBA4444ToTiles(pSrc, width, height, pDst);
+				PdrRendererData::ConvertRGBA4444ToTiles(pSrc, width, height,
+					pDst);
 				break;
 
 			default:

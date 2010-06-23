@@ -93,5 +93,5 @@ void TMap<TKEY, TVALUE>::Remove(const TKEY& rKey)
 	}
 
 	WIRE_ASSERT((low < quantity) && ((*mpArray)[low].Key == rKey));
-	mpArray->Remove(low);
+	mpArray->RemoveAt(low);
 }

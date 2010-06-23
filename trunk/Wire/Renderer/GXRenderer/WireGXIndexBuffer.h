@@ -21,9 +21,10 @@ public:
 	void Enable(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
 	void Disable(Renderer* pRenderer);
 
-	TArray<PdrVertexBuffer*> mVBuffers;
+	TArray<PdrVertexBuffer*>& GetPdrVBuffers() { return mPdrVBuffers; }
 
 private:
+	TArray<PdrVertexBuffer*> mPdrVBuffers;
 };
 
 }
