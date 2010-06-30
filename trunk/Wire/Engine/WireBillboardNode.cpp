@@ -39,7 +39,7 @@ void BillboardNode::UpdateWorldData(Double appTime)
         // camera is on the model axis (x = 0 and z = 0), ATan2 returns zero
         // (rather than NaN), so there is no need to trap this degenerate
         // case and handle it separately.
-        float angle = MathF::ATan2(camLocation.X(), camLocation.Z());
+        Float angle = MathF::ATan2(camLocation.X(), camLocation.Z());
         Matrix34F orientation(Vector3F::UNIT_Y, angle);
         World.SetRotate(World.GetMatrix() * orientation);
     }

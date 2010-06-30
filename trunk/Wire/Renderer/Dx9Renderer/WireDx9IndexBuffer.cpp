@@ -18,7 +18,7 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 
 	PdrRendererData& rData = *(pRenderer->GetRendererData());
 
-	if (!rData.mSupports32BitIndices)
+	if (!rData.Supports32BitIndices)
 	{
 		indexBufferSize = quantity * sizeof(UShort);
 		format = D3DFMT_INDEX16;
@@ -26,7 +26,7 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 
 	// Create the index buffer.
 	HRESULT hr;
-	hr = rData.mpD3DDevice->CreateIndexBuffer(indexBufferSize,
+	hr = rData.D3DDevice->CreateIndexBuffer(indexBufferSize,
 		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &mpIndexBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -36,7 +36,7 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 		&pLockedIBuffer), 0);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	if (rData.mSupports32BitIndices)
+	if (rData.Supports32BitIndices)
 	{
 		System::Memcpy(pLockedIBuffer, indexBufferSize, pIndices,
 			indexBufferSize);
@@ -77,7 +77,7 @@ PdrIndexBuffer::~PdrIndexBuffer()
 void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*)
 {
 	HRESULT hr;
-	hr = pRenderer->GetRendererData()->mpD3DDevice->SetIndices(mpIndexBuffer);
+	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpIndexBuffer);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

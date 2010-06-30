@@ -5,7 +5,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::msFogDensity[FogState::DF_QUANTITY] =
+UChar PdrRendererData::sFogDensity[FogState::DF_QUANTITY] =
 {
 	GX_FOG_PERSP_LIN,	// FogState::DF_LINEAR
 	GX_FOG_ORTHO_EXP,   // FogState::DF_EXP
@@ -21,7 +21,7 @@ void Renderer::SetFogState(FogState* pState)
 	{
  		GXColor color = { pState->Color.R() * 255.0F, pState->Color.G() *
 			255.0F, pState->Color.B() * 255.0F, 255};
-		GXSetFog(PdrRendererData::msFogDensity[pState->DensityFunc],
+		GXSetFog(PdrRendererData::sFogDensity[pState->DensityFunc],
 			pState->Start, pState->End, mpCamera->GetDMin(), mpCamera->
 			GetDMax(), color);
 	}

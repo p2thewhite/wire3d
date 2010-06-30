@@ -115,11 +115,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireString.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireSystem.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTArray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTHashTable.h"
 					>
 				</File>
 				<File
@@ -171,7 +179,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireString.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTArray.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTHashTable.inl"
 					>
 				</File>
 				<File
@@ -212,6 +228,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix34.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireString.cpp"
 					>
 				</File>
 				<File

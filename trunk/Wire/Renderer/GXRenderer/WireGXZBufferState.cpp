@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::msZBufferCompare[ZBufferState::CF_QUANTITY] = 
+UChar PdrRendererData::sZBufferCompare[ZBufferState::CF_QUANTITY] = 
 {
 	GX_NEVER,     // ZBufferState::CF_NEVER
 	GX_LESS,      // ZBufferState::CF_LESS
@@ -24,6 +24,6 @@ void Renderer::SetZBufferState(ZBufferState* pState)
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;
 	UChar writable = pState->Writable ? GX_TRUE : GX_FALSE;
 
-	GXSetZMode(enable, PdrRendererData::msZBufferCompare[pState->Compare],
+	GXSetZMode(enable, PdrRendererData::sZBufferCompare[pState->Compare],
 		writable);
 }

@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::msCullType[CullState::CM_QUANTITY] = 
+UChar PdrRendererData::sCullType[CullState::CM_QUANTITY] = 
 {
 	GX_CULL_BACK,
 	GX_CULL_FRONT
@@ -17,7 +17,7 @@ void Renderer::SetCullState(CullState* pState)
 
 	if (pState->Enabled)
 	{
-		GXSetCullMode(PdrRendererData::msCullType[pState->CullFace]);
+		GXSetCullMode(PdrRendererData::sCullType[pState->CullFace]);
 	}
 	else
 	{

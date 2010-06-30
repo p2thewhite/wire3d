@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::msFogDensity[FogState::DF_QUANTITY] = 
+DWORD PdrRendererData::sFogDensity[FogState::DF_QUANTITY] = 
 {
 	D3DFOG_LINEAR,  // FogState::DF_LINEAR
 	D3DFOG_EXP,     // FogState::DF_EXP
@@ -16,7 +16,7 @@ void Renderer::SetFogState(FogState* pState)
 {
 	mspStates[GlobalState::FOG] = pState;
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 	if (pState->Enabled)
 	{
@@ -43,13 +43,13 @@ void Renderer::SetFogState(FogState* pState)
 //		if (pState->ApplyFunction == FogState::AF_PER_PIXEL)
 // 		{
 // 			hr = rDevice->SetRenderState(D3DRS_FOGTABLEMODE,
-// 				PdrRendererData::msFogDensity[pState->DensityFunc]);
+// 				PdrRendererData::sFogDensity[pState->DensityFunc]);
 // 			WIRE_ASSERT(SUCCEEDED(hr));
 // 		}
 // 		else
 // 		{
 			hr = rDevice->SetRenderState(D3DRS_FOGVERTEXMODE,
-				PdrRendererData::msFogDensity[pState->DensityFunc]);    
+				PdrRendererData::sFogDensity[pState->DensityFunc]);    
 			WIRE_ASSERT(SUCCEEDED(hr));
 // 		}
 	}

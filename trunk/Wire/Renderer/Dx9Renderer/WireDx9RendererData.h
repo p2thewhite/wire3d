@@ -21,22 +21,23 @@ public:
 	static void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	// Platform-dependent data
-	IDirect3D9* mpD3D;
-	IDirect3DDevice9* mpD3DDevice;
-	D3DPRESENT_PARAMETERS mPresent;
-	Bool mSupports32BitIndices;
+	IDirect3D9* D3D;
+	IDirect3DDevice9* D3DDevice;
+	D3DPRESENT_PARAMETERS Present;
 
-	Matrix4F mViewMatrix;
+	Matrix4F ViewMatrix;
 
- 	static DWORD msAlphaSrcBlend[];
- 	static DWORD msAlphaDstBlend[];
- 	static DWORD msCullType[];
- 	static DWORD msFogDensity[];
- 	static DWORD msZBufferCompare[];
- 	static DWORD msTexMinFilter[];
- 	static DWORD msTexMipFilter[];
- 	static DWORD msTexWrapMode[];
- 	static D3DFORMAT msImage2DFormat[];
+ 	static DWORD sAlphaSrcBlend[];
+ 	static DWORD sAlphaDstBlend[];
+ 	static DWORD sCullType[];
+ 	static DWORD sFogDensity[];
+ 	static DWORD sZBufferCompare[];
+ 	static DWORD sTexMinFilter[];
+ 	static DWORD sTexMipFilter[];
+ 	static DWORD sTexWrapMode[];
+ 	static D3DFORMAT sImage2DFormat[];
+
+	Bool Supports32BitIndices;
 
 private:
 	Renderer* mpRenderer;

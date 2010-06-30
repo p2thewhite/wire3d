@@ -41,32 +41,31 @@ public:
 	// internally used by System::Assert
 	void* GetFramebuffer();
 	void SetFramebufferIndex(UInt i);
-	GXRenderModeObj* GetRenderMode();
 
 	// Platform-dependent data
-	void* mFifoBuffer;
-	void* mFrameBuffer[2];
+	void* FifoBuffer;
+	void* FrameBuffer[2];
 
-	PdrVertexBuffer* mpPdrVBuffer;
-	PdrIndexBuffer* mpPdrIBuffer;
+	PdrVertexBuffer* PdrVBuffer;
+	PdrIndexBuffer* PdrIBuffer;
 
-	GXRenderModeObj* mRMode;
-	GXColor mGXClearColor;
+	GXRenderModeObj* RMode;
+	GXColor GXClearColor;
 
 	// Transforms world space to camera space.
-	Matrix34F mViewMatrix;
+	Matrix34F ViewMatrix;
 
-	UInt mFrameBufferIndex;
-	Bool mIsFrameBufferDirty;
+	UInt FrameBufferIndex;
+	Bool IsFrameBufferDirty;
 
-	static UChar msAlphaSrcBlend[];
-	static UChar msAlphaDstBlend[];
-	static UChar msCullType[];
-	static UChar msFogDensity[];
-	static UChar msZBufferCompare[];
-	static UChar msTexMinFilter[];
-	static UChar msTexWrapMode[];
-	static UChar msImage2DFormat[];
+	static UChar sAlphaSrcBlend[];
+	static UChar sAlphaDstBlend[];
+	static UChar sCullType[];
+	static UChar sFogDensity[];
+	static UChar sZBufferCompare[];
+	static UChar sTexMinFilter[];
+	static UChar sTexWrapMode[];
+	static UChar sImage2DFormat[];
 
 private:
 	Renderer* mpRenderer;

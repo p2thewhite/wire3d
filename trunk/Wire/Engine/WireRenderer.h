@@ -37,6 +37,10 @@ public:
 	// doing any of its own work.
 	void Initialize(UInt width, UInt height);
 
+	// The platform-dependent destructor must call this function after doing
+	// any of its own work.
+	void Terminate();
+
 	// Object drawing
 	void DrawScene(VisibleSet& rVisibleSet);
 	void Draw(Geometry* pGeometry);
@@ -117,9 +121,12 @@ private:
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;
 	
-	TMap<const IndexBuffer*, PdrIndexBuffer*> mIndexBufferMap;
-	TMap<const VertexBuffer*, PdrVertexBuffer*> mVertexBufferMap;
-	TMap<const Texture2D*, PdrTexture2D*> mTexture2DMap;
+	typedef TMap<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
+	typedef TMap<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
+	typedef TMap<const Texture2D*, PdrTexture2D*> Texture2DMap;
+	IndexBufferMap mIndexBufferMap;
+	VertexBufferMap mVertexBufferMap;
+	Texture2DMap mTexture2DMap;
 
 	// Platform-dependent portion of the Renderer
 public:

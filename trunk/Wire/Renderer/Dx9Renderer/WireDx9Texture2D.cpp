@@ -7,7 +7,7 @@
 
 using namespace Wire;
 
-D3DFORMAT PdrRendererData::msImage2DFormat[Image2D::FM_QUANTITY] =
+D3DFORMAT PdrRendererData::sImage2DFormat[Image2D::FM_QUANTITY] =
 {
 	D3DFMT_A8R8G8B8,	// Image2D::FM_RGB888
 	D3DFMT_A8R8G8B8,	// Image2D::FM_RGBA8888
@@ -15,7 +15,7 @@ D3DFORMAT PdrRendererData::msImage2DFormat[Image2D::FM_QUANTITY] =
 	D3DFMT_A4R4G4B4,	// Image2D::FM_RGBA4444
 };
 
-DWORD PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
+DWORD PdrRendererData::sTexMinFilter[Texture2D::FT_QUANTITY] =
 {
 	D3DTEXF_POINT,  // Texture2D::FT_NEAREST
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR
@@ -25,7 +25,7 @@ DWORD PdrRendererData::msTexMinFilter[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::msTexMipFilter[Texture2D::FT_QUANTITY] =
+DWORD PdrRendererData::sTexMipFilter[Texture2D::FT_QUANTITY] =
 {
 	D3DTEXF_NONE,   // Texture2D::FT_NEAREST
 	D3DTEXF_NONE,   // Texture2D::FT_LINEAR
@@ -35,7 +35,7 @@ DWORD PdrRendererData::msTexMipFilter[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::msTexWrapMode[Texture2D::WT_QUANTITY] =
+DWORD PdrRendererData::sTexWrapMode[Texture2D::WT_QUANTITY] =
 {
 	D3DTADDRESS_CLAMP,      // Texture2D::WT_CLAMP
 	D3DTADDRESS_WRAP,       // Texture2D::WT_REPEAT
@@ -136,9 +136,9 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	const UInt mipmapCount = pImage->GetMipmapCount();
 
 	HRESULT hr;
-	hr = D3DXCreateTexture(pRenderer->GetRendererData()->mpD3DDevice,
+	hr = D3DXCreateTexture(pRenderer->GetRendererData()->D3DDevice,
 		pImage->GetBound(0), pImage->GetBound(1), mipmapCount, usage,
-		PdrRendererData::msImage2DFormat[format], pool, &mpTexture);
+		PdrRendererData::sImage2DFormat[format], pool, &mpTexture);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	if (pDst)
@@ -159,7 +159,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 			UInt offset = pImage->GetMipmapOffset(i);
 
 			hr = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
-				pDst+offset, PdrRendererData::msImage2DFormat[format],
+				pDst+offset, PdrRendererData::sImage2DFormat[format],
 				pitch * bpp, NULL, &r, D3DX_FILTER_NONE, 0xFF000000);
 			WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -189,7 +189,7 @@ PdrTexture2D::~PdrTexture2D()
 void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	UInt unit)
 {
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
 
 	// Anisotropic filtering value.
@@ -245,11 +245,11 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	else
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
-			PdrRendererData::msTexMinFilter[filterType]);
+			PdrRendererData::sTexMinFilter[filterType]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
-			PdrRendererData::msTexMipFilter[filterType]);
+			PdrRendererData::sTexMipFilter[filterType]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
@@ -261,10 +261,10 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU,
-		PdrRendererData::msTexWrapMode[pTexture->GetWrapType(0)]);
+		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(0)]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV,
-		PdrRendererData::msTexWrapMode[pTexture->GetWrapType(1)]);
+		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(1)]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	hr = rDevice->SetTexture(unit, mpTexture);
@@ -284,7 +284,7 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 //----------------------------------------------------------------------------
 void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 {
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
 	hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	WIRE_ASSERT(SUCCEEDED(hr));
