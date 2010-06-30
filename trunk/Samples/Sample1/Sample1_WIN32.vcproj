@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample1_WIN32"
+	Name="Sample1"
 	ProjectGUID="{5EF9DCF2-9CD2-4EC6-9E7D-422AC18BE27E}"
 	RootNamespace="Sample1_WIN32"
 	>
