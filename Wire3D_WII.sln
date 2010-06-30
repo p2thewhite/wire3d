@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wire", "Wire\Wire.vcproj", "{F95787AD-C522-4532-98F2-107E57D5019C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wire", "Wire\Wire_WII.vcproj", "{F95787AD-C522-4532-98F2-107E57D5019C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1", "Samples\Sample1\Sample1.vcproj", "{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1", "Samples\Sample1\Sample1_WII.vcproj", "{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2", "Samples\Sample2\Sample2.vcproj", "{63E8E87E-548C-460A-9B0E-FA0365C263F5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2", "Samples\Sample2\Sample2_WII.vcproj", "{63E8E87E-548C-460A-9B0E-FA0365C263F5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection

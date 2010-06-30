@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Wire_WIN32"
+	Name="Wire"
 	ProjectGUID="{B0895837-1F40-4F57-8F36-1DF861114254}"
 	RootNamespace="Wire_WIN32"
 	>
