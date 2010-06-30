@@ -1,1 +1,1 @@
-<Workspace name="Wire3D"><Project path="Wire\Wire.pnproj"></Project><Project path="Samples\Sample1\Sample1.pnproj"><Project path="Samples\Sample2\Sample2.pnproj"></Project></Workspace>
+<Workspace name="Wire3D"><Project path="Wire\Wire_WII.pnproj"></Project><Project path="Samples\Sample1\Sample1_WII.pnproj"><Project path="Samples\Sample2\Sample2_WII.pnproj"></Project></Workspace>
