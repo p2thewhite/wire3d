@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::msZBufferCompare[ZBufferState::CF_QUANTITY] = 
+DWORD PdrRendererData::sZBufferCompare[ZBufferState::CF_QUANTITY] = 
 {
 	D3DCMP_NEVER,           // ZBufferState::CF_NEVER
 	D3DCMP_LESS,            // ZBufferState::CF_LESS
@@ -21,12 +21,12 @@ void Renderer::SetZBufferState(ZBufferState* pState)
 {
 	mspStates[GlobalState::ZBUFFER] = pState;
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 	if (pState->Enabled)
 	{
 		hr = rDevice->SetRenderState(D3DRS_ZFUNC,
-			PdrRendererData::msZBufferCompare[pState->Compare]);
+			PdrRendererData::sZBufferCompare[pState->Compare]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else

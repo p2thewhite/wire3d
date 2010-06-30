@@ -48,3 +48,61 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Print("Assertion failed, %s, %s, line %d", pExpression, pFile,
 		lineNumber);
 }
+
+//----------------------------------------------------------------------------
+FILE* System::Fopen(const Char* pFilename, const Char* pMode)
+{
+	FILE* pFile;
+	errno_t error = fopen_s(&pFile, pFilename, pMode);
+	if (error == 0)
+	{
+		return pFile;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+//----------------------------------------------------------------------------
+Char* System::Strcpy(Char* pDst, size_t dstSize, const Char* pSrc)
+{
+	errno_t error = strcpy_s(pDst, dstSize, pSrc);
+	if (error == 0)
+	{
+		return pDst;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+//----------------------------------------------------------------------------
+Char* System::Strcat(Char* pDst, size_t dstSize, const Char* pSrc)
+{
+	errno_t error = strcat_s(pDst, dstSize, pSrc);
+	if (error == 0)
+	{
+		return pDst;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+//----------------------------------------------------------------------------
+Char* System::Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
+	size_t srcSize)
+{
+	errno_t error = strncpy_s(pDst, dstSize, pSrc, srcSize);
+	if (error == 0)
+	{
+		return pDst;
+	}
+	else
+	{
+		return NULL;
+	}
+}

@@ -25,6 +25,8 @@ public:
 	void Remove(const TKEY& rKey);
 	TVALUE* Find(const TKEY& rKey);
 
+	TArray<MapElement>* GetArray() { return mpArray; }
+
 private:
 	TArray<MapElement>* mpArray;
 };

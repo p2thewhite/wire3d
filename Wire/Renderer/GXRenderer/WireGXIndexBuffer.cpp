@@ -39,7 +39,7 @@ PdrIndexBuffer::~PdrIndexBuffer()
 void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
 	pIndexBuffer)
 {
-	pRenderer->GetRendererData()->mpPdrIBuffer = this;
+	pRenderer->GetRendererData()->PdrIBuffer = this;
 
 	GXSetNumTexGens(0);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,

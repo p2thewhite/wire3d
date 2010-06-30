@@ -117,13 +117,13 @@ void TArray<T>::RemoveAt(UInt i)
 
 //----------------------------------------------------------------------------
 template <class T>
-bool TArray<T>::Remove(const T& rElement)
+Bool TArray<T>::Remove(const T& rElement)
 {
 	for (UInt i = 0; i < mQuantity; i++)
 	{
 		if (mpArray[i] == rElement)
 		{
-			Remove(i);
+			RemoveAt(i);
 			return true;
 		}
 	}

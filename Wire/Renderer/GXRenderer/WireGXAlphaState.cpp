@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
+UChar PdrRendererData::sAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 {
 	GX_BL_ZERO,          // AlphaState::SBM_ZERO
 	GX_BL_ONE,           // AlphaState::SBM_ONE
@@ -16,7 +16,7 @@ UChar PdrRendererData::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 	GX_BL_INVDSTALPHA,   // AlphaState::SBM_ONE_MINUS_DST_ALPHA
 };
 
-UChar PdrRendererData::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
+UChar PdrRendererData::sAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 {
 	GX_BL_ZERO,          // AlphaState::DBM_ZERO
 	GX_BL_ONE,           // AlphaState::DBM_ONE
@@ -36,8 +36,8 @@ void Renderer::SetAlphaState(AlphaState* pState)
 	if (pState->BlendEnabled)
 	{
 		GXSetBlendMode(GX_BM_BLEND,
-			PdrRendererData::msAlphaSrcBlend[pState->SrcBlend],
-			PdrRendererData::msAlphaDstBlend[pState->DstBlend], GX_LO_SET);
+			PdrRendererData::sAlphaSrcBlend[pState->SrcBlend],
+			PdrRendererData::sAlphaDstBlend[pState->DstBlend], GX_LO_SET);
 		GXSetColorUpdate(GX_TRUE);
 //		GXSetAlphaUpdate(GX_TRUE);
 	}

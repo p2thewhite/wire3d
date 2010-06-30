@@ -1,8 +1,11 @@
 #include "WireRenderer.h"
 
 #include "WireCamera.h"
+#include "WireDx9IndexBuffer.h"
 #include "WireDx9RendererData.h"
 #include "WireDx9RendererInput.h"
+#include "WireDx9Texture2D.h"
+#include "WireDx9VertexBuffer.h"
 #include "WireGeometry.h"
 #include <d3dx9.h>
 
@@ -16,11 +19,11 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	mpData = WIRE_NEW PdrRendererData(this);
 	WIRE_ASSERT(mpData);
 
-	IDirect3D9*& rD3D = mpData->mpD3D;
+	IDirect3D9*& rD3D = mpData->D3D;
 	rD3D = Direct3DCreate9(D3D_SDK_VERSION);
 	WIRE_ASSERT(rD3D);
 
-	D3DPRESENT_PARAMETERS& rPresent = mpData->mPresent;
+	D3DPRESENT_PARAMETERS& rPresent = mpData->Present;
 	rPresent.BackBufferWidth = width;
 	rPresent.BackBufferHeight = height;
 	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
@@ -51,7 +54,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 		&deviceCaps);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	mpData->mSupports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
+	mpData->Supports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
 		true : false;
 
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders
@@ -67,7 +70,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 		behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
 	}
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	hr = rD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
 		rInput.WindowHandle, behaviorFlags, &rPresent, &rDevice);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -85,17 +88,19 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 //----------------------------------------------------------------------------
 Renderer::~Renderer()
 {
-	if (mpData->mpD3DDevice)
+	if (mpData->D3DDevice)
 	{
-		mpData->mpD3DDevice->Release();
+		mpData->D3DDevice->Release();
 	}
 
-	if (mpData->mpD3D)
+	if (mpData->D3D)
 	{
-		mpData->mpD3D->Release();
+		mpData->D3D->Release();
 	}
 
 	WIRE_DELETE mpData;
+
+	Terminate();
 }
 
 //----------------------------------------------------------------------------
@@ -105,7 +110,7 @@ void Renderer::ClearBuffers()
 		mClearColor.G(), mClearColor.B(), mClearColor.A());
 
 	HRESULT hr;
-	hr = mpData->mpD3DDevice->Clear(0, 0,
+	hr = mpData->D3DDevice->Clear(0, 0,
 		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
 		clearColor, 1.0F/*mClearDepth*/, static_cast<DWORD>(0/*mClearStencil*/));
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -115,10 +120,41 @@ void Renderer::ClearBuffers()
 void Renderer::DisplayBackBuffer()
 {
 	HRESULT hr;
-	hr = mpData->mpD3DDevice->Present(NULL, NULL, NULL, NULL);
+	hr = mpData->D3DDevice->Present(NULL, NULL, NULL, NULL);
 	if (hr != D3DERR_DEVICELOST)
 	{
 		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+void DestroyResources(TMap<const Resource*, PdrResource*>& rMap,
+	TArray<const Resource*>& rSave)
+{
+ 	TArray<TMap<const Resource*, PdrResource*>::MapElement>* pElements =
+		rMap.GetArray();
+ 
+	rSave.SetQuantity(pElements->GetQuantity());
+	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	{
+		TMap<const Resource*, PdrResource*>::MapElement& rElement =
+			(*pElements)[i];
+		PdrResource* pResource = rElement.Value;
+		WIRE_DELETE pResource;
+		rSave[i] = rElement.Key;
+	}
+
+	pElements->RemoveAll();
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource>
+void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
+{
+	for (UInt i = 0; i < rSave.GetQuantity(); i++)
+	{
+		pRenderer->Bind(rSave[i]);
 	}
 }
 
@@ -141,10 +177,10 @@ Bool Renderer::PreDraw(Camera* pCamera)
 		0.0F,			0.0F,			f/(f-n),		1.0F,
 		0.0F,			0.0F,			-n*f/(f-n),		0.0F);
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
-		mViewMatrix));
+		ViewMatrix));
 
 	HRESULT hr;
 	hr = rDevice->TestCooperativeLevel();
@@ -152,11 +188,19 @@ Bool Renderer::PreDraw(Camera* pCamera)
     switch (hr)
     {
     case D3DERR_DEVICELOST:
-		// TODO: handle device lost
 		return false;
 
 	case D3DERR_DEVICENOTRESET:
-        mpData->ResetDevice();
+		TArray<const IndexBuffer*> saveIndexBuffers;
+		TArray<const VertexBuffer*> saveVertexBuffers;
+		TArray<const Texture2D*> saveTexture2Ds;
+		DestroyResources(mIndexBufferMap, saveIndexBuffers);
+		DestroyResources(mVertexBufferMap, saveVertexBuffers);
+		DestroyResources(mTexture2DMap, saveTexture2Ds);
+		mpData->ResetDevice();
+		RecreateResources(this, saveIndexBuffers);
+		RecreateResources(this, saveVertexBuffers);
+		RecreateResources(this, saveTexture2Ds);
         break;
     }
 
@@ -170,7 +214,7 @@ Bool Renderer::PreDraw(Camera* pCamera)
 void Renderer::PostDraw()
 {
 	HRESULT hr;
-	hr = mpData->mpD3DDevice->EndScene();
+	hr = mpData->D3DDevice->EndScene();
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -179,7 +223,7 @@ void Renderer::DrawElements()
 {
 	// Set up world matrix
 	Matrix4F world;
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	mpGeometry->World.GetHomogeneous(world);
 	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
@@ -198,7 +242,7 @@ void Renderer::OnFrameChange()
 	Vector3F uVector = mpCamera->GetUVector();
 	Vector3F dVector = mpCamera->GetDVector();
 
-	Matrix4F& rViewMatrix = mpData->mViewMatrix;
+	Matrix4F& rViewMatrix = mpData->ViewMatrix;
 	rViewMatrix[0][0] = rVector[0];
 	rViewMatrix[0][1] = uVector[0];
 	rViewMatrix[0][2] = dVector[0];
@@ -241,7 +285,7 @@ void Renderer::OnViewportChange()
 	viewport.MaxZ = 1.0F;
 
 	HRESULT hr;
-	hr = mpData->mpD3DDevice->SetViewport(&viewport);
+	hr = mpData->D3DDevice->SetViewport(&viewport);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -256,7 +300,7 @@ PdrRendererData::PdrRendererData(Renderer* pRenderer)
 void PdrRendererData::ResetDevice()
 {
 	HRESULT hr;
-	hr = mpD3DDevice->Reset(&mPresent);
+	hr = D3DDevice->Reset(&Present);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	mpRenderer->OnViewportChange();

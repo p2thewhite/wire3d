@@ -64,7 +64,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
 	elements.Append(sentinel);
 
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
 	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpVertexDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -99,7 +99,7 @@ PdrVertexBuffer::~PdrVertexBuffer()
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*)
 {
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
 	hr = rDevice->SetStreamSource(0, mpVertexBuffer, 0, mVertexSize);
 	WIRE_ASSERT(SUCCEEDED(hr));

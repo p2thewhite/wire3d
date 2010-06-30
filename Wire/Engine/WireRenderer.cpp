@@ -30,6 +30,16 @@ void Renderer::Initialize(UInt width, UInt height)
 	mCurrentSampler = 0;
 	mMaxAnisotropy = 1.0F;
 	smRenderer = this;
+	mpCamera = NULL;
+	mpGeometry = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Terminate()
+{
+	DestroyAllIndexBuffers();
+	DestroyAllVertexBuffers();
+	DestroyAllTexture2Ds();
 }
 
 //----------------------------------------------------------------------------
@@ -268,19 +278,45 @@ PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllIndexBuffers()
 {
+	TArray<IndexBufferMap::MapElement>* pElements = mIndexBufferMap.
+		GetArray();
 
+	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	{
+		IndexBufferMap::MapElement& rElement = (*pElements)[i];
+		WIRE_DELETE rElement.Value;
+	}
+
+	pElements->RemoveAll();
 }
 
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllVertexBuffers()
 {
+	TArray<VertexBufferMap::MapElement>* pElements = mVertexBufferMap.
+		GetArray();
 
+	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	{
+		VertexBufferMap::MapElement& rElement = (*pElements)[i];
+		WIRE_DELETE rElement.Value;
+	}
+
+	pElements->RemoveAll();
 }
 
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllTexture2Ds()
 {
+	TArray<Texture2DMap::MapElement>* pElements = mTexture2DMap.GetArray();
 
+	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	{
+		Texture2DMap::MapElement& rElement = (*pElements)[i];
+		WIRE_DELETE rElement.Value;
+	}
+
+	pElements->RemoveAll();
 }
 
 //----------------------------------------------------------------------------

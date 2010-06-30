@@ -65,7 +65,7 @@ void DLodNode::SelectLevelOfDetail(const Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-void DLodNode::GetVisibleSet(Culler& rCuller, bool noCull)
+void DLodNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
     SelectLevelOfDetail(rCuller.GetCamera());
     SwitchNode::GetVisibleSet(rCuller, noCull);

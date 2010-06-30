@@ -119,7 +119,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
 	Bool foundDL = false;
 	for (UInt i = 0; i < mDisplayLists.GetQuantity(); i++)
 	{
-		if (mDisplayLists[i].RegisteredIBuffer == rData.mpPdrIBuffer)
+		if (mDisplayLists[i].RegisteredIBuffer == rData.PdrIBuffer)
 		{
 			foundDL = true;
 			break;
@@ -131,7 +131,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
 		rData.CreateDisplayList(this, *(pRenderer->mpGeometry->IBuffer));
 	}
 
-	rData.mpPdrVBuffer = this;
+	rData.PdrVBuffer = this;
 }
 
 //----------------------------------------------------------------------------

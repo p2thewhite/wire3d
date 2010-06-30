@@ -9,7 +9,7 @@ void Renderer::SetWireframeState(WireframeState* pState)
 {
 	mspStates[GlobalState::WIREFRAME] = pState;
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
     if (pState->Enabled)
     {

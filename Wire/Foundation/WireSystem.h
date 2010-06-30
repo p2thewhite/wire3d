@@ -30,6 +30,7 @@
 #endif /* WIRE_WII */
 
 #include <float.h>
+#include <stdio.h>
 
 #include "WireTypes.h"
 #include "WireMemory.h"
@@ -43,11 +44,25 @@ public:
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
 	static void Memset(void* pDst, Int value, size_t count);
+	static Int Memcmp(const void* pBuf1, const void* pBuf2, size_t size);
 
 	static Double GetTime();
 	static void Print(const Char* pFormat, ...);
 	static void Assert(const Char* pExpression, const Char* pFile,
 		Int lineNumber);
+
+ 	static FILE* Fopen(const Char* pFilename, const Char* pMode);
+ 	static Int Fprintf(FILE* pFile, const Char* pFormat, ...);
+	static Int Fclose(FILE* pFile);
+
+	static Char* Strcpy(Char* pDst, size_t dstSize, const Char* pSrc);
+	static Char* Strcat(Char* pDst, size_t dstSize, const Char* pSrc);
+	static Char* Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
+        size_t srcSize);
+	static UInt Strlen(const Char* pString);
+
+	static Int Toupper(Int c);
+	static Int Tolower(Int c);
 
 private:
 	static Bool msInitializedTime;

@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
+DWORD PdrRendererData::sAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // AlphaState::SBM_ZERO
 	D3DBLEND_ONE,           // AlphaState::SBM_ONE
@@ -16,7 +16,7 @@ DWORD PdrRendererData::msAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
 	D3DBLEND_INVDESTALPHA,  // AlphaState::SBM_ONE_MINUS_DST_ALPHA
 };
 
-DWORD PdrRendererData::msAlphaDstBlend[AlphaState::DBM_QUANTITY] =
+DWORD PdrRendererData::sAlphaDstBlend[AlphaState::DBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // AlphaState::DBM_ZERO
 	D3DBLEND_ONE,           // AlphaState::DBM_ONE
@@ -33,15 +33,15 @@ void Renderer::SetAlphaState(AlphaState* pState)
 {
 	mspStates[GlobalState::ALPHA] = pState;
 
-	IDirect3DDevice9*& rDevice = mpData->mpD3DDevice;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 	if (pState->BlendEnabled)
 	{
 		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		DWORD srcBlend = PdrRendererData::msAlphaSrcBlend[pState->SrcBlend];
-		DWORD dstBlend = PdrRendererData::msAlphaDstBlend[pState->DstBlend];
+		DWORD srcBlend = PdrRendererData::sAlphaSrcBlend[pState->SrcBlend];
+		DWORD dstBlend = PdrRendererData::sAlphaDstBlend[pState->DstBlend];
 
 		hr = rDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 		WIRE_ASSERT(SUCCEEDED(hr));

@@ -26,7 +26,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 
 	VIInit();
 
-	GXRenderModeObj*& rRMode = mpData->mRMode;
+	GXRenderModeObj*& rRMode = mpData->RMode;
 	rRMode = VIDEO_GetPreferredMode(NULL);
 
 	if (CONF_GetAspectRatio() == CONF_ASPECT_16_9)
@@ -36,14 +36,14 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	}
 
 	// allocate 2 framebuffers for double buffering
-	mpData->mFrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
-	mpData->mFrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
+	mpData->FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
+	mpData->FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
 
-	UInt& rFrameBufferIndex = mpData->mFrameBufferIndex;
+	UInt& rFrameBufferIndex = mpData->FrameBufferIndex;
 	rFrameBufferIndex = 0;
 
 	// ConfigureMem
-	void*& rFifoBuffer = mpData->mFifoBuffer;
+	void*& rFifoBuffer = mpData->FifoBuffer;
 	rFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
 	memset(rFifoBuffer,0 , DEFAULT_FIFO_SIZE);
 
@@ -81,12 +81,12 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	// 		0.0F, 1.0F);
 	// 	GXSetDispCopyYScale(1.0F);
 
-	GXCopyDisp(mpData->mFrameBuffer[rFrameBufferIndex], GX_TRUE);
-	mpData->mIsFrameBufferDirty = false;
+	GXCopyDisp(mpData->FrameBuffer[rFrameBufferIndex], GX_TRUE);
+	mpData->IsFrameBufferDirty = false;
 
 	// StartVI
 	VIConfigure(rRMode);
-	VISetNextFrameBuffer(mpData->mFrameBuffer[rFrameBufferIndex]);
+	VISetNextFrameBuffer(mpData->FrameBuffer[rFrameBufferIndex]);
 	VISetBlack(FALSE);
 	VIFlush();
 	VIWaitForRetrace();
@@ -106,6 +106,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 Renderer::~Renderer()
 {
 	WIRE_DELETE mpData;
+	Terminate();
 }
 
 //----------------------------------------------------------------------------
@@ -136,9 +137,9 @@ void Renderer::ClearBuffers()
 	// e.g. printf ("\x1b[%d;%dH", row, column );
 	System::Print("\x1b[4;0H");
 
-	if (mpData->mIsFrameBufferDirty)
+	if (mpData->IsFrameBufferDirty)
 	{
-		GXCopyDisp(mpData->mFrameBuffer[(mpData->mFrameBufferIndex)^1], GX_TRUE);
+		GXCopyDisp(mpData->FrameBuffer[(mpData->FrameBufferIndex)^1], GX_TRUE);
 	}
 }
 
@@ -152,10 +153,10 @@ void Renderer::DisplayBackBuffer()
 	GXSetColorUpdate(GX_TRUE);
 
 	// Issue display copy command
-	UInt& rFrameBufferIndex = mpData->mFrameBufferIndex;
+	UInt& rFrameBufferIndex = mpData->FrameBufferIndex;
 	rFrameBufferIndex ^= 1;		// flip framebuffer
-	GXCopyDisp(mpData->mFrameBuffer[rFrameBufferIndex], GX_TRUE);
-	mpData->mIsFrameBufferDirty = false;
+	GXCopyDisp(mpData->FrameBuffer[rFrameBufferIndex], GX_TRUE);
+	mpData->IsFrameBufferDirty = false;
 
 	// Wait until everything is drawn and copied into XFB.
 	// This stalls until all graphics commands have executed and the
@@ -164,7 +165,7 @@ void Renderer::DisplayBackBuffer()
 	GXDrawDone();
 
 	// Display the buffer which was just filled by GXCopyDisplay
-	VISetNextFrameBuffer(mpData->mFrameBuffer[rFrameBufferIndex]);
+	VISetNextFrameBuffer(mpData->FrameBuffer[rFrameBufferIndex]);
 
 	// Tell VI device driver to write the current VI settings so far
 	VIFlush();
@@ -177,7 +178,7 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	mClearColor = rClearColor;
 
-	GXColor& rGXClearColor = mpData->mGXClearColor;
+	GXColor& rGXClearColor = mpData->GXClearColor;
 
 	rGXClearColor.r = static_cast<UChar>(rClearColor.R() * 255.0F);
 	rGXClearColor.g = static_cast<UChar>(rClearColor.G() * 255.0F);
@@ -189,12 +190,12 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 //----------------------------------------------------------------------------
 void Renderer::DrawElements()
 {
-	mpData->mIsFrameBufferDirty = true;
+	mpData->IsFrameBufferDirty = true;
 
 	Matrix34F model;
 	mpGeometry->World.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(mpData->mViewMatrix * model, GX_PNMTX0);
+	GXLoadPosMtxImm(mpData->ViewMatrix * model, GX_PNMTX0);
 
 	GXSetNumChans(1);
 //	GXSetNumTexGens(0);
@@ -206,7 +207,7 @@ void Renderer::DrawElements()
 
 	const WireframeState* pWireframeState = GetWireframeState();
 
-	PdrVertexBuffer*& rPdrVBuffer = mpData->mpPdrVBuffer;
+	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
 
 	if (pWireframeState && pWireframeState->Enabled)
 	{
@@ -220,7 +221,7 @@ void Renderer::DrawElements()
 		Bool foundDL = false;
 		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 		{
-			if (rDisplayLists[i].RegisteredIBuffer == mpData->mpPdrIBuffer)
+			if (rDisplayLists[i].RegisteredIBuffer == mpData->PdrIBuffer)
 			{
 				foundDL = true;
 				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
@@ -243,7 +244,7 @@ void Renderer::OnFrameChange()
 	Vector3F uVector = mpCamera->GetUVector();
 	Vector3F dVector = mpCamera->GetDVector();
 
-	Matrix34F& rViewMatrix = mpData->mViewMatrix;
+	Matrix34F& rViewMatrix = mpData->ViewMatrix;
 	rViewMatrix[0][0] = rVector[0];
 	rViewMatrix[1][0] = uVector[0];
 	rViewMatrix[2][0] = dVector[0];
@@ -272,7 +273,7 @@ void Renderer::OnViewportChange()
 	// screen. GX needs a specification of relative distance from the
 	// top of the screen, which is 1 - 'top'.
 	mpCamera->GetViewport(left, right, top, bottom);
-	GXRenderModeObj*& rRMode = mpData->mRMode;
+	GXRenderModeObj*& rRMode = mpData->RMode;
 	Float originX = left * static_cast<Float>(mWidth);
 	Float width = (right - left) *  static_cast<Float>(mWidth);
 	Float originY = (1.0F - top) * static_cast<Float>(rRMode->xfbHeight);
@@ -555,9 +556,8 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 
 	DCFlushRange(DL.DL, DL.DLSize);
 
-	PdrIndexBuffer*& rPdrIndexBuffer = mpPdrIBuffer;
-	DL.RegisteredIBuffer = rPdrIndexBuffer;
-	rPdrIndexBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
+	DL.RegisteredIBuffer = PdrIBuffer;
+	PdrIBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
 	pPdrVBuffer->GetDisplayLists().Append(DL);
 }
 
@@ -675,18 +675,11 @@ void Renderer::SetWireframeState(WireframeState* pState)
 //----------------------------------------------------------------------------
 void* PdrRendererData::GetFramebuffer()
 {
-	return mFrameBuffer[0];
+	return FrameBuffer[0];
 }
 
 //----------------------------------------------------------------------------
 void PdrRendererData::SetFramebufferIndex(UInt i)
 {
-	mFrameBufferIndex = i;
+	FrameBufferIndex = i;
 }
-
-//----------------------------------------------------------------------------
-GXRenderModeObj* PdrRendererData::GetRenderMode()
-{
-	return mRMode;
-}
-
