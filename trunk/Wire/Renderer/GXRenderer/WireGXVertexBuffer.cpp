@@ -128,7 +128,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
 
 	if (!foundDL)
 	{
-		rData.CreateDisplayList(this, *(pRenderer->mpGeometry->IBuffer));
+		rData.CreateDisplayList(this, *(rData.IBuffer));
 	}
 
 	rData.PdrVBuffer = this;

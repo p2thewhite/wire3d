@@ -86,9 +86,6 @@ public:
 	void Disable(Texture2D* pTexture);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
 
-	// Current Geometry object for drawing
-	Geometry* mpGeometry;
-
 private:
 	// Global render state management
 	void SetGlobalState(GlobalStatePtr spStates[]);
@@ -105,6 +102,9 @@ private:
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;
+
+	// Current Geometry object for drawing
+	Geometry* mpGeometry;
 
 	// The color used for clearing the backbuffer
 	ColorRGBA mClearColor;

@@ -16,10 +16,11 @@
 #include "WireString.h"
 #include "WireSystem.h"
 #include "WireTArray.h"
+#include "WireTHashSet.h"
 #include "WireTHashTable.h"
 #include "WireTMap.h"
+#include "WireTStack.h"
 #include "WireTypes.h"
 #include "WireVector2.h"
 #include "WireVector3.h"
-
 #endif

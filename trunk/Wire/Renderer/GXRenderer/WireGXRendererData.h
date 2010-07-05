@@ -48,6 +48,7 @@ public:
 
 	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
+	IndexBuffer* IBuffer;
 
 	GXRenderModeObj* RMode;
 	GXColor GXClearColor;
