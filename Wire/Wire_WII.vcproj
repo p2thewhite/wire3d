@@ -127,6 +127,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTHashSet.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTHashTable.h"
 					>
 				</File>
@@ -184,6 +188,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTArray.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTHashSet.inl"
 					>
 				</File>
 				<File

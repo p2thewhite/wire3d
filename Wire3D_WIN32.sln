@@ -13,6 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2", "Samples\Sample2\
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderTest", "Samples\RenderTest\RenderTest_WIN32.vcproj", "{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +36,10 @@ Global
 		{FCAB5275-8361-4579-9FE8-63BD5F3B854E}.Debug|Win32.Build.0 = Debug|Win32
 		{FCAB5275-8361-4579-9FE8-63BD5F3B854E}.Release|Win32.ActiveCfg = Release|Win32
 		{FCAB5275-8361-4579-9FE8-63BD5F3B854E}.Release|Win32.Build.0 = Release|Win32
+		{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}.Debug|Win32.Build.0 = Debug|Win32
+		{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}.Release|Win32.ActiveCfg = Release|Win32
+		{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
