@@ -22,12 +22,10 @@ public:
 
 private:
 	Geometry* CreateCube();
-	Geometry* CreatePyramid();
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	GeometryPtr mspCube;
-	GeometryPtr mspPyramid;
 	Culler mCuller;
 
 	Float mAngle;

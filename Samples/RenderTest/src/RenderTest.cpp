@@ -25,11 +25,10 @@ Bool RenderTest::OnInitialize()
 	// The smart pointer automatically deletes the object when it goes out
 	// of scope and no other references to the object exist.
 	mspCube = CreateCube();
-	mspPyramid = CreatePyramid();
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
-	Vector3F cameraLocation(0.0F, 0.0F, 5.0F);
+	Vector3F cameraLocation(0.0F, 0.0F, -5.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -171,67 +170,6 @@ Texture2D* RenderTest::CreateTexture()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreatePyramid()
-{
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(3);
-	VertexBuffer* pPyramidVerts = WIRE_NEW VertexBuffer(attributes, 12);
-
-	ColorRGB colors[] = {
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F)			// Set The Color To Green
-	};
-
-	Vector3F vertices[] = {
-		Vector3F( 0.0F, 1.0F, 0.0F),	// Top of Triangle (front)
-		Vector3F(-1.0F,-1.0F, 1.0F),	// Left of Triangle (front)
-		Vector3F( 1.0F,-1.0F, 1.0F),	// Right of Triangle (front)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),		// Top of Triangle (Right)
-		Vector3F( 1.0F,-1.0F, 1.0F),	// Left of Triangle (Right)
-		Vector3F( 1.0F,-1.0F,-1.0F),	// Right of Triangle (Right)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),		// Top of Triangle (Back)
-		Vector3F(-1.0F,-1.0F,-1.0F),	// Left of Triangle (Back)
-		Vector3F( 1.0F,-1.0F,-1.0F),	// Right of Triangle (Back)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),	// Top of Triangle (Left)
-		Vector3F(-1.0F,-1.0F,-1.0F),	// Left of Triangle (Left)
-		Vector3F(-1.0F,-1.0F, 1.0F)	// Right of Triangle (Left)
-	};
-
-	for (UInt i = 0; i < pPyramidVerts->GetVertexQuantity(); i++)
-	{
-		pPyramidVerts->Position3(i) = vertices[i];
-		pPyramidVerts->Color3(i) = colors[i];
-	}
-
-	UInt indexQuantity = pPyramidVerts->GetVertexQuantity();
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for (UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndices)[i] = i;
-	}
-
-	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, pIndices);
-	return pPyramid;
-}
-
-//----------------------------------------------------------------------------
 void RenderTest::OnIdle()
 {
 	Double time = System::GetTime();
@@ -247,37 +185,9 @@ void RenderTest::OnIdle()
 	mpRenderer->ClearBuffers();
 	mpRenderer->PreDraw(mspCamera);
 
-	Float angle = MathF::FMod(mAngle * 2.0F, MathF::TWO_PI);
-	Float xOffset = -1.5F - angle;
-	Matrix34F model(Vector3F(0, -1, 0), angle);
-	mspPyramid->World.SetRotate(model);
-	mspPyramid->World.SetTranslate(Vector3F(xOffset, 0.0F, -6.0F));
-	mspPyramid->ModelBound->TransformBy(mspPyramid->World, mspPyramid->WorldBound);
-	//	mspPyramid->UpdateWorldBound();	// is the same but protected
-	if (!mCuller.IsVisible(mspPyramid->WorldBound))
-	{
-		// 		mspCube->VBuffer->Color3(0) = ColorRGB::WHITE;
-		// 		mspCube->VBuffer->Color3(1) = ColorRGB::WHITE;
-		// 		mspCube->VBuffer->Color3(2) = ColorRGB::WHITE;
-		// 		Renderer::UnbindAll(mspCube->VBuffer);
-	}
-	else
-	{
-		// 		mspCube->VBuffer->Color3(0) = ColorRGB::RED;
-		// 		mspCube->VBuffer->Color3(1) = ColorRGB::GREEN;
-		// 		mspCube->VBuffer->Color3(2) = ColorRGB::BLUE;
-		// 		Renderer::UnbindAll(mspCube->VBuffer);
-		mpRenderer->Draw(mspPyramid);
-	}
-
-
-	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -3.0F - mAngle * 2.0F));
-
-	model.FromAxisAngle(Vector3F(1, 1, 1), mAngle * 2.0F);
+	Matrix34F model(Vector3F(1, 1, 0), mAngle);
 	mspCube->World.SetRotate(model);
-	// 	mspCube->World.SetTranslate(Vector3F(1.5F, 0.0F, -7.0F));
-	//	mspCube->World.SetScale(Vector3F(scaleFactor + 1.0F, 1.0F, 1.0F));
-	//	mspCube->World.SetUniformScale(2.0F);
+	mspCube->World.SetTranslate(Vector3F::ZERO);
 	mpRenderer->Draw(mspCube);
 
 	mpRenderer->PostDraw();
