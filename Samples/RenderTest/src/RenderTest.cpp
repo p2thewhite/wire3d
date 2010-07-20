@@ -22,14 +22,13 @@ Bool RenderTest::OnInitialize()
 		return false;
 	}
 
-	// The smart pointer automatically deletes the object when it goes out
-	// of scope and no other references to the object exist.
-	mspCube = CreateCube();
+	mspRoot = WIRE_NEW Node;
+	mspRoot->AttachChild(CreateCube());
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	Vector3F cameraLocation(0.0F, 0.0F, -5.0F);
-	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
+	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
@@ -49,18 +48,50 @@ Bool RenderTest::OnInitialize()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreateCube()
+void RenderTest::OnIdle()
 {
-	Float extent = 1.0F;
+	Double time = System::GetTime();
+	Double elapsedTime = time - mLastTime;
+	mLastTime = time;
+
+	// 	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
+	mAngle += static_cast<Float>(elapsedTime);
+	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
+
+	Matrix34F model(Vector3F(1, 1, 0), mAngle);
+	mspRoot->Local.SetRotate(model);
+	mspRoot->Local.SetTranslate(Vector3F::ZERO);
+
+	mCuller.SetFrustum(mspCamera->GetFrustum());
+	mspRoot->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspRoot);
+
+	mpRenderer->ClearBuffers();
+	mpRenderer->PreDraw(mspCamera);
+	mpRenderer->DrawScene(mCuller.GetVisibleSet());
+	mpRenderer->PostDraw();
+	mpRenderer->DisplayBackBuffer();
+}
+
+//----------------------------------------------------------------------------
+Geometry* RenderTest::CreateCube(Bool useVertexColors)
+{
+	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
-		Vector3F(-extent, -extent, -extent),
-		Vector3F(+extent, -extent, -extent),
-		Vector3F(+extent, +extent, -extent),
-		Vector3F(-extent, +extent, -extent),
-		Vector3F(-extent, -extent, +extent),
-		Vector3F(+extent, -extent, +extent),
-		Vector3F(+extent, +extent, +extent),
-		Vector3F(-extent, +extent, +extent)
+		Vector3F(-extent, -extent, -extent),	// 0
+		Vector3F(-extent,  extent, -extent),	// 1
+		Vector3F( extent,  extent, -extent),	// 2
+		Vector3F( extent, -extent, -extent),	// 3
+		Vector3F( extent, -extent, extent),		// 4 (-3)
+		Vector3F( extent,  extent, extent),		// 5 (-2)
+		Vector3F(-extent,  extent, extent),		// 6 (-1)
+		Vector3F(-extent, -extent, extent),		// 7 (-0)
+		Vector3F( extent,  extent, extent),		// 8 (5)
+		Vector3F(-extent,  extent, extent),		// 9 (6)
+		Vector3F( extent,  extent, extent),		// 10(5)
+		Vector3F( extent, -extent, extent),		// 11(4)
+		Vector3F(-extent, -extent, extent),		// 12(7)
+		Vector3F( extent, -extent, extent),		// 13(4)
 	};
 
 	const ColorRGB colors[] = {
@@ -72,24 +103,52 @@ Geometry* RenderTest::CreateCube()
 		ColorRGB(0.0F, 1.0F, 1.0F),
 		ColorRGB(1.0F, 1.0F, 1.0F),
 		ColorRGB(0.0F, 0.0F, 0.0F),
+
+		ColorRGB(1.0F, 0.0F, 0.0F),
+		ColorRGB(0.0F, 1.0F, 0.0F),
+		ColorRGB(0.0F, 0.0F, 1.0F),
+		ColorRGB(1.0F, 1.0F, 0.0F),
+		ColorRGB(1.0F, 0.0F, 1.0F),
+		ColorRGB(0.0F, 1.0F, 1.0F),
 	};
 
+	const Float extentUv = 1.0F;
 	const Vector2F uvs[] = {
-		Vector2F(0, 0),
-		Vector2F(extent, 0),
-		Vector2F(extent, extent),
-		Vector2F(0, extent),
-		Vector2F(0, 0),
-		Vector2F(extent, 0),
-		Vector2F(extent, extent),
-		Vector2F(0, extent)
+		Vector2F(0.50F * extentUv, 0.50F * extentUv),
+		Vector2F(0.50F * extentUv, 0.25F * extentUv),
+		Vector2F(0.25F * extentUv, 0.25F * extentUv),
+		Vector2F(0.25F * extentUv, 0.50F * extentUv),
+		Vector2F(0.00F * extentUv, 0.50F * extentUv),
+		Vector2F(0.00F * extentUv, 0.25F * extentUv),
+		Vector2F(0.75F * extentUv, 0.25F * extentUv),
+		Vector2F(0.75F * extentUv, 0.50F * extentUv),
+		Vector2F(0.25F * extentUv, 0.00F * extentUv),
+		Vector2F(0.50F * extentUv, 0.00F * extentUv),
+		Vector2F(1.00F * extentUv, 0.25F * extentUv),
+		Vector2F(1.00F * extentUv, 0.50F * extentUv),
+		Vector2F(0.50F * extentUv, 0.75F * extentUv),
+		Vector2F(0.25F * extentUv, 0.75F * extentUv)
+	};
+
+	const UInt indices[] = {
+		0, 1, 2, 3,
+		11, 10, 6, 7,
+		7, 6, 1, 0,
+		3, 2, 5, 4,
+		1, 9, 8, 2,
+		12, 0, 3, 13
 	};
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetColorChannels(3);		// channels: R, G, B
 	attributes.SetTCoordChannels(2);	// channels: U, V
+	if (useVertexColors)
+	{
+		attributes.SetColorChannels(3);		// channels: R, G, B
+	}
+
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
@@ -97,30 +156,23 @@ Geometry* RenderTest::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
-		pCubeVerts->Color3(i) = colors[i];
 		pCubeVerts->TCoord2(i) = uvs[i];
+		if (useVertexColors)
+		{
+			pCubeVerts->Color3(i) = colors[i];
+		}
 	}
 
-	UInt indices[] = {
-		0, 2, 1,
-		0, 3, 2,
-		0, 1, 5,
-		0, 5, 4,
-		0, 4, 7,
-		0, 7, 3,
-		6, 4, 5,
-		6, 7, 4,
-		6, 5, 1,
-		6, 1, 2,
-		6, 2, 3,
-		6, 3, 7,
-	};
-
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for (UInt i = 0; i < indexQuantity; i++)
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
+	for	(int i = 0; i < 6; i++)
 	{
-		(*pIndices)[i] = indices[i];
+		(*pIndices)[0+i*6] = indices[0+i*4];
+		(*pIndices)[1+i*6] = indices[1+i*4];
+		(*pIndices)[2+i*6] = indices[3+i*4];
+
+		(*pIndices)[3+i*6] = indices[3+i*4];
+		(*pIndices)[4+i*6] = indices[1+i*4];
+		(*pIndices)[5+i*6] = indices[2+i*4];
 	}
 
 	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
@@ -138,6 +190,22 @@ Texture2D* RenderTest::CreateTexture()
 	const UInt width = 256;
 	const UInt height = 64;
 
+	UChar* pMap = WIRE_NEW UChar[width * height];
+	UInt seed = 7;
+	for (UInt x = 0; x < width; x++)
+	{
+		pMap[x] = seed;
+	}
+
+	for (UInt i = width; i < (width * height)-1; i++)
+	{
+		seed *= 0x06255;
+		seed = (seed >> 7) | (seed << (32-7));
+		UInt val = (7 & seed) - 1;
+		UChar texel = (pMap[i-width] + pMap[i-width+1]) >> 1;
+		pMap[i] = val + texel;
+	}
+
 	Image2D::FormatMode format = Image2D::FM_RGB565;
 	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
 
@@ -149,13 +217,11 @@ Texture2D* RenderTest::CreateTexture()
 		UInt temp;
 		for (UInt x = 0; x < width; x++)
 		{
-			Float val = 0.5F;
-			UChar t = static_cast<UChar>(val*127 + 127);
-
+			UChar t = pMap[y*width+x];
 			UChar* pTemp = reinterpret_cast<UChar*>(&temp);
 			*pTemp++ = t;
 			*pTemp++ = t;
-			*pTemp++ = ~t;
+			*pTemp++ = t;
 			*pTemp = 0xFF;
 
 			// 			Image2D::RGBA8888ToRGBA4444(pTemp - 3, pDst);
@@ -167,29 +233,4 @@ Texture2D* RenderTest::CreateTexture()
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	return pTexture;
-}
-
-//----------------------------------------------------------------------------
-void RenderTest::OnIdle()
-{
-	Double time = System::GetTime();
-	Double elapsedTime = time - mLastTime;
-	mLastTime = time;
-
-	mCuller.SetFrustum(mspCamera->GetFrustum());
-
-	// 	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
-	mAngle += static_cast<Float>(elapsedTime);
-	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
-
-	mpRenderer->ClearBuffers();
-	mpRenderer->PreDraw(mspCamera);
-
-	Matrix34F model(Vector3F(1, 1, 0), mAngle);
-	mspCube->World.SetRotate(model);
-	mspCube->World.SetTranslate(Vector3F::ZERO);
-	mpRenderer->Draw(mspCube);
-
-	mpRenderer->PostDraw();
-	mpRenderer->DisplayBackBuffer();
 }

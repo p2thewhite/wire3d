@@ -242,9 +242,7 @@ void Renderer::OnFrameChange()
 	Vector3F eye = mpCamera->GetLocation();
 	Vector3F rVector = mpCamera->GetRVector();
 	Vector3F uVector = mpCamera->GetUVector();
-	Vector3F dVector = mpCamera->GetDVector();
-	eye.X() = -eye.X();
-	eye.Y() = -eye.Y();
+	Vector3F dVector = -mpCamera->GetDVector();
 
 	Matrix34F& rViewMatrix = mpData->ViewMatrix;
 	rViewMatrix[0][0] = rVector[0];
@@ -255,7 +253,7 @@ void Renderer::OnFrameChange()
 	rViewMatrix[2][1] = dVector[1];
 	rViewMatrix[0][2] = rVector[2];
 	rViewMatrix[1][2] = uVector[2];
-	rViewMatrix[2][2] = -dVector[2];
+	rViewMatrix[2][2] = dVector[2];
 	rViewMatrix[0][3] = -rVector.Dot(eye);
 	rViewMatrix[1][3] = -uVector.Dot(eye);
 	rViewMatrix[2][3] = -dVector.Dot(eye);

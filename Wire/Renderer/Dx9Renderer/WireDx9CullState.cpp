@@ -6,6 +6,7 @@ using namespace Wire;
 
 DWORD PdrRendererData::sCullType[CullState::CM_QUANTITY] = 
 {
+	D3DCULL_NONE,
 	D3DCULL_CCW,  // CullState::FT_CCW (front CCW -> cull backface CCW in DX)
 	D3DCULL_CW,   // CullState::FT_CW  (front CW -> cull backface CW in DX)
 };

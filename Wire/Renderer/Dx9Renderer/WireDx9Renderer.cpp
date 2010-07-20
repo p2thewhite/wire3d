@@ -255,9 +255,9 @@ void Renderer::OnFrameChange()
 	rViewMatrix[2][1] = uVector[2];
 	rViewMatrix[2][2] = dVector[2];
 	rViewMatrix[2][3] = 0.0F;
-	rViewMatrix[3][0] = rVector.Dot(eye);
-	rViewMatrix[3][1] = uVector.Dot(eye);
-	rViewMatrix[3][2] = dVector.Dot(eye);
+	rViewMatrix[3][0] = -rVector.Dot(eye);
+	rViewMatrix[3][1] = -uVector.Dot(eye);
+	rViewMatrix[3][2] = -dVector.Dot(eye);
 	rViewMatrix[3][3] = 1.0F;
 }
 
