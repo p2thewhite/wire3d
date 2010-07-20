@@ -6,6 +6,7 @@ using namespace Wire;
 
 UChar PdrRendererData::sCullType[CullState::CM_QUANTITY] = 
 {
+	GX_CULL_NONE,
 	GX_CULL_BACK,
 	GX_CULL_FRONT
 };

@@ -21,11 +21,11 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube();
+	Geometry* CreateCube(Bool useVertexColors = true);
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
-	GeometryPtr mspCube;
+	NodePtr mspRoot;
 	Culler mCuller;
 
 	Float mAngle;
