@@ -8,7 +8,7 @@
     * DirectX SDK's `Lib` directory (e.g. `C:\Program Files\Microsoft DirectX SDK\Lib`) to `Library files`
   * Open `Wire3D_WIN32.sln` with Visual Studio, compile and run any of the samples in the solution
 
-*Note*: The solution file is for Visual Studio 2005 Professional. However I tested using it with Visual Studio 2008 Express, too. On first launch, just let Visual Studio convert the solution and project files for you, after that it compiles without any warnings. I have not tried Visual Studio 2010 yet, but it should work likewise. If it does not work, email me.
+*Note*: The solution file is for Visual Studio 2005 Professional. However I tested using it with Visual Studio 2008 Express, too. On first launch, just let Visual Studio convert the solution and project files for you, after that it compiles without any warnings.
 
 
 === Wii ===
