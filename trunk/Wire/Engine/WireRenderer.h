@@ -25,6 +25,7 @@ class PdrRendererData;
 class PdrRendererInput;
 class PdrTexture2D;
 class Texture2D;
+class TextureEffect;
 class VertexBuffer;
 class VisibleSet;
 
@@ -156,6 +157,7 @@ public:
 	void SetFogState(FogState* pState);
 	void SetWireframeState(WireframeState* pState);
 	void SetZBufferState(ZBufferState* pState);
+	void ApplyEffect(TextureEffect* pEffect);
 };
 
 #include "WireRenderer.inl"

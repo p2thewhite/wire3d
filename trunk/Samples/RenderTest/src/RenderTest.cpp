@@ -24,8 +24,8 @@ Bool RenderTest::OnInitialize()
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(CreateCube());
- 	mspRoot->AttachChild(CreateCube(false, 1));
- 	mspRoot->AttachChild(CreateCube(true, 1));
+	mspRoot->AttachChild(CreateCube(true, 1));
+	mspRoot->AttachChild(CreateCube(false, 1, TextureEffect::BM_REPLACE));
 
 	UInt cubeCount = mspRoot->GetQuantity();
 	Float stride = 3.0F;
@@ -85,7 +85,8 @@ void RenderTest::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount)
+Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount,
+	TextureEffect::BlendMode blendMode)
 {
 	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
@@ -207,6 +208,7 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount)
 		{
 			Texture2D* pTexture = CreateTexture();
 			pTextureEffect->Textures.Append(pTexture);
+			pTextureEffect->BlendOps.Append(blendMode);
 		}
 	}
 

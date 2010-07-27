@@ -66,6 +66,7 @@ public:
 	static UChar sZBufferCompare[];
 	static UChar sTexMinFilter[];
 	static UChar sTexWrapMode[];
+	static UChar sTexBlend[];
 	static UChar sImage2DFormat[];
 
 private:

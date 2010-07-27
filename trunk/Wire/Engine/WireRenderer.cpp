@@ -487,6 +487,7 @@ void Renderer::ApplyEffect(Effect* pEffect)
 			Enable(pTextureEffect->Textures[i], i);
 		}
 
+		ApplyEffect(pTextureEffect);
 		DrawElements();
 
 		for (UInt i = 0; i < pTextureEffect->Textures.GetQuantity(); i++)
