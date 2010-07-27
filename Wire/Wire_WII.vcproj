@@ -726,6 +726,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXTextureEffect.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.cpp"
 						>
 					</File>

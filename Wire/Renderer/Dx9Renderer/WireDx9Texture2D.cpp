@@ -269,16 +269,6 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 
 	hr = rDevice->SetTexture(unit, mpTexture);
 	WIRE_ASSERT(SUCCEEDED(hr));
-
-	// TODO: introduce ApplyMode
-	hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG1, D3DTA_TEXTURE );
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP,   D3DTOP_DISABLE );
-	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------

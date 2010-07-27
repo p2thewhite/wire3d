@@ -130,6 +130,7 @@ Geometry* Sample1::CreateCube()
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pCube->AttachEffect(pTextureEffect);
 
 	return pCube;

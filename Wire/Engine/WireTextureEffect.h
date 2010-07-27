@@ -16,7 +16,8 @@ class TextureEffect : public Effect
 	enum BlendMode
 	{
 		BM_REPLACE,
-		BM_MODULATE
+		BM_MODULATE,
+		BM_QUANTITY
 	};
 
 public:
@@ -24,7 +25,7 @@ public:
 	virtual ~TextureEffect();
 
 	TArray<Texture2DPtr> Textures;
-	TArray<BlendMode> BlendOp;
+	TArray<BlendMode> BlendOps;
 };
 
 typedef Pointer<TextureEffect> TextureEffectPtr;

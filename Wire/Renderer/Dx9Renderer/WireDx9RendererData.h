@@ -35,6 +35,7 @@ public:
  	static DWORD sTexMinFilter[];
  	static DWORD sTexMipFilter[];
  	static DWORD sTexWrapMode[];
+	static DWORD sTexBlend[];
  	static D3DFORMAT sImage2DFormat[];
 
 	Bool Supports32BitIndices;
