@@ -27,7 +27,6 @@ void Renderer::Initialize(UInt width, UInt height)
 {
 	mWidth = width;
 	mHeight = height;
-	mCurrentSampler = 0;
 	mMaxAnisotropy = 1.0F;
 	smRenderer = this;
 	mpCamera = NULL;
@@ -87,7 +86,7 @@ void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 	}
 	else
 	{
-		PdrIndexBuffer* pPdrTexture =	Bind(pIndexBuffer);
+		PdrIndexBuffer* pPdrTexture = Bind(pIndexBuffer);
 		pPdrTexture->Enable(this, pIndexBuffer);
 	}
 }
@@ -232,29 +231,29 @@ void Renderer::UnbindAll(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(Texture2D* pTexture)
+void Renderer::Enable(Texture2D* pTexture, UInt unit)
 {
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
 	{
-		(*pValue)->Enable(this, pTexture, mCurrentSampler);
+		(*pValue)->Enable(this, pTexture, unit);
 	}
 	else
 	{
 		PdrTexture2D* pPdrTexture =	Bind(pTexture);
-		pPdrTexture->Enable(this, pTexture, mCurrentSampler);
+		pPdrTexture->Enable(this, pTexture, unit);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(Texture2D* pTexture)
+void Renderer::Disable(Texture2D* pTexture, UInt unit)
 {
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
 	{
-		(*pValue)->Disable(this, mCurrentSampler);
+		(*pValue)->Disable(this, unit);
 	}
 	else
 	{
@@ -331,37 +330,16 @@ void Renderer::Draw(Geometry* pGeometry)
 	Enable(mpGeometry->IBuffer);
 	Enable(mpGeometry->VBuffer);
 
-	// Keep track of the current sampler to be used in enabling the
-	// textures.
-	mCurrentSampler = 0;
+	UInt effectCount = mpGeometry->GetEffectQuantity();
 
-	Texture2D* pTexture = NULL;
-	if (mpGeometry->GetEffectQuantity() > 0)
+	if (effectCount == 0)
 	{
-		TextureEffect* pTextureEffect = DynamicCast<TextureEffect>(
-			mpGeometry->GetEffect(0));
-
-		if (pTextureEffect)
-		{
-			if (pTextureEffect->Textures.GetQuantity() > 0)
-			{
-				pTexture = pTextureEffect->Textures[0];
-				WIRE_ASSERT(pTexture);
-			}
-		}
-
-		Enable(pTexture);
-		mCurrentSampler++;
+		DrawElements();
 	}
 
-	DrawElements();
-
-	// Keep track of the current sampler to be used in disabling the
-	// textures.
-	mCurrentSampler = 0;
-	if (pTexture)
+	for (UInt i = 0; i < effectCount; i++)
 	{
-		Disable(pTexture);
+		ApplyEffect(mpGeometry->GetEffect(i));
 	}
 
 	Disable(mpGeometry->VBuffer);
@@ -495,5 +473,25 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::ZBUFFER];
 		SetZBufferState(StaticCast<ZBufferState>(pState));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::ApplyEffect(Effect* pEffect)
+{
+	TextureEffect* pTextureEffect = DynamicCast<TextureEffect>(pEffect);
+	if (pTextureEffect)
+	{
+		for (UInt i = 0; i < pTextureEffect->Textures.GetQuantity(); i++)
+		{
+			Enable(pTextureEffect->Textures[i], i);
+		}
+
+		DrawElements();
+
+		for (UInt i = 0; i < pTextureEffect->Textures.GetQuantity(); i++)
+		{
+			Disable(pTextureEffect->Textures[i], i);
+		}
 	}
 }

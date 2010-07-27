@@ -16,6 +16,7 @@ namespace Wire
 
 class Bindable;
 class Camera;
+class Effect;
 class Geometry;
 class IndexBuffer;
 class PdrIndexBuffer;
@@ -82,8 +83,8 @@ public:
 	PdrTexture2D* Bind(const Texture2D* pTexture);
 	void Unbind(const Texture2D* pTexture);
 	static void UnbindAll(const Texture2D* pTexture);
-	void Enable(Texture2D* pTexture);
-	void Disable(Texture2D* pTexture);
+	void Enable(Texture2D* pTexture, UInt unit = 0);
+	void Disable(Texture2D* pTexture, UInt unit = 0);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
 
 private:
@@ -96,6 +97,9 @@ private:
 	void DestroyAllIndexBuffers();
  	void DestroyAllTexture2Ds();
 	void DestroyAllVertexBuffers();
+
+	// Render geometry using this effect
+	void ApplyEffect(Effect* pEffect);
 
 	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
@@ -115,8 +119,6 @@ private:
 
 	// Maximum anisotropy value supported for texture filtering by the device
 	Float mMaxAnisotropy;
-
-	UInt mCurrentSampler;
 
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;

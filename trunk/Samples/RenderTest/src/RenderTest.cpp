@@ -24,10 +24,21 @@ Bool RenderTest::OnInitialize()
 
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(CreateCube());
+ 	mspRoot->AttachChild(CreateCube(false, 1));
+ 	mspRoot->AttachChild(CreateCube(true, 1));
 
-	// setup our camera at the origin
-	// looking down the -z axis with y up
-	Vector3F cameraLocation(0.0F, 0.0F, -5.0F);
+	UInt cubeCount = mspRoot->GetQuantity();
+	Float stride = 3.0F;
+	Float offset = static_cast<Float>(cubeCount) * -0.5F * stride + stride * 0.5F;
+
+	for (UInt i = 0; i < cubeCount; i++)
+	{
+		Spatial* pCube = mspRoot->GetChild(i);
+		pCube->Local.SetTranslate(Vector3F(offset, 0, 0));
+		offset += stride;
+	}
+
+	Vector3F cameraLocation(0.0F, 0.0F, -10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -58,7 +69,7 @@ void RenderTest::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix34F model(Vector3F(1, 1, 0), mAngle);
+	Matrix34F model(Vector3F(0, 1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
 	mspRoot->Local.SetTranslate(Vector3F::ZERO);
 
@@ -74,7 +85,7 @@ void RenderTest::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreateCube(Bool useVertexColors)
+Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount)
 {
 	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
@@ -141,7 +152,12 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors)
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetTCoordChannels(2);	// channels: U, V
+
+	for (UInt unit = 0; unit < textureCount; unit++)
+	{
+		attributes.SetTCoordChannels(2, unit);	// channels: U, V
+	}
+
 	if (useVertexColors)
 	{
 		attributes.SetColorChannels(3);		// channels: R, G, B
@@ -156,7 +172,12 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors)
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
-		pCubeVerts->TCoord2(i) = uvs[i];
+
+		for (UInt unit = 0; unit < textureCount; unit++)
+		{
+			pCubeVerts->TCoord2(i, unit) = uvs[i];
+		}
+
 		if (useVertexColors)
 		{
 			pCubeVerts->Color3(i) = colors[i];
@@ -176,10 +197,18 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors)
 	}
 
 	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	Texture2D* pTexture = CreateTexture();
-	pTextureEffect->Textures.Append(pTexture);
-	pCube->AttachEffect(pTextureEffect);
+
+	if (textureCount > 0)
+	{
+		TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+		pCube->AttachEffect(pTextureEffect);
+
+		for (UInt i = 0; i < textureCount; i++)
+		{
+			Texture2D* pTexture = CreateTexture();
+			pTextureEffect->Textures.Append(pTexture);
+		}
+	}
 
 	return pCube;
 }
