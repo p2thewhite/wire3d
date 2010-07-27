@@ -21,7 +21,7 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube(Bool useVertexColors = true);
+	Geometry* CreateCube(Bool useVertexColors = true, UInt textureCount = 0);
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;

@@ -13,11 +13,18 @@ class TextureEffect : public Effect
 {
 	WIRE_DECLARE_RTTI;
 
+	enum BlendMode
+	{
+		BM_REPLACE,
+		BM_MODULATE
+	};
+
 public:
 	TextureEffect();
 	virtual ~TextureEffect();
 
 	TArray<Texture2DPtr> Textures;
+	TArray<BlendMode> BlendOp;
 };
 
 typedef Pointer<TextureEffect> TextureEffectPtr;
