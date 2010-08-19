@@ -22,10 +22,20 @@ Bool RenderTest::OnInitialize()
 		return false;
 	}
 
+	TArray<Texture2D*> textures;
 	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(CreateCube());
-	mspRoot->AttachChild(CreateCube(true, 1));
-	mspRoot->AttachChild(CreateCube(false, 1, TextureEffect::BM_REPLACE));
+	mspRoot->AttachChild(CreateCube(textures));
+	textures.Append(CreateTexture());
+	mspRoot->AttachChild(CreateCube(textures));
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+// 	textures.Append(CreateTexture2());
+	mspRoot->AttachChild(CreateCube(textures, false));
 
 	UInt cubeCount = mspRoot->GetQuantity();
 	Float stride = 3.0F;
@@ -85,8 +95,8 @@ void RenderTest::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount,
-	TextureEffect::BlendMode blendMode)
+Geometry* RenderTest::CreateCube(TArray<Texture2D*>& rTextures,
+	Bool useVertexColors)
 {
 	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
@@ -154,6 +164,7 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount,
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 
+	UInt textureCount = rTextures.GetQuantity();
 	for (UInt unit = 0; unit < textureCount; unit++)
 	{
 		attributes.SetTCoordChannels(2, unit);	// channels: U, V
@@ -206,8 +217,13 @@ Geometry* RenderTest::CreateCube(Bool useVertexColors, UInt textureCount,
 
 		for (UInt i = 0; i < textureCount; i++)
 		{
-			Texture2D* pTexture = CreateTexture();
-			pTextureEffect->Textures.Append(pTexture);
+			pTextureEffect->Textures.Append(rTextures[i]);
+			TextureEffect::BlendMode blendMode = TextureEffect::BM_MODULATE;
+			if (!useVertexColors && (i == 0))
+			{
+				blendMode = TextureEffect::BM_REPLACE;
+			}
+
 			pTextureEffect->BlendOps.Append(blendMode);
 		}
 	}
@@ -241,7 +257,7 @@ Texture2D* RenderTest::CreateTexture()
 	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
 
 	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
-	UChar* pDst = reinterpret_cast<UChar*>(pData);
+	UChar* pDst = pData;
 
 	for (UInt y = 0; y < height; y++)
 	{
@@ -263,5 +279,45 @@ Texture2D* RenderTest::CreateTexture()
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	return pTexture;
+}
+
+//----------------------------------------------------------------------------
+Texture2D* RenderTest::CreateTexture2()
+{
+	const UInt width = 64;
+	const UInt height = 64;
+
+	Image2D::FormatMode format = Image2D::FM_RGB888;
+	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
+
+	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
+	UChar* pDst = pData;
+
+	for (UInt y = 0; y < height; y++)
+	{
+		bool flip = true;
+		if ((y & 0x4) > 0)
+		{
+			flip = false;
+		}
+
+		for (UInt x = 0; x < width; x++)
+		{
+			UChar t = flip ? 0x80 : 0xFF;
+			if ((x & 0x4) > 0)
+			{
+				t = flip ? 0xFF : 0x80;
+			}
+
+			*pDst++ = t;
+			*pDst++ = t;
+			*pDst++ = t;
+		}
+	}
+
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetFilterType(Texture2D::FT_NEAREST);
 	return pTexture;
 }

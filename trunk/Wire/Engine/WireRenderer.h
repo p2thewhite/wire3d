@@ -54,6 +54,7 @@ public:
 	UInt GetWidth() const;
 	UInt GetHeight() const;
 	Float GetMaxAnisotropy() const;
+	UInt GetMaxTextureStages() const;
 
 	// Render state handling
 	AlphaState* GetAlphaState();
@@ -120,6 +121,7 @@ private:
 
 	// Maximum anisotropy value supported for texture filtering by the device
 	Float mMaxAnisotropy;
+	UInt mMaxTextureStages;
 
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;

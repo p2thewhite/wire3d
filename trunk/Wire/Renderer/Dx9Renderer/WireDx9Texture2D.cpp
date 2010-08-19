@@ -189,6 +189,8 @@ PdrTexture2D::~PdrTexture2D()
 void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	UInt unit)
 {
+	WIRE_ASSERT(unit < pRenderer->GetMaxTextureStages());
+
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
 
@@ -198,6 +200,12 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
 			static_cast<DWORD>(anisotropy));
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+	else if (1.0F < anisotropy)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
+			static_cast<DWORD>(pRenderer->GetMaxAnisotropy()));
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else

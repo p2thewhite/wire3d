@@ -21,9 +21,10 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube(Bool useVertexColors = true, UInt textureCount = 0,
-		TextureEffect::BlendMode blendMode = TextureEffect::BM_MODULATE);
+	Geometry* CreateCube(TArray<Texture2D*>& rTextures,
+		Bool useVertexColors = true);
 	Texture2D* CreateTexture();
+	Texture2D* CreateTexture2();
 
 	CameraPtr mspCamera;
 	NodePtr mspRoot;

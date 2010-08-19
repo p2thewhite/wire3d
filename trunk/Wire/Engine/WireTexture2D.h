@@ -38,7 +38,7 @@ public:
 	const Image2D* GetImage() const;
 
 	// Access to filter modes. The default is LINEAR.
-	virtual void SetFilterType(FilterType filterType);
+	void SetFilterType(FilterType filterType);
 	FilterType GetFilterType() const;
 
 	// Access to wrap modes. The defaults are WT_CLAMP.

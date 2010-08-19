@@ -57,6 +57,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	mpData->Supports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
 		true : false;
 
+	mMaxTextureStages = deviceCaps.MaxTextureBlendStages;
+
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders
 	// in HW then switch to SWVP.
 	DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE;

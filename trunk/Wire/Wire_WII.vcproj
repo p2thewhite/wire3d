@@ -367,6 +367,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireLight.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.h"
 					>
 				</File>
@@ -596,6 +600,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireLight.cpp"
 					>
 				</File>
 				<File

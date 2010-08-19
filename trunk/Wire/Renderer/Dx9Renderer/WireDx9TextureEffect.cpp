@@ -30,8 +30,8 @@ void Renderer::ApplyEffect(TextureEffect* pEffect)
 			D3DTA_TEXTURE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG2,
-			D3DTA_DIFFUSE);
+		DWORD blendOp = (unit > 0) ? D3DTA_CURRENT : D3DTA_DIFFUSE;
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG2, blendOp);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP,

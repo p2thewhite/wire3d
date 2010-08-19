@@ -242,7 +242,7 @@ void Sample2::OnIdle()
 
 	if (time > 2)
 	{
-		WIRE_ASSERT(false);
+//		WIRE_ASSERT(false);
 	}
 	
 	System::Print("%f, %f\n", static_cast<Float>(time),

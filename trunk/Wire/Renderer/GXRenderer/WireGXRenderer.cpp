@@ -20,6 +20,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 {
 	Initialize(width, height);
 	mMaxAnisotropy = 4.0F;
+	mMaxTextureStages = 8;
 
 	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);

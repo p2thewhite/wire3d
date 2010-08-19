@@ -4,6 +4,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
+#include "WireLight.h"
 #include "WireSpatial.h"
 #include "WireVertexBuffer.h"
 
@@ -29,8 +30,10 @@ public:
 	IndexBufferPtr IBuffer;
 	BoundingVolumePtr ModelBound;
 
+// TODO: remove Type/TriMesh class
 //	GeometryType Type;
 	GlobalStatePtr States[GlobalState::MAX_STATE_TYPE];
+	TArray<LightPtr> Lights;
 
 protected:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
@@ -40,7 +43,8 @@ protected:
 	virtual void UpdateWorldBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<GlobalState*>* pStack);
+	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+		TArray<Light*>* pLStack);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
