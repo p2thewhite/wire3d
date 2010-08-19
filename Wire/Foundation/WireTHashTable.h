@@ -30,7 +30,7 @@ class THashTable
 public:
     // construction and destruction
     THashTable(UInt tableSize = 256);
-    ~THashTable ();
+    ~THashTable();
 
     // element access
     UInt GetQuantity() const;

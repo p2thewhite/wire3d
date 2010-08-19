@@ -28,7 +28,8 @@ protected:
 	virtual void UpdateWorldBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<GlobalState*>* pStack);
+	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+		TArray<Light*>* pLStack);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);

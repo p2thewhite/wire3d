@@ -5,6 +5,7 @@
 #include "WireBoundingVolume.h"
 #include "WireEffect.h"
 #include "WireGlobalState.h"
+#include "WireLight.h"
 #include "WireSceneObject.h"
 #include "WireTransformation.h"
 
@@ -69,7 +70,8 @@ public:
 	void UpdateBS();
 
 	// Update of render state
-	virtual void UpdateRS(TArray<GlobalState*>* pStack = NULL);
+	virtual void UpdateRS(TArray<GlobalState*>* pGStack = NULL,
+		TArray<Light*>* pLStack = NULL);
 
 	// Parent access (Node calls this during attach/detach of children)
 	void SetParent(Spatial* pkParent);
@@ -87,6 +89,13 @@ public:
 	void DetachGlobalState(GlobalState::StateType type);
 	void DetachAllGlobalStates();
 
+    // light state
+    UInt GetLightQuantity() const;
+    Light* GetLight(UInt i) const;
+    void AttachLight(Light* pLight);
+    void DetachLight(Light* pLight);
+    void DetachAllLights();
+
 	// effect state
 	UInt GetEffectQuantity() const;
 	Effect* GetEffect(UInt i) const;
@@ -103,10 +112,12 @@ protected:
 	void PropagateBoundToRoot();
 
 	// render state updates
-	void PropagateStateFromRoot(TArray<GlobalState*>* pStack);
-	void PushState(TArray<GlobalState*>* pStack);
-	void PopState(TArray<GlobalState*>* pStack);
-	virtual void UpdateState(TArray<GlobalState*>* pStack) = 0;
+	void PropagateStateFromRoot(TArray<GlobalState*>* pGStack,
+		TArray<Light*>* pLStack);
+	void PushState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack);
+	void PopState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack);
+	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+		TArray<Light*>* pLStack) = 0;
 
 protected:
 	// support for hierarchical scene graph
@@ -114,6 +125,9 @@ protected:
 
 	// global render state
 	TArray<GlobalStatePtr> mGlobalStates;
+
+	// light state
+	TArray<LightPtr> mLights;
 
 	// Effect state. If the effect is attached to a Geometry object, it
 	// applies to that object alone. If the effect is attached to a Node

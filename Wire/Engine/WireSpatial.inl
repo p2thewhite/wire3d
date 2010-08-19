@@ -19,7 +19,7 @@ inline UInt Spatial::GetGlobalStateQuantity() const
 //----------------------------------------------------------------------------
 inline GlobalState* Spatial::GetGlobalState(UInt i) const
 {
-	WIRE_ASSERT(0 <= i && i < mGlobalStates.GetQuantity());
+	WIRE_ASSERT(i < mGlobalStates.GetQuantity());
 	return mGlobalStates[i];
 }
 
@@ -27,6 +27,31 @@ inline GlobalState* Spatial::GetGlobalState(UInt i) const
 inline void Spatial::DetachAllGlobalStates()
 {
 	mGlobalStates.RemoveAll();
+}
+
+//----------------------------------------------------------------------------
+inline UInt Spatial::GetLightQuantity() const
+{
+	return mLights.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline Light* Spatial::GetLight(UInt i) const
+{
+	WIRE_ASSERT(i < mLights.GetQuantity());
+	return mLights[i];
+}
+
+//----------------------------------------------------------------------------
+inline void Spatial::DetachLight(Light* pLight)
+{
+	mLights.Remove(pLight);
+}
+
+//----------------------------------------------------------------------------
+inline void Spatial::DetachAllLights()
+{
+	mLights.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
@@ -38,8 +63,14 @@ inline UInt Spatial::GetEffectQuantity() const
 //----------------------------------------------------------------------------
 inline Effect* Spatial::GetEffect(UInt i) const
 {
-	WIRE_ASSERT(0 <= i && i < mEffects.GetQuantity());
+	WIRE_ASSERT(i < mEffects.GetQuantity());
 	return StaticCast<Effect>(mEffects[i]);
+}
+
+//----------------------------------------------------------------------------
+inline void Spatial::DetachEffect(Effect* pEffect)
+{
+	mEffects.Remove(pEffect);
 }
 
 //----------------------------------------------------------------------------

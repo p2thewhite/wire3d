@@ -17,6 +17,12 @@ inline Float Renderer::GetMaxAnisotropy() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxTextureStages() const
+{
+	return mMaxTextureStages;
+}
+
+//----------------------------------------------------------------------------
 inline PdrRendererData* Renderer::GetRendererData()
 {
 	return mpData;

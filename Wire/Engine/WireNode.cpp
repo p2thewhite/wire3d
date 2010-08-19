@@ -221,14 +221,14 @@ void Node::UpdateWorldData(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateState(TArray<GlobalState*>* pStack)
+void Node::UpdateState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		Spatial* pChild = mChildren[i];
 		if (pChild)
 		{
-			pChild->UpdateRS(pStack);
+			pChild->UpdateRS(pGStack, pLStack);
 		}
 	}
 }

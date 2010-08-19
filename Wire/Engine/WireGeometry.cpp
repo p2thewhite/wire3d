@@ -35,13 +35,22 @@ void Geometry::UpdateWorldBound()
 }
 
 //----------------------------------------------------------------------------
-void Geometry::UpdateState(TArray<GlobalState*>* pStack)
+void Geometry::UpdateState(TArray<GlobalState*>* pGStack,
+	TArray<Light*>* pLStack)
 {
 	// update global state
 	for (UInt i = 0; i < GlobalState::MAX_STATE_TYPE; i++)
 	{
-		TArray<GlobalState*>& rState = pStack[i];
+		TArray<GlobalState*>& rState = pGStack[i];
   		States[i] = rState[rState.GetQuantity()-1];
+	}
+
+	// update light state
+	Lights.RemoveAll();
+	Lights.SetQuantity(pLStack->GetQuantity());
+	for (UInt i = 0; i < pLStack->GetQuantity(); i++)
+	{
+		Lights[i] = (*pLStack)[i];
 	}
 }
 

@@ -109,6 +109,8 @@ PdrTexture2D::~PdrTexture2D()
 void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	UInt unit)
 {
+	WIRE_ASSERT(unit < pRenderer->GetMaxTextureStages());
+
 	GXSetTexCoordGen(GX_TEXCOORD0 + unit, GX_TG_MTX2x4, GX_TG_TEX0 + unit,
 		GX_IDENTITY);
 	GXSetNumTexGens(1);

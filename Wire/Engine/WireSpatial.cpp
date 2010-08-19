@@ -144,80 +144,22 @@ void Spatial::DetachGlobalState(GlobalState::StateType type)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateRS(TArray<GlobalState*>* pStack)
+void Spatial::AttachLight(Light* pLight)
 {
-	Bool isInitiator = (pStack == NULL);
+	WIRE_ASSERT(pLight);
 
-	if (isInitiator)
+	// Check if this light is already in the list.
+	for (UInt i = 0; i < mLights.GetQuantity(); i++)
 	{
-		// The order of preference is
-		//   (1) Default global states are used.
-		//   (2) Geometry can override them, but if global state FOOBAR
-		//       has not been pushed to the Geometry leaf node, then
-		//       the current FOOBAR remains in effect (rather than the
-		//       default FOOBAR being used).
-		//   (3) Effect can override default or Geometry render states.
-		pStack = WIRE_NEW TArray<GlobalState*>[GlobalState::MAX_STATE_TYPE];
-
-		for (UInt i = 0; i < GlobalState::MAX_STATE_TYPE; i++)
+		if (mLights[i] == pLight)
 		{
-			pStack[i].Append(NULL);
+			// This Light already exists.
+			return;
 		}
-
-		// traverse to root and push states from root to this node
-		PropagateStateFromRoot(pStack);
-	}
-	else
-	{
-		// push states at this node
-		PushState(pStack);
 	}
 
-	// propagate the new state to the subtree rooted here
-	UpdateState(pStack);
-
-	if (isInitiator)
-	{
-		WIRE_DELETE[] pStack;
-	}
-	else
-	{
-		// pop states at this node
-		PopState(pStack);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Spatial::PropagateStateFromRoot(TArray<GlobalState*>* pStack)
-{
-	// traverse to root to allow downward state propagation
-	if (mpParent)
-	{
-		mpParent->PropagateStateFromRoot(pStack);
-	}
-
-	// push states onto current render state stack
-	PushState(pStack);
-}
-
-//----------------------------------------------------------------------------
-void Spatial::PushState(TArray<GlobalState*>* pStack)
-{
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
-	{
-		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
-		pStack[type].Append(mGlobalStates[i]);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Spatial::PopState(TArray<GlobalState*>* pStack)
-{
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
-	{
-		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
-		pStack[type].RemoveLast();
-	}
+	// This light is not in the current list, so add it.
+	mLights.Append(pLight);
 }
 
 //----------------------------------------------------------------------------
@@ -240,14 +182,94 @@ void Spatial::AttachEffect(Effect* pEffect)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::DetachEffect(Effect* pEffect)
+void Spatial::UpdateRS(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
 {
-	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	Bool isInitiator = (pGStack == NULL);
+
+	if (isInitiator)
 	{
-		if (mEffects[i] == pEffect)
+		// The order of preference is
+		//   (1) Default global states are used.
+		//   (2) Geometry can override them, but if global state FOOBAR
+		//       has not been pushed to the Geometry leaf node, then
+		//       the current FOOBAR remains in effect (rather than the
+		//       default FOOBAR being used).
+		//   (3) Effect can override default or Geometry render states.
+		pGStack = WIRE_NEW TArray<GlobalState*>[GlobalState::MAX_STATE_TYPE];
+
+		for (UInt i = 0; i < GlobalState::MAX_STATE_TYPE; i++)
 		{
-			mEffects.RemoveAt(i);
-			return;
+			pGStack[i].Append(NULL);
 		}
+
+        // stack has no lights initially
+        pLStack = WIRE_NEW TArray<Light*>;
+
+		// traverse to root and push states from root to this node
+		PropagateStateFromRoot(pGStack, pLStack);
+	}
+	else
+	{
+		// push states at this node
+		PushState(pGStack, pLStack);
+	}
+
+	// propagate the new state to the subtree rooted here
+	UpdateState(pGStack, pLStack);
+
+	if (isInitiator)
+	{
+		WIRE_DELETE[] pGStack;
+		WIRE_DELETE pLStack;
+	}
+	else
+	{
+		// pop states at this node
+		PopState(pGStack, pLStack);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Spatial::PropagateStateFromRoot(TArray<GlobalState*>* pGStack,
+	TArray<Light*>* pLStack)
+{
+	// traverse to root to allow downward state propagation
+	if (mpParent)
+	{
+		mpParent->PropagateStateFromRoot(pGStack, pLStack);
+	}
+
+	// push states onto current render state stack
+	PushState(pGStack, pLStack);
+}
+
+//----------------------------------------------------------------------------
+void Spatial::PushState(TArray<GlobalState*>* pGStack, TArray<Light*>*
+	pLStack)
+{
+	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	{
+		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
+		pGStack[type].Append(mGlobalStates[i]);
+	}
+
+	for (UInt i = 0; i < mLights.GetQuantity(); i++)
+	{
+		pLStack->Append(mLights[i]);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Spatial::PopState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
+{
+	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	{
+		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
+		pGStack[type].RemoveLast();
+	}
+
+	for (UInt i = 0; i < mLights.GetQuantity(); i++)
+	{
+		pLStack->RemoveLast();
 	}
 }

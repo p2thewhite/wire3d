@@ -16,6 +16,7 @@
 #include "WireGlobalState.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
+#include "WireLight.h"
 #include "WireNode.h"
 #include "WireObject.h"
 #include "WireRenderer.h"
