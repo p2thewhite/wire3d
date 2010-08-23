@@ -113,12 +113,10 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 
 	GXSetTexCoordGen(GX_TEXCOORD0 + unit, GX_TG_MTX2x4, GX_TG_TEX0 + unit,
 		GX_IDENTITY);
-	GXSetNumTexGens(1);
 
-	// TODO:
-	GXSetTevOp(GX_TEVSTAGE0, GX_REPLACE);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0 + unit, GX_TEXMAP0 + unit,
-		GX_COLOR0A0);
+	UChar color = unit > 0 ? GX_COLOR_NULL : GX_COLOR0A0;
+	GXSetTevOrder(GX_TEVSTAGE0 + unit, GX_TEXCOORD0 + unit, GX_TEXMAP0 + unit,
+		color);
 
 	GXInitTexObjWrapMode(&mTexObj,
 		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(0)],

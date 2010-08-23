@@ -20,8 +20,8 @@ PdrIndexBuffer::~PdrIndexBuffer()
 {
 	for (UInt i = 0; i < mPdrVBuffers.GetQuantity(); i++)
 	{
-		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists = mPdrVBuffers[i]->
-			GetDisplayLists();
+		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
+			mPdrVBuffers[i]->GetDisplayLists();
 
 		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
 		{
@@ -44,6 +44,7 @@ void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
 	pData->IBuffer = const_cast<IndexBuffer*>(pIndexBuffer);
 
 	GXSetNumTexGens(0);
+	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 		GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);

@@ -198,16 +198,11 @@ void Renderer::DrawElements()
 	// load the modelview matrix into matrix memory
 	GXLoadPosMtxImm(mpData->ViewMatrix * model, GX_PNMTX0);
 
+	// TODO: lighting
 	GXSetNumChans(1);
-//	GXSetNumTexGens(0);
-// 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
-// 		GX_COLOR0A0);
-// 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
-
 	const WireframeState* pWireframeState = GetWireframeState();
-
 	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
 
 	if (pWireframeState && pWireframeState->Enabled)
@@ -587,6 +582,13 @@ void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 				break;
 
 			case GX_VA_TEX0:
+			case GX_VA_TEX1:
+			case GX_VA_TEX2:
+			case GX_VA_TEX3:
+			case GX_VA_TEX4:
+			case GX_VA_TEX5:
+			case GX_VA_TEX6:
+			case GX_VA_TEX7:
 				GXTexCoord1x16(index);
 				break;
 
@@ -626,12 +628,19 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 					break;
 
 				case GX_VA_TEX0:
+				case GX_VA_TEX1:
+				case GX_VA_TEX2:
+				case GX_VA_TEX3:
+				case GX_VA_TEX4:
+				case GX_VA_TEX5:
+				case GX_VA_TEX6:
+				case GX_VA_TEX7:
 					GXTexCoord1x16(index);
 					break;
 
 				default:
 					WIRE_ASSERT(false);
-				}		
+				}
 			}
 
 			for (UInt j = 0; j < rElements.GetQuantity(); j++)
@@ -648,6 +657,13 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 					break;
 
 				case GX_VA_TEX0:
+				case GX_VA_TEX1:
+				case GX_VA_TEX2:
+				case GX_VA_TEX3:
+				case GX_VA_TEX4:
+				case GX_VA_TEX5:
+				case GX_VA_TEX6:
+				case GX_VA_TEX7:
 					GXTexCoord1x16(index);
 					break;
 
