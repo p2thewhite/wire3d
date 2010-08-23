@@ -17,6 +17,7 @@ class TextureEffect : public Effect
 	{
 		BM_REPLACE,
 		BM_MODULATE,
+		BM_PASS,
 		BM_QUANTITY
 	};
 

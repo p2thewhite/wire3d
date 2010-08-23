@@ -27,14 +27,7 @@ Bool RenderTest::OnInitialize()
 	mspRoot->AttachChild(CreateCube(textures));
 	textures.Append(CreateTexture());
 	mspRoot->AttachChild(CreateCube(textures));
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
-// 	textures.Append(CreateTexture2());
+ 	textures.Append(CreateTexture2());
 	mspRoot->AttachChild(CreateCube(textures, false));
 
 	UInt cubeCount = mspRoot->GetQuantity();
@@ -304,10 +297,10 @@ Texture2D* RenderTest::CreateTexture2()
 
 		for (UInt x = 0; x < width; x++)
 		{
-			UChar t = flip ? 0x80 : 0xFF;
+			UChar t = flip ? 0xc0 : 0xFF;
 			if ((x & 0x4) > 0)
 			{
-				t = flip ? 0xFF : 0x80;
+				t = flip ? 0xFF : 0xc0;
 			}
 
 			*pDst++ = t;

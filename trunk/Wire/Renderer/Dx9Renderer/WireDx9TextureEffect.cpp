@@ -8,7 +8,8 @@ using namespace Wire;
 DWORD PdrRendererData::sTexBlend[TextureEffect::BM_QUANTITY] =
 {
 	D3DTOP_SELECTARG1,		// TextureEffect::BM_REPLACE
-	D3DTOP_MODULATE			// TextureEffect::BM_MODULATE
+	D3DTOP_MODULATE,		// TextureEffect::BM_MODULATE
+	D3DTOP_SELECTARG2,		// TextureEffect::BM_PASS
 };
 
 //----------------------------------------------------------------------------

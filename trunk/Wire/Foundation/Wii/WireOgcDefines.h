@@ -10,6 +10,7 @@
 typedef guVector Vector;
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
+#define GX_COLOR_NULL GX_COLORNULL
 
 #define GXBegin GX_Begin
 #define GXBeginDisplayList GX_BeginDispList
