@@ -198,6 +198,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireRandom.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireSphere3.h"
 					>
 				</File>
@@ -333,6 +337,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix34.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireRandom.cpp"
 					>
 				</File>
 				<File

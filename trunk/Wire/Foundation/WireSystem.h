@@ -30,6 +30,7 @@
 #endif /* WIRE_WII */
 
 #include <float.h>
+#include <limits.h>
 #include <stdio.h>
 
 #include "WireTypes.h"
@@ -41,6 +42,9 @@ namespace Wire
 class /*WIRE_FOUNDATION_ITEM*/ System
 {
 public:
+	static UInt MaxUInt;
+	static Int MaxInt;
+
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
 	static void Memset(void* pDst, Int value, size_t count);

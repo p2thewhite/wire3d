@@ -12,6 +12,7 @@
 #include "WireMatrix4.h"
 #include "WireMemory.h"
 #include "WirePlane3.h"
+#include "WireRandom.h"
 #include "WireSphere3.h"
 #include "WireString.h"
 #include "WireSystem.h"
