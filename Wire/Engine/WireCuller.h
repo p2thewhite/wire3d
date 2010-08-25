@@ -33,8 +33,11 @@ public:
 	// relative to the world planes.
 	void ComputeVisibleSet(Spatial* pScene);
 
-	// Compare the object's world bounding volume against the culling planes.
-	// Only Spatial calls this function.
+	// Compare the object's world bounding volume against all culling planes.
+	Bool IsVisible(const Spatial* pSpatial) const;
+
+	// Compare the bounding volume against the active culling planes.
+	// Only Spatial calls this function (during traversal using plane state)
 	Bool IsVisible(const BoundingVolume* pBV);
 
 	// The base class behavior creates a VisibleObject from the input and

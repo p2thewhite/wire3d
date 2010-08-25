@@ -12,6 +12,8 @@ using namespace Wire;
 #endif
 
 Bool System::msInitializedTime = false;
+UInt System::MaxUInt = UINT_MAX;
+Int System::MaxInt = INT_MAX;
 
 //----------------------------------------------------------------------------
 void* System::Memcpy(void* pDst, size_t dstSize, const void* pSrc,
