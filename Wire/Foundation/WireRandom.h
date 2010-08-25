@@ -26,6 +26,6 @@ protected:
 	ULongLong x[5];
 };
 
-} //namespace Wm3
+}
 
-#endif //GRMRANDOM_H
+#endif
