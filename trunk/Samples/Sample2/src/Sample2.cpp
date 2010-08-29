@@ -168,7 +168,7 @@ Geometry* Sample2::CreateCube()
 		(*pIndices)[i] = indices[i];
 	}
 
-	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 	return pCube;
 }
 
@@ -229,7 +229,7 @@ Geometry* Sample2::CreatePyramid()
 		(*pIndices)[i] = i;
 	}
 
-	Geometry* pPyramid = WIRE_NEW TriMesh(pPyramidVerts, pIndices);
+	Geometry* pPyramid = WIRE_NEW Geometry(pPyramidVerts, pIndices);
 	return pPyramid;
 }
 

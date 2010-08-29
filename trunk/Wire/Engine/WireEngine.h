@@ -30,7 +30,6 @@
 #include "WireTexture2D.h"
 #include "WireTextureEffect.h"
 #include "WireTransformation.h"
-#include "WireTriMesh.h"
 #include "WireVertexAttributes.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleObject.h"

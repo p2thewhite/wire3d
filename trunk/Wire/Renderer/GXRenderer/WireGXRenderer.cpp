@@ -17,6 +17,10 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
+	:
+	mIndexBufferMap(1024),
+	mVertexBufferMap(1024),
+	mTexture2DMap(256)
 {
 	Initialize(width, height);
 	mMaxAnisotropy = 4.0F;

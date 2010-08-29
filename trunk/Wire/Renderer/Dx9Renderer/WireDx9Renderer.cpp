@@ -13,6 +13,10 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
+	:
+	mIndexBufferMap(1024),
+	mVertexBufferMap(1024),
+	mTexture2DMap(256)
 {
 	Initialize(width, height);
 
@@ -131,23 +135,19 @@ void Renderer::DisplayBackBuffer()
 
 //----------------------------------------------------------------------------
 template <typename Resource, typename PdrResource>
-void DestroyResources(TMap<const Resource*, PdrResource*>& rMap,
+void DestroyResources(THashTable<const Resource*, PdrResource*>& rMap,
 	TArray<const Resource*>& rSave)
 {
- 	TArray<TMap<const Resource*, PdrResource*>::MapElement>* pElements =
-		rMap.GetArray();
- 
-	rSave.SetQuantity(pElements->GetQuantity());
-	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	rSave.SetMaxQuantity(rMap.GetQuantity());
+	const Resource* pKey;
+	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
+		pValue = rMap.GetNext(&pKey))
 	{
-		TMap<const Resource*, PdrResource*>::MapElement& rElement =
-			(*pElements)[i];
-		PdrResource* pResource = rElement.Value;
-		WIRE_DELETE pResource;
-		rSave[i] = rElement.Key;
+		WIRE_DELETE *pValue;
+		rSave.Append(pKey);
 	}
 
-	pElements->RemoveAll();
+	rMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------

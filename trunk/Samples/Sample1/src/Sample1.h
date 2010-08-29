@@ -14,24 +14,18 @@ class Sample1 : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
-	Sample1();
-	virtual ~Sample1();
-
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
 private:
 	Geometry* CreateCube();
-	Geometry* CreatePyramid();
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	GeometryPtr mspCube;
-	GeometryPtr mspPyramid;
 	Culler mCuller;
 
 	Float mAngle;
-
 	Double mLastTime;
 };
 
