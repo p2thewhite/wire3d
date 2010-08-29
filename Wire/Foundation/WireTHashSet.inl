@@ -33,7 +33,7 @@ template <class TKEY>
 TKEY* THashSet<TKEY>::Insert(const TKEY& rKey)
 {
     // find hash table entry for given key
-    int index = HashFunction(rKey);
+    UInt index = HashFunction(rKey);
     HashItem* pItem = mpTable[index];
 
     // search for item in list associated with key
@@ -63,7 +63,7 @@ template <class TKEY>
 TKEY* THashSet<TKEY>::Get(const TKEY& rtKey) const
 {
     // find hash table entry for given key
-    int index = HashFunction(rtKey);
+    UInt index = HashFunction(rtKey);
     HashItem* pItem = mpTable[index];
 
     // search for item in list associated with key
@@ -86,7 +86,7 @@ template <class TKEY>
 Bool THashSet<TKEY>::Remove(const TKEY& rKey)
 {
     // find hash table entry for given key
-    int index = HashFunction(rKey);
+    UInt index = HashFunction(rKey);
     HashItem* pItem = mpTable[index];
 
     if (!pItem)
@@ -193,7 +193,7 @@ TKEY* THashSet<TKEY>::GetNext() const
 
 //----------------------------------------------------------------------------
 template <class TKEY>
-UInt THashSet<TKEY>::HashFunction (const TKEY& rKey) const
+UInt THashSet<TKEY>::HashFunction(const TKEY& rKey) const
 {
     if (UserHashFunction)
     {

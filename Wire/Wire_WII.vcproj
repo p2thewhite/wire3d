@@ -431,10 +431,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTriMesh.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireVertexAttributes.h"
 					>
 				</File>
@@ -656,10 +652,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireTriMesh.cpp"
 					>
 				</File>
 				<File

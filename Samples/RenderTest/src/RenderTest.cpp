@@ -201,7 +201,7 @@ Geometry* RenderTest::CreateCube(TArray<Texture2D*>& rTextures,
 		(*pIndices)[5+i*6] = indices[2+i*4];
 	}
 
-	Geometry* pCube = WIRE_NEW TriMesh(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 
 	if (textureCount > 0)
 	{

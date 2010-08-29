@@ -3,8 +3,10 @@
 #include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
+#include "WireNode.h"
 #include "WireTexture2D.h"
 #include "WireTextureEffect.h"
+#include "WireTStack.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
@@ -39,6 +41,84 @@ void Renderer::Terminate()
 	DestroyAllIndexBuffers();
 	DestroyAllVertexBuffers();
 	DestroyAllTexture2Ds();
+}
+
+//----------------------------------------------------------------------------
+void Renderer::BindAll(const Spatial* pSpatial)
+{
+	if (!pSpatial)
+	{
+		return;
+	}
+
+	const Node* pNode = DynamicCast<Node>(pSpatial);
+	if (pNode)
+	{
+		for (UInt i = 0; i < pNode->GetQuantity(); i++)
+		{
+			BindAll(const_cast<Node*>(pNode)->GetChild(i));
+		}
+	}
+
+	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
+	if (pGeometry)
+	{
+		smRenderer->Bind(pGeometry->IBuffer);
+		smRenderer->Bind(pGeometry->VBuffer);
+
+		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
+		{
+			TextureEffect* pEffect = DynamicCast<TextureEffect>(
+				pGeometry->GetEffect(i));
+
+			if (pEffect)
+			{
+				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
+				{
+					smRenderer->Bind(pEffect->Textures[j]);
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::UnbindAll(const Spatial* pSpatial)
+{
+	if (!pSpatial)
+	{
+		return;
+	}
+
+	const Node* pNode = DynamicCast<Node>(pSpatial);
+	if (pNode)
+	{
+		for (UInt i = 0; i < pNode->GetQuantity(); i++)
+		{
+			UnbindAll(const_cast<Node*>(pNode)->GetChild(i));
+		}
+	}
+
+	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
+	if (pGeometry)
+	{
+		smRenderer->Unbind(pGeometry->IBuffer);
+		smRenderer->Unbind(pGeometry->VBuffer);
+
+		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
+		{
+			TextureEffect* pEffect = DynamicCast<TextureEffect>(
+				pGeometry->GetEffect(i));
+
+			if (pEffect)
+			{
+				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
+				{
+					smRenderer->Unbind(pEffect->Textures[j]);
+				}
+			}
+		}
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -277,45 +357,37 @@ PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllIndexBuffers()
 {
-	TArray<IndexBufferMap::MapElement>* pElements = mIndexBufferMap.
-		GetArray();
+ 	for (PdrIndexBuffer** pValue = mIndexBufferMap.GetFirst(); pValue;
+		pValue = mIndexBufferMap.GetNext())
+ 	{
+ 		WIRE_DELETE *pValue;
+ 	}
 
-	for (UInt i = 0; i < pElements->GetQuantity(); i++)
-	{
-		IndexBufferMap::MapElement& rElement = (*pElements)[i];
-		WIRE_DELETE rElement.Value;
-	}
-
-	pElements->RemoveAll();
+	mIndexBufferMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllVertexBuffers()
 {
-	TArray<VertexBufferMap::MapElement>* pElements = mVertexBufferMap.
-		GetArray();
-
-	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	for (PdrVertexBuffer** pValue = mVertexBufferMap.GetFirst(); pValue;
+		pValue = mVertexBufferMap.GetNext())
 	{
-		VertexBufferMap::MapElement& rElement = (*pElements)[i];
-		WIRE_DELETE rElement.Value;
+		WIRE_DELETE *pValue;
 	}
 
-	pElements->RemoveAll();
+	mVertexBufferMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllTexture2Ds()
 {
-	TArray<Texture2DMap::MapElement>* pElements = mTexture2DMap.GetArray();
-
-	for (UInt i = 0; i < pElements->GetQuantity(); i++)
+	for (PdrTexture2D** pValue = mTexture2DMap.GetFirst(); pValue;
+		pValue = mTexture2DMap.GetNext())
 	{
-		Texture2DMap::MapElement& rElement = (*pElements)[i];
-		WIRE_DELETE rElement.Value;
+		WIRE_DELETE *pValue;
 	}
 
-	pElements->RemoveAll();
+	mTexture2DMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------

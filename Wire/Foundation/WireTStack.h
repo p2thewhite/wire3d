@@ -17,7 +17,7 @@ template <class T>
 class TStack
 {
 public:
-    TStack(int maxQuantity = 64);
+    TStack(Int maxQuantity = 64);
     ~TStack();
 
     Bool IsEmpty() const;

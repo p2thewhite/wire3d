@@ -7,7 +7,7 @@
 #include "WireCullState.h"
 #include "WireFogState.h"
 #include "WireSmartPointer.h"
-#include "WireTMap.h"
+#include "WireTHashTable.h"
 #include "WireWireframeState.h"
 #include "WireZBufferState.h"
 
@@ -24,6 +24,7 @@ class PdrVertexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
 class PdrTexture2D;
+class Spatial;
 class Texture2D;
 class TextureEffect;
 class VertexBuffer;
@@ -65,6 +66,10 @@ public:
 
 	PdrRendererData* GetRendererData();
 
+	// Bind/Unbind all resources of a geometry object or a scene graph
+	static void BindAll(const Spatial* pSpatial);
+	static void UnbindAll(const Spatial* pSpatial);
+
 	// Index buffer management
 	PdrIndexBuffer* Bind(const IndexBuffer* pIndexBuffer);
 	void Unbind(const IndexBuffer* pIndexBuffer);
@@ -88,6 +93,34 @@ public:
 	void Enable(Texture2D* pTexture, UInt unit = 0);
 	void Disable(Texture2D* pTexture, UInt unit = 0);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
+
+	// Platform-dependent portion of the Renderer
+
+	// Support for predraw and postdraw semantics
+	Bool PreDraw(Camera* pCamera);
+	void PostDraw();
+
+	// Apply camera changes to platform specific renderer.
+	void OnFrameChange();
+	void OnViewportChange();
+
+	// Support for full-sized window buffer operations. The values used for
+	// clearing are specified by SetClearColor().
+	void ClearBuffers();
+	void DisplayBackBuffer();
+
+	// The main entry point to drawing in the derived-class renderers
+	void DrawElements();
+
+	void SetClearColor(const ColorRGBA& rClearColor);
+
+	// Render state handling
+	void SetAlphaState(AlphaState* pState);
+	void SetCullState(CullState* pState);
+	void SetFogState(FogState* pState);
+	void SetWireframeState(WireframeState* pState);
+	void SetZBufferState(ZBufferState* pState);
+	void ApplyEffect(TextureEffect* pEffect);
 
 private:
 	// Global render state management
@@ -126,40 +159,12 @@ private:
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;
 	
-	typedef TMap<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
-	typedef TMap<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
-	typedef TMap<const Texture2D*, PdrTexture2D*> Texture2DMap;
+	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
+	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
+	typedef THashTable<const Texture2D*, PdrTexture2D*> Texture2DMap;
 	IndexBufferMap mIndexBufferMap;
 	VertexBufferMap mVertexBufferMap;
 	Texture2DMap mTexture2DMap;
-
-	// Platform-dependent portion of the Renderer
-public:
-	// Support for predraw and postdraw semantics
-	Bool PreDraw(Camera* pCamera);
-	void PostDraw();
-
-	// Apply camera changes to platform specific renderer.
-	void OnFrameChange();
-	void OnViewportChange();
-
-	// Support for full-sized window buffer operations. The values used for
-	// clearing are specified by SetClearColor().
-	void ClearBuffers();
-	void DisplayBackBuffer();
-
-	// The main entry point to drawing in the derived-class renderers
-	void DrawElements();
-
-	void SetClearColor(const ColorRGBA& rClearColor);
-
-	// Render state handling
-	void SetAlphaState(AlphaState* pState);
-	void SetCullState(CullState* pState);
-	void SetFogState(FogState* pState);
-	void SetWireframeState(WireframeState* pState);
-	void SetZBufferState(ZBufferState* pState);
-	void ApplyEffect(TextureEffect* pEffect);
 };
 
 #include "WireRenderer.inl"
