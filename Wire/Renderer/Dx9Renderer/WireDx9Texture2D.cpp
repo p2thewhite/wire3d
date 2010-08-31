@@ -52,7 +52,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	// Windows stores BGR (lowest byte to highest byte), but Wire stores RGB.
 	// The byte ordering must be reversed.
 	UChar* pSrc = pImage->GetData();
-	UChar* pDst = 0;
+	UChar* pDst = NULL;
 	UInt quantity = pImage->GetTotalQuantity();
 	UInt bpp = pImage->GetBytesPerPixel();
 	bpp = (bpp == 3) ? 4 : bpp;
@@ -156,7 +156,8 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 			r.right		= pitch;
 			r.top		= 0;
 			r.left		= 0;
-			UInt offset = pImage->GetMipmapOffset(i);
+			UInt offset = (pImage->GetMipmapOffset(i) /
+				pImage->GetBytesPerPixel()) * bpp;
 
 			hr = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
 				pDst+offset, PdrRendererData::sImage2DFormat[format],

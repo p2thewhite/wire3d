@@ -60,30 +60,18 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Header Files"
+		<File
+			RelativePath=".\src\Sample1.cpp"
 			>
-			<File
-				RelativePath=".\src\PerlinNoise.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Sample1.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Source Files"
+		</File>
+		<File
+			RelativePath=".\src\Sample1.h"
 			>
-			<File
-				RelativePath=".\src\PerlinNoise.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Sample1.cpp"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath=".\src\Sample1.inl"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

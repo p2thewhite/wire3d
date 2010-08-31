@@ -1,7 +1,5 @@
 #include "Sample1.h"
 
-#include "PerlinNoise.h"	// we use Perlin noise to create a texture
-
 using namespace Wire;
 
 WIRE_APPLICATION(Sample1);
@@ -19,7 +17,7 @@ Bool Sample1::OnInitialize()
 	mspCube = CreateCube();
 
 	// setup our camera to look down the -z axis with y up
-	Vector3F cameraLocation(0.0F, 0.0F, 15.0F);
+	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -42,16 +40,22 @@ Bool Sample1::OnInitialize()
 //----------------------------------------------------------------------------
 Geometry* Sample1::CreateCube()
 {
-	Float extent = 1.0F;
+	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
-		Vector3F(-extent, -extent, -extent),
-		Vector3F(+extent, -extent, -extent),
-		Vector3F(+extent, +extent, -extent),
-		Vector3F(-extent, +extent, -extent),
-		Vector3F(-extent, -extent, +extent),
-		Vector3F(+extent, -extent, +extent),
-		Vector3F(+extent, +extent, +extent),
-		Vector3F(-extent, +extent, +extent)
+		Vector3F(-extent, -extent, -extent),	// 0
+		Vector3F(-extent,  extent, -extent),	// 1
+		Vector3F( extent,  extent, -extent),	// 2
+		Vector3F( extent, -extent, -extent),	// 3
+		Vector3F( extent, -extent, extent),		// 4 (-3)
+		Vector3F( extent,  extent, extent),		// 5 (-2)
+		Vector3F(-extent,  extent, extent),		// 6 (-1)
+		Vector3F(-extent, -extent, extent),		// 7 (-0)
+		Vector3F( extent,  extent, extent),		// 8 (5)
+		Vector3F(-extent,  extent, extent),		// 9 (6)
+		Vector3F( extent,  extent, extent),		// 10(5)
+		Vector3F( extent, -extent, extent),		// 11(4)
+		Vector3F(-extent, -extent, extent),		// 12(7)
+		Vector3F( extent, -extent, extent),		// 13(4)
 	};
 
 	const ColorRGB colors[] = {
@@ -63,24 +67,55 @@ Geometry* Sample1::CreateCube()
 		ColorRGB(0.0F, 1.0F, 1.0F),
 		ColorRGB(1.0F, 1.0F, 1.0F),
 		ColorRGB(0.0F, 0.0F, 0.0F),
+
+		ColorRGB(1.0F, 0.0F, 0.0F),
+		ColorRGB(0.0F, 1.0F, 0.0F),
+		ColorRGB(0.0F, 0.0F, 1.0F),
+		ColorRGB(1.0F, 1.0F, 0.0F),
+		ColorRGB(1.0F, 0.0F, 1.0F),
+		ColorRGB(0.0F, 1.0F, 1.0F),
 	};
 
+	const Float extentUv = 1.0F;
 	const Vector2F uvs[] = {
-		Vector2F(0, 0),
-		Vector2F(extent, 0),
-		Vector2F(extent, extent),
-		Vector2F(0, extent),
-		Vector2F(0, 0),
-		Vector2F(extent, 0),
-		Vector2F(extent, extent),
-		Vector2F(0, extent)
+		Vector2F(0.50F * extentUv, 0.50F * extentUv),
+		Vector2F(0.50F * extentUv, 0.25F * extentUv),
+		Vector2F(0.25F * extentUv, 0.25F * extentUv),
+		Vector2F(0.25F * extentUv, 0.50F * extentUv),
+		Vector2F(0.00F * extentUv, 0.50F * extentUv),
+		Vector2F(0.00F * extentUv, 0.25F * extentUv),
+		Vector2F(0.75F * extentUv, 0.25F * extentUv),
+		Vector2F(0.75F * extentUv, 0.50F * extentUv),
+		Vector2F(0.25F * extentUv, 0.00F * extentUv),
+		Vector2F(0.50F * extentUv, 0.00F * extentUv),
+		Vector2F(1.00F * extentUv, 0.25F * extentUv),
+		Vector2F(1.00F * extentUv, 0.50F * extentUv),
+		Vector2F(0.50F * extentUv, 0.75F * extentUv),
+		Vector2F(0.25F * extentUv, 0.75F * extentUv)
+	};
+
+	const UInt indices[] = {
+		0, 1, 2, 3,
+		11, 10, 6, 7,
+		7, 6, 1, 0,
+		3, 2, 5, 4,
+		1, 9, 8, 2,
+		12, 0, 3, 13
 	};
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
+
+	UInt textureCount = 1;
+	for (UInt unit = 0; unit < textureCount; unit++)
+	{
+		attributes.SetTCoordChannels(2, unit);	// channels: U, V
+	}
+
 	attributes.SetColorChannels(3);		// channels: R, G, B
-	attributes.SetTCoordChannels(2);	// channels: U, V
+
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
@@ -88,80 +123,53 @@ Geometry* Sample1::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
+
+		for (UInt unit = 0; unit < textureCount; unit++)
+		{
+			pCubeVerts->TCoord2(i, unit) = uvs[i];
+		}
+
 		pCubeVerts->Color3(i) = colors[i];
-		pCubeVerts->TCoord2(i) = uvs[i];
 	}
 
-	UInt indices[] = {
-		0, 2, 1,
-		0, 3, 2,
-		0, 1, 5,
-		0, 5, 4,
-		0, 4, 7,
-		0, 7, 3,
-		6, 4, 5,
-		6, 7, 4,
-		6, 5, 1,
-		6, 1, 2,
-		6, 2, 3,
-		6, 3, 7,
-	};
-
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for (UInt i = 0; i < indexQuantity; i++)
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
+	for	(int i = 0; i < 6; i++)
 	{
-		(*pIndices)[i] = indices[i];
+		(*pIndices)[0+i*6] = indices[0+i*4];
+		(*pIndices)[1+i*6] = indices[1+i*4];
+		(*pIndices)[2+i*6] = indices[3+i*4];
+
+		(*pIndices)[3+i*6] = indices[3+i*4];
+		(*pIndices)[4+i*6] = indices[1+i*4];
+		(*pIndices)[5+i*6] = indices[2+i*4];
 	}
 
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pCube->AttachEffect(pTextureEffect);
 
 	return pCube;
 }
 
+#include "Sample1.inl"
+
 //----------------------------------------------------------------------------
 Texture2D* Sample1::CreateTexture()
 {
-	const UInt width = 256;
-	const UInt height = 64;
+	const UInt width = WireLogo64.width;
+	const UInt height = WireLogo64.height;
+	const UInt bpp = WireLogo64.bytes_per_pixel;
 
-	Image2D::FormatMode format = Image2D::FM_RGB565;
-	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
-
-	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
-	UChar* pDst = reinterpret_cast<UChar*>(pData);
-
-	PerlinNoise noise(0.5, 8);
-
-	for (UInt y = 0; y < height; y++)
+	UChar* pData = WIRE_NEW UChar[width * height * bpp];
+	for (UInt i = 0; i < (width * height * bpp); i++)
 	{
-		UInt temp;
-		for (UInt x = 0; x < width; x++)
-		{
-			Float val = noise.EvaluateAtPos(
-				static_cast<Float>(x)/static_cast<Float>(width),
-				static_cast<Float>(y)/static_cast<Float>(height));
- 			val = MathF::Cos(10 * val);
- 			UChar t = static_cast<UChar>(val*127 + 127);
-
-			UChar* pTemp = reinterpret_cast<UChar*>(&temp);
-			*pTemp++ = t;
-			*pTemp++ = t;
-			*pTemp++ = ~t;
-			*pTemp = 0xFF;
-
-// 			Image2D::RGBA8888ToRGBA4444(pTemp - 3, pDst);
- 			Image2D::RGB888ToRGB565(pTemp - 3, pDst);
- 			pDst += 2;
-		}
+		pData[i] = WireLogo64.pixel_data[i];
 	}
 
-	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGB888, width, height, pData);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	return pTexture;
 }
@@ -188,7 +196,7 @@ void Sample1::OnIdle()
 
 	for (UInt i = 0; i < cubeCount; i++)
 	{
-		Matrix34F model(Vector3F(0.25F, 1, 0.5F), angle);
+		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), angle);
 		mspCube->World.SetRotate(model);
 		mspCube->World.SetTranslate(Vector3F(offset, 0, 0));
 		mspCube->UpdateWorldBound();
