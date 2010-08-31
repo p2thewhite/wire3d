@@ -2,9 +2,8 @@
 #ifndef WIREAPPLICATION_H
 #define WIREAPPLICATION_H
 
-#include "WireColorRGBA.h"
-#include "WireMain.h"
-#include "WireSystem.h"
+#include "WireEngine.h"
+#include "WireFoundation.h"
 
 namespace Wire
 {

@@ -55,7 +55,13 @@ public:
 	static void Assert(const Char* pExpression, const Char* pFile,
 		Int lineNumber);
 
- 	static FILE* Fopen(const Char* pFilename, const Char* pMode);
+	// File support for buffer load and save.
+	static Bool Load(const Char* pFilename, Char*& rBuffer, Int& rSize);
+	static Bool Load(const Char* pFilename, UChar*& rBuffer, Int& rSize);
+	static Bool Save(const Char* pFilename, const Char* pBuffer, Int size);
+	static Bool Save(const Char* pFilename, const UChar* pBuffer, Int size);
+
+	static FILE* Fopen(const Char* pFilename, const Char* pMode);
  	static Int Fprintf(FILE* pFile, const Char* pFormat, ...);
 	static Int Fclose(FILE* pFile);
 

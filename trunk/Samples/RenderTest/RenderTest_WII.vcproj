@@ -60,22 +60,14 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Header Files"
+		<File
+			RelativePath=".\src\RenderTest.cpp"
 			>
-			<File
-				RelativePath=".\src\RenderTest.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Source Files"
+		</File>
+		<File
+			RelativePath=".\src\RenderTest.h"
 			>
-			<File
-				RelativePath=".\src\RenderTest.cpp"
-				>
-			</File>
-		</Filter>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

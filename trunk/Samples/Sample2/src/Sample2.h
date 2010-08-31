@@ -2,7 +2,6 @@
 #ifndef SAMPLE2_H
 #define SAMPLE2_H
 
-#include "WireEngine.h"
 #include "WireApplication.h"
 
 using namespace Wire;
