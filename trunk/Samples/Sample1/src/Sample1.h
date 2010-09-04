@@ -23,6 +23,8 @@ private:
 	CameraPtr mspCamera;
 	GeometryPtr mspCube;
 	Culler mCuller;
+	CullStatePtr mspCullState;
+	AlphaStatePtr mspAlphaState;
 
 	Float mAngle;
 	Double mLastTime;

@@ -27,11 +27,12 @@ Bool Sample1::OnInitialize()
 	Float width = static_cast<Float>(mpRenderer->GetWidth());
 	Float height = static_cast<Float>(mpRenderer->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
-
 	mCuller.SetCamera(mspCamera);
 
-	mAngle = 0.0F;
+	mspCullState = WIRE_NEW CullState;
+	mspAlphaState = WIRE_NEW AlphaState;
 
+	mAngle = 0.0F;
 	mLastTime = System::GetTime();
 
 	return true;
@@ -41,66 +42,95 @@ Bool Sample1::OnInitialize()
 Geometry* Sample1::CreateCube()
 {
 	const Float extent = 1.0F;
-	const Vector3F vertices[] = {
-		Vector3F(-extent, -extent, -extent),	// 0
-		Vector3F(-extent,  extent, -extent),	// 1
-		Vector3F( extent,  extent, -extent),	// 2
-		Vector3F( extent, -extent, -extent),	// 3
-		Vector3F( extent, -extent, extent),		// 4 (-3)
-		Vector3F( extent,  extent, extent),		// 5 (-2)
-		Vector3F(-extent,  extent, extent),		// 6 (-1)
-		Vector3F(-extent, -extent, extent),		// 7 (-0)
-		Vector3F( extent,  extent, extent),		// 8 (5)
-		Vector3F(-extent,  extent, extent),		// 9 (6)
-		Vector3F( extent,  extent, extent),		// 10(5)
-		Vector3F( extent, -extent, extent),		// 11(4)
-		Vector3F(-extent, -extent, extent),		// 12(7)
-		Vector3F( extent, -extent, extent),		// 13(4)
-	};
-
-	const ColorRGB colors[] = {
-		ColorRGB(1.0F, 0.0F, 0.0F),
-		ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F),
-		ColorRGB(0.0F, 1.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 1.0F),
-		ColorRGB(0.0F, 0.0F, 0.0F),
-
-		ColorRGB(1.0F, 0.0F, 0.0F),
-		ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F),
-		ColorRGB(0.0F, 1.0F, 1.0F),
+	const Vector3F vertices[] =
+	{
+		// side 1
+		Vector3F(-extent,  extent,  extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F( extent, -extent,  extent),
+		Vector3F(-extent, -extent,  extent),
+		// side 2
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F(-extent,  extent,  extent),
+		Vector3F(-extent,  extent, -extent),
+		// side 3
+		Vector3F( extent, -extent,  extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent, -extent, -extent),
+		// side 4
+		Vector3F(-extent,  extent, -extent),
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent, -extent, -extent),
+		Vector3F(-extent, -extent, -extent),
+		// side 5
+		Vector3F( extent, -extent, -extent),
+		Vector3F( extent, -extent,  extent),
+		Vector3F(-extent, -extent,  extent),
+		Vector3F(-extent, -extent, -extent),
+		// side 6
+		Vector3F(-extent, -extent,  extent),
+		Vector3F(-extent,  extent,  extent),
+		Vector3F(-extent,  extent, -extent),
+		Vector3F(-extent, -extent, -extent)
 	};
 
 	const Float extentUv = 1.0F;
-	const Vector2F uvs[] = {
-		Vector2F(0.50F * extentUv, 0.50F * extentUv),
-		Vector2F(0.50F * extentUv, 0.25F * extentUv),
-		Vector2F(0.25F * extentUv, 0.25F * extentUv),
-		Vector2F(0.25F * extentUv, 0.50F * extentUv),
-		Vector2F(0.00F * extentUv, 0.50F * extentUv),
-		Vector2F(0.00F * extentUv, 0.25F * extentUv),
-		Vector2F(0.75F * extentUv, 0.25F * extentUv),
-		Vector2F(0.75F * extentUv, 0.50F * extentUv),
-		Vector2F(0.25F * extentUv, 0.00F * extentUv),
-		Vector2F(0.50F * extentUv, 0.00F * extentUv),
-		Vector2F(1.00F * extentUv, 0.25F * extentUv),
-		Vector2F(1.00F * extentUv, 0.50F * extentUv),
-		Vector2F(0.50F * extentUv, 0.75F * extentUv),
-		Vector2F(0.25F * extentUv, 0.75F * extentUv)
+	const Vector2F uvs[] =
+	{
+		// side 1
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 2
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 3
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 4
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 5
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 6
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv)
 	};
 
-	const UInt indices[] = {
-		0, 1, 2, 3,
-		11, 10, 6, 7,
-		7, 6, 1, 0,
-		3, 2, 5, 4,
-		1, 9, 8, 2,
-		12, 0, 3, 13
+	const UInt indices[] =
+	{
+		// side 1
+		0, 2, 1,
+		0, 3, 2,
+		// side 2
+		4, 6, 5,
+		4, 7, 6,
+		// side 3
+		8, 10, 9,
+		8, 11, 10,
+		// side 4
+		12, 13, 14,
+		12, 14, 15,
+		// side 5
+		16, 17, 18,
+		16, 18, 19,
+		// side 6
+		20, 21, 22,
+		20, 22, 23
 	};
 
 	VertexAttributes attributes;
@@ -112,10 +142,8 @@ Geometry* Sample1::CreateCube()
 		attributes.SetTCoordChannels(2, unit);	// channels: U, V
 	}
 
-	attributes.SetColorChannels(3);		// channels: R, G, B
-
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
+	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
@@ -128,20 +156,12 @@ Geometry* Sample1::CreateCube()
 		{
 			pCubeVerts->TCoord2(i, unit) = uvs[i];
 		}
-
-		pCubeVerts->Color3(i) = colors[i];
 	}
 
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
-	for	(int i = 0; i < 6; i++)
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	for	(UInt i = 0; i < indexQuantity; i++)
 	{
-		(*pIndices)[0+i*6] = indices[0+i*4];
-		(*pIndices)[1+i*6] = indices[1+i*4];
-		(*pIndices)[2+i*6] = indices[3+i*4];
-
-		(*pIndices)[3+i*6] = indices[3+i*4];
-		(*pIndices)[4+i*6] = indices[1+i*4];
-		(*pIndices)[5+i*6] = indices[2+i*4];
+		(*pIndices)[i] = indices[i];
 	}
 
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
@@ -159,18 +179,32 @@ Geometry* Sample1::CreateCube()
 //----------------------------------------------------------------------------
 Texture2D* Sample1::CreateTexture()
 {
-	const UInt width = WireLogo64.width;
-	const UInt height = WireLogo64.height;
-	const UInt bpp = WireLogo64.bytes_per_pixel;
+	const UInt width = WireLogo.width;
+	const UInt height = WireLogo.height;
+	const UInt bpp = WireLogo.bytes_per_pixel;
 
-	UChar* pData = WIRE_NEW UChar[width * height * bpp];
-	for (UInt i = 0; i < (width * height * bpp); i++)
+	UChar* const pDst = WIRE_NEW UChar[width * height * 4];
+	const UChar* pSrc = WireLogo.pixel_data;
+	for (UInt y = 0; y < height; y++)
 	{
-		pData[i] = WireLogo64.pixel_data[i];
+		for (UInt x = 0; x < width; x++)
+		{
+			pDst[(y*width + x)*4] = *pSrc++;
+			pDst[(y*width + x)*4+1] = *pSrc++;
+			pDst[(y*width + x)*4+2] = *pSrc++;
+			Float distance = 255.0F - Vector2F(x-width*0.5F, y-height*0.5F).
+				Length() * 4 + 150;
+			distance = distance < 0 ? 0 : distance;
+			UChar alpha = distance > 255 ? 255 : static_cast<UChar>(distance);
+			pDst[(y*width + x)*4+3] = alpha;
+		}
 	}
 
-	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGB888, width, height, pData);
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, width, height,
+		pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetAnisotropyValue(4.0F);
+
 	return pTexture;
 }
 
@@ -191,22 +225,59 @@ void Sample1::OnIdle()
 
 	const UInt cubeCount = 5;
 	const Float stride = 3.5F;
-	Float offset = cubeCount * -0.5F * stride + stride * 0.5F;
-	Float angle = mAngle;
+	const Float offset = cubeCount * -0.5F * stride + stride * 0.6F;
+	Float z = MathF::Sin(mAngle) * 3.0F;
+
+	mspCullState->CullFace = CullState::CM_BACK;
+	GetRenderer()->SetCullState(mspCullState);
+	mspAlphaState->BlendEnabled = false;
+	GetRenderer()->SetAlphaState(mspAlphaState);
 
 	for (UInt i = 0; i < cubeCount; i++)
 	{
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), angle);
+		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F * i);
 		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset, 0, 0));
+		mspCube->World.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
 			mpRenderer->Draw(mspCube);
 		}
+	}
 
-		angle += 0.2F;
-		offset += stride;
+
+	mspCullState->CullFace = CullState::CM_FRONT;
+	GetRenderer()->SetCullState(mspCullState);
+	z = MathF::Cos(mAngle) * 3.0F;
+
+	for (UInt i = 0; i < cubeCount; i++)
+	{
+		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
+		mspCube->World.SetRotate(model);
+		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
+		mspCube->UpdateWorldBound();
+		if (mCuller.IsVisible(mspCube))
+		{
+			mpRenderer->Draw(mspCube);
+		}
+	}
+
+
+	mspCullState->CullFace = CullState::CM_BACK;
+	GetRenderer()->SetCullState(mspCullState);
+	mspAlphaState->BlendEnabled = true;
+	GetRenderer()->SetAlphaState(mspAlphaState);
+
+	for (UInt i = 0; i < cubeCount; i++)
+	{
+		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
+		mspCube->World.SetRotate(model);
+		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
+		mspCube->UpdateWorldBound();
+		if (mCuller.IsVisible(mspCube))
+		{
+			mpRenderer->Draw(mspCube);
+		}
 	}
 
 	mpRenderer->PostDraw();

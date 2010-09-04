@@ -36,7 +36,7 @@ void Renderer::ApplyEffect(TextureEffect* pEffect)
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP,
-			D3DTOP_DISABLE);
+			D3DTOP_SELECTARG1);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 }
