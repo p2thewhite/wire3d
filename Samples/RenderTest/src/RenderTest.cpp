@@ -190,7 +190,7 @@ Geometry* RenderTest::CreateCube(TArray<Texture2D*>& rTextures,
 	}
 
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
-	for	(int i = 0; i < 6; i++)
+	for	(UInt i = 0; i < 6; i++)
 	{
 		(*pIndices)[0+i*6] = indices[0+i*4];
 		(*pIndices)[1+i*6] = indices[1+i*4];

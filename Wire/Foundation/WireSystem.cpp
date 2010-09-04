@@ -110,7 +110,7 @@ Bool System::Save(const Char* pFilename, const Char* pBuffer, Int size)
 		return false;
 	}
 
-	Int writeCount = static_cast<int>(fwrite(pBuffer, sizeof(Char), size,
+	Int writeCount = static_cast<Int>(fwrite(pBuffer, sizeof(Char), size,
 		pFile));
 	if (System::Fclose(pFile) != 0 || writeCount != size)
 	{
