@@ -649,7 +649,7 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 
 			for (UInt j = 0; j < rElements.GetQuantity(); j++)
 			{
-				index = rIBuffer[i + ((k+1) > 2 ? 0 : k)];
+				index = rIBuffer[i + ((k+1) > 2 ? 0 : k+1)];
 				switch (rElements[j].Attr)
 				{
 				case GX_VA_POS:
