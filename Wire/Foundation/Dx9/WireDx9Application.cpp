@@ -109,6 +109,12 @@ Int Dx9Application::Main(Int, Char*[])
 {
 	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
+	// allow work to be done before the window and renderer is created
+	if (!mpApplication->OnPrecreate())
+	{
+		return -1;
+	}
+
 	// register the window class
 	static Char sWindowClass[] = "Wire Application";
 	WNDCLASS wc;
@@ -179,14 +185,21 @@ Int Dx9Application::Main(Int, Char*[])
 }
 
 //----------------------------------------------------------------------------
-void Dx9Application::OnTerminate()
+Bool Dx9Application::OnPrecreate()
 {
+	return true;
 }
+
 
 //----------------------------------------------------------------------------
 Bool Dx9Application::OnInitialize()
 {
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void Dx9Application::OnTerminate()
+{
 }
 
 //----------------------------------------------------------------------------

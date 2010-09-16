@@ -30,55 +30,44 @@ Bool Sample2::OnInitialize()
 		return false;
 	}
 
-	Geometry* pCube = CreateCube();
-	Geometry* pCube2 = CreateCube();
-	Geometry* pCube3 = CreateCube();
-//	CubeController* pCubeController = WIRE_NEW CubeController;
-//	pCube->AttachController(pCubeController);
-
-//	mspRoot = WIRE_NEW DLodNode;
 	mspRoot = WIRE_NEW Node;
-//	mspRoot->AttachChild(pCube);
-	mspRoot->AttachChild(CreatePyramid());
-	mspRoot->AttachChild(pCube2);
-	mspRoot->AttachChild(pCube3);
-/*
-    mspRoot->SetModelDistance(0, 0.0F, 7.0F);
-    mspRoot->SetModelDistance(1, 7.0F, 8.0F);
-    mspRoot->SetModelDistance(2, 8.0F, 9.0F);
-    mspRoot->SetModelDistance(3, 9.0F, 40.0F);
 
-    // set model LOD center
-    mspRoot->ModelCenter() = Vector3F::ZERO;
-*/
-	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -12.0F));
-	pCube2->Local.SetTranslate(Vector3F(-2.5F, 0.0F, 0.0F));
-	pCube2->Local.SetScale(Vector3F(0.5F, 1, 0.5F));
-	pCube3->Local.SetTranslate(Vector3F(0.0F, 2.5F, 0.0F));
+	Geometry* pBody1 = CreateCube();
+	pBody1->Local.SetScale(Vector3F(2, 1, 1));
+	mspRoot->AttachChild(pBody1);
 
-	CullState* pCullState = WIRE_NEW CullState;
-	pCullState->CullFace = CullState::CM_FRONT;
-	pCube2->AttachGlobalState(pCullState);
+	Geometry* pBody2 = CreateCube();
+	pBody2->Local.SetScale(Vector3F(1, 2, 1));
+	pBody2->Local.SetTranslate(Vector3F(3, 1, 0));
+	pBody2->VBuffer->Position3(1).Y() = -0.5F;
+	pBody2->VBuffer->Position3(5).Y() = -0.5F;
+	mspRoot->AttachChild(pBody2);
 
-	ZBufferState* pZBufferState = WIRE_NEW ZBufferState;
-	pZBufferState->Compare = ZBufferState::CF_ALWAYS;
-	pZBufferState->Writable = false;
-	pCube2->AttachGlobalState(pZBufferState);
+	Geometry* pTail = CreateCube();
+	pTail->Local.SetTranslate(Vector3F(5, 2, 0));
+	pTail->VBuffer->Position3(2) = Vector3F(5, 1, -0.25F);
+	pTail->VBuffer->Position3(6) = Vector3F(5, 1, 0.25F);
+	pTail->VBuffer->Position3(1) = Vector3F(5, 0.5F, -0.25F);
+	pTail->VBuffer->Position3(5) = Vector3F(5, 0.5F, 0.25F);
+	mspRoot->AttachChild(pTail);
 
-	AlphaState* pAlphaState = WIRE_NEW AlphaState;
-	pAlphaState->BlendEnabled = true;
-	pCube2->AttachGlobalState(pAlphaState);
+	Geometry* pNose = CreateCube();
+	pNose->Local.SetTranslate(Vector3F(-3, 0, 0));
+	pNose->VBuffer->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
+	pNose->VBuffer->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
+	pNose->VBuffer->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
+	pNose->VBuffer->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
+	mspRoot->AttachChild(pNose);
 
-	WireframeState* pWireframeState = WIRE_NEW WireframeState;
-	pWireframeState->Enabled = true;
-	pCube3->AttachGlobalState(pWireframeState);
+	Node* pRear = WIRE_NEW Node;
+	mspRoot->AttachChild(pRear);
+	pRear->Local.SetTranslate(Vector3F(10, 2.75F, 0.55F));
 
-	FogState* pFogState = WIRE_NEW FogState;
-	pFogState->Enabled = true;
-	pFogState->Color = ColorRGB(0, 0, 0.2F);
-	pFogState->Start = 11.0F;
-	pFogState->End = 13.0F;
-	mspRoot->AttachGlobalState(pFogState);
+	mspRearRotor = CreateCube();
+	mspRearRotor->Local.SetScale(Vector3F(1, 0.1F, 0.1F));
+	pRear->AttachChild(mspRearRotor);
+
+	mspRoot->Local.SetTranslate(Vector3F(0.0F, 0.0F, -20.0F));
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -97,13 +86,6 @@ Bool Sample2::OnInitialize()
 
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
-
-	BillboardNode* pBillboard = WIRE_NEW BillboardNode(mspCamera);
-	mspRoot->AttachChild(pBillboard);
-	pBillboard->AttachChild(pCube);
-	pBillboard->Local.SetTranslate(Vector3F(2.5F, 0.0F, 0.0F));
-
-	mspRoot->UpdateRS();
 	return true;
 }
 
@@ -173,67 +155,6 @@ Geometry* Sample2::CreateCube()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample2::CreatePyramid()
-{
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(3);
-	VertexBuffer* pPyramidVerts = WIRE_NEW VertexBuffer(attributes, 12);
-
-	ColorRGB colors[] = {
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F),			// Set The Color To Green
-
-		ColorRGB(1.0F,0.0F,0.0F),			// Set The Color To Red
-		ColorRGB(0.0F,0.0F,1.0F),			// Set The Color To Blue
-		ColorRGB(0.0F,1.0F,0.0F)			// Set The Color To Green
-	};
-
-	Vector3F vertices[] = {
-		Vector3F( 0.0F, 1.0F, 0.0F),	// Top of Triangle (front)
-		Vector3F(-1.0F,-1.0F, 1.0F),	// Left of Triangle (front)
-		Vector3F( 1.0F,-1.0F, 1.0F),	// Right of Triangle (front)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),		// Top of Triangle (Right)
-		Vector3F( 1.0F,-1.0F, 1.0F),	// Left of Triangle (Right)
-		Vector3F( 1.0F,-1.0F,-1.0F),	// Right of Triangle (Right)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),		// Top of Triangle (Back)
-		Vector3F(-1.0F,-1.0F,-1.0F),	// Left of Triangle (Back)
-		Vector3F( 1.0F,-1.0F,-1.0F),	// Right of Triangle (Back)
-
-		Vector3F( 0.0F, 1.0F, 0.0F),	// Top of Triangle (Left)
-		Vector3F(-1.0F,-1.0F,-1.0F),	// Left of Triangle (Left)
-		Vector3F(-1.0F,-1.0F, 1.0F)	// Right of Triangle (Left)
-	};
-
-	for (UInt i = 0; i < pPyramidVerts->GetVertexQuantity(); i++)
-	{
-		pPyramidVerts->Position3(i) = vertices[i];
-		pPyramidVerts->Color3(i) = colors[i];
-	}
-
-	UInt indexQuantity = pPyramidVerts->GetVertexQuantity();
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for (UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndices)[i] = i;
-	}
-
-	Geometry* pPyramid = WIRE_NEW Geometry(pPyramidVerts, pIndices);
-	return pPyramid;
-}
-
-//----------------------------------------------------------------------------
 void Sample2::OnIdle()
 {
 	Double time = System::GetTime();
@@ -256,6 +177,10 @@ void Sample2::OnIdle()
 	Matrix34F model(Vector3F(0, -1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
 //	mspRoot->Local.SetTranslate(Vector3F(0, 0, -1) * mAngle + Vector3F(0, 0, -5));
+
+	Matrix34F rearRotation(Vector3F(0, 0, 1), MathF::FMod(mAngle * 8,
+		MathF::TWO_PI));
+	mspRearRotor->Local.SetRotate(rearRotation);
 
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);

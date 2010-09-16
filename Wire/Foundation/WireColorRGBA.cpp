@@ -25,3 +25,33 @@ ColorRGBA::ColorRGBA(Float red, Float green, Float blue, Float alpha)
 	mTuple[2] = blue;
 	mTuple[3] = alpha;
 }
+
+//----------------------------------------------------------------------------
+ColorRGBA ColorRGBA::operator* (float scalar) const
+{
+	return ColorRGBA(
+		scalar * mTuple[0],
+		scalar * mTuple[1],
+		scalar * mTuple[2],
+		scalar * mTuple[3]);
+}
+
+//----------------------------------------------------------------------------
+ColorRGBA& ColorRGBA::operator*= (Float scalar)
+{
+	mTuple[0] *= scalar;
+	mTuple[1] *= scalar;
+	mTuple[2] *= scalar;
+	mTuple[3] *= scalar;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+ColorRGBA Wire::operator* (float scalar, const ColorRGBA& rCol)
+{
+	return ColorRGBA(
+		scalar * rCol.mTuple[0],
+		scalar * rCol.mTuple[1],
+		scalar * rCol.mTuple[2],
+		scalar * rCol.mTuple[3]);
+}

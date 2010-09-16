@@ -26,6 +26,12 @@ GXApplication::~GXApplication()
 //----------------------------------------------------------------------------
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
+	// allow work to be done before the renderer is created
+	if (!mpApplication->OnPrecreate())
+	{
+		return -1;
+	}
+
 	PdrRendererInput input;
 	input.BackgroundColor = mBackgroundColor;
 	mpRenderer = WIRE_NEW Renderer(input, 0, 0);
@@ -49,14 +55,20 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 }
 
 //----------------------------------------------------------------------------
-void GXApplication::OnTerminate()
+Bool GXApplication::OnPrecreate()
 {
+	return true;
 }
 
 //----------------------------------------------------------------------------
 Bool GXApplication::OnInitialize()
 {
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void GXApplication::OnTerminate()
+{
 }
 
 //----------------------------------------------------------------------------

@@ -18,6 +18,7 @@ public:
 
 	virtual ~GXApplication();
 
+	virtual Bool OnPrecreate();
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();
