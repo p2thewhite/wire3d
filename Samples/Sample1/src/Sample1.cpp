@@ -295,6 +295,12 @@ Geometry* Sample1::CreateCube()
 
 #include "Sample1.inl"
 
+struct Cell
+{
+	Vector2F point;
+	ColorRGB color;
+};
+
 //----------------------------------------------------------------------------
 Texture2D* Sample1::CreateTexture2()
 {
@@ -304,12 +310,6 @@ Texture2D* Sample1::CreateTexture2()
 	Image2D::FormatMode format = Image2D::FM_RGB888;
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
 	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
-
-	struct Cell
-	{
-		Vector2F point;
-		ColorRGB color;
-	};
 
 	TArray<Cell> cells;
 	Random random;

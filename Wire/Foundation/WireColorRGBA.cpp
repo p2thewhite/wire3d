@@ -47,11 +47,11 @@ ColorRGBA& ColorRGBA::operator*= (Float scalar)
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA Wire::operator* (float scalar, const ColorRGBA& rCol)
+ColorRGBA operator* (float scalar, const ColorRGBA& rCol)
 {
 	return ColorRGBA(
-		scalar * rCol.mTuple[0],
-		scalar * rCol.mTuple[1],
-		scalar * rCol.mTuple[2],
-		scalar * rCol.mTuple[3]);
+		scalar * rCol.R(),
+		scalar * rCol.G(),
+		scalar * rCol.B(),
+		scalar * rCol.A());
 }
