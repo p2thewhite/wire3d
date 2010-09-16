@@ -51,7 +51,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 
 	// Windows stores BGR (lowest byte to highest byte), but Wire stores RGB.
 	// The byte ordering must be reversed.
-	UChar* pSrc = pImage->GetData();
+	UChar* const pSrc = pImage->GetData();
 	UChar* pDst = NULL;
 	UInt quantity = pImage->GetTotalQuantity();
 	UInt bpp = pImage->GetBytesPerPixel();

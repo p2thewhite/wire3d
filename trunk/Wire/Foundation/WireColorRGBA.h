@@ -22,6 +22,13 @@ public:
 	Float A() const;
 	Float& A();
 
+	// arithmetic operations
+	ColorRGBA operator* (Float scalar) const;
+	friend ColorRGBA operator* (Float scalar, const ColorRGBA& rCol);
+
+	// arithmetic updates
+	ColorRGBA& operator*= (Float scalar);
+
 	static const ColorRGBA BLACK;
 	static const ColorRGBA WHITE;
 	static const ColorRGBA RED;

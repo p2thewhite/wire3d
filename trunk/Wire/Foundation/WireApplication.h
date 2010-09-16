@@ -18,12 +18,11 @@ public:
 
 	virtual Int Main(Int argumentQuantity, Char* arguments[]) = 0;
 
-// 	// Called before the creation and initialization of the renderer.
-// 	// Returning 'false' quits the application.
-// 	virtual Bool OnPrecreate();
-// 
-	// Called before main loop.
-	// Returning 'false' quits the application.
+ 	// Called before the creation and initialization of the renderer.
+ 	// Returning 'false' quits the application.
+ 	virtual Bool OnPrecreate() = 0;
+ 
+	// Called before main loop. Returning 'false' quits the application.
 	virtual Bool OnInitialize() = 0;
 
 	// Called by the main loop

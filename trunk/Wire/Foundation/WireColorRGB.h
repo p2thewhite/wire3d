@@ -20,6 +20,13 @@ public:
 	Float B() const;
 	Float& B();
 
+	// arithmetic operations
+	ColorRGB operator* (Float scalar) const;
+	friend ColorRGB operator* (Float scalar, const ColorRGB& rCol);
+
+	// arithmetic updates
+	ColorRGB& operator*= (Float scalar);
+
 	static const ColorRGB BLACK;
 	static const ColorRGB WHITE;
 	static const ColorRGB RED;

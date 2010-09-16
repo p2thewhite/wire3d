@@ -23,3 +23,30 @@ ColorRGB::ColorRGB(Float red, Float green, Float blue)
 	mTuple[1] = green;
 	mTuple[2] = blue;
 }
+
+//----------------------------------------------------------------------------
+ColorRGB ColorRGB::operator* (Float scalar) const
+{
+	return ColorRGB(
+		scalar * mTuple[0],
+		scalar * mTuple[1],
+		scalar * mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+ColorRGB& ColorRGB::operator*= (Float scalar)
+{
+	mTuple[0] *= scalar;
+	mTuple[1] *= scalar;
+	mTuple[2] *= scalar;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+ColorRGB Wire::operator* (float scalar, const ColorRGB& rCol)
+{
+	return ColorRGB(
+		scalar * rCol.mTuple[0],
+		scalar * rCol.mTuple[1],
+		scalar * rCol.mTuple[2]);
+}

@@ -13,7 +13,7 @@ class TMap
 public:
 	// construction and destruction
 	TMap(UInt quantity = 0, UInt growBy = 1);
-	virtual ~TMap();
+	~TMap();
 
 	struct MapElement
 	{

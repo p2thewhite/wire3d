@@ -14,7 +14,7 @@ public:
 	// construction and destruction
 	TArray(UInt quantity = 0, UInt growBy = 1);
 	TArray(const TArray& rObject);
-	virtual ~TArray();
+	~TArray();
 
 	// assignment
 	TArray& operator= (const TArray& rObject);

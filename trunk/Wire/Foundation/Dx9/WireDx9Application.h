@@ -17,6 +17,7 @@ public:
 		Int width = 640, Int height = 480);
 	virtual ~Dx9Application();
 
+	virtual Bool OnPrecreate();
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();

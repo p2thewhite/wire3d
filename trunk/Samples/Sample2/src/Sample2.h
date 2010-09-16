@@ -21,12 +21,11 @@ public:
 
 private:
 	Geometry* CreateCube();
-	Geometry* CreatePyramid();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
-//	DLodNodePtr mspRoot;
 	NodePtr mspRoot;
+	GeometryPtr mspRearRotor;
 
 	Float mAngle;
 	Double mLastTime;
