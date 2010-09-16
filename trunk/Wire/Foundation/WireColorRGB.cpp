@@ -43,10 +43,10 @@ ColorRGB& ColorRGB::operator*= (Float scalar)
 }
 
 //----------------------------------------------------------------------------
-ColorRGB Wire::operator* (float scalar, const ColorRGB& rCol)
+ColorRGB operator* (float scalar, const ColorRGB& rCol)
 {
 	return ColorRGB(
-		scalar * rCol.mTuple[0],
-		scalar * rCol.mTuple[1],
-		scalar * rCol.mTuple[2]);
+		scalar * rCol.R(),
+		scalar * rCol.G(),
+		scalar * rCol.B());
 }
