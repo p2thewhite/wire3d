@@ -484,31 +484,31 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 	GlobalState* pState = spStates[GlobalState::ALPHA];
 	if (pState)
 	{
-		SetAlphaState(StaticCast<AlphaState>(pState));
+		SetState(StaticCast<AlphaState>(pState));
 	}
 
 	pState = spStates[GlobalState::CULL];
 	if (pState)
 	{
-		SetCullState(StaticCast<CullState>(pState));
+		SetState(StaticCast<CullState>(pState));
 	}
 
 	pState = spStates[GlobalState::FOG];
 	if (pState)
 	{
-		SetFogState(StaticCast<FogState>(pState));
+		SetState(StaticCast<FogState>(pState));
 	}
 
 	pState = spStates[GlobalState::WIREFRAME];
 	if (pState)
 	{
-		SetWireframeState(StaticCast<WireframeState>(pState));
+		SetState(StaticCast<WireframeState>(pState));
 	}
 
 	pState = spStates[GlobalState::ZBUFFER];
 	if (pState)
 	{
-		SetZBufferState(StaticCast<ZBufferState>(pState));
+		SetState(StaticCast<ZBufferState>(pState));
 	}
 }
 
@@ -520,31 +520,31 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	if (spStates[GlobalState::ALPHA])
 	{
 		pState = GlobalState::Default[GlobalState::ALPHA];
-		SetAlphaState(StaticCast<AlphaState>(pState));
+		SetState(StaticCast<AlphaState>(pState));
 	}
 
 	if (spStates[GlobalState::CULL])
 	{
 		pState = GlobalState::Default[GlobalState::CULL];
-		SetCullState(StaticCast<CullState>(pState));
+		SetState(StaticCast<CullState>(pState));
 	}
 
 	if (spStates[GlobalState::FOG])
 	{
 		pState = GlobalState::Default[GlobalState::FOG];
-		SetFogState(StaticCast<FogState>(pState));
+		SetState(StaticCast<FogState>(pState));
 	}
 
 	if (spStates[GlobalState::WIREFRAME])
 	{
 		pState = GlobalState::Default[GlobalState::WIREFRAME];
-		SetWireframeState(StaticCast<WireframeState>(pState));
+		SetState(StaticCast<WireframeState>(pState));
 	}
 
 	if (spStates[GlobalState::ZBUFFER])
 	{
 		pState = GlobalState::Default[GlobalState::ZBUFFER];
-		SetZBufferState(StaticCast<ZBufferState>(pState));
+		SetState(StaticCast<ZBufferState>(pState));
 	}
 }
 

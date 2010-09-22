@@ -12,7 +12,7 @@ DWORD PdrRendererData::sCullType[CullState::CM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetCullState(CullState* pState)
+void Renderer::SetState(CullState* pState)
 {
 	mspStates[GlobalState::CULL] = pState;
 

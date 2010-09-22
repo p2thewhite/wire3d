@@ -14,7 +14,6 @@
 namespace Wire
 {
 
-class Bindable;
 class Camera;
 class Effect;
 class Geometry;
@@ -58,13 +57,13 @@ public:
 	UInt GetMaxTextureStages() const;
 
 	// Render state handling
-	AlphaState* GetAlphaState();
-	CullState* GetCullState();
-	FogState* GetFogState();
-	WireframeState* GetWireframeState();
-	ZBufferState* GetZBufferState();
+	AlphaState* GetAlphaState() const;
+	CullState* GetCullState() const;
+	FogState* GetFogState() const;
+	WireframeState* GetWireframeState() const;
+	ZBufferState* GetZBufferState() const;
 
-	PdrRendererData* GetRendererData();
+	PdrRendererData* GetRendererData() const;
 
 	// Bind/Unbind all resources of a geometry object or a scene graph
 	static void BindAll(const Spatial* pSpatial);
@@ -115,12 +114,12 @@ public:
 	void SetClearColor(const ColorRGBA& rClearColor);
 
 	// Render state handling
-	void SetAlphaState(AlphaState* pState);
-	void SetCullState(CullState* pState);
-	void SetFogState(FogState* pState);
-	void SetWireframeState(WireframeState* pState);
-	void SetZBufferState(ZBufferState* pState);
-	void ApplyEffect(TextureEffect* pEffect);
+	void SetState(AlphaState* pState);
+	void SetState(CullState* pState);
+	void SetState(FogState* pState);
+	void SetState(WireframeState* pState);
+	void SetState(ZBufferState* pState);
+	void ApplyEffect(const TextureEffect* pEffect);
 
 private:
 	// Global render state management

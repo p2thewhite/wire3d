@@ -144,5 +144,4 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 //----------------------------------------------------------------------------
 void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 {
-	// TODO
 }

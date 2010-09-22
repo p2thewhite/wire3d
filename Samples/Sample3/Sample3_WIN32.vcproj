@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample2"
-	ProjectGUID="{FCAB5275-8361-4579-9FE8-63BD5F3B854E}"
-	RootNamespace="Sample2_WIN32"
+	Name="Sample3"
+	ProjectGUID="{7FC321A4-570F-41A8-A845-F5A0FE9B5D94}"
+	RootNamespace="Sample3_WIN32"
 	>
 	<Platforms>
 		<Platform
@@ -181,11 +181,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\Sample2.cpp"
+			RelativePath=".\src\Sample3.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\Sample2.h"
+			RelativePath=".\src\Sample3.h"
 			>
 		</File>
 	</Files>

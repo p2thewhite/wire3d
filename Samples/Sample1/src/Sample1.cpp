@@ -8,6 +8,9 @@ WIRE_APPLICATION(Sample1);
 //----------------------------------------------------------------------------
 Bool Sample1::OnInitialize()
 {
+	// This function is called by the framework before the rendering loop
+	// starts. Put all you initializations here.
+
 	// The platform dependent part of the application might need to do some
 	// initialization. If it fails, we return false.
 	if (!Parent::OnInitialize())
@@ -30,7 +33,7 @@ Bool Sample1::OnInitialize()
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
-	// Providing a field of view (FOV) in degrees, aspect ratio,
+	// By providing a field of view (FOV) in degrees, aspect ratio,
 	// near and far plane, we define a viewing frustum used for culling.
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
@@ -52,6 +55,9 @@ Bool Sample1::OnInitialize()
 //----------------------------------------------------------------------------
 void Sample1::OnIdle()
 {
+	// This function is called by the framework's render loop until the
+	// application exits. Perform all your rendering here.
+
 	// Determine how much time has passed since the last call, so we can
 	// move our objects independently of the actual frame rate.
 	Double time = System::GetTime();
@@ -60,21 +66,24 @@ void Sample1::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	mCuller.SetFrustum(mspCamera->GetFrustum());
+	// If the camera's viewing frustum changed, we need to update the culler
+	// (we know we don't change it, so it's commented out here)
+//	mCuller.SetFrustum(mspCamera->GetFrustum());
 
 	// Clear the framebuffer and the z-buffer.
 	mpRenderer->ClearBuffers();
 
-	// Tell the Renderer that we are about to start drawing.
+	// Tell the Renderer that we want to start drawing.
 	mpRenderer->PreDraw(mspCamera);
 
 	// We set the render state to backface culling and disable alpha blending.
 	// NOTE: if you are not using the scenegraph to handle render states for
 	// you, it is your responsibility to handle states between draw calls.
 	mspCullState->CullFace = CullState::CM_BACK;
-	GetRenderer()->SetCullState(mspCullState);
+	GetRenderer()->SetState(mspCullState);
+
 	mspAlphaState->BlendEnabled = false;
-	GetRenderer()->SetAlphaState(mspAlphaState);
+	GetRenderer()->SetState(mspAlphaState);
 
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;
@@ -105,7 +114,7 @@ void Sample1::OnIdle()
 
 	// To draw the backfaces, cull the frontfaces
 	mspCullState->CullFace = CullState::CM_FRONT;
-	GetRenderer()->SetCullState(mspCullState);
+	GetRenderer()->SetState(mspCullState);
 
 	z = MathF::Cos(mAngle) * 3.0F;
 	for (UInt i = 0; i < cubeCount; i++)
@@ -122,9 +131,9 @@ void Sample1::OnIdle()
 
 	// Cull the backfaces, i.e. draw the front faces using alpha blending
 	mspCullState->CullFace = CullState::CM_BACK;
-	GetRenderer()->SetCullState(mspCullState);
+	GetRenderer()->SetState(mspCullState);
 	mspAlphaState->BlendEnabled = true;
-	GetRenderer()->SetAlphaState(mspAlphaState);
+	GetRenderer()->SetState(mspAlphaState);
 
 	for (UInt i = 0; i < cubeCount; i++)
 	{
@@ -280,7 +289,7 @@ Geometry* Sample1::CreateCube()
 	// The cube shall be textured. Therefore we create and attach a texture
 	// effect, where we add a texture and define its blending mode.
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	Texture2D* pTexture = CreateTexture2();
+	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pCube->AttachEffect(pTextureEffect);
@@ -288,7 +297,7 @@ Geometry* Sample1::CreateCube()
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
 	// smart pointers. Thus, you can share these buffers amongst Geometry 
 	// objects without having to worry about deletion. Same applies to
-	// Effects and Textures.
+	// Effects, Textures and Images.
 
 	return pCube;
 }
@@ -411,7 +420,7 @@ Texture2D* Sample1::CreateTexture()
 
 	// Create a Texture using this image. Images can be shared amongst
 	// texture objects. So you can use different filter/wrap/anisotropy values
-	// without the need to duplicate images.
+	// without the need to duplicate images in memory.
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 
 	// Use anisotropic filtering for texturing. Looks better, but lowers

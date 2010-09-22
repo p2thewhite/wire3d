@@ -13,7 +13,7 @@ UChar PdrRendererData::sTexBlend[TextureEffect::BM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Renderer::ApplyEffect(TextureEffect* pEffect)
+void Renderer::ApplyEffect(const TextureEffect* pEffect)
 {
 	WIRE_ASSERT(pEffect->Textures.GetQuantity() ==
 		pEffect->BlendOps.GetQuantity());

@@ -29,37 +29,36 @@ Sphere3<Real>& Sphere3<Real>::operator= (const Sphere3& rSphere)
 	return *this;
 }
 
-// TODO: test
 //----------------------------------------------------------------------------
 template <class Real>
-Sphere3<Real> MergeSpheres (const Sphere3<Real>& rkSphere0,
-							const Sphere3<Real>& rkSphere1)
+Sphere3<Real> Sphere3<Real>::MergeSpheres(const Sphere3<Real>& rSphere0,
+	const Sphere3<Real>& rSphere1)
 {
-	Vector3<Real> kCDiff = rkSphere1.Center - rkSphere0.Center;
-	Real fLSqr = kCDiff.SquaredLength();
-	Real fRDiff = rkSphere1.Radius - rkSphere0.Radius;
-	Real fRDiffSqr = fRDiff*fRDiff;
+	Vector3<Real> centerDiff = rSphere1.Center - rSphere0.Center;
+	Real centerDiffLenSqr = centerDiff.SquaredLength();
+	Real radiusDiff = rSphere1.Radius - rSphere0.Radius;
+	Real radiusDiffSqr = radiusDiff * radiusDiff;
 
-	if (fRDiffSqr >= fLSqr)
+	if (radiusDiffSqr >= centerDiffLenSqr)
 	{
-		return ( fRDiff >= (Real)0.0 ? rkSphere1 : rkSphere0 );
+		return (radiusDiff >= static_cast<Real>(0.0) ? rSphere1 : rSphere0);
 	}
 
-	Real fLength = Math<Real>::Sqrt(fLSqr);
-	Sphere3<Real> kSphere;
+	Real length = Math<Real>::Sqrt(centerDiffLenSqr);
+	Sphere3<Real> sphere;
 
-	if (fLength > Math<Real>::ZERO_TOLERANCE)
+	if (length > Math<Real>::ZERO_TOLERANCE)
 	{
-		Real fCoeff = (fLength + fRDiff)/(((Real)2.0)*fLength);
-		kSphere.Center = rkSphere0.Center + fCoeff*kCDiff;
+		Real coeff = (length + radiusDiff)/((static_cast<Real>(2.0))*length);
+		sphere.Center = rSphere0.Center + coeff*centerDiff;
 	}
 	else
 	{
-		kSphere.Center = rkSphere0.Center;
+		sphere.Center = rSphere0.Center;
 	}
 
-	kSphere.Radius = ((Real)0.5)*(fLength + rkSphere0.Radius +
-		rkSphere1.Radius);
+	sphere.Radius = (static_cast<Real>(0.5))*(length + rSphere0.Radius +
+		rSphere1.Radius);
 
-	return kSphere;
+	return sphere;
 }
