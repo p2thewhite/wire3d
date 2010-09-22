@@ -76,7 +76,6 @@ void RenderTest::OnIdle()
 	mspRoot->Local.SetRotate(model);
 	mspRoot->Local.SetTranslate(Vector3F::ZERO);
 
-	mCuller.SetFrustum(mspCamera->GetFrustum());
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
 

@@ -2,7 +2,9 @@
 inline void Culler::SetCamera(const Camera* pCamera)
 {
 	mpCamera = pCamera;
+	SetFrustum(mpCamera->GetFrustum());
 }
+
 //----------------------------------------------------------------------------
 inline const Camera* Culler::GetCamera() const
 {

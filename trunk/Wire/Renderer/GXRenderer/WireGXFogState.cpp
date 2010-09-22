@@ -13,7 +13,7 @@ UChar PdrRendererData::sFogDensity[FogState::DF_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetFogState(FogState* pState)
+void Renderer::SetState(FogState* pState)
 {
 	mspStates[GlobalState::FOG] = pState;
 

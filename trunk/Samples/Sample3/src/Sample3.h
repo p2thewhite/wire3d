@@ -1,26 +1,23 @@
 #pragma once
-#ifndef SAMPLE2_H
-#define SAMPLE2_H
+#ifndef SAMPLE3_H
+#define SAMPLE3_H
 
 #include "WireApplication.h"
 
 using namespace Wire;
 
-class Sample2 : public WIREAPPLICATION
+class Sample3 : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
 
 	typedef WIREAPPLICATION Parent;
 
 public:
-	Sample2();
-
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
 private:
-	Node* CreateHelicopter();
-	Geometry* CreateCube(ColorRGBA top, ColorRGBA bottom);
+	Geometry* Create();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
@@ -29,10 +26,8 @@ private:
 	Double mLastTime;
 
 	NodePtr mspRoot;
-	GeometryPtr mspTopRotor;
-	GeometryPtr mspRearRotor;
 };
 
-WIRE_REGISTER_INITIALIZE(Sample2);
+WIRE_REGISTER_INITIALIZE(Sample3);
 
 #endif

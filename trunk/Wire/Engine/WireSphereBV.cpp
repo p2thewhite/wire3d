@@ -100,5 +100,6 @@ void SphereBV::CopyFrom(const BoundingVolume* pInput)
 //----------------------------------------------------------------------------
 void SphereBV::GrowToContain(const BoundingVolume* pInput)
 {
-	mSphere = MergeSpheres(mSphere, StaticCast<SphereBV>(pInput)->mSphere);
+	mSphere = Sphere3F::MergeSpheres(mSphere, StaticCast<SphereBV>(pInput)->
+		mSphere);
 }
