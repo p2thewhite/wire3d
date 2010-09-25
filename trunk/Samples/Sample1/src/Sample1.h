@@ -27,7 +27,6 @@ public:
 private:
 	Geometry* CreateCube();
 	Texture2D* CreateTexture();
-	Texture2D* CreateTexture2();
 
 	// ObjectPtr is a smart pointer. Every object derived from Wire::Object
 	// has a reference count, which the smart pointer operates on to

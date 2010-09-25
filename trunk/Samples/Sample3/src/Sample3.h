@@ -17,7 +17,12 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* Create();
+	DLodNode* CreateLods();
+	Geometry* CreateGeometry(UInt shapeCount, UInt segmentCount);
+
+	Geometry* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
+		UInt segmentCount, UInt p, UInt q);
+	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
@@ -26,6 +31,7 @@ private:
 	Double mLastTime;
 
 	NodePtr mspRoot;
+	Texture2DPtr mspTexture;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample3);
