@@ -53,8 +53,8 @@ UInt Image2D::GetBound(UInt i, UInt level) const
 
 	while ((width > 1 || height > 1) && (currentLevel < level))
 	{
-		width = width >> 1;
-		height = height >> 1;
+		width = width > 1 ? width >> 1 : 1;
+		height = height > 1 ? height >> 1 : 1;
 		currentLevel++;
 	}
 
@@ -201,6 +201,7 @@ void Image2D::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 	if (width == 1 || height == 1)
 	{
 		CreateMipmap1(pSrc, pDst, width, height);
+		return;
 	}
 
 	UInt bpp = GetBytesPerPixel();

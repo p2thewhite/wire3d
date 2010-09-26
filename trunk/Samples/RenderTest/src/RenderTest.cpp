@@ -48,8 +48,8 @@ Bool RenderTest::OnInitialize()
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
-	Float width = static_cast<Float>(mpRenderer->GetWidth());
-	Float height = static_cast<Float>(mpRenderer->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 
 	mCuller.SetCamera(mspCamera);
@@ -79,11 +79,11 @@ void RenderTest::OnIdle()
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
 
-	mpRenderer->ClearBuffers();
-	mpRenderer->PreDraw(mspCamera);
-	mpRenderer->DrawScene(mCuller.GetVisibleSet());
-	mpRenderer->PostDraw();
-	mpRenderer->DisplayBackBuffer();
+	GetRenderer()->ClearBuffers();
+	GetRenderer()->PreDraw(mspCamera);
+	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->PostDraw();
+	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------

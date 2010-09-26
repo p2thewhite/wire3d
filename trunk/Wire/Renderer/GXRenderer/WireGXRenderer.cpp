@@ -542,7 +542,9 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe
-	const UInt tempDLSize = 65536;
+
+	// TODO: handle displaylist size > tempDLSize gracefully
+	const UInt tempDLSize = 65536*4;
 	void* pTempDL = memalign(32, tempDLSize);
 	DCInvalidateRange(pTempDL, tempDLSize);
 
