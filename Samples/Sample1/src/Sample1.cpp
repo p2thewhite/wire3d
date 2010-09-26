@@ -71,10 +71,10 @@ void Sample1::OnIdle()
 //	mCuller.SetFrustum(mspCamera->GetFrustum());
 
 	// Clear the framebuffer and the z-buffer.
-	mpRenderer->ClearBuffers();
+	GetRenderer()->ClearBuffers();
 
 	// Tell the Renderer that we want to start drawing.
-	mpRenderer->PreDraw(mspCamera);
+	GetRenderer()->PreDraw(mspCamera);
 
 	// We set the render state to backface culling and disable alpha blending.
 	// NOTE: if you are not using the scenegraph to handle render states for
@@ -104,7 +104,7 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			mpRenderer->Draw(mspCube);
+			GetRenderer()->Draw(mspCube);
 		}
 	}
 
@@ -125,7 +125,7 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			mpRenderer->Draw(mspCube);
+			GetRenderer()->Draw(mspCube);
 		}
 	}
 
@@ -143,15 +143,15 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			mpRenderer->Draw(mspCube);
+			GetRenderer()->Draw(mspCube);
 		}
 	}
 
 	// Tell the Renderer that we are done with drawing
-	mpRenderer->PostDraw();
+	GetRenderer()->PostDraw();
 
 	// Present the framebuffer (aka backbuffer) on the screen
-	mpRenderer->DisplayBackBuffer();
+	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------

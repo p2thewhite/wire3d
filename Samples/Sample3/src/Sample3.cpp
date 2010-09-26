@@ -13,21 +13,28 @@ Bool Sample3::OnInitialize()
 	}
 
 	mspRoot = WIRE_NEW Node;
+
+	// create the torus knot shown on the left side of the screen.
 	Node* pLeft = CreateLods();
 	mspRoot->AttachChild(pLeft);
 
+	// create the wireframe torus knot shown on the right
 	Node* pRight = CreateLods();
 	mspRoot->AttachChild(pRight);
-
 	WireframeState* pWireframe = WIRE_NEW WireframeState;
 	pWireframe->Enabled = true;
 	pRight->AttachGlobalState(pWireframe);
-
 	CullState* pCull = WIRE_NEW CullState;
 	pCull->CullFace = CullState::CM_OFF;
 	pRight->AttachGlobalState(pCull);
-
 	mspRoot->UpdateRS();
+
+	// Bind all resources of the scene graph (vertex buffers, index buffers,
+	// textures) to the renderer. If we don't bind the resources here, they
+	// will be bound automatically the first time the object is rendered.
+	// When using LODs, this means that resources will be created some time
+	// during execution of the main loop (i.e. when the respective level
+	// of the object is drawn for the first time).
 	Renderer::BindAll(mspRoot);
 
 	// setup our camera at the origin
@@ -39,11 +46,13 @@ Bool Sample3::OnInitialize()
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
-	Float width = static_cast<Float>(mpRenderer->GetWidth());
-	Float height = static_cast<Float>(mpRenderer->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 
 	mCuller.SetCamera(mspCamera);
+
+	GetRenderer()->SetClearColor(ColorRGBA::WHITE);
 
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
@@ -73,11 +82,11 @@ void Sample3::OnIdle()
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);
 
-	mpRenderer->ClearBuffers();
-	mpRenderer->PreDraw(mspCamera);
-	mpRenderer->DrawScene(mCuller.GetVisibleSet());
-	mpRenderer->PostDraw();
-	mpRenderer->DisplayBackBuffer();
+	GetRenderer()->ClearBuffers();
+	GetRenderer()->PreDraw(mspCamera);
+	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->PostDraw();
+	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
@@ -85,16 +94,18 @@ DLodNode* Sample3::CreateLods()
 {
 	DLodNode* pLod = WIRE_NEW DLodNode;
 
-	pLod->AttachChild(CreateGeometry(14, 192));
- 	pLod->AttachChild(CreateGeometry(10, 192));
- 	pLod->AttachChild(CreateGeometry(8, 128));
-	pLod->AttachChild(CreateGeometry(6, 96));
+	// Create different levels of the same object
+	pLod->AttachChild(CreateGeometry(14, 192)); // 5376 triangles
+ 	pLod->AttachChild(CreateGeometry(10, 160));	// 3200 triangles
+ 	pLod->AttachChild(CreateGeometry(8, 128));	// 2048 triangles
+	pLod->AttachChild(CreateGeometry(6, 96));	// 1152 triangles
 	
-	pLod->SetModelDistance(0, 0, 5);
-	pLod->SetModelDistance(1, 5, 10);
-	pLod->SetModelDistance(2, 10, 15);
-	pLod->SetModelDistance(3, 15, 100);
+	pLod->SetModelDistance(0, 0, 5);	// level0 from 0-5 units
+	pLod->SetModelDistance(1, 5, 10);	// level1 from 5-10 units
+	pLod->SetModelDistance(2, 10, 15);	// level2 from 10-15 units
+	pLod->SetModelDistance(3, 15, 100);	// level3 from 15-100 units
 
+	// Define the model's center used for calculating the distance to camera.
 	pLod->ModelCenter() = Vector3F::ZERO;
 	return pLod;
 }
@@ -102,7 +113,9 @@ DLodNode* Sample3::CreateLods()
 //----------------------------------------------------------------------------
 Geometry* Sample3::CreateGeometry(UInt shapeCount, UInt segmentCount)
 {
+	// Create a PQ (4,3) torus knot with a inner radius of 0.2
 	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);
+
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	pTextureEffect->Textures.Append(CreateTexture());
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
@@ -118,8 +131,8 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 	shapeCount++;
 	segmentCount++;
 
+	// create the inner shape (i.e. a circle)
 	TArray<Vector3F> shape(shapeCount);
-
 	Vector3F pos(0, shapeRadius, 0);
 	Float angleStride = MathF::TWO_PI / (shapeCount-1);
 	Float angle = 0;
@@ -130,6 +143,7 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		angle += angleStride;
 	}
 
+	// the last vertex can't share uv-coords, so we duplicate the first vertex
 	shape.SetElement(shapeCount-1, shape[0]);
 
 	VertexAttributes attributes;
@@ -139,6 +153,7 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 	const UInt vertexCount = segmentCount * shapeCount;
 	VertexBuffer* pVertices = WIRE_NEW VertexBuffer(attributes, vertexCount);
 
+	// create the pq torus knot and position & align the shape along it
 	angleStride = MathF::TWO_PI / (segmentCount-1);
 	angle = 0;
 	for (UInt i = 0; i < segmentCount-1; i++)
@@ -174,6 +189,7 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		}
 	}
 
+	// the last segment can't share uv-coords, so we copy it from the first
 	for (UInt j = 0; j < shapeCount; j++)
 	{	
 		pVertices->Position3((segmentCount-1)*shapeCount + j) = pVertices->
@@ -220,32 +236,43 @@ struct Cell
 //----------------------------------------------------------------------------
 Texture2D* Sample3::CreateTexture()
 {
+	// create the texture once and cache it for subsequent calls
 	if (mspTexture)
 	{
 		return mspTexture;
 	}
 
-	// Define the properties of the image to be used as a texture
-	const UInt width = 64;
-	const UInt height = 64;
+	// define the properties of the image to be used as a texture
+	const UInt width = 32;
+	const UInt height = 1024;
 	const Image2D::FormatMode format = Image2D::FM_RGB888;
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
-	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
+	ColorRGB* const pColorDst = WIRE_NEW ColorRGB[width*height];
 
+	// create points with random x,y position and colors
 	TArray<Cell> cells;
 	Random random;
-	for (UInt i = 0; i < 30; i++)
+	for (UInt i = 0; i < 100; i++)
 	{
 		Cell cell;
 		cell.point.X() = random.GetFloat() * width;
 		cell.point.Y() = random.GetFloat() * height;
-		cell.color.R() = random.GetFloat() * 4;
-		cell.color.G() = random.GetFloat() * 4;
-		cell.color.B() = random.GetFloat() * 4;
+		cell.color.R() = random.GetFloat();
+		cell.color.G() = random.GetFloat();
+		cell.color.B() = random.GetFloat();
 
+		Float max = 0.0F;
+		max = max < cell.color.R() ? cell.color.R() : max;
+		max = max < cell.color.G() ? cell.color.G() : max;
+		max = max < cell.color.B() ? cell.color.B() : max;
+		max = 1.0F / max;
+		cell.color *= max;
 		cells.Append(cell);
 	}
 
+	// iterate over all texels and use the distance to the 2 closest random
+	// points to calculate the texel's color
+	Float max = 0;
 	for (UInt y = 0; y < height; y++)
 	{
 		for (UInt x = 0; x < width; x++)
@@ -279,12 +306,25 @@ Texture2D* Sample3::CreateTexture()
 				}
 			}
 
-			float factor = (min2Dist - minDist) + 20;
+			float factor = (min2Dist - minDist) + 3;
 			ColorRGB color = cells[minIndex].color * factor;
-			pDst[(y*width+x)*bpp] = static_cast<UChar>(color.R());
-			pDst[(y*width+x)*bpp+1] = static_cast<UChar>(color.G());
-			pDst[(y*width+x)*bpp+2] = static_cast<UChar>(color.B());
+			max = max < color.R() ? color.R() : max;
+			max = max < color.G() ? color.G() : max;
+			max = max < color.B() ? color.B() : max;
+			pColorDst[y*width+x] = color;
 		}
+	}
+
+	// convert and normalize the ColorRGBA float array to an 8-bit per
+	// channel texture
+	max = 255.0F / max;
+	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
+	for (UInt i = 0; i < width*height; i++)
+	{
+		ColorRGB color = pColorDst[i];
+		pDst[i*bpp] = static_cast<UChar>(color.R() * max);
+		pDst[i*bpp+1] = static_cast<UChar>(color.G() * max);
+		pDst[i*bpp+2] = static_cast<UChar>(color.B() * max);
 	}
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);

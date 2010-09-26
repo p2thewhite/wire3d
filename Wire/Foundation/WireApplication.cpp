@@ -37,12 +37,6 @@ Application* Application::GetApplication()
 }
 
 //----------------------------------------------------------------------------
-Renderer* Application::GetRenderer() const
-{
-	return mpRenderer;
-}
-
-//----------------------------------------------------------------------------
 Int main(Int argc, Char** argv)
 {
 	Main::Initialize();

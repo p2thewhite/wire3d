@@ -32,6 +32,7 @@ void DLodNode::SelectLevelOfDetail(const Camera* pCamera)
     // empty slots in the array and the number of children is GetQuantity().
     // Moreover, it is assumed that all model distance values were set for
     // these children.
+	WIRE_ASSERT(mModelMinDist.GetQuantity() == GetQuantity());
 
     // compute world LOD center
     mWorldLodCenter = World.ApplyForward(mModelLodCenter);

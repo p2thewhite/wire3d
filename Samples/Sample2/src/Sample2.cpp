@@ -52,8 +52,8 @@ Bool Sample2::OnInitialize()
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
 	// specify FOV, aspect ratio, near and far plane of the frustum
-	Float width = static_cast<Float>(mpRenderer->GetWidth());
-	Float height = static_cast<Float>(mpRenderer->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 
 	// the culler needs to know which camera to use when performing its task
@@ -106,11 +106,11 @@ void Sample2::OnIdle()
 	// which these visible objects are being drawn by the Renderer.
 	mCuller.ComputeVisibleSet(mspRoot);
 
-	mpRenderer->ClearBuffers();
-	mpRenderer->PreDraw(mspCamera);
-	mpRenderer->DrawScene(mCuller.GetVisibleSet());
-	mpRenderer->PostDraw();
-	mpRenderer->DisplayBackBuffer();
+	GetRenderer()->ClearBuffers();
+	GetRenderer()->PreDraw(mspCamera);
+	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->PostDraw();
+	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
