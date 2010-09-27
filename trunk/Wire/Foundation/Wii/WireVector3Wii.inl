@@ -221,11 +221,10 @@ inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 template <class Real>
 inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
 {
-	// TODO: use VECScale
-	return Vector3<Real>(
-		scalar * rVector[0],
-		scalar * rVector[1],
-		scalar * rVector[2]);
+	Vector3<Real> result;
+	VECScale(reinterpret_cast<Vector*>(const_cast<Vector3<Real>*>(&rVector)),
+		reinterpret_cast<Vector*>(&result), scalar);
+	return result;
 }
 
 //----------------------------------------------------------------------------
