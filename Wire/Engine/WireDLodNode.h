@@ -17,6 +17,8 @@ public:
 	DLodNode();
 	virtual ~DLodNode();
 
+	void SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist);
+
     // center for level of detail
     Vector3F& ModelCenter();
     const Vector3F& GetModelCenter() const;

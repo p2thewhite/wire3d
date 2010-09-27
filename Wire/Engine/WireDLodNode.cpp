@@ -8,12 +8,21 @@ WIRE_IMPLEMENT_RTTI(DLodNode, SwitchNode);
 
 //----------------------------------------------------------------------------
 DLodNode::DLodNode()
+	:
+	mModelLodCenter(Vector3F::ZERO)
 {
 }
 
 //----------------------------------------------------------------------------
 DLodNode::~DLodNode()
 {
+}
+
+//----------------------------------------------------------------------------
+void DLodNode::SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist)
+{
+	SetChild(i, pLod);
+	SetModelDistance(i, minDist, maxDist);
 }
 
 //----------------------------------------------------------------------------

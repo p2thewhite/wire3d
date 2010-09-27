@@ -20,13 +20,16 @@ Bool Sample3::OnInitialize()
 
 	// create the wireframe torus knot shown on the right
 	Node* pRight = CreateLods();
-	mspRoot->AttachChild(pRight);
+
 	WireframeState* pWireframe = WIRE_NEW WireframeState;
 	pWireframe->Enabled = true;
 	pRight->AttachGlobalState(pWireframe);
+
 	CullState* pCull = WIRE_NEW CullState;
 	pCull->CullFace = CullState::CM_OFF;
 	pRight->AttachGlobalState(pCull);
+
+	mspRoot->AttachChild(pRight);
 	mspRoot->UpdateRS();
 
 	// Bind all resources of the scene graph (vertex buffers, index buffers,
@@ -95,18 +98,16 @@ DLodNode* Sample3::CreateLods()
 	DLodNode* pLod = WIRE_NEW DLodNode;
 
 	// Create different levels of the same object
-	pLod->AttachChild(CreateGeometry(14, 192)); // 5376 triangles
- 	pLod->AttachChild(CreateGeometry(10, 160));	// 3200 triangles
- 	pLod->AttachChild(CreateGeometry(8, 128));	// 2048 triangles
-	pLod->AttachChild(CreateGeometry(6, 96));	// 1152 triangles
-	
-	pLod->SetModelDistance(0, 0, 5);	// level0 from 0-5 units
-	pLod->SetModelDistance(1, 5, 10);	// level1 from 5-10 units
-	pLod->SetModelDistance(2, 10, 15);	// level2 from 10-15 units
-	pLod->SetModelDistance(3, 15, 100);	// level3 from 15-100 units
+	Geometry* pLod0 = CreateGeometry(14, 192);	// 5376 triangles
+	Geometry* pLod1 = CreateGeometry(10, 160);	// 3200 triangles
+	Geometry* pLod2 = CreateGeometry(8, 128);	// 2048 triangles
+	Geometry* pLod3 = CreateGeometry(6, 96);	// 1152 triangles
 
-	// Define the model's center used for calculating the distance to camera.
-	pLod->ModelCenter() = Vector3F::ZERO;
+	pLod->SetLod(0, pLod0, 0, 5);		// level0 from 0-5 units
+	pLod->SetLod(1, pLod1, 5, 10);		// level1 from 5-10 units
+	pLod->SetLod(2, pLod2, 10, 15);		// level2 from 10-15 units
+	pLod->SetLod(3, pLod3, 15, 100);	// level3 from 15-100 units
+
 	return pLod;
 }
 
