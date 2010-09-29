@@ -23,6 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3", "Samples\Sample3\
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4", "Samples\Sample4\Sample4_WII.vcproj", "{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,6 +54,10 @@ Global
 		{5B8835D8-A708-4650-9C67-D0599D9A8899}.Debug|Win32.Build.0 = Debug|Win32
 		{5B8835D8-A708-4650-9C67-D0599D9A8899}.Release|Win32.ActiveCfg = Release|Win32
 		{5B8835D8-A708-4650-9C67-D0599D9A8899}.Release|Win32.Build.0 = Release|Win32
+		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Debug|Win32.Build.0 = Debug|Win32
+		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Release|Win32.ActiveCfg = Release|Win32
+		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

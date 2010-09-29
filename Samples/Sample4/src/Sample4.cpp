@@ -1,13 +1,11 @@
-// This sample demonstrates how to use discrete LODs in the scene graph.
-
-#include "Sample3.h"
+#include "Sample4.h"
 
 using namespace Wire;
 
-WIRE_APPLICATION(Sample3);
+WIRE_APPLICATION(Sample4);
 
 //----------------------------------------------------------------------------
-Bool Sample3::OnInitialize()
+Bool Sample4::OnInitialize()
 {
 	if (!Parent::OnInitialize())
 	{
@@ -37,9 +35,9 @@ Bool Sample3::OnInitialize()
 	// Bind all resources of the scene graph (vertex buffers, index buffers,
 	// textures) to the renderer. If we don't bind the resources here, they
 	// will be bound automatically the first time the object is rendered.
-	// When using LODs, this would mean that resources will be created some
-	// time during execution of the main loop (i.e. when the respective level
-	// of the object is drawn for the first time). Thus we bind beforehand.
+	// When using LODs, this means that resources will be created some time
+	// during execution of the main loop (i.e. when the respective level
+	// of the object is drawn for the first time).
 	Renderer::BindAll(mspRoot);
 
 	// setup our camera at the origin
@@ -65,7 +63,7 @@ Bool Sample3::OnInitialize()
 }
 
 //----------------------------------------------------------------------------
-void Sample3::OnIdle()
+void Sample4::OnIdle()
 {
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
@@ -95,7 +93,7 @@ void Sample3::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-DLodNode* Sample3::CreateLods()
+DLodNode* Sample4::CreateLods()
 {
 	DLodNode* pLod = WIRE_NEW DLodNode;
 
@@ -114,7 +112,7 @@ DLodNode* Sample3::CreateLods()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample3::CreateGeometry(UInt shapeCount, UInt segmentCount)
+Geometry* Sample4::CreateGeometry(UInt shapeCount, UInt segmentCount)
 {
 	// Create a PQ (4,3) torus knot with a inner radius of 0.2
 	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);
@@ -128,7 +126,7 @@ Geometry* Sample3::CreateGeometry(UInt shapeCount, UInt segmentCount)
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
+Geometry* Sample4::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 	UInt segmentCount, UInt p, UInt q)
 {
 	shapeCount++;
@@ -175,7 +173,6 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 
 		angle += angleStride;		
 
-		// approximate Frenet frame
 		Vector3F t = p1-p0;
 		Vector3F n = p1+p0;
 		Vector3F b = t.Cross(n);
@@ -238,7 +235,7 @@ struct Cell
 };
 
 //----------------------------------------------------------------------------
-Texture2D* Sample3::CreateTexture()
+Texture2D* Sample4::CreateTexture()
 {
 	// create the texture once and cache it for subsequent calls
 	if (mspTexture)
@@ -253,7 +250,7 @@ Texture2D* Sample3::CreateTexture()
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
 	ColorRGB* const pColorDst = WIRE_NEW ColorRGB[width*height];
 
-	// create points with random x,y position and color
+	// create points with random x,y position and colors
 	TArray<Cell> cells;
 	Random random;
 	for (UInt i = 0; i < 100; i++)
@@ -333,8 +330,6 @@ Texture2D* Sample3::CreateTexture()
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-	// The texture tiles and the torus is supposed to be seamless, therefore
-	// we need the UV set to be repeating.
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
 

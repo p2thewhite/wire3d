@@ -1,3 +1,5 @@
+// This sample demonstrate how to create and render a scene graph.
+
 #include "Sample2.h"
 
 using namespace Wire;

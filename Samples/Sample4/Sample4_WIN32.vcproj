@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample3 - Level of Detail"
-	ProjectGUID="{7FC321A4-570F-41A8-A845-F5A0FE9B5D94}"
+	Name="Sample4"
+	ProjectGUID="{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
 	RootNamespace="Sample3_WIN32"
 	>
 	<Platforms>
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Sample3d.exe"
+				OutputFile="$(ProjectName)d.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -80,7 +80,6 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -144,7 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Sample3.exe"
+				OutputFile="$(ProjectName).exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
@@ -162,7 +161,6 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
-				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -183,11 +181,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\Sample3.cpp"
+			RelativePath=".\src\Sample4.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\Sample3.h"
+			RelativePath=".\src\Sample4.h"
 			>
 		</File>
 	</Files>

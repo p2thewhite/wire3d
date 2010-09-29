@@ -726,6 +726,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXLight.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 					</File>
