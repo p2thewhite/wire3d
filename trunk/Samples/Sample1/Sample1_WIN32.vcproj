@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample1"
+	Name="Sample1 - Basic Rendering"
 	ProjectGUID="{5EF9DCF2-9CD2-4EC6-9E7D-422AC18BE27E}"
 	RootNamespace="Sample1_WIN32"
 	>
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(ProjectName)d.exe"
+				OutputFile="Sample1d.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -80,6 +80,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -143,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(ProjectName).exe"
+				OutputFile="Sample1.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
@@ -161,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

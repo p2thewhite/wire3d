@@ -1,3 +1,6 @@
+// This sample demonstrates how to create a transparent, textured cube and
+// render it using different render states.
+
 #include "Sample1.h"
 
 using namespace Wire;

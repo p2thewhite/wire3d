@@ -16,7 +16,8 @@
 	#ifdef WIRE_DEBUG
 		#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
 	#else
-		#define WIRE_ASSERT(expression)
+		#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
+//		#define WIRE_ASSERT(expression)
 	#endif
 #else
 	#include <stddef.h>

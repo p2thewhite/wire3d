@@ -13,7 +13,7 @@ class /*WIRE_ENGINE_ITEM*/ Light : public Object
 
 public:
 	Light();
-	virtual ~Light();
+	~Light();
 
 };
 
@@ -22,4 +22,3 @@ typedef Pointer<Light> LightPtr;
 }
 
 #endif
-

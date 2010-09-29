@@ -18,6 +18,7 @@ class Camera;
 class Effect;
 class Geometry;
 class IndexBuffer;
+class Light;
 class PdrIndexBuffer;
 class PdrVertexBuffer;
 class PdrRendererData;
@@ -108,9 +109,6 @@ public:
 	void ClearBuffers();
 	void DisplayBackBuffer();
 
-	// The main entry point to drawing in the derived-class renderers
-	void DrawElements();
-
 	void SetClearColor(const ColorRGBA& rClearColor);
 
 	// Render state handling
@@ -119,9 +117,18 @@ public:
 	void SetState(FogState* pState);
 	void SetState(WireframeState* pState);
 	void SetState(ZBufferState* pState);
-	void ApplyEffect(const TextureEffect* pEffect);
+
+	// Light state handling
+	void SetLight(Light* pLight);
+	void Enable(const TArray<Pointer<Light> >& rLights);
+	void Disable(const TArray<Pointer<Light> >& rLights);
 
 private:
+	void ApplyEffect(const TextureEffect* pEffect);
+
+	// The main entry point to drawing in the derived-class renderers
+	void DrawElements();
+
 	// Global render state management
 	void SetGlobalState(GlobalStatePtr spStates[]);
 	void RestoreGlobalState(GlobalStatePtr spStates[]);
@@ -154,6 +161,7 @@ private:
 	// Maximum anisotropy value supported for texture filtering by the device
 	Float mMaxAnisotropy;
 	UInt mMaxTextureStages;
+	UInt mMaxLights;
 
 	static Renderer* smRenderer;
 	PdrRendererData* mpData;

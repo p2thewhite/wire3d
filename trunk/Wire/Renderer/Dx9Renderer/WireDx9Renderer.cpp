@@ -62,6 +62,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 		true : false;
 
 	mMaxTextureStages = deviceCaps.MaxTextureBlendStages;
+	mMaxLights = deviceCaps.MaxActiveLights;
 
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders
 	// in HW then switch to SWVP.

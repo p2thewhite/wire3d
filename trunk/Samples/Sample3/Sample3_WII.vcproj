@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample3"
+	Name="Sample3 - Level of Detail"
 	ProjectGUID="{5B8835D8-A708-4650-9C67-D0599D9A8899}"
+	RootNamespace="Sample3 - Level of Detail"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>

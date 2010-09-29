@@ -396,6 +396,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	mpGeometry = pGeometry;
 
 	SetGlobalState(mpGeometry->States);
+	Enable(mpGeometry->Lights);
 
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
@@ -545,6 +546,36 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::ZBUFFER];
 		SetState(StaticCast<ZBufferState>(pState));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
+{
+	UInt maxLights = rLights.GetQuantity();
+ 	if (maxLights > mMaxLights)
+ 	{
+ 		maxLights = mMaxLights;
+ 	}
+
+	for (UInt i = 0; i < maxLights; i++)
+	{
+		SetLight(rLights[i]);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
+{
+	UInt maxLights = rLights.GetQuantity();
+	if (maxLights > mMaxLights)
+	{
+		maxLights = mMaxLights;
+	}
+
+	for (UInt i = 0; i < maxLights; i++)
+	{
+		SetLight(NULL);
 	}
 }
 

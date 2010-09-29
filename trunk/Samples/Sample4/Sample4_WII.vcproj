@@ -2,9 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample2 - Scene Graph"
-	ProjectGUID="{63E8E87E-548C-460A-9B0E-FA0365C263F5}"
-	RootNamespace="Sample2 - S"
+	Name="Sample4"
+	ProjectGUID="{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -62,11 +61,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\Sample2.cpp"
+			RelativePath=".\src\Sample4.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\Sample2.h"
+			RelativePath=".\src\Sample4.h"
 			>
 		</File>
 	</Files>
