@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(ProjectName)d.exe"
+				OutputFile="Sample4d.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -80,6 +80,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -143,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(ProjectName).exe"
+				OutputFile="Sample4.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
@@ -161,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				OutputFile="$(OutDir)/$(TargetFileName).bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

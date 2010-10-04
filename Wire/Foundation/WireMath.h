@@ -21,6 +21,11 @@ public:
 	static Real Sqrt(Real value);
 	static Real Tan(Real value);
 
+	static Real Min(Real value1, Real value2);
+	static Real Max(Real value1, Real value2);
+
+	static Real Clamp(Real min, Real value, Real max);
+
 	// common constants
 	/*WIRE_FOUNDATION_ITEM*/ static const Real MAX_REAL;
 	/*WIRE_FOUNDATION_ITEM*/ static const Real PI;
