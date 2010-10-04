@@ -5,334 +5,407 @@ using namespace Wire;
 WIRE_APPLICATION(Sample4);
 
 //----------------------------------------------------------------------------
+Sample4::Sample4()
+// :
+// WIREAPPLICATION(
+// 				ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
+// 				"Sample2 - Creating a Scenegraph",	// Name of the application.
+// 				800, 600,								// Window position and
+// 				100, 100)							// size (both ignored on the Wii).
+{
+}
+
+//----------------------------------------------------------------------------
 Bool Sample4::OnInitialize()
 {
+	// This function is called by the framework before the rendering loop
+	// starts. Put all you initializations here.
+
+	// The platform dependent part of the application might need to do some
+	// initialization. If it fails, we return false.
 	if (!Parent::OnInitialize())
 	{
 		return false;
 	}
 
-	mspRoot = WIRE_NEW Node;
+	// We create a cube here and reference it using a smart pointer.
+	// The smart pointer automatically deletes the object when it goes out
+	// of scope and no other references to the object exist. In this case
+	// deletion will happen when Sample4 is being destructed.
+	mspCube = CreateCube();
 
-	// create the torus knot shown on the left side of the screen.
-	Node* pLeft = CreateLods();
-	mspRoot->AttachChild(pLeft);
-
-	// create the wireframe torus knot shown on the right
-	Node* pRight = CreateLods();
-
-	WireframeState* pWireframe = WIRE_NEW WireframeState;
-	pWireframe->Enabled = true;
-	pRight->AttachGlobalState(pWireframe);
-
-	CullState* pCull = WIRE_NEW CullState;
-	pCull->CullFace = CullState::CM_OFF;
-	pRight->AttachGlobalState(pCull);
-
-	mspRoot->AttachChild(pRight);
-	mspRoot->UpdateRS();
-
-	// Bind all resources of the scene graph (vertex buffers, index buffers,
-	// textures) to the renderer. If we don't bind the resources here, they
-	// will be bound automatically the first time the object is rendered.
-	// When using LODs, this means that resources will be created some time
-	// during execution of the main loop (i.e. when the respective level
-	// of the object is drawn for the first time).
-	Renderer::BindAll(mspRoot);
-
-	// setup our camera at the origin
-	// looking down the -z axis with y up
-	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
+	// Setup the position and orientation of the camera to look down
+	// the -z axis with y up.
+	Vector3F cameraLocation(0.0F, 0.0F, 3.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
+	// By providing a field of view (FOV) in degrees, aspect ratio,
+	// near and far plane, we define a viewing frustum used for culling.
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
-
 	mCuller.SetCamera(mspCamera);
 
-	GetRenderer()->SetClearColor(ColorRGBA::WHITE);
+	// We render some of the cubes using transparency and frontface culling,
+	// so we create the required render state objects here.
+	mspCullState = WIRE_NEW CullState;
+	mspAlphaState = WIRE_NEW AlphaState;
 
+	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
+
 	return true;
 }
 
 //----------------------------------------------------------------------------
 void Sample4::OnIdle()
 {
+	// This function is called by the framework's render loop until the
+	// application exits. Perform all your rendering here.
+
+	// Determine how much time has passed since the last call, so we can
+	// move our objects independently of the actual frame rate.
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
-
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
+	// If the camera's viewing frustum changed, we need to update the culler
+	// (we know we don't change it, so it's commented out here)
+	//	mCuller.SetFrustum(mspCamera->GetFrustum());
 
-	Spatial* pLeft = mspRoot->GetChild(0);
-	pLeft->Local.SetRotate(rotate);
-	pLeft->Local.SetTranslate(Vector3F(-2, 0, MathF::Sin(mAngle) * 7));
-
-	Spatial* pRight = mspRoot->GetChild(1);
-	pRight->Local.SetRotate(rotate);
-	pRight->Local.SetTranslate(Vector3F(2, 0, MathF::Sin(mAngle) * 7));
-
- 	mspRoot->UpdateGS(time);
- 	mCuller.ComputeVisibleSet(mspRoot);
-
+	// Clear the framebuffer and the z-buffer.
 	GetRenderer()->ClearBuffers();
+
+	// Tell the Renderer that we want to start drawing.
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+
+	// We set the render state to backface culling and disable alpha blending.
+	// NOTE: if you are not using the scenegraph to handle render states for
+	// you, it is your responsibility to handle states between draw calls.
+	mspCullState->CullFace = CullState::CM_BACK;
+	GetRenderer()->SetState(mspCullState);
+
+	mspAlphaState->BlendEnabled = false;
+	GetRenderer()->SetState(mspAlphaState);
+
+	// Set world position (translate) and orientation (rotate)
+	Matrix34F model(Matrix34F::IDENTITY);
+	mspCube->World.SetRotate(model);
+	mspCube->World.SetTranslate(Vector3F::ZERO);
+
+	// After setting world transformation, we update the world bounding
+	// volume of the cube so we can cull it against the viewing frustum.
+	// That way we only draw objects that are visible on the screen.
+	mspCube->UpdateWorldBound();
+	if (mCuller.IsVisible(mspCube))
+	{
+		GetRenderer()->Draw(mspCube);
+	}
+
+	// Tell the Renderer that we are done with drawing
 	GetRenderer()->PostDraw();
+
+	// Present the framebuffer (aka backbuffer) on the screen
 	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
-DLodNode* Sample4::CreateLods()
+Geometry* Sample4::CreateCube()
 {
-	DLodNode* pLod = WIRE_NEW DLodNode;
-
-	// Create different levels of the same object
-	Geometry* pLod0 = CreateGeometry(14, 192);	// 5376 triangles
-	Geometry* pLod1 = CreateGeometry(10, 160);	// 3200 triangles
-	Geometry* pLod2 = CreateGeometry(8, 128);	// 2048 triangles
-	Geometry* pLod3 = CreateGeometry(6, 96);	// 1152 triangles
-
-	pLod->SetLod(0, pLod0, 0, 5);		// level0 from 0-5 units
-	pLod->SetLod(1, pLod1, 5, 10);		// level1 from 5-10 units
-	pLod->SetLod(2, pLod2, 10, 15);		// level2 from 10-15 units
-	pLod->SetLod(3, pLod3, 15, 100);	// level3 from 15-100 units
-
-	return pLod;
-}
-
-//----------------------------------------------------------------------------
-Geometry* Sample4::CreateGeometry(UInt shapeCount, UInt segmentCount)
-{
-	// Create a PQ (4,3) torus knot with a inner radius of 0.2
-	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);
-
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	pTextureEffect->Textures.Append(CreateTexture());
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
-	pTorus->AttachEffect(pTextureEffect);
-
-	return pTorus;
-}
-
-//----------------------------------------------------------------------------
-Geometry* Sample4::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
-	UInt segmentCount, UInt p, UInt q)
-{
-	shapeCount++;
-	segmentCount++;
-
-	// create the inner shape (i.e. a circle)
-	TArray<Vector3F> shape(shapeCount);
-	Vector3F pos(0, shapeRadius, 0);
-	Float angleStride = MathF::TWO_PI / (shapeCount-1);
-	Float angle = 0;
-	for (UInt i = 0; i < (shapeCount-1); i++)
+	// Create a cube with unique texture (UV) coordinates for each side.
+	// This means we have to duplicate vertices, since every vertex can only
+	// have one UV coordinate per texture. Thus resulting in 24 (4 vertices
+	// times 6 sides of the cube) vertices.
+	const Float extent = 1.0F;
+	const Vector3F vertices[] =
 	{
-		Matrix34F rot(Vector3F(0, 0, 1), angle);
-		shape.SetElement(i, pos * rot);
-		angle += angleStride;
-	}
+		// side 1
+		Vector3F(-extent,  extent,  extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F( extent, -extent,  extent),
+		Vector3F(-extent, -extent,  extent),
+		// side 2
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F(-extent,  extent,  extent),
+		Vector3F(-extent,  extent, -extent),
+		// side 3
+		Vector3F( extent, -extent,  extent),
+		Vector3F( extent,  extent,  extent),
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent, -extent, -extent),
+		// side 4
+		Vector3F(-extent,  extent, -extent),
+		Vector3F( extent,  extent, -extent),
+		Vector3F( extent, -extent, -extent),
+		Vector3F(-extent, -extent, -extent),
+		// side 5
+		Vector3F( extent, -extent, -extent),
+		Vector3F( extent, -extent,  extent),
+		Vector3F(-extent, -extent,  extent),
+		Vector3F(-extent, -extent, -extent),
+		// side 6
+		Vector3F(-extent, -extent,  extent),
+		Vector3F(-extent,  extent,  extent),
+		Vector3F(-extent,  extent, -extent),
+		Vector3F(-extent, -extent, -extent)
+	};
 
-	// the last vertex can't share uv-coords, so we duplicate the first vertex
-	shape.SetElement(shapeCount-1, shape[0]);
+	// Texture coordinates
+	const Float extentUv = 1.0F;
+	const Vector2F uvs[] =
+	{
+		// side 1
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 2
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 3
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 4
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 5
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv),
+		// side 6
+		Vector2F(0.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 0.0F * extentUv),
+		Vector2F(1.0F * extentUv, 1.0F * extentUv),
+		Vector2F(0.0F * extentUv, 1.0F * extentUv)
+	};
 
+	// Indices provide connectivity information and define the triangle mesh.
+	// Every side of the cube consists of 2 triangles.
+	const UInt indices[] =
+	{
+		// side 1
+		0, 2, 1,
+		0, 3, 2,
+		// side 2
+		4, 6, 5,
+		4, 7, 6,
+		// side 3
+		8, 10, 9,
+		8, 11, 10,
+		// side 4
+		12, 13, 14,
+		12, 14, 15,
+		// side 5
+		16, 17, 18,
+		16, 18, 19,
+		// side 6
+		20, 21, 22,
+		20, 22, 23
+	};
+
+	// Before creating the VertexBuffer we need to define its format.
+	// It consists of 3d positions and 2d texture coordinates
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
 
-	const UInt vertexCount = segmentCount * shapeCount;
-	VertexBuffer* pVertices = WIRE_NEW VertexBuffer(attributes, vertexCount);
+	// Now with the attributes being defined, we can create a VertexBuffer
+	// and fill it with data.
+	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
+	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+		vertexQuantity);
 
-	// create the pq torus knot and position & align the shape along it
-	angleStride = MathF::TWO_PI / (segmentCount-1);
-	angle = 0;
-	for (UInt i = 0; i < segmentCount-1; i++)
+	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
-		Float r = 0.5F * (2 + MathF::Sin(q * angle));
-		Float x = r * MathF::Cos(p * angle);
-		Float y = r * MathF::Cos(q * angle);
-		Float z = r * MathF::Sin(p * angle);
-		Vector3F p0(x, y, z);
-
-		r = 0.5F * (2 + MathF::Sin(q * (angle+0.1F)));
-		x = r * MathF::Cos(p * (angle+0.1F));
-		y = r * MathF::Cos(q * (angle+0.1F));
-		z = r * MathF::Sin(p * (angle+0.1F));
-		Vector3F p1(x, y, z);
-
-		angle += angleStride;		
-
-		Vector3F t = p1-p0;
-		Vector3F n = p1+p0;
-		Vector3F b = t.Cross(n);
-		n = b.Cross(t);
-		n.Normalize();
-		b.Normalize();
-
-		for (UInt j = 0; j < shapeCount; j++)
-		{	
-			Vector3F newVertex = p0 + shape[j].X() * n + shape[j].Y() * b;
-			pVertices->Position3(i*shapeCount + j) = newVertex;
-
-			Vector2F uv((1.0F/(shapeCount-1))*j, (1.0F/(segmentCount-1))*i);
-			pVertices->TCoord2(i*shapeCount + j) = uv;
-		}
+		pCubeVerts->Position3(i) = vertices[i];
+		pCubeVerts->TCoord2(i) = uvs[i];
 	}
 
-	// the last segment can't share uv-coords, so we copy it from the first
-	for (UInt j = 0; j < shapeCount; j++)
-	{	
-		pVertices->Position3((segmentCount-1)*shapeCount + j) = pVertices->
-			Position3(j);
-		Vector2F uv = pVertices->TCoord2(j);
-		uv.Y() += 1.0F;
-		pVertices->TCoord2((segmentCount-1)*shapeCount + j) = uv;
-	}
-
-	const UInt indexCount = (segmentCount-1)*(shapeCount-1)*6;
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexCount);
-	for (UInt j = 0; j < segmentCount-1; j++)
+	// Same for the IndexBuffer
+	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	for	(UInt i = 0; i < indexQuantity; i++)
 	{
-		UInt offset = shapeCount*j;
-		for (UInt i = 0; i < shapeCount-1; i++)
-		{
-			UInt index = (shapeCount-1)*j+i;
-			UInt index0 = i+offset;
-			UInt index1 = index0+shapeCount;
-			UInt index2 = index0+1;
-			UInt index3 = index0+shapeCount+1;
-
-			(*pIndices)[index*6] = index0;
-			(*pIndices)[index*6+1] = index1;
-			(*pIndices)[index*6+2] = index2;
-
-			(*pIndices)[index*6+3] = index2;
-			(*pIndices)[index*6+4] = index1;
-			(*pIndices)[index*6+5] = index3;
-		}
+		(*pIndices)[i] = indices[i];
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pVertices, pIndices);
-	return pGeo;
+	// Geometric objects consist of a Vertex- and IndexBuffer.
+	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
+
+	// The cube shall be textured. Therefore we create and attach a texture
+	// effect, where we add a texture and define its blending mode.
+	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	Texture2D* pTexture = CreateTexture();
+	pTextureEffect->Textures.Append(pTexture);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
+	pCube->AttachEffect(pTextureEffect);
+
+	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
+	// smart pointers. Thus, you can share these buffers amongst Geometry 
+	// objects without having to worry about deletion. Same applies to
+	// Effects, Textures and Images.
+
+	return pCube;
 }
-
-//----------------------------------------------------------------------------
-struct Cell
-{
-	Vector2F point;
-	ColorRGB color;
-};
 
 //----------------------------------------------------------------------------
 Texture2D* Sample4::CreateTexture()
 {
-	// create the texture once and cache it for subsequent calls
-	if (mspTexture)
-	{
-		return mspTexture;
-	}
-
-	// define the properties of the image to be used as a texture
-	const UInt width = 32;
-	const UInt height = 1024;
-	const Image2D::FormatMode format = Image2D::FM_RGB888;
+	const Image2D::FormatMode format = Image2D::FM_RGBA8888;
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
-	ColorRGB* const pColorDst = WIRE_NEW ColorRGB[width*height];
+	const UInt width = 256;
+	const UInt height = 256;
 
-	// create points with random x,y position and colors
-	TArray<Cell> cells;
-	Random random;
-	for (UInt i = 0; i < 100; i++)
-	{
-		Cell cell;
-		cell.point.X() = random.GetFloat() * width;
-		cell.point.Y() = random.GetFloat() * height;
-		cell.color.R() = random.GetFloat();
-		cell.color.G() = random.GetFloat();
-		cell.color.B() = random.GetFloat();
+	const Float r = MathF::Min(static_cast<Float>(width), static_cast<Float>(
+		height)) * 0.5F;
 
-		Float max = 0.0F;
-		max = max < cell.color.R() ? cell.color.R() : max;
-		max = max < cell.color.G() ? cell.color.G() : max;
-		max = max < cell.color.B() ? cell.color.B() : max;
-		max = 1.0F / max;
-		cell.color *= max;
-		cells.Append(cell);
-	}
-
-	// iterate over all texels and use the distance to the 2 closest random
-	// points to calculate the texel's color
-	Float max = 0;
+	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
 	for (UInt y = 0; y < height; y++)
 	{
 		for (UInt x = 0; x < width; x++)
 		{
-			Float minDist = MathF::MAX_REAL;
-			Float min2Dist = MathF::MAX_REAL;
-			UInt minIndex = 0;
+			Float dx = r-x;
+			Float dy = r-y;
+			Float r1 = MathF::Sqrt(dx*dx + dy*dy) / r;
 
-			for (UInt i = 0; i < cells.GetQuantity(); i++)
+// replace the if-statement with c *= 1-smoothstep(1-.01, 1+.01, r);
+
+// 			Float c = 1-r1;
+// 			c = c*c;
+// 			c *= 1 - SmoothStep(1-0.01F, 1+0.01F, r1);
+
+// 			Float c = r1*r1;
+// 			c = c*c;
+// 			c = c*c*c;
+// 			c *= 1 - SmoothStep(1-0.01F, 1+0.01F, r1);
+
+// 			Float c = r1;
+// 			c *= 1 - SmoothStep(1-0.01F, 1+0.01F, r1);
+
+			Float c = 1-MathF::FAbs(r1 - 0.9F) / 0.1F;
+			if (c < 0)
 			{
-				Vector2F pos(static_cast<Float>(x), static_cast<Float>(y));
-
-				// Handle tiling
-				Vector2F vec = cells[i].point - pos;
-				vec.X() = MathF::FAbs(vec.X());
-				vec.Y() = MathF::FAbs(vec.Y());
-				vec.X() = vec.X() > width/2 ? width-vec.X() : vec.X();
-				vec.Y() = vec.Y() > height/2 ? height-vec.Y() : vec.Y();
-
-				Float distance = vec.Length();
-
-				if (minDist > distance)
-				{
-					min2Dist = minDist;
-					minDist = distance;
-					minIndex = i;
-				}
-				else if (min2Dist > distance)
-				{
-					min2Dist = distance;
-				}
+				c = 0;
+			}
+			else
+			{
+				c = c*c;
+				c = c*c;
 			}
 
-			float factor = (min2Dist - minDist) + 3;
-			ColorRGB color = cells[minIndex].color * factor;
-			max = max < color.R() ? color.R() : max;
-			max = max < color.G() ? color.G() : max;
-			max = max < color.B() ? color.B() : max;
-			pColorDst[y*width+x] = color;
+			UChar alpha = static_cast<UChar>(c * 255.0F);
+
+			pDst[(y*width + x)*4] = alpha;	// R
+			pDst[(y*width + x)*4+1] = alpha;	// G
+			pDst[(y*width + x)*4+2] = alpha;	// B
+			pDst[(y*width + x)*4+3] = alpha;
 		}
 	}
 
-	// convert and normalize the ColorRGBA float array to an 8-bit per
-	// channel texture
-	max = 255.0F / max;
-	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
-	for (UInt i = 0; i < width*height; i++)
-	{
-		ColorRGB color = pColorDst[i];
-		pDst[i*bpp] = static_cast<UChar>(color.R() * max);
-		pDst[i*bpp+1] = static_cast<UChar>(color.G() * max);
-		pDst[i*bpp+2] = static_cast<UChar>(color.B() * max);
-	}
+
+
+
+// 	Float* const pTemp = WIRE_NEW Float[width*height];
+// 	for (UInt i = 0; i < width*height; i++)
+// 	{
+// 		pTemp[i] = 0.0F;
+// 	}
+// 
+// 	Random rand;
+// 	for (UInt count = 0; count < 200; count++)
+// 	{
+// 		// pick a random direction
+// 		Float angle = rand.GetFloat() * MathF::TWO_PI;
+// 		Float dx = MathF::Cos(angle);
+// 		Float dy = MathF::Sin(angle);
+// 
+// 		// push particle along this path
+// 		Float fx = static_cast<Float>(width) * 0.5F;
+// 		Float fy = static_cast<Float>(height) * 0.5F;
+// 
+// 		for (UInt step = 0; step < r; step++)
+// 		{
+// 			DrawParticle(pTemp, fx, fy, width);
+// 			fx += dx;
+// 			fy += dy;
+// 		}
+// 	}
+// 
+// 	// normalize
+// 	Float max = 0;
+// 	for (UInt i = 0; i < width*height; i++)
+// 	{
+// 		if (pTemp[i] > max)
+// 		{
+// 			max = pTemp[i];
+// 		}
+// 	}
+// 
+// 	max = 1/max;
+// 	for (UInt i = 0; i < width*height; i++)
+// 	{
+// 		Float f = pTemp[i] * max * 512.0F;
+// 		UChar val = static_cast<UChar>(MathF::Clamp(0, f, 255.0F));
+// 		pDst[i*bpp] = val;
+// 		pDst[i*bpp+1] = val;
+// 		pDst[i*bpp+2] = val;
+// 		pDst[i*bpp+3] = val;
+// 	}
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
-	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
+	pTexture->SetAnisotropyValue(4.0F);
 
-	mspTexture = pTexture;
 	return pTexture;
+}
+
+//----------------------------------------------------------------------------
+void Sample4::DrawParticle(Float* const pDst, Float fx, Float fy, UInt width)
+{
+	const Int partRadius = 10;
+	
+	for (Int y = -partRadius; y < partRadius; y++)
+	{
+		for (Int x = -partRadius; x < partRadius; x++)
+		{
+			Float r2 = static_cast<Float>(x*x + y*y);
+			Float c = 1 - r2 / static_cast<Float>(partRadius*partRadius);
+			c = c*c;
+			c = c*c;
+			pDst[(y+static_cast<Int>(fy))*width+ x+static_cast<Int>(fx)] += c;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+Float Sample4::SmoothStep(Float a, Float b, Float x)
+{
+	if (x < a)
+	{
+		return 0;
+	}
+
+	if (x >= b)
+	{
+		return 1;
+	}
+
+	x = (x-a) / (b-a);
+	return (x*x) * (3-2*x);
 }

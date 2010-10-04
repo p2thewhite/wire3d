@@ -62,3 +62,34 @@ Real Math<Real>::Tan(Real value)
 {
 	return static_cast<Real>(tan(static_cast<Double>(value)));
 }
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::Min(Real value1, Real value2)
+{
+	return value1 < value2 ? value1 : value2;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::Max(Real value1, Real value2)
+{
+	return value1 > value2 ? value1 : value2;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::Clamp(Real min, Real value, Real max)
+{
+	if (value < min)
+	{
+		return min;
+	}
+
+	if (value > max)
+	{
+		return max;
+	}
+
+	return value;
+}

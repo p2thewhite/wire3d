@@ -13,25 +13,27 @@ class Sample4 : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
+	Sample4();
+
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
 private:
-	DLodNode* CreateLods();
-	Geometry* CreateGeometry(UInt shapeCount, UInt segmentCount);
-
-	Geometry* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
-		UInt segmentCount, UInt p, UInt q);
+	Geometry* CreateCube();
 	Texture2D* CreateTexture();
+
+	Float SmoothStep(Float a, Float b, Float x);
+	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);
 
 	CameraPtr mspCamera;
 	Culler mCuller;
 
+	GeometryPtr mspCube;
+	CullStatePtr mspCullState;
+	AlphaStatePtr mspAlphaState;
+
 	Float mAngle;
 	Double mLastTime;
-
-	NodePtr mspRoot;
-	Texture2DPtr mspTexture;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample4);
