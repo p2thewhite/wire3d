@@ -6,6 +6,7 @@
 #include "WireColorRGBA.h"
 #include "WireCullState.h"
 #include "WireFogState.h"
+#include "WireMaterialState.h"
 #include "WireSmartPointer.h"
 #include "WireTHashTable.h"
 #include "WireWireframeState.h"
@@ -57,15 +58,6 @@ public:
 	Float GetMaxAnisotropy() const;
 	UInt GetMaxTextureStages() const;
 
-	// Render state handling
-	AlphaState* GetAlphaState() const;
-	CullState* GetCullState() const;
-	FogState* GetFogState() const;
-	WireframeState* GetWireframeState() const;
-	ZBufferState* GetZBufferState() const;
-
-	PdrRendererData* GetRendererData() const;
-
 	// Bind/Unbind all resources of a geometry object or a scene graph
 	static void BindAll(const Spatial* pSpatial);
 	static void UnbindAll(const Spatial* pSpatial);
@@ -115,13 +107,22 @@ public:
 	void SetState(AlphaState* pState);
 	void SetState(CullState* pState);
 	void SetState(FogState* pState);
+	void SetState(MaterialState* pState);
 	void SetState(WireframeState* pState);
 	void SetState(ZBufferState* pState);
+	AlphaState* GetAlphaState() const;
+	CullState* GetCullState() const;
+	FogState* GetFogState() const;
+	MaterialState* GetMaterialState() const;
+	WireframeState* GetWireframeState() const;
+	ZBufferState* GetZBufferState() const;
 
 	// Light state handling
 	void SetLight(Light* pLight);
 	void Enable(const TArray<Pointer<Light> >& rLights);
 	void Disable(const TArray<Pointer<Light> >& rLights);
+
+	PdrRendererData* GetRendererData() const;
 
 private:
 	void ApplyEffect(const TextureEffect* pEffect);

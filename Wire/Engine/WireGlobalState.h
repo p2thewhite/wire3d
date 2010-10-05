@@ -22,6 +22,7 @@ public:
 		ALPHA,
 		CULL,
 		FOG,
+		MATERIAL,
 		WIREFRAME,
 		ZBUFFER,
 		MAX_STATE_TYPE

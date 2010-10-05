@@ -500,6 +500,12 @@ void Renderer::SetGlobalState(GlobalStatePtr spStates[])
 		SetState(StaticCast<FogState>(pState));
 	}
 
+	pState = spStates[GlobalState::MATERIAL];
+	if (pState)
+	{
+		SetState(StaticCast<MaterialState>(pState));
+	}
+
 	pState = spStates[GlobalState::WIREFRAME];
 	if (pState)
 	{
@@ -534,6 +540,12 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 	{
 		pState = GlobalState::Default[GlobalState::FOG];
 		SetState(StaticCast<FogState>(pState));
+	}
+
+	if (spStates[GlobalState::MATERIAL])
+	{
+		pState = GlobalState::Default[GlobalState::MATERIAL];
+		SetState(StaticCast<MaterialState>(pState));
 	}
 
 	if (spStates[GlobalState::WIREFRAME])

@@ -39,6 +39,7 @@ private:
 	GeometryPtr mspCube;
 	CullStatePtr mspCullState;
 	AlphaStatePtr mspAlphaState;
+	MaterialStatePtr mspMaterialState;
 
 	Float mAngle;
 	Double mLastTime;

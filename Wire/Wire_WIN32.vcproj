@@ -579,6 +579,26 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXMaterialState.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 						<FileConfiguration
@@ -731,6 +751,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9MaterialState.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>
 					</File>
@@ -825,6 +849,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireLight.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMaterialState.h"
 					>
 				</File>
 				<File
@@ -1057,6 +1085,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireLight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMaterialState.cpp"
 					>
 				</File>
 				<File

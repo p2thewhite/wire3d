@@ -206,6 +206,26 @@ void Renderer::DrawElements()
 	// TODO: lighting
 	GXSetNumChans(1);
 
+// 	GXLightObj MyLight;
+// 	GXColor color = {255, 255, 255, 255};
+// 
+// 	GXInitLightPos(&MyLight, 0.0F, 0.0F, 0.0F);
+// 	GXInitLightColor(&MyLight, color);
+// 	GXLoadLightObjImm(&MyLight, GX_LIGHT0);
+// 
+// 	GXSetChanCtrl(
+// 		GX_COLOR0A0,
+// 		GX_ENABLE,   // enable channel
+// 		GX_SRC_REG,  // amb source
+// 		GX_SRC_REG,  // mat source
+// 		GX_LIGHT0,   // light mask
+// 		GX_DF_CLAMP, // diffuse function
+// 		GX_AF_NONE);
+// 	// set up ambient color
+// 	GXColor ambCol = { 255, 128, 0, 255 };
+// 	GXColor white = { 255, 255, 255, 255 };
+// 	GXSetChanAmbColor(GX_COLOR0A0, ambCol);
+
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
 	const WireframeState* pWireframeState = GetWireframeState();
 	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;

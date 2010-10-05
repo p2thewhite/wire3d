@@ -53,6 +53,12 @@ inline FogState* Renderer::GetFogState() const
 }
 
 //----------------------------------------------------------------------------
+inline MaterialState* Renderer::GetMaterialState() const
+{
+	return StaticCast<MaterialState>(mspStates[GlobalState::MATERIAL]);
+}
+
+//----------------------------------------------------------------------------
 inline WireframeState* Renderer::GetWireframeState() const
 {
 	return StaticCast<WireframeState>(mspStates[GlobalState::WIREFRAME]);
