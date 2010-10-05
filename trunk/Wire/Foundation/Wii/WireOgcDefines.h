@@ -34,6 +34,7 @@ typedef guVector Vector;
 #define GXInitTexObjWrapMode GX_InitTexObjWrapMode
 #define GXInvalidateTexAll GX_InvalidateTexAll
 #define GXInvalidateVtxCache GX_InvVtxCache
+#define GXLoadLightObjImm GX_LoadLightObj
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
 #define GXLoadTexObj GX_LoadTexObj
 #define GXPosition1x16 GX_Position1x16
@@ -43,6 +44,9 @@ typedef guVector Vector;
 #define GXSetAlphaUpdate GX_SetAlphaUpdate
 #define GXSetArray GX_SetArray
 #define GXSetBlendMode GX_SetBlendMode
+#define GXSetChanAmbColor GX_SetChanAmbColor
+#define GXSetChanCtrl GX_SetChanCtrl
+#define GXSetChanMatColor GX_SetChanMatColor
 #define GXSetColorUpdate GX_SetColorUpdate
 #define GXSetCopyClear GX_SetCopyClear
 #define GXSetCopyFilter GX_SetCopyFilter

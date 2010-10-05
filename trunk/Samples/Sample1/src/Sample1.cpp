@@ -47,6 +47,7 @@ Bool Sample1::OnInitialize()
 	// so we create the required render state objects here.
 	mspCullState = WIRE_NEW CullState;
 	mspAlphaState = WIRE_NEW AlphaState;
+	mspMaterialState = WIRE_NEW MaterialState;
 
 	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
@@ -88,6 +89,9 @@ void Sample1::OnIdle()
 	mspAlphaState->BlendEnabled = false;
 	GetRenderer()->SetState(mspAlphaState);
 
+	mspMaterialState->Ambient = ColorRGBA::GREEN;
+	GetRenderer()->SetState(mspMaterialState);
+
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;
 	const Float stride = 3.5F;
@@ -118,6 +122,9 @@ void Sample1::OnIdle()
 	// To draw the backfaces, cull the frontfaces
 	mspCullState->CullFace = CullState::CM_FRONT;
 	GetRenderer()->SetState(mspCullState);
+
+	mspMaterialState->Ambient = ColorRGBA::RED;
+	GetRenderer()->SetState(mspMaterialState);
 
 	z = MathF::Cos(mAngle) * 3.0F;
 	for (UInt i = 0; i < cubeCount; i++)
@@ -294,7 +301,7 @@ Geometry* Sample1::CreateCube()
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
 	pCube->AttachEffect(pTextureEffect);
 
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using

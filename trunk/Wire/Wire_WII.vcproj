@@ -379,6 +379,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMaterialState.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.h"
 					>
 				</File>
@@ -611,6 +615,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMaterialState.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.cpp"
 					>
 				</File>
@@ -727,6 +735,10 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXLight.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXMaterialState.cpp"
 						>
 					</File>
 					<File
