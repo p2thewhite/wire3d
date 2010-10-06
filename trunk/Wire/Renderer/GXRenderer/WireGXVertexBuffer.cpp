@@ -28,6 +28,18 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		mElements.Append(element);
 	}
 
+	channels = rIAttr.GetNormalChannels();
+	if (channels > 0)
+	{
+		element.Stride = channels * sizeof(Float);
+		element.Size = element.Stride * vertexCount;
+		element.Data = memalign(32, element.Size);
+		element.Attr = GX_VA_NRM;
+		element.CompCnt = GX_NRM_XYZ;
+		element.CompType = GX_F32;
+		mElements.Append(element);
+	}
+
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
 	{
 		if (rIAttr.GetColorChannels(unit) > 0)
@@ -58,7 +70,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	}
 
 	WIRE_ASSERT(mElements.GetQuantity() > 0);
-	PdrRendererData::Convert(pVertexBuffer, mElements);
+	Convert(pVertexBuffer, mElements);
 
 	for (UInt i = 0; i < mElements.GetQuantity(); i++)
 	{
@@ -138,4 +150,82 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
 void PdrVertexBuffer::Disable(Renderer* pRenderer)
 {
 	// Nothing to do.
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::Convert(const VertexBuffer* pSrc,
+	TArray<PdrVertexBuffer::VertexElement>& rElements)
+{
+	const VertexAttributes& rIAttr = pSrc->GetAttributes();
+
+	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	{
+		UInt index = 0;
+
+		if (rIAttr.GetPositionChannels() > 0)
+		{
+			const Float* const pPosition = pSrc->GetPosition(i);
+			Float* const pDst = static_cast<Float*>(rElements[index++].Data);
+			UInt channelCount = rIAttr.GetPositionChannels();
+
+			for (UInt k = 0; k < channelCount; k++)
+			{
+				pDst[i*channelCount+k] = pPosition[k];
+			}
+		}
+
+		if (rIAttr.GetNormalChannels() > 0)
+		{
+			const Float* const pNormal = pSrc->GetNormal(i);
+			Float* const pDst = static_cast<Float*>(rElements[index++].Data);
+			UInt channelCount = rIAttr.GetNormalChannels();
+
+			for (UInt k = 0; k < channelCount; k++)
+			{
+				pDst[i*channelCount+k] = pNormal[k];
+			}
+		}
+
+		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
+		{
+			if (rIAttr.GetColorChannels(unit) > 0)
+			{
+				const Float* const pColor = pSrc->GetColor(i, unit);
+				UInt color = 0xFFFFFFFF;
+				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
+				{
+					color = color << 8;
+					color |= static_cast<UChar>(pColor[k] * 255.0F);
+				}
+
+				if (rIAttr.GetColorChannels(unit) == 3)
+				{
+					color = color << 8;
+					color |= 0xFF;
+				}
+
+				UInt* const pDst = static_cast<UInt*>(rElements[index++].
+					Data);
+				pDst[i] = color;
+			}
+		}
+
+		UInt tChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		for (UInt unit = 0; unit < tChannelQuantity; unit++)
+		{
+			if (rIAttr.GetTCoordChannels(unit) > 0)
+			{
+				const Float* const pUv = pSrc->GetTCoord(i, unit);
+				Float* const pDst = static_cast<Float*>(rElements[index++].
+					Data);
+				UInt channelCount = rIAttr.GetTCoordChannels(unit);
+
+				for (UInt k = 0; k < channelCount; k++)
+				{
+					pDst[i*channelCount+k] = pUv[k];
+				}
+			}
+		}
+	}
 }

@@ -315,70 +315,6 @@ void Renderer::OnViewportChange()
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::Convert(const VertexBuffer* pSrc,
-	TArray<PdrVertexBuffer::VertexElement>& rElements)
-{
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
-	{
-		UInt index = 0;
-
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* pPosition = pSrc->GetPosition(i);
-			Float* pDst = static_cast<Float*>(rElements[index++].Data);
-			UInt channelCount = rIAttr.GetPositionChannels();
-
-			for (UInt k = 0; k < channelCount; k++)
-			{
-				pDst[i*channelCount+k] = pPosition[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* pColor = pSrc->GetColor(i, unit);
-				UInt color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 3)
-				{
-					color = color << 8;
-					color |= 0xFF;
-				}
-
-				UInt* pDst = static_cast<UInt*>(rElements[index++].Data);
-				pDst[i] = color;
-			}
-		}
-
-		UInt tChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tChannelQuantity; unit++)
-		{
-			if (rIAttr.GetTCoordChannels(unit) > 0)
-			{
-				const Float* pUv = pSrc->GetTCoord(i, unit);
-				Float* pDst = static_cast<Float*>(rElements[index++].Data);
-				UInt channelCount = rIAttr.GetTCoordChannels(unit);
-
-				for (UInt k = 0; k < channelCount; k++)
-				{
-					pDst[i*channelCount+k] = pUv[k];
-				}
-			}
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
 void PdrRendererData::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 	UShort height, UChar* pDst)
 {
@@ -604,6 +540,10 @@ void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 				GXPosition1x16(index);
 				break;
 
+			case GX_VA_NRM:
+				GXNormal1x16(index);
+				break;
+
 			case GX_VA_CLR0:
 				GXColor1x16(index);
 				break;
@@ -650,6 +590,10 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 					GXPosition1x16(index);
 					break;
 
+				case GX_VA_NRM:
+					GXNormal1x16(index);
+					break;
+
 				case GX_VA_CLR0:
 					GXColor1x16(index);
 					break;
@@ -677,6 +621,10 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 				{
 				case GX_VA_POS:
 					GXPosition1x16(index);
+					break;
+
+				case GX_VA_NRM:
+					GXNormal1x16(index);
 					break;
 
 				case GX_VA_CLR0:

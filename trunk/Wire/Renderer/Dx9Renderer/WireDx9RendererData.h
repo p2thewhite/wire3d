@@ -18,8 +18,6 @@ public:
 	// device management
 	void ResetDevice();
 
-	static void Convert(const VertexBuffer* pSrc, Float* pDst);
-
 	// Platform-dependent data
 	IDirect3D9* D3D;
 	IDirect3DDevice9* D3DDevice;

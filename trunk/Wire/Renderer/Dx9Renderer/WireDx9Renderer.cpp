@@ -230,8 +230,8 @@ void Renderer::DrawElements()
 	mpGeometry->World.GetHomogeneous(world);
 	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
- 	rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
- 	rDevice->SetRenderState(D3DRS_AMBIENT, 0x00FF8000 );
+//  	rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+//  	rDevice->SetRenderState(D3DRS_AMBIENT, 0x00FF8000 );
 
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
@@ -311,64 +311,6 @@ void PdrRendererData::ResetDevice()
 
 	mpRenderer->OnViewportChange();
 	mpRenderer->OnFrameChange();
-}
-
-//----------------------------------------------------------------------------
-void PdrRendererData::Convert(const VertexBuffer* pSrc, Float* pDst)
-{
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
-	{
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* pPosition = pSrc->GetPosition(i);
-			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
-			{
-				*pDst++ = pPosition[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* pColor = pSrc->GetColor(i, unit);
-				D3DCOLOR color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 4)
-				{
-					UChar alpha = static_cast<UChar>(color);
-					color = color >> 8;
-					color |= alpha << 24;
-				}
-
-				DWORD* pColorDst = reinterpret_cast<DWORD*>(pDst);
-				*pColorDst++ = color;
-				pDst = reinterpret_cast<Float*>(pColorDst);
-			}
-		}
-
-		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
-		{
-			UInt channels = rIAttr.GetTCoordChannels(unit);
-			if (channels > 0)
-			{
-				const Float* pTCoords = pSrc->GetTCoord(i, unit);
-				for (UInt k = 0; k < channels; k++)
-				{
-					*pDst++ = pTCoords[k];
-				}
-			}
-		}
-	}
 }
 
 //----------------------------------------------------------------------------

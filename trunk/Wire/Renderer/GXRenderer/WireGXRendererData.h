@@ -15,9 +15,6 @@ class VertexBuffer;
 class PdrRendererData
 {
 public:
-	static void Convert(const VertexBuffer* pSrc, TArray<PdrVertexBuffer::
-		VertexElement>& rElements);
-
 	static UInt GetTotalImageMemory(const Image2D* pImage, UInt bpp);
 
 	static void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
