@@ -43,6 +43,9 @@ public:
 		{ return mElements; }
 
 private:
+	void Convert(const VertexBuffer* pSrc,
+		TArray<PdrVertexBuffer::VertexElement>& rElements);
+
 	TArray<DisplayList> mDisplayLists;
 	TArray<VertexElement> mElements;
 

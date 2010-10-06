@@ -23,6 +23,8 @@ public:
 	void Disable(Renderer* pRenderer);
 
 private:
+	void Convert(const VertexBuffer* pSrc, Float* pDst);
+
 	IDirect3DVertexBuffer9* mpVertexBuffer;
 	IDirect3DVertexDeclaration9* mpVertexDeclaration;
 	UInt mVertexSize;

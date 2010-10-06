@@ -37,6 +37,7 @@ typedef guVector Vector;
 #define GXLoadLightObjImm GX_LoadLightObj
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
 #define GXLoadTexObj GX_LoadTexObj
+#define GXNormal1x16 GX_Normal1x16
 #define GXPosition1x16 GX_Position1x16
 #define GXPosition1x8 GX_Position1x8
 #define GXPosition3f32 GX_Position3f32

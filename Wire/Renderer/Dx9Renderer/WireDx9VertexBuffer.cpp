@@ -32,6 +32,17 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		elements.Append(element);
 	}
 
+	if (rIAttr.GetNormalChannels() > 0)
+	{
+		channels = rIAttr.GetNormalChannels();
+		element.Offset = static_cast<WORD>(vertexSize);
+		vertexSize += channels * sizeof(Float);
+		element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels - 1);
+		element.Usage = D3DDECLUSAGE_NORMAL;
+		element.UsageIndex = 0;
+		elements.Append(element);
+	}
+
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
 	{
 		if (rIAttr.GetColorChannels(unit) > 0)
@@ -81,7 +92,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		0);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	PdrRendererData::Convert(pVertexBuffer, pVBData);
+	Convert(pVertexBuffer, pVBData);
 
 	hr = mpVertexBuffer->Unlock();
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -112,4 +123,71 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*)
 void PdrVertexBuffer::Disable(Renderer*)
 {
 	// Nothing to do
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, Float* pDst)
+{
+	const VertexAttributes& rIAttr = pSrc->GetAttributes();
+
+	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	{
+		if (rIAttr.GetPositionChannels() > 0)
+		{
+			const Float* const pPosition = pSrc->GetPosition(i);
+			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
+			{
+				*pDst++ = pPosition[k];
+			}
+		}
+
+		if (rIAttr.GetNormalChannels() > 0)
+		{
+			const Float* const pNormal = pSrc->GetNormal(i);
+			for (UInt k = 0; k < rIAttr.GetNormalChannels(); k++)
+			{
+				*pDst++ = pNormal[k];
+			}
+		}
+
+		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
+		{
+			if (rIAttr.GetColorChannels(unit) > 0)
+			{
+				const Float* const pColor = pSrc->GetColor(i, unit);
+				D3DCOLOR color = 0xFFFFFFFF;
+				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
+				{
+					color = color << 8;
+					color |= static_cast<UChar>(pColor[k] * 255.0F);
+				}
+
+				if (rIAttr.GetColorChannels(unit) == 4)
+				{
+					UChar alpha = static_cast<UChar>(color);
+					color = color >> 8;
+					color |= alpha << 24;
+				}
+
+				DWORD* pColorDst = reinterpret_cast<DWORD*>(pDst);
+				*pColorDst++ = color;
+				pDst = reinterpret_cast<Float*>(pColorDst);
+			}
+		}
+
+		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
+		{
+			UInt channels = rIAttr.GetTCoordChannels(unit);
+			if (channels > 0)
+			{
+				const Float* const pTCoords = pSrc->GetTCoord(i, unit);
+				for (UInt k = 0; k < channels; k++)
+				{
+					*pDst++ = pTCoords[k];
+				}
+			}
+		}
+	}
 }
