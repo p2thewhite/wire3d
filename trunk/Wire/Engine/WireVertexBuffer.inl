@@ -1,4 +1,10 @@
 //----------------------------------------------------------------------------
+inline UInt VertexBuffer::GetVertexQuantity() const
+{
+	return mVertexQuantity;
+}
+
+//----------------------------------------------------------------------------
 inline Float* VertexBuffer::GetData()
 {
 	return mpChannel;

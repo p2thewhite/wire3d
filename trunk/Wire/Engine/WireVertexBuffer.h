@@ -20,7 +20,7 @@ public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);
 	virtual ~VertexBuffer();
 
-	UInt GetVertexQuantity() const { return mVertexQuantity; }
+	UInt GetVertexQuantity() const;
 
 	Vector3F& Position3(UInt i);
 	Vector3F Position3(UInt i) const;
@@ -55,6 +55,8 @@ public:
 	UInt GetPositionStride() const;
 
 	const VertexAttributes& GetAttributes() const;
+
+	void GeneratePlatonicNormals();
 
 private:
 	VertexAttributes mAttributes;

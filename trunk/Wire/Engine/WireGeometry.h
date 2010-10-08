@@ -21,6 +21,8 @@ public:
 
 	virtual void UpdateWorldBound();
 
+	void GenerateNormals(Bool ignoreHardEdges = false);
+
 	// member access
 	VertexBufferPtr VBuffer;
 	IndexBufferPtr IBuffer;

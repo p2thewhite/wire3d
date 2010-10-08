@@ -26,6 +26,13 @@ public:
 	inline Real Z() const;
 	inline Real& Z();
 
+	// assignment
+	inline Vector3& operator= (const Vector3& rVector);
+
+	// comparison
+ 	inline Bool operator== (const Vector3& rVector) const;
+ 	inline Bool operator!= (const Vector3& rVector) const;
+
 	// arithmetic operations
 	inline Vector3 operator+ (const Vector3& rVector) const;
 	inline Vector3 operator- (const Vector3& rVector) const;

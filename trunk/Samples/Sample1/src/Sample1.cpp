@@ -89,8 +89,8 @@ void Sample1::OnIdle()
 	mspAlphaState->BlendEnabled = false;
 	GetRenderer()->SetState(mspAlphaState);
 
-	mspMaterialState->Ambient = ColorRGBA::GREEN;
-	GetRenderer()->SetState(mspMaterialState);
+// 	mspMaterialState->Ambient = ColorRGBA::GREEN;
+// 	GetRenderer()->SetState(mspMaterialState);
 
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;
@@ -123,8 +123,8 @@ void Sample1::OnIdle()
 	mspCullState->CullFace = CullState::CM_FRONT;
 	GetRenderer()->SetState(mspCullState);
 
-	mspMaterialState->Ambient = ColorRGBA::RED;
-	GetRenderer()->SetState(mspMaterialState);
+// 	mspMaterialState->Ambient = ColorRGBA::RED;
+// 	GetRenderer()->SetState(mspMaterialState);
 
 	z = MathF::Cos(mAngle) * 3.0F;
 	for (UInt i = 0; i < cubeCount; i++)
@@ -271,6 +271,7 @@ Geometry* Sample1::CreateCube()
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
+//	attributes.SetNormalChannels(3);
 
 	// Now with the attributes being defined, we can create a VertexBuffer
 	// and fill it with data.
@@ -282,6 +283,8 @@ Geometry* Sample1::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
+//		pCubeVerts->Normal3(i) = vertices[i];
+//		pCubeVerts->Normal3(i).Normalize();
 		pCubeVerts->TCoord2(i) = uvs[i];
 	}
 
@@ -301,7 +304,7 @@ Geometry* Sample1::CreateCube()
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
 	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pCube->AttachEffect(pTextureEffect);
 
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
