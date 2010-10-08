@@ -118,9 +118,11 @@ public:
 	ZBufferState* GetZBufferState() const;
 
 	// Light state handling
-	void SetLight(Light* pLight);
+	void SetLight(const Light* pLight, UInt unit = 0);
 	void Enable(const TArray<Pointer<Light> >& rLights);
 	void Disable(const TArray<Pointer<Light> >& rLights);
+	void EnableLighting();
+	void DisableLighting();
 
 	PdrRendererData* GetRendererData() const;
 

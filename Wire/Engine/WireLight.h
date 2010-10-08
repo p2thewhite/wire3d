@@ -3,6 +3,7 @@
 #define WIRELIGHT_H
 
 #include "WireObject.h"
+#include "WireVector3.h"
 
 namespace Wire
 {
@@ -14,6 +15,9 @@ class /*WIRE_ENGINE_ITEM*/ Light : public Object
 public:
 	Light();
 	~Light();
+
+	Vector3F Position;
+	Vector3F Direction;
 
 };
 

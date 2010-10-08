@@ -108,3 +108,23 @@ Vector2F VertexBuffer::TCoord2(UInt i, UInt unit) const
 	const Float* pChannel = GetTCoord(i, unit);
 	return *(reinterpret_cast<Vector2F*>(const_cast<Float*>(pChannel)));
 }
+
+//----------------------------------------------------------------------------
+void VertexBuffer::GeneratePlatonicNormals()
+{
+	const VertexAttributes& rAttr = mAttributes;
+
+	if (rAttr.GetNormalChannels() == rAttr.GetPositionChannels() &&
+		rAttr.GetNormalChannels() == 3)
+	{
+		for (UInt i = 0; i < mVertexQuantity; i++)
+		{	
+			Normal3(i) = Position3(i);
+			Normal3(i).Normalize();
+		}
+	}
+	else
+	{
+		WIRE_ASSERT(false);
+	}
+}

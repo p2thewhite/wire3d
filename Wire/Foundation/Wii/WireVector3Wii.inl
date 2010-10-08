@@ -72,6 +72,37 @@ inline Real& Vector3<Real>::Z()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Vector3<Real>& Vector3<Real>::operator= (const Vector3& rVector)
+{
+	mTuple.x = rVector.mTuple.x;
+	mTuple.y = rVector.mTuple.y;
+	mTuple.z = rVector.mTuple.z;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Bool Vector3<Real>::operator== (const Vector3& rVector) const
+{
+	return (
+		mTuple.x == rVector.mTuple.x &&
+		mTuple.y == rVector.mTuple.y &&
+		mTuple.z == rVector.mTuple.z);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Bool Vector3<Real>::operator!= (const Vector3& rVector) const
+{
+	return !(
+		mTuple.x == rVector.mTuple.x &&
+		mTuple.y == rVector.mTuple.y &&
+		mTuple.z == rVector.mTuple.z);
+
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
 {
 	VECAdd(&mTuple, const_cast<Vector*>(&rVector.mTuple), &mTuple);

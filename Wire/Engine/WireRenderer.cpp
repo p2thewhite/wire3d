@@ -6,7 +6,6 @@
 #include "WireNode.h"
 #include "WireTexture2D.h"
 #include "WireTextureEffect.h"
-#include "WireTStack.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
@@ -564,30 +563,44 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 //----------------------------------------------------------------------------
 void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
 {
-	UInt maxLights = rLights.GetQuantity();
- 	if (maxLights > mMaxLights)
- 	{
- 		maxLights = mMaxLights;
- 	}
-
-	for (UInt i = 0; i < maxLights; i++)
+	UInt lightCount = rLights.GetQuantity();
+	if (lightCount == 0)
 	{
-		SetLight(rLights[i]);
+		return;
+	}
+
+	EnableLighting();
+
+ 	if (lightCount > mMaxLights)
+ 	{
+ 		lightCount = mMaxLights;
+ 	}
+	
+	for (UInt i = 0; i < lightCount; i++)
+	{
+		SetLight(rLights[i], i);
 	}
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 {
-	UInt maxLights = rLights.GetQuantity();
-	if (maxLights > mMaxLights)
+	UInt lightCount = rLights.GetQuantity();
+	if (lightCount == 0)
 	{
-		maxLights = mMaxLights;
+		return;
 	}
 
-	for (UInt i = 0; i < maxLights; i++)
+	DisableLighting();
+
+	if (lightCount > mMaxLights)
 	{
-		SetLight(NULL);
+		lightCount = mMaxLights;
+	}
+
+	for (UInt i = 0; i < lightCount; i++)
+	{
+		SetLight(NULL, i);
 	}
 }
 
