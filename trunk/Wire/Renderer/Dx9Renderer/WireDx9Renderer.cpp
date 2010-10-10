@@ -230,9 +230,6 @@ void Renderer::DrawElements()
 	mpGeometry->World.GetHomogeneous(world);
 	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
-//  	rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-//  	rDevice->SetRenderState(D3DRS_AMBIENT, 0x00FF8000 );
-
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
 		mpGeometry->VBuffer->GetVertexQuantity(), 0,

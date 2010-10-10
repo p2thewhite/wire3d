@@ -34,7 +34,7 @@ public:
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 
 
-	Renderer* GetRenderer() const { return mpRenderer; }
+	inline Renderer* GetRenderer() const { return mpRenderer; }
 
 	// Key identifiers. These are platform-specific, so classes that
 	// implement the Application interfaces must define these variables.

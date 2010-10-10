@@ -8,22 +8,27 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderTest", "Samples\Rende
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1", "Samples\Sample1\Sample1_WII.vcproj", "{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1 - Basic Rendering", "Samples\Sample1\Sample1_WII.vcproj", "{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2", "Samples\Sample2\Sample2_WII.vcproj", "{63E8E87E-548C-460A-9B0E-FA0365C263F5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2 - Scene Graph", "Samples\Sample2\Sample2_WII.vcproj", "{63E8E87E-548C-460A-9B0E-FA0365C263F5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3", "Samples\Sample3\Sample3_WII.vcproj", "{5B8835D8-A708-4650-9C67-D0599D9A8899}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail", "Samples\Sample3\Sample3_WII.vcproj", "{5B8835D8-A708-4650-9C67-D0599D9A8899}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4", "Samples\Sample4\Sample4_WII.vcproj", "{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5 - Lighting", "Samples\Sample5\Sample5_WII.vcproj", "{0F5C00B3-991B-44E6-832A-F76E6F3360A7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
@@ -58,6 +63,10 @@ Global
 		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Debug|Win32.Build.0 = Debug|Win32
 		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Release|Win32.ActiveCfg = Release|Win32
 		{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}.Release|Win32.Build.0 = Release|Win32
+		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Debug|Win32.Build.0 = Debug|Win32
+		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Release|Win32.ActiveCfg = Release|Win32
+		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

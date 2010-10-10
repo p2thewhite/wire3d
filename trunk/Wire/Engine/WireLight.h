@@ -2,6 +2,7 @@
 #ifndef WIRELIGHT_H
 #define WIRELIGHT_H
 
+#include "WireColorRGB.h"
 #include "WireObject.h"
 #include "WireVector3.h"
 
@@ -16,9 +17,12 @@ public:
 	Light();
 	~Light();
 
-	Vector3F Position;
-	Vector3F Direction;
+	ColorRGB Ambient;	// default: BLACK
+	ColorRGB Color;		// default: WHITE
 
+	// position and direction in world coordinates
+	Vector3F Position;	// default: ZERO
+	Vector3F Direction;	// default: UNIT_Z
 };
 
 typedef Pointer<Light> LightPtr;

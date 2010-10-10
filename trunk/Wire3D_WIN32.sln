@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wire", "Wire\Wire_WIN32.vcproj", "{B0895837-1F40-4F57-8F36-1DF861114254}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1", "Samples\Sample1\Sample1_WIN32.vcproj", "{5EF9DCF2-9CD2-4EC6-9E7D-422AC18BE27E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1 - Basic Rendering", "Samples\Sample1\Sample1_WIN32.vcproj", "{5EF9DCF2-9CD2-4EC6-9E7D-422AC18BE27E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2", "Samples\Sample2\Sample2_WIN32.vcproj", "{FCAB5275-8361-4579-9FE8-63BD5F3B854E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2 - Scene Graph", "Samples\Sample2\Sample2_WIN32.vcproj", "{FCAB5275-8361-4579-9FE8-63BD5F3B854E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
@@ -18,12 +18,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderTest", "Samples\Rende
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3", "Samples\Sample3\Sample3_WIN32.vcproj", "{7FC321A4-570F-41A8-A845-F5A0FE9B5D94}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail", "Samples\Sample3\Sample3_WIN32.vcproj", "{7FC321A4-570F-41A8-A845-F5A0FE9B5D94}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4", "Samples\Sample4\Sample4_WIN32.vcproj", "{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5", "Samples\Sample5\Sample5_WIN32.vcproj", "{E960AE2F-C29B-452D-A24E-9178843D7E30}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
@@ -58,6 +63,10 @@ Global
 		{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}.Debug|Win32.Build.0 = Debug|Win32
 		{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}.Release|Win32.ActiveCfg = Release|Win32
 		{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}.Release|Win32.Build.0 = Release|Win32
+		{E960AE2F-C29B-452D-A24E-9178843D7E30}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E960AE2F-C29B-452D-A24E-9178843D7E30}.Debug|Win32.Build.0 = Debug|Win32
+		{E960AE2F-C29B-452D-A24E-9178843D7E30}.Release|Win32.ActiveCfg = Release|Win32
+		{E960AE2F-C29B-452D-A24E-9178843D7E30}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -84,7 +84,7 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 		Vector3F v2 = VBuffer->Position3(pIndices[i+2]) - VBuffer->Position3(
 			pIndices[i+1]);
 
-		Vector3F normal = v1.Cross(v2);
+		Vector3F normal = v2.Cross(v1);
 		normal.Normalize();
 		faceNormals.Append(normal);
 	}
