@@ -15,5 +15,5 @@ void Renderer::SetState(MaterialState* pState)
 	material.b = pState->Ambient.B();
 	material.a = pState->Ambient.A();
 
-//	GXSetChanMatColor(GX_COLOR0A0, material);
+	GXSetChanMatColor(GX_COLOR0A0, material);
 }

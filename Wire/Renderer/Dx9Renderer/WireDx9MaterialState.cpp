@@ -15,10 +15,10 @@ void Renderer::SetState(MaterialState* pState)
 	material.Ambient.b = pState->Ambient.B();
 	material.Ambient.a = pState->Ambient.A();
 
-	material.Diffuse.r = 0.0F;
-	material.Diffuse.g = 0.0F;
-	material.Diffuse.b = 0.0F;
-	material.Diffuse.a = 0.0F;
+	material.Diffuse.r = pState->Ambient.R();
+	material.Diffuse.g = pState->Ambient.G();
+	material.Diffuse.b = pState->Ambient.B();
+	material.Diffuse.a = pState->Ambient.A();
 
 	material.Specular.r = 0.0F;
 	material.Specular.g = 0.0F;

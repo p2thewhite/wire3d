@@ -1,6 +1,7 @@
 #include "WireRenderer.h"
 
 #include "WireDx9RendererData.h"
+#include "WireLight.h"
 
 using namespace Wire;
 
@@ -20,17 +21,42 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	hr = rDevice->LightEnable(unit, TRUE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	static Float sqrtMaxReal = MathF::Sqrt(MathF::MAX_REAL);
-
 	D3DLIGHT9 d3dLight;
-	d3dLight.Falloff = 1.0f;
-	d3dLight.Theta = 0.0f;
-	d3dLight.Phi = 0.0f;
+	d3dLight.Ambient.r = pLight->Ambient.R();
+	d3dLight.Ambient.g = pLight->Ambient.G();
+	d3dLight.Ambient.b = pLight->Ambient.B();
+	d3dLight.Ambient.a = 1.0F;
+
+	d3dLight.Diffuse.r = pLight->Color.R();
+	d3dLight.Diffuse.g = pLight->Color.G();
+	d3dLight.Diffuse.b = pLight->Color.B();
+
+	d3dLight.Specular.r = 1.0F;
+	d3dLight.Specular.g = 1.0F;
+	d3dLight.Specular.b = 1.0F;
+	d3dLight.Specular.a = 1.0F;
+
+	d3dLight.Attenuation0 = 1.0F;
+	d3dLight.Attenuation1 = 0.0F;
+	d3dLight.Attenuation2 = 0.0F;
+
+	static Float sqrtMaxReal = MathF::Sqrt(MathF::MAX_REAL);
+	d3dLight.Falloff = 1.0F;
+	d3dLight.Theta = 0.0F;
+	d3dLight.Phi = 0.0F;
 	d3dLight.Range = sqrtMaxReal;
 
+	d3dLight.Type = D3DLIGHT_DIRECTIONAL;
+	d3dLight.Direction.x = pLight->Direction.X();
+	d3dLight.Direction.y = pLight->Direction.Y();
+	d3dLight.Direction.z = pLight->Direction.Z();
 
-// 	hr = rDevice->SetLight(unit, &d3dLight);
-// 	WIRE_ASSERT(SUCCEEDED(hr));
+	const ColorRGB& rC = pLight->Ambient;
+	DWORD ambientColor = D3DCOLOR_COLORVALUE(rC.R(), rC.G(), rC.B(), 1.0F);
+	rDevice->SetRenderState(D3DRS_AMBIENT, ambientColor);
+
+	hr = rDevice->SetLight(unit, &d3dLight);
+ 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
@@ -41,8 +67,8 @@ void Renderer::EnableLighting()
 
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
-	WIRE_ASSERT(SUCCEEDED(hr));
+// 	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+// 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
@@ -53,6 +79,6 @@ void Renderer::DisableLighting()
 
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
-	WIRE_ASSERT(SUCCEEDED(hr));
+// 	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
+// 	WIRE_ASSERT(SUCCEEDED(hr));
 }
