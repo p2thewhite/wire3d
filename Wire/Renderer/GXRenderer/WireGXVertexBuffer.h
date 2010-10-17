@@ -28,7 +28,7 @@ public:
 	struct DisplayList
 	{
 		void* DL;
-		UInt DLSize;
+		UInt Size;
 		PdrIndexBuffer* RegisteredIBuffer;
 	};
 
