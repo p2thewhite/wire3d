@@ -42,6 +42,8 @@ public:
 	const TArray<VertexElement>& GetVertexElements() const
 		{ return mElements; }
 
+	Bool HasNormals() { return mHasNormals; }
+
 private:
 	void Convert(const VertexBuffer* pSrc,
 		TArray<PdrVertexBuffer::VertexElement>& rElements);
@@ -49,6 +51,7 @@ private:
 	TArray<DisplayList> mDisplayLists;
 	TArray<VertexElement> mElements;
 
+	Bool mHasNormals;
 };
 
 }

@@ -323,52 +323,106 @@ Geometry* Sample5::CreateCube()
 }
 
 //----------------------------------------------------------------------------
+struct Cell
+{
+	Vector2F point;
+	ColorRGB color;
+};
+
+//----------------------------------------------------------------------------
 Texture2D* Sample5::CreateTexture()
 {
+	// define the properties of the image to be used as a texture
 	const UInt width = 256;
-	const UInt height = 64;
+	const UInt height = 256;
+	const Image2D::FormatMode format = Image2D::FM_RGB888;
+	const UInt bpp = Image2D::GetBytesPerPixel(format);
+	ColorRGB* const pColorDst = WIRE_NEW ColorRGB[width*height];
 
-	UChar* pMap = WIRE_NEW UChar[width * height];
-	UInt seed = 7;
-	for (UInt x = 0; x < width; x++)
+	// create points with random x,y position and color
+	TArray<Cell> cells;
+	Random random;
+	for (UInt i = 0; i < 10; i++)
 	{
-		pMap[x] = seed;
+		Cell cell;
+		cell.point.X() = random.GetFloat() * width;
+		cell.point.Y() = random.GetFloat() * height;
+		cell.color.R() = random.GetFloat();
+		cell.color.G() = random.GetFloat();
+		cell.color.B() = random.GetFloat();
+
+		Float max = 0.0F;
+		max = max < cell.color.R() ? cell.color.R() : max;
+		max = max < cell.color.G() ? cell.color.G() : max;
+		max = max < cell.color.B() ? cell.color.B() : max;
+		max = 1.0F / max;
+		cell.color *= max;
+		cells.Append(cell);
 	}
 
-	for (UInt i = width; i < (width * height)-1; i++)
-	{
-		seed *= 0x06255;
-		seed = (seed >> 7) | (seed << (32-7));
-		UInt val = (7 & seed) - 1;
-		UChar texel = (pMap[i-width] + pMap[i-width+1]) >> 1;
-		pMap[i] = val + texel;
-	}
-
-	Image2D::FormatMode format = Image2D::FM_RGB565;
-	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
-
-	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
-	UChar* pDst = pData;
-
+	// iterate over all texels and use the distance to the 2 closest random
+	// points to calculate the texel's color
+	Float max = 0;
 	for (UInt y = 0; y < height; y++)
 	{
-		UInt temp;
 		for (UInt x = 0; x < width; x++)
 		{
-			UChar t = pMap[y*width+x];
-			UChar* pTemp = reinterpret_cast<UChar*>(&temp);
-			*pTemp++ = t;
-			*pTemp++ = t;
-			*pTemp++ = t;
-			*pTemp = 0xFF;
+			Float minDist = MathF::MAX_REAL;
+			Float min2Dist = MathF::MAX_REAL;
+			UInt minIndex = 0;
 
-			// 			Image2D::RGBA8888ToRGBA4444(pTemp - 3, pDst);
-			Image2D::RGB888ToRGB565(pTemp - 3, pDst);
-			pDst += 2;
+			for (UInt i = 0; i < cells.GetQuantity(); i++)
+			{
+				Vector2F pos(static_cast<Float>(x), static_cast<Float>(y));
+
+				// Handle tiling
+				Vector2F vec = cells[i].point - pos;
+				vec.X() = MathF::FAbs(vec.X());
+				vec.Y() = MathF::FAbs(vec.Y());
+				vec.X() = vec.X() > width/2 ? width-vec.X() : vec.X();
+				vec.Y() = vec.Y() > height/2 ? height-vec.Y() : vec.Y();
+
+				Float distance = vec.Length();
+
+				if (minDist > distance)
+				{
+					min2Dist = minDist;
+					minDist = distance;
+					minIndex = i;
+				}
+				else if (min2Dist > distance)
+				{
+					min2Dist = distance;
+				}
+			}
+
+			float factor = (min2Dist - minDist) + 3;
+			ColorRGB color = cells[minIndex].color * factor;
+			max = max < color.R() ? color.R() : max;
+			max = max < color.G() ? color.G() : max;
+			max = max < color.B() ? color.B() : max;
+			pColorDst[y*width+x] = color;
 		}
 	}
 
-	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
+	// convert and normalize the ColorRGBA float array to an 8-bit per
+	// channel texture
+	max = 255.0F / max;
+	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
+	for (UInt i = 0; i < width*height; i++)
+	{
+		ColorRGB color = pColorDst[i];
+		pDst[i*bpp] = static_cast<UChar>(color.R() * max);
+		pDst[i*bpp+1] = static_cast<UChar>(color.G() * max);
+		pDst[i*bpp+2] = static_cast<UChar>(color.B() * max);
+	}
+
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	// The texture tiles and the torus is supposed to be seamless, therefore
+	// we need the UV set to be repeating.
+	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
+	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
+
 	return pTexture;
 }

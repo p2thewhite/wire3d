@@ -15,6 +15,8 @@ class VertexBuffer;
 class PdrRendererData
 {
 public:
+	PdrRendererData();
+
 	static UInt GetTotalImageMemory(const Image2D* pImage, UInt bpp);
 
 	static void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
@@ -42,13 +44,14 @@ public:
 	// Platform-dependent data
 	void* FifoBuffer;
 	void* FrameBuffer[2];
+	GXRenderModeObj* RMode;
 
 	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
 	IndexBuffer* IBuffer;
 
-	GXRenderModeObj* RMode;
-	GXColor GXClearColor;
+	GXColor ClearColor;
+	GXColor Material;
 
 	// Transforms world space to camera space.
 	Matrix34F ViewMatrix;
@@ -65,9 +68,6 @@ public:
 	static UChar sTexWrapMode[];
 	static UChar sTexBlend[];
 	static UChar sImage2DFormat[];
-
-private:
-	Renderer* mpRenderer;
 };
 
 }

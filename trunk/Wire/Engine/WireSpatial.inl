@@ -64,7 +64,7 @@ inline UInt Spatial::GetEffectQuantity() const
 inline Effect* Spatial::GetEffect(UInt i) const
 {
 	WIRE_ASSERT(i < mEffects.GetQuantity());
-	return StaticCast<Effect>(mEffects[i]);
+	return mEffects[i];
 }
 
 //----------------------------------------------------------------------------
