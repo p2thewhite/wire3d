@@ -44,7 +44,7 @@ void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
 	pData->IBuffer = const_cast<IndexBuffer*>(pIndexBuffer);
 
 	GXSetNumTexGens(0);
-	GXSetNumTevStages(1);
+//	GXSetNumTevStages(1);
 	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
 		GX_COLOR0A0);
 	GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);

@@ -36,6 +36,7 @@ typedef guVector Vector;
 #define GXInvalidateVtxCache GX_InvVtxCache
 #define GXLoadLightObjImm GX_LoadLightObj
 #define GXLoadPosMtxImm GX_LoadPosMtxImm
+#define GXLoadNrmMtxImm GX_LoadNrmMtxImm
 #define GXLoadTexObj GX_LoadTexObj
 #define GXNormal1x16 GX_Normal1x16
 #define GXPosition1x16 GX_Position1x16
@@ -78,12 +79,14 @@ typedef guVector Vector;
 #define MTXConcat guMtxConcat
 #define MTXFrustum guFrustum
 #define MTXIdentity guMtxIdentity
+#define MTXInverse guMtxInverse
 #define MTXLookAt guLookAt
 #define MTXMultVec guVecMultiply
 #define MTXMultVecSR guVecMultiplySR
 #define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
 #define MTXTrans guMtxTrans
+#define MTXTranspose guMtxTranspose
 #define VECAdd guVecAdd
 #define VECCrossProduct guVecCross
 #define VECDotProduct guVecDotProduct

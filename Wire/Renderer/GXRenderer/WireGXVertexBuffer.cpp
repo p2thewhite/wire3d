@@ -11,6 +11,8 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
+	:
+	mHasNormals(false)
 {
 	VertexElement element;
 	UInt vertexCount = pVertexBuffer->GetVertexQuantity();
@@ -31,6 +33,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	channels = rIAttr.GetNormalChannels();
 	if (channels > 0)
 	{
+		mHasNormals = true;
 		element.Stride = channels * sizeof(Float);
 		element.Size = element.Stride * vertexCount;
 		element.Data = memalign(32, element.Size);

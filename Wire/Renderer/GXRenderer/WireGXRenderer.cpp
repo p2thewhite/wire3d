@@ -45,13 +45,10 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	mpData->FrameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
 	mpData->FrameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rRMode));
 
-	UInt& rFrameBufferIndex = mpData->FrameBufferIndex;
-	rFrameBufferIndex = 0;
-
 	// ConfigureMem
 	void*& rFifoBuffer = mpData->FifoBuffer;
 	rFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
-	memset(rFifoBuffer,0 , DEFAULT_FIFO_SIZE);
+	memset(rFifoBuffer, 0 ,DEFAULT_FIFO_SIZE);
 
 	GXInit(rFifoBuffer, DEFAULT_FIFO_SIZE);
 
@@ -87,12 +84,12 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	// 		0.0F, 1.0F);
 	// 	GXSetDispCopyYScale(1.0F);
 
-	GXCopyDisp(mpData->FrameBuffer[rFrameBufferIndex], GX_TRUE);
-	mpData->IsFrameBufferDirty = false;
+	const UInt frameBufferIndex = mpData->FrameBufferIndex;
+	GXCopyDisp(mpData->FrameBuffer[frameBufferIndex], GX_TRUE);
 
 	// StartVI
 	VIConfigure(rRMode);
-	VISetNextFrameBuffer(mpData->FrameBuffer[rFrameBufferIndex]);
+	VISetNextFrameBuffer(mpData->FrameBuffer[frameBufferIndex]);
 	VISetBlack(FALSE);
 	VIFlush();
 	VIWaitForRetrace();
@@ -184,7 +181,7 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	mClearColor = rClearColor;
 
-	GXColor& rGXClearColor = mpData->GXClearColor;
+	GXColor& rGXClearColor = mpData->ClearColor;
 
 	rGXClearColor.r = static_cast<UChar>(rClearColor.R() * 255.0F);
 	rGXClearColor.g = static_cast<UChar>(rClearColor.G() * 255.0F);
@@ -201,30 +198,18 @@ void Renderer::DrawElements()
 	Matrix34F model;
 	mpGeometry->World.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	GXLoadPosMtxImm(mpData->ViewMatrix * model, GX_PNMTX0);
+	Matrix34F modelView = mpData->ViewMatrix * model;
+	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
-	// TODO: lighting
+	if (mpData->PdrVBuffer->HasNormals())
+	{
+		Mtx modelViewInverse;
+		MTXInverse(modelView, modelViewInverse); 
+		MTXTranspose(modelViewInverse, modelView); 
+		GXLoadNrmMtxImm(modelView, GX_PNMTX0);
+	}
+
 	GXSetNumChans(1);
-
-// 	GXLightObj MyLight;
-// 	GXColor color = {255, 255, 255, 255};
-// 
-// 	GXInitLightPos(&MyLight, 0.0F, 0.0F, 0.0F);
-// 	GXInitLightColor(&MyLight, color);
-// 	GXLoadLightObjImm(&MyLight, GX_LIGHT0);
-// 
-// 	GXSetChanCtrl(
-// 		GX_COLOR0A0,
-// 		GX_ENABLE,   // enable channel
-// 		GX_SRC_REG,  // amb source
-// 		GX_SRC_REG,  // mat source
-// 		GX_LIGHT0,   // light mask
-// 		GX_DF_CLAMP, // diffuse function
-// 		GX_AF_NONE);
-// 	// set up ambient color
-// 	GXColor ambCol = { 255, 128, 0, 255 };
-// 	GXColor white = { 255, 255, 255, 255 };
-// 	GXSetChanAmbColor(GX_COLOR0A0, ambCol);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
 	const WireframeState* pWireframeState = GetWireframeState();
@@ -312,6 +297,29 @@ void Renderer::OnViewportChange()
 	}
 
 	GXSetScissor(originX, originY, width, height);
+}
+
+//----------------------------------------------------------------------------
+PdrRendererData::PdrRendererData()
+	:
+	FifoBuffer(NULL),
+	RMode(NULL),
+	PdrVBuffer(NULL),
+	PdrIBuffer(NULL),
+	IBuffer(NULL),
+	FrameBufferIndex(0),
+	IsFrameBufferDirty(false)
+{
+	FrameBuffer[0] = NULL;
+	FrameBuffer[1] = NULL;
+	Material.r = 0;
+	Material.g = 0;
+	Material.b = 0;
+	Material.a = 0xFF;
+	ClearColor.r = 0;
+	ClearColor.g = 0;
+	ClearColor.b = 0;
+	ClearColor.a = 0xFF;
 }
 
 //----------------------------------------------------------------------------

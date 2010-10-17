@@ -9,11 +9,8 @@ void Renderer::SetState(MaterialState* pState)
 {
 	mspStates[GlobalState::MATERIAL] = pState;
 
-	GXColor material;
-	material.r = pState->Ambient.R();
-	material.g = pState->Ambient.G();
-	material.b = pState->Ambient.B();
-	material.a = pState->Ambient.A();
-
-	GXSetChanMatColor(GX_COLOR0A0, material);
+	mpData->Material.r = pState->Ambient.R();
+	mpData->Material.g = pState->Ambient.G();
+	mpData->Material.b = pState->Ambient.B();
+	mpData->Material.a = pState->Ambient.A();
 }
