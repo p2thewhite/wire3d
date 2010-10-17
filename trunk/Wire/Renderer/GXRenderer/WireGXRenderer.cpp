@@ -230,8 +230,7 @@ void Renderer::DrawElements()
 			if (rDisplayLists[i].RegisteredIBuffer == mpData->PdrIBuffer)
 			{
 				foundDL = true;
-				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].
-					DLSize);
+				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].Size);
 			}
 		}
 
@@ -503,29 +502,25 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
-	PdrVertexBuffer::DisplayList DL;
+	PdrVertexBuffer::DisplayList displayList;
 
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe
+	const UInt maxSize = ((rIBuffer.GetIndexQuantity() * pPdrVBuffer->
+		GetVertexElements().GetQuantity()*2) & 0xFFFFFFE0) + 64;
+	displayList.DL = memalign(32, maxSize);
+	DCInvalidateRange(displayList.DL, maxSize);
 
-	// TODO: handle displaylist size > tempDLSize gracefully
-	const UInt tempDLSize = 65536*4;
-	void* pTempDL = memalign(32, tempDLSize);
-	DCInvalidateRange(pTempDL, tempDLSize);
-
-	GXBeginDisplayList(pTempDL, tempDLSize);
+	GXBeginDisplayList(displayList.DL, maxSize);
 	Draw(pPdrVBuffer, rIBuffer);
+	displayList.Size = GXEndDisplayList();
+	WIRE_ASSERT(displayList.Size);
 
-	DL.DLSize = GXEndDisplayList();
-	DL.DL = memalign(32, DL.DLSize);
-	System::Memcpy(DL.DL, DL.DLSize, pTempDL, DL.DLSize);
-	free(pTempDL);
+	DCFlushRange(displayList.DL, maxSize);
 
-	DCFlushRange(DL.DL, DL.DLSize);
-
-	DL.RegisteredIBuffer = PdrIBuffer;
+	displayList.RegisteredIBuffer = PdrIBuffer;
 	PdrIBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
-	pPdrVBuffer->GetDisplayLists().Append(DL);
+	pPdrVBuffer->GetDisplayLists().Append(displayList);
 }
 
 //----------------------------------------------------------------------------
