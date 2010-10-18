@@ -77,9 +77,10 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 
 	for (UInt i = 0; i < mElements.GetQuantity(); i++)
 	{
-		// TODO: use DCStoreRangeNoSync to accumulate stores, then PPCSync()
-		DCStoreRange(mElements[i].Data, mElements[i].Size);
+		DCStoreRangeNoSync(mElements[i].Data, mElements[i].Size);
 	}
+
+	PPCSync();
 
 	// Invalidate vertex cache in GP
 	GXInvalidateVtxCache();

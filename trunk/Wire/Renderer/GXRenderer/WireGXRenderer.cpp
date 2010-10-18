@@ -20,7 +20,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	:
 	mMaxAnisotropy(4.0F),
 	mMaxTextureStages(8),
-	mMaxLights(8),
+	mMaxLights(PdrRendererData::MaxLights),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mTexture2DMap(256)
@@ -311,10 +311,6 @@ PdrRendererData::PdrRendererData()
 {
 	FrameBuffer[0] = NULL;
 	FrameBuffer[1] = NULL;
-	Material.r = 0;
-	Material.g = 0;
-	Material.b = 0;
-	Material.a = 0xFF;
 	ClearColor.r = 0;
 	ClearColor.g = 0;
 	ClearColor.b = 0;

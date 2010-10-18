@@ -46,6 +46,7 @@ public:
     void RemoveAll();
 
     // linear traversal of table
+	// TODO: implement this as an iterator
     TVALUE* GetFirst(TKEY* pKey = NULL) const;
     TVALUE* GetNext(TKEY* pKey = NULL) const;
 

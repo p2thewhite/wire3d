@@ -8,7 +8,6 @@
 namespace Wire
 {
 
-// TODO: move Main to Engine
 class /*WIRE_FOUNDATION_ITEM*/ Main
 {
 
@@ -24,8 +23,8 @@ public:
 	static void Terminate();
 
 private:
-	static InitializerArray* mpsInitializers;
-	static TerminatorArray* mpsTerminators;
+	static InitializerArray* smpInitializers;
+	static TerminatorArray* smpTerminators;
 };
 
 }
