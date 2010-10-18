@@ -5,6 +5,7 @@
 #include <gccore.h>
 #include <ogc/gu.h>
 #include <ogc/lwp_watchdog.h>
+#include <ogc/machine/processor.h>
 #include <wiiuse/wpad.h>
 
 typedef guVector Vector;
@@ -94,6 +95,8 @@ typedef guVector Vector;
 #define VECSubtract guVecSub
 
 #define PADInit WPAD_Init
+
+#define PPCSync ppcsync
 
 #define VIConfigure VIDEO_Configure
 #define VIFlush VIDEO_Flush

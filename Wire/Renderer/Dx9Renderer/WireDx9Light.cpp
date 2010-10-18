@@ -30,6 +30,7 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	d3dLight.Diffuse.r = pLight->Color.R();
 	d3dLight.Diffuse.g = pLight->Color.G();
 	d3dLight.Diffuse.b = pLight->Color.B();
+	d3dLight.Diffuse.a = 1.0F;
 
 	d3dLight.Specular.r = 1.0F;
 	d3dLight.Specular.g = 1.0F;

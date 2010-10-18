@@ -17,6 +17,7 @@ class PdrRendererData
 public:
 	PdrRendererData();
 
+	// convenience functions
 	static UInt GetTotalImageMemory(const Image2D* pImage, UInt bpp);
 
 	static void ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
@@ -30,6 +31,7 @@ public:
 	static void GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 		UInt& rTilesXCount, UShort &rWidth);
 
+	// GX rendering specific functions
 	void CreateDisplayList(PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
 	void Draw(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
@@ -51,11 +53,11 @@ public:
 	IndexBuffer* IBuffer;
 
 	GXColor ClearColor;
-	GXColor Material;
 
 	// Transforms world space to camera space.
 	Matrix34F ViewMatrix;
 
+	static const UInt MaxLights = 8;
 	UInt FrameBufferIndex;
 	Bool IsFrameBufferDirty;
 
