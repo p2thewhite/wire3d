@@ -1,5 +1,5 @@
 // This sample demonstrates how to create a transparent, textured cube and
-// render it using different render states.
+// render it using different render states and a light.
 
 #include "Sample1.h"
 
@@ -15,7 +15,7 @@ Bool Sample1::OnInitialize()
 	// starts. Put all you initializations here.
 
 	// The platform dependent part of the application might need to do some
-	// initialization. If it fails, we return false.
+	// initialization. If it fails, we return false and the application exits.
 	if (!Parent::OnInitialize())
 	{
 		return false;
@@ -43,10 +43,15 @@ Bool Sample1::OnInitialize()
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
-	// We render some of the cubes using transparency and frontface culling,
+	// We render some of the cubes using transparency and front-face culling,
 	// so we create the required render state objects here.
 	mspCullState = WIRE_NEW CullState;
 	mspAlphaState = WIRE_NEW AlphaState;
+
+	// We render the top row of cubes with lighting on, so we create a light
+	// and a material state for the cube, which defines how the light (color)
+	// will be reflected.
+	mspLight = WIRE_NEW Light;
 	mspMaterialState = WIRE_NEW MaterialState;
 
 	// Initialize working variables used in the render loop (i.e. OnIdle()).
@@ -89,8 +94,16 @@ void Sample1::OnIdle()
 	mspAlphaState->BlendEnabled = false;
 	GetRenderer()->SetState(mspAlphaState);
 
-// 	mspMaterialState->Ambient = ColorRGBA::GREEN;
-// 	GetRenderer()->SetState(mspMaterialState);
+	// The light's color is white. We set the material of the cube so it
+	// reduces the red and blue component a bit, resulting in a tint of green.
+ 	mspMaterialState->Ambient = ColorRGBA(0.9F, 1.0F, 0.9F, 1.0F);
+ 	GetRenderer()->SetState(mspMaterialState);
+
+	// modulate the texture with the light
+	mspTextureEffect->BlendOps[0] = TextureEffect::BM_MODULATE;
+
+	GetRenderer()->EnableLighting();
+	GetRenderer()->SetLight(mspLight);
 
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;
@@ -123,9 +136,12 @@ void Sample1::OnIdle()
 	mspCullState->CullFace = CullState::CM_FRONT;
 	GetRenderer()->SetState(mspCullState);
 
-// 	mspMaterialState->Ambient = ColorRGBA::RED;
-// 	GetRenderer()->SetState(mspMaterialState);
+	GetRenderer()->DisableLighting();
 
+	// There is no more light, so the texture blending needs to be reset,
+	// otherwise it will modulate undefined values.
+	mspTextureEffect->BlendOps[0] = TextureEffect::BM_REPLACE;
+	
 	z = MathF::Cos(mAngle) * 3.0F;
 	for (UInt i = 0; i < cubeCount; i++)
 	{
@@ -267,11 +283,12 @@ Geometry* Sample1::CreateCube()
 	};
 
 	// Before creating the VertexBuffer we need to define its format.
-	// It consists of 3d positions and 2d texture coordinates
+	// It consists of 3d positions, 2d texture coordinates and 3d normal
+	// vectors. Normals are required for lighting.
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
-//	attributes.SetNormalChannels(3);
+	attributes.SetNormalChannels(3);
 
 	// Now with the attributes being defined, we can create a VertexBuffer
 	// and fill it with data.
@@ -283,12 +300,13 @@ Geometry* Sample1::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
-//		pCubeVerts->Normal3(i) = vertices[i];
-//		pCubeVerts->Normal3(i).Normalize();
 		pCubeVerts->TCoord2(i) = uvs[i];
+
+		// We don't provide normals here, we generate them later.
+//		pCubeVerts->Normal3(i) = normals[i];
 	}
 
-	// Same for the IndexBuffer
+	// Fill the IndexBuffer with data.
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
@@ -299,13 +317,16 @@ Geometry* Sample1::CreateCube()
 	// Geometric objects consist of a Vertex- and IndexBuffer.
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 
+	// Generate normal vectors from the triangles of the geometry.
+	pCube->GenerateNormals();
+
 	// The cube shall be textured. Therefore we create and attach a texture
-	// effect, where we add a texture and define its blending mode.
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	// effect, where we add textures and define their blending modes.
+	mspTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
-	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
-	pCube->AttachEffect(pTextureEffect);
+	mspTextureEffect->Textures.Append(pTexture);
+	mspTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	pCube->AttachEffect(mspTextureEffect);
 
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
 	// smart pointers. Thus, you can share these buffers amongst Geometry 

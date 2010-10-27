@@ -83,7 +83,7 @@ inline Vector3<Real>& Vector3<Real>::operator= (const Vector3& rVector)
 
 //----------------------------------------------------------------------------
 template <class Real>
-Bool Vector3<Real>::operator== (const Vector3& rVector) const
+inline Bool Vector3<Real>::operator== (const Vector3& rVector) const
 {
 	return (
 		mTuple[0] == rVector.mTuple[0] &&
@@ -93,7 +93,7 @@ Bool Vector3<Real>::operator== (const Vector3& rVector) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-Bool Vector3<Real>::operator!= (const Vector3& rVector) const
+inline Bool Vector3<Real>::operator!= (const Vector3& rVector) const
 {
 	return !(
 		mTuple[0] == rVector.mTuple[0] &&

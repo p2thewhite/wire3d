@@ -17,7 +17,7 @@ inline Int Object::GetReferences() const
 //----------------------------------------------------------------------------
 inline const Rtti& Object::GetType() const
 {
-	return Type;
+	return TYPE;
 }
 
 //----------------------------------------------------------------------------
@@ -62,12 +62,12 @@ inline const T* StaticCast(const Object* pObj)
 template <class T>
 T* DynamicCast(Object* pObj)
 {
-	return pObj && pObj->IsDerived(T::Type) ? (T*)pObj : 0;
+	return pObj && pObj->IsDerived(T::TYPE) ? (T*)pObj : 0;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 const T* DynamicCast(const Object* pObj)
 {
-	return pObj && pObj->IsDerived(T::Type) ? (const T*)pObj : 0;
+	return pObj && pObj->IsDerived(T::TYPE) ? (const T*)pObj : 0;
 }

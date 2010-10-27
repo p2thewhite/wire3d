@@ -1,30 +1,17 @@
-// This sample demonstrates how to create a transparent, textured cube and
-// render it using different render states.
-
 #include "Sample5.h"
 
 using namespace Wire;
 
-// This macro creates our user application.
 WIRE_APPLICATION(Sample5);
 
 //----------------------------------------------------------------------------
 Bool Sample5::OnInitialize()
 {
-	// This function is called by the framework before the rendering loop
-	// starts. Put all you initializations here.
-
-	// The platform dependent part of the application might need to do some
-	// initialization. If it fails, we return false.
 	if (!Parent::OnInitialize())
 	{
 		return false;
 	}
 
-	// We create a cube here and reference it using a smart pointer.
-	// The smart pointer automatically deletes the object when it goes out
-	// of scope and no other references to the object exist. In this case
-	// deletion will happen when Sample5 is being destructed.
 	mspCube = CreateCube();
 
 	// Setup the position and orientation of the camera to look down
@@ -43,14 +30,18 @@ Bool Sample5::OnInitialize()
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
-	// We render some of the cubes using transparency and frontface culling,
-	// so we create the required render state objects here.
-	mspCullState = WIRE_NEW CullState;
-	mspAlphaState = WIRE_NEW AlphaState;
 	mspMaterialState = WIRE_NEW MaterialState;
-	mspLight = WIRE_NEW Light;
-	mspLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
-	mspLight->Color = ColorRGB(1, 1, 1);
+
+	mspLight = WIRE_NEW Light(Light::LT_POINT);
+	mspLight->Position = Vector3F(0, 0, 0);
+	mspLight->Color = ColorRGB(0, 1, 0);
+
+	mspLight2 = WIRE_NEW Light();
+	mspLight2->Color = ColorRGB(1, 0, 0);
+
+	mspCube->Lights.Append(mspLight);
+	mspCube->Lights.Append(mspLight2);
+//	mspCube->UpdateRS();
 
 	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
@@ -62,113 +53,40 @@ Bool Sample5::OnInitialize()
 //----------------------------------------------------------------------------
 void Sample5::OnIdle()
 {
-	// This function is called by the framework's render loop until the
-	// application exits. Perform all your rendering here.
-
-	// Determine how much time has passed since the last call, so we can
-	// move our objects independently of the actual frame rate.
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	// If the camera's viewing frustum changed, we need to update the culler
-	// (we know we don't change it, so it's commented out here)
-//	mCuller.SetFrustum(mspCamera->GetFrustum());
-
-	// Clear the framebuffer and the z-buffer.
 	GetRenderer()->ClearBuffers();
-
-	// Tell the Renderer that we want to start drawing.
 	GetRenderer()->PreDraw(mspCamera);
-
-	// We set the render state to backface culling and disable alpha blending.
-	// NOTE: if you are not using the scenegraph to handle render states for
-	// you, it is your responsibility to handle states between draw calls.
-	mspCullState->CullFace = CullState::CM_BACK;
-	GetRenderer()->SetState(mspCullState);
-
-	mspAlphaState->BlendEnabled = false;
-	GetRenderer()->SetState(mspAlphaState);
 
 	mspMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
  	GetRenderer()->SetState(mspMaterialState);
 
-	GetRenderer()->EnableLighting();
-	GetRenderer()->SetLight(mspLight);
+// 	GetRenderer()->EnableLighting();
+// 	GetRenderer()->SetLight(mspLight);
+// 	GetRenderer()->SetLight(mspLight2, 1);
 
-	// Draw the upper row of cubes.
-	const UInt cubeCount = 5;
-	const Float stride = 3.5F;
-	const Float offset = cubeCount * -0.5F * stride + stride * 0.6F;
-	Float z = MathF::Sin(mAngle) * 3.0F;
-
-	for (UInt i = 0; i < cubeCount; i++)
+	Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F);
+	mspCube->World.SetRotate(model);
+	mspCube->World.SetTranslate(Vector3F(-2.5F, 0, 0));
+	mspCube->UpdateWorldBound();
+	if (mCuller.IsVisible(mspCube))
 	{
-		// Set world position (translate) and orientation (rotate)
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
-
-		// After setting world transformation, we update the world bounding
-		// volume of the cube so we can cull it against the viewing frustum.
-		// That way we only draw objects that are visible on the screen.
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
+		GetRenderer()->Draw(mspCube);
 	}
 
-//	GetRenderer()->DisableLighting();
-
-	// Draw the lower row of cubes using alpha blending.
-	// For correct transparency order, we draw the backfaces first and then
-	// the transparent frontfaces.
-
-	// To draw the backfaces, cull the frontfaces
-	mspCullState->CullFace = CullState::CM_FRONT;
-	GetRenderer()->SetState(mspCullState);
-
- 	mspMaterialState->Ambient = ColorRGBA(0.2F, 0.2F, 0.2F, 1.0F);
- 	GetRenderer()->SetState(mspMaterialState);
-
-	z = MathF::Cos(mAngle) * 3.0F;
-	for (UInt i = 0; i < cubeCount; i++)
+	mspCube->World.SetRotate(model);
+	mspCube->World.SetTranslate(Vector3F(2.5F, 0, 0));
+	mspCube->UpdateWorldBound();
+	if (mCuller.IsVisible(mspCube))
 	{
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
+		GetRenderer()->Draw(mspCube);
 	}
 
-	// Cull the backfaces, i.e. draw the front faces using alpha blending
-	mspCullState->CullFace = CullState::CM_BACK;
-	GetRenderer()->SetState(mspCullState);
-	mspAlphaState->BlendEnabled = true;
-	GetRenderer()->SetState(mspAlphaState);
-
-	for (UInt i = 0; i < cubeCount; i++)
-	{
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
-	}
-
-	// Tell the Renderer that we are done with drawing
 	GetRenderer()->PostDraw();
-
-	// Present the framebuffer (aka backbuffer) on the screen
 	GetRenderer()->DisplayBackBuffer();
 }
 
@@ -308,16 +226,11 @@ Geometry* Sample5::CreateCube()
 
 	// The cube shall be textured. Therefore we create and attach a texture
 	// effect, where we add a texture and define its blending mode.
-// 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-// 	Texture2D* pTexture = CreateTexture();
-// 	pTextureEffect->Textures.Append(pTexture);
-// 	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-// 	pCube->AttachEffect(pTextureEffect);
-
-	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
-	// smart pointers. Thus, you can share these buffers amongst Geometry 
-	// objects without having to worry about deletion. Same applies to
-	// Effects, Textures and Images.
+	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	Texture2D* pTexture = CreateTexture();
+	pTextureEffect->Textures.Append(pTexture);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	pCube->AttachEffect(pTextureEffect);
 
 	return pCube;
 }

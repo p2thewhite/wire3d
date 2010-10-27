@@ -245,6 +245,10 @@
 					RelativePath=".\Foundation\WireVector3.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Foundation\WireVector4.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
@@ -309,6 +313,10 @@
 					RelativePath=".\Foundation\WireVector3.inl"
 					>
 				</File>
+				<File
+					RelativePath=".\Foundation\WireVector4.inl"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
@@ -352,7 +360,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireVector2.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireVector3.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireVector4.cpp"
 					>
 				</File>
 			</Filter>
@@ -852,6 +868,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireLightNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireMaterialState.h"
 					>
 				</File>
@@ -961,6 +981,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireLightNode.inl"
 					>
 				</File>
 				<File
@@ -1085,6 +1109,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireLight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireLightNode.cpp"
 					>
 				</File>
 				<File

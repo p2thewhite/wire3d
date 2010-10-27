@@ -416,6 +416,7 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	Disable(mpGeometry->VBuffer);
 	Disable(mpGeometry->IBuffer);
+	Disable(mpGeometry->Lights);
 
 	RestoreGlobalState(mpGeometry->States);
 }

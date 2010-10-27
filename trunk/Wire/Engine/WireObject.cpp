@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-const Rtti Object::Type(NULL);
+const Rtti Object::TYPE(NULL);
 
 //----------------------------------------------------------------------------
 Object::Object()
@@ -15,7 +15,7 @@ Object::Object()
 Object::~Object ()
 {
 	// This assert traps the case when someone tries 'delete spObject'
-	// for a smart-pointer-based object.  Instead, use 'spObject = 0'.
+	// for a smart-pointer-based object.  Instead, use 'spObject = NULL'.
 	WIRE_ASSERT(mReferences == 0);
 }
 

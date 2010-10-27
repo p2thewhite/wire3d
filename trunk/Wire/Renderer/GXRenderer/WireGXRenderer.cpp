@@ -307,7 +307,8 @@ PdrRendererData::PdrRendererData()
 	PdrIBuffer(NULL),
 	IBuffer(NULL),
 	FrameBufferIndex(0),
-	IsFrameBufferDirty(false)
+	IsFrameBufferDirty(false),
+	LightsMask(0)
 {
 	FrameBuffer[0] = NULL;
 	FrameBuffer[1] = NULL;

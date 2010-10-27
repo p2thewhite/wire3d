@@ -76,7 +76,7 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
 {
 	Vector3<Real>* pAxis = const_cast<Vector3<Real>*>(&rAxis);
-	MTXRotAxisRad(mEntry, reinterpret_cast<Vector*>(pAxis), angle);
+	MTXRotAxisRad(mEntry, reinterpret_cast<Vec*>(pAxis), angle);
 	return *this;
 }
 
@@ -112,8 +112,8 @@ const
 	Vector3<Real> result;
 	Vector3<Real>* pResult = const_cast<Vector3<Real>*>(&result);
 	Vector3<Real>* pVector = const_cast<Vector3<Real>*>(&rVector);
-	MTXMultVecSR(const_cast<Real4*>(mEntry), reinterpret_cast<Vector*>(
-		pVector), reinterpret_cast<Vector*>(pResult));
+	MTXMultVecSR(const_cast<Real4*>(mEntry), reinterpret_cast<Vec*>(pVector),
+		reinterpret_cast<Vec*>(pResult));
 	return result;
 }
 

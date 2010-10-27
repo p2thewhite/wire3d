@@ -47,10 +47,39 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	d3dLight.Phi = 0.0F;
 	d3dLight.Range = sqrtMaxReal;
 
-	d3dLight.Type = D3DLIGHT_DIRECTIONAL;
-	d3dLight.Direction.x = pLight->Direction.X();
-	d3dLight.Direction.y = pLight->Direction.Y();
-	d3dLight.Direction.z = pLight->Direction.Z();
+	switch (pLight->Type)
+	{
+	case Light::LT_POINT:
+		d3dLight.Type = D3DLIGHT_POINT;
+		d3dLight.Position.x = pLight->Position.X();
+		d3dLight.Position.y = pLight->Position.Y();
+		d3dLight.Position.z = pLight->Position.Z();
+		break;
+
+	case Light::LT_DIRECTIONAL:
+		d3dLight.Type = D3DLIGHT_DIRECTIONAL;
+		WIRE_ASSERT(pLight->Direction.Length() > 0);
+		d3dLight.Direction.x = pLight->Direction.X();
+		d3dLight.Direction.y = pLight->Direction.Y();
+		d3dLight.Direction.z = pLight->Direction.Z();
+		break;
+
+	case Light::LT_SPOT:
+		d3dLight.Type = D3DLIGHT_SPOT;
+		d3dLight.Position.x = pLight->Position.X();
+		d3dLight.Position.y = pLight->Position.Y();
+		d3dLight.Position.z = pLight->Position.Z();
+		d3dLight.Direction.x = pLight->Direction.X();
+		d3dLight.Direction.y = pLight->Direction.Y();
+		d3dLight.Direction.z = pLight->Direction.Z();
+// 		d3dLight.Phi = 2.0F * pLight->Angle;
+// 		d3dLight.Theta = 0.0F;
+// 		d3dLight.Falloff = pLight->Exponent;
+		break;
+
+	default:
+		WIRE_ASSERT(false);
+	}
 
 	const ColorRGB& rC = pLight->Ambient;
 	DWORD ambientColor = D3DCOLOR_COLORVALUE(rC.R(), rC.G(), rC.B(), 1.0F);
