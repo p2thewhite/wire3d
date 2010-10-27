@@ -25,7 +25,7 @@ inline Vector3<Real>::operator Real* ()
 template <class Real>
 inline Vector3<Real>::operator const Real* () const
 {
-	return reinterpret_cast<Real*>(const_cast<Vector*>(&mTuple));
+	return reinterpret_cast<Real*>(const_cast<Vec*>(&mTuple));
 }
 
 //----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ Bool Vector3<Real>::operator!= (const Vector3& rVector) const
 template <class Real>
 inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
 {
-	VECAdd(&mTuple, const_cast<Vector*>(&rVector.mTuple), &mTuple);
+	VECAdd(&mTuple, const_cast<Vec*>(&rVector.mTuple), &mTuple);
 	return *this;
 }
 
@@ -113,7 +113,7 @@ inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
 template <class Real>
 inline Vector3<Real>& Vector3<Real>::operator-= (const Vector3& rVector)
 {
-	VECSubtract(&mTuple, const_cast<Vector*>(&rVector.mTuple), &mTuple);
+	VECSubtract(&mTuple, const_cast<Vec*>(&rVector.mTuple), &mTuple);
 	return *this;
 }
 
@@ -174,7 +174,7 @@ inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
 const
 {
 	Vector3 result;
-	VECAdd(const_cast<Vector*>(&mTuple), const_cast<Vector*>(&rVector.
+	VECAdd(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
 		mTuple), &result.mTuple);
 	return result;
 }
@@ -185,7 +185,7 @@ inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
 const
 {
 	Vector3 result;
-	VECSubtract(const_cast<Vector*>(&mTuple), const_cast<Vector*>(&rVector.
+	VECSubtract(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
 		mTuple), &result.mTuple);
 	return result;
 }
@@ -195,7 +195,7 @@ template <class Real>
 inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
 {
 	Vector3 result;
-	VECScale(const_cast<Vector*>(&mTuple), &result.mTuple, scalar);
+	VECScale(const_cast<Vec*>(&mTuple), &result.mTuple, scalar);
 	return result;
 }
 
@@ -208,7 +208,7 @@ inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
 	if (scalar != static_cast<Real>(0.0))
 	{
 		Real invScalar = (static_cast<Real>(1.0)) / scalar;
-		VECScale(const_cast<Vector*>(&mTuple), &quot.mTuple, invScalar);
+		VECScale(const_cast<Vec*>(&mTuple), &quot.mTuple, invScalar);
 	}
 	else
 	{
@@ -235,8 +235,8 @@ template <class Real>
 inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
 {
 	Vector3 result;
-	VECCrossProduct(const_cast<Vector*>(&mTuple), 
-		const_cast<Vector*>(&rVector.mTuple), &result.mTuple);
+	VECCrossProduct(const_cast<Vec*>(&mTuple), 
+		const_cast<Vec*>(&rVector.mTuple), &result.mTuple);
 	return result;
 }
 
@@ -244,8 +244,8 @@ inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
 template <class Real>
 inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 {
-	return VECDotProduct(const_cast<Vector*>(&mTuple), 
-		const_cast<Vector*>(&rVector.mTuple));
+	return VECDotProduct(const_cast<Vec*>(&mTuple), 
+		const_cast<Vec*>(&rVector.mTuple));
 }
 
 //----------------------------------------------------------------------------
@@ -253,8 +253,8 @@ template <class Real>
 inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
 {
 	Vector3<Real> result;
-	VECScale(reinterpret_cast<Vector*>(const_cast<Vector3<Real>*>(&rVector)),
-		reinterpret_cast<Vector*>(&result), scalar);
+	VECScale(reinterpret_cast<Vec*>(const_cast<Vector3<Real>*>(&rVector)),
+		reinterpret_cast<Vec*>(&result), scalar);
 	return result;
 }
 

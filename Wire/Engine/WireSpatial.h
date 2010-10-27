@@ -91,14 +91,14 @@ public:
 
     // light state
     UInt GetLightQuantity() const;
-    Light* GetLight(UInt i) const;
+    Light* GetLight(UInt i = 0) const;
     void AttachLight(Light* pLight);
     void DetachLight(Light* pLight);
     void DetachAllLights();
 
 	// effect state
 	UInt GetEffectQuantity() const;
-	Effect* GetEffect(UInt i) const;
+	Effect* GetEffect(UInt i = 0) const;
 	void AttachEffect(Effect* pEffect);
 	void DetachEffect(Effect* pEffect);
 	void DetachAllEffects();

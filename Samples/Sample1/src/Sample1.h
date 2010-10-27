@@ -36,10 +36,14 @@ private:
 	CameraPtr mspCamera;
 	Culler mCuller;
 
+	TextureEffectPtr mspTextureEffect;
+
 	GeometryPtr mspCube;
 	CullStatePtr mspCullState;
 	AlphaStatePtr mspAlphaState;
+
 	MaterialStatePtr mspMaterialState;
+	LightPtr mspLight;
 
 	Float mAngle;
 	Double mLastTime;

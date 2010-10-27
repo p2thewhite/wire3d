@@ -8,7 +8,7 @@
 #include <ogc/machine/processor.h>
 #include <wiiuse/wpad.h>
 
-typedef guVector Vector;
+typedef guVector Vec;
 
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
 #define GX_COLOR_NULL GX_COLORNULL
@@ -27,7 +27,14 @@ typedef guVector Vector;
 #define GXGetYScaleFactor GX_GetYScaleFactor
 #define GXInit GX_Init
 #define GXInitLightColor GX_InitLightColor
+#define GXInitLightDir GX_InitLightDir
+#define GXInitLightDirv GX_InitLightDirv
+#define GXInitLightDistAttn GX_InitLightDistAttn
 #define GXInitLightPos GX_InitLightPos
+#define GXInitLightPosv GX_InitLightPosv
+#define GXInitLightShininess GX_InitLightShininess
+#define GXInitLightSpot GX_InitLightSpot
+#define GXInitSpecularDirv GX_InitSpecularDirv
 #define GXInitTexObj GX_InitTexObj
 #define GXInitTexObjFilter GX_InitTexObjFilterMode
 #define GXInitTexObjLOD GX_InitTexObjLOD

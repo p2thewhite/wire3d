@@ -1,4 +1,8 @@
-// This sample demonstrate how to create and render a scene graph.
+// This sample demonstrates how to create and render a scene graph.
+// Scene graphs serve the purpose of organizing your 3D objects in a
+// hierarchy.
+// The design of the classes is explained in detail in:
+// http://downloads.gamedev.net/pdf/Eberly-3.pdf
 
 #include "Sample2.h"
 
@@ -11,7 +15,7 @@ Sample2::Sample2()
 	:
 	WIREAPPLICATION(
 		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
-		"Sample2 - Creating a Scenegraph",	// Name of the application.
+		"Sample2 - Creating a Scene Graph",	// Name of the application.
 		0, 0,								// Window position and
 		640, 480)							// size (both ignored on the Wii).
 {

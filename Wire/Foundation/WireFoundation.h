@@ -24,4 +24,5 @@
 #include "WireTypes.h"
 #include "WireVector2.h"
 #include "WireVector3.h"
+#include "WireVector4.h"
 #endif

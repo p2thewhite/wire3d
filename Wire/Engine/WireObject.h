@@ -7,14 +7,14 @@
 
 namespace Wire
 {
-
+ 
 class /*WIRE_ENGINE_ITEM*/ Object
 {
 public:
 	virtual ~Object();
 
 	// run-time type information system
-	static const Rtti Type;
+	static const Rtti TYPE;
 	virtual const Rtti& GetType() const;
 	Bool IsExactly(const Rtti& rType) const;
 	Bool IsDerived(const Rtti& rType) const;

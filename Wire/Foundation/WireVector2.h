@@ -24,24 +24,48 @@ public:
 	inline Real Y() const;
 	inline Real& Y();
 
+	// assignment
+	inline Vector2& operator= (const Vector2& rVector);
+
+	// comparison
+	Bool operator== (const Vector2& rVector) const;
+	Bool operator!= (const Vector2& rVector) const;
+
 	// arithmetic operations
-	inline Vector2 operator+ (const Vector2& rVector);
-	inline Vector2 operator- (const Vector2& rVector);
-	inline Vector2 operator* (Real scalar);
-	inline Vector2 operator/ (Real scalar);
+	inline Vector2 operator+ (const Vector2& rVector) const;
+	inline Vector2 operator- (const Vector2& rVector) const;
+	inline Vector2 operator* (Real scalar) const;
+	inline Vector2 operator/ (Real scalar) const;
 	inline Vector2 operator- () const;
 
 	// vector operations
 	inline Real Length() const;
 	inline Real SquaredLength() const;
+	inline Real Dot(const Vector2& rVector) const;
+	inline Real Normalize();
+
+	// Gram-Schmidt orthonormalization. Take linearly independent vectors U
+	// and V and compute an orthonormal set (unit length, mutually
+	// perpendicular).
+	static void Orthonormalize (Vector2& rU, Vector2& rV);
+
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 ZERO;    // (0,0)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 UNIT_X;  // (1,0)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 UNIT_Y;  // (0,1)
+	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 ONE;     // (1,1)
 
 private:
 	Real mTuple[2];
 };
 
+// arithmetic operations
+template <class Real>
+Vector2<Real> operator* (Real scalar, const Vector2<Real>& rVector);
+
 #include "WireVector2.inl"
 
 typedef Vector2<Float> Vector2F;
+typedef Vector2<Double> Vector2D;
 
 }
 

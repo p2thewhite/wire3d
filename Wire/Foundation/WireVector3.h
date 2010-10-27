@@ -73,7 +73,7 @@ public:
 private:
 #ifdef WIRE_WII
 #include "Wii/WireOgcDefines.h"
-	Vector mTuple;
+	Vec mTuple;
 #else
 	Real mTuple[3];
 #endif
@@ -90,6 +90,7 @@ Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector);
 #endif
 
 typedef Vector3<Float> Vector3F;
+typedef Vector3<Double> Vector3D;
 
 }
 

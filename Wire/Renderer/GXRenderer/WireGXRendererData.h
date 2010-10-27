@@ -61,6 +61,8 @@ public:
 	UInt FrameBufferIndex;
 	Bool IsFrameBufferDirty;
 
+	UChar LightsMask;
+
 	static UChar sAlphaSrcBlend[];
 	static UChar sAlphaDstBlend[];
 	static UChar sCullType[];
