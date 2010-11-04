@@ -189,13 +189,58 @@ inline Vector4<Real> Vector4<Real>::operator- () const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector4<Real> operator* (Real scalar, const Vector4<Real>& rVector)
+inline Vector4<Real>& Vector4<Real>::operator+= (const Vector4& rVector)
 {
-	return Vector4<Real>(
-		scalar * rVector[0],
-		scalar * rVector[1],
-		scalar * rVector[2],
-		scalar * rVector[3]);
+	mTuple[0] += rVector.mTuple[0];
+	mTuple[1] += rVector.mTuple[1];
+	mTuple[2] += rVector.mTuple[2];
+	mTuple[3] += rVector.mTuple[3];
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector4<Real>& Vector4<Real>::operator-= (const Vector4& rVector)
+{
+	mTuple[0] -= rVector.mTuple[0];
+	mTuple[1] -= rVector.mTuple[1];
+	mTuple[2] -= rVector.mTuple[2];
+	mTuple[3] -= rVector.mTuple[3];
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector4<Real>& Vector4<Real>::operator*= (Real scalar)
+{
+	mTuple[0] *= scalar;
+	mTuple[1] *= scalar;
+	mTuple[2] *= scalar;
+	mTuple[3] *= scalar;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector4<Real>& Vector4<Real>::operator/= (Real scalar)
+{
+	if (scalar != static_cast<Real>(0.0))
+	{
+		Real invScalar = (static_cast<Real>(1.0)) / scalar;
+		mTuple[0] *= invScalar;
+		mTuple[1] *= invScalar;
+		mTuple[2] *= invScalar;
+		mTuple[3] *= invScalar;
+	}
+	else
+	{
+		mTuple[0] = Math<Real>::MAX_REAL;
+		mTuple[1] = Math<Real>::MAX_REAL;
+		mTuple[2] = Math<Real>::MAX_REAL;
+		mTuple[3] = Math<Real>::MAX_REAL;
+	}
+
+	return *this;
 }
 
 //----------------------------------------------------------------------------
@@ -255,4 +300,15 @@ inline Real Vector4<Real>::Normalize()
 	}
 
 	return length;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector4<Real> operator* (Real scalar, const Vector4<Real>& rVector)
+{
+	return Vector4<Real>(
+		scalar * rVector[0],
+		scalar * rVector[1],
+		scalar * rVector[2],
+		scalar * rVector[3]);
 }

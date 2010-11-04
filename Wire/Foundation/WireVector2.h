@@ -28,8 +28,8 @@ public:
 	inline Vector2& operator= (const Vector2& rVector);
 
 	// comparison
-	Bool operator== (const Vector2& rVector) const;
-	Bool operator!= (const Vector2& rVector) const;
+	inline Bool operator== (const Vector2& rVector) const;
+	inline Bool operator!= (const Vector2& rVector) const;
 
 	// arithmetic operations
 	inline Vector2 operator+ (const Vector2& rVector) const;
@@ -37,6 +37,12 @@ public:
 	inline Vector2 operator* (Real scalar) const;
 	inline Vector2 operator/ (Real scalar) const;
 	inline Vector2 operator- () const;
+
+	// arithmetic updates
+	inline Vector2& operator+= (const Vector2& rVector);
+	inline Vector2& operator-= (const Vector2& rVector);
+	inline Vector2& operator*= (Real scalar);
+	inline Vector2& operator/= (Real scalar);
 
 	// vector operations
 	inline Real Length() const;

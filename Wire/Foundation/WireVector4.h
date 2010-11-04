@@ -42,6 +42,12 @@ public:
 	inline Vector4 operator/ (Real scalar) const;
 	inline Vector4 operator- () const;
  
+	// arithmetic updates
+	inline Vector4& operator+= (const Vector4& rVector);
+	inline Vector4& operator-= (const Vector4& rVector);
+	inline Vector4& operator*= (Real scalar);
+	inline Vector4& operator/= (Real scalar);
+
 	// vector operations
 	inline Real Length() const;
 	inline Real SquaredLength() const;

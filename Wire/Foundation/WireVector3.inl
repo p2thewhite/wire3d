@@ -104,6 +104,71 @@ inline Bool Vector3<Real>::operator!= (const Vector3& rVector) const
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
+const
+{
+	return Vector3(
+		mTuple[0] + rVector.mTuple[0],
+		mTuple[1] + rVector.mTuple[1],
+		mTuple[2] + rVector.mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
+const
+{
+	return Vector3(
+		mTuple[0] - rVector.mTuple[0],
+		mTuple[1] - rVector.mTuple[1],
+		mTuple[2] - rVector.mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
+{
+	return Vector3(
+		scalar * mTuple[0],
+		scalar * mTuple[1],
+		scalar * mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
+{
+	Vector3 quot;
+
+	if (scalar != static_cast<Real>(0.0))
+	{
+		Real invScalar = (static_cast<Real>(1.0)) / scalar;
+		quot.mTuple[0] = invScalar * mTuple[0];
+		quot.mTuple[1] = invScalar * mTuple[1];
+		quot.mTuple[2] = invScalar * mTuple[2];
+	}
+	else
+	{
+		quot.mTuple[0] = Math<Real>::MAX_REAL;
+		quot.mTuple[1] = Math<Real>::MAX_REAL;
+		quot.mTuple[2] = Math<Real>::MAX_REAL;
+	}
+
+	return quot;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator- () const
+{
+	return Vector3(
+		-mTuple[0],
+		-mTuple[1],
+		-mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
 {
 	mTuple[0] += rVector.mTuple[0];
@@ -171,71 +236,6 @@ inline Real Vector3<Real>::SquaredLength() const
 		mTuple[0] * mTuple[0] +
 		mTuple[1] * mTuple[1] +
 		mTuple[2] * mTuple[2];
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
-const
-{
-	return Vector3(
-		mTuple[0] + rVector.mTuple[0],
-		mTuple[1] + rVector.mTuple[1],
-		mTuple[2] + rVector.mTuple[2]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
-const
-{
-	return Vector3(
-		mTuple[0] - rVector.mTuple[0],
-		mTuple[1] - rVector.mTuple[1],
-		mTuple[2] - rVector.mTuple[2]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
-{
-	return Vector3(
-		scalar * mTuple[0],
-		scalar * mTuple[1],
-		scalar * mTuple[2]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
-{
-	Vector3 quot;
-
-	if (scalar != static_cast<Real>(0.0))
-	{
-		Real invScalar = (static_cast<Real>(1.0)) / scalar;
-		quot.mTuple[0] = invScalar * mTuple[0];
-		quot.mTuple[1] = invScalar * mTuple[1];
-		quot.mTuple[2] = invScalar * mTuple[2];
-	}
-	else
-	{
-		quot.mTuple[0] = Math<Real>::MAX_REAL;
-		quot.mTuple[1] = Math<Real>::MAX_REAL;
-		quot.mTuple[2] = Math<Real>::MAX_REAL;
-	}
-
-	return quot;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator- () const
-{
-	return Vector3(
-		-mTuple[0],
-		-mTuple[1],
-		-mTuple[2]);
 }
 
 //----------------------------------------------------------------------------

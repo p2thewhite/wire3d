@@ -2,7 +2,6 @@
 
 namespace Wire
 {
-
 template<> const Matrix34<Float> Matrix34<Float>::ZERO(
     0.0F, 0.0F, 0.0F, 0.0F,
     0.0F, 0.0F, 0.0F, 0.0F,

@@ -17,16 +17,15 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube();
+	Geometry* CreateCube(Bool useTexture = true, Bool useNormals = true,
+		Bool useVertexColor = false, ColorRGBA vertexColor = ColorRGBA::WHITE);
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
 
-	GeometryPtr mspCube;
-	MaterialStatePtr mspMaterialState;
-	LightPtr mspLight;
-	LightPtr mspLight2;
+	NodePtr mspRoot;
+	Texture2DPtr mspTexture;
 
 	Float mAngle;
 	Double mLastTime;
