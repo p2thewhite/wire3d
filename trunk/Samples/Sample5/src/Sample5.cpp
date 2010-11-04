@@ -12,7 +12,39 @@ Bool Sample5::OnInitialize()
 		return false;
 	}
 
-	mspCube = CreateCube();
+	mspRoot = WIRE_NEW Node;
+	Node* pLitGroup = WIRE_NEW Node;
+	Node* pUnlitGroup = WIRE_NEW Node;
+
+	mspRoot->AttachChild(pLitGroup);
+	mspRoot->AttachChild(pUnlitGroup);
+
+	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA(0, 1, 0, 0));
+	pLightSrc1->Local.SetUniformScale(0.2F);
+	pUnlitGroup->AttachChild(pLightSrc1);
+
+	Spatial* pCube1 = CreateCube();
+	Spatial* pCube2 = CreateCube(false, true);
+	pCube1->Local.SetTranslate(Vector3F(-2.5F, 0, 0));
+	pCube2->Local.SetTranslate(Vector3F(2.5F, 0, 0));
+	pLitGroup->AttachChild(pCube1);
+	pLitGroup->AttachChild(pCube2);
+
+	MaterialState* pMaterialState = WIRE_NEW MaterialState;
+	pMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
+
+	Light* pLight1 = WIRE_NEW Light(Light::LT_POINT);
+	pLight1->Position = Vector3F(0, 0, 0);
+	pLight1->Color = ColorRGB(0, 1, 0);
+
+	Light* pLight2 = WIRE_NEW Light();
+	pLight2->Color = ColorRGB(1, 0.3F, 0);
+
+	pLitGroup->AttachGlobalState(pMaterialState);
+	pLitGroup->AttachLight(pLight1);
+	pLitGroup->AttachLight(pLight2);
+	mspRoot->UpdateRS();
+
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -30,19 +62,6 @@ Bool Sample5::OnInitialize()
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
-	mspMaterialState = WIRE_NEW MaterialState;
-
-	mspLight = WIRE_NEW Light(Light::LT_POINT);
-	mspLight->Position = Vector3F(0, 0, 0);
-	mspLight->Color = ColorRGB(0, 1, 0);
-
-	mspLight2 = WIRE_NEW Light();
-	mspLight2->Color = ColorRGB(1, 0, 0);
-
-	mspCube->Lights.Append(mspLight);
-	mspCube->Lights.Append(mspLight2);
-//	mspCube->UpdateRS();
-
 	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
@@ -57,41 +76,41 @@ void Sample5::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 	mAngle += static_cast<Float>(elapsedTime);
-	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
+	mAngle = MathF::FMod(mAngle, MathF::TWO_PI * 2);
+
+	Node* pLitGroup = DynamicCast<Node>(mspRoot->GetChild(0));
+	WIRE_ASSERT(pLitGroup);
+
+	Matrix34F model1(Vector3F(0.75F, 0.25F, 0.5F), -mAngle * 0.5F);
+	Spatial* pCube1 = pLitGroup->GetChild(0);
+	pCube1->Local.SetRotate(model1);
+
+	Matrix34F model2(Vector3F(-0.75F, -0.25F, -0.5F), -mAngle * 0.5F);
+	Spatial* pCube2 = pLitGroup->GetChild(1);
+	pCube2->Local.SetRotate(model2);
+
+	Float y = MathF::FMod(static_cast<Float>(time), MathF::TWO_PI);
+	Vector3F lightPos(0, MathF::Sin(y*2) * 2, 0);
+	pLitGroup->GetLight()->Position = lightPos;
+
+	Node* pUnlitGroup = DynamicCast<Node>(mspRoot->GetChild(1));
+	WIRE_ASSERT(pUnlitGroup);
+	Spatial* pLightCube1 = pUnlitGroup->GetChild(0);
+	pLightCube1->Local.SetTranslate(lightPos);
+
+	mspRoot->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-
-	mspMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
- 	GetRenderer()->SetState(mspMaterialState);
-
-// 	GetRenderer()->EnableLighting();
-// 	GetRenderer()->SetLight(mspLight);
-// 	GetRenderer()->SetLight(mspLight2, 1);
-
-	Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F);
-	mspCube->World.SetRotate(model);
-	mspCube->World.SetTranslate(Vector3F(-2.5F, 0, 0));
-	mspCube->UpdateWorldBound();
-	if (mCuller.IsVisible(mspCube))
-	{
-		GetRenderer()->Draw(mspCube);
-	}
-
-	mspCube->World.SetRotate(model);
-	mspCube->World.SetTranslate(Vector3F(2.5F, 0, 0));
-	mspCube->UpdateWorldBound();
-	if (mCuller.IsVisible(mspCube))
-	{
-		GetRenderer()->Draw(mspCube);
-	}
-
+	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample5::CreateCube()
+Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
+	Bool useVertexColor, ColorRGBA vertexColor)
 {
 	// Create a cube with unique texture (UV) coordinates for each side.
 	// This means we have to duplicate vertices, since every vertex can only
@@ -196,8 +215,21 @@ Geometry* Sample5::CreateCube()
 	// It consists of 3d positions and 2d texture coordinates
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetTCoordChannels(2);	// channels: U, V
-	attributes.SetNormalChannels(3);	// channels: X, Y, Z
+
+	if (useTexture)
+	{
+		attributes.SetTCoordChannels(2);	// channels: U, V
+	}
+
+	if (useNormals)
+	{
+		attributes.SetNormalChannels(3);	// channels: X, Y, Z
+	}
+
+	if (useVertexColor)
+	{
+		attributes.SetColorChannels(4);		// RGBA
+	}
 
 	// Now with the attributes being defined, we can create a VertexBuffer
 	// and fill it with data.
@@ -209,7 +241,16 @@ Geometry* Sample5::CreateCube()
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
 		pCubeVerts->Position3(i) = vertices[i];
-		pCubeVerts->TCoord2(i) = uvs[i];
+
+		if (useTexture)
+		{
+			pCubeVerts->TCoord2(i) = uvs[i];
+		}
+
+		if (useVertexColor)
+		{
+			pCubeVerts->Color4(i) = vertexColor;
+		}
 	}
 
 	// Same for the IndexBuffer
@@ -224,13 +265,14 @@ Geometry* Sample5::CreateCube()
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 	pCube->GenerateNormals();
 
-	// The cube shall be textured. Therefore we create and attach a texture
-	// effect, where we add a texture and define its blending mode.
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	Texture2D* pTexture = CreateTexture();
-	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	pCube->AttachEffect(pTextureEffect);
+	if (useTexture)
+	{
+		TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+		Texture2D* pTexture = CreateTexture();
+		pTextureEffect->Textures.Append(pTexture);
+		pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+		pCube->AttachEffect(pTextureEffect);
+	}
 
 	return pCube;
 }
@@ -245,6 +287,11 @@ struct Cell
 //----------------------------------------------------------------------------
 Texture2D* Sample5::CreateTexture()
 {
+	if (mspTexture)
+	{
+		return mspTexture;
+	}
+
 	// define the properties of the image to be used as a texture
 	const UInt width = 256;
 	const UInt height = 256;
@@ -337,5 +384,6 @@ Texture2D* Sample5::CreateTexture()
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
 
+	mspTexture = pTexture;
 	return pTexture;
 }

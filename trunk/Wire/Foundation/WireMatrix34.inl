@@ -82,6 +82,7 @@ Matrix34<Real>& Matrix34<Real>::MakeIdentity()
 	mEntry[2][1] = static_cast<Real>(0.0);
 	mEntry[2][2] = static_cast<Real>(1.0);
 	mEntry[2][3] = static_cast<Real>(0.0);
+
 	return *this;
 }
 
@@ -231,9 +232,8 @@ inline Real& Matrix34<Real>::operator() (UInt row, UInt col)
 
 //----------------------------------------------------------------------------
 template <class Real>
-void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
+void Matrix34<Real>::SetColumn(UInt col, const Vector3<Real>& rVector)
 {
-	WIRE_ASSERT((0 <= col) && (col < 4));
 	mEntry[0][col] = rVector.X();
 	mEntry[1][col] = rVector.Y();
 	mEntry[2][col] = rVector.Z();
@@ -241,7 +241,7 @@ void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 
 //----------------------------------------------------------------------------
 template <class Real>
-Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
+Vector3<Real> Matrix34<Real>::GetColumn(UInt col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
 }
@@ -316,6 +316,7 @@ template <class Real>
 inline Vector3<Real> operator* (const Vector3<Real>& rV,
 	const Matrix34<Real>& rM)
 {
+	// TODO:
     return Vector3<Real>(
         rV[0]*rM(0, 0) + rV[1]*rM(1, 0) + rV[2]*rM(2, 0),
         rV[0]*rM(0, 1) + rV[1]*rM(1, 1) + rV[2]*rM(2, 1),

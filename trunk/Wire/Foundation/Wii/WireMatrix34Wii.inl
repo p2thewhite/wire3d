@@ -147,9 +147,8 @@ inline Real& Matrix34<Real>::operator() (UInt row, UInt col)
 
 //----------------------------------------------------------------------------
 template <class Real>
-void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
+void Matrix34<Real>::SetColumn(UInt col, const Vector3<Real>& rVector)
 {
-	WIRE_ASSERT((0 <= col) && (col < 4));
 	mEntry[0][col] = rVector.X();
 	mEntry[1][col] = rVector.Y();
 	mEntry[2][col] = rVector.Z();
@@ -157,7 +156,7 @@ void Matrix34<Real>::SetColumn(Int col, const Vector3<Real>& rVector)
 
 //----------------------------------------------------------------------------
 template <class Real>
-Vector3<Real> Matrix34<Real>::GetColumn(Int col) const
+Vector3<Real> Matrix34<Real>::GetColumn(UInt col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
 }

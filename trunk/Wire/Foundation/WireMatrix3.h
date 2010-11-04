@@ -1,9 +1,6 @@
 #pragma once
-#ifndef WIREMATRIX34_H
-#define WIREMATRIX34_H
-
-// Matrix34 is a 4x4 matrix with an implicit 4th row of (0, 0, 0, 1).
-// It is a row-major matrix, thus it is indexed as Matrix[row][column]
+#ifndef WIREMATRIX3_H
+#define WIREMATRIX3_H
 
 // Matrix operations are applied on the left. For example, given a matrix M
 // and a vector V, matrix-times-vector is M*V. That is, V is treated as a
@@ -23,68 +20,63 @@ namespace Wire
 {
 
 template <class Real>
-class Matrix34
+class Matrix3
 {
 public:
-	typedef Real Real4[4];
-
 	// If zero is true, create the zero matrix. Otherwise, create the
 	// identity matrix.
-	Matrix34(Bool zero = true);
+	Matrix3(Bool zero = true);
 
-	// input mRC is in row R, column C
-	Matrix34(Real m00, Real m01, Real m02, Real m03,
-		Real m10, Real m11, Real m12, Real m13,
-		Real m20, Real m21, Real m22, Real m23);
+	// input mRC is in row R, column C.
+	Matrix3(Real m00, Real m01, Real m02,
+		Real m10, Real m11, Real m12,
+		Real m20, Real m21, Real m22);
 
 	// Create rotation matrices (positive angle - counterclockwise).  The
 	// angle must be in radians, not degrees.
-	Matrix34(const Vector3<Real>& rAxis, Real angle);
+	Matrix3(const Vector3<Real>& rAxis, Real angle);
 
 	// create various matrices
-	Matrix34& MakeZero();
-	Matrix34& MakeIdentity();
-	Matrix34& FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
+	Matrix3& MakeZero();
+	Matrix3& MakeIdentity();
+    Matrix3& FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
 
 	// member access
-	inline operator Real4* ();
-//	inline operator const Real4* () const;	// TODO: fix for VC
-    inline Real operator() (UInt row, UInt col) const;
-    inline Real& operator() (UInt row, UInt col);
+	inline operator const Real* () const;
+	inline operator Real* ();
+	inline Real operator() (UInt row, UInt col) const;
+	inline Real& operator() (UInt row, UInt col);
 	void SetColumn(UInt col, const Vector3<Real>& rVector);
 	Vector3<Real> GetColumn(UInt col) const;
 
 	// arithmetic operations
-	inline Matrix34 operator* (const Matrix34& rMatrix) const;
-	inline Matrix34 operator* (Real scalar) const;
+	inline Matrix3 operator* (const Matrix3& rMatrix) const;
+	inline Matrix3 operator* (Real scalar) const;
 
 	// matrix times vector
 	inline Vector3<Real> operator* (const Vector3<Real>& rVector) const;
 
 	// other operations
-	Matrix34 TimesDiagonal(const Vector3<Real>& rDiag) const;
-    Matrix34 Inverse() const;
+	Matrix3 TimesDiagonal(const Vector3<Real>& rDiag) const;
+	Matrix3 Inverse() const;
 
-    // special matrices
-    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 ZERO;
-    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 IDENTITY;
+	// special matrices
+	/*WIRE_FOUNDATION_ITEM*/ static const Matrix3 ZERO;
+	/*WIRE_FOUNDATION_ITEM*/ static const Matrix3 IDENTITY;
 
 private:
-	Real mEntry[3][4];
+    Real mEntry[9];
 };
 
 // v^T * M
 template <class Real>
 inline Vector3<Real> operator* (const Vector3<Real>& rV,
-    const Matrix34<Real>& rM);
+	const Matrix3<Real>& rM);
 
-#ifdef WIRE_WII
-#include "Wii/WireMatrix34Wii.inl"
-#else
-#include "WireMatrix34.inl"
-#endif
+#include "WireMatrix3.inl"
 
-typedef Matrix34<Float> Matrix34F;
+typedef Matrix3<Float> Matrix3F;
+typedef Matrix3<Double> Matrix3D;
 
 }
 
