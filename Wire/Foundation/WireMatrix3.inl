@@ -122,7 +122,7 @@ Matrix3<Real>& Matrix3<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 // 	mEntry[7] = yzm+xSin;
 // 	mEntry[8] = z2*oneMinusCos+cos;
 // 
-// 	return *this;
+ 	return *this;
 }
 
 //----------------------------------------------------------------------------

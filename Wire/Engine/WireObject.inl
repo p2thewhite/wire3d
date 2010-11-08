@@ -62,12 +62,12 @@ inline const T* StaticCast(const Object* pObj)
 template <class T>
 T* DynamicCast(Object* pObj)
 {
-	return pObj && pObj->IsDerived(T::TYPE) ? (T*)pObj : 0;
+	return pObj && pObj->IsDerived(T::TYPE) ? static_cast<T*>(pObj) : 0;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 const T* DynamicCast(const Object* pObj)
 {
-	return pObj && pObj->IsDerived(T::TYPE) ? (const T*)pObj : 0;
+	return pObj && pObj->IsDerived(T::TYPE) ? static_cast<const T*>(pObj) : 0;
 }

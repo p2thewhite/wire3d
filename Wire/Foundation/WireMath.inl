@@ -1,5 +1,47 @@
 //----------------------------------------------------------------------------
 template <class Real>
+Real Math<Real>::ACos(Real value)
+{
+	if (-static_cast<Real>(1.0) < value)
+	{
+		if (value < static_cast<Real>(1.0))
+		{
+			return static_cast<Real>(acos(static_cast<Double>(value)));
+		}
+		else
+		{
+			return static_cast<Real>(0.0);
+		}
+	}
+	else
+	{
+		return PI;
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::ASin(Real value)
+{
+	if (-static_cast<Real>(1.0) < value)
+	{
+		if (value < static_cast<Real>(1.0))
+		{
+			return static_cast<Real>(asin(static_cast<Double>(value)));
+		}
+		else
+		{
+			return HALF_PI;
+		}
+	}
+	else
+	{
+		return -HALF_PI;
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Real Math<Real>::ATan(Real value)
 {
 	return static_cast<Real>(atan(static_cast<Double>(value)));
@@ -40,6 +82,13 @@ Real Math<Real>::FMod(Real x, Real y)
 {
 	return static_cast<Real>(
 		fmod(static_cast<Double>(x), static_cast<Double>(y)));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::InvSqrt(Real value)
+{
+	return static_cast<Real>(1.0/sqrt(static_cast<Double>(value)));
 }
 
 //----------------------------------------------------------------------------

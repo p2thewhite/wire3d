@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(LightNode, Light);
+WIRE_IMPLEMENT_RTTI(LightNode, Node);
 
 //----------------------------------------------------------------------------
 LightNode::LightNode(Light* pLight)
@@ -13,6 +13,7 @@ LightNode::LightNode(Light* pLight)
 	{
 		Local.SetTranslate(mspLight->Position);
 	}
+
 }
 
 //----------------------------------------------------------------------------
@@ -28,7 +29,6 @@ void LightNode::SetLight(Light* pLight)
 	if (mspLight)
 	{
 		Local.SetTranslate(mspLight->Position);
-		UpdateGS();
 	}
 }
 

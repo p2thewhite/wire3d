@@ -162,6 +162,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireBox3.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGB.h"
 					>
 				</File>
@@ -199,6 +203,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WirePlane3.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireQuaternion.h"
 					>
 				</File>
 				<File
@@ -258,6 +266,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Foundation\WireBox3.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGB.inl"
 					>
 				</File>
@@ -283,6 +295,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WirePlane3.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireQuaternion.inl"
 					>
 				</File>
 				<File
@@ -357,6 +373,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix34.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireQuaternion.cpp"
 					>
 				</File>
 				<File

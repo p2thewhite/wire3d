@@ -68,6 +68,7 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 void SphereBV::TransformBy(const Transformation& rTransform,
 	BoundingVolume* pResult)
 {
+	WIRE_ASSERT(pResult->IsDerived(SphereBV::TYPE));
 	Sphere3F& rTarget = StaticCast<SphereBV>(pResult)->mSphere;
 	rTarget.Center = rTransform.ApplyForward(mSphere.Center);
 	rTarget.Radius = rTransform.GetNorm() * mSphere.Radius;
@@ -94,6 +95,7 @@ Int SphereBV::WhichSide(const Plane3F& rPlane) const
 //----------------------------------------------------------------------------
 void SphereBV::CopyFrom(const BoundingVolume* pInput)
 {
+	WIRE_ASSERT(pInput->IsDerived(SphereBV::TYPE));
 	mSphere = StaticCast<SphereBV>(pInput)->mSphere;
 }
 

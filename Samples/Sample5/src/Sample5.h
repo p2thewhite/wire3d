@@ -25,7 +25,6 @@ private:
 	Culler mCuller;
 
 	NodePtr mspRoot;
-	Texture2DPtr mspTexture;
 
 	Float mAngle;
 	Double mLastTime;
