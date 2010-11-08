@@ -3,6 +3,7 @@
 #define WIREFOUNDATION_H
 
 #include "WireApplication.h"
+#include "WireBox3.h"
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireMain.h"
@@ -13,6 +14,7 @@
 #include "WireMatrix4.h"
 #include "WireMemory.h"
 #include "WirePlane3.h"
+#include "WireQuaternion.h"
 #include "WireRandom.h"
 #include "WireSphere3.h"
 #include "WireString.h"

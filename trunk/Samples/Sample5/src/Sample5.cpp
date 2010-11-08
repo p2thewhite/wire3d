@@ -14,14 +14,21 @@ Bool Sample5::OnInitialize()
 
 	mspRoot = WIRE_NEW Node;
 	Node* pLitGroup = WIRE_NEW Node;
-	Node* pUnlitGroup = WIRE_NEW Node;
+	LightNode* pLightNode1 = WIRE_NEW LightNode;
+	LightNode* pLightNode2 = WIRE_NEW LightNode;
 
 	mspRoot->AttachChild(pLitGroup);
-	mspRoot->AttachChild(pUnlitGroup);
+	mspRoot->AttachChild(pLightNode1);
+	mspRoot->AttachChild(pLightNode2);
 
 	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA(0, 1, 0, 0));
 	pLightSrc1->Local.SetUniformScale(0.2F);
-	pUnlitGroup->AttachChild(pLightSrc1);
+	pLightNode1->AttachChild(pLightSrc1);
+
+	Spatial* pLightSrc2 = CreateCube(false, false, true, ColorRGBA(1, 0, 0, 0));
+	pLightSrc2->Local.SetTranslate(Vector3F(1, 2, 0));
+	pLightSrc2->Local.SetUniformScale(0.2F);
+	pLightNode2->AttachChild(pLightSrc2);
 
 	Spatial* pCube1 = CreateCube();
 	Spatial* pCube2 = CreateCube(false, true);
@@ -35,16 +42,17 @@ Bool Sample5::OnInitialize()
 
 	Light* pLight1 = WIRE_NEW Light(Light::LT_POINT);
 	pLight1->Position = Vector3F(0, 0, 0);
-	pLight1->Color = ColorRGB(0, 1, 0);
+	pLight1->Color = ColorRGB(0.3F, 1, 0.3F);
+	pLightNode1->SetLight(pLight1);
 
 	Light* pLight2 = WIRE_NEW Light();
-	pLight2->Color = ColorRGB(1, 0.3F, 0);
+	pLight2->Color = ColorRGB(1, 0.3F, 0.3F);
+	pLightNode2->SetLight(pLight2);
 
 	pLitGroup->AttachGlobalState(pMaterialState);
 	pLitGroup->AttachLight(pLight1);
 	pLitGroup->AttachLight(pLight2);
 	mspRoot->UpdateRS();
-
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -91,12 +99,10 @@ void Sample5::OnIdle()
 
 	Float y = MathF::FMod(static_cast<Float>(time), MathF::TWO_PI);
 	Vector3F lightPos(0, MathF::Sin(y*2) * 2, 0);
-	pLitGroup->GetLight()->Position = lightPos;
 
-	Node* pUnlitGroup = DynamicCast<Node>(mspRoot->GetChild(1));
-	WIRE_ASSERT(pUnlitGroup);
-	Spatial* pLightCube1 = pUnlitGroup->GetChild(0);
-	pLightCube1->Local.SetTranslate(lightPos);
+	Node* pLightNode1 = DynamicCast<Node>(mspRoot->GetChild(1));
+	WIRE_ASSERT(pLightNode1);
+	pLightNode1->Local.SetTranslate(lightPos);
 
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
@@ -287,11 +293,6 @@ struct Cell
 //----------------------------------------------------------------------------
 Texture2D* Sample5::CreateTexture()
 {
-	if (mspTexture)
-	{
-		return mspTexture;
-	}
-
 	// define the properties of the image to be used as a texture
 	const UInt width = 256;
 	const UInt height = 256;
@@ -384,6 +385,5 @@ Texture2D* Sample5::CreateTexture()
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
 
-	mspTexture = pTexture;
 	return pTexture;
 }
