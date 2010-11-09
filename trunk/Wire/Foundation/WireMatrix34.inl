@@ -44,7 +44,42 @@ Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle)
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::MakeZero()
+Matrix34<Real>::Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
+						 const Vector3<Real>& rW, Bool isColumn)
+{
+	mEntry[0][3] = static_cast<Real>(0.0);
+	mEntry[1][3] = static_cast<Real>(0.0);
+	mEntry[2][3] = static_cast<Real>(0.0);
+
+	if (isColumn)
+	{
+		mEntry[0][0] = rU[0];
+		mEntry[0][1] = rV[0];
+		mEntry[0][2] = rW[0];
+		mEntry[1][0] = rU[1];
+		mEntry[1][1] = rV[1];
+		mEntry[1][2] = rW[1];
+		mEntry[2][0] = rU[2];
+		mEntry[2][1] = rV[2];
+		mEntry[2][2] = rW[2];
+	}
+	else
+	{
+		mEntry[0][0] = rU[0];
+		mEntry[0][1] = rU[1];
+		mEntry[0][2] = rU[2];
+		mEntry[1][0] = rV[0];
+		mEntry[1][1] = rV[1];
+		mEntry[1][2] = rV[2];
+		mEntry[2][0] = rW[0];
+		mEntry[2][1] = rW[1];
+		mEntry[2][2] = rW[2];
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Matrix34<Real>::MakeZero()
 {
 	mEntry[0][0] = static_cast<Real>(0.0);
 	mEntry[0][1] = static_cast<Real>(0.0);
@@ -60,13 +95,11 @@ Matrix34<Real>& Matrix34<Real>::MakeZero()
 	mEntry[2][1] = static_cast<Real>(0.0);
 	mEntry[2][2] = static_cast<Real>(0.0);
 	mEntry[2][3] = static_cast<Real>(0.0);
-
-	return *this;
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::MakeIdentity()
+void Matrix34<Real>::MakeIdentity()
 {
 	mEntry[0][0] = static_cast<Real>(1.0);
 	mEntry[0][1] = static_cast<Real>(0.0);
@@ -82,13 +115,11 @@ Matrix34<Real>& Matrix34<Real>::MakeIdentity()
 	mEntry[2][1] = static_cast<Real>(0.0);
 	mEntry[2][2] = static_cast<Real>(1.0);
 	mEntry[2][3] = static_cast<Real>(0.0);
-
-	return *this;
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
+void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
 {
 	Vector3<Real> axis = rAxis;
@@ -144,8 +175,6 @@ Matrix34<Real>& Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 // 	mEntry[2][1] = yzM + xSin;
 // 	mEntry[2][2] = z2 * oneMinusCos + cos;
 // 	mEntry[2][3] = static_cast<Real>(0.0);
-// 
-	return *this;
 }
 
 //----------------------------------------------------------------------------

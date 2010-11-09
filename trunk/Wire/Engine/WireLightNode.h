@@ -26,6 +26,8 @@ protected:
 	virtual void UpdateWorldData(double appTime);
 
 private:
+	void LightToLocalTransform();
+
 	LightPtr mspLight;
 };
 

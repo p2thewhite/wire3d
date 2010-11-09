@@ -99,6 +99,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMatrix2.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireMatrix3.h"
 					>
 				</File>
@@ -191,6 +195,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMatrix2.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireMatrix3.inl"
 					>
 				</File>
@@ -268,6 +276,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMath.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireMatrix2.cpp"
 					>
 				</File>
 				<File
