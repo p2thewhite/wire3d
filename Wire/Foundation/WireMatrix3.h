@@ -13,6 +13,21 @@
 // therefore be careful about how you interface the transformation code with
 // graphics APIS.
 
+// The (x,y,z) coordinate system is assumed to be right-handed. Coordinate
+// axis rotation matrices are of the form
+//   RX =    1       0       0
+//           0     cos(t) -sin(t)
+//           0     sin(t)  cos(t)
+// where t > 0 indicates a counterclockwise rotation in the yz-plane
+//   RY =  cos(t)    0     sin(t)
+//           0       1       0
+//        -sin(t)    0     cos(t)
+// where t > 0 indicates a counterclockwise rotation in the zx-plane
+//   RZ =  cos(t) -sin(t)    0
+//         sin(t)  cos(t)    0
+//           0       0       1
+// where t > 0 indicates a counterclockwise rotation in the xy-plane.
+
 #include "WireTypes.h"
 #include "WireVector3.h"
 
@@ -32,21 +47,25 @@ public:
 		Real m10, Real m11, Real m12,
 		Real m20, Real m21, Real m22);
 
-	// Create rotation matrices (positive angle - counterclockwise).  The
+	// Create rotation matrix (positive angle - counterclockwise).  The
 	// angle must be in radians, not degrees.
 	Matrix3(const Vector3<Real>& rAxis, Real angle);
 
+	// Create matrices based on row or column vector input
+	Matrix3(const Vector3<Real>& rU, const Vector3<Real>& rV,
+		const Vector3<Real>& rW, Bool isColumn);
+
 	// create various matrices
-	Matrix3& MakeZero();
-	Matrix3& MakeIdentity();
-    Matrix3& FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
+	void MakeZero();
+	void MakeIdentity();
+    void FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
 
 	// member access
 	inline operator const Real* () const;
 	inline operator Real* ();
 	inline Real operator() (UInt row, UInt col) const;
 	inline Real& operator() (UInt row, UInt col);
-	void SetColumn(UInt col, const Vector3<Real>& rVector);
+	void SetColumn(UInt col, const Vector3<Real>& rV);
 	Vector3<Real> GetColumn(UInt col) const;
 
 	// arithmetic operations
@@ -54,7 +73,7 @@ public:
 	inline Matrix3 operator* (Real scalar) const;
 
 	// matrix times vector
-	inline Vector3<Real> operator* (const Vector3<Real>& rVector) const;
+	inline Vector3<Real> operator* (const Vector3<Real>& rV) const;	// M * v
 
 	// other operations
 	Matrix3 TimesDiagonal(const Vector3<Real>& rDiag) const;

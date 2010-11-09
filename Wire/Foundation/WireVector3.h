@@ -64,6 +64,19 @@ public:
 	// perpendicular).
 	static void Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW);
 
+	// Input W must be a nonzero vector. The output is an orthonormal basis
+	// {U,V,W}. The input W is normalized by this function. If you know
+	// W is already unit length, use GenerateComplementBasis to compute U
+	// and V.
+	static void GenerateOrthonormalBasis(Vector3& rU, Vector3& rV,
+		Vector3& rW);
+
+	// Input W must be a unit-length vector. The output vectors {U,V} are
+	// unit length and mutually perpendicular, and {U,V,W} is an orthonormal
+	// basis.
+	static void GenerateComplementBasis(Vector3& rU, Vector3& rV,
+		const Vector3& rW);
+
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ZERO;    // (0,0,0)
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_X;  // (1,0,0)
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_Y;  // (0,1,0)

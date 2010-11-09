@@ -9,6 +9,7 @@
 #include "WireMain.h"
 #include "WireMainMCR.h"
 #include "WireMath.h"
+#include "WireMatrix2.h"
 #include "WireMatrix3.h"
 #include "WireMatrix34.h"
 #include "WireMatrix4.h"

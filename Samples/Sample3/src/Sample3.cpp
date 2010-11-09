@@ -22,6 +22,7 @@ Bool Sample3::OnInitialize()
 
 	// create the wireframe torus knot shown on the right
 	Node* pRight = CreateLods();
+	mspRoot->AttachChild(pRight);
 
 	WireframeState* pWireframe = WIRE_NEW WireframeState;
 	pWireframe->Enabled = true;
@@ -31,7 +32,6 @@ Bool Sample3::OnInitialize()
 	pCull->CullFace = CullState::CM_OFF;
 	pRight->AttachGlobalState(pCull);
 
-	mspRoot->AttachChild(pRight);
 	mspRoot->UpdateRS();
 
 	// Bind all resources of the scene graph (vertex buffers, index buffers,
@@ -39,7 +39,8 @@ Bool Sample3::OnInitialize()
 	// will be bound automatically the first time the object is rendered.
 	// When using LODs, this would mean that resources will be created some
 	// time during execution of the main loop (i.e. when the respective level
-	// of the object is drawn for the first time). Thus we bind beforehand.
+	// of the object is drawn for the first time). Thus we bind beforehand in
+	// order to avoid wasting time in the main loop.
 	Renderer::BindAll(mspRoot);
 
 	// setup our camera at the origin
@@ -74,6 +75,7 @@ void Sample3::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
+	// rotate and zoom the torus knots
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
 
 	Spatial* pLeft = mspRoot->GetChild(0);
@@ -105,10 +107,12 @@ DLodNode* Sample3::CreateLods()
 	Geometry* pLod2 = CreateGeometry(8, 128);	// 2048 triangles
 	Geometry* pLod3 = CreateGeometry(6, 96);	// 1152 triangles
 
-	pLod->SetLod(0, pLod0, 0, 5);		// level0 from 0-5 units
-	pLod->SetLod(1, pLod1, 5, 10);		// level1 from 5-10 units
-	pLod->SetLod(2, pLod2, 10, 15);		// level2 from 10-15 units
-	pLod->SetLod(3, pLod3, 15, 100);	// level3 from 15-100 units
+	pLod->SetLod(0, pLod0, 0, 5);		// level0 from distance 0-5 units
+	pLod->SetLod(1, pLod1, 5, 10);		// level1 from distance 5-10 units
+	pLod->SetLod(2, pLod2, 10, 15);		// level2 from distance 10-15 units
+	pLod->SetLod(3, pLod3, 15, 100);	// level3 from distance 15-100 units
+	// if the object is farther away from the camera than 100 units,
+	// the object will not be drawn at all
 
 	return pLod;
 }
@@ -203,6 +207,7 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		pVertices->TCoord2((segmentCount-1)*shapeCount + j) = uv;
 	}
 
+	// here we establish connectivity information defined in an IndexBuffer
 	const UInt indexCount = (segmentCount-1)*(shapeCount-1)*6;
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexCount);
 	for (UInt j = 0; j < segmentCount-1; j++)

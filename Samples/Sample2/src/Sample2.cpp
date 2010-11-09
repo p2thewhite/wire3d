@@ -29,6 +29,9 @@ Bool Sample2::OnInitialize()
 		return false;
 	}
 
+	// Create a helicopter consisting of several objects and attach it to the
+	// root node of the scene graph. Whenever we move or rotate this node,
+	// every object attached to it, moves/rotates along.
 	mspRoot = WIRE_NEW Node;
 	mspRoot->AttachChild(CreateHelicopter());
 
@@ -36,7 +39,7 @@ Bool Sample2::OnInitialize()
 	// apply fog to all objects that are attached to this node.
 	FogState* pFogState = WIRE_NEW FogState;
 	pFogState->Enabled = true;
-	pFogState->Color = ColorRGB(0, 0, 0.2F);
+	pFogState->Color = ColorRGB(0, 0, 0.2F); // dark blue fog
 	pFogState->Start = 20.0F;
 	pFogState->End = 40.0F;
 	mspRoot->AttachGlobalState(pFogState);
@@ -44,8 +47,7 @@ Bool Sample2::OnInitialize()
 	// Once we finished creating the scene graph, we update the graph's
 	// render states. This propagates the fog state to all child nodes.
 	// Whenever you change the graph's render state (using Attach-/
-	// DetachGlobalState() on any of its children), you must call
-	// UpdateRS().
+	// DetachGlobalState() on any of its children), you must call UpdateRS().
 	mspRoot->UpdateRS();
 
 	// setup our camera at the origin
@@ -100,16 +102,16 @@ void Sample2::OnIdle()
 	Matrix34F topRot(Vector3F::UNIT_Y, MathF::FMod(mAngle*16, MathF::TWO_PI));
 	mspTopRotor->Local.SetRotate(topRot);
 
-	// Since the local transformations of the helicopter and its rotors
-	// changed, we need to call UpdateGS() (update geometric state) to 
-	// calculate the world transformation and update the world bounding
-	// volumes accordingly.
+	// Since the local transformations of the helicopter and its child objects
+	// (i.e. rotors) changed, we need to call UpdateGS() (update geometric
+	// state) to calculate the world transformation and update the world
+	// bounding volumes accordingly.
 	// See WireSpatial.h for details.
  	mspRoot->UpdateGS(time);
 
 	// The culler traverses the scene graph top-down and left to right, 
 	// collecting all visible objects in a set. This is also the order in
-	// which these visible objects are being drawn by the Renderer.
+	// which the visible objects are being drawn by the Renderer.
 	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
@@ -227,7 +229,8 @@ Node* Sample2::CreateHelicopter()
 	pNose->VBuffer->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
 	pNode->AttachChild(pNose);
 
-	// We save a reference to the rotors, so we can easily access them later.
+	// We save a reference to the rotors, so we can easily access them later
+	// to rotate them in the main loop.
 	mspRearRotor = CreateCube(ColorRGBA::WHITE*0.7F, ColorRGBA::WHITE*0.4F);
 	mspRearRotor->Local.SetScale(Vector3F(1, 0.2F, 0.1F));
 	mspRearRotor->Local.SetTranslate(Vector3F(9.75F, 2.5F, 0.55F));

@@ -37,7 +37,38 @@ Matrix3<Real>::Matrix3(const Vector3<Real>& rAxis, Real angle)
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix3<Real>& Matrix3<Real>::MakeZero()
+Matrix3<Real>::Matrix3(const Vector3<Real>& rU, const Vector3<Real>& rV,
+	const Vector3<Real>& rW, Bool isColumn)
+{
+	if (isColumn)
+	{
+		mEntry[0] = rU[0];
+		mEntry[1] = rV[0];
+		mEntry[2] = rW[0];
+		mEntry[3] = rU[1];
+		mEntry[4] = rV[1];
+		mEntry[5] = rW[1];
+		mEntry[6] = rU[2];
+		mEntry[7] = rV[2];
+		mEntry[8] = rW[2];
+	}
+	else
+	{
+		mEntry[0] = rU[0];
+		mEntry[1] = rU[1];
+		mEntry[2] = rU[2];
+		mEntry[3] = rV[0];
+		mEntry[4] = rV[1];
+		mEntry[5] = rV[2];
+		mEntry[6] = rW[0];
+		mEntry[7] = rW[1];
+		mEntry[8] = rW[2];
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Matrix3<Real>::MakeZero()
 {
 	mEntry[0] = static_cast<Real>(0.0);
 	mEntry[1] = static_cast<Real>(0.0);
@@ -48,13 +79,11 @@ Matrix3<Real>& Matrix3<Real>::MakeZero()
 	mEntry[6] = static_cast<Real>(0.0);
 	mEntry[7] = static_cast<Real>(0.0);
 	mEntry[8] = static_cast<Real>(0.0);
-
-	return *this;
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix3<Real>& Matrix3<Real>::MakeIdentity()
+void Matrix3<Real>::MakeIdentity()
 {
 	mEntry[0] = static_cast<Real>(1.0);
 	mEntry[1] = static_cast<Real>(0.0);
@@ -65,13 +94,11 @@ Matrix3<Real>& Matrix3<Real>::MakeIdentity()
 	mEntry[6] = static_cast<Real>(0.0);
 	mEntry[7] = static_cast<Real>(0.0);
 	mEntry[8] = static_cast<Real>(1.0);
-
-	return *this;
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix3<Real>& Matrix3<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
+void Matrix3<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
 {
 	Vector3<Real> axis = rAxis;
@@ -121,8 +148,6 @@ Matrix3<Real>& Matrix3<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 // 	mEntry[6] = xzm-ySin;
 // 	mEntry[7] = yzm+xSin;
 // 	mEntry[8] = z2*oneMinusCos+cos;
-// 
- 	return *this;
 }
 
 //----------------------------------------------------------------------------

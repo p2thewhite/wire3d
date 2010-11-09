@@ -250,16 +250,6 @@ inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
-{
-	Vector3<Real> result;
-	VECScale(reinterpret_cast<Vec*>(const_cast<Vector3<Real>*>(&rVector)),
-		reinterpret_cast<Vec*>(&result), scalar);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Real Vector3<Real>::Normalize()
 {
 	// TODO: use VECNormalize
@@ -310,4 +300,54 @@ void Vector3<Real>::Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW)
 	dot0 = rU.Dot(rW);
 	rW -= dot0*rU + dot1*rV;
 	rW.Normalize();
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Vector3<Real>::GenerateOrthonormalBasis(Vector3& rU, Vector3& rV,
+	Vector3& rW)
+{
+	rW.Normalize();
+	GenerateComplementBasis(rU, rV, rW);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Vector3<Real>::GenerateComplementBasis(Vector3& rU, Vector3& rV,
+	const Vector3& rW)
+{
+	if (Math<Real>::FAbs(rW.mTuple.x) >= Math<Real>::FAbs(rW.mTuple.y))
+	{
+		// W.x or W.z is the largest magnitude component, swap them
+		Real invLength = Math<Real>::InvSqrt(rW.mTuple.x * rW.mTuple.x +
+			rW.mTuple.z * rW.mTuple.z);
+		rU.mTuple.x = -rW.mTuple.z * invLength;
+		rU.mTuple.y = static_cast<Real>(0.0);
+		rU.mTuple.z = +rW.mTuple.x * invLength;
+		rV.mTuple.x = rW.mTuple.y * rU.mTuple.z;
+		rV.mTuple.y = rW.mTuple.z*rU.mTuple.x - rW.mTuple.x*rU.mTuple.z;
+		rV.mTuple.z = -rW.mTuple.y * rU.mTuple.x;
+	}
+	else
+	{
+		// W.y or W.z is the largest magnitude component, swap them
+		Real invLength = Math<Real>::InvSqrt(rW.mTuple.y * rW.mTuple.y +
+			rW.mTuple.z * rW.mTuple.z);
+		rU.mTuple.x = static_cast<Real>(0.0);
+		rU.mTuple.y = +rW.mTuple.z * invLength;
+		rU.mTuple.z = -rW.mTuple.y * invLength;
+		rV.mTuple.x = rW.mTuple.y*rU.mTuple.z - rW.mTuple.z*rU.mTuple.y;
+		rV.mTuple.y = -rW.mTuple.x * rU.mTuple.z;
+		rV.mTuple.z = rW.mTuple.x * rU.mTuple.y;
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> operator* (Real scalar, const Vector3<Real>& rVector)
+{
+	Vector3<Real> result;
+	VECScale(reinterpret_cast<Vec*>(const_cast<Vector3<Real>*>(&rVector)),
+		reinterpret_cast<Vec*>(&result), scalar);
+	return result;
 }
