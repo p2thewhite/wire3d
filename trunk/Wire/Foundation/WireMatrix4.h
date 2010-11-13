@@ -14,6 +14,7 @@
 // graphics APIS.
 
 #include "WireTypes.h"
+#include "WireVector4.h"
 
 namespace Wire
 {
@@ -22,8 +23,6 @@ template <class Real>
 class Matrix4
 {
 public:
-	typedef Real Real4[4];
-
 	// If zero is true, create the zero matrix.  Otherwise, create the
 	// identity matrix.
 	Matrix4(Bool zero = true);
@@ -34,20 +33,59 @@ public:
 		Real m20, Real m21, Real m22, Real m23,
 		Real m30, Real m31, Real m32, Real m33);
 
-	Matrix4& MakeZero();
-	Matrix4& MakeIdentity();
+	// Create matrices based on row or column vector input
+	Matrix4(const Vector4<Real>& rV0, const Vector4<Real>& rV1,
+		const Vector4<Real>& rV2, const Vector4<Real>& rV3, Bool isColumn);
+
+	void MakeZero();
+	void MakeIdentity();
 
 	// access operators
-	inline operator Real4* ();
-//	inline operator const Real4* () const; // TODO: fix for VC
+	inline operator const Real* () const;
+	inline operator Real* ();
+	inline const Real* operator[] (Int row) const;
+	inline Real* operator[] (Int row);
+	inline Real operator() (UInt row, UInt col) const;
+	inline Real& operator() (UInt row, UInt col);
+	void SetRow(UInt row, const Vector4<Real>& rV);
+	Vector4<Real> GetRow(UInt row) const;
+	void SetColumn(UInt col, const Vector4<Real>& rV);
+	Vector4<Real> GetColumn(UInt col) const;
+
+	// arithmetic operations
+	inline Matrix4 operator* (const Matrix4& rMatrix) const;
+	inline Matrix4 operator* (Real scalar) const;
+
+	// matrix times vector
+	inline Vector4<Real> operator* (const Vector4<Real>& rV) const;	// M * v
+
+	// other operations
+	Matrix4 Transpose() const;  // M^T
+	Matrix4 TransposeTimes(const Matrix4& rM) const;  // this^T * M
+	Matrix4 TimesTranspose(const Matrix4& rM) const;  // this * M^T
+	Matrix4 Inverse() const;
+
+	// special matrices
+	/*WIRE_FOUNDATION_ITEM*/ static const Matrix4 ZERO;
+	/*WIRE_FOUNDATION_ITEM*/ static const Matrix4 IDENTITY;
 
 private:
-	Real mEntry[4][4];
+	Real mEntry[16];
 };
+
+// c * M
+template <class Real>
+inline Matrix4<Real> operator* (Real scalar, const Matrix4<Real>& rM);
+
+// v^T * M
+template <class Real>
+inline Vector4<Real> operator* (const Vector4<Real>& rV,
+	const Matrix4<Real>& rM);
 
 #include "WireMatrix4.inl"
 
 typedef Matrix4<Float> Matrix4F;
+typedef Matrix4<Double> Matrix4D;
 
 }
 

@@ -96,6 +96,20 @@ inline Matrix2<Real>::operator Real* ()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline const Real* Matrix2<Real>::operator[] (Int row) const
+{
+	return &mEntry[2 * row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real* Matrix2<Real>::operator[] (Int row)
+{
+	return &mEntry[2 * row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Real Matrix2<Real>::operator() (UInt row, UInt col) const
 {
 	return mEntry[col + 2*row];
@@ -106,6 +120,21 @@ template <class Real>
 inline Real& Matrix2<Real>::operator() (UInt row, UInt col)
 {
 	return mEntry[col + 2*row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Matrix2<Real>::SetRow(UInt row, const Vector2<Real>& rkV)
+{
+	mEntry[2*row] = rkV[0];
+	mEntry[2*row+1] = rkV[1];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Vector2<Real> Matrix2<Real>::GetRow(UInt row) const
+{
+	return Vector2<Real>(mEntry[2*row], mEntry[2*row+1]);
 }
 
 //----------------------------------------------------------------------------
@@ -156,6 +185,41 @@ inline Vector2<Real> Matrix2<Real>::operator* (const Vector2<Real>& rV) const
 
 //----------------------------------------------------------------------------
 template <class Real>
+Matrix2<Real> Matrix2<Real>::Transpose() const
+{
+	return Matrix2<Real>(
+		mEntry[0],
+		mEntry[2],
+		mEntry[1],
+		mEntry[3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix2<Real> Matrix2<Real>::TransposeTimes(const Matrix2& rM) const
+{
+	// P = A^T*B
+	return Matrix2<Real>(
+		mEntry[0] * rM.mEntry[0] + mEntry[2] * rM.mEntry[2],
+		mEntry[0] * rM.mEntry[1] + mEntry[2] * rM.mEntry[3],
+		mEntry[1] * rM.mEntry[0] + mEntry[3] * rM.mEntry[2],
+		mEntry[1] * rM.mEntry[1] + mEntry[3] * rM.mEntry[3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix2<Real> Matrix2<Real>::TimesTranspose(const Matrix2& rM) const
+{
+	// P = A*B^T
+	return Matrix2<Real>(
+		mEntry[0] * rM.mEntry[0] + mEntry[1] * rM.mEntry[1],
+		mEntry[0] * rM.mEntry[2] + mEntry[1] * rM.mEntry[3],
+		mEntry[2] * rM.mEntry[0] + mEntry[3] * rM.mEntry[1],
+		mEntry[2] * rM.mEntry[2] + mEntry[3] * rM.mEntry[3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Matrix2<Real> Matrix2<Real>::Inverse() const
 {
 	Matrix2<Real> inverse;
@@ -182,11 +246,17 @@ Matrix2<Real> Matrix2<Real>::Inverse() const
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Matrix2<Real> operator* (Real scalar, const Matrix2<Real>& rM)
+{
+	return rM * scalar;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector2<Real> operator* (const Vector2<Real>& rV,
 	const Matrix2<Real>& rM)
 {
-	// TODO
 	return Vector2<Real>(
-		rV[0] * rM(0, 0) + rV[1] * rM(1, 0),
-		rV[0] * rM(0, 1) + rV[1] * rM(1, 1));
+		rV[0] * rM[0][0] + rV[1] * rM[1][0],
+		rV[0] * rM[0][1] + rV[1] * rM[1][1]);
 }

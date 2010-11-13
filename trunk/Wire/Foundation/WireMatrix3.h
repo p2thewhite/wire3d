@@ -47,13 +47,13 @@ public:
 		Real m10, Real m11, Real m12,
 		Real m20, Real m21, Real m22);
 
-	// Create rotation matrix (positive angle - counterclockwise).  The
-	// angle must be in radians, not degrees.
-	Matrix3(const Vector3<Real>& rAxis, Real angle);
-
 	// Create matrices based on row or column vector input
 	Matrix3(const Vector3<Real>& rU, const Vector3<Real>& rV,
 		const Vector3<Real>& rW, Bool isColumn);
+
+	// Create rotation matrix (positive angle - counterclockwise).  The
+	// angle must be in radians, not degrees.
+	Matrix3(const Vector3<Real>& rAxis, Real angle);
 
 	// create various matrices
 	void MakeZero();
@@ -63,8 +63,12 @@ public:
 	// member access
 	inline operator const Real* () const;
 	inline operator Real* ();
+	inline const Real* operator[] (Int row) const;
+	inline Real* operator[] (Int row);
 	inline Real operator() (UInt row, UInt col) const;
 	inline Real& operator() (UInt row, UInt col);
+	void SetRow(UInt row, const Vector3<Real>& rV);
+	Vector3<Real> GetRow(UInt row) const;
 	void SetColumn(UInt col, const Vector3<Real>& rV);
 	Vector3<Real> GetColumn(UInt col) const;
 
@@ -76,8 +80,11 @@ public:
 	inline Vector3<Real> operator* (const Vector3<Real>& rV) const;	// M * v
 
 	// other operations
-	Matrix3 TimesDiagonal(const Vector3<Real>& rDiag) const;
+	Matrix3 Transpose() const;  // M^T
+	Matrix3 TransposeTimes(const Matrix3& rM) const;  // this^T * M
+	Matrix3 TimesTranspose(const Matrix3& rM) const;  // this * M^T
 	Matrix3 Inverse() const;
+	Matrix3 TimesDiagonal(const Vector3<Real>& rDiag) const;
 
 	// special matrices
 	/*WIRE_FOUNDATION_ITEM*/ static const Matrix3 ZERO;
@@ -86,6 +93,10 @@ public:
 private:
     Real mEntry[9];
 };
+
+// c * M
+template <class Real>
+inline Matrix3<Real> operator* (Real scalar, const Matrix3<Real>& rM);
 
 // v^T * M
 template <class Real>

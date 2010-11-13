@@ -35,12 +35,12 @@ public:
 	// input mRC is in row R, column C.
 	Matrix2(Real m00, Real m01, Real m10, Real m11);
 
+	// Create matrices based on row or column vector input
+	Matrix2(const Vector2<Real>& rU, const Vector2<Real>& rV, Bool isColumn);
+
 	// Create rotation matrix (positive angle - counterclockwise).  The
 	// angle must be in radians, not degrees.
 	Matrix2(Real angle);
-
-	// Create matrices based on row or column vector input
-	Matrix2(const Vector2<Real>& rU, const Vector2<Real>& rV, Bool isColumn);
 
 	// create various matrices
 	void MakeZero ();
@@ -50,8 +50,12 @@ public:
 	// member access
 	inline operator const Real* () const;
 	inline operator Real* ();
+	inline const Real* operator[] (Int row) const;
+	inline Real* operator[] (Int row);
 	inline Real operator() (UInt row, UInt col) const;
 	inline Real& operator() (UInt row, UInt col);
+	void SetRow(UInt row, const Vector2<Real>& rV);
+	Vector2<Real> GetRow(UInt row) const;
 	void SetColumn(UInt col, const Vector2<Real>& rV);
 	Vector2<Real> GetColumn (UInt col) const;
 
@@ -63,6 +67,9 @@ public:
 	inline Vector2<Real> operator* (const Vector2<Real>& rV) const; // M * v
 
 	// other operations
+	Matrix2 Transpose() const;  // M^T
+	Matrix2 TransposeTimes(const Matrix2& rM) const;  // this^T * M
+	Matrix2 TimesTranspose(const Matrix2& rM) const;  // this * M^T
 	Matrix2 Inverse() const;
 
 	// special matrices
@@ -70,9 +77,12 @@ public:
 	/*WIRE_FOUNDATION_ITEM*/ static const Matrix2 IDENTITY;
 
 private:
-	// matrix stored in row-major order
 	Real mEntry[4];
 };
+
+// c * M
+template <class Real>
+inline Matrix2<Real> operator* (Real scalar, const Matrix2<Real>& rM);
 
 // v^T * M
 template <class Real>

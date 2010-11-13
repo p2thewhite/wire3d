@@ -291,6 +291,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMatrix4.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireQuaternion.cpp"
 					>
 				</File>
