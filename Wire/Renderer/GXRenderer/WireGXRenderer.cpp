@@ -119,7 +119,7 @@ Bool Renderer::PreDraw(Camera* pCamera)
 	OnFrameChange();
 	OnViewportChange();
 
-	Matrix4F perspective;
+	Mtx44 perspective;
 	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
 		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
 		pCamera->GetDMax());

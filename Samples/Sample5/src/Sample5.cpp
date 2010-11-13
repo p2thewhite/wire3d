@@ -21,12 +21,11 @@ Bool Sample5::OnInitialize()
 	mspRoot->AttachChild(pLightNode1);
 	mspRoot->AttachChild(pLightNode2);
 
-	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA(0, 1, 0, 0));
+	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA::GREEN);
 	pLightSrc1->Local.SetUniformScale(0.2F);
 	pLightNode1->AttachChild(pLightSrc1);
 
-	Spatial* pLightSrc2 = CreateCube(false, false, true, ColorRGBA(1, 0, 0, 0));
-	pLightSrc2->Local.SetTranslate(Vector3F(1, 2, 0));
+	Spatial* pLightSrc2 = CreateCube(false, false, true, ColorRGBA::RED);
 	pLightSrc2->Local.SetUniformScale(0.2F);
 	pLightNode2->AttachChild(pLightSrc2);
 
@@ -41,12 +40,12 @@ Bool Sample5::OnInitialize()
 	pMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
 
 	Light* pLight1 = WIRE_NEW Light(Light::LT_POINT);
-	pLight1->Position = Vector3F(0, 0, 0);
-	pLight1->Color = ColorRGB(0.3F, 1, 0.3F);
+	pLight1->Color = ColorRGB::GREEN;
 	pLightNode1->SetLight(pLight1);
 
-	Light* pLight2 = WIRE_NEW Light();
-	pLight2->Color = ColorRGB(1, 0.3F, 0.3F);
+	Light* pLight2 = WIRE_NEW Light(Light::LT_POINT);
+	pLight2->Color = ColorRGB::RED;
+	pLight2->Ambient = ColorRGB(0.1F, 0.1F, 0.1F);
 	pLightNode2->SetLight(pLight2);
 
 	pLitGroup->AttachGlobalState(pMaterialState);
@@ -56,7 +55,7 @@ Bool Sample5::OnInitialize()
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
-	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
+	Vector3F cameraLocation(0.0F, -1.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -89,20 +88,25 @@ void Sample5::OnIdle()
 	Node* pLitGroup = DynamicCast<Node>(mspRoot->GetChild(0));
 	WIRE_ASSERT(pLitGroup);
 
-	Matrix34F model1(Vector3F(0.75F, 0.25F, 0.5F), -mAngle * 0.5F);
+	Matrix34F rotate1(Vector3F(0.75F, 0.25F, 0.5F), -mAngle * 0.5F);
 	Spatial* pCube1 = pLitGroup->GetChild(0);
-	pCube1->Local.SetRotate(model1);
+	pCube1->Local.SetRotate(rotate1);
 
-	Matrix34F model2(Vector3F(-0.75F, -0.25F, -0.5F), -mAngle * 0.5F);
+	Matrix34F rotate2(Vector3F(-0.75F, -0.25F, -0.5F), -mAngle * 0.5F);
 	Spatial* pCube2 = pLitGroup->GetChild(1);
-	pCube2->Local.SetRotate(model2);
+	pCube2->Local.SetRotate(rotate2);
 
 	Float y = MathF::FMod(static_cast<Float>(time), MathF::TWO_PI);
-	Vector3F lightPos(0, MathF::Sin(y*2) * 2, 0);
-
+	Vector3F lightPos1(0, MathF::Sin(y*2) * 1.5F, 2);
 	Node* pLightNode1 = DynamicCast<Node>(mspRoot->GetChild(1));
 	WIRE_ASSERT(pLightNode1);
-	pLightNode1->Local.SetTranslate(lightPos);
+	pLightNode1->Local.SetTranslate(lightPos1);
+
+	Node* pLightNode2 = DynamicCast<Node>(mspRoot->GetChild(2));
+	WIRE_ASSERT(pLightNode2);
+	Matrix34F rotateLight2(Vector3F(0, 1, 0), mAngle);
+	Vector3F lightPos2 = Vector3F(5, 0, 0) * rotateLight2;
+	pLightNode2->Local.SetTranslate(lightPos2);
 
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);

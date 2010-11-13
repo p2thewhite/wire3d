@@ -166,6 +166,20 @@ inline Matrix3<Real>::operator Real* ()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline const Real* Matrix3<Real>::operator[] (Int row) const
+{
+	return &mEntry[3 * row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real* Matrix3<Real>::operator[] (Int row)
+{
+	return &mEntry[3 * row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Real Matrix3<Real>::operator() (UInt row, UInt col) const
 {
 	return mEntry[col + 3 * row];
@@ -176,6 +190,24 @@ template <class Real>
 inline Real& Matrix3<Real>::operator() (UInt row, UInt col)
 {
 	return mEntry[col + 3 * row];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Matrix3<Real>::SetRow(UInt row, const Vector3<Real>& rV)
+{
+	const UInt offset = 3*row;
+	mEntry[offset] = rV[0];
+	mEntry[offset+1] = rV[1];
+	mEntry[offset+2] = rV[2];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Vector3<Real> Matrix3<Real>::GetRow(UInt row) const
+{
+	const UInt offset = 3*row;
+	return Vector3<Real>(mEntry[offset], mEntry[offset+1], mEntry[offset+2]);
 }
 
 //----------------------------------------------------------------------------
@@ -264,12 +296,104 @@ inline Vector3<Real> Matrix3<Real>::operator* (const Vector3<Real>& rV) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix3<Real> Matrix3<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
+Matrix3<Real> Matrix3<Real>::Transpose() const
 {
 	return Matrix3<Real>(
-		mEntry[0] * rDiag[0], mEntry[1] * rDiag[1], mEntry[2] * rDiag[2],
-		mEntry[3] * rDiag[0], mEntry[4] * rDiag[1], mEntry[5] * rDiag[2],
-		mEntry[6] * rDiag[0], mEntry[7] * rDiag[1], mEntry[8] * rDiag[2]);
+		mEntry[0],
+		mEntry[3],
+		mEntry[6],
+		mEntry[1],
+		mEntry[4],
+		mEntry[7],
+		mEntry[2],
+		mEntry[5],
+		mEntry[8]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix3<Real> Matrix3<Real>::TransposeTimes(const Matrix3& rM) const
+{
+	// P = A^T*B
+	return Matrix3<Real>(
+		mEntry[0] * rM.mEntry[0] +
+		mEntry[3] * rM.mEntry[3] +
+		mEntry[6] * rM.mEntry[6],
+
+		mEntry[0] * rM.mEntry[1] +
+		mEntry[3] * rM.mEntry[4] +
+		mEntry[6] * rM.mEntry[7],
+
+		mEntry[0] * rM.mEntry[2] +
+		mEntry[3] * rM.mEntry[5] +
+		mEntry[6] * rM.mEntry[8],
+
+		mEntry[1] * rM.mEntry[0] +
+		mEntry[4] * rM.mEntry[3] +
+		mEntry[7] * rM.mEntry[6],
+
+		mEntry[1] * rM.mEntry[1] +
+		mEntry[4] * rM.mEntry[4] +
+		mEntry[7] * rM.mEntry[7],
+
+		mEntry[1] * rM.mEntry[2] +
+		mEntry[4] * rM.mEntry[5] +
+		mEntry[7] * rM.mEntry[8],
+
+		mEntry[2] * rM.mEntry[0] +
+		mEntry[5] * rM.mEntry[3] +
+		mEntry[8] * rM.mEntry[6],
+
+		mEntry[2] * rM.mEntry[1] +
+		mEntry[5] * rM.mEntry[4] +
+		mEntry[8] * rM.mEntry[7],
+
+		mEntry[2] * rM.mEntry[2] +
+		mEntry[5] * rM.mEntry[5] +
+		mEntry[8] * rM.mEntry[8]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix3<Real> Matrix3<Real>::TimesTranspose(const Matrix3& rM) const
+{
+	// P = A*B^T
+	return Matrix3<Real>(
+		mEntry[0] * rM.mEntry[0] +
+		mEntry[1] * rM.mEntry[1] +
+		mEntry[2] * rM.mEntry[2],
+
+		mEntry[0] * rM.mEntry[3] +
+		mEntry[1] * rM.mEntry[4] +
+		mEntry[2] * rM.mEntry[5],
+
+		mEntry[0] * rM.mEntry[6] +
+		mEntry[1] * rM.mEntry[7] +
+		mEntry[2] * rM.mEntry[8],
+
+		mEntry[3] * rM.mEntry[0] +
+		mEntry[4] * rM.mEntry[1] +
+		mEntry[5] * rM.mEntry[2],
+
+		mEntry[3] * rM.mEntry[3] +
+		mEntry[4] * rM.mEntry[4] +
+		mEntry[5] * rM.mEntry[5],
+
+		mEntry[3] * rM.mEntry[6] +
+		mEntry[4] * rM.mEntry[7] +
+		mEntry[5] * rM.mEntry[8],
+
+		mEntry[6] * rM.mEntry[0] +
+		mEntry[7] * rM.mEntry[1] +
+		mEntry[8] * rM.mEntry[2],
+
+		mEntry[6] * rM.mEntry[3] +
+		mEntry[7] * rM.mEntry[4] +
+		mEntry[8] * rM.mEntry[5],
+
+		mEntry[6] * rM.mEntry[6] +
+		mEntry[7] * rM.mEntry[7] +
+		mEntry[8] * rM.mEntry[8]);
 }
 
 //----------------------------------------------------------------------------
@@ -281,20 +405,20 @@ Matrix3<Real> Matrix3<Real>::Inverse() const
 
 	Matrix3 inverse;
 
-	inverse.mEntry[0] =	mEntry[4]*mEntry[8] - mEntry[5]*mEntry[7];
-	inverse.mEntry[1] =	mEntry[2]*mEntry[7] - mEntry[1]*mEntry[8];
-	inverse.mEntry[2] =	mEntry[1]*mEntry[5] - mEntry[2]*mEntry[4];
-	inverse.mEntry[3] =	mEntry[5]*mEntry[6] - mEntry[3]*mEntry[8];
-	inverse.mEntry[4] =	mEntry[0]*mEntry[8] - mEntry[2]*mEntry[6];
-	inverse.mEntry[5] =	mEntry[2]*mEntry[3] - mEntry[0]*mEntry[5];
-	inverse.mEntry[6] =	mEntry[3]*mEntry[7] - mEntry[4]*mEntry[6];
-	inverse.mEntry[7] =	mEntry[1]*mEntry[6] - mEntry[0]*mEntry[7];
-	inverse.mEntry[8] =	mEntry[0]*mEntry[4] - mEntry[1]*mEntry[3];
+	inverse.mEntry[0] =	mEntry[4] * mEntry[8] - mEntry[5] * mEntry[7];
+	inverse.mEntry[1] =	mEntry[2] * mEntry[7] - mEntry[1] * mEntry[8];
+	inverse.mEntry[2] =	mEntry[1] * mEntry[5] - mEntry[2] * mEntry[4];
+	inverse.mEntry[3] =	mEntry[5] * mEntry[6] - mEntry[3] * mEntry[8];
+	inverse.mEntry[4] =	mEntry[0] * mEntry[8] - mEntry[2] * mEntry[6];
+	inverse.mEntry[5] =	mEntry[2] * mEntry[3] - mEntry[0] * mEntry[5];
+	inverse.mEntry[6] =	mEntry[3] * mEntry[7] - mEntry[4] * mEntry[6];
+	inverse.mEntry[7] =	mEntry[1] * mEntry[6] - mEntry[0] * mEntry[7];
+	inverse.mEntry[8] =	mEntry[0] * mEntry[4] - mEntry[1] * mEntry[3];
 
 	Real det =
-		mEntry[0]*inverse.mEntry[0] +
-		mEntry[1]*inverse.mEntry[3] +
-		mEntry[2]*inverse.mEntry[6];
+		mEntry[0] * inverse.mEntry[0] +
+		mEntry[1] * inverse.mEntry[3] +
+		mEntry[2] * inverse.mEntry[6];
 
 	if (Math<Real>::FAbs(det) <= Math<Real>::ZERO_TOLERANCE)
 	{
@@ -316,13 +440,28 @@ Matrix3<Real> Matrix3<Real>::Inverse() const
 
 //----------------------------------------------------------------------------
 template <class Real>
+Matrix3<Real> Matrix3<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
+{
+	return Matrix3<Real>(
+		mEntry[0] * rDiag[0], mEntry[1] * rDiag[1], mEntry[2] * rDiag[2],
+		mEntry[3] * rDiag[0], mEntry[4] * rDiag[1], mEntry[5] * rDiag[2],
+		mEntry[6] * rDiag[0], mEntry[7] * rDiag[1], mEntry[8] * rDiag[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix3<Real> operator* (Real scalar, const Matrix3<Real>& rM)
+{
+	return rM * scalar;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector3<Real> operator* (const Vector3<Real>& rV,
 	const Matrix3<Real>& rM)
 {
-	// TODO:
 	return Vector3<Real>(
-		rV[0]*rM(0, 0) + rV[1]*rM(1, 0) + rV[2]*rM(2, 0),
-		rV[0]*rM(0, 1) + rV[1]*rM(1, 1) + rV[2]*rM(2, 1),
-		rV[0]*rM(0, 2) + rV[1]*rM(1, 2) + rV[2]*rM(2, 2));
-
+		rV[0]*rM[0][0] + rV[1]*rM[1][0] + rV[2]*rM[2][0],
+		rV[0]*rM[0][1] + rV[1]*rM[1][1] + rV[2]*rM[2][1],
+		rV[0]*rM[0][2] + rV[1]*rM[1][2] + rV[2]*rM[2][2]);
 }
