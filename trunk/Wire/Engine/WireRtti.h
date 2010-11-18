@@ -15,7 +15,7 @@ public:
 	Rtti(const Rtti* pBaseType);
 	~Rtti();
 
-	Bool IsExactly(const Rtti& rType) const;
+	inline Bool IsExactly(const Rtti& rType) const;
 	Bool IsDerived(const Rtti& rType) const;
 
 private:

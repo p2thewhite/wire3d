@@ -16,13 +16,13 @@ public:
 	// run-time type information system
 	static const Rtti TYPE;
 	virtual const Rtti& GetType() const;
-	Bool IsExactly(const Rtti& rType) const;
-	Bool IsDerived(const Rtti& rType) const;
-	Bool IsExactlyTypeOf(const Object* pObject) const;
-	Bool IsDerivedTypeOf(const Object* pObject) const;
+	inline Bool IsExactly(const Rtti& rType) const;
+	inline Bool IsDerived(const Rtti& rType) const;
+	inline Bool IsExactlyTypeOf(const Object* pObject) const;
+	inline Bool IsDerivedTypeOf(const Object* pObject) const;
 
 	// smart pointer system
-	void IncrementReferences();
+	inline void IncrementReferences();
 	void DecrementReferences();
 	Int GetReferences() const;
 

@@ -32,6 +32,13 @@ void Renderer::Initialize(UInt width, UInt height)
 	smRenderer = this;
 	mpCamera = NULL;
 	mpGeometry = NULL;
+
+	mspDefaultStates[GlobalState::ALPHA] = WIRE_NEW AlphaState;
+	mspDefaultStates[GlobalState::CULL] = WIRE_NEW CullState;
+	mspDefaultStates[GlobalState::FOG] = WIRE_NEW FogState;
+	mspDefaultStates[GlobalState::MATERIAL] = WIRE_NEW MaterialState;
+	mspDefaultStates[GlobalState::WIREFRAME] = WIRE_NEW WireframeState;
+	mspDefaultStates[GlobalState::ZBUFFER] = WIRE_NEW ZBufferState;
 }
 
 //----------------------------------------------------------------------------
@@ -526,37 +533,37 @@ void Renderer::RestoreGlobalState(GlobalStatePtr spStates[])
 
 	if (spStates[GlobalState::ALPHA])
 	{
-		pState = GlobalState::Default[GlobalState::ALPHA];
+		pState = mspDefaultStates[GlobalState::ALPHA];
 		SetState(StaticCast<AlphaState>(pState));
 	}
 
 	if (spStates[GlobalState::CULL])
 	{
-		pState = GlobalState::Default[GlobalState::CULL];
+		pState = mspDefaultStates[GlobalState::CULL];
 		SetState(StaticCast<CullState>(pState));
 	}
 
 	if (spStates[GlobalState::FOG])
 	{
-		pState = GlobalState::Default[GlobalState::FOG];
+		pState = mspDefaultStates[GlobalState::FOG];
 		SetState(StaticCast<FogState>(pState));
 	}
 
 	if (spStates[GlobalState::MATERIAL])
 	{
-		pState = GlobalState::Default[GlobalState::MATERIAL];
+		pState = mspDefaultStates[GlobalState::MATERIAL];
 		SetState(StaticCast<MaterialState>(pState));
 	}
 
 	if (spStates[GlobalState::WIREFRAME])
 	{
-		pState = GlobalState::Default[GlobalState::WIREFRAME];
+		pState = mspDefaultStates[GlobalState::WIREFRAME];
 		SetState(StaticCast<WireframeState>(pState));
 	}
 
 	if (spStates[GlobalState::ZBUFFER])
 	{
-		pState = GlobalState::Default[GlobalState::ZBUFFER];
+		pState = mspDefaultStates[GlobalState::ZBUFFER];
 		SetState(StaticCast<ZBufferState>(pState));
 	}
 }

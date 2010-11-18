@@ -17,22 +17,22 @@ template <class T>
 class TStack
 {
 public:
-    TStack(Int maxQuantity = 64);
-    ~TStack();
+	TStack(Int maxQuantity = 64);
+	~TStack();
 
-    Bool IsEmpty() const;
-    Bool IsFull() const;
-    void Push(const T& rItem);
-    void Pop(T& rItem);
+	Bool IsEmpty() const;
+	Bool IsFull() const;
+	void Push(const T& rItem);
+	void Pop(T& rItem);
 	void Pop();
-    void Clear();
-    Bool GetTop(T& rItem) const;
+	void Clear();
+	Bool GetTop(T& rItem) const;
 	T& GetTop() const;
 
-    // for iteration over the stack elements
-    Int GetQuantity() const;
-    Int GetMaxQuantity() const;
-    const T* GetData() const;
+	// for iteration over the stack elements
+	inline Int GetQuantity() const;
+	inline Int GetMaxQuantity() const;
+	inline const T* GetData() const;
 
 private:
     Int mMaxQuantity;

@@ -49,14 +49,14 @@ public:
 	void DrawScene(VisibleSet& rVisibleSet);
 	void Draw(Geometry* pGeometry);
 
-	// Access to the color value used for clearing the back buffer
-	const ColorRGBA& GetClearColor() const;
+	// Backbuffer functions
+	inline UInt GetWidth() const;
+	inline UInt GetHeight() const;
+	inline const ColorRGBA& GetClearColor() const;
 
-	// Backbuffer parameters
-	UInt GetWidth() const;
-	UInt GetHeight() const;
-	Float GetMaxAnisotropy() const;
-	UInt GetMaxTextureStages() const;
+	// Texture sampler functions
+	inline Float GetMaxAnisotropy() const;
+	inline UInt GetMaxTextureStages() const;
 
 	// Bind/Unbind all resources of a geometry object or a scene graph
 	static void BindAll(const Spatial* pSpatial);
@@ -96,12 +96,10 @@ public:
 	void OnFrameChange();
 	void OnViewportChange();
 
-	// Support for full-sized window buffer operations. The values used for
-	// clearing are specified by SetClearColor().
+	// Support for full-sized window buffer operations.
+	void SetClearColor(const ColorRGBA& rClearColor);
 	void ClearBuffers();
 	void DisplayBackBuffer();
-
-	void SetClearColor(const ColorRGBA& rClearColor);
 
 	// Render state handling
 	void SetState(AlphaState* pState);
@@ -110,12 +108,12 @@ public:
 	void SetState(MaterialState* pState);
 	void SetState(WireframeState* pState);
 	void SetState(ZBufferState* pState);
-	AlphaState* GetAlphaState() const;
-	CullState* GetCullState() const;
-	FogState* GetFogState() const;
-	MaterialState* GetMaterialState() const;
-	WireframeState* GetWireframeState() const;
-	ZBufferState* GetZBufferState() const;
+	inline const AlphaState* GetAlphaState() const;
+	inline const CullState* GetCullState() const;
+	inline const FogState* GetFogState() const;
+	inline const MaterialState* GetMaterialState() const;
+	inline const WireframeState* GetWireframeState() const;
+	inline const ZBufferState* GetZBufferState() const;
 
 	// Light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
@@ -124,7 +122,7 @@ public:
 	void EnableLighting();
 	void DisableLighting();
 
-	PdrRendererData* GetRendererData() const;
+	inline PdrRendererData* GetRendererData() const;
 
 private:
 	void ApplyEffect(const TextureEffect* pEffect);
@@ -147,6 +145,7 @@ private:
 
 	// Global render states
 	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
+	GlobalStatePtr mspDefaultStates[GlobalState::MAX_STATE_TYPE];
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;

@@ -20,11 +20,11 @@ public:
 	TArray& operator= (const TArray& rObject);
 
 	// element access, index i must be in range
-	UInt GetQuantity() const;
-	T* GetArray();
-	const T* GetArray() const;
-	T& operator[] (UInt i);
-	const T& operator[] (UInt i) const;
+	inline UInt GetQuantity() const;
+	inline T* GetArray();
+	inline const T* GetArray() const;
+	inline T& operator[] (UInt i);
+	inline const T& operator[] (UInt i) const;
 
 	// add new element, array will dynamically grow if necessary
 	void Append(const T& rElement);
@@ -52,9 +52,9 @@ public:
 
 	// dynamic growth, new array elements are default constructed
 	void SetMaxQuantity(UInt newMaxQuantity, Bool copy = true);
-	UInt GetMaxQuantity() const;
-	void SetGrowBy(UInt growBy);
-	UInt GetGrowBy() const;
+	inline UInt GetMaxQuantity() const;
+	inline void SetGrowBy(UInt growBy);
+	inline UInt GetGrowBy() const;
 
 	// set the quantity without con-/destructing array elements
 	void SetQuantity(UInt newQuantity, Bool copy = true);

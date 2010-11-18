@@ -13,14 +13,14 @@ public:
 	ColorRGBA();  // initial values (0, 0, 0, 0)
 	ColorRGBA(Float red, Float green, Float blue, Float alpha);
 
-	Float R() const;
-	Float& R();
-	Float G() const;
-	Float& G();
-	Float B() const;
-	Float& B();
-	Float A() const;
-	Float& A();
+	inline Float R() const;
+	inline Float& R();
+	inline Float G() const;
+	inline Float& G();
+	inline Float B() const;
+	inline Float& B();
+	inline Float A() const;
+	inline Float& A();
 
 	// arithmetic operations
 	ColorRGBA operator* (Float scalar) const;

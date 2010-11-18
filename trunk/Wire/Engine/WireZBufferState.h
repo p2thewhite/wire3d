@@ -10,8 +10,6 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ ZBufferState : public GlobalState
 {
 	WIRE_DECLARE_RTTI;
-	WIRE_DECLARE_INITIALIZE;
-	WIRE_DECLARE_TERMINATE;
 
 public:
 	ZBufferState();
@@ -37,8 +35,6 @@ public:
 	CompareFunction Compare;	// default: CF_LEQUAL
 };
 
-WIRE_REGISTER_INITIALIZE(ZBufferState);
-WIRE_REGISTER_TERMINATE(ZBufferState);
 typedef Pointer<ZBufferState> ZBufferStatePtr;
 
 }

@@ -10,8 +10,6 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ AlphaState : public GlobalState
 {
 	WIRE_DECLARE_RTTI;
-	WIRE_DECLARE_INITIALIZE;
-	WIRE_DECLARE_TERMINATE;
 
 public:
 	enum SrcBlendMode
@@ -50,8 +48,6 @@ public:
 	DstBlendMode DstBlend;  // default: DBF_ONE_MINUS_SRC_ALPHA
 };
 
-WIRE_REGISTER_INITIALIZE(AlphaState);
-WIRE_REGISTER_TERMINATE(AlphaState);
 typedef Pointer<AlphaState> AlphaStatePtr;
 
 }

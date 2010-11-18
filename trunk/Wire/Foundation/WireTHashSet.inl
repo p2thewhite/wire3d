@@ -23,7 +23,7 @@ THashSet<TKEY>::~THashSet()
 
 //----------------------------------------------------------------------------
 template <class TKEY>
-UInt THashSet<TKEY>::GetQuantity() const
+inline UInt THashSet<TKEY>::GetQuantity() const
 {
     return mQuantity;
 }

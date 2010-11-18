@@ -16,15 +16,15 @@ public:
 	virtual ~IndexBuffer();
 
 	// Access to indices.
-	UInt operator[] (UInt i) const;
-	UInt& operator[] (UInt i);
+	inline UInt operator[] (UInt i) const;
+	inline UInt& operator[] (UInt i);
 
 	// Direct access to the index buffer data. The quantity is the number of
 	// UInt elements. The number of bytes for the entire index buffer is
 	// GetIndexQuantity()*sizeof(UInt).
-	UInt GetIndexQuantity() const;
-	UInt* GetData();
-	const UInt* GetData() const;
+	inline UInt GetIndexQuantity() const;
+	inline UInt* GetData();
+	inline const UInt* GetData() const;
 
 private:
 	UInt mQuantity;

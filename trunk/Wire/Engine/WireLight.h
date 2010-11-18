@@ -33,6 +33,10 @@ public:
 	// position and direction in world coordinates
 	Vector3F Position;	// default: ZERO
 	Vector3F Direction;	// default: -UNIT_Z
+
+	// parameters for spot lights
+	Float Angle;		// default: Math::PI
+	Float Exponent;		// default: 1
 };
 
 typedef Pointer<Light> LightPtr;

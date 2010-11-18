@@ -18,8 +18,8 @@ public:
 	virtual ~LightNode();
 
 	void SetLight(Light* pLight);
-	Light* GetLight();
-	const Light* GetLight() const;
+	inline Light* GetLight();
+	inline const Light* GetLight() const;
 
 protected:
 	// geometric updates

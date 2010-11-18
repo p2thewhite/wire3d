@@ -23,6 +23,12 @@ inline Vector3F Camera::GetRVector() const
 }
 
 //----------------------------------------------------------------------------
+inline const Float* Camera::GetFrustum() const
+{
+	return mFrustum;
+}
+
+//----------------------------------------------------------------------------
 inline Float Camera::GetDMin() const
 {
 	return mFrustum[VF_DMIN];
@@ -56,10 +62,4 @@ inline Float Camera::GetRMin() const
 inline Float Camera::GetRMax() const
 {
 	return mFrustum[VF_RMAX];
-}
-
-//----------------------------------------------------------------------------
-inline const Float* Camera::GetFrustum() const
-{
-	return mFrustum;
 }

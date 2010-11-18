@@ -15,25 +15,25 @@ public:
 	VertexAttributes();
 	virtual ~VertexAttributes();
 
-	UInt GetChannelQuantity() const;
-	UInt GetColorChannelQuantity() const;
-	UInt GetTCoordChannelQuantity() const;
+	inline UInt GetChannelQuantity() const;
+	inline UInt GetColorChannelQuantity() const;
+	inline UInt GetTCoordChannelQuantity() const;
 
-	void SetInterleaved(Bool isChannelInterleaved);
+	inline void SetInterleaved(Bool isChannelInterleaved);
 	void SetPositionChannels(UInt positionChannels);
 	void SetColorChannels(UInt colorChannels, UInt unit = 0);
 	void SetNormalChannels(UInt normalChannels);
 	void SetTCoordChannels(UInt tCoordChannels, UInt unit = 0);
 
-	UInt GetPositionChannels() const;
-	UInt GetColorChannels(UInt unit = 0) const;
-	UInt GetNormalChannels() const;
-	UInt GetTCoordChannels(UInt unit = 0) const;
+	inline UInt GetPositionChannels() const;
+	inline UInt GetColorChannels(UInt unit = 0) const;
+	inline UInt GetNormalChannels() const;
+	inline UInt GetTCoordChannels(UInt unit = 0) const;
 
-	UInt GetPositionOffset() const;
-	UInt GetColorOffset(UInt unit = 0) const;
-	UInt GetNormalOffset() const;
-	UInt GetTCoordOffset(UInt unit = 0) const;
+	inline UInt GetPositionOffset() const;
+	inline UInt GetColorOffset(UInt unit = 0) const;
+	inline UInt GetNormalOffset() const;
+	inline UInt GetTCoordOffset(UInt unit = 0) const;
 
 private:
 	void UpdateOffsets();

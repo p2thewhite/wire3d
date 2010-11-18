@@ -3,20 +3,6 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(AlphaState, GlobalState);
-WIRE_IMPLEMENT_INITIALIZE(AlphaState);
-WIRE_IMPLEMENT_TERMINATE(AlphaState);
-
-//----------------------------------------------------------------------------
-void AlphaState::Initialize()
-{
-	Default[ALPHA] = WIRE_NEW AlphaState;
-}
-
-//----------------------------------------------------------------------------
-void AlphaState::Terminate()
-{
-	Default[ALPHA] = NULL;
-}
 
 //----------------------------------------------------------------------------
 AlphaState::AlphaState()

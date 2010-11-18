@@ -102,7 +102,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	mHeight = rRMode->efbHeight;
 
 	// Initialize global render state to default settings.
-	SetGlobalState(GlobalState::Default);
+	SetGlobalState(mspDefaultStates);
 }
 
 //----------------------------------------------------------------------------

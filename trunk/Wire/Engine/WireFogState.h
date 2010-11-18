@@ -11,8 +11,6 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ FogState : public GlobalState
 {
 	WIRE_DECLARE_RTTI;
-	WIRE_DECLARE_INITIALIZE;
-	WIRE_DECLARE_TERMINATE;
 
 public:
 	FogState();
@@ -35,8 +33,6 @@ public:
 	Float End;						// default: 1.0F
 };
 
-WIRE_REGISTER_INITIALIZE(FogState);
-WIRE_REGISTER_TERMINATE(FogState);
 typedef Pointer<FogState> FogStatePtr;
 
 }

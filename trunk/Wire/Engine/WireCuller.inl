@@ -12,15 +12,15 @@ inline const Camera* Culler::GetCamera() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Culler::GetPlaneState() const
-{
-	return mPlaneState;
-}
-
-//----------------------------------------------------------------------------
 inline void Culler::SetPlaneState(UInt planeState)
 {
 	mPlaneState = planeState;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Culler::GetPlaneState() const
+{
+	return mPlaneState;
 }
 
 //----------------------------------------------------------------------------

@@ -12,26 +12,26 @@ class Pointer
 {
 public:
     // construction and destruction
-    Pointer(T* pObject = NULL);
-    Pointer(const Pointer& rPointer);
-    ~Pointer();
+	Pointer(T* pObject = NULL);
+	Pointer(const Pointer& rPointer);
+	~Pointer();
 
     // implicit conversions
-    operator T* () const;
-    T& operator* () const;
-    T* operator-> () const;
+	inline operator T* () const;
+	inline T& operator* () const;
+	inline T* operator-> () const;
 
-	T* Get() const;
+	inline T* Get() const;
 
     // assignment
-    Pointer& operator= (T* pObject);
-    Pointer& operator= (const Pointer& rReference);
+	Pointer& operator= (T* pObject);
+	Pointer& operator= (const Pointer& rReference);
 
     // comparisons
-    Bool operator== (T* pObject) const;
-    Bool operator!= (T* pObject) const;
-    Bool operator== (const Pointer& rReference) const;
-    Bool operator!= (const Pointer& rReference) const;
+	inline Bool operator== (T* pObject) const;
+	inline Bool operator!= (T* pObject) const;
+	inline Bool operator== (const Pointer& rReference) const;
+	inline Bool operator!= (const Pointer& rReference) const;
 
 protected:
     // the shared object

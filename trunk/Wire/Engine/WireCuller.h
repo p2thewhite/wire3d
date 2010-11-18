@@ -23,10 +23,10 @@ public:
 	virtual ~Culler();
 
 	// Access to the camera, frustum copy, and potentially visible set.
-	void SetCamera(const Camera* pCamera);
-	const Camera* GetCamera() const;
+	inline void SetCamera(const Camera* pCamera);
+	inline const Camera* GetCamera() const;
 	void SetFrustum(const Float* pFrustum);
-	VisibleSet& GetVisibleSet();
+	inline VisibleSet& GetVisibleSet();
 
 	// This is the main function you should use for culling within a scene
 	// graph. Traverse the scene and construct the potentially visible set
@@ -48,8 +48,8 @@ public:
 	virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);
 
 	enum { VS_MAX_PLANE_QUANTITY = 32 };
-	void SetPlaneState(UInt planeState);
-	UInt GetPlaneState() const;
+	inline void SetPlaneState(UInt planeState);
+	inline UInt GetPlaneState() const;
 
 protected:
 	// The input camera has information that might be needed during the
