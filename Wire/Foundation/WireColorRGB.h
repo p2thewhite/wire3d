@@ -13,12 +13,12 @@ public:
 	ColorRGB();  // initial values (0, 0, 0)
 	ColorRGB(Float red, Float green, Float blue);
 
-	Float R() const;
-	Float& R();
-	Float G() const;
-	Float& G();
-	Float B() const;
-	Float& B();
+	inline Float R() const;
+	inline Float& R();
+	inline Float G() const;
+	inline Float& G();
+	inline Float B() const;
+	inline Float& B();
 
 	// arithmetic operations
 	ColorRGB operator* (Float scalar) const;

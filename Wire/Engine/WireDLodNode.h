@@ -20,16 +20,16 @@ public:
 	void SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist);
 
     // center for level of detail
-    Vector3F& ModelCenter();
-    const Vector3F& GetModelCenter() const;
-    const Vector3F& GetWorldCenter() const;
+    inline Vector3F& ModelCenter();
+    inline const Vector3F& GetModelCenter() const;
+    inline const Vector3F& GetWorldCenter() const;
 
     // distance intervals for children
     void SetModelDistance(UInt i, Float minDist, Float maxDist);
-    Float GetModelMinDistance(UInt i) const;
-    Float GetModelMaxDistance(UInt i) const;
-    Float GetWorldMinDistance(UInt i) const;
-    Float GetWorldMaxDistance(UInt i) const;
+    inline Float GetModelMinDistance(UInt i) const;
+    inline Float GetModelMaxDistance(UInt i) const;
+    inline Float GetWorldMinDistance(UInt i) const;
+    inline Float GetWorldMaxDistance(UInt i) const;
 
 protected:
     // set the SwitchNode based on distance from world LOD center to camera

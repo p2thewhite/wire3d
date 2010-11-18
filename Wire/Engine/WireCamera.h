@@ -27,10 +27,10 @@ public:
 		VF_QUANTITY = 6
 	};
 
-	Vector3F GetLocation() const;
-	Vector3F GetDVector() const;
-	Vector3F GetUVector() const;
-	Vector3F GetRVector() const;
+	inline Vector3F GetLocation() const;
+	inline Vector3F GetDVector() const;
+	inline Vector3F GetUVector() const;
+	inline Vector3F GetRVector() const;
 
 	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 		const Vector3F& rRVector);
@@ -71,15 +71,15 @@ public:
 		Float& rDMin, Float& rDMax) const;
 
 	// Get all the view frustum values simultaneously.
-	const Float* GetFrustum() const;
+	inline const Float* GetFrustum() const;
 
 	// Get the individual frustum values.
-	Float GetDMin() const;
-	Float GetDMax() const;
-	Float GetUMin() const;
-	Float GetUMax() const;
-	Float GetRMin() const;
-	Float GetRMax() const;
+	inline Float GetDMin() const;
+	inline Float GetDMax() const;
+	inline Float GetUMin() const;
+	inline Float GetUMax() const;
+	inline Float GetRMin() const;
+	inline Float GetRMax() const;
 
 	// viewport (contained in [0,1]^2)
 	void SetViewport(Float left, Float right, Float top, Float bottom);

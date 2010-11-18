@@ -38,6 +38,7 @@ Bool Sample5::OnInitialize()
 
 	MaterialState* pMaterialState = WIRE_NEW MaterialState;
 	pMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
+	pLitGroup->AttachGlobalState(pMaterialState);
 
 	Light* pLight1 = WIRE_NEW Light(Light::LT_POINT);
 	pLight1->Color = ColorRGB::GREEN;
@@ -48,10 +49,15 @@ Bool Sample5::OnInitialize()
 	pLight2->Ambient = ColorRGB(0.1F, 0.1F, 0.1F);
 	pLightNode2->SetLight(pLight2);
 
-	pLitGroup->AttachGlobalState(pMaterialState);
 	pLitGroup->AttachLight(pLight1);
 	pLitGroup->AttachLight(pLight2);
+
 	mspRoot->UpdateRS();
+
+	mspPlane = CreatePlane();
+	mspWhiteCube = CreateCube(false, false, true, ColorRGBA::WHITE);
+	mspWhiteCube->World.SetTranslate(Vector3F(0, 0, 5));
+	mspWhiteCube->World.SetUniformScale(0.2F);
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -111,9 +117,31 @@ void Sample5::OnIdle()
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
 
+	Float angle = MathF::Sin(mAngle*2);
+	angle = angle * MathF::HALF_PI*0.25F + MathF::PI;
+	Matrix34F rotateLight3(Vector3F(0, 1, 0), angle);
+	mspWhiteCube->World.SetRotate(rotateLight3);
+	mspPlane->Lights[0]->Position = mspWhiteCube->World.GetTranslate();
+	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().GetColumn(2);
+
+
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+
+	if (mCuller.IsVisible(mspWhiteCube))
+	{
+		GetRenderer()->Draw(mspWhiteCube);
+	}
+
+	GetRenderer()->EnableLighting();
+	if (mCuller.IsVisible(mspPlane))
+	{
+		GetRenderer()->Draw(mspPlane);
+	}
+
+	GetRenderer()->DisableLighting();
+
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -288,6 +316,92 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 }
 
 //----------------------------------------------------------------------------
+Geometry* Sample5::CreatePlane()
+{
+	const UInt tileXCount = 20;
+	const UInt tileYCount = 20;
+	const Float xSize = 7.0F;
+	const Float ySize = 7.0F;
+
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);  // channels: X, Y, Z
+	attributes.SetTCoordChannels(2);	// channels: U, V
+	attributes.SetNormalChannels(3);	// channels: X, Y, Z
+
+	const UInt vertexCount = (tileXCount+1) * (tileYCount+1);
+	VertexBuffer* pVertices = WIRE_NEW VertexBuffer(attributes, vertexCount);
+
+	const Float xStride = xSize / tileXCount;
+	const Float yStride = ySize / tileYCount;
+	Float y = -ySize * 0.5F;
+	for (UInt j = 0; j < tileYCount+1; j++)
+	{
+		Float x = -xSize * 0.5F;;
+		for (UInt i = 0; i < tileXCount+1; i++)
+		{
+			pVertices->Position3(i + (tileXCount+1)*j) = Vector3F(x, y, 0);
+			pVertices->TCoord2(i + (tileXCount+1)*j) = Vector2F(x, y);
+			x += xStride;
+		}
+
+		y += yStride;
+	}
+
+	const UInt indexCount = tileXCount * tileYCount * 6;
+	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexCount);
+
+	for (UInt j = 0; j < tileYCount; j++)
+	{
+		UInt offset = (tileXCount+1)*j;
+		for (UInt i = 0; i < tileXCount; i++)
+		{
+			UInt index = tileXCount*j+i;
+			UInt index0 = i+offset;
+			UInt index1 = index0+tileXCount+1;
+			UInt index2 = index0+1;
+			UInt index3 = index0+tileXCount+2;
+
+			(*pIndices)[index*6] = index0;
+			(*pIndices)[index*6+1] = index2;
+			(*pIndices)[index*6+2] = index1;
+
+			(*pIndices)[index*6+3] = index1;
+			(*pIndices)[index*6+4] = index2;
+			(*pIndices)[index*6+5] = index3;
+
+		}
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(pVertices, pIndices);
+	pGeo->GenerateNormals();
+
+	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	Texture2D* pTexture = CreateTexture();
+	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
+	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
+	pTextureEffect->Textures.Append(pTexture);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	pGeo->AttachEffect(pTextureEffect);
+
+	MaterialState* pMaterial = WIRE_NEW MaterialState;
+	pMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
+	pGeo->States[GlobalState::MATERIAL] = pMaterial;
+
+	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
+	pLight->Position = Vector3F(0, 0, 10);
+	pLight->Direction = Vector3F(0, 0, -1);
+	pLight->Angle = 0.5F;
+	pLight->Ambient = ColorRGB(0.0F, 0.0F, 0.0F);
+	pGeo->Lights.Append(pLight);
+
+	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
+//	pGeo->World.SetRotate(rotate);
+//	pGeo->World.SetTranslate(Vector3F(0, -2.5F, 0));
+
+	return pGeo;
+}
+
+//----------------------------------------------------------------------------
 struct Cell
 {
 	Vector2F point;
@@ -297,6 +411,11 @@ struct Cell
 //----------------------------------------------------------------------------
 Texture2D* Sample5::CreateTexture()
 {
+	if (mspTexture)
+	{
+		return mspTexture;
+	}
+
 	// define the properties of the image to be used as a texture
 	const UInt width = 256;
 	const UInt height = 256;
@@ -388,6 +507,8 @@ Texture2D* Sample5::CreateTexture()
 	// we need the UV set to be repeating.
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
+
+	mspTexture = pTexture;
 
 	return pTexture;
 }

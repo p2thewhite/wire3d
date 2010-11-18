@@ -17,9 +17,9 @@ public:
 
     enum { SN_INVALID_CHILD = -1 };
 
-    void SetActiveChild(Int activeChild);
-    Int GetActiveChild() const;
-    void DisableAllChildren();
+    inline void SetActiveChild(Int activeChild);
+    inline Int GetActiveChild() const;
+    inline void DisableAllChildren();
 
 protected:
     // culling

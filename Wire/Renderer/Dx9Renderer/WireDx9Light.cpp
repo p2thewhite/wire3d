@@ -72,9 +72,9 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		d3dLight.Direction.x = pLight->Direction.X();
 		d3dLight.Direction.y = pLight->Direction.Y();
 		d3dLight.Direction.z = pLight->Direction.Z();
-// 		d3dLight.Phi = 2.0F * pLight->Angle;
-// 		d3dLight.Theta = 0.0F;
-// 		d3dLight.Falloff = pLight->Exponent;
+ 		d3dLight.Phi = pLight->Angle;
+ 		d3dLight.Theta = 0.0F;
+ 		d3dLight.Falloff = pLight->Exponent;
 		break;
 
 	default:

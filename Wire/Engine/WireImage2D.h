@@ -29,16 +29,16 @@ public:
 	virtual ~Image2D();
 
 	// Pointer to the image (i.e. mipmap level 0)
-	UChar* GetData() const;
-	FormatMode GetFormat() const;
+	inline UChar* GetData() const;
+	inline FormatMode GetFormat() const;
 
 	// Get number of pixels in this image
-	UInt GetQuantity(UInt level = 0) const;
+	inline UInt GetQuantity(UInt level = 0) const;
 	UInt GetBound(UInt i, UInt level = 0) const;
-	UInt GetBytesPerPixel() const;
-	static UInt GetBytesPerPixel(FormatMode format);
+	inline UInt GetBytesPerPixel() const;
+	inline static UInt GetBytesPerPixel(FormatMode format);
 
-	Bool HasMipmaps() const;
+	inline Bool HasMipmaps() const;
 	void CreateMipmaps();
 	UInt GetMipmapCount() const;
 	UInt GetMipmapQuantity(UInt level) const;
@@ -52,13 +52,13 @@ public:
 	// Number of pixels across all mipmap levels
 	UInt GetTotalQuantity() const;
 
-	static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
-	static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
-	static void RGB565ToRGB888(UChar* pSrc565, UChar* pDst888);
-	static void RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888);
+	inline static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
+	inline static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
+	inline static void RGB565ToRGB888(UChar* pSrc565, UChar* pDst888);
+	inline static void RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888);
 
 private:
-	Bool IsPowerOfTwo(UInt value) const;
+	inline Bool IsPowerOfTwo(UInt value) const;
 	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 

@@ -74,34 +74,34 @@ public:
 		TArray<Light*>* pLStack = NULL);
 
 	// Parent access (Node calls this during attach/detach of children)
-	void SetParent(Spatial* pkParent);
-	Spatial* GetParent();
+	inline void SetParent(Spatial* pkParent);
+	inline Spatial* GetParent();
 
 	// culling
 	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull) = 0;
 
 	// global state
-	UInt GetGlobalStateQuantity() const;
-	GlobalState* GetGlobalState(UInt i) const;
+	inline UInt GetGlobalStateQuantity() const;
+	inline GlobalState* GetGlobalState(UInt i) const;
 	GlobalState* GetGlobalState(GlobalState::StateType type) const;
 	void AttachGlobalState(GlobalState* pState);
 	void DetachGlobalState(GlobalState::StateType type);
-	void DetachAllGlobalStates();
+	inline void DetachAllGlobalStates();
 
     // light state
-    UInt GetLightQuantity() const;
-    Light* GetLight(UInt i = 0) const;
+    inline UInt GetLightQuantity() const;
+    inline Light* GetLight(UInt i = 0) const;
     void AttachLight(Light* pLight);
-    void DetachLight(Light* pLight);
-    void DetachAllLights();
+    inline void DetachLight(Light* pLight);
+    inline void DetachAllLights();
 
 	// effect state
-	UInt GetEffectQuantity() const;
-	Effect* GetEffect(UInt i = 0) const;
+	inline UInt GetEffectQuantity() const;
+	inline Effect* GetEffect(UInt i = 0) const;
 	void AttachEffect(Effect* pEffect);
-	void DetachEffect(Effect* pEffect);
-	void DetachAllEffects();
+	inline void DetachEffect(Effect* pEffect);
+	inline void DetachAllEffects();
 
 protected:
 	Spatial();

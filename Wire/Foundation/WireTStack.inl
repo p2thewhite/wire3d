@@ -120,21 +120,21 @@ T& TStack<T>::GetTop() const
 
 //----------------------------------------------------------------------------
 template <class T>
-Int TStack<T>::GetQuantity() const
+inline Int TStack<T>::GetQuantity() const
 {
     return mTop+1;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-Int TStack<T>::GetMaxQuantity() const
+inline Int TStack<T>::GetMaxQuantity() const
 {
     return mMaxQuantity;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-const T* TStack<T>::GetData() const
+inline const T* TStack<T>::GetData() const
 {
     return mpStack;
 }

@@ -32,30 +32,30 @@ Pointer<T>::~Pointer()
 
 //----------------------------------------------------------------------------
 template <class T>
-T* Pointer<T>::Get() const
-{
-	return mpObject;
-}
-
-//----------------------------------------------------------------------------
-template <class T>
-Pointer<T>::operator T* () const
+inline Pointer<T>::operator T* () const
 {
     return mpObject;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-T& Pointer<T>::operator* () const
+inline T& Pointer<T>::operator* () const
 {
     return *mpObject;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-T* Pointer<T>::operator-> () const
+inline T* Pointer<T>::operator-> () const
 {
     return mpObject;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+inline T* Pointer<T>::Get() const
+{
+	return mpObject;
 }
 
 //----------------------------------------------------------------------------
@@ -104,28 +104,28 @@ Pointer<T>& Pointer<T>::operator= (const Pointer& rPointer)
 
 //----------------------------------------------------------------------------
 template <class T>
-Bool Pointer<T>::operator== (T* pObject) const
+inline Bool Pointer<T>::operator== (T* pObject) const
 {
     return mpObject == pObject;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-Bool Pointer<T>::operator!= (T* pObject) const
+inline Bool Pointer<T>::operator!= (T* pObject) const
 {
     return mpObject != pObject;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-Bool Pointer<T>::operator== (const Pointer& rPointer) const
+inline Bool Pointer<T>::operator== (const Pointer& rPointer) const
 {
     return mpObject == rPointer.mpObject;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-Bool Pointer<T>::operator!= (const Pointer& rPointer) const
+inline Bool Pointer<T>::operator!= (const Pointer& rPointer) const
 {
     return mpObject != rPointer.mpObject;
 }

@@ -15,7 +15,7 @@ public:
 	Node(UInt quantity = 0, UInt growBy = 1);
 	virtual ~Node();
 
-	UInt GetQuantity() const;
+	inline UInt GetQuantity() const;
 	UInt AttachChild(Spatial* pChild);
  	Int DetachChild(Spatial* pChild);
  	SpatialPtr DetachChildAt(UInt i);

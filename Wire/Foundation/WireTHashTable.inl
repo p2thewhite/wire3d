@@ -25,7 +25,7 @@ THashTable<TKEY,TVALUE>::~THashTable()
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-UInt THashTable<TKEY,TVALUE>::GetQuantity() const
+inline UInt THashTable<TKEY,TVALUE>::GetQuantity() const
 {
     return mQuantity;
 }

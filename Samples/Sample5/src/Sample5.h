@@ -19,12 +19,17 @@ public:
 private:
 	Geometry* CreateCube(Bool useTexture = true, Bool useNormals = true,
 		Bool useVertexColor = false, ColorRGBA vertexColor = ColorRGBA::WHITE);
+	Geometry* CreatePlane();
+
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
 
 	NodePtr mspRoot;
+	GeometryPtr mspPlane;
+	GeometryPtr mspWhiteCube;
+	Texture2DPtr mspTexture;
 
 	Float mAngle;
 	Double mLastTime;

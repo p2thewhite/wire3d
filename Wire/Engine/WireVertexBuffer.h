@@ -20,7 +20,10 @@ public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);
 	virtual ~VertexBuffer();
 
-	UInt GetVertexQuantity() const;
+	inline UInt GetVertexQuantity() const;
+	inline Float* GetData();
+	inline const Float* GetData() const;
+	inline const VertexAttributes& GetAttributes() const;
 
 	Vector3F& Position3(UInt i);
 	Vector3F Position3(UInt i) const;
@@ -37,24 +40,17 @@ public:
 	Vector2F& TCoord2(UInt i, UInt unit = 0);
 	Vector2F TCoord2(UInt i, UInt unit = 0) const;
 
-	Float* GetData();
-	const Float* GetData() const;
+	inline Float* GetPosition(UInt i = 0);
+	inline const Float* GetPosition(UInt i = 0) const;
 
-	Float* GetPosition(UInt i = 0);
-	const Float* GetPosition(UInt i = 0) const;
+ 	inline Float* GetColor(UInt i = 0, UInt unit = 0);
+ 	inline const Float* GetColor(UInt i = 0, UInt unit = 0) const;
 
- 	Float* GetColor(UInt i = 0, UInt unit = 0);
- 	const Float* GetColor(UInt i = 0, UInt unit = 0) const;
+	inline Float* GetNormal(UInt i = 0);
+	inline const Float* GetNormal(UInt i = 0) const;
 
-	Float* GetNormal(UInt i = 0);
-	const Float* GetNormal(UInt i = 0) const;
-
-	Float* GetTCoord(UInt i = 0, UInt unit = 0);
-	const Float* GetTCoord(UInt i = 0, UInt unit = 0) const;
-
-	UInt GetPositionStride() const;
-
-	const VertexAttributes& GetAttributes() const;
+	inline Float* GetTCoord(UInt i = 0, UInt unit = 0);
+	inline const Float* GetTCoord(UInt i = 0, UInt unit = 0) const;
 
 	void GeneratePlatonicNormals();
 

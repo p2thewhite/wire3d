@@ -23,8 +23,8 @@ public:
 	virtual Vector3F GetCenter() const;
 	virtual Float GetRadius() const;
 
-	Sphere3F& Sphere();
-	const Sphere3F& GetSphere() const;
+	inline Sphere3F& Sphere();
+	inline const Sphere3F& GetSphere() const;
 
 	// Compute a sphere that contains all the points.
 	virtual void ComputeFromData(const VertexBuffer* pVBuffer);

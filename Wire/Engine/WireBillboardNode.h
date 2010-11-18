@@ -22,7 +22,7 @@ public:
     virtual ~BillboardNode();
 
     // the camera to which the billboard is aligned
-    void AlignTo(Camera* pCamera);
+    inline void AlignTo(Camera* pCamera);
 
 protected:
     // geometric updates

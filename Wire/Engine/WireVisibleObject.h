@@ -17,7 +17,7 @@ public:
 	Spatial* Object;
 	Effect* GlobalEffect;
 
-	Bool IsDrawable() const;
+	inline Bool IsDrawable() const;
 };
 
 #include "WireVisibleObject.inl"

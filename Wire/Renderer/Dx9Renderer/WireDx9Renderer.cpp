@@ -93,7 +93,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
 
 	// Initialize global render state to default settings.
-	SetGlobalState(GlobalState::Default);
+	SetGlobalState(mspDefaultStates);
 }
 
 //----------------------------------------------------------------------------

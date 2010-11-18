@@ -68,7 +68,8 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		MTXMultVec(mpData->ViewMatrix, pLightPos, &lightViewPos);
 		GXInitLightPosv(&gxLight, &lightViewPos);
 		
-		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);
+		Float angle = pL->Angle * MathF::RAD_TO_DEG * 0.5F;
+		GXInitLightSpot(&gxLight, angle, GX_SP_COS2);
 		GXInitLightDistAttn(&gxLight, 20, 1, GX_DA_OFF);
 		break;
 	}

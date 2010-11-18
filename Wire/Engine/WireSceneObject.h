@@ -16,8 +16,8 @@ class /*WIRE_ENGINE_ITEM*/ SceneObject : public Object
 public:
 	virtual ~SceneObject();
 
- 	UInt GetControllerQuantity() const;
- 	Controller* GetController(UInt i) const;
+	inline UInt GetControllerQuantity() const;
+ 	inline Controller* GetController(UInt i) const;
  	void AttachController(Controller* pController);
  	void DetachController(Controller* pController);
  	void DetachAllControllers();

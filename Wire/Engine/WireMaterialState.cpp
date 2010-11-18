@@ -3,20 +3,6 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(MaterialState, GlobalState);
-WIRE_IMPLEMENT_INITIALIZE(MaterialState);
-WIRE_IMPLEMENT_TERMINATE(MaterialState);
-
-//----------------------------------------------------------------------------
-void MaterialState::Initialize()
-{
-	Default[MATERIAL] = WIRE_NEW MaterialState;
-}
-
-//----------------------------------------------------------------------------
-void MaterialState::Terminate()
-{
-	Default[MATERIAL] = NULL;
-}
 
 //----------------------------------------------------------------------------
 MaterialState::MaterialState()

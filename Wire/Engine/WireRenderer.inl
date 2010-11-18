@@ -35,37 +35,37 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 }
 
 //----------------------------------------------------------------------------
-inline AlphaState* Renderer::GetAlphaState() const
+inline const AlphaState* Renderer::GetAlphaState() const
 {
 	return StaticCast<AlphaState>(mspStates[GlobalState::ALPHA]);
 }
 
 //----------------------------------------------------------------------------
-inline CullState* Renderer::GetCullState() const
+inline const CullState* Renderer::GetCullState() const
 {
 	return StaticCast<CullState>(mspStates[GlobalState::CULL]);
 }
 
 //----------------------------------------------------------------------------
-inline FogState* Renderer::GetFogState() const
+inline const FogState* Renderer::GetFogState() const
 {
 	return StaticCast<FogState>(mspStates[GlobalState::FOG]);
 }
 
 //----------------------------------------------------------------------------
-inline MaterialState* Renderer::GetMaterialState() const
+inline const MaterialState* Renderer::GetMaterialState() const
 {
 	return StaticCast<MaterialState>(mspStates[GlobalState::MATERIAL]);
 }
 
 //----------------------------------------------------------------------------
-inline WireframeState* Renderer::GetWireframeState() const
+inline const WireframeState* Renderer::GetWireframeState() const
 {
 	return StaticCast<WireframeState>(mspStates[GlobalState::WIREFRAME]);
 }
 
 //----------------------------------------------------------------------------
-inline ZBufferState* Renderer::GetZBufferState() const
+inline const ZBufferState* Renderer::GetZBufferState() const
 {
 	return StaticCast<ZBufferState>(mspStates[GlobalState::ZBUFFER]);
 }

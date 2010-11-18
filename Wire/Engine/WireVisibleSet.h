@@ -24,14 +24,14 @@ public:
 		VS_DEFAULT_GROWBY);
 	virtual ~VisibleSet ();
 
-	UInt GetQuantity() const;
-	VisibleObject* GetVisible();
-	VisibleObject& GetVisible(UInt i);
+	inline UInt GetQuantity() const;
+	inline VisibleObject* GetVisible();
+	inline VisibleObject& GetVisible(UInt i);
 
 	// Creates a VisibleObject from the input and appends it to the end of the
 	// VisibleObject array.
 	void Insert(Spatial* pkObject, Effect* pGlobalEffect);
-	void Clear();
+	inline void Clear();
 
 private:
 	TArray<VisibleObject> mVisible;

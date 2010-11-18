@@ -11,7 +11,9 @@ Light::Light(LightType type)
 	Ambient(ColorRGB::BLACK),
 	Color(ColorRGB::WHITE),
 	Position(Vector3F::ZERO),
-	Direction(-Vector3F::UNIT_Z)
+	Direction(-Vector3F::UNIT_Z),
+	Angle(MathF::PI),
+	Exponent(1.0F)
 {
 }
 

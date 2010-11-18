@@ -17,22 +17,22 @@ public:
 
 	// Hints about the structure of the transformation.  In the common case
 	// of M = R*S, IsRSMatrix() returns true.
-	Bool IsIdentity() const;
-	Bool IsRSMatrix() const;
-	Bool IsUniformScale() const;
+	inline Bool IsIdentity() const;
+	inline Bool IsRSMatrix() const;
+	inline Bool IsUniformScale() const;
 
 	inline operator Matrix34F ();
  	inline operator const Matrix34F () const;
 
 	void SetRotate(const Matrix34F& rMatrix);
 	void SetMatrix(const Matrix34F& rMatrix);
-	const Matrix34F& GetMatrix() const;
+	inline const Matrix34F& GetMatrix() const;
 	void SetTranslate(const Vector3F& rTranslate);
-	Vector3F GetTranslate() const;
+	inline Vector3F GetTranslate() const;
 	void SetScale(const Vector3F& rScale);
-	const Vector3F& GetScale() const;
+	inline const Vector3F& GetScale() const;
 	void SetUniformScale(Float scale);
-	Float GetUniformScale() const;
+	inline Float GetUniformScale() const;
 
 	// Pack the transformation into a 3-by-4 matrix with implicit 4th row.
 	void GetTransformation(Matrix34F& rMatrix) const;

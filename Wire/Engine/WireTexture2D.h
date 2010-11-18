@@ -34,20 +34,20 @@ public:
 	Texture2D(Image2D* pImage);
 	virtual ~Texture2D();
 
-	Image2D* GetImage();
-	const Image2D* GetImage() const;
+	inline Image2D* GetImage();
+	inline const Image2D* GetImage() const;
 
 	// Access to filter modes. The default is LINEAR.
-	void SetFilterType(FilterType filterType);
-	FilterType GetFilterType() const;
+	inline void SetFilterType(FilterType filterType);
+	inline FilterType GetFilterType() const;
 
 	// Access to wrap modes. The defaults are WT_CLAMP.
-	void SetWrapType(UInt i, WrapType wrapType);
-	WrapType GetWrapType(UInt i) const;
+	inline void SetWrapType(UInt i, WrapType wrapType);
+	inline WrapType GetWrapType(UInt i) const;
 
 	// Access to the anisotropy value for image filtering.
-	void SetAnisotropyValue(Float anisotropy);
-	Float GetAnisotropyValue() const;
+	inline void SetAnisotropyValue(Float anisotropy);
+	inline Float GetAnisotropyValue() const;
 
 private:
 	Image2DPtr mspImage;

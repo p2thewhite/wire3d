@@ -30,9 +30,6 @@ public:
 
 	virtual StateType GetStateType() const = 0;
 
-	// default states
-	static Pointer<GlobalState> Default[MAX_STATE_TYPE];
-
 protected:
 	GlobalState();
 };

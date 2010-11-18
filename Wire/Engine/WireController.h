@@ -18,7 +18,7 @@ public:
 	virtual ~Controller();
 
 	// the controlled object
-	SceneObject* GetObject() const;
+	inline SceneObject* GetObject() const;
 
 	// geometric update
 	virtual Bool Update(Double appTime);
@@ -29,7 +29,7 @@ protected:
 
 	// the controlled scene object
 	friend class SceneObject;
-	virtual void SetObject(SceneObject* pObject);
+	inline void SetObject(SceneObject* pObject);
 
 	// Regular pointer used for controlled object to avoid circular smart
 	// pointers between controller and object.

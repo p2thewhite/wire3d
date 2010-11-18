@@ -23,53 +23,53 @@ template <class TKEY>
 class THashSet
 {
 public:
-    // construction and destruction
-    THashSet(UInt tableSize = 128);
-    ~THashSet ();
+	// construction and destruction
+	THashSet(UInt tableSize = 128);
+	~THashSet ();
 
-    // element access
-    UInt GetQuantity() const;
+	// element access
+	inline UInt GetQuantity() const;
 
-    // A pointer to the actual storage is returned so that the caller has
-    // direct access to it. This allows a subset of TKEY members to be used
-    // in key comparison.
-    TKEY* Insert(const TKEY& rKey);
+	// A pointer to the actual storage is returned so that the caller has
+	// direct access to it. This allows a subset of TKEY members to be used
+	// in key comparison.
+	TKEY* Insert(const TKEY& rKey);
 
-    // If the input key exists, a pointer to the actual storage is returned.
-    // This allows a subset of TKEY members to be used in key comparison,
-    // but gives the caller a chance to modify other TKEY members.
-    TKEY* Get(const TKEY& rKey) const;
+	// If the input key exists, a pointer to the actual storage is returned.
+	// This allows a subset of TKEY members to be used in key comparison,
+	// but gives the caller a chance to modify other TKEY members.
+	TKEY* Get(const TKEY& rKey) const;
 
 	Bool Remove(const TKEY& rKey);
-    void RemoveAll();
+	void RemoveAll();
 
-    // linear traversal of map
-    TKEY* GetFirst() const;
-    TKEY* GetNext() const;
+	// linear traversal of map
+	TKEY* GetFirst() const;
+	TKEY* GetNext() const;
 
-    // user-specified key-to-index construction
-    UInt (*UserHashFunction)(const TKEY&);
+	// user-specified key-to-index construction
+	UInt (*UserHashFunction)(const TKEY&);
 
 private:
-    class HashItem
-    {
-    public:
-        TKEY mKey;
-        HashItem* mpNext;
-    };
+	class HashItem
+	{
+	public:
+		TKEY mKey;
+		HashItem* mpNext;
+	};
 
-    // Default key-to-index construction (override by user-specified when
-    // requested).
-    UInt HashFunction(const TKEY& rKey) const;
+	// Default key-to-index construction (override by user-specified when
+	// requested).
+	UInt HashFunction(const TKEY& rKey) const;
 
-    // hash table
-    UInt mTableSize;
-    UInt mQuantity;
-    HashItem** mpTable;
+	// hash table
+	UInt mTableSize;
+	UInt mQuantity;
+	HashItem** mpTable;
 
-    // iterator for traversal
-    mutable UInt mIndex;
-    mutable HashItem* mpItem;
+	// iterator for traversal
+	mutable UInt mIndex;
+	mutable HashItem* mpItem;
 };
 
 #include "WireTHashSet.inl"

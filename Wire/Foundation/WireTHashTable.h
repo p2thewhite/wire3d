@@ -28,51 +28,51 @@ template <class TKEY, class TVALUE>
 class THashTable
 {
 public:
-    // construction and destruction
-    THashTable(UInt tableSize = 256);
-    ~THashTable();
+	// construction and destruction
+	THashTable(UInt tableSize = 256);
+	~THashTable();
 
-    // element access
-    UInt GetQuantity() const;
+	// element access
+	inline UInt GetQuantity() const;
 
-    // insert a key-value pair into the hash table (false if rKey exists)
-    Bool Insert(const TKEY& rKey, const TVALUE& rValue);
+	// insert a key-value pair into the hash table (false if rKey exists)
+	Bool Insert(const TKEY& rKey, const TVALUE& rValue);
 
-    // search for a key and returns it value (null, if key does not exist)
-    TVALUE* Find(const TKEY& rKey) const;
+	// search for a key and returns it value (null, if key does not exist)
+	TVALUE* Find(const TKEY& rKey) const;
 
-    // remove key-value pairs from the hash table
-    Bool Remove(const TKEY& rKey);
-    void RemoveAll();
+	// remove key-value pairs from the hash table
+	Bool Remove(const TKEY& rKey);
+	void RemoveAll();
 
-    // linear traversal of table
+	// linear traversal of table
 	// TODO: implement this as an iterator
-    TVALUE* GetFirst(TKEY* pKey = NULL) const;
-    TVALUE* GetNext(TKEY* pKey = NULL) const;
+	TVALUE* GetFirst(TKEY* pKey = NULL) const;
+	TVALUE* GetNext(TKEY* pKey = NULL) const;
 
-    // user-specified key-to-index construction
-    UInt (*UserHashFunction)(const TKEY&);
+	// user-specified key-to-index construction
+	UInt (*UserHashFunction)(const TKEY&);
 
 private:
-    struct HashItem
-    {
-        TKEY mKey;
-        TVALUE mValue;
-        HashItem* mpNext;
-    };
+	struct HashItem
+	{
+		TKEY mKey;
+		TVALUE mValue;
+		HashItem* mpNext;
+	};
 
-    // Default key-to-index construction (override by user-specified when
-    // requested).
-    UInt HashFunction(const TKEY& rKey) const;
+	// Default key-to-index construction (override by user-specified when
+	// requested).
+	UInt HashFunction(const TKEY& rKey) const;
 
-    // hash table
-    UInt mTableSize;
-    UInt mQuantity;
-    HashItem** mpTable;
+	// hash table
+	UInt mTableSize;
+	UInt mQuantity;
+	HashItem** mpTable;
 
-    // iterator for traversal
-    mutable UInt mIndex;
-    mutable HashItem* mpItem;
+	// iterator for traversal
+	mutable UInt mIndex;
+	mutable HashItem* mpItem;
 };
 
 #include "WireTHashTable.inl"

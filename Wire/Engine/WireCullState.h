@@ -10,8 +10,6 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ CullState : public GlobalState
 {
 	WIRE_DECLARE_RTTI;
-	WIRE_DECLARE_INITIALIZE;
-	WIRE_DECLARE_TERMINATE;
 
 public:
 	CullState();
@@ -31,8 +29,6 @@ public:
 	CullMode CullFace;    // default: CM_BACK
 };
 
-WIRE_REGISTER_INITIALIZE(CullState);
-WIRE_REGISTER_TERMINATE(CullState);
 typedef Pointer<CullState> CullStatePtr;
 
 }

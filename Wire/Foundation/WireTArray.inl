@@ -51,28 +51,28 @@ TArray<T>& TArray<T>::operator= (const TArray& rObject)
 
 //----------------------------------------------------------------------------
 template <class T>
-UInt TArray<T>::GetQuantity() const
+inline UInt TArray<T>::GetQuantity() const
 {
 	return mQuantity;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-T* TArray<T>::GetArray()
+inline T* TArray<T>::GetArray()
 {
 	return mpArray;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-const T* TArray<T>::GetArray() const
+inline const T* TArray<T>::GetArray() const
 {
 	return mpArray;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-T& TArray<T>::operator[] (UInt i)
+inline T& TArray<T>::operator[] (UInt i)
 {
 	WIRE_ASSERT(i < mQuantity && mpArray);
 	if (i >= mQuantity)
@@ -85,7 +85,7 @@ T& TArray<T>::operator[] (UInt i)
 
 //----------------------------------------------------------------------------
 template <class T>
-const T& TArray<T>::operator[] (UInt i) const
+inline const T& TArray<T>::operator[] (UInt i) const
 {
 	WIRE_ASSERT(i < mQuantity && mpArray);
 	if (i >= mQuantity)
@@ -202,14 +202,14 @@ void TArray<T>::SetMaxQuantity(UInt newMaxQuantity, Bool copy)
 
 //----------------------------------------------------------------------------
 template <class T>
-UInt TArray<T>::GetMaxQuantity() const
+inline UInt TArray<T>::GetMaxQuantity() const
 {
 	return mMaxQuantity;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-void TArray<T>::SetGrowBy(UInt growBy)
+inline void TArray<T>::SetGrowBy(UInt growBy)
 {
 	mGrowBy = growBy;
 }
@@ -228,7 +228,7 @@ void TArray<T>::SetQuantity(UInt newQuantity, Bool copy)
 
 //----------------------------------------------------------------------------
 template <class T>
-UInt TArray<T>::GetGrowBy() const
+inline UInt TArray<T>::GetGrowBy() const
 {
 	return mGrowBy;
 }

@@ -10,8 +10,6 @@ namespace Wire
 class /*WIRE_ENGINE_ITEM*/ WireframeState : public GlobalState
 {
 	WIRE_DECLARE_RTTI;
-	WIRE_DECLARE_INITIALIZE;
-	WIRE_DECLARE_TERMINATE;
 
 public:
 	WireframeState();
@@ -22,8 +20,6 @@ public:
 	Bool Enabled;         // default: false
 };
 
-WIRE_REGISTER_INITIALIZE(WireframeState);
-WIRE_REGISTER_TERMINATE(WireframeState);
 typedef Pointer<WireframeState> WireframeStatePtr;
 
 }
