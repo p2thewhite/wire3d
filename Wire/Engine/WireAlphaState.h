@@ -41,7 +41,7 @@ public:
 	AlphaState();
 	virtual ~AlphaState();
 
-	virtual StateType GetStateType() const { return ALPHA; }
+	inline virtual StateType GetStateType() const { return ALPHA; }
 
 	Bool BlendEnabled;      // default: false
 	SrcBlendMode SrcBlend;  // default: SBF_SRC_ALPHA

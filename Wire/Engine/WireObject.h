@@ -15,7 +15,7 @@ public:
 
 	// run-time type information system
 	static const Rtti TYPE;
-	virtual const Rtti& GetType() const;
+	inline virtual const Rtti& GetType() const;
 	inline Bool IsExactly(const Rtti& rType) const;
 	inline Bool IsDerived(const Rtti& rType) const;
 	inline Bool IsExactlyTypeOf(const Object* pObject) const;

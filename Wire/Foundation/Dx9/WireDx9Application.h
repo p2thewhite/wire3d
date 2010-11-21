@@ -25,8 +25,8 @@ public:
 	Int GetWindowID() const;
 
 private:
-	// Entry point to be implemented by the application.  The return value
-	// is an exit code, if desired.
+	// Entry point to be implemented by the application. The return value is
+	// an exit code, if desired.
 	virtual Int Main(Int argumentQuantity, Char* arguments[]);
 
 	// An identifier for the window (representation is platform-specific).

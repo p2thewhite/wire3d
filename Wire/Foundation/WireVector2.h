@@ -53,7 +53,7 @@ public:
 	// Gram-Schmidt orthonormalization. Take linearly independent vectors U
 	// and V and compute an orthonormal set (unit length, mutually
 	// perpendicular).
-	static void Orthonormalize (Vector2& rU, Vector2& rV);
+	static void Orthonormalize(Vector2& rU, Vector2& rV);
 
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 ZERO;    // (0,0)
 	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 UNIT_X;  // (1,0)

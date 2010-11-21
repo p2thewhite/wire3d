@@ -11,7 +11,8 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
-	if (!pLight)
+	Bool useLight = pLight ? pLight->Enabled : false;
+	if (!useLight)
 	{
 		hr = rDevice->LightEnable(unit, FALSE);
 		WIRE_ASSERT(SUCCEEDED(hr));

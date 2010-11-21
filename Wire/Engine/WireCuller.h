@@ -45,7 +45,7 @@ public:
 	// may override this behavior; for example, the array might be maintained
 	// as a sorted array for minimizing render state changes or it might be
 	// maintained as a unique list of objects for a portal system.
-	virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);
+	inline virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);
 
 	enum { VS_MAX_PLANE_QUANTITY = 32 };
 	inline void SetPlaneState(UInt planeState);
