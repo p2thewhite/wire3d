@@ -22,16 +22,16 @@ Bool Sample5::OnInitialize()
 	mspRoot->AttachChild(pLightNode2);
 
 	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA::GREEN);
-	pLightSrc1->Local.SetUniformScale(0.2F);
+	pLightSrc1->Local.SetUniformScale(0.15F);
 	pLightNode1->AttachChild(pLightSrc1);
 
 	Spatial* pLightSrc2 = CreateCube(false, false, true, ColorRGBA::RED);
-	pLightSrc2->Local.SetUniformScale(0.2F);
+	pLightSrc2->Local.SetUniformScale(0.15F);
 	pLightNode2->AttachChild(pLightSrc2);
 
 	Spatial* pCube1 = CreateCube();
 	Spatial* pCube2 = CreateCube(false, true);
-	pCube1->Local.SetTranslate(Vector3F(-2.5F, 0, 0));
+	pCube1->Local.SetTranslate(Vector3F(-2.F, 0, 0));
 	pCube2->Local.SetTranslate(Vector3F(2.5F, 0, 0));
 	pLitGroup->AttachChild(pCube1);
 	pLitGroup->AttachChild(pCube2);
@@ -56,8 +56,7 @@ Bool Sample5::OnInitialize()
 
 	mspPlane = CreatePlane();
 	mspWhiteCube = CreateCube(false, false, true, ColorRGBA::WHITE);
-	mspWhiteCube->World.SetTranslate(Vector3F(0, 0, 5));
-	mspWhiteCube->World.SetUniformScale(0.2F);
+	mspWhiteCube->World.SetUniformScale(0.15F);
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -118,12 +117,16 @@ void Sample5::OnIdle()
 	mCuller.ComputeVisibleSet(mspRoot);
 
 	Float angle = MathF::Sin(mAngle*2);
-	angle = angle * MathF::HALF_PI*0.25F + MathF::PI;
-	Matrix34F rotateLight3(Vector3F(0, 1, 0), angle);
-	mspWhiteCube->World.SetRotate(rotateLight3);
+	angle = angle * MathF::HALF_PI*0.3F + MathF::PI;
+	Matrix34F rotateLocalLight3(Vector3F(0, 1, 0), angle);
+	Matrix34F rotateWorldLight3(Vector3F(1, 0, 0), -0.5F);
+	rotateWorldLight3 = rotateWorldLight3 * rotateLocalLight3;
+	mspWhiteCube->World.SetTranslate(
+		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 3.0F) * 3.0F));
+	mspWhiteCube->World.SetRotate(rotateWorldLight3);
 	mspPlane->Lights[0]->Position = mspWhiteCube->World.GetTranslate();
-	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().GetColumn(2);
-
+	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().
+		GetColumn(2);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -287,7 +290,14 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 
 		if (useVertexColor)
 		{
-			pCubeVerts->Color4(i) = vertexColor;
+			if (vertices[i].Z() > 0)
+			{
+				pCubeVerts->Color4(i) = vertexColor;
+			}
+			else
+			{
+				pCubeVerts->Color4(i) = vertexColor * 0.5F;
+			}
 		}
 	}
 
@@ -318,10 +328,10 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 //----------------------------------------------------------------------------
 Geometry* Sample5::CreatePlane()
 {
-	const UInt tileXCount = 20;
+	const UInt tileXCount = 30;
 	const UInt tileYCount = 20;
-	const Float xSize = 7.0F;
-	const Float ySize = 7.0F;
+	const Float xSize = 12.0F;
+	const Float ySize = 8.0F;
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
@@ -391,12 +401,12 @@ Geometry* Sample5::CreatePlane()
 	pLight->Position = Vector3F(0, 0, 10);
 	pLight->Direction = Vector3F(0, 0, -1);
 	pLight->Angle = 0.5F;
-	pLight->Ambient = ColorRGB(0.0F, 0.0F, 0.0F);
+	pLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
 	pGeo->Lights.Append(pLight);
 
 	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
-//	pGeo->World.SetRotate(rotate);
-//	pGeo->World.SetTranslate(Vector3F(0, -2.5F, 0));
+	pGeo->World.SetRotate(rotate);
+	pGeo->World.SetTranslate(Vector3F(0, -2.5F, 0));
 
 	return pGeo;
 }
@@ -503,11 +513,12 @@ Texture2D* Sample5::CreateTexture()
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-	// The texture tiles and the torus is supposed to be seamless, therefore
+	// The texture tiles are supposed to be seamless, therefore
 	// we need the UV set to be repeating.
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
 
+	// save the texture for later reference
 	mspTexture = pTexture;
 
 	return pTexture;

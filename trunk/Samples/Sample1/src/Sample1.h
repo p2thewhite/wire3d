@@ -31,8 +31,15 @@ private:
 	// ObjectPtr is a smart pointer. Every object derived from Wire::Object
 	// has a reference count, which the smart pointer operates on to
 	// determine when an object is no longer referenced. Once the reference
-	// count is zero, the object is automatically deleted. Therefore NEVER
+	// count is zero, the object is deleted automatically. Therefore NEVER
 	// delete such an object manually.
+	//
+	// The following coding style is used throughout the framework:
+	// 'pObject' = pointer to Object
+	// 'spObject' = smart pointer to Object
+	// 'mObject' = Object is a member variable of the class
+	// 'mpObject' = member pointer to Object
+	// 'mspObject' = member smart pointer to Object
 	CameraPtr mspCamera;
 	Culler mCuller;
 

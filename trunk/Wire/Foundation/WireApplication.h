@@ -21,7 +21,7 @@ public:
  	// Called before the creation and initialization of the renderer.
  	// Returning 'false' quits the application.
  	virtual Bool OnPrecreate() = 0;
- 
+
 	// Called before main loop. Returning 'false' quits the application.
 	virtual Bool OnInitialize() = 0;
 
@@ -37,7 +37,7 @@ public:
 	inline Renderer* GetRenderer() const { return mpRenderer; }
 
 	// Key identifiers. These are platform-specific, so classes that
-	// implement the Application interfaces must define these variables.
+	// implement the Application interface must define these variables.
 	// They are not defined by Application.
 	UInt KEY_TERMINATE;  // default KEY_ESCAPE, redefine as desired
 	static const UInt KEY_ESCAPE;

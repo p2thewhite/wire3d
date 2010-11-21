@@ -37,6 +37,8 @@ public:
 	// parameters for spot lights
 	Float Angle;		// default: Math::PI
 	Float Exponent;		// default: 1
+
+	Bool Enabled;		// default: true
 };
 
 typedef Pointer<Light> LightPtr;

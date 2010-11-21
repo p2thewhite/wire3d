@@ -15,7 +15,7 @@ public:
 	ZBufferState();
 	virtual ~ZBufferState();
 
-	virtual StateType GetStateType() const { return ZBUFFER; }
+	inline virtual StateType GetStateType() const { return ZBUFFER; }
 
 	enum CompareFunction
 	{

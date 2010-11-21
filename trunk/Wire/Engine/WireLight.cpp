@@ -13,7 +13,8 @@ Light::Light(LightType type)
 	Position(Vector3F::ZERO),
 	Direction(-Vector3F::UNIT_Z),
 	Angle(MathF::PI),
-	Exponent(1.0F)
+	Exponent(1.0F),
+	Enabled(true)
 {
 }
 

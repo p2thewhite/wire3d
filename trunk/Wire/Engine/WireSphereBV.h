@@ -18,10 +18,10 @@ public:
 	virtual ~SphereBV();
 
 	// all bounding volumes must define a center and radius
-	virtual void SetCenter(const Vector3F& rCenter);
-	virtual void SetRadius(Float radius);
-	virtual Vector3F GetCenter() const;
-	virtual Float GetRadius() const;
+	inline virtual void SetCenter(const Vector3F& rCenter);
+	inline virtual void SetRadius(Float radius);
+	inline virtual Vector3F GetCenter() const;
+	inline virtual Float GetRadius() const;
 
 	inline Sphere3F& Sphere();
 	inline const Sphere3F& GetSphere() const;

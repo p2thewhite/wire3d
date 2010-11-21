@@ -15,7 +15,7 @@ public:
 	WireframeState();
 	virtual ~WireframeState();
 
-	virtual StateType GetStateType() const { return WIREFRAME; }
+	inline virtual StateType GetStateType() const { return WIREFRAME; }
 
 	Bool Enabled;         // default: false
 };

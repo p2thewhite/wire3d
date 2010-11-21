@@ -16,7 +16,7 @@ public:
 	MaterialState();
 	virtual ~MaterialState();
 
-	virtual StateType GetStateType() const { return MATERIAL; }
+	inline virtual StateType GetStateType() const { return MATERIAL; }
 
     ColorRGBA Ambient;   // default:  ColorRGBA(0.2, 0.2, 0.2, 1)
 };

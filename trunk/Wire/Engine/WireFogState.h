@@ -16,7 +16,7 @@ public:
 	FogState();
 	virtual ~FogState();
 
-	virtual StateType GetStateType() const { return FOG; }
+	inline virtual StateType GetStateType() const { return FOG; }
 
 	enum DensityFunction
 	{

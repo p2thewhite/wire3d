@@ -10,7 +10,8 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 {
 	WIRE_ASSERT(unit < PdrRendererData::MaxLights)
 
-	if (!pLight)
+	Bool useLight = pLight ? pLight->Enabled : false;
+	if (!useLight)
 	{
 		GXSetNumChans(1);
 		mpData->LightsMask &= ~(1<<unit);
