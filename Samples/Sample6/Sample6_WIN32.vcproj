@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="RenderTest"
-	ProjectGUID="{E5ED2547-6363-4A88-BF13-7BCEB4E21DA9}"
-	RootNamespace="RenderTest_WIN32"
+	Name="Sample6 - Multitexturing"
+	ProjectGUID="{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
+	RootNamespace="Sample6_WIN32"
 	>
 	<Platforms>
 		<Platform
@@ -181,11 +181,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\RenderTest.cpp"
+			RelativePath=".\src\Sample6.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\RenderTest.h"
+			RelativePath=".\src\Sample6.h"
 			>
 		</File>
 	</Files>

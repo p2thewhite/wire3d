@@ -32,6 +32,7 @@
 // where t > 0 indicates a counterclockwise rotation in the xy-plane.
 
 #include "WireTypes.h"
+#include "WireMatrix3.h"
 #include "WireVector3.h"
 
 namespace Wire
@@ -61,6 +62,12 @@ public:
 	Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
 		const Vector3<Real>& rW, Bool isColumn);
 
+	// Create the matrix using a Matrix3 and a Vector3 as the 4th column.
+	Matrix34(const Matrix3<Real>& rM, const Vector3<Real>& rV);
+
+	// Set the matrix leaving the 4th column untouched.
+	void SetMatrix3(const Matrix3<Real>& rM);
+
 	// create various matrices
 	void MakeZero();
 	void MakeIdentity();
@@ -69,8 +76,12 @@ public:
 	// member access
 	inline operator Real4* ();
 //	inline operator const Real4* () const;	// TODO: fix for VC
-    inline Real operator() (UInt row, UInt col) const;
+ 	inline const Real* operator[] (Int row) const;
+ 	inline Real* operator[] (Int row);
+	inline Real operator() (UInt row, UInt col) const;
     inline Real& operator() (UInt row, UInt col);
+	void SetRow(UInt row, const Vector3<Real>& rV);
+	Vector3<Real> GetRow(UInt row) const;
 	void SetColumn(UInt col, const Vector3<Real>& rV);
 	Vector3<Real> GetColumn(UInt col) const;
 
@@ -96,7 +107,7 @@ private:
 // v^T * M
 template <class Real>
 inline Vector3<Real> operator* (const Vector3<Real>& rV,
-    const Matrix34<Real>& rM);
+	const Matrix34<Real>& rM);
 
 #ifdef WIRE_WII
 #include "Wii/WireMatrix34Wii.inl"

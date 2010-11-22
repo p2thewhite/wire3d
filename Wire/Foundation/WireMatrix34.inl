@@ -23,12 +23,10 @@ Matrix34<Real>::Matrix34(
 	mEntry[0][1] = m01;
 	mEntry[0][2] = m02;
 	mEntry[0][3] = m03;
-
 	mEntry[1][0] = m10;
 	mEntry[1][1] = m11;
 	mEntry[1][2] = m12;
 	mEntry[1][3] = m13;
-
 	mEntry[2][0] = m20;
 	mEntry[2][1] = m21;
 	mEntry[2][2] = m22;
@@ -45,7 +43,7 @@ Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle)
 //----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real>::Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
-						 const Vector3<Real>& rW, Bool isColumn)
+	const Vector3<Real>& rW, Bool isColumn)
 {
 	mEntry[0][3] = static_cast<Real>(0.0);
 	mEntry[1][3] = static_cast<Real>(0.0);
@@ -75,6 +73,39 @@ Matrix34<Real>::Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
 		mEntry[2][1] = rW[1];
 		mEntry[2][2] = rW[2];
 	}
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix34<Real>::Matrix34(const Matrix3<Real>& rM, const Vector3<Real>& rV)
+{
+	mEntry[0][0] = rM[0][0];
+	mEntry[0][1] = rM[0][1];
+	mEntry[0][2] = rM[0][2];
+	mEntry[0][3] = rV[0];
+	mEntry[1][0] = rM[1][0];
+	mEntry[1][1] = rM[1][1];
+	mEntry[1][2] = rM[1][2];
+	mEntry[1][3] = rV[1];
+	mEntry[2][0] = rM[2][0];
+	mEntry[2][1] = rM[2][1];
+	mEntry[2][2] = rM[2][2];
+	mEntry[2][3] = rV[2];
+}
+
+//----------------------------------------------------------------------------			 
+template <class Real>
+void Matrix34<Real>::SetMatrix3(const Matrix3<Real>& rM)
+{
+	mEntry[0][0] = rM[0][0];
+	mEntry[0][1] = rM[0][1];
+	mEntry[0][2] = rM[0][2];
+	mEntry[1][0] = rM[1][0];
+	mEntry[1][1] = rM[1][1];
+	mEntry[1][2] = rM[1][2];
+	mEntry[2][0] = rM[2][0];
+	mEntry[2][1] = rM[2][1];
+	mEntry[2][2] = rM[2][2];
 }
 
 //----------------------------------------------------------------------------
@@ -218,23 +249,20 @@ inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rVector)
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV)
 const
 {
 	return Vector3<Real>(
-		mEntry[0][0]*rVector[0] + mEntry[0][1]*rVector[1] + 
-			mEntry[0][2]*rVector[2],
-		mEntry[1][0]*rVector[0] + mEntry[1][1]*rVector[1] + 
-			mEntry[1][2]*rVector[2],
-		mEntry[2][0]*rVector[0] + mEntry[2][1]*rVector[1] +
-			mEntry[2][2]*rVector[2]);
+		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2],
+		mEntry[1][0] * rV[0] + mEntry[1][1] * rV[1] + mEntry[1][2] * rV[2],
+		mEntry[2][0] * rV[0] + mEntry[2][1] * rV[1] + mEntry[2][2] * rV[2]);
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
 inline Matrix34<Real>::operator Real4* ()
 {
-	return mEntry;
+	return &mEntry;
 }
 
 //----------------------------------------------------------------------------
@@ -244,6 +272,20 @@ inline Matrix34<Real>::operator Real4* ()
 // 	return mEntry;
 // }
 //inline Real (* (Get)())[4] { return mEntry; }
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline const Real* Matrix34<Real>::operator[] (Int row) const
+{
+	return &mEntry[row][0];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real* Matrix34<Real>::operator[] (Int row)
+{
+	return &mEntry[row][0];
+}
 
 //----------------------------------------------------------------------------
 template <class Real>
@@ -261,11 +303,27 @@ inline Real& Matrix34<Real>::operator() (UInt row, UInt col)
 
 //----------------------------------------------------------------------------
 template <class Real>
-void Matrix34<Real>::SetColumn(UInt col, const Vector3<Real>& rVector)
+void Matrix34<Real>::SetRow(UInt row, const Vector3<Real>& rV)
 {
-	mEntry[0][col] = rVector.X();
-	mEntry[1][col] = rVector.Y();
-	mEntry[2][col] = rVector.Z();
+	mEntry[row][0] = rV[0];
+	mEntry[row][1] = rV[1];
+	mEntry[row][2] = rV[2];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Vector3<Real> Matrix34<Real>::GetRow(UInt row) const
+{
+	return Vector3<Real>(mEntry[row][0], mEntry[row][1], mEntry[row][1]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+void Matrix34<Real>::SetColumn(UInt col, const Vector3<Real>& rV)
+{
+	mEntry[0][col] = rV.X();
+	mEntry[1][col] = rV.Y();
+	mEntry[2][col] = rV.Z();
 }
 
 //----------------------------------------------------------------------------
@@ -345,9 +403,8 @@ template <class Real>
 inline Vector3<Real> operator* (const Vector3<Real>& rV,
 	const Matrix34<Real>& rM)
 {
-	// TODO:
-    return Vector3<Real>(
-        rV[0]*rM(0, 0) + rV[1]*rM(1, 0) + rV[2]*rM(2, 0),
-        rV[0]*rM(0, 1) + rV[1]*rM(1, 1) + rV[2]*rM(2, 1),
-        rV[0]*rM(0, 2) + rV[1]*rM(1, 2) + rV[2]*rM(2, 2));
+	return Vector3<Real>(
+		rV[0]*rM[0][0] + rV[1]*rM[1][0] + rV[2]*rM[2][0],
+		rV[0]*rM[0][1] + rV[1]*rM[1][1] + rV[2]*rM[2][1],
+		rV[0]*rM[0][2] + rV[1]*rM[1][2] + rV[2]*rM[2][2]);
 }

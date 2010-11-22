@@ -1,21 +1,11 @@
-#include "RenderTest.h"
+#include "Sample6.h"
 
 using namespace Wire;
 
-WIRE_APPLICATION(RenderTest);
+WIRE_APPLICATION(Sample6);
 
 //----------------------------------------------------------------------------
-RenderTest::RenderTest()
-{
-}
-
-//----------------------------------------------------------------------------
-RenderTest::~RenderTest()
-{
-}
-
-//----------------------------------------------------------------------------
-Bool RenderTest::OnInitialize()
+Bool Sample6::OnInitialize()
 {
 	if (!Parent::OnInitialize())
 	{
@@ -62,7 +52,7 @@ Bool RenderTest::OnInitialize()
 }
 
 //----------------------------------------------------------------------------
-void RenderTest::OnIdle()
+void Sample6::OnIdle()
 {
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
@@ -87,7 +77,7 @@ void RenderTest::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* RenderTest::CreateCube(TArray<Texture2D*>& rTextures,
+Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 	Bool useVertexColors)
 {
 	const Float extent = 1.0F;
@@ -224,7 +214,7 @@ Geometry* RenderTest::CreateCube(TArray<Texture2D*>& rTextures,
 }
 
 //----------------------------------------------------------------------------
-Texture2D* RenderTest::CreateTexture()
+Texture2D* Sample6::CreateTexture()
 {
 	const UInt width = 256;
 	const UInt height = 64;
@@ -275,7 +265,7 @@ Texture2D* RenderTest::CreateTexture()
 }
 
 //----------------------------------------------------------------------------
-Texture2D* RenderTest::CreateTexture2()
+Texture2D* Sample6::CreateTexture2()
 {
 	const UInt width = 64;
 	const UInt height = 64;

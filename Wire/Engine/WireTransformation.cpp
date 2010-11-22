@@ -19,6 +19,24 @@ Transformation::~Transformation()
 }
 
 //----------------------------------------------------------------------------
+void Transformation::SetRotate(const Matrix3F& rMatrix)
+{
+	mMatrix.SetMatrix3(rMatrix);
+	mIsIdentity = false;
+	mIsRSMatrix = true;
+}
+
+//----------------------------------------------------------------------------
+Matrix3F Transformation::GetRotate() const
+{
+	Matrix3F rotate(
+		mMatrix[0][0], mMatrix[0][1], mMatrix[0][2],
+		mMatrix[1][0], mMatrix[1][1], mMatrix[1][2],
+		mMatrix[2][0], mMatrix[2][1], mMatrix[2][2]);
+	return rotate;
+}
+
+//----------------------------------------------------------------------------
 void Transformation::SetRotate(const Matrix34F& rMatrix)
 {
 	Vector3F translate = GetTranslate();
