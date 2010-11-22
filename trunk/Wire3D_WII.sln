@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wire", "Wire\Wire_WII.vcproj", "{F95787AD-C522-4532-98F2-107E57D5019C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RenderTest", "Samples\RenderTest\RenderTest_WII.vcproj", "{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample1 - Basic Rendering", "Samples\Sample1\Sample1_WII.vcproj", "{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
@@ -33,6 +28,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5 - Lighting", "Sampl
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Multitexturing", "Samples\Sample6\Sample6_WII.vcproj", "{B3F7B708-87F9-44D9-841E-B1154446BEAC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,10 +43,6 @@ Global
 		{F95787AD-C522-4532-98F2-107E57D5019C}.Debug|Win32.Build.0 = Debug|Win32
 		{F95787AD-C522-4532-98F2-107E57D5019C}.Release|Win32.ActiveCfg = Release|Win32
 		{F95787AD-C522-4532-98F2-107E57D5019C}.Release|Win32.Build.0 = Release|Win32
-		{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}.Debug|Win32.Build.0 = Debug|Win32
-		{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}.Release|Win32.ActiveCfg = Release|Win32
-		{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}.Release|Win32.Build.0 = Release|Win32
 		{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}.Debug|Win32.ActiveCfg = Debug|Win32
 		{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}.Debug|Win32.Build.0 = Debug|Win32
 		{DD8DDE23-4C8B-47E5-86E3-725A5B52C3AD}.Release|Win32.ActiveCfg = Release|Win32
@@ -67,6 +63,10 @@ Global
 		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Debug|Win32.Build.0 = Debug|Win32
 		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Release|Win32.ActiveCfg = Release|Win32
 		{0F5C00B3-991B-44E6-832A-F76E6F3360A7}.Release|Win32.Build.0 = Release|Win32
+		{B3F7B708-87F9-44D9-841E-B1154446BEAC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3F7B708-87F9-44D9-841E-B1154446BEAC}.Debug|Win32.Build.0 = Debug|Win32
+		{B3F7B708-87F9-44D9-841E-B1154446BEAC}.Release|Win32.ActiveCfg = Release|Win32
+		{B3F7B708-87F9-44D9-841E-B1154446BEAC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

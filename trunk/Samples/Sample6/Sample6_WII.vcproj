@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="RenderTest"
-	ProjectGUID="{15AFADA3-B7C7-432A-8894-16A2FCCDDA0F}"
+	Name="Sample6 - Multitexturing"
+	ProjectGUID="{B3F7B708-87F9-44D9-841E-B1154446BEAC}"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -61,11 +61,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\RenderTest.cpp"
+			RelativePath=".\src\Sample6.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\RenderTest.h"
+			RelativePath=".\src\Sample6.h"
 			>
 		</File>
 	</Files>

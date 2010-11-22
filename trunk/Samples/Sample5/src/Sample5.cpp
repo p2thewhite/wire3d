@@ -122,7 +122,7 @@ void Sample5::OnIdle()
 	Matrix34F rotateWorldLight3(Vector3F(1, 0, 0), -0.5F);
 	rotateWorldLight3 = rotateWorldLight3 * rotateLocalLight3;
 	mspWhiteCube->World.SetTranslate(
-		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 3.0F) * 3.0F));
+		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
 	mspWhiteCube->World.SetRotate(rotateWorldLight3);
 	mspPlane->Lights[0]->Position = mspWhiteCube->World.GetTranslate();
 	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().

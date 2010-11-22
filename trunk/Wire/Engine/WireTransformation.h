@@ -2,6 +2,7 @@
 #ifndef WIRETRANSFORMATION_H
 #define WIRETRANSFORMATION_H
 
+#include "WireMatrix3.h"
 #include "WireMatrix34.h"
 #include "WireMatrix4.h"
 #include "WireTypes.h"
@@ -24,6 +25,8 @@ public:
 	inline operator Matrix34F ();
  	inline operator const Matrix34F () const;
 
+	void SetRotate(const Matrix3F& rMatrix);
+	Matrix3F GetRotate() const;
 	void SetRotate(const Matrix34F& rMatrix);
 	void SetMatrix(const Matrix34F& rMatrix);
 	inline const Matrix34F& GetMatrix() const;
@@ -57,7 +60,7 @@ public:
     Vector3F ApplyInverse(const Vector3F& rInput) const;
 
 private:
-	mutable Matrix34F mMatrix;	// TODO: fix for VC
+	Matrix34F mMatrix;
 	Vector3F mScale;
 
 	Bool mIsIdentity;

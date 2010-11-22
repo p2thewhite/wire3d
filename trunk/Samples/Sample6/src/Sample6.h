@@ -1,21 +1,18 @@
 #pragma once
-#ifndef SAMPLE1_H
-#define SAMPLE1_H
+#ifndef SAMPLE6_H
+#define SAMPLE6_H
 
 #include "WireApplication.h"
 
 using namespace Wire;
 
-class RenderTest : public WIREAPPLICATION
+class Sample6 : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
 
 	typedef WIREAPPLICATION Parent;
 
 public:
-	RenderTest();
-	virtual ~RenderTest();
-
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
@@ -34,6 +31,6 @@ private:
 	Double mLastTime;
 };
 
-WIRE_REGISTER_INITIALIZE(RenderTest);
+WIRE_REGISTER_INITIALIZE(Sample6);
 
 #endif
