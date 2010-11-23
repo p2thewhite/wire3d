@@ -88,9 +88,12 @@ void Sample1::OnIdle()
 	// We set the render state to backface culling and disable alpha blending.
 	// NOTE: if you are not using the scenegraph to handle render states for
 	// you, it is your responsibility to handle states between draw calls.
+
+	// use back face culling
 	mspCullState->CullFace = CullState::CM_BACK;
 	GetRenderer()->SetState(mspCullState);
 
+	// disable alpha blending
 	mspAlphaState->BlendEnabled = false;
 	GetRenderer()->SetState(mspAlphaState);
 
@@ -113,7 +116,8 @@ void Sample1::OnIdle()
 
 	for (UInt i = 0; i < cubeCount; i++)
 	{
-		// Set world position (translate) and orientation (rotate)
+		// Rotate the cube around the axis specified by the vector and
+		// the angle given in radians.
 		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F * i);
 		mspCube->World.SetRotate(model);
 		mspCube->World.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
@@ -185,7 +189,7 @@ Geometry* Sample1::CreateCube()
 {
 	// Create a cube with unique texture (UV) coordinates for each side.
 	// This means we have to duplicate vertices, since every vertex can only
-	// have one UV coordinate per texture. Thus resulting in 24 (4 vertices
+	// have one UV coordinate per texture. This results in 24 (4 vertices
 	// times 6 sides of the cube) vertices.
 	const Float extent = 1.0F;
 	const Vector3F vertices[] =
@@ -336,6 +340,7 @@ Geometry* Sample1::CreateCube()
 	return pCube;
 }
 
+// the actual texture data
 #include "Sample1.inl"
 
 //----------------------------------------------------------------------------

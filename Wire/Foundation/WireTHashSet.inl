@@ -97,9 +97,9 @@ Bool THashSet<TKEY>::Remove(const TKEY& rKey)
     if (rKey == pItem->mKey)
     {
         // item is at front of list, strip it off
-        HashItem* pkSave = pItem;
+        HashItem* pSave = pItem;
         mpTable[index] = pItem->mpNext;
-        WIRE_DELETE pkSave;
+        WIRE_DELETE pSave;
         mQuantity--;
         return true;
     }

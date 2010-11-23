@@ -8,7 +8,7 @@ using namespace Wire;
 
 // User applications are derived from WIREAPPLICATION, which handles
 // platform dependent setup and provides virtual functions for the user
-// (i.e. you) to overwrite. See WireApplication.h for details.
+// (i.e. you) to override. See WireApplication.h for details.
 class Sample1 : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
@@ -36,6 +36,7 @@ private:
 	//
 	// The following coding style is used throughout the framework:
 	// 'pObject' = pointer to Object
+	// 'rObject' = reference to Object
 	// 'spObject' = smart pointer to Object
 	// 'mObject' = Object is a member variable of the class
 	// 'mpObject' = member pointer to Object
@@ -43,14 +44,14 @@ private:
 	CameraPtr mspCamera;
 	Culler mCuller;
 
+	GeometryPtr mspCube;
 	TextureEffectPtr mspTextureEffect;
 
-	GeometryPtr mspCube;
+	LightPtr mspLight;
+	MaterialStatePtr mspMaterialState;
+
 	CullStatePtr mspCullState;
 	AlphaStatePtr mspAlphaState;
-
-	MaterialStatePtr mspMaterialState;
-	LightPtr mspLight;
 
 	Float mAngle;
 	Double mLastTime;

@@ -139,9 +139,9 @@ void THashTable<TKEY,TVALUE>::RemoveAll()
         {
             while (mpTable[i])
             {
-                HashItem* pkSave = mpTable[i];
+                HashItem* pSave = mpTable[i];
                 mpTable[i] = mpTable[i]->mpNext;
-                WIRE_DELETE pkSave;
+                WIRE_DELETE pSave;
                 if (--mQuantity == 0)
                 {
                     return;
