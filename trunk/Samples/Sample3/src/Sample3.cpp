@@ -317,10 +317,13 @@ Texture2D* Sample3::CreateTexture()
 
 			float factor = (min2Dist - minDist) + 3;
 			ColorRGB color = cells[minIndex].color * factor;
+			pColorDst[y*width+x] = color;
+
+			// determine the maximum value of all texels for later
+			// normalization of the texture
 			max = max < color.R() ? color.R() : max;
 			max = max < color.G() ? color.G() : max;
 			max = max < color.B() ? color.B() : max;
-			pColorDst[y*width+x] = color;
 		}
 	}
 
@@ -330,10 +333,10 @@ Texture2D* Sample3::CreateTexture()
 	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
 	for (UInt i = 0; i < width*height; i++)
 	{
-		ColorRGB color = pColorDst[i];
-		pDst[i*bpp] = static_cast<UChar>(color.R() * max);
-		pDst[i*bpp+1] = static_cast<UChar>(color.G() * max);
-		pDst[i*bpp+2] = static_cast<UChar>(color.B() * max);
+		const ColorRGB& rColor = pColorDst[i];
+		pDst[i*bpp] = static_cast<UChar>(rColor.R() * max);
+		pDst[i*bpp+1] = static_cast<UChar>(rColor.G() * max);
+		pDst[i*bpp+2] = static_cast<UChar>(rColor.B() * max);
 	}
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);

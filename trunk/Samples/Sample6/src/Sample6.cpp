@@ -80,6 +80,8 @@ void Sample6::OnIdle()
 Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 	Bool useVertexColors)
 {
+	// Creation of Wire::Geometry objects is explained in detail in Sample1
+
 	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
 		Vector3F(-extent, -extent, -extent),	// 0

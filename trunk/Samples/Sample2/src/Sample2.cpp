@@ -1,6 +1,6 @@
 // This sample demonstrates how to create and render a scene graph.
-// Scene graphs serve the purpose of organizing your 3D objects in a
-// hierarchy.
+// Scene graphs serve the purpose of organizing your 3D objects (together
+// with render states, lights, effects and controllers) in a hierarchy.
 // The design of the classes is explained in detail in:
 // http://downloads.gamedev.net/pdf/Eberly-3.pdf
 
@@ -15,9 +15,9 @@ Sample2::Sample2()
 	:
 	WIREAPPLICATION(
 		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
-		"Sample2 - Creating a Scene Graph",	// Name of the application.
-		0, 0,								// Window position and
-		640, 480)							// size (both ignored on the Wii).
+		"Sample2 - Creating a Scene Graph",	// Name of the application,
+		0, 0,								// window position and
+		640, 480)							// size (ignored on the Wii).
 {
 }
 
@@ -40,7 +40,7 @@ Bool Sample2::OnInitialize()
 	FogState* pFogState = WIRE_NEW FogState;
 	pFogState->Enabled = true;
 	pFogState->Color = ColorRGB(0, 0, 0.2F); // dark blue fog
-	pFogState->Start = 20.0F;
+	pFogState->Start = 20.0F; // camera space z value
 	pFogState->End = 40.0F;
 	mspRoot->AttachGlobalState(pFogState);
 
@@ -50,8 +50,7 @@ Bool Sample2::OnInitialize()
 	// DetachGlobalState() on any of its children), you must call UpdateRS().
 	mspRoot->UpdateRS();
 
-	// setup our camera at the origin
-	// looking down the -z axis with y up
+	// setup our camera at the origin, looking down the -z axis with y up
 	Vector3F cameraLocation(0.0F, 1.0F, 25.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
@@ -158,20 +157,8 @@ Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 		}
 	}
 
-	UInt indices[] = {
-		0, 2, 1,
-		0, 3, 2,
-		0, 1, 5,
-		0, 5, 4,
-		0, 4, 7,
-		0, 7, 3,
-		6, 4, 5,
-		6, 7, 4,
-		6, 5, 1,
-		6, 1, 2,
-		6, 2, 3,
-		6, 3, 7,
-	};
+	UInt indices[] = { 0, 2, 1,	0, 3, 2, 0, 1, 5, 0, 5, 4, 0, 4, 7,	0, 7, 3,
+		6, 4, 5, 6, 7, 4, 6, 5, 1, 6, 1, 2,	6, 2, 3, 6, 3, 7, };
 
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
@@ -258,8 +245,7 @@ Node* Sample2::CreateHelicopter()
 	// Now we tilt and orient the helicopter for later use.
 	Matrix34F tilt(Vector3F(0, 0, 1), 0.2F);
 	Matrix34F rotate(Vector3F(0, 1, 0), MathF::HALF_PI);
-	tilt = rotate * tilt;
-	pNode->Local.SetRotate(tilt);
+	pNode->Local.SetRotate(rotate * tilt);
 
 	return pNode;
 }

@@ -51,7 +51,7 @@ public:
 
 		// Never cull the object.  If a Node is never culled, its entire
 		// subtree is never culled.  To accomplish this, the first time such
-		// a Node is encountered, the bNoCull parameter is set to 'true' in
+		// a Node is encountered, the 'noCull' parameter is set to 'true' in
 		// the recursive chain GetVisibleSet/OnGetVisibleSet.
 		CULL_NEVER,
 
@@ -60,21 +60,21 @@ public:
 
 	CullingMode Culling;
 
-	// Update of geometric state and controllers. The UpdateGS function
+	// Update of geometric state and controllers. The UpdateGS() function
 	// computes world transformations on the downward pass and world bounding
-	// volumes on the upward pass. The UpdateBS function just computes the
+	// volumes on the upward pass. The UpdateBS() function just computes the
 	// world bounding volumes on an upward pass. This is useful if model
 	// data changes, causing the model and world bounds to change, but no
 	// transformations need recomputing.
 	void UpdateGS(Double appTime = -MathD::MAX_REAL, Bool isInitiator = true);
 	void UpdateBS();
 
-	// Update of render state
+	// update render state
 	virtual void UpdateRS(TArray<GlobalState*>* pGStack = NULL,
 		TArray<Light*>* pLStack = NULL);
 
-	// Parent access (Node calls this during attach/detach of children)
-	inline void SetParent(Spatial* pkParent);
+	// parent access (Node calls this during attach/detach of children)
+	inline void SetParent(Spatial* pParent);
 	inline Spatial* GetParent();
 
 	// culling
