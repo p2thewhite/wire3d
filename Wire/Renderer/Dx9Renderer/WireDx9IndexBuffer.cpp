@@ -25,64 +25,83 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	}
 
 	// Create the index buffer.
+	const Buffer::UsageType usage = pIndexBuffer->GetUsage();
+	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
+		D3DPOOL_MANAGED;
 	HRESULT hr;
 	hr = rData.D3DDevice->CreateIndexBuffer(indexBufferSize,
-		D3DUSAGE_WRITEONLY, format, D3DPOOL_MANAGED, &mpIndexBuffer, NULL);
+		D3DUSAGE_WRITEONLY, format, pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Copy the index buffer data from system memory to video memory.
-	Char* pLockedIBuffer;
-	hr = mpIndexBuffer->Lock(0, indexBufferSize, reinterpret_cast<void**>(
-		&pLockedIBuffer), 0);
-	WIRE_ASSERT(SUCCEEDED(hr));
-
+	Char* pBuffer = reinterpret_cast<Char*>(Lock(Buffer::LM_WRITE_ONLY));	
 	if (rData.Supports32BitIndices)
 	{
-		System::Memcpy(pLockedIBuffer, indexBufferSize, pIndices,
+		System::Memcpy(pBuffer, indexBufferSize, pIndices,
 			indexBufferSize);
 	}
 	else
 	{
-		UShort* pBuffer = reinterpret_cast<UShort*>(pLockedIBuffer);
+		UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
 
 		if ((quantity % 3) == 0)
 		{
 			for (UInt i = 0; i < quantity; i+=3)
 			{
-				pBuffer[i] = static_cast<UShort>(pIndices[i]);
-				pBuffer[i+1] = static_cast<UShort>(pIndices[i+1]);
-				pBuffer[i+2] = static_cast<UShort>(pIndices[i+2]);
+				pBuffer16[i] = static_cast<UShort>(pIndices[i]);
+				pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1]);
+				pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2]);
 			}
 		}
 		else
 		{
 			for (UInt i = 0; i < quantity; i++)
 			{
-				pBuffer[i] = static_cast<UShort>(pIndices[i]);
+				pBuffer16[i] = static_cast<UShort>(pIndices[i]);
 			}
 		}
 	}
 
-	hr = mpIndexBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(hr));
+	Unlock();
 }
 
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
-	mpIndexBuffer->Release();
+	mpBuffer->Release();
 }
 
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*)
 {
 	HRESULT hr;
-	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpIndexBuffer);
+	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpBuffer);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
-void PdrIndexBuffer::Disable(Renderer*)
+void PdrIndexBuffer::Disable(Renderer* pRenderer)
 {
-	// Nothing to do
+	HRESULT hr;
+	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(NULL);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void* PdrIndexBuffer::Lock(Buffer::LockingMode mode)
+{
+	void* pVideoMemory = 0;
+	HRESULT hr;
+	hr = mpBuffer->Lock(0, 0, &pVideoMemory,
+		PdrRendererData::sBufferLocking[mode]);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	return pVideoMemory;
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Unlock()
+{
+	HRESULT hr;
+	hr = mpBuffer->Unlock();
+	WIRE_ASSERT(SUCCEEDED(hr));
 }

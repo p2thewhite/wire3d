@@ -868,6 +868,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireBuffer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCamera.h"
 					>
 				</File>
@@ -1008,6 +1012,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireBuffer.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireCamera.inl"
 					>
 				</File>
@@ -1109,6 +1117,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireBoundingVolume.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireBuffer.cpp"
 					>
 				</File>
 				<File

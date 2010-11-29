@@ -2,17 +2,17 @@
 #ifndef WIREINDEXBUFFER_H
 #define WIREINDEXBUFFER_H
 
-#include "WireObject.h"
+#include "WireBuffer.h"
 
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Object
+class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	IndexBuffer(UInt quantity);
+	IndexBuffer(UInt quantity, UsageType usage = UT_STATIC);
 	virtual ~IndexBuffer();
 
 	// Access to indices.

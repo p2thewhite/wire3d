@@ -2,12 +2,14 @@
 #ifndef WIRETEXTURE_H
 #define WIRETEXTURE_H
 
-#include "WireImage2D.h"
+#include "WireBuffer.h"
 
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Texture2D : public Object
+class Image2D;
+
+class /*WIRE_ENGINE_ITEM*/ Texture2D : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 
@@ -31,7 +33,7 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture2D(Image2D* pImage);
+	Texture2D(Image2D* pImage, UsageType usage = UT_STATIC);
 	virtual ~Texture2D();
 
 	inline Image2D* GetImage();
@@ -50,7 +52,7 @@ public:
 	inline Float GetAnisotropyValue() const;
 
 private:
-	Image2DPtr mspImage;
+	Pointer<Image2D> mspImage;
 	FilterType mFilterType;	// default = FT_LINEAR
 	WrapType mWarpType[2];	// default = WT_CLAMP
 	Float mAnisotropy;		// default = 1.0F

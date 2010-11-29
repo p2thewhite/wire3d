@@ -4,12 +4,13 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(VertexBuffer, Object);
+WIRE_IMPLEMENT_RTTI(VertexBuffer, Buffer);
 
 //----------------------------------------------------------------------------
 VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
-	UInt vertexQuantity)
+	UInt vertexQuantity, UsageType usage)
 	:
+	Buffer(usage),
 	mAttributes(rAttributes),
 	mVertexQuantity(vertexQuantity),
 	mpChannel(NULL)

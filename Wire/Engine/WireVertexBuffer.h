@@ -2,22 +2,23 @@
 #ifndef WIREVERTEXBUFFER_H
 #define WIREVERTEXBUFFER_H
 
+#include "WireBuffer.h"
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
-#include "WireObject.h"
-#include "WireVertexAttributes.h"
 #include "WireVector2.h"
 #include "WireVector3.h"
+#include "WireVertexAttributes.h"
 
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Object
+class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity);
+	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity,
+		UsageType usage = UT_STATIC);
 	virtual ~VertexBuffer();
 
 	inline UInt GetVertexQuantity() const;

@@ -35,6 +35,7 @@ public:
  	static DWORD sTexWrapMode[];
 	static DWORD sTexBlend[];
  	static D3DFORMAT sImage2DFormat[];
+	static DWORD sBufferLocking[];
 
 	Bool Supports32BitIndices;
 
