@@ -5,6 +5,7 @@
 #include "WireAlphaState.h"
 #include "WireBillboardNode.h"
 #include "WireBoundingVolume.h"
+#include "WireBuffer.h"
 #include "WireCamera.h"
 #include "WireController.h"
 #include "WireCuller.h"

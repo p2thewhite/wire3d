@@ -1,6 +1,7 @@
 #include "WireGXTexture2D.h"
 
 #include "WireGXRendererData.h"
+#include "WireImage2D.h"
 #include "WireRenderer.h"
 #include "WireTexture2D.h"
 #include <malloc.h>

@@ -4,11 +4,12 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(IndexBuffer, Object);
+WIRE_IMPLEMENT_RTTI(IndexBuffer, Buffer);
 
 //----------------------------------------------------------------------------
-IndexBuffer::IndexBuffer(UInt quantity)
+IndexBuffer::IndexBuffer(UInt quantity, UsageType usage)
 	:
+	Buffer(usage),
 	mQuantity(quantity)
 {
 	mpIndices = WIRE_NEW UInt[mQuantity];

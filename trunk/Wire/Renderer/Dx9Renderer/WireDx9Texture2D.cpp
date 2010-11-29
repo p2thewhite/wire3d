@@ -1,6 +1,7 @@
 #include "WireDx9Texture2D.h"
 
 #include "WireDx9RendererData.h"
+#include "WireImage2D.h"
 #include "WireRenderer.h"
 #include "WireTexture2D.h"
 #include <d3dx9tex.h>
@@ -131,13 +132,14 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		}
 	}
 
-	DWORD usage = 0;
-	D3DPOOL pool = D3DPOOL_MANAGED;
+	const Buffer::UsageType usage = pTexture->GetUsage();
+	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
+		D3DPOOL_MANAGED;
 	const UInt mipmapCount = pImage->GetMipmapCount();
 
 	HRESULT hr;
 	hr = D3DXCreateTexture(pRenderer->GetRendererData()->D3DDevice,
-		pImage->GetBound(0), pImage->GetBound(1), mipmapCount, usage,
+		pImage->GetBound(0), pImage->GetBound(1), mipmapCount, 0,
 		PdrRendererData::sImage2DFormat[format], pool, &mpTexture);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -289,5 +291,24 @@ void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	hr = rDevice->SetTexture(unit, 0);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void* PdrTexture2D::Lock(Buffer::LockingMode mode, UInt level)
+{
+	D3DLOCKED_RECT rect;
+	HRESULT hr;
+	hr = mpTexture->LockRect(level, &rect, NULL,
+		PdrRendererData::sBufferLocking[mode]);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	return rect.pBits;
+}
+
+//----------------------------------------------------------------------------
+void PdrTexture2D::Unlock(UInt level)
+{
+	HRESULT hr;
+	hr = mpTexture->UnlockRect(level);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }

@@ -297,6 +297,20 @@ void Renderer::OnViewportChange()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::SetClearColor(const ColorRGBA& rClearColor)
+{
+	mClearColor = rClearColor;
+}
+
+//----------------------------------------------------------------------------
+DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] = 
+{
+	D3DLOCK_READONLY,           // Buffer::LM_READ_ONLY
+	0,                          // Buffer::LM_WRITE_ONLY
+	0                           // Buffer::LM_READ_WRITE
+};
+
+//----------------------------------------------------------------------------
 PdrRendererData::PdrRendererData(Renderer* pRenderer)
 	:
 	mpRenderer(pRenderer)
@@ -312,10 +326,4 @@ void PdrRendererData::ResetDevice()
 
 	mpRenderer->OnViewportChange();
 	mpRenderer->OnFrameChange();
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetClearColor(const ColorRGBA& rClearColor)
-{
-	mClearColor = rClearColor;
 }

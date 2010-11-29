@@ -2,6 +2,7 @@
 #ifndef WIREDX9VERTEXBUFFER_H
 #define WIREDX9VERTEXBUFFER_H
 
+#include "WireBuffer.h"
 #include "WireTypes.h"
 
 struct IDirect3DVertexBuffer9;
@@ -21,13 +22,15 @@ public:
 
 	void Enable(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	void Disable(Renderer* pRenderer);
+	void* Lock(Buffer::LockingMode mode);
+	void Unlock();
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
-	IDirect3DVertexBuffer9* mpVertexBuffer;
-	IDirect3DVertexDeclaration9* mpVertexDeclaration;
-	UInt mVertexSize;
+	IDirect3DVertexBuffer9* mpBuffer;
+	IDirect3DVertexDeclaration9* mpDeclaration;
+	UInt mSize;
 };
 
 }

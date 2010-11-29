@@ -2,6 +2,7 @@
 #ifndef WIREDX9TEXTURE2D_H
 #define WIREDX9TEXTURE2D_H
 
+#include "WireBuffer.h"
 #include "WireTypes.h"
 
 struct IDirect3DTexture9;
@@ -20,6 +21,8 @@ public:
 
 	void Enable(Renderer* pRenderer, const Texture2D* pTexture, UInt unit);
 	void Disable(Renderer* pRenderer, UInt unit);
+	void* Lock(Buffer::LockingMode mode, UInt level = 0);
+	void Unlock(UInt level = 0);
 
 private:
 	IDirect3DTexture9* mpTexture;

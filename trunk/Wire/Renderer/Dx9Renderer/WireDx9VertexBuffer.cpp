@@ -77,34 +77,31 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpVertexDeclaration);
+	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Create the vertex buffer.
 	UInt vbSize = vertexSize * pVertexBuffer->GetVertexQuantity();
-	hr = rDevice->CreateVertexBuffer(vbSize, 0, 0, D3DPOOL_MANAGED,
-		&mpVertexBuffer, NULL);
+	const Buffer::UsageType usage = pVertexBuffer->GetUsage();
+	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
+		D3DPOOL_MANAGED;
+	hr = rDevice->CreateVertexBuffer(vbSize, D3DUSAGE_WRITEONLY, 0, pool,
+		&mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Copy the vertex buffer data from system memory to video memory.
-	Float* pVBData;
-	hr = mpVertexBuffer->Lock(0, vbSize, reinterpret_cast<void**>(&pVBData),
-		0);
-	WIRE_ASSERT(SUCCEEDED(hr));
-
+	Float* pVBData = reinterpret_cast<Float*>(Lock(Buffer::LM_WRITE_ONLY));
 	Convert(pVertexBuffer, pVBData);
+	Unlock();
 
-	hr = mpVertexBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(hr));
-
-	mVertexSize = vertexSize;
+	mSize = vertexSize;
 }
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::~PdrVertexBuffer()
 {
-	mpVertexBuffer->Release();
-	mpVertexDeclaration->Release();
+	mpBuffer->Release();
+	mpDeclaration->Release();
 }
 
 //----------------------------------------------------------------------------
@@ -112,17 +109,38 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->SetStreamSource(0, mpVertexBuffer, 0, mVertexSize);
+	hr = rDevice->SetStreamSource(0, mpBuffer, 0, mSize);
 	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetVertexDeclaration(mpVertexDeclaration);
+	hr = rDevice->SetVertexDeclaration(mpDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
-
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Disable(Renderer*)
+void PdrVertexBuffer::Disable(Renderer* pRenderer)
 {
-	// Nothing to do
+	HRESULT hr;
+	hr = pRenderer->GetRendererData()->D3DDevice->SetStreamSource(
+		0, NULL, 0, 0);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void* PdrVertexBuffer::Lock(Buffer::LockingMode mode)
+{
+	void* pVideoMemory = 0;
+	HRESULT hr;
+	hr = mpBuffer->Lock(0, 0, &pVideoMemory,
+		PdrRendererData::sBufferLocking[mode]);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	return pVideoMemory;
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::Unlock()
+{
+	HRESULT hr;
+	hr = mpBuffer->Unlock();
+	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------

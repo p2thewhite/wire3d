@@ -1,14 +1,16 @@
 #include "WireTexture2D.h"
 
+#include "WireImage2D.h"
 #include "WireRenderer.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Texture2D, Object);
+WIRE_IMPLEMENT_RTTI(Texture2D, Buffer);
 
 //----------------------------------------------------------------------------
-Texture2D::Texture2D(Image2D* pImage)
+Texture2D::Texture2D(Image2D* pImage, UsageType usage)
 	:
+	Buffer(usage),
 	mspImage(pImage),
 	mFilterType(FT_LINEAR),
 	mAnisotropy(1.0F)
