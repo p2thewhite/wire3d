@@ -27,7 +27,7 @@ ColorRGBA::ColorRGBA(Float red, Float green, Float blue, Float alpha)
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA ColorRGBA::operator* (float scalar) const
+ColorRGBA ColorRGBA::operator* (Float scalar) const
 {
 	return ColorRGBA(
 		scalar * mTuple[0],
@@ -47,7 +47,7 @@ ColorRGBA& ColorRGBA::operator*= (Float scalar)
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA operator* (float scalar, const ColorRGBA& rCol)
+ColorRGBA operator* (Float scalar, const ColorRGBA& rCol)
 {
 	return ColorRGBA(
 		scalar * rCol.R(),

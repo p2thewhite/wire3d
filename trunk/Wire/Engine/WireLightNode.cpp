@@ -30,7 +30,7 @@ void LightNode::SetLight(Light* pLight)
 }
 
 //----------------------------------------------------------------------------
-void LightNode::UpdateWorldData(double appTime)
+void LightNode::UpdateWorldData(Double appTime)
 {
 	Node::UpdateWorldData(appTime);
 

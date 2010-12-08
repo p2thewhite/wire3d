@@ -242,6 +242,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTList.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTMap.h"
 					>
 				</File>
@@ -327,6 +331,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTHashTable.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTList.inl"
 					>
 				</File>
 				<File

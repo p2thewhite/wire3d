@@ -1,3 +1,7 @@
+// Sample6 - Multitexturing
+// This sample demonstrates how to blend individual textures together in
+// a single rendering pass using multi-texturing.
+
 #include "Sample6.h"
 
 using namespace Wire;
@@ -64,7 +68,6 @@ void Sample6::OnIdle()
 
 	Matrix34F model(Vector3F(0, 1, 0), mAngle);
 	mspRoot->Local.SetRotate(model);
-	mspRoot->Local.SetTranslate(Vector3F::ZERO);
 
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
@@ -82,67 +85,39 @@ Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 {
 	// Creation of Wire::Geometry objects is explained in detail in Sample1
 
-	const Float extent = 1.0F;
 	const Vector3F vertices[] = {
-		Vector3F(-extent, -extent, -extent),	// 0
-		Vector3F(-extent,  extent, -extent),	// 1
-		Vector3F( extent,  extent, -extent),	// 2
-		Vector3F( extent, -extent, -extent),	// 3
-		Vector3F( extent, -extent, extent),		// 4 (-3)
-		Vector3F( extent,  extent, extent),		// 5 (-2)
-		Vector3F(-extent,  extent, extent),		// 6 (-1)
-		Vector3F(-extent, -extent, extent),		// 7 (-0)
-		Vector3F( extent,  extent, extent),		// 8 (5)
-		Vector3F(-extent,  extent, extent),		// 9 (6)
-		Vector3F( extent,  extent, extent),		// 10(5)
-		Vector3F( extent, -extent, extent),		// 11(4)
-		Vector3F(-extent, -extent, extent),		// 12(7)
-		Vector3F( extent, -extent, extent),		// 13(4)
+		Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(-1.0F,  1.0F, -1.0F),
+		Vector3F( 1.0F,  1.0F, -1.0F), Vector3F( 1.0F, -1.0F, -1.0F),
+		Vector3F( 1.0F, -1.0F, 1.0F), Vector3F( 1.0F,  1.0F, 1.0F),
+		Vector3F(-1.0F,  1.0F, 1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
+		Vector3F( 1.0F,  1.0F, 1.0F), Vector3F(-1.0F,  1.0F, 1.0F),
+		Vector3F( 1.0F,  1.0F, 1.0F), Vector3F( 1.0F, -1.0F, 1.0F),
+		Vector3F(-1.0F, -1.0F, 1.0F), Vector3F( 1.0F, -1.0F, 1.0F)
 	};
 
 	const ColorRGB colors[] = {
-		ColorRGB(1.0F, 0.0F, 0.0F),
-		ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F),
-		ColorRGB(0.0F, 1.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 1.0F),
-		ColorRGB(0.0F, 0.0F, 0.0F),
-
-		ColorRGB(1.0F, 0.0F, 0.0F),
-		ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F),
-		ColorRGB(0.0F, 1.0F, 1.0F),
+		ColorRGB(1.0F, 0.0F, 0.0F), ColorRGB(0.0F, 1.0F, 0.0F),
+		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F),
+		ColorRGB(1.0F, 0.0F, 1.0F), ColorRGB(0.0F, 1.0F, 1.0F),
+		ColorRGB(1.0F, 1.0F, 1.0F), ColorRGB(0.0F, 0.0F, 0.0F),
+		ColorRGB(1.0F, 0.0F, 0.0F), ColorRGB(0.0F, 1.0F, 0.0F),
+		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F),
+		ColorRGB(1.0F, 0.0F, 1.0F), ColorRGB(0.0F, 1.0F, 1.0F)
 	};
 
-	const Float extentUv = 1.0F;
 	const Vector2F uvs[] = {
-		Vector2F(0.50F * extentUv, 0.50F * extentUv),
-		Vector2F(0.50F * extentUv, 0.25F * extentUv),
-		Vector2F(0.25F * extentUv, 0.25F * extentUv),
-		Vector2F(0.25F * extentUv, 0.50F * extentUv),
-		Vector2F(0.00F * extentUv, 0.50F * extentUv),
-		Vector2F(0.00F * extentUv, 0.25F * extentUv),
-		Vector2F(0.75F * extentUv, 0.25F * extentUv),
-		Vector2F(0.75F * extentUv, 0.50F * extentUv),
-		Vector2F(0.25F * extentUv, 0.00F * extentUv),
-		Vector2F(0.50F * extentUv, 0.00F * extentUv),
-		Vector2F(1.00F * extentUv, 0.25F * extentUv),
-		Vector2F(1.00F * extentUv, 0.50F * extentUv),
-		Vector2F(0.50F * extentUv, 0.75F * extentUv),
-		Vector2F(0.25F * extentUv, 0.75F * extentUv)
+		Vector2F(0.50F, 0.50F), Vector2F(0.50F, 0.25F),
+		Vector2F(0.25F, 0.25F), Vector2F(0.25F, 0.50F),
+		Vector2F(0.00F, 0.50F), Vector2F(0.00F, 0.25F),
+		Vector2F(0.75F, 0.25F), Vector2F(0.75F, 0.50F),
+		Vector2F(0.25F, 0.00F), Vector2F(0.50F, 0.00F),
+		Vector2F(1.00F, 0.25F), Vector2F(1.00F, 0.50F),
+		Vector2F(0.50F, 0.75F), Vector2F(0.25F, 0.75F)
 	};
 
 	const UInt indices[] = {
-		0, 1, 2, 3,
-		11, 10, 6, 7,
-		7, 6, 1, 0,
-		3, 2, 5, 4,
-		1, 9, 8, 2,
-		12, 0, 3, 13
+		0, 1, 2, 3,	11, 10, 6, 7, 7, 6, 1, 0, 3, 2, 5, 4, 1, 9, 8, 2, 12, 0,
+		3, 13
 	};
 
 	VertexAttributes attributes;
@@ -210,6 +185,11 @@ Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 
 			pTextureEffect->BlendOps.Append(blendMode);
 		}
+
+		if (textureCount > 1)
+		{
+			pTextureEffect->BlendOps[1] = TextureEffect::BM_DECAL;
+		}
 	}
 
 	return pCube;
@@ -272,7 +252,7 @@ Texture2D* Sample6::CreateTexture2()
 	const UInt width = 64;
 	const UInt height = 64;
 
-	Image2D::FormatMode format = Image2D::FM_RGB888;
+	Image2D::FormatMode format = Image2D::FM_RGBA8888;
 	const UInt bytesPerPixel = Image2D::GetBytesPerPixel(format);
 
 	UChar* pData = WIRE_NEW UChar[width * height * bytesPerPixel];
@@ -280,7 +260,7 @@ Texture2D* Sample6::CreateTexture2()
 
 	for (UInt y = 0; y < height; y++)
 	{
-		bool flip = true;
+		Bool flip = true;
 		if ((y & 0x4) > 0)
 		{
 			flip = false;
@@ -288,15 +268,16 @@ Texture2D* Sample6::CreateTexture2()
 
 		for (UInt x = 0; x < width; x++)
 		{
-			UChar t = flip ? 0xc0 : 0xFF;
+			UChar t = flip ? 0x40 : 0x60;
 			if ((x & 0x4) > 0)
 			{
-				t = flip ? 0xFF : 0xc0;
+				t = flip ? 0x60 : 0x40;
 			}
 
 			*pDst++ = t;
 			*pDst++ = t;
 			*pDst++ = t;
+			*pDst++ = 0x40;
 		}
 	}
 

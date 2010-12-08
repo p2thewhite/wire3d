@@ -75,7 +75,7 @@ public:
 
 	// member access
 	inline operator Real4* ();
-//	inline operator const Real4* () const;	// TODO: fix for VC
+	inline operator const Real* () const;
  	inline const Real* operator[] (Int row) const;
  	inline Real* operator[] (Int row);
 	inline Real operator() (UInt row, UInt col) const;

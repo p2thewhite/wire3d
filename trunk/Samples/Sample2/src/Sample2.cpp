@@ -1,3 +1,4 @@
+// Sample2 - Scene Graph
 // This sample demonstrates how to create and render a scene graph.
 // Scene graphs serve the purpose of organizing your 3D objects (together
 // with render states, lights, effects and controllers) in a hierarchy.

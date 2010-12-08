@@ -38,6 +38,7 @@ public:
 	inline UInt GetBytesPerPixel() const;
 	inline static UInt GetBytesPerPixel(FormatMode format);
 
+	inline Bool HasAlpha() const;
 	inline Bool HasMipmaps() const;
 	void CreateMipmaps();
 	UInt GetMipmapCount() const;

@@ -210,68 +210,17 @@ void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
-const
-{
-	const Real4* a = mEntry;
-	const Real4* b = rMatrix.mEntry;
-
-	return Matrix34<Real>(
-		a[0][0]*b[0][0] + a[0][1]*b[1][0] +	a[0][2]*b[2][0],
-		a[0][0]*b[0][1] + a[0][1]*b[1][1] +	a[0][2]*b[2][1],
-		a[0][0]*b[0][2] + a[0][1]*b[1][2] +	a[0][2]*b[2][2],
-		a[0][0]*b[0][3] + a[0][1]*b[1][3] +	a[0][2]*b[2][3] + a[0][3],
-
-		a[1][0]*b[0][0] + a[1][1]*b[1][0] +	a[1][2]*b[2][0],
-		a[1][0]*b[0][1] + a[1][1]*b[1][1] +	a[1][2]*b[2][1],
-		a[1][0]*b[0][2] + a[1][1]*b[1][2] +	a[1][2]*b[2][2],
-		a[1][0]*b[0][3] + a[1][1]*b[1][3] +	a[1][2]*b[2][3] + a[1][3],
-
-		a[2][0]*b[0][0] + a[2][1]*b[1][0] +	a[2][2]*b[2][0],
-		a[2][0]*b[0][1] + a[2][1]*b[1][1] +	a[2][2]*b[2][1],
-		a[2][0]*b[0][2] + a[2][1]*b[1][2] +	a[2][2]*b[2][2],
-		a[2][0]*b[0][3] + a[2][1]*b[1][3] +	a[2][2]*b[2][3] + a[2][3]
-		);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
-{
-	return Matrix34<Real>(
-		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
-			mEntry[0][3],
-		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
-			mEntry[1][3],
-		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
-			mEntry[2][3]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV)
-const
-{
-	return Vector3<Real>(
-		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2],
-		mEntry[1][0] * rV[0] + mEntry[1][1] * rV[1] + mEntry[1][2] * rV[2],
-		mEntry[2][0] * rV[0] + mEntry[2][1] * rV[1] + mEntry[2][2] * rV[2]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Matrix34<Real>::operator Real4* ()
 {
 	return &mEntry;
 }
 
 //----------------------------------------------------------------------------
-// template <class Real>
-// inline Matrix34<Real>::operator const Real4* () const
-// {
-// 	return mEntry;
-// }
-//inline Real (* (Get)())[4] { return mEntry; }
+template <class Real>
+inline Matrix34<Real>::operator const Real* () const
+{
+	return mEntry;
+}
 
 //----------------------------------------------------------------------------
 template <class Real>
@@ -291,14 +240,14 @@ inline Real* Matrix34<Real>::operator[] (Int row)
 template <class Real>
 inline Real Matrix34<Real>::operator() (UInt row, UInt col) const
 {
-    return mEntry[row][col];
+	return mEntry[row][col];
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
 inline Real& Matrix34<Real>::operator() (UInt row, UInt col)
 {
-    return mEntry[row][col];
+	return mEntry[row][col];
 }
 
 //----------------------------------------------------------------------------
@@ -331,6 +280,55 @@ template <class Real>
 Vector3<Real> Matrix34<Real>::GetColumn(UInt col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
+const
+{
+	const Real4* a = mEntry;
+	const Real4* b = rMatrix.mEntry;
+
+	return Matrix34<Real>(
+		a[0][0]*b[0][0] + a[0][1]*b[1][0] +	a[0][2]*b[2][0],
+		a[0][0]*b[0][1] + a[0][1]*b[1][1] +	a[0][2]*b[2][1],
+		a[0][0]*b[0][2] + a[0][1]*b[1][2] +	a[0][2]*b[2][2],
+		a[0][0]*b[0][3] + a[0][1]*b[1][3] +	a[0][2]*b[2][3] + a[0][3],
+
+		a[1][0]*b[0][0] + a[1][1]*b[1][0] +	a[1][2]*b[2][0],
+		a[1][0]*b[0][1] + a[1][1]*b[1][1] +	a[1][2]*b[2][1],
+		a[1][0]*b[0][2] + a[1][1]*b[1][2] +	a[1][2]*b[2][2],
+		a[1][0]*b[0][3] + a[1][1]*b[1][3] +	a[1][2]*b[2][3] + a[1][3],
+
+		a[2][0]*b[0][0] + a[2][1]*b[1][0] +	a[2][2]*b[2][0],
+		a[2][0]*b[0][1] + a[2][1]*b[1][1] +	a[2][2]*b[2][1],
+		a[2][0]*b[0][2] + a[2][1]*b[1][2] +	a[2][2]*b[2][2],
+		a[2][0]*b[0][3] + a[2][1]*b[1][3] +	a[2][2]*b[2][3] + a[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
+{
+	return Matrix34<Real>(
+		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
+			mEntry[0][3],
+		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
+			mEntry[1][3],
+		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
+			mEntry[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV)
+const
+{
+	return Vector3<Real>(
+		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2],
+		mEntry[1][0] * rV[0] + mEntry[1][1] * rV[1] + mEntry[1][2] * rV[2],
+		mEntry[2][0] * rV[0] + mEntry[2][1] * rV[1] + mEntry[2][2] * rV[2]);
 }
 
 //----------------------------------------------------------------------------

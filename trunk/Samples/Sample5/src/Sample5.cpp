@@ -1,3 +1,4 @@
+// Sample5 - Lighting
 // This sample demonstrates how to render objects using lights.
 // For that purpose we create 2 cubes which are both lit by 2 point lights
 // using the scene graph. Furthermore we create a plane which is lit by a 
@@ -479,7 +480,7 @@ Texture2D* Sample5::CreateTexture()
 				}
 			}
 
-			float factor = (min2Dist - minDist) + 3;
+			Float factor = (min2Dist - minDist) + 3;
 			ColorRGB color = cells[minIndex].color * factor;
 			pColorDst[y*width+x] = color;
 

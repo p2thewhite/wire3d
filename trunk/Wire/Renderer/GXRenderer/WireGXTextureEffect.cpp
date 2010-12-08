@@ -9,7 +9,9 @@ UChar PdrRendererData::sTexBlend[TextureEffect::BM_QUANTITY] =
 {
 	GX_REPLACE,			// TextureEffect::BM_REPLACE
 	GX_MODULATE,		// TextureEffect::BM_MODULATE
-	GX_PASSCLR			// TextureEffect::BM_PASS
+	GX_PASSCLR,			// TextureEffect::BM_PASS
+	GX_BLEND,			// TextureEffect::BM_BLEND
+	GX_DECAL			// TextureEffect::BM_DECAL
 };
 
 //----------------------------------------------------------------------------

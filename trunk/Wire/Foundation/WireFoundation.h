@@ -23,6 +23,7 @@
 #include "WireTArray.h"
 #include "WireTHashSet.h"
 #include "WireTHashTable.h"
+#include "WireTList.h"
 #include "WireTMap.h"
 #include "WireTStack.h"
 #include "WireTypes.h"
