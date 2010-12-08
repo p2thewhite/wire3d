@@ -2,23 +2,23 @@
 
 namespace Wire
 {
-template<> const Matrix4<float> Matrix4<float>::ZERO(
+template<> const Matrix4<Float> Matrix4<Float>::ZERO(
 	0.0F, 0.0F, 0.0F, 0.0F,
 	0.0F, 0.0F, 0.0F, 0.0F,
 	0.0F, 0.0F, 0.0F, 0.0F,
 	0.0F, 0.0F, 0.0F, 0.0F);
-template<> const Matrix4<float> Matrix4<float>::IDENTITY(
+template<> const Matrix4<Float> Matrix4<Float>::IDENTITY(
 	1.0F, 0.0F, 0.0F, 0.0F,
 	0.0F, 1.0F, 0.0F, 0.0F,
 	0.0F, 0.0F, 1.0F, 0.0F,
 	0.0F, 0.0F, 0.0F, 1.0F);
 
-template<> const Matrix4<double> Matrix4<double>::ZERO(
+template<> const Matrix4<Double> Matrix4<Double>::ZERO(
 	0.0, 0.0, 0.0, 0.0,
 	0.0, 0.0, 0.0, 0.0,
 	0.0, 0.0, 0.0, 0.0,
 	0.0, 0.0, 0.0, 0.0);
-template<> const Matrix4<double> Matrix4<double>::IDENTITY(
+template<> const Matrix4<Double> Matrix4<Double>::IDENTITY(
 	1.0, 0.0, 0.0, 0.0,
 	0.0, 1.0, 0.0, 0.0,
 	0.0, 0.0, 1.0, 0.0,

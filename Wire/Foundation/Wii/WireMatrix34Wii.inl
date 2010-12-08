@@ -146,54 +146,17 @@ void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
-const
-{
-	Matrix34<Real> result;
-	MTXConcat(const_cast<Real4*>(mEntry), const_cast<Matrix34&>(rMatrix),
-		result);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
-{
-	return Matrix34<Real>(
-		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
-			mEntry[0][3],
-		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
-			mEntry[1][3],
-		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
-			mEntry[2][3]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV) const
-{
-	Vector3<Real> result;
-	Vector3<Real>* pResult = const_cast<Vector3<Real>*>(&result);
-	Vector3<Real>* pVector = const_cast<Vector3<Real>*>(&rV);
-	MTXMultVecSR(const_cast<Real4*>(mEntry), reinterpret_cast<Vec*>(pVector),
-		reinterpret_cast<Vec*>(pResult));
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Matrix34<Real>::operator Real4* ()
 {
 	return mEntry;
 }
 
 //----------------------------------------------------------------------------
-// template <class Real>
-// inline Matrix34<Real>::operator const Real4* () const
-// {
-// 	return mEntry;
-// }
-//inline Real (* (Get)())[4] { return mEntry; }
+template <class Real>
+inline Matrix34<Real>::operator const Real* () const
+{
+	return mEntry;
+}
 
 //----------------------------------------------------------------------------
 template <class Real>
@@ -253,6 +216,42 @@ template <class Real>
 Vector3<Real> Matrix34<Real>::GetColumn(UInt col) const
 {
 	return Vector3<Real>(mEntry[0][col], mEntry[1][col], mEntry[2][col]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
+const
+{
+	Matrix34<Real> result;
+	MTXConcat(const_cast<Real4*>(mEntry), const_cast<Matrix34&>(rMatrix),
+		result);
+	return result;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
+{
+	return Matrix34<Real>(
+		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
+			mEntry[0][3],
+		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
+			mEntry[1][3],
+		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
+			mEntry[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV) const
+{
+	Vector3<Real> result;
+	Vector3<Real>* pResult = const_cast<Vector3<Real>*>(&result);
+	Vector3<Real>* pVector = const_cast<Vector3<Real>*>(&rV);
+	MTXMultVecSR(const_cast<Real4*>(mEntry), reinterpret_cast<Vec*>(pVector),
+		reinterpret_cast<Vec*>(pResult));
+	return result;
 }
 
 //----------------------------------------------------------------------------

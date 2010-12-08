@@ -522,13 +522,12 @@ Quaternion<Real> Quaternion<Real>::Inverse() const
 	Quaternion inverse;
 
 	Real norm = static_cast<Real>(0.0);
-	int i;
-	for (i = 0; i < 4; i++)
+	for (UInt i = 0; i < 4; i++)
 	{
-		norm += mTuple[i]*mTuple[i];
+		norm += mTuple[i] * mTuple[i];
 	}
 
-	if (norm > (Real)0.0)
+	if (norm > static_cast<Real>(0.0))
 	{
 		Real invNorm = static_cast<Real>(1.0) / norm;
 		inverse.mTuple[0] = mTuple[0] * invNorm;

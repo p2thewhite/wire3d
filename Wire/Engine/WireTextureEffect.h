@@ -18,6 +18,8 @@ class TextureEffect : public Effect
 		BM_REPLACE,
 		BM_MODULATE,
 		BM_PASS,
+		BM_BLEND,
+		BM_DECAL,
 		BM_QUANTITY
 	};
 

@@ -1,3 +1,4 @@
+// Sample3 - Level of Detail
 // This sample demonstrates how to use discrete LODs in the scene graph.
 
 #include "Sample3.h"
@@ -315,7 +316,7 @@ Texture2D* Sample3::CreateTexture()
 				}
 			}
 
-			float factor = (min2Dist - minDist) + 3;
+			Float factor = (min2Dist - minDist) + 3;
 			ColorRGB color = cells[minIndex].color * factor;
 			pColorDst[y*width+x] = color;
 

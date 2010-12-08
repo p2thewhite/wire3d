@@ -53,7 +53,7 @@ public:
 	inline Real Normalize();
 
 	// The cross products are computed using the right-handed rule. Be aware
-	// that some graphics APIs use a left-handed rule.  If you have to compute
+	// that some graphics APIs use a left-handed rule. If you have to compute
 	// a cross product with these functions and send the result to the API
 	// that expects left-handed, you will need to change sign on the vector
 	// (replace each component value c by -c).

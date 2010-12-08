@@ -23,7 +23,7 @@ public:
 
 protected:
 	// geometric updates
-	virtual void UpdateWorldData(double appTime);
+	virtual void UpdateWorldData(Double appTime);
 
 private:
 	void LightToLocalTransform();

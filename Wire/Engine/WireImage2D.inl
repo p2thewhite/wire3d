@@ -24,6 +24,12 @@ inline UInt Image2D::GetQuantity(UInt level) const
 }
 
 //----------------------------------------------------------------------------
+inline Bool Image2D::HasAlpha() const
+{
+	return mFormat == FM_RGBA8888 || mFormat == FM_RGBA4444;
+}
+
+//----------------------------------------------------------------------------
 inline Bool Image2D::HasMipmaps() const
 {
 	return mHasMipmaps;

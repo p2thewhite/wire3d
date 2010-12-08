@@ -43,7 +43,7 @@ ColorRGB& ColorRGB::operator*= (Float scalar)
 }
 
 //----------------------------------------------------------------------------
-ColorRGB operator* (float scalar, const ColorRGB& rCol)
+ColorRGB operator* (Float scalar, const ColorRGB& rCol)
 {
 	return ColorRGB(
 		scalar * rCol.R(),

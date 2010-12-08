@@ -252,7 +252,6 @@ inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 template <class Real>
 inline Real Vector3<Real>::Normalize()
 {
-	// TODO: use VECNormalize
 	Real length = Length();
 
 	if (length > Math<Real>::ZERO_TOLERANCE)

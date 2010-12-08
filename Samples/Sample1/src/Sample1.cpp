@@ -1,3 +1,4 @@
+// Sample1 - Basic Rendering
 // This sample demonstrates how to create a transparent, textured cube and
 // render it using different render states and a light.
 
@@ -292,12 +293,16 @@ Geometry* Sample1::CreateCube()
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
-	attributes.SetNormalChannels(3);
+	attributes.SetNormalChannels(3);	// channels: X, Y, Z
 
 	// Now with the attributes being defined, we can create a VertexBuffer
 	// and fill it with data.
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+
+	// If the supplied number of vertices does not match the number of uvs,
+	// the assert fires and halts the application (in debug mode only)
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
+
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
