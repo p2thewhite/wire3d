@@ -1,4 +1,5 @@
 #include "Sample4.h"
+#include "LensflareNode.h"
 
 using namespace Wire;
 
@@ -6,12 +7,6 @@ WIRE_APPLICATION(Sample4);
 
 //----------------------------------------------------------------------------
 Sample4::Sample4()
-// :
-// WIREAPPLICATION(
-// 				ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
-// 				"Sample2 - Creating a Scenegraph",	// Name of the application.
-// 				800, 600,								// Window position and
-// 				100, 100)							// size (both ignored on the Wii).
 {
 }
 
