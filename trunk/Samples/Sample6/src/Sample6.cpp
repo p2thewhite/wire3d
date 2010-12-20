@@ -16,26 +16,16 @@ Bool Sample6::OnInitialize()
 		return false;
 	}
 
-	TArray<Texture2D*> textures;
-	mspRoot = WIRE_NEW Node;
-	mspRoot->AttachChild(CreateCube(textures));
-	textures.Append(CreateTexture());
-	mspRoot->AttachChild(CreateCube(textures));
- 	textures.Append(CreateTexture2());
-	mspRoot->AttachChild(CreateCube(textures, false));
+	// create a cube with vertex colors using a texture effect with 2 textures
+	TextureEffect* pEffect = WIRE_NEW TextureEffect;
+	pEffect->Textures.Append(CreateTexture());
+	pEffect->Textures.Append(CreateTexture2());
 
-	UInt cubeCount = mspRoot->GetQuantity();
-	Float stride = 3.0F;
-	Float offset = static_cast<Float>(cubeCount) * -0.5F * stride + stride * 0.5F;
+	mspGeometry = CreateCube(pEffect->Textures.GetQuantity());
+	mspGeometry->AttachEffect(pEffect);
 
-	for (UInt i = 0; i < cubeCount; i++)
-	{
-		Spatial* pCube = mspRoot->GetChild(i);
-		pCube->Local.SetTranslate(Vector3F(offset, 0, 0));
-		offset += stride;
-	}
-
-	Vector3F cameraLocation(0.0F, 0.0F, -10.0F);
+	// camera and viewing frustum setup
+	Vector3F cameraLocation(0.0F, 0.0F, -7.0F);
 	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -46,10 +36,8 @@ Bool Sample6::OnInitialize()
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 
-	mCuller.SetCamera(mspCamera);
-
+	// initializing working variables
 	mAngle = 0.0F;
-
 	mLastTime = System::GetTime();
 
 	return true;
@@ -62,26 +50,59 @@ void Sample6::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	// 	Float scaleFactor = MathF::Sin(mAngle * 2.0F) * 0.8F;
-	mAngle += static_cast<Float>(elapsedTime);
+	// rotate the cube based on the time passed	
+	mAngle += static_cast<Float>(elapsedTime) * 0.5F;
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
+	Vector3F axis(Vector3F(MathF::Sin(mAngle), MathF::Cos(mAngle), 0.3F));
+	Matrix34F model(axis, mAngle);
+	mspGeometry->World.SetRotate(model);
 
-	Matrix34F model(Vector3F(0, 1, 0), mAngle);
-	mspRoot->Local.SetRotate(model);
+	// define some blending modes for the cube to cycle through
+	static const BlendMode modes[] =
+	{
+		// texture0 passes the previous stage (i.e. vertex color),
+		// so does texture1, thus only the vertex color is visible
+		BlendMode(TextureEffect::BM_PASS, TextureEffect::BM_PASS),
 
-	mspRoot->UpdateGS(time);
-	mCuller.ComputeVisibleSet(mspRoot);
+		// texture0 replaces the vertex color, texture1 passes the
+		// the previous stage, thus only texture0 is visible
+		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_PASS),
+
+		// texture0 blends with the vertex color
+		BlendMode(TextureEffect::BM_BLEND, TextureEffect::BM_PASS),
+
+		// texture0 replaces the vertex color, texture1 is applied as a decal
+		// over the previous stage (i.e. texture0)
+		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_DECAL),
+
+		// and so on... check WireTextureEffect.h for the formulas
+		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_BLEND),
+		BlendMode(TextureEffect::BM_MODULATE, TextureEffect::BM_BLEND),
+		BlendMode(TextureEffect::BM_BLEND, TextureEffect::BM_BLEND)
+	};
+	
+	// we change the blending mode every second
+	UInt modeQuantity = sizeof(modes) / sizeof(BlendMode);
+	UInt modeIndex = static_cast<UInt>(MathF::FMod(static_cast<Float>(time),
+		static_cast<Float>(modeQuantity)));
+	WIRE_ASSERT(0 <= modeIndex && modeIndex < modeQuantity);
+	TextureEffect* pEffect = DynamicCast<TextureEffect>(mspGeometry->
+		GetEffect());
+	if (pEffect)
+	{
+		pEffect->BlendOps.SetElement(0, modes[modeIndex].Mode0);
+		pEffect->BlendOps.SetElement(1, modes[modeIndex].Mode1);
+	}
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->Draw(mspGeometry);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
-	Bool useVertexColors)
+Geometry* Sample6::CreateCube(const UInt uvQuantity)
 {
 	// Creation of Wire::Geometry objects is explained in detail in Sample1
 
@@ -123,16 +144,12 @@ Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 
-	UInt textureCount = rTextures.GetQuantity();
-	for (UInt unit = 0; unit < textureCount; unit++)
+	for (UInt unit = 0; unit < uvQuantity; unit++)
 	{
 		attributes.SetTCoordChannels(2, unit);	// channels: U, V
 	}
 
-	if (useVertexColors)
-	{
-		attributes.SetColorChannels(3);		// channels: R, G, B
-	}
+	attributes.SetColorChannels(3);		// channels: R, G, B
 
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
@@ -144,15 +161,12 @@ Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 	{
 		pCubeVerts->Position3(i) = vertices[i];
 
-		for (UInt unit = 0; unit < textureCount; unit++)
+		for (UInt unit = 0; unit < uvQuantity; unit++)
 		{
 			pCubeVerts->TCoord2(i, unit) = uvs[i];
 		}
 
-		if (useVertexColors)
-		{
-			pCubeVerts->Color3(i) = colors[i];
-		}
+		pCubeVerts->Color3(i) = colors[i];
 	}
 
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
@@ -168,38 +182,14 @@ Geometry* Sample6::CreateCube(TArray<Texture2D*>& rTextures,
 	}
 
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
-
-	if (textureCount > 0)
-	{
-		TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-		pCube->AttachEffect(pTextureEffect);
-
-		for (UInt i = 0; i < textureCount; i++)
-		{
-			pTextureEffect->Textures.Append(rTextures[i]);
-			TextureEffect::BlendMode blendMode = TextureEffect::BM_MODULATE;
-			if (!useVertexColors && (i == 0))
-			{
-				blendMode = TextureEffect::BM_REPLACE;
-			}
-
-			pTextureEffect->BlendOps.Append(blendMode);
-		}
-
-		if (textureCount > 1)
-		{
-			pTextureEffect->BlendOps[1] = TextureEffect::BM_DECAL;
-		}
-	}
-
 	return pCube;
 }
 
 //----------------------------------------------------------------------------
 Texture2D* Sample6::CreateTexture()
 {
-	const UInt width = 256;
-	const UInt height = 64;
+	const UInt width = 512;
+	const UInt height = 128;
 
 	UChar* pMap = WIRE_NEW UChar[width * height];
 	UInt seed = 7;
@@ -233,9 +223,7 @@ Texture2D* Sample6::CreateTexture()
 			*pTemp++ = t;
 			*pTemp++ = t;
 			*pTemp++ = t;
-			*pTemp = 0xFF;
 
-			// 			Image2D::RGBA8888ToRGBA4444(pTemp - 3, pDst);
 			Image2D::RGB888ToRGB565(pTemp - 3, pDst);
 			pDst += 2;
 		}
@@ -249,6 +237,7 @@ Texture2D* Sample6::CreateTexture()
 //----------------------------------------------------------------------------
 Texture2D* Sample6::CreateTexture2()
 {
+	// create a 32bit checker board texture with alpha channel
 	const UInt width = 64;
 	const UInt height = 64;
 
@@ -268,10 +257,10 @@ Texture2D* Sample6::CreateTexture2()
 
 		for (UInt x = 0; x < width; x++)
 		{
-			UChar t = flip ? 0x40 : 0x60;
+			UChar t = flip ? 0x40 : 0x80;
 			if ((x & 0x4) > 0)
 			{
-				t = flip ? 0x60 : 0x40;
+				t = flip ? 0x80 : 0x40;
 			}
 
 			*pDst++ = t;

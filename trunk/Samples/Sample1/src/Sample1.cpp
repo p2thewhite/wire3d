@@ -39,9 +39,13 @@ Bool Sample1::OnInitialize()
 
 	// By providing a field of view (FOV) in degrees, aspect ratio,
 	// near and far plane, we define a viewing frustum used for culling.
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+	UInt width = GetRenderer()->GetWidth();
+	UInt height = GetRenderer()->GetHeight();
+	Float fieldOfView = 45.0F;
+	Float aspectRatio = static_cast<Float>(width)/static_cast<Float>(height);
+	Float nearPlane = 0.1F;
+	Float farPlane = 300.0F;
+	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
 	mCuller.SetCamera(mspCamera);
 
 	// We render some of the cubes using transparency and front-face culling,

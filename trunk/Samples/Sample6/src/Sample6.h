@@ -17,17 +17,26 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube(TArray<Texture2D*>& rTextures,
-		Bool useVertexColors = true);
+	struct BlendMode
+	{
+		BlendMode(TextureEffect::BlendMode mode0,
+			TextureEffect::BlendMode mode1)
+			:
+		Mode0(mode0),
+			Mode1(mode1) {}
+
+		TextureEffect::BlendMode Mode0;
+		TextureEffect::BlendMode Mode1;
+	};
+
+	Geometry* CreateCube(const UInt uvQuantity);
 	Texture2D* CreateTexture();
 	Texture2D* CreateTexture2();
 
 	CameraPtr mspCamera;
-	NodePtr mspRoot;
-	Culler mCuller;
+	GeometryPtr mspGeometry;
 
 	Float mAngle;
-
 	Double mLastTime;
 };
 
