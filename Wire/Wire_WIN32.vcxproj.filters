@@ -95,9 +95,6 @@
     <ClInclude Include="Foundation\WireMain.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Foundation\WireMainMCR.h">
-      <Filter>Foundation\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\WireMath.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
@@ -270,9 +267,6 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\WireRtti.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\WireRttiMCR.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\WireSceneObject.h">

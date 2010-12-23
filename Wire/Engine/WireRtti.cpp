@@ -2,9 +2,11 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Rtti::Rtti(const Rtti* pBaseType)
+Rtti::Rtti(const Char* pName, const Rtti* pBaseType)
+	:
+	mpName(pName),
+	mpBaseType(pBaseType)
 {
-	mpBaseType = pBaseType;
 }
 
 //----------------------------------------------------------------------------

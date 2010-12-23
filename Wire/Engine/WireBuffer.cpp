@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Buffer, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Buffer, Object);
 
 //----------------------------------------------------------------------------
 Buffer::Buffer(UsageType usage)

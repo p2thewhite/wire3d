@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Camera, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Camera, Object);
 
 //----------------------------------------------------------------------------
 Camera::Camera()
@@ -74,12 +74,12 @@ Bool Camera::GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 }
 
 //----------------------------------------------------------------------------
-void Camera::SetAxes(const Vector3F& rkDVector, const Vector3F& rkUVector,
-	const Vector3F& rkRVector)
+void Camera::SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
+	const Vector3F& rRVector)
 {
-	mDVector = rkDVector;
-	mUVector = rkUVector;
-	mRVector = rkRVector;
+	mDVector = rDVector;
+	mUVector = rUVector;
+	mRVector = rRVector;
 
 	Float aDet = MathF::FAbs(mDVector.Dot(mUVector.Cross(mRVector)));
 	if (MathF::FAbs(1.0F - aDet) > 0.01F)

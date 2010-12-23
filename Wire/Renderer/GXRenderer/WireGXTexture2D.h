@@ -2,7 +2,8 @@
 #ifndef WIREGXTEXTURE2D_H
 #define WIREGXTEXTURE2D_H
 
-#include "WireSystem.h"
+#include "WireTypes.h"
+#include "Wii/WireOgcDefines.h"
 
 namespace Wire
 {

@@ -2,7 +2,7 @@
 #ifndef WIREVISIBLEOBJECT_H
 #define WIREVISIBLEOBJECT_H
 
-#include "WireSystem.h"
+#include "WireTypes.h"
 
 namespace Wire
 {

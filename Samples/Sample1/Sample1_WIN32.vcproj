@@ -64,7 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Wired.lib"
 				OutputFile="Sample1d.exe"
+				AdditionalLibraryDirectories="..\..\Wire\lib\debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -144,11 +146,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Wire.lib"
 				OutputFile="Sample1.exe"
+				AdditionalLibraryDirectories="..\..\Wire\lib\release"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				EntryPointSymbol="mainCRTStartup"
 				TargetMachine="1"
 			/>
 			<Tool

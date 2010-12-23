@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Spatial, SceneObject);
+WIRE_IMPLEMENT_RTTI(Wire, Spatial, SceneObject);
 
 //----------------------------------------------------------------------------
 Spatial::Spatial()

@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Node, Spatial);
+WIRE_IMPLEMENT_RTTI(Wire, Node, Spatial);
 
 //----------------------------------------------------------------------------
 Node::Node(UInt quantity, UInt growBy)

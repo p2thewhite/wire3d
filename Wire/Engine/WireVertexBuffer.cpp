@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(VertexBuffer, Buffer);
+WIRE_IMPLEMENT_RTTI(Wire, VertexBuffer, Buffer);
 
 //----------------------------------------------------------------------------
 VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,

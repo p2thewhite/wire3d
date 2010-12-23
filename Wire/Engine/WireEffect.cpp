@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Effect, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Effect, Object);
 
 //----------------------------------------------------------------------------
 Effect::Effect()

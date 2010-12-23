@@ -365,7 +365,6 @@ Texture2D* Sample4::CreateTexture()
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-	pTexture->SetAnisotropyValue(4.0F);
 
 	return pTexture;
 }

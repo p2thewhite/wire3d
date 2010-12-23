@@ -17,8 +17,8 @@ Sample2::Sample2()
 	WIREAPPLICATION(
 		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
 		"Sample2 - Creating a Scene Graph",	// Name of the application,
-		0, 0,								// window position and
-		640, 480)							// size (ignored on the Wii).
+		0, 0,								// window position, size and
+		640, 480, true)						// fullscreen (ignored on the Wii).
 {
 }
 

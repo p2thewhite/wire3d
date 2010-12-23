@@ -14,7 +14,7 @@ class GXApplication : public Application
 public:
 	GXApplication(const ColorRGBA backgroundColor = ColorRGBA::BLACK,
 		const Char* pWindowTitle = NULL, Int xPosition = 0, Int yPosition = 0,
-		Int width = 640, Int height = 480);
+		UInt width = 640, UInt height = 480, Bool isFullscreen = true);
 
 	virtual ~GXApplication();
 

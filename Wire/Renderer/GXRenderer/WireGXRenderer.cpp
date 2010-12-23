@@ -16,7 +16,8 @@ using namespace Wire;
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
 //----------------------------------------------------------------------------
-Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
+Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
+	Bool)
 	:
 	mMaxAnisotropy(4.0F),
 	mMaxTextureStages(8),

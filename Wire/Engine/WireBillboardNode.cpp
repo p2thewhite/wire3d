@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(BillboardNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, BillboardNode, Node);
 
 //----------------------------------------------------------------------------
 BillboardNode::BillboardNode(Camera* pCamera)

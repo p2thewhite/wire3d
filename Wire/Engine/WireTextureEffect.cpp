@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(TextureEffect, Effect);
+WIRE_IMPLEMENT_RTTI(Wire, TextureEffect, Effect);
 
 //----------------------------------------------------------------------------
 TextureEffect::TextureEffect()

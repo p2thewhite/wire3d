@@ -25,8 +25,10 @@ Bool Sample5::OnInitialize()
 	// +->LitGroup (with MaterialState, Light1, Light2 attached)
 	// | +->Cube1 (textured cube)
 	// | +->Cube2 (flat shaded cube)
+	// |
 	// +->LightNode1 (owning Light1)
 	// | +->LightSrc1 (cube representing Light1)
+	// |
 	// +->LightNode2 (owning Light2)
 	//   +->LightSrc2 (cube representing Light2)
 

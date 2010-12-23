@@ -9,10 +9,11 @@ const UInt Application::KEY_ESCAPE = WPAD_BUTTON_HOME;
 
 //----------------------------------------------------------------------------
 GXApplication::GXApplication(const ColorRGBA backgroundColor, const Char*
-	pWindowTitle, Int xPosition, Int yPosition, Int width, Int height)
+	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
+	Bool)
 	:
 	Application(backgroundColor, pWindowTitle, xPosition, yPosition, width,
-		height)
+		height, true)
 {
 }
 
@@ -34,7 +35,7 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 
 	PdrRendererInput input;
 	input.BackgroundColor = mBackgroundColor;
-	mpRenderer = WIRE_NEW Renderer(input, 0, 0);
+	mpRenderer = WIRE_NEW Renderer(input, 0, 0, mIsFullscreen);
 	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// VIInit must be called before PADInit

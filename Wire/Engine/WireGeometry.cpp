@@ -3,7 +3,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Geometry, Spatial);
+WIRE_IMPLEMENT_RTTI(Wire, Geometry, Spatial);
 
 //----------------------------------------------------------------------------
 Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)

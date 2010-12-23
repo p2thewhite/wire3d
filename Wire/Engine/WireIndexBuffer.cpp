@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(IndexBuffer, Buffer);
+WIRE_IMPLEMENT_RTTI(Wire, IndexBuffer, Buffer);
 
 //----------------------------------------------------------------------------
 IndexBuffer::IndexBuffer(UInt quantity, UsageType usage)

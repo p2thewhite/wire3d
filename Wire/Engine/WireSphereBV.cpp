@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(SphereBV, BoundingVolume);
+WIRE_IMPLEMENT_RTTI(Wire, SphereBV, BoundingVolume);
 
 //----------------------------------------------------------------------------
 // The factory function of BoundingVolume creates SphereBV objects. You may

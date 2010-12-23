@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(ZBufferState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, ZBufferState, GlobalState);
 
 //----------------------------------------------------------------------------
 ZBufferState::ZBufferState()

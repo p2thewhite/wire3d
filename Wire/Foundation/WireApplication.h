@@ -44,7 +44,8 @@ public:
 
 protected:
 	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
-		Int xPosition, Int yPosition, UInt width, UInt height);
+		Int xPosition, Int yPosition, UInt width, UInt height,
+		Bool isFullscreen);
 
 	// the unique application object
 	static Application* mpApplication;
@@ -57,6 +58,7 @@ protected:
 	Int mYPosition;
 	UInt mWidth;
 	UInt mHeight;
+	Bool mIsFullscreen;
 };
 
 }
