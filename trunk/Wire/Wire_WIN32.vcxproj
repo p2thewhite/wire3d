@@ -92,7 +92,6 @@
     <ClInclude Include="Foundation\WireColorRGB.h" />
     <ClInclude Include="Foundation\WireColorRGBA.h" />
     <ClInclude Include="Foundation\WireMain.h" />
-    <ClInclude Include="Foundation\WireMainMCR.h" />
     <ClInclude Include="Foundation\WireMath.h" />
     <ClInclude Include="Foundation\WireMatrix2.h" />
     <ClInclude Include="Foundation\WireMatrix3.h" />
@@ -151,7 +150,6 @@
     <ClInclude Include="Engine\WireObject.h" />
     <ClInclude Include="Engine\WireRenderer.h" />
     <ClInclude Include="Engine\WireRtti.h" />
-    <ClInclude Include="Engine\WireRttiMCR.h" />
     <ClInclude Include="Engine\WireSceneObject.h" />
     <ClInclude Include="Engine\WireSmartPointer.h" />
     <ClInclude Include="Engine\WireSpatial.h" />

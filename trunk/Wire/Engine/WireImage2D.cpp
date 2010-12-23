@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Image2D, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Image2D, Object);
 
 const UChar Image2D::sImageBpp[] =
 {

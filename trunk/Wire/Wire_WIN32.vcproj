@@ -178,10 +178,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Foundation\WireMainMCR.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Foundation\WireMath.h"
 					>
 				</File>
@@ -949,10 +945,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRtti.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireRttiMCR.h"
 					>
 				</File>
 				<File

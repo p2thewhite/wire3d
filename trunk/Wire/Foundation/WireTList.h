@@ -2,7 +2,7 @@
 #ifndef WIRETLIST_H
 #define WIRETLIST_H
 
-#include "WireSystem.h"
+#include "WireTypes.h"
 
 // The class T is either native data or is class data that has the following
 // member functions:

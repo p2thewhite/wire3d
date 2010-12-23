@@ -12,7 +12,8 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
+Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
+	Bool isFullscreen)
 	:
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
@@ -33,10 +34,16 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	rPresent.BackBufferCount = 1;
 	rPresent.hDeviceWindow = rInput.WindowHandle;
-	rPresent.Windowed = true;
+	rPresent.Windowed = isFullscreen ? FALSE : TRUE;
 	rPresent.Flags = 0;
-	rPresent.FullScreen_RefreshRateInHz = 0;
 	rPresent.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	if (isFullscreen)
+	{
+		rPresent.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+	}
+	{
+		rPresent.FullScreen_RefreshRateInHz = 0;
+	}
 
 	// Request depth and stencil buffers. The parameters are not independent
 	// for DirectX. For now, just grab a 24-bit depth buffer and an 8-bit
@@ -48,8 +55,6 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height)
 	rPresent.SwapEffect = D3DSWAPEFFECT_FLIP; 
 	rPresent.MultiSampleType = D3DMULTISAMPLE_NONE;
 	rPresent.MultiSampleQuality = 0;
-
-	// TODO: support multi sampling
 
 	// Query the device for its capabilities.
 	D3DCAPS9 deviceCaps;
@@ -122,7 +127,7 @@ void Renderer::ClearBuffers()
 
 	HRESULT hr;
 	hr = mpData->D3DDevice->Clear(0, 0,
-		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL,
+		D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER /*| D3DCLEAR_STENCIL*/,
 		clearColor, 1.0F/*mClearDepth*/, static_cast<DWORD>(0/*mClearStencil*/));
 	WIRE_ASSERT(SUCCEEDED(hr));
 }

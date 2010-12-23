@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(CullState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, CullState, GlobalState);
 
 //----------------------------------------------------------------------------
 CullState::CullState()

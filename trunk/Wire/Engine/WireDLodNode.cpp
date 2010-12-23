@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(DLodNode, SwitchNode);
+WIRE_IMPLEMENT_RTTI(Wire, DLodNode, SwitchNode);
 
 //----------------------------------------------------------------------------
 DLodNode::DLodNode()

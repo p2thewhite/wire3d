@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Controller, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Controller, Object);
 
 //----------------------------------------------------------------------------
 Controller::Controller()

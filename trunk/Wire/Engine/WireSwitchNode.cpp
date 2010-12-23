@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(SwitchNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, SwitchNode, Node);
 
 //----------------------------------------------------------------------------
 SwitchNode::SwitchNode()

@@ -7,7 +7,8 @@ Application* Application::mpApplication = NULL;
 
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA backgroundColor, const Char*
-	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height)
+	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
+	Bool isFullscreen)
 	:
 	mpRenderer(NULL),
 	mBackgroundColor(backgroundColor),
@@ -15,7 +16,8 @@ Application::Application(const ColorRGBA backgroundColor, const Char*
 	mXPosition(xPosition),
 	mYPosition(yPosition),
 	mWidth(width),
-	mHeight(height)
+	mHeight(height),
+	mIsFullscreen(isFullscreen)
 {
 }
 

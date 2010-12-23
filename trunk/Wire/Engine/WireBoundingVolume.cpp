@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(BoundingVolume, Object);
+WIRE_IMPLEMENT_RTTI(Wire, BoundingVolume, Object);
 
 //----------------------------------------------------------------------------
 BoundingVolume::BoundingVolume()

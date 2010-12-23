@@ -14,7 +14,7 @@ class Dx9Application : public Application
 public:
 	Dx9Application(const ColorRGBA backgroundColor = ColorRGBA::BLACK,
 		const Char* windowTitle = NULL, Int xPosition = 0, Int yPosition = 0,
-		Int width = 640, Int height = 480);
+		UInt width = 640, UInt height = 480, Bool isFullscreen = false);
 	virtual ~Dx9Application();
 
 	virtual Bool OnPrecreate();

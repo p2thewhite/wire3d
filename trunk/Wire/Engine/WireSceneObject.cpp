@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(SceneObject, Object);
+WIRE_IMPLEMENT_RTTI(Wire, SceneObject, Object);
 
 //----------------------------------------------------------------------------
 SceneObject::SceneObject()

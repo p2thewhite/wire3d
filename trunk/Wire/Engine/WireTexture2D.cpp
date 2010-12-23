@@ -5,7 +5,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Texture2D, Buffer);
+WIRE_IMPLEMENT_RTTI(Wire, Texture2D, Buffer);
 
 //----------------------------------------------------------------------------
 Texture2D::Texture2D(Image2D* pImage, UsageType usage)

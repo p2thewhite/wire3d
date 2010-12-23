@@ -34,7 +34,8 @@ class VisibleSet;
 class /*WIRE_ENGINE_ITEM*/ Renderer
 {
 public:
-	Renderer(PdrRendererInput& rInput, UInt width, UInt height);
+	Renderer(PdrRendererInput& rInput, UInt width, UInt height,
+		Bool isFullscreen);
 	~Renderer();
 
 	// The platform-dependent constructor must call this function first before

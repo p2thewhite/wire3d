@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Light, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Light, Object);
 
 //----------------------------------------------------------------------------
 Light::Light(LightType type)

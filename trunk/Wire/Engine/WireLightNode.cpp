@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(LightNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, LightNode, Node);
 
 //----------------------------------------------------------------------------
 LightNode::LightNode(Light* pLight)
