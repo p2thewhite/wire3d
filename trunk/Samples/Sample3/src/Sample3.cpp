@@ -27,11 +27,11 @@ Bool Sample3::OnInitialize()
 
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
-	pRight->AttachGlobalState(pWireframe);
+	pRight->AttachState(pWireframe);
 
 	StateCull* pCull = WIRE_NEW StateCull;
 	pCull->CullFace = StateCull::CM_OFF;
-	pRight->AttachGlobalState(pCull);
+	pRight->AttachState(pCull);
 
 	mspRoot->UpdateRS();
 

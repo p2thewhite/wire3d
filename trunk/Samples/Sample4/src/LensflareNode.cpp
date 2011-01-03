@@ -8,17 +8,31 @@ LensflareNode::LensflareNode()
 {
 	CreateTextures();
 
-	AttachChild(CreateQuad(1.0F, 0.0F, 0.0F));
+	AttachChild(CreateQuad(0.498F, 0.0F, 0.0F, mspLensTex0));
+	AttachChild(CreateQuad(0.5F, 0.501F, 0.501F, mspLensTex0));
+	AttachChild(CreateQuad(0.5F, 0.501F, 0.0F, mspLensTex0));
+	AttachChild(CreateQuad(0.5F, 0.0F, 0.5F, mspLensTex0));
+	AttachChild(CreateQuad(1, 0, 0, mspLensTex1));
+
+	const UInt count = GetQuantity();
+	const Float stride = 3.5F;
+	const Float offset = count * -0.5F * stride + stride * 0.6F;
+
+	for (UInt i = 0; i < count; i++)
+	{
+		GetChild(i)->Local.SetTranslate(Vector3F(offset + stride * i, 0, -10));
+
+	}
 }
 
 //----------------------------------------------------------------------------
 Geometry* LensflareNode::CreateQuad(Float uvFactor, Float uOffset,
-	Float vOffset)
+	Float vOffset, Texture2D* pTexture)
 {
 	const Vector3F vertices[] =
 	{
-		Vector3F(-1, 1, 1), Vector3F(1, 1, 1),
-		Vector3F(1, -1, 1), Vector3F(-1, -1, 1)
+		Vector3F(-1, 1, 0), Vector3F(1, 1, 0),
+		Vector3F(1, -1, 0), Vector3F(-1, -1, 0)
 	};
 
 	// Texture coordinates
@@ -73,7 +87,7 @@ Geometry* LensflareNode::CreateQuad(Float uvFactor, Float uOffset,
 	// The cube shall be textured. Therefore we create and attach a texture
 	// effect, where we add a texture and define its blending mode.
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	pTextureEffect->Textures.Append(mspLensTex0);
+	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pCube->AttachEffect(pTextureEffect);
 

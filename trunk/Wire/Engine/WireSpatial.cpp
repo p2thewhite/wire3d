@@ -93,15 +93,15 @@ void Spatial::OnGetVisibleSet(Culler& rCuller, Bool noCull)
 }
 
 //----------------------------------------------------------------------------
-State* Spatial::GetGlobalState(State::StateType type) const
+State* Spatial::GetState(State::StateType type) const
 {
 	// check if type of state already exists
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
-		if (mGlobalStates[i]->GetStateType() == type)
+		if (mStates[i]->GetStateType() == type)
 		{
 			// type of state exists, return it
-			return mGlobalStates[i];
+			return mStates[i];
 		}
 	}
 
@@ -109,35 +109,35 @@ State* Spatial::GetGlobalState(State::StateType type) const
 }
 
 //----------------------------------------------------------------------------
-void Spatial::AttachGlobalState(State* pState)
+void Spatial::AttachState(State* pState)
 {
 	WIRE_ASSERT(pState);
 
 	// Check if this type of state is already in the list.
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
-		if (mGlobalStates[i]->GetStateType() == pState->GetStateType())
+		if (mStates[i]->GetStateType() == pState->GetStateType())
 		{
 			// This type of state already exists, so replace it.
-			mGlobalStates[i] = pState;
+			mStates[i] = pState;
 			return;
 		}
 	}
 
 	// This type of state is not in the current list, so add it.
-	mGlobalStates.Append(pState);
+	mStates.Append(pState);
 }
 
 //----------------------------------------------------------------------------
-void Spatial::DetachGlobalState(State::StateType type)
+void Spatial::DetachState(State::StateType type)
 {
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
-		State* pState = mGlobalStates[i];
+		State* pState = mStates[i];
 
 		if (pState->GetStateType() == type)
 		{
-			mGlobalStates.RemoveAt(i);
+			mStates.RemoveAt(i);
 			return;
 		}
 	}
@@ -247,10 +247,10 @@ void Spatial::PropagateStateFromRoot(TArray<State*>* pGStack,
 void Spatial::PushState(TArray<State*>* pGStack, TArray<Light*>*
 	pLStack)
 {
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
-		State::StateType type = mGlobalStates[i]->GetStateType();
-		pGStack[type].Append(mGlobalStates[i]);
+		State::StateType type = mStates[i]->GetStateType();
+		pGStack[type].Append(mStates[i]);
 	}
 
 	for (UInt i = 0; i < mLights.GetQuantity(); i++)
@@ -262,9 +262,9 @@ void Spatial::PushState(TArray<State*>* pGStack, TArray<Light*>*
 //----------------------------------------------------------------------------
 void Spatial::PopState(TArray<State*>* pGStack, TArray<Light*>* pLStack)
 {
-	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
-		State::StateType type = mGlobalStates[i]->GetStateType();
+		State::StateType type = mStates[i]->GetStateType();
 		pGStack[type].RemoveLast();
 	}
 

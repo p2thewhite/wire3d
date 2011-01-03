@@ -38,12 +38,12 @@ Bool Sample2::OnInitialize()
 
 	// Create a fog render state and attach it to the root node, i.e.
 	// apply fog to all objects that are attached to this node.
-	StateFog* pFogState = WIRE_NEW StateFog;
-	pFogState->Enabled = true;
-	pFogState->Color = ColorRGB(0, 0, 0.2F); // dark blue fog
-	pFogState->Start = 20.0F; // camera space z value
-	pFogState->End = 40.0F;
-	mspRoot->AttachGlobalState(pFogState);
+	StateFog* pFog = WIRE_NEW StateFog;
+	pFog->Enabled = true;
+	pFog->Color = ColorRGB(0, 0, 0.2F); // dark blue fog
+	pFog->Start = 20.0F; // camera space z value
+	pFog->End = 40.0F;
+	mspRoot->AttachState(pFog);
 
 	// Once we finished creating the scene graph, we update the graph's
 	// render states. This propagates the fog state to all child nodes.
@@ -239,9 +239,9 @@ Node* Sample2::CreateHelicopter()
 
 	// The cockpit is supposed to be transparent, so we create an StateAlpha 
 	// and attach it to the cockpit object.
-	StateAlpha* pAlphaState = WIRE_NEW StateAlpha;
-	pAlphaState->BlendEnabled = true;
-	pCockpit->AttachGlobalState(pAlphaState);
+	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
+	pAlpha->BlendEnabled = true;
+	pCockpit->AttachState(pAlpha);
 
 	// Now we tilt and orient the helicopter for later use.
 	Matrix34F tilt(Vector3F(0, 0, 1), 0.2F);

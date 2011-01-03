@@ -13,7 +13,8 @@ public:
 	LensflareNode();
 
 private:
-	Geometry* CreateQuad(Float uvFactor, Float uOffset, Float vOffset);
+	Geometry* CreateQuad(Float uvFactor, Float uOffset, Float vOffset,
+		Texture2D* pTexture);
 	void CreateTextures();
 	Float SmoothStep(Float a, Float b, Float x);
 	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);
