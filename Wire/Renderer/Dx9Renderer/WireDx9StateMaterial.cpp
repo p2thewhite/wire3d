@@ -7,7 +7,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateMaterial* pState)
 {
-	mspStates[StateGlobal::MATERIAL] = pState;
+	mspStates[State::MATERIAL] = pState;
 
 	D3DMATERIAL9 material;
 	material.Ambient.r = pState->Ambient.R();

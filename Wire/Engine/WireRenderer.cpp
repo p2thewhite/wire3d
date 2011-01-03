@@ -33,12 +33,12 @@ void Renderer::Initialize(UInt width, UInt height)
 	mpCamera = NULL;
 	mpGeometry = NULL;
 
-	mspDefaultStates[StateGlobal::ALPHA] = WIRE_NEW StateAlpha;
-	mspDefaultStates[StateGlobal::CULL] = WIRE_NEW StateCull;
-	mspDefaultStates[StateGlobal::FOG] = WIRE_NEW StateFog;
-	mspDefaultStates[StateGlobal::MATERIAL] = WIRE_NEW StateMaterial;
-	mspDefaultStates[StateGlobal::WIREFRAME] = WIRE_NEW StateWireframe;
-	mspDefaultStates[StateGlobal::ZBUFFER] = WIRE_NEW StateZBuffer;
+	mspDefaultStates[State::ALPHA] = WIRE_NEW StateAlpha;
+	mspDefaultStates[State::CULL] = WIRE_NEW StateCull;
+	mspDefaultStates[State::FOG] = WIRE_NEW StateFog;
+	mspDefaultStates[State::MATERIAL] = WIRE_NEW StateMaterial;
+	mspDefaultStates[State::WIREFRAME] = WIRE_NEW StateWireframe;
+	mspDefaultStates[State::ZBUFFER] = WIRE_NEW StateZBuffer;
 }
 
 //----------------------------------------------------------------------------
@@ -401,7 +401,7 @@ void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
 
-	SetGlobalState(mpGeometry->States);
+	SetStates(mpGeometry->States);
 	Enable(mpGeometry->Lights);
 
 	// Enable the index buffer. The connectivity information is the same
@@ -425,7 +425,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	Disable(mpGeometry->IBuffer);
 	Disable(mpGeometry->Lights);
 
-	RestoreGlobalState(mpGeometry->States);
+	RestoreStates(mpGeometry->States);
 }
 
 //----------------------------------------------------------------------------
@@ -487,39 +487,39 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetGlobalState(StateGlobalPtr spStates[])
+void Renderer::SetStates(StatePtr spStates[])
 {
-	StateGlobal* pState = spStates[StateGlobal::ALPHA];
+	State* pState = spStates[State::ALPHA];
 	if (pState)
 	{
 		SetState(StaticCast<StateAlpha>(pState));
 	}
 
-	pState = spStates[StateGlobal::CULL];
+	pState = spStates[State::CULL];
 	if (pState)
 	{
 		SetState(StaticCast<StateCull>(pState));
 	}
 
-	pState = spStates[StateGlobal::FOG];
+	pState = spStates[State::FOG];
 	if (pState)
 	{
 		SetState(StaticCast<StateFog>(pState));
 	}
 
-	pState = spStates[StateGlobal::MATERIAL];
+	pState = spStates[State::MATERIAL];
 	if (pState)
 	{
 		SetState(StaticCast<StateMaterial>(pState));
 	}
 
-	pState = spStates[StateGlobal::WIREFRAME];
+	pState = spStates[State::WIREFRAME];
 	if (pState)
 	{
 		SetState(StaticCast<StateWireframe>(pState));
 	}
 
-	pState = spStates[StateGlobal::ZBUFFER];
+	pState = spStates[State::ZBUFFER];
 	if (pState)
 	{
 		SetState(StaticCast<StateZBuffer>(pState));
@@ -527,43 +527,43 @@ void Renderer::SetGlobalState(StateGlobalPtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::RestoreGlobalState(StateGlobalPtr spStates[])
+void Renderer::RestoreStates(StatePtr spStates[])
 {
-	StateGlobal* pState;
+	State* pState;
 
-	if (spStates[StateGlobal::ALPHA])
+	if (spStates[State::ALPHA])
 	{
-		pState = mspDefaultStates[StateGlobal::ALPHA];
+		pState = mspDefaultStates[State::ALPHA];
 		SetState(StaticCast<StateAlpha>(pState));
 	}
 
-	if (spStates[StateGlobal::CULL])
+	if (spStates[State::CULL])
 	{
-		pState = mspDefaultStates[StateGlobal::CULL];
+		pState = mspDefaultStates[State::CULL];
 		SetState(StaticCast<StateCull>(pState));
 	}
 
-	if (spStates[StateGlobal::FOG])
+	if (spStates[State::FOG])
 	{
-		pState = mspDefaultStates[StateGlobal::FOG];
+		pState = mspDefaultStates[State::FOG];
 		SetState(StaticCast<StateFog>(pState));
 	}
 
-	if (spStates[StateGlobal::MATERIAL])
+	if (spStates[State::MATERIAL])
 	{
-		pState = mspDefaultStates[StateGlobal::MATERIAL];
+		pState = mspDefaultStates[State::MATERIAL];
 		SetState(StaticCast<StateMaterial>(pState));
 	}
 
-	if (spStates[StateGlobal::WIREFRAME])
+	if (spStates[State::WIREFRAME])
 	{
-		pState = mspDefaultStates[StateGlobal::WIREFRAME];
+		pState = mspDefaultStates[State::WIREFRAME];
 		SetState(StaticCast<StateWireframe>(pState));
 	}
 
-	if (spStates[StateGlobal::ZBUFFER])
+	if (spStates[State::ZBUFFER])
 	{
-		pState = mspDefaultStates[StateGlobal::ZBUFFER];
+		pState = mspDefaultStates[State::ZBUFFER];
 		SetState(StaticCast<StateZBuffer>(pState));
 	}
 }

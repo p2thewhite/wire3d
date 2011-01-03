@@ -2,12 +2,12 @@
 #ifndef WIRECULLSTATE_H
 #define WIRECULLSTATE_H
 
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateCull : public StateGlobal
+class StateCull : public State
 {
 	WIRE_DECLARE_RTTI;
 

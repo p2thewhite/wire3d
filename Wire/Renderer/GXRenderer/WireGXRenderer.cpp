@@ -103,7 +103,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mHeight = rRMode->efbHeight;
 
 	// Initialize global render state to default settings.
-	SetGlobalState(mspDefaultStates);
+	SetStates(mspDefaultStates);
 }
 
 //----------------------------------------------------------------------------
@@ -213,7 +213,7 @@ void Renderer::DrawElements()
 	GXSetNumChans(1);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
-	const StateWireframe* pWireframeState = GetWireframeState();
+	const StateWireframe* pWireframeState = GetStateWireframe();
 	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
 
 	if (pWireframeState && pWireframeState->Enabled)
@@ -661,7 +661,7 @@ void Renderer::PostDraw()
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateWireframe* pState)
 {
-	mspStates[StateGlobal::WIREFRAME] = pState;
+	mspStates[State::WIREFRAME] = pState;
 }
 
 // internally used by System::Assert

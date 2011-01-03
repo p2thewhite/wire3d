@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateFog, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateFog, State);
 
 //----------------------------------------------------------------------------
 StateFog::StateFog()

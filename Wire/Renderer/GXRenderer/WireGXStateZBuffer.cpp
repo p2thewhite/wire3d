@@ -19,7 +19,7 @@ UChar PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateZBuffer* pState)
 {
-	mspStates[StateGlobal::ZBUFFER] = pState;
+	mspStates[State::ZBUFFER] = pState;
 
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;
 	UChar writable = pState->Writable ? GX_TRUE : GX_FALSE;

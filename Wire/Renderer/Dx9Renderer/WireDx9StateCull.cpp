@@ -14,7 +14,7 @@ DWORD PdrRendererData::sCullType[StateCull::CM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateCull* pState)
 {
-	mspStates[StateGlobal::CULL] = pState;
+	mspStates[State::CULL] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

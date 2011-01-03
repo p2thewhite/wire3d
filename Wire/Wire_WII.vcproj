@@ -415,10 +415,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireGlobalState.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.h"
 					>
 				</File>
@@ -476,6 +472,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSphereBV.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireState.h"
 					>
 				</File>
 				<File
@@ -663,10 +663,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireGlobalState.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.cpp"
 					>
 				</File>
@@ -720,6 +716,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSphereBV.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireState.cpp"
 					>
 				</File>
 				<File

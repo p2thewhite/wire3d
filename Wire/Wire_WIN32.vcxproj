@@ -90,6 +90,7 @@
     <ClInclude Include="Engine\WireNodeDLod.h" />
     <ClInclude Include="Engine\WireNodeLight.h" />
     <ClInclude Include="Engine\WireNodeSwitch.h" />
+    <ClInclude Include="Engine\WireState.h" />
     <ClInclude Include="Engine\WireStateAlpha.h" />
     <ClInclude Include="Engine\WireStateCull.h" />
     <ClInclude Include="Engine\WireStateFog.h" />
@@ -145,7 +146,6 @@
     <ClInclude Include="Engine\WireCuller.h" />
     <ClInclude Include="Engine\WireEffect.h" />
     <ClInclude Include="Engine\WireGeometry.h" />
-    <ClInclude Include="Engine\WireGlobalState.h" />
     <ClInclude Include="Engine\WireImage2D.h" />
     <ClInclude Include="Engine\WireIndexBuffer.h" />
     <ClInclude Include="Engine\WireLight.h" />
@@ -221,6 +221,7 @@
     <ClCompile Include="Engine\WireNodeDLod.cpp" />
     <ClCompile Include="Engine\WireNodeLight.cpp" />
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
+    <ClCompile Include="Engine\WireState.cpp" />
     <ClCompile Include="Engine\WireStateAlpha.cpp" />
     <ClCompile Include="Engine\WireStateCull.cpp" />
     <ClCompile Include="Engine\WireStateFog.cpp" />
@@ -311,7 +312,6 @@
     <ClCompile Include="Engine\WireCuller.cpp" />
     <ClCompile Include="Engine\WireEffect.cpp" />
     <ClCompile Include="Engine\WireGeometry.cpp" />
-    <ClCompile Include="Engine\WireGlobalState.cpp" />
     <ClCompile Include="Engine\WireImage2D.cpp" />
     <ClCompile Include="Engine\WireIndexBuffer.cpp" />
     <ClCompile Include="Engine\WireLight.cpp" />

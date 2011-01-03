@@ -3,12 +3,12 @@
 #define WIREMATERIALSTATE_H
 
 #include "WireColorRGBA.h"
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateMaterial : public StateGlobal
+class StateMaterial : public State
 {
 	WIRE_DECLARE_RTTI;
 

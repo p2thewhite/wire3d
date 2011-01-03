@@ -1,15 +1,15 @@
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateGlobal, Object);
+WIRE_IMPLEMENT_RTTI(Wire, State, Object);
 
 //----------------------------------------------------------------------------
-StateGlobal::StateGlobal()
+State::State()
 {
 }
 
 //----------------------------------------------------------------------------
-StateGlobal::~StateGlobal()
+State::~State()
 {
 }

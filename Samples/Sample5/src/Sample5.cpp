@@ -377,7 +377,7 @@ Geometry* Sample5::CreatePlane()
 	// attach a material state and a light to the plane geometry directly
 	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
 	pMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
-	pGeo->States[StateGlobal::MATERIAL] = pMaterial;
+	pGeo->States[State::MATERIAL] = pMaterial;
 
 	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
 	pLight->Position = Vector3F(0, 0, 10);

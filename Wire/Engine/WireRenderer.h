@@ -109,12 +109,12 @@ public:
 	void SetState(StateMaterial* pState);
 	void SetState(StateWireframe* pState);
 	void SetState(StateZBuffer* pState);
-	inline const StateAlpha* GetAlphaState() const;
-	inline const StateCull* GetCullState() const;
-	inline const StateFog* GetFogState() const;
-	inline const StateMaterial* GetMaterialState() const;
-	inline const StateWireframe* GetWireframeState() const;
-	inline const StateZBuffer* GetZBufferState() const;
+	inline const StateAlpha* GetStateAlpha() const;
+	inline const StateCull* GetStateCull() const;
+	inline const StateFog* GetStateFog() const;
+	inline const StateMaterial* GetStateMaterial() const;
+	inline const StateWireframe* GetStateWireframe() const;
+	inline const StateZBuffer* GetStateZBuffer() const;
 
 	// Light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
@@ -132,8 +132,8 @@ private:
 	void DrawElements();
 
 	// Global render state management
-	void SetGlobalState(StateGlobalPtr spStates[]);
-	void RestoreGlobalState(StateGlobalPtr spStates[]);
+	void SetStates(StatePtr spStates[]);
+	void RestoreStates(StatePtr spStates[]);
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
@@ -145,8 +145,8 @@ private:
 	void ApplyEffect(Effect* pEffect);
 
 	// Global render states
-	StateGlobalPtr mspStates[StateGlobal::MAX_STATE_TYPE];
-	StateGlobalPtr mspDefaultStates[StateGlobal::MAX_STATE_TYPE];
+	StatePtr mspStates[State::MAX_STATE_TYPE];
+	StatePtr mspDefaultStates[State::MAX_STATE_TYPE];
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;
