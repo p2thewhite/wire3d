@@ -35,37 +35,37 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 }
 
 //----------------------------------------------------------------------------
-inline const StateAlpha* Renderer::GetAlphaState() const
+inline const StateAlpha* Renderer::GetStateAlpha() const
 {
-	return StaticCast<StateAlpha>(mspStates[StateGlobal::ALPHA]);
+	return StaticCast<StateAlpha>(mspStates[State::ALPHA]);
 }
 
 //----------------------------------------------------------------------------
-inline const StateCull* Renderer::GetCullState() const
+inline const StateCull* Renderer::GetStateCull() const
 {
-	return StaticCast<StateCull>(mspStates[StateGlobal::CULL]);
+	return StaticCast<StateCull>(mspStates[State::CULL]);
 }
 
 //----------------------------------------------------------------------------
-inline const StateFog* Renderer::GetFogState() const
+inline const StateFog* Renderer::GetStateFog() const
 {
-	return StaticCast<StateFog>(mspStates[StateGlobal::FOG]);
+	return StaticCast<StateFog>(mspStates[State::FOG]);
 }
 
 //----------------------------------------------------------------------------
-inline const StateMaterial* Renderer::GetMaterialState() const
+inline const StateMaterial* Renderer::GetStateMaterial() const
 {
-	return StaticCast<StateMaterial>(mspStates[StateGlobal::MATERIAL]);
+	return StaticCast<StateMaterial>(mspStates[State::MATERIAL]);
 }
 
 //----------------------------------------------------------------------------
-inline const StateWireframe* Renderer::GetWireframeState() const
+inline const StateWireframe* Renderer::GetStateWireframe() const
 {
-	return StaticCast<StateWireframe>(mspStates[StateGlobal::WIREFRAME]);
+	return StaticCast<StateWireframe>(mspStates[State::WIREFRAME]);
 }
 
 //----------------------------------------------------------------------------
-inline const StateZBuffer* Renderer::GetZBufferState() const
+inline const StateZBuffer* Renderer::GetStateZBuffer() const
 {
-	return StaticCast<StateZBuffer>(mspStates[StateGlobal::ZBUFFER]);
+	return StaticCast<StateZBuffer>(mspStates[State::ZBUFFER]);
 }

@@ -12,8 +12,8 @@ Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 	IBuffer(pIBuffer),
 	ModelBound(BoundingVolume::Create())
 {
-	System::Memset(States, 0, StateGlobal::MAX_STATE_TYPE * sizeof(
-		StateGlobal*));
+	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(
+		State*));
 	UpdateModelBound();
 }
 
@@ -35,13 +35,13 @@ void Geometry::UpdateWorldBound()
 }
 
 //----------------------------------------------------------------------------
-void Geometry::UpdateState(TArray<StateGlobal*>* pGStack,
+void Geometry::UpdateState(TArray<State*>* pGStack,
 	TArray<Light*>* pLStack)
 {
 	// update global state
-	for (UInt i = 0; i < StateGlobal::MAX_STATE_TYPE; i++)
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 	{
-		TArray<StateGlobal*>& rState = pGStack[i];
+		TArray<State*>& rState = pGStack[i];
   		States[i] = rState[rState.GetQuantity()-1];
 	}
 

@@ -2,12 +2,12 @@
 #ifndef WIREWIREFRAMESTATE_H
 #define WIREWIREFRAMESTATE_H
 
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateWireframe : public StateGlobal
+class StateWireframe : public State
 {
 	WIRE_DECLARE_RTTI;
 

@@ -2,12 +2,12 @@
 #ifndef WIREALPHASTATE_H
 #define WIREALPHASTATE_H
 
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateAlpha : public StateGlobal
+class StateAlpha : public State
 {
 	WIRE_DECLARE_RTTI;
 

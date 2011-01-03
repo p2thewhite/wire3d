@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateWireframe, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateWireframe, State);
 
 //----------------------------------------------------------------------------
 StateWireframe::StateWireframe()

@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateCull, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateCull, State);
 
 //----------------------------------------------------------------------------
 StateCull::StateCull()

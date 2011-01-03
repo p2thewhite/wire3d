@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateAlpha, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateAlpha, State);
 
 //----------------------------------------------------------------------------
 StateAlpha::StateAlpha()

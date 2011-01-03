@@ -4,9 +4,9 @@
 
 #include "WireBoundingVolume.h"
 #include "WireEffect.h"
-#include "WireGlobalState.h"
 #include "WireLight.h"
 #include "WireSceneObject.h"
+#include "WireState.h"
 #include "WireTransformation.h"
 
 namespace Wire
@@ -70,7 +70,7 @@ public:
 	void UpdateBS();
 
 	// update render state
-	virtual void UpdateRS(TArray<StateGlobal*>* pGStack = NULL,
+	virtual void UpdateRS(TArray<State*>* pGStack = NULL,
 		TArray<Light*>* pLStack = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
@@ -83,10 +83,10 @@ public:
 
 	// global state
 	inline UInt GetGlobalStateQuantity() const;
-	inline StateGlobal* GetGlobalState(UInt i) const;
-	StateGlobal* GetGlobalState(StateGlobal::StateType type) const;
-	void AttachGlobalState(StateGlobal* pState);
-	void DetachGlobalState(StateGlobal::StateType type);
+	inline State* GetGlobalState(UInt i) const;
+	State* GetGlobalState(State::StateType type) const;
+	void AttachGlobalState(State* pState);
+	void DetachGlobalState(State::StateType type);
 	inline void DetachAllGlobalStates();
 
     // light state
@@ -112,11 +112,11 @@ protected:
 	void PropagateBoundToRoot();
 
 	// render state updates
-	void PropagateStateFromRoot(TArray<StateGlobal*>* pGStack,
+	void PropagateStateFromRoot(TArray<State*>* pGStack,
 		TArray<Light*>* pLStack);
-	void PushState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack);
-	void PopState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack);
-	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
+	void PushState(TArray<State*>* pGStack, TArray<Light*>* pLStack);
+	void PopState(TArray<State*>* pGStack, TArray<Light*>* pLStack);
+	virtual void UpdateState(TArray<State*>* pGStack,
 		TArray<Light*>* pLStack) = 0;
 
 protected:
@@ -124,7 +124,7 @@ protected:
 	Spatial* mpParent;
 
 	// global render state
-	TArray<StateGlobalPtr> mGlobalStates;
+	TArray<StatePtr> mGlobalStates;
 
 	// light state
 	TArray<LightPtr> mLights;

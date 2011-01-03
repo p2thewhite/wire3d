@@ -224,9 +224,6 @@
     <ClInclude Include="Engine\WireGeometry.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireGlobalState.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WireImage2D.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -309,6 +306,9 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\WireNodeSwitch.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\WireState.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -573,9 +573,6 @@
     <ClCompile Include="Engine\WireGeometry.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\WireGlobalState.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\WireImage2D.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
@@ -685,6 +682,9 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireNodeSwitch.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireState.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

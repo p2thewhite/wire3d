@@ -8,13 +8,13 @@
 namespace Wire
 {
 
-class StateGlobal : public Object
+class State : public Object
 {
 	WIRE_DECLARE_RTTI;
 
 public:
 	// abstract base class
-	virtual ~StateGlobal();
+	virtual ~State();
 
 	// supported global states
 	enum StateType
@@ -31,10 +31,10 @@ public:
 	virtual StateType GetStateType() const = 0;
 
 protected:
-	StateGlobal();
+	State();
 };
 
-typedef Pointer<StateGlobal> StateGlobalPtr;
+typedef Pointer<State> StatePtr;
 
 }
 

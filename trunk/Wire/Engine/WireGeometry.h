@@ -28,7 +28,7 @@ public:
 	IndexBufferPtr IBuffer;
 	BoundingVolumePtr ModelBound;
 
-	StateGlobalPtr States[StateGlobal::MAX_STATE_TYPE];
+	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<LightPtr> Lights;
 
 protected:
@@ -36,7 +36,7 @@ protected:
 	virtual void UpdateModelBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
+	virtual void UpdateState(TArray<State*>* pGStack,
 		TArray<Light*>* pLStack);
 
 	// culling

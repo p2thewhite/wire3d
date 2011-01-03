@@ -31,7 +31,7 @@ DWORD PdrRendererData::sAlphaDstBlend[StateAlpha::DBM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateAlpha* pState)
 {
-	mspStates[StateGlobal::ALPHA] = pState;
+	mspStates[State::ALPHA] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

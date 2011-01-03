@@ -19,7 +19,7 @@ DWORD PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateZBuffer* pState)
 {
-	mspStates[StateGlobal::ZBUFFER] = pState;
+	mspStates[State::ZBUFFER] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

@@ -2,12 +2,12 @@
 #ifndef WIREZBUFFERSTATE_H
 #define WIREZBUFFERSTATE_H
 
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateZBuffer : public StateGlobal
+class StateZBuffer : public State
 {
 	WIRE_DECLARE_RTTI;
 

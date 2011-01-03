@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, State);
 
 //----------------------------------------------------------------------------
 StateZBuffer::StateZBuffer()

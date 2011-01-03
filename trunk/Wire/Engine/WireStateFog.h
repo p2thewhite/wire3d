@@ -3,12 +3,12 @@
 #define WIREFOGSTATE_H
 
 #include "WireColorRGB.h"
-#include "WireGlobalState.h"
+#include "WireState.h"
 
 namespace Wire
 {
 
-class StateFog : public StateGlobal
+class StateFog : public State
 {
 	WIRE_DECLARE_RTTI;
 

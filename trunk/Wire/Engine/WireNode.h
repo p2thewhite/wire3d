@@ -58,7 +58,7 @@ protected:
 	virtual void UpdateWorldBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
+	virtual void UpdateState(TArray<State*>* pGStack,
 		TArray<Light*>* pLStack);
 
 	// culling

@@ -2,7 +2,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, State);
 
 //----------------------------------------------------------------------------
 StateMaterial::StateMaterial()
