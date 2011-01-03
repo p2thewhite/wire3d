@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Image2D : public Object
+class Image2D : public Object
 {
 	WIRE_DECLARE_RTTI;
 

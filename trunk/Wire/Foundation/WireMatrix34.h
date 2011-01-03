@@ -97,8 +97,8 @@ public:
     Matrix34 Inverse() const;
 
     // special matrices
-    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 ZERO;
-    /*WIRE_FOUNDATION_ITEM*/ static const Matrix34 IDENTITY;
+    static const Matrix34 ZERO;
+    static const Matrix34 IDENTITY;
 
 private:
 	Real mEntry[3][4];

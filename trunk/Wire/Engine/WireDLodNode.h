@@ -9,13 +9,13 @@ namespace Wire
 
 class Camera;
 
-class /*WIRE_ENGINE_ITEM*/ DLodNode : public SwitchNode
+class NodeDLod : public NodeSwitch
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	DLodNode();
-	virtual ~DLodNode();
+	NodeDLod();
+	virtual ~NodeDLod();
 
 	void SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist);
 
@@ -32,7 +32,7 @@ public:
     inline Float GetWorldMaxDistance(UInt i) const;
 
 protected:
-    // set the SwitchNode based on distance from world LOD center to camera
+    // set the NodeSwitch based on distance from world LOD center to camera
     void SelectLevelOfDetail(const Camera* pCamera);
 
     // culling
@@ -49,7 +49,7 @@ protected:
     TArray<Float> mWorldMaxDist;
 };
 
-typedef Pointer<DLodNode> DLodNodePtr;
+typedef Pointer<NodeDLod> NodeDLodPtr;
 
 #include "WireDLodNode.inl"
 

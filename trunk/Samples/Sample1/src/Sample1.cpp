@@ -50,14 +50,14 @@ Bool Sample1::OnInitialize()
 
 	// We render some of the cubes using transparency and front-face culling,
 	// so we create the required render state objects here.
-	mspCullState = WIRE_NEW CullState;
-	mspAlphaState = WIRE_NEW AlphaState;
+	mspCullState = WIRE_NEW StateCull;
+	mspAlphaState = WIRE_NEW StateAlpha;
 
 	// We render the top row of cubes with lighting on, so we create a light
 	// and a material state for the cube, which defines how the light (color)
 	// will be reflected.
 	mspLight = WIRE_NEW Light;
-	mspMaterialState = WIRE_NEW MaterialState;
+	mspMaterialState = WIRE_NEW StateMaterial;
 
 	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
@@ -95,7 +95,7 @@ void Sample1::OnIdle()
 	// you, it is your responsibility to handle states between draw calls.
 
 	// use back face culling
-	mspCullState->CullFace = CullState::CM_BACK;
+	mspCullState->CullFace = StateCull::CM_BACK;
 	GetRenderer()->SetState(mspCullState);
 
 	// disable alpha blending
@@ -142,7 +142,7 @@ void Sample1::OnIdle()
 	// the transparent frontfaces.
 
 	// To draw the backfaces, cull the frontfaces
-	mspCullState->CullFace = CullState::CM_FRONT;
+	mspCullState->CullFace = StateCull::CM_FRONT;
 	GetRenderer()->SetState(mspCullState);
 
 	GetRenderer()->DisableLighting();
@@ -165,7 +165,7 @@ void Sample1::OnIdle()
 	}
 
 	// Cull the backfaces, i.e. draw the front faces using alpha blending
-	mspCullState->CullFace = CullState::CM_BACK;
+	mspCullState->CullFace = StateCull::CM_BACK;
 	GetRenderer()->SetState(mspCullState);
 	mspAlphaState->BlendEnabled = true;
 	GetRenderer()->SetState(mspAlphaState);

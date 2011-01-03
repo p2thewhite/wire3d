@@ -7,13 +7,13 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ ZBufferState : public GlobalState
+class StateZBuffer : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	ZBufferState();
-	virtual ~ZBufferState();
+	StateZBuffer();
+	virtual ~StateZBuffer();
 
 	inline virtual StateType GetStateType() const { return ZBUFFER; }
 
@@ -35,7 +35,7 @@ public:
 	CompareFunction Compare;	// default: CF_LEQUAL
 };
 
-typedef Pointer<ZBufferState> ZBufferStatePtr;
+typedef Pointer<StateZBuffer> StateZBufferPtr;
 
 }
 

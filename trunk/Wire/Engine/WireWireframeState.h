@@ -7,20 +7,20 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ WireframeState : public GlobalState
+class StateWireframe : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	WireframeState();
-	virtual ~WireframeState();
+	StateWireframe();
+	virtual ~StateWireframe();
 
 	inline virtual StateType GetStateType() const { return WIREFRAME; }
 
 	Bool Enabled;         // default: false
 };
 
-typedef Pointer<WireframeState> WireframeStatePtr;
+typedef Pointer<StateWireframe> StateWireframePtr;
 
 }
 

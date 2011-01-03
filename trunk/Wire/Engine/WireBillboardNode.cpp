@@ -4,27 +4,27 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, BillboardNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, NodeBillboard, Node);
 
 //----------------------------------------------------------------------------
-BillboardNode::BillboardNode(Camera* pCamera)
+NodeBillboard::NodeBillboard(Camera* pCamera)
     :
     mspCamera(pCamera)
 {
 }
 
 //----------------------------------------------------------------------------
-BillboardNode::~BillboardNode()
+NodeBillboard::~NodeBillboard()
 {
 }
 
 //----------------------------------------------------------------------------
-void BillboardNode::UpdateWorldData(Double appTime)
+void NodeBillboard::UpdateWorldData(Double appTime)
 {
     // Compute billboard's world transforms based on its parent's world
     // transform and its local transforms. Notice that you should not call
     // Node::UpdateWorldData since that function updates its children. The
-    // children of a BillboardNode cannot be updated until the billboard is
+    // children of a NodeBillboard cannot be updated until the billboard is
     // aligned with the camera.
     Spatial::UpdateWorldData(appTime);
 

@@ -8,7 +8,7 @@ namespace Wire
 {
 // based on "Mother-of-all generator" from http://www.agner.org/random/
 
-class /*WIRE_FOUNDATION_ITEM*/ Random
+class Random
 {
 public:
 	Random(UInt seed = 0);

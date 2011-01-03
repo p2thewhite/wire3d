@@ -10,7 +10,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Transformation
+class Transformation
 {
 public:
 	Transformation();

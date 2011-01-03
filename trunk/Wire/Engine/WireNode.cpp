@@ -221,7 +221,7 @@ void Node::UpdateWorldData(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
+void Node::UpdateState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack)
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{

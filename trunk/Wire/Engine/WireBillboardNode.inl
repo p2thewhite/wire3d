@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-inline void BillboardNode::AlignTo(Camera* pCamera)
+inline void NodeBillboard::AlignTo(Camera* pCamera)
 {
     mspCamera = pCamera;
 }

@@ -48,10 +48,10 @@ private:
 	TextureEffectPtr mspTextureEffect;
 
 	LightPtr mspLight;
-	MaterialStatePtr mspMaterialState;
+	StateMaterialPtr mspMaterialState;
 
-	CullStatePtr mspCullState;
-	AlphaStatePtr mspAlphaState;
+	StateCullPtr mspCullState;
+	StateAlphaPtr mspAlphaState;
 
 	Float mAngle;
 	Double mLastTime;

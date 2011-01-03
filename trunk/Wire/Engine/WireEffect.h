@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Effect : public Object
+class Effect : public Object
 {
 	WIRE_DECLARE_RTTI;
 

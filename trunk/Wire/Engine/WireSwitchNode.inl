@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-inline void SwitchNode::SetActiveChild(Int activeChild)
+inline void NodeSwitch::SetActiveChild(Int activeChild)
 {
     WIRE_ASSERT(activeChild == SN_INVALID_CHILD || 
 		static_cast<UInt>(activeChild) < GetQuantity());
@@ -7,13 +7,13 @@ inline void SwitchNode::SetActiveChild(Int activeChild)
 }
 
 //----------------------------------------------------------------------------
-inline Int SwitchNode::GetActiveChild() const
+inline Int NodeSwitch::GetActiveChild() const
 {
     return mActiveChild;
 }
 
 //----------------------------------------------------------------------------
-inline void SwitchNode::DisableAllChildren()
+inline void NodeSwitch::DisableAllChildren()
 {
     mActiveChild = SN_INVALID_CHILD;
 }

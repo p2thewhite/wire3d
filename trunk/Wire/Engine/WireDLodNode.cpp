@@ -4,29 +4,29 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, DLodNode, SwitchNode);
+WIRE_IMPLEMENT_RTTI(Wire, NodeDLod, NodeSwitch);
 
 //----------------------------------------------------------------------------
-DLodNode::DLodNode()
+NodeDLod::NodeDLod()
 	:
 	mModelLodCenter(Vector3F::ZERO)
 {
 }
 
 //----------------------------------------------------------------------------
-DLodNode::~DLodNode()
+NodeDLod::~NodeDLod()
 {
 }
 
 //----------------------------------------------------------------------------
-void DLodNode::SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist)
+void NodeDLod::SetLod(UInt i, Spatial* pLod, Float minDist, Float maxDist)
 {
 	SetChild(i, pLod);
 	SetModelDistance(i, minDist, maxDist);
 }
 
 //----------------------------------------------------------------------------
-void DLodNode::SetModelDistance(UInt i, Float minDist, Float maxDist)
+void NodeDLod::SetModelDistance(UInt i, Float minDist, Float maxDist)
 {
     mModelMinDist.SetElement(i, minDist);
     mModelMaxDist.SetElement(i, maxDist);
@@ -35,9 +35,9 @@ void DLodNode::SetModelDistance(UInt i, Float minDist, Float maxDist)
 }
 
 //----------------------------------------------------------------------------
-void DLodNode::SelectLevelOfDetail(const Camera* pCamera)
+void NodeDLod::SelectLevelOfDetail(const Camera* pCamera)
 {
-    // ASSERT: The child array of an DLodNode is compacted. There are no
+    // ASSERT: The child array of an NodeDLod is compacted. There are no
     // empty slots in the array and the number of children is GetQuantity().
     // Moreover, it is assumed that all model distance values were set for
     // these children.
@@ -75,8 +75,8 @@ void DLodNode::SelectLevelOfDetail(const Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-void DLodNode::GetVisibleSet(Culler& rCuller, Bool noCull)
+void NodeDLod::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
     SelectLevelOfDetail(rCuller.GetCamera());
-    SwitchNode::GetVisibleSet(rCuller, noCull);
+    NodeSwitch::GetVisibleSet(rCuller, noCull);
 }

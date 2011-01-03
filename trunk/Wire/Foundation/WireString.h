@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_FOUNDATION_ITEM*/ String
+class String
 {
 public:
 	// construction and destruction

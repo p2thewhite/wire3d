@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ IndexBuffer : public Buffer
+class IndexBuffer : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 

@@ -17,7 +17,7 @@ public:
 	virtual void OnIdle();
 
 private:
-	DLodNode* CreateLods();
+	NodeDLod* CreateLods();
 	Geometry* CreateGeometry(UInt shapeCount, UInt segmentCount);
 
 	Geometry* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,

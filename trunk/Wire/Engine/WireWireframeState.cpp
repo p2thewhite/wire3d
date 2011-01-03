@@ -2,16 +2,16 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, WireframeState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateWireframe, StateGlobal);
 
 //----------------------------------------------------------------------------
-WireframeState::WireframeState()
+StateWireframe::StateWireframe()
 	:
 	Enabled(false)
 {
 }
 
 //----------------------------------------------------------------------------
-WireframeState::~WireframeState()
+StateWireframe::~StateWireframe()
 {
 }

@@ -2,16 +2,16 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, MaterialState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, StateGlobal);
 
 //----------------------------------------------------------------------------
-MaterialState::MaterialState()
+StateMaterial::StateMaterial()
 	:
 	Ambient(0.2F, 0.2F, 0.2F, 1.0F)
 {
 }
 
 //----------------------------------------------------------------------------
-MaterialState::~MaterialState()
+StateMaterial::~StateMaterial()
 {
 }

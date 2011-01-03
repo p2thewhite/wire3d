@@ -2,10 +2,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, AlphaState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateAlpha, StateGlobal);
 
 //----------------------------------------------------------------------------
-AlphaState::AlphaState()
+StateAlpha::StateAlpha()
 	:
 	BlendEnabled(false),
 	SrcBlend(SBM_SRC_ALPHA),
@@ -14,6 +14,6 @@ AlphaState::AlphaState()
 }
 
 //----------------------------------------------------------------------------
-AlphaState::~AlphaState()
+StateAlpha::~StateAlpha()
 {
 }

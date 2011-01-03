@@ -4,34 +4,34 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
+DWORD PdrRendererData::sAlphaSrcBlend[StateAlpha::SBM_QUANTITY] =
 {
-	D3DBLEND_ZERO,          // AlphaState::SBM_ZERO
-	D3DBLEND_ONE,           // AlphaState::SBM_ONE
-	D3DBLEND_DESTCOLOR,     // AlphaState::SBM_DST_COLOR
-	D3DBLEND_INVDESTCOLOR,  // AlphaState::SBM_ONE_MINUS_DST_COLOR
-	D3DBLEND_SRCALPHA,      // AlphaState::SBM_SRC_ALPHA
-	D3DBLEND_INVSRCALPHA,   // AlphaState::SBM_ONE_MINUS_SRC_ALPHA
-	D3DBLEND_DESTALPHA,     // AlphaState::SBM_DST_ALPHA
-	D3DBLEND_INVDESTALPHA,  // AlphaState::SBM_ONE_MINUS_DST_ALPHA
+	D3DBLEND_ZERO,          // StateAlpha::SBM_ZERO
+	D3DBLEND_ONE,           // StateAlpha::SBM_ONE
+	D3DBLEND_DESTCOLOR,     // StateAlpha::SBM_DST_COLOR
+	D3DBLEND_INVDESTCOLOR,  // StateAlpha::SBM_ONE_MINUS_DST_COLOR
+	D3DBLEND_SRCALPHA,      // StateAlpha::SBM_SRC_ALPHA
+	D3DBLEND_INVSRCALPHA,   // StateAlpha::SBM_ONE_MINUS_SRC_ALPHA
+	D3DBLEND_DESTALPHA,     // StateAlpha::SBM_DST_ALPHA
+	D3DBLEND_INVDESTALPHA,  // StateAlpha::SBM_ONE_MINUS_DST_ALPHA
 };
 
-DWORD PdrRendererData::sAlphaDstBlend[AlphaState::DBM_QUANTITY] =
+DWORD PdrRendererData::sAlphaDstBlend[StateAlpha::DBM_QUANTITY] =
 {
-	D3DBLEND_ZERO,          // AlphaState::DBM_ZERO
-	D3DBLEND_ONE,           // AlphaState::DBM_ONE
-	D3DBLEND_SRCCOLOR,      // AlphaState::DBM_SRC_COLOR
-	D3DBLEND_INVSRCCOLOR,   // AlphaState::DBM_ONE_MINUS_SRC_COLOR
-	D3DBLEND_SRCALPHA,      // AlphaState::DBM_SRC_ALPHA
-	D3DBLEND_INVSRCALPHA,   // AlphaState::DBM_ONE_MINUS_SRC_ALPHA
-	D3DBLEND_DESTALPHA,     // AlphaState::DBM_DST_ALPHA
-	D3DBLEND_INVDESTALPHA,  // AlphaState::DBM_ONE_MINUS_DST_ALPHA
+	D3DBLEND_ZERO,          // StateAlpha::DBM_ZERO
+	D3DBLEND_ONE,           // StateAlpha::DBM_ONE
+	D3DBLEND_SRCCOLOR,      // StateAlpha::DBM_SRC_COLOR
+	D3DBLEND_INVSRCCOLOR,   // StateAlpha::DBM_ONE_MINUS_SRC_COLOR
+	D3DBLEND_SRCALPHA,      // StateAlpha::DBM_SRC_ALPHA
+	D3DBLEND_INVSRCALPHA,   // StateAlpha::DBM_ONE_MINUS_SRC_ALPHA
+	D3DBLEND_DESTALPHA,     // StateAlpha::DBM_DST_ALPHA
+	D3DBLEND_INVDESTALPHA,  // StateAlpha::DBM_ONE_MINUS_DST_ALPHA
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(AlphaState* pState)
+void Renderer::SetState(StateAlpha* pState)
 {
-	mspStates[GlobalState::ALPHA] = pState;
+	mspStates[StateGlobal::ALPHA] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

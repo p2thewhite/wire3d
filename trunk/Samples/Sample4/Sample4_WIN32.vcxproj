@@ -126,9 +126,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\LensflareNode.cpp" />
     <ClCompile Include="src\Sample4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LensflareNode.h" />
     <ClInclude Include="src\Sample4.h" />
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ inline UInt Spatial::GetGlobalStateQuantity() const
 }
 
 //----------------------------------------------------------------------------
-inline GlobalState* Spatial::GetGlobalState(UInt i) const
+inline StateGlobal* Spatial::GetGlobalState(UInt i) const
 {
 	WIRE_ASSERT(i < mGlobalStates.GetQuantity());
 	return mGlobalStates[i];

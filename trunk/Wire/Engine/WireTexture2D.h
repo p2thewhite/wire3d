@@ -9,7 +9,7 @@ namespace Wire
 
 class Image2D;
 
-class /*WIRE_ENGINE_ITEM*/ Texture2D : public Buffer
+class Texture2D : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 

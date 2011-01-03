@@ -93,7 +93,7 @@ void Spatial::OnGetVisibleSet(Culler& rCuller, Bool noCull)
 }
 
 //----------------------------------------------------------------------------
-GlobalState* Spatial::GetGlobalState(GlobalState::StateType type) const
+StateGlobal* Spatial::GetGlobalState(StateGlobal::StateType type) const
 {
 	// check if type of state already exists
 	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
@@ -109,7 +109,7 @@ GlobalState* Spatial::GetGlobalState(GlobalState::StateType type) const
 }
 
 //----------------------------------------------------------------------------
-void Spatial::AttachGlobalState(GlobalState* pState)
+void Spatial::AttachGlobalState(StateGlobal* pState)
 {
 	WIRE_ASSERT(pState);
 
@@ -129,11 +129,11 @@ void Spatial::AttachGlobalState(GlobalState* pState)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::DetachGlobalState(GlobalState::StateType type)
+void Spatial::DetachGlobalState(StateGlobal::StateType type)
 {
 	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
 	{
-		GlobalState* pState = mGlobalStates[i];
+		StateGlobal* pState = mGlobalStates[i];
 
 		if (pState->GetStateType() == type)
 		{
@@ -182,7 +182,7 @@ void Spatial::AttachEffect(Effect* pEffect)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateRS(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
+void Spatial::UpdateRS(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack)
 {
 	Bool isInitiator = (pGStack == NULL);
 
@@ -195,9 +195,9 @@ void Spatial::UpdateRS(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
 		//       the current FOOBAR remains in effect (rather than the
 		//       default FOOBAR being used).
 		//   (3) Effect can override default or Geometry render states.
-		pGStack = WIRE_NEW TArray<GlobalState*>[GlobalState::MAX_STATE_TYPE];
+		pGStack = WIRE_NEW TArray<StateGlobal*>[StateGlobal::MAX_STATE_TYPE];
 
-		for (UInt i = 0; i < GlobalState::MAX_STATE_TYPE; i++)
+		for (UInt i = 0; i < StateGlobal::MAX_STATE_TYPE; i++)
 		{
 			pGStack[i].Append(NULL);
 		}
@@ -230,7 +230,7 @@ void Spatial::UpdateRS(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PropagateStateFromRoot(TArray<GlobalState*>* pGStack,
+void Spatial::PropagateStateFromRoot(TArray<StateGlobal*>* pGStack,
 	TArray<Light*>* pLStack)
 {
 	// traverse to root to allow downward state propagation
@@ -244,12 +244,12 @@ void Spatial::PropagateStateFromRoot(TArray<GlobalState*>* pGStack,
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PushState(TArray<GlobalState*>* pGStack, TArray<Light*>*
+void Spatial::PushState(TArray<StateGlobal*>* pGStack, TArray<Light*>*
 	pLStack)
 {
 	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
 	{
-		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
+		StateGlobal::StateType type = mGlobalStates[i]->GetStateType();
 		pGStack[type].Append(mGlobalStates[i]);
 	}
 
@@ -260,11 +260,11 @@ void Spatial::PushState(TArray<GlobalState*>* pGStack, TArray<Light*>*
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PopState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack)
+void Spatial::PopState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack)
 {
 	for (UInt i = 0; i < mGlobalStates.GetQuantity(); i++)
 	{
-		GlobalState::StateType type = mGlobalStates[i]->GetStateType();
+		StateGlobal::StateType type = mGlobalStates[i]->GetStateType();
 		pGStack[type].RemoveLast();
 	}
 

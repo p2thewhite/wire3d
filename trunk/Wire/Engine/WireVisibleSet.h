@@ -10,7 +10,7 @@ namespace Wire
 
 class Spatial;
 
-class /*WIRE_ENGINE_ITEM*/ VisibleSet
+class VisibleSet
 {
 
 public:

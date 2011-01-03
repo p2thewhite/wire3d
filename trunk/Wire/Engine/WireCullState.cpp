@@ -2,10 +2,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, CullState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateCull, StateGlobal);
 
 //----------------------------------------------------------------------------
-CullState::CullState()
+StateCull::StateCull()
 	:
 	Enabled(true),
 	CullFace(CM_BACK)
@@ -13,6 +13,6 @@ CullState::CullState()
 }
 
 //----------------------------------------------------------------------------
-CullState::~CullState()
+StateCull::~StateCull()
 {
 }

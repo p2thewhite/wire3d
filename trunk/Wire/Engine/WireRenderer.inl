@@ -35,37 +35,37 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 }
 
 //----------------------------------------------------------------------------
-inline const AlphaState* Renderer::GetAlphaState() const
+inline const StateAlpha* Renderer::GetAlphaState() const
 {
-	return StaticCast<AlphaState>(mspStates[GlobalState::ALPHA]);
+	return StaticCast<StateAlpha>(mspStates[StateGlobal::ALPHA]);
 }
 
 //----------------------------------------------------------------------------
-inline const CullState* Renderer::GetCullState() const
+inline const StateCull* Renderer::GetCullState() const
 {
-	return StaticCast<CullState>(mspStates[GlobalState::CULL]);
+	return StaticCast<StateCull>(mspStates[StateGlobal::CULL]);
 }
 
 //----------------------------------------------------------------------------
-inline const FogState* Renderer::GetFogState() const
+inline const StateFog* Renderer::GetFogState() const
 {
-	return StaticCast<FogState>(mspStates[GlobalState::FOG]);
+	return StaticCast<StateFog>(mspStates[StateGlobal::FOG]);
 }
 
 //----------------------------------------------------------------------------
-inline const MaterialState* Renderer::GetMaterialState() const
+inline const StateMaterial* Renderer::GetMaterialState() const
 {
-	return StaticCast<MaterialState>(mspStates[GlobalState::MATERIAL]);
+	return StaticCast<StateMaterial>(mspStates[StateGlobal::MATERIAL]);
 }
 
 //----------------------------------------------------------------------------
-inline const WireframeState* Renderer::GetWireframeState() const
+inline const StateWireframe* Renderer::GetWireframeState() const
 {
-	return StaticCast<WireframeState>(mspStates[GlobalState::WIREFRAME]);
+	return StaticCast<StateWireframe>(mspStates[StateGlobal::WIREFRAME]);
 }
 
 //----------------------------------------------------------------------------
-inline const ZBufferState* Renderer::GetZBufferState() const
+inline const StateZBuffer* Renderer::GetZBufferState() const
 {
-	return StaticCast<ZBufferState>(mspStates[GlobalState::ZBUFFER]);
+	return StaticCast<StateZBuffer>(mspStates[StateGlobal::ZBUFFER]);
 }

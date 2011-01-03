@@ -9,13 +9,13 @@ namespace Wire
 
 class Light;
 
-class /*WIRE_ENGINE_ITEM*/ LightNode : public Node
+class NodeLight : public Node
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	LightNode(Light* pLight = NULL);
-	virtual ~LightNode();
+	NodeLight(Light* pLight = NULL);
+	virtual ~NodeLight();
 
 	void SetLight(Light* pLight);
 	inline Light* GetLight();
@@ -31,7 +31,7 @@ private:
 	LightPtr mspLight;
 };
 
-typedef Pointer<LightNode> LightNodePtr;
+typedef Pointer<NodeLight> NodeLightPtr;
 #include "WireLightNode.inl"
 
 }

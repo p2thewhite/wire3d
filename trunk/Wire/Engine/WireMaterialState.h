@@ -8,20 +8,20 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ MaterialState : public GlobalState
+class StateMaterial : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	MaterialState();
-	virtual ~MaterialState();
+	StateMaterial();
+	virtual ~StateMaterial();
 
 	inline virtual StateType GetStateType() const { return MATERIAL; }
 
     ColorRGBA Ambient;   // default:  ColorRGBA(0.2, 0.2, 0.2, 1)
 };
 
-typedef Pointer<MaterialState> MaterialStatePtr;
+typedef Pointer<StateMaterial> StateMaterialPtr;
 
 }
 

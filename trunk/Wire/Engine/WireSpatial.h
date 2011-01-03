@@ -14,7 +14,7 @@ namespace Wire
 
 class Culler;
 
-class /*WIRE_ENGINE_ITEM*/ Spatial : public SceneObject
+class Spatial : public SceneObject
 {
 	WIRE_DECLARE_RTTI;
 
@@ -70,7 +70,7 @@ public:
 	void UpdateBS();
 
 	// update render state
-	virtual void UpdateRS(TArray<GlobalState*>* pGStack = NULL,
+	virtual void UpdateRS(TArray<StateGlobal*>* pGStack = NULL,
 		TArray<Light*>* pLStack = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
@@ -83,10 +83,10 @@ public:
 
 	// global state
 	inline UInt GetGlobalStateQuantity() const;
-	inline GlobalState* GetGlobalState(UInt i) const;
-	GlobalState* GetGlobalState(GlobalState::StateType type) const;
-	void AttachGlobalState(GlobalState* pState);
-	void DetachGlobalState(GlobalState::StateType type);
+	inline StateGlobal* GetGlobalState(UInt i) const;
+	StateGlobal* GetGlobalState(StateGlobal::StateType type) const;
+	void AttachGlobalState(StateGlobal* pState);
+	void DetachGlobalState(StateGlobal::StateType type);
 	inline void DetachAllGlobalStates();
 
     // light state
@@ -112,11 +112,11 @@ protected:
 	void PropagateBoundToRoot();
 
 	// render state updates
-	void PropagateStateFromRoot(TArray<GlobalState*>* pGStack,
+	void PropagateStateFromRoot(TArray<StateGlobal*>* pGStack,
 		TArray<Light*>* pLStack);
-	void PushState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack);
-	void PopState(TArray<GlobalState*>* pGStack, TArray<Light*>* pLStack);
-	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+	void PushState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack);
+	void PopState(TArray<StateGlobal*>* pGStack, TArray<Light*>* pLStack);
+	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
 		TArray<Light*>* pLStack) = 0;
 
 protected:
@@ -124,7 +124,7 @@ protected:
 	Spatial* mpParent;
 
 	// global render state
-	TArray<GlobalStatePtr> mGlobalStates;
+	TArray<StateGlobalPtr> mGlobalStates;
 
 	// light state
 	TArray<LightPtr> mLights;

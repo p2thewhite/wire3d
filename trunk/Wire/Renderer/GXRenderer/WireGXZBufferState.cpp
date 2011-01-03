@@ -4,22 +4,22 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sZBufferCompare[ZBufferState::CF_QUANTITY] = 
+UChar PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] = 
 {
-	GX_NEVER,     // ZBufferState::CF_NEVER
-	GX_LESS,      // ZBufferState::CF_LESS
-	GX_EQUAL,     // ZBufferState::CF_EQUAL
-	GX_LEQUAL,    // ZBufferState::CF_LEQUAL
-	GX_GREATER,   // ZBufferState::CF_GREATER
-	GX_NEQUAL,    // ZBufferState::CF_NOTEQUAL
-	GX_GEQUAL,    // ZBufferState::CF_GEQUAL
-	GX_ALWAYS,    // ZBufferState::CF_ALWAYS
+	GX_NEVER,     // StateZBuffer::CF_NEVER
+	GX_LESS,      // StateZBuffer::CF_LESS
+	GX_EQUAL,     // StateZBuffer::CF_EQUAL
+	GX_LEQUAL,    // StateZBuffer::CF_LEQUAL
+	GX_GREATER,   // StateZBuffer::CF_GREATER
+	GX_NEQUAL,    // StateZBuffer::CF_NOTEQUAL
+	GX_GEQUAL,    // StateZBuffer::CF_GEQUAL
+	GX_ALWAYS,    // StateZBuffer::CF_ALWAYS
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(ZBufferState* pState)
+void Renderer::SetState(StateZBuffer* pState)
 {
-	mspStates[GlobalState::ZBUFFER] = pState;
+	mspStates[StateGlobal::ZBUFFER] = pState;
 
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;
 	UChar writable = pState->Writable ? GX_TRUE : GX_FALSE;

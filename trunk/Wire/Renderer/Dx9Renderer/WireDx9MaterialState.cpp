@@ -5,9 +5,9 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(MaterialState* pState)
+void Renderer::SetState(StateMaterial* pState)
 {
-	mspStates[GlobalState::MATERIAL] = pState;
+	mspStates[StateGlobal::MATERIAL] = pState;
 
 	D3DMATERIAL9 material;
 	material.Ambient.r = pState->Ambient.R();

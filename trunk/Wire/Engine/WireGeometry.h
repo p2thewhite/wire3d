@@ -11,7 +11,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Geometry : public Spatial
+class Geometry : public Spatial
 {
 	WIRE_DECLARE_RTTI;
 
@@ -28,7 +28,7 @@ public:
 	IndexBufferPtr IBuffer;
 	BoundingVolumePtr ModelBound;
 
-	GlobalStatePtr States[GlobalState::MAX_STATE_TYPE];
+	StateGlobalPtr States[StateGlobal::MAX_STATE_TYPE];
 	TArray<LightPtr> Lights;
 
 protected:
@@ -36,7 +36,7 @@ protected:
 	virtual void UpdateModelBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
 		TArray<Light*>* pLStack);
 
 	// culling

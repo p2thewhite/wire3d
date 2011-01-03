@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sCullType[CullState::CM_QUANTITY] = 
+UChar PdrRendererData::sCullType[StateCull::CM_QUANTITY] = 
 {
 	GX_CULL_NONE,
 	GX_CULL_BACK,
@@ -12,9 +12,9 @@ UChar PdrRendererData::sCullType[CullState::CM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(CullState* pState)
+void Renderer::SetState(StateCull* pState)
 {
-	mspStates[GlobalState::CULL] = pState;
+	mspStates[StateGlobal::CULL] = pState;
 
 	if (pState->Enabled)
 	{

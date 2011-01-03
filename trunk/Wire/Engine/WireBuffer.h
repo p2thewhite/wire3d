@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Buffer : public Object
+class Buffer : public Object
 {
 	WIRE_DECLARE_RTTI;
 

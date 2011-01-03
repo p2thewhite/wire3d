@@ -9,7 +9,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Light : public Object
+class Light : public Object
 {
 	WIRE_DECLARE_RTTI;
 

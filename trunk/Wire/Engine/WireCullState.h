@@ -7,13 +7,13 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ CullState : public GlobalState
+class StateCull : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	CullState();
-	virtual ~CullState();
+	StateCull();
+	virtual ~StateCull();
 
 	virtual StateType GetStateType() const { return CULL; }
 
@@ -29,7 +29,7 @@ public:
 	CullMode CullFace;    // default: CM_BACK
 };
 
-typedef Pointer<CullState> CullStatePtr;
+typedef Pointer<StateCull> StateCullPtr;
 
 }
 

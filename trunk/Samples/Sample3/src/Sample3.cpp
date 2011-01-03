@@ -25,12 +25,12 @@ Bool Sample3::OnInitialize()
 	Node* pRight = CreateLods();
 	mspRoot->AttachChild(pRight);
 
-	WireframeState* pWireframe = WIRE_NEW WireframeState;
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 	pRight->AttachGlobalState(pWireframe);
 
-	CullState* pCull = WIRE_NEW CullState;
-	pCull->CullFace = CullState::CM_OFF;
+	StateCull* pCull = WIRE_NEW StateCull;
+	pCull->CullFace = StateCull::CM_OFF;
 	pRight->AttachGlobalState(pCull);
 
 	mspRoot->UpdateRS();
@@ -98,9 +98,9 @@ void Sample3::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-DLodNode* Sample3::CreateLods()
+NodeDLod* Sample3::CreateLods()
 {
-	DLodNode* pLod = WIRE_NEW DLodNode;
+	NodeDLod* pLod = WIRE_NEW NodeDLod;
 
 	// Create different levels of the same object
 	Geometry* pLod0 = CreateGeometry(14, 192);	// 5376 triangles

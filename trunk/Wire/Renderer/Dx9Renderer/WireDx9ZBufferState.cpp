@@ -4,22 +4,22 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sZBufferCompare[ZBufferState::CF_QUANTITY] = 
+DWORD PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] = 
 {
-	D3DCMP_NEVER,           // ZBufferState::CF_NEVER
-	D3DCMP_LESS,            // ZBufferState::CF_LESS
-	D3DCMP_EQUAL,           // ZBufferState::CF_EQUAL
-	D3DCMP_LESSEQUAL,       // ZBufferState::CF_LEQUAL
-	D3DCMP_GREATER,         // ZBufferState::CF_GREATER
-	D3DCMP_NOTEQUAL,        // ZBufferState::CF_NOTEQUAL
-	D3DCMP_GREATEREQUAL,    // ZBufferState::CF_GEQUAL
-	D3DCMP_ALWAYS,          // ZBufferState::CF_ALWAYS
+	D3DCMP_NEVER,           // StateZBuffer::CF_NEVER
+	D3DCMP_LESS,            // StateZBuffer::CF_LESS
+	D3DCMP_EQUAL,           // StateZBuffer::CF_EQUAL
+	D3DCMP_LESSEQUAL,       // StateZBuffer::CF_LEQUAL
+	D3DCMP_GREATER,         // StateZBuffer::CF_GREATER
+	D3DCMP_NOTEQUAL,        // StateZBuffer::CF_NOTEQUAL
+	D3DCMP_GREATEREQUAL,    // StateZBuffer::CF_GEQUAL
+	D3DCMP_ALWAYS,          // StateZBuffer::CF_ALWAYS
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(ZBufferState* pState)
+void Renderer::SetState(StateZBuffer* pState)
 {
-	mspStates[GlobalState::ZBUFFER] = pState;
+	mspStates[StateGlobal::ZBUFFER] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

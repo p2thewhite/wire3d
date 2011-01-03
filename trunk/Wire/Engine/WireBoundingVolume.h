@@ -11,7 +11,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ BoundingVolume : public Object
+class BoundingVolume : public Object
 {
 	WIRE_DECLARE_RTTI;
 

@@ -4,17 +4,17 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sCullType[CullState::CM_QUANTITY] = 
+DWORD PdrRendererData::sCullType[StateCull::CM_QUANTITY] = 
 {
 	D3DCULL_NONE,
-	D3DCULL_CCW,  // CullState::CM_FRONT(front CCW -> cull backface CCW in DX)
-	D3DCULL_CW,   // CullState::CM_BACK (front CW -> cull backface CW in DX)
+	D3DCULL_CCW,  // StateCull::CM_FRONT(front CCW -> cull backface CCW in DX)
+	D3DCULL_CW,   // StateCull::CM_BACK (front CW -> cull backface CW in DX)
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(CullState* pState)
+void Renderer::SetState(StateCull* pState)
 {
-	mspStates[GlobalState::CULL] = pState;
+	mspStates[StateGlobal::CULL] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

@@ -213,7 +213,7 @@ void Renderer::DrawElements()
 	GXSetNumChans(1);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
-	const WireframeState* pWireframeState = GetWireframeState();
+	const StateWireframe* pWireframeState = GetWireframeState();
 	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
 
 	if (pWireframeState && pWireframeState->Enabled)
@@ -659,9 +659,9 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(WireframeState* pState)
+void Renderer::SetState(StateWireframe* pState)
 {
-	mspStates[GlobalState::WIREFRAME] = pState;
+	mspStates[StateGlobal::WIREFRAME] = pState;
 }
 
 // internally used by System::Assert
