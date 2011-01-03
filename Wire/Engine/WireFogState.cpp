@@ -2,10 +2,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, FogState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateFog, StateGlobal);
 
 //----------------------------------------------------------------------------
-FogState::FogState()
+StateFog::StateFog()
 	:
 	Enabled(false),
 	Color(ColorRGB::BLACK),
@@ -16,6 +16,6 @@ FogState::FogState()
 }
 
 //----------------------------------------------------------------------------
-FogState::~FogState()
+StateFog::~StateFog()
 {
 }

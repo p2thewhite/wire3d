@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ VertexAttributes
+class VertexAttributes
 {
 
 public:

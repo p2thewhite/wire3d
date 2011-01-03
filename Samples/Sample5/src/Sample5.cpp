@@ -22,7 +22,7 @@ Bool Sample5::OnInitialize()
 
 	// We are building the following scenegraph:
 	// +Root
-	// +->LitGroup (with MaterialState, Light1, Light2 attached)
+	// +->LitGroup (with StateMaterial, Light1, Light2 attached)
 	// | +->Cube1 (textured cube)
 	// | +->Cube2 (flat shaded cube)
 	// |
@@ -45,7 +45,7 @@ Bool Sample5::OnInitialize()
 	pLight2->Color = ColorRGB::RED;
 	pLight2->Ambient = ColorRGB(0.1F, 0.1F, 0.1F);
 
-	MaterialState* pMaterialState = WIRE_NEW MaterialState;
+	StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
 	pMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
 
 	// attach lights and material state
@@ -63,11 +63,11 @@ Bool Sample5::OnInitialize()
 
 	// create light nodes. These act the same as normal nodes, except that
 	// the own a light and apply scene graph transformations on that light.
-	LightNode* pLightNode1 = WIRE_NEW LightNode;
+	NodeLight* pLightNode1 = WIRE_NEW NodeLight;
 	mspRoot->AttachChild(pLightNode1);
 	pLightNode1->SetLight(pLight1);
 
-	LightNode* pLightNode2 = WIRE_NEW LightNode;
+	NodeLight* pLightNode2 = WIRE_NEW NodeLight;
 	mspRoot->AttachChild(pLightNode2);
 	pLightNode2->SetLight(pLight2);
 
@@ -81,7 +81,7 @@ Bool Sample5::OnInitialize()
 	pLightNode2->AttachChild(pLightSrc2);
 
 	// update all render state and light objects in the scene graph
-	// (i.e. Light1, Light2 and MaterialState are propagated from LitGroup
+	// (i.e. Light1, Light2 and StateMaterial are propagated from LitGroup
 	// to Cube1 and Cube2)
 	mspRoot->UpdateRS();
 
@@ -375,9 +375,9 @@ Geometry* Sample5::CreatePlane()
 	pGeo->AttachEffect(pTextureEffect);
 
 	// attach a material state and a light to the plane geometry directly
-	MaterialState* pMaterial = WIRE_NEW MaterialState;
+	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
 	pMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
-	pGeo->States[GlobalState::MATERIAL] = pMaterial;
+	pGeo->States[StateGlobal::MATERIAL] = pMaterial;
 
 	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
 	pLight->Position = Vector3F(0, 0, 10);

@@ -1,44 +1,44 @@
 //----------------------------------------------------------------------------
-inline Vector3F& DLodNode::ModelCenter()
+inline Vector3F& NodeDLod::ModelCenter()
 {
     return mModelLodCenter;
 }
 
 //----------------------------------------------------------------------------
-inline const Vector3F& DLodNode::GetModelCenter() const
+inline const Vector3F& NodeDLod::GetModelCenter() const
 {
     return mModelLodCenter;
 }
 
 //----------------------------------------------------------------------------
-inline const Vector3F& DLodNode::GetWorldCenter() const
+inline const Vector3F& NodeDLod::GetWorldCenter() const
 {
     return mWorldLodCenter;
 }
 
 //----------------------------------------------------------------------------
-inline Float DLodNode::GetModelMinDistance(UInt i) const
+inline Float NodeDLod::GetModelMinDistance(UInt i) const
 {
     WIRE_ASSERT(i < mModelMinDist.GetQuantity());
     return mModelMinDist[i];
 }
 
 //----------------------------------------------------------------------------
-inline Float DLodNode::GetModelMaxDistance(UInt i) const
+inline Float NodeDLod::GetModelMaxDistance(UInt i) const
 {
     WIRE_ASSERT(i < mModelMaxDist.GetQuantity());
     return mModelMaxDist[i];
 }
 
 //----------------------------------------------------------------------------
-inline Float DLodNode::GetWorldMinDistance(UInt i) const
+inline Float NodeDLod::GetWorldMinDistance(UInt i) const
 {
     WIRE_ASSERT(i < mWorldMinDist.GetQuantity());
     return mWorldMinDist[i];
 }
 
 //----------------------------------------------------------------------------
-inline Float DLodNode::GetWorldMaxDistance(UInt i) const
+inline Float NodeDLod::GetWorldMaxDistance(UInt i) const
 {
     WIRE_ASSERT(i < mWorldMaxDist.GetQuantity());
     return mWorldMaxDist[i];

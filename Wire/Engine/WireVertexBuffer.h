@@ -12,7 +12,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ VertexBuffer : public Buffer
+class VertexBuffer : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 

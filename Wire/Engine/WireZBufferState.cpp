@@ -2,10 +2,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, ZBufferState, GlobalState);
+WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, StateGlobal);
 
 //----------------------------------------------------------------------------
-ZBufferState::ZBufferState()
+StateZBuffer::StateZBuffer()
 	:
 	Enabled(true),
 	Writable(true),
@@ -14,6 +14,6 @@ ZBufferState::ZBufferState()
 }
 
 //----------------------------------------------------------------------------
-ZBufferState::~ZBufferState()
+StateZBuffer::~StateZBuffer()
 {
 }

@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ AlphaState : public GlobalState
+class StateAlpha : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
@@ -38,8 +38,8 @@ public:
 		DBM_QUANTITY
 	};
 
-	AlphaState();
-	virtual ~AlphaState();
+	StateAlpha();
+	virtual ~StateAlpha();
 
 	inline virtual StateType GetStateType() const { return ALPHA; }
 
@@ -48,7 +48,7 @@ public:
 	DstBlendMode DstBlend;  // default: DBF_ONE_MINUS_SRC_ALPHA
 };
 
-typedef Pointer<AlphaState> AlphaStatePtr;
+typedef Pointer<StateAlpha> StateAlphaPtr;
 
 }
 

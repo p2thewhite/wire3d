@@ -11,7 +11,7 @@ namespace Wire
 
 class Spatial;
 
-class /*WIRE_ENGINE_ITEM*/ Culler
+class Culler
 {
 public:
 	// Construction and destruction. The first two input parameters are used

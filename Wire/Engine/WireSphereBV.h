@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ SphereBV : public BoundingVolume
+class SphereBV : public BoundingVolume
 {
 	WIRE_DECLARE_RTTI;
 

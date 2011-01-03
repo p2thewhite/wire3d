@@ -9,7 +9,7 @@ namespace Wire
 
 class SceneObject;
 
-class /*WIRE_ENGINE_ITEM*/ Controller : public Object
+class Controller : public Object
 {
 	WIRE_DECLARE_RTTI;
 

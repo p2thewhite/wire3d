@@ -5,9 +5,9 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(MaterialState* pState)
+void Renderer::SetState(StateMaterial* pState)
 {
-	mspStates[GlobalState::MATERIAL] = pState;
+	mspStates[StateGlobal::MATERIAL] = pState;
 
 	GXColor material;
 	material.r = static_cast<UChar>(pState->Ambient.R() * 255.0F);

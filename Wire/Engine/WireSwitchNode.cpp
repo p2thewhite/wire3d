@@ -4,21 +4,21 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, SwitchNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, NodeSwitch, Node);
 
 //----------------------------------------------------------------------------
-SwitchNode::SwitchNode()
+NodeSwitch::NodeSwitch()
 {
     mActiveChild = SN_INVALID_CHILD;
 }
 
 //----------------------------------------------------------------------------
-SwitchNode::~SwitchNode()
+NodeSwitch::~NodeSwitch()
 {
 }
 
 //----------------------------------------------------------------------------
-void SwitchNode::GetVisibleSet(Culler& rCuller, Bool noCull)
+void NodeSwitch::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
     if (mActiveChild == SN_INVALID_CHILD)
     {

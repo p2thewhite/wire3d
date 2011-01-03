@@ -31,7 +31,7 @@ class TextureEffect;
 class VertexBuffer;
 class VisibleSet;
 
-class /*WIRE_ENGINE_ITEM*/ Renderer
+class Renderer
 {
 public:
 	Renderer(PdrRendererInput& rInput, UInt width, UInt height,
@@ -103,18 +103,18 @@ public:
 	void DisplayBackBuffer();
 
 	// Render state handling
-	void SetState(AlphaState* pState);
-	void SetState(CullState* pState);
-	void SetState(FogState* pState);
-	void SetState(MaterialState* pState);
-	void SetState(WireframeState* pState);
-	void SetState(ZBufferState* pState);
-	inline const AlphaState* GetAlphaState() const;
-	inline const CullState* GetCullState() const;
-	inline const FogState* GetFogState() const;
-	inline const MaterialState* GetMaterialState() const;
-	inline const WireframeState* GetWireframeState() const;
-	inline const ZBufferState* GetZBufferState() const;
+	void SetState(StateAlpha* pState);
+	void SetState(StateCull* pState);
+	void SetState(StateFog* pState);
+	void SetState(StateMaterial* pState);
+	void SetState(StateWireframe* pState);
+	void SetState(StateZBuffer* pState);
+	inline const StateAlpha* GetAlphaState() const;
+	inline const StateCull* GetCullState() const;
+	inline const StateFog* GetFogState() const;
+	inline const StateMaterial* GetMaterialState() const;
+	inline const StateWireframe* GetWireframeState() const;
+	inline const StateZBuffer* GetZBufferState() const;
 
 	// Light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
@@ -132,8 +132,8 @@ private:
 	void DrawElements();
 
 	// Global render state management
-	void SetGlobalState(GlobalStatePtr spStates[]);
-	void RestoreGlobalState(GlobalStatePtr spStates[]);
+	void SetGlobalState(StateGlobalPtr spStates[]);
+	void RestoreGlobalState(StateGlobalPtr spStates[]);
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
@@ -145,8 +145,8 @@ private:
 	void ApplyEffect(Effect* pEffect);
 
 	// Global render states
-	GlobalStatePtr mspStates[GlobalState::MAX_STATE_TYPE];
-	GlobalStatePtr mspDefaultStates[GlobalState::MAX_STATE_TYPE];
+	StateGlobalPtr mspStates[StateGlobal::MAX_STATE_TYPE];
+	StateGlobalPtr mspDefaultStates[StateGlobal::MAX_STATE_TYPE];
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;

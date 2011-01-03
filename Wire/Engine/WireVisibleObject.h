@@ -10,7 +10,7 @@ namespace Wire
 class Effect;
 class Spatial;
 
-class /*WIRE_ENGINE_ITEM*/ VisibleObject
+class VisibleObject
 {
 
 public:

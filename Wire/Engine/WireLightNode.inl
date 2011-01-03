@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------------
-inline Light* LightNode::GetLight()
+inline Light* NodeLight::GetLight()
 {
 	return mspLight;
 }
 
 //----------------------------------------------------------------------------
-inline const Light* LightNode::GetLight() const
+inline const Light* NodeLight::GetLight() const
 {
 	return mspLight;
 }

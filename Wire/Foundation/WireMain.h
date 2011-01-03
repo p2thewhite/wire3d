@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_FOUNDATION_ITEM*/ Main
+class Main
 {
 
 public:

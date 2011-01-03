@@ -9,7 +9,7 @@ namespace Wire
 
 class Camera;
 
-class /*WIRE_ENGINE_ITEM*/ BillboardNode : public Node
+class NodeBillboard : public Node
 {
 	WIRE_DECLARE_RTTI;
 
@@ -18,8 +18,8 @@ public:
     // chosen to be the billboard's axis of rotation.
 
     // Construction and destruction.
-    BillboardNode(Camera* pCamera = NULL);
-    virtual ~BillboardNode();
+    NodeBillboard(Camera* pCamera = NULL);
+    virtual ~NodeBillboard();
 
     // the camera to which the billboard is aligned
     inline void AlignTo(Camera* pCamera);
@@ -31,7 +31,7 @@ protected:
     Pointer<Camera> mspCamera;
 };
 
-typedef Pointer<BillboardNode> BillboardNodePtr;
+typedef Pointer<NodeBillboard> NodeBillboardPtr;
 
 #include "WireBillboardNode.inl"
 

@@ -4,34 +4,34 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sAlphaSrcBlend[AlphaState::SBM_QUANTITY] =
+UChar PdrRendererData::sAlphaSrcBlend[StateAlpha::SBM_QUANTITY] =
 {
-	GX_BL_ZERO,          // AlphaState::SBM_ZERO
-	GX_BL_ONE,           // AlphaState::SBM_ONE
-	GX_BL_DSTCLR,        // AlphaState::SBM_DST_COLOR
-	GX_BL_INVDSTCLR,     // AlphaState::SBM_ONE_MINUS_DST_COLOR
-	GX_BL_SRCALPHA,      // AlphaState::SBM_SRC_ALPHA
-	GX_BL_INVSRCALPHA,   // AlphaState::SBM_ONE_MINUS_SRC_ALPHA
-	GX_BL_DSTALPHA,      // AlphaState::SBM_DST_ALPHA
-	GX_BL_INVDSTALPHA,   // AlphaState::SBM_ONE_MINUS_DST_ALPHA
+	GX_BL_ZERO,          // StateAlpha::SBM_ZERO
+	GX_BL_ONE,           // StateAlpha::SBM_ONE
+	GX_BL_DSTCLR,        // StateAlpha::SBM_DST_COLOR
+	GX_BL_INVDSTCLR,     // StateAlpha::SBM_ONE_MINUS_DST_COLOR
+	GX_BL_SRCALPHA,      // StateAlpha::SBM_SRC_ALPHA
+	GX_BL_INVSRCALPHA,   // StateAlpha::SBM_ONE_MINUS_SRC_ALPHA
+	GX_BL_DSTALPHA,      // StateAlpha::SBM_DST_ALPHA
+	GX_BL_INVDSTALPHA,   // StateAlpha::SBM_ONE_MINUS_DST_ALPHA
 };
 
-UChar PdrRendererData::sAlphaDstBlend[AlphaState::DBM_QUANTITY] =
+UChar PdrRendererData::sAlphaDstBlend[StateAlpha::DBM_QUANTITY] =
 {
-	GX_BL_ZERO,          // AlphaState::DBM_ZERO
-	GX_BL_ONE,           // AlphaState::DBM_ONE
-	GX_BL_SRCCLR,        // AlphaState::DBM_SRC_COLOR
-	GX_BL_INVSRCCLR,     // AlphaState::DBM_ONE_MINUS_SRC_COLOR
-	GX_BL_SRCALPHA,      // AlphaState::DBM_SRC_ALPHA
-	GX_BL_INVSRCALPHA,   // AlphaState::DBM_ONE_MINUS_SRC_ALPHA
-	GX_BL_DSTALPHA,      // AlphaState::DBM_DST_ALPHA
-	GX_BL_INVDSTALPHA,   // AlphaState::DBM_ONE_MINUS_DST_ALPHA
+	GX_BL_ZERO,          // StateAlpha::DBM_ZERO
+	GX_BL_ONE,           // StateAlpha::DBM_ONE
+	GX_BL_SRCCLR,        // StateAlpha::DBM_SRC_COLOR
+	GX_BL_INVSRCCLR,     // StateAlpha::DBM_ONE_MINUS_SRC_COLOR
+	GX_BL_SRCALPHA,      // StateAlpha::DBM_SRC_ALPHA
+	GX_BL_INVSRCALPHA,   // StateAlpha::DBM_ONE_MINUS_SRC_ALPHA
+	GX_BL_DSTALPHA,      // StateAlpha::DBM_DST_ALPHA
+	GX_BL_INVDSTALPHA,   // StateAlpha::DBM_ONE_MINUS_DST_ALPHA
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(AlphaState* pState)
+void Renderer::SetState(StateAlpha* pState)
 {
-	mspStates[GlobalState::ALPHA] = pState;
+	mspStates[StateGlobal::ALPHA] = pState;
 
 	if (pState->BlendEnabled)
 	{

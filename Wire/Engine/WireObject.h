@@ -8,7 +8,7 @@
 namespace Wire
 {
  
-class /*WIRE_ENGINE_ITEM*/ Object
+class Object
 {
 public:
 	virtual ~Object();

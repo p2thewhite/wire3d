@@ -7,7 +7,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Node : public Spatial
+class Node : public Spatial
 {
 	WIRE_DECLARE_RTTI;
 
@@ -58,7 +58,7 @@ protected:
 	virtual void UpdateWorldBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<GlobalState*>* pGStack,
+	virtual void UpdateState(TArray<StateGlobal*>* pGStack,
 		TArray<Light*>* pLStack);
 
 	// culling

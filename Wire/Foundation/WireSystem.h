@@ -40,7 +40,7 @@
 namespace Wire
 {
 
-class /*WIRE_FOUNDATION_ITEM*/ System
+class System
 {
 public:
 	static UInt MaxUInt;

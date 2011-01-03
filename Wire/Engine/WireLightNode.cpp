@@ -2,10 +2,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, LightNode, Node);
+WIRE_IMPLEMENT_RTTI(Wire, NodeLight, Node);
 
 //----------------------------------------------------------------------------
-LightNode::LightNode(Light* pLight)
+NodeLight::NodeLight(Light* pLight)
 	:
 	mspLight(pLight)
 {
@@ -13,12 +13,12 @@ LightNode::LightNode(Light* pLight)
 }
 
 //----------------------------------------------------------------------------
-LightNode::~LightNode()
+NodeLight::~NodeLight()
 {
 }
 
 //----------------------------------------------------------------------------
-void LightNode::SetLight(Light* pLight)
+void NodeLight::SetLight(Light* pLight)
 {
 	mspLight = pLight;
 
@@ -30,7 +30,7 @@ void LightNode::SetLight(Light* pLight)
 }
 
 //----------------------------------------------------------------------------
-void LightNode::UpdateWorldData(Double appTime)
+void NodeLight::UpdateWorldData(Double appTime)
 {
 	Node::UpdateWorldData(appTime);
 
@@ -42,7 +42,7 @@ void LightNode::UpdateWorldData(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-void LightNode::LightToLocalTransform()
+void NodeLight::LightToLocalTransform()
 {
 	if (!mspLight)
 	{

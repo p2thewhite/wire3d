@@ -7,13 +7,13 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ SwitchNode: public Node
+class NodeSwitch: public Node
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-    SwitchNode();
-    virtual ~SwitchNode();
+    NodeSwitch();
+    virtual ~NodeSwitch();
 
     enum { SN_INVALID_CHILD = -1 };
 
@@ -28,7 +28,7 @@ protected:
     Int mActiveChild;
 };
 
-typedef Pointer<SwitchNode> SwitchNodePtr;
+typedef Pointer<NodeSwitch> NodeSwitchPtr;
 #include "WireSwitchNode.inl"
 
 }

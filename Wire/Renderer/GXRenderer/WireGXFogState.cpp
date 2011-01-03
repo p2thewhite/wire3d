@@ -5,17 +5,17 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sFogDensity[FogState::DF_QUANTITY] =
+UChar PdrRendererData::sFogDensity[StateFog::DF_QUANTITY] =
 {
-	GX_FOG_PERSP_LIN,	// FogState::DF_LINEAR
-	GX_FOG_ORTHO_EXP,   // FogState::DF_EXP
-	GX_FOG_ORTHO_EXP2   // FogState::DF_EXPSQR
+	GX_FOG_PERSP_LIN,	// StateFog::DF_LINEAR
+	GX_FOG_ORTHO_EXP,   // StateFog::DF_EXP
+	GX_FOG_ORTHO_EXP2   // StateFog::DF_EXPSQR
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetState(FogState* pState)
+void Renderer::SetState(StateFog* pState)
 {
-	mspStates[GlobalState::FOG] = pState;
+	mspStates[StateGlobal::FOG] = pState;
 
 	if (pState->Enabled)
 	{

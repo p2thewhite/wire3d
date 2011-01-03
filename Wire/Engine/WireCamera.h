@@ -8,7 +8,7 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ Camera : public Object
+class Camera : public Object
 {
 	WIRE_DECLARE_RTTI;
 

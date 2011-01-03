@@ -3,6 +3,7 @@
 #define SAMPLE4_H
 
 #include "WireApplication.h"
+#include "LensflareNode.h"
 
 using namespace Wire;
 
@@ -19,18 +20,10 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube();
-	Texture2D* CreateTexture();
-
-	Float SmoothStep(Float a, Float b, Float x);
-	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);
-
 	CameraPtr mspCamera;
 	Culler mCuller;
 
-	GeometryPtr mspCube;
-	CullStatePtr mspCullState;
-	AlphaStatePtr mspAlphaState;
+	LensflareNodePtr mspLensflare;
 
 	Float mAngle;
 	Double mLastTime;

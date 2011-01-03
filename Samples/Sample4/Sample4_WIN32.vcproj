@@ -188,14 +188,18 @@
 	<References>
 	</References>
 	<Files>
-		<File
-			RelativePath=".\src\LensflareNode.cpp"
+		<Filter
+			Name="Lensflare"
 			>
-		</File>
-		<File
-			RelativePath=".\src\LensflareNode.h"
-			>
-		</File>
+			<File
+				RelativePath=".\src\LensflareNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\LensflareNode.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\Sample4.cpp"
 			>

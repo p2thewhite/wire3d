@@ -8,13 +8,13 @@
 namespace Wire
 {
 
-class /*WIRE_ENGINE_ITEM*/ FogState : public GlobalState
+class StateFog : public StateGlobal
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	FogState();
-	virtual ~FogState();
+	StateFog();
+	virtual ~StateFog();
 
 	inline virtual StateType GetStateType() const { return FOG; }
 
@@ -33,7 +33,7 @@ public:
 	Float End;						// default: 1.0F
 };
 
-typedef Pointer<FogState> FogStatePtr;
+typedef Pointer<StateFog> StateFogPtr;
 
 }
 

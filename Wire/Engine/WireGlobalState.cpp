@@ -2,14 +2,14 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, GlobalState, Object);
+WIRE_IMPLEMENT_RTTI(Wire, StateGlobal, Object);
 
 //----------------------------------------------------------------------------
-GlobalState::GlobalState()
+StateGlobal::StateGlobal()
 {
 }
 
 //----------------------------------------------------------------------------
-GlobalState::~GlobalState()
+StateGlobal::~StateGlobal()
 {
 }
