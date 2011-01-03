@@ -29,7 +29,7 @@ protected:
 };
 
 typedef Pointer<NodeSwitch> NodeSwitchPtr;
-#include "WireSwitchNode.inl"
+#include "WireNodeSwitch.inl"
 
 }
 

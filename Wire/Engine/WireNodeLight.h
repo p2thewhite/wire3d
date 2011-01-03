@@ -32,7 +32,7 @@ private:
 };
 
 typedef Pointer<NodeLight> NodeLightPtr;
-#include "WireLightNode.inl"
+#include "WireNodeLight.inl"
 
 }
 

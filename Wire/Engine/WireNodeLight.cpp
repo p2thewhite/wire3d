@@ -1,4 +1,4 @@
-#include "WireLightNode.h"
+#include "WireNodeLight.h"
 
 using namespace Wire;
 

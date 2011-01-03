@@ -1,4 +1,4 @@
-#include "WireWireframeState.h"
+#include "WireStateWireframe.h"
 
 using namespace Wire;
 

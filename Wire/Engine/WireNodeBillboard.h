@@ -33,7 +33,7 @@ protected:
 
 typedef Pointer<NodeBillboard> NodeBillboardPtr;
 
-#include "WireBillboardNode.inl"
+#include "WireNodeBillboard.inl"
 
 }
 

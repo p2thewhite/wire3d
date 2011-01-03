@@ -1,17 +1,19 @@
-#include "WireMaterialState.h"
+#include "WireStateZBuffer.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, StateGlobal);
 
 //----------------------------------------------------------------------------
-StateMaterial::StateMaterial()
+StateZBuffer::StateZBuffer()
 	:
-	Ambient(0.2F, 0.2F, 0.2F, 1.0F)
+	Enabled(true),
+	Writable(true),
+	Compare(CF_LEQUAL)
 {
 }
 
 //----------------------------------------------------------------------------
-StateMaterial::~StateMaterial()
+StateZBuffer::~StateZBuffer()
 {
 }

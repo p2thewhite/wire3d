@@ -1,19 +1,18 @@
-#include "WireZBufferState.h"
+#include "WireStateCull.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateCull, StateGlobal);
 
 //----------------------------------------------------------------------------
-StateZBuffer::StateZBuffer()
+StateCull::StateCull()
 	:
 	Enabled(true),
-	Writable(true),
-	Compare(CF_LEQUAL)
+	CullFace(CM_BACK)
 {
 }
 
 //----------------------------------------------------------------------------
-StateZBuffer::~StateZBuffer()
+StateCull::~StateCull()
 {
 }
