@@ -86,6 +86,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\WireNodeBillboard.h" />
+    <ClInclude Include="Engine\WireNodeDLod.h" />
+    <ClInclude Include="Engine\WireNodeLight.h" />
+    <ClInclude Include="Engine\WireNodeSwitch.h" />
+    <ClInclude Include="Engine\WireStateAlpha.h" />
+    <ClInclude Include="Engine\WireStateCull.h" />
+    <ClInclude Include="Engine\WireStateFog.h" />
+    <ClInclude Include="Engine\WireStateMaterial.h" />
+    <ClInclude Include="Engine\WireStateWireframe.h" />
+    <ClInclude Include="Engine\WireStateZBuffer.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
     <ClInclude Include="Foundation\WireBox3.h" />
@@ -128,24 +138,17 @@
     <ClInclude Include="Renderer\Dx9Renderer\WireDx9Texture2D.h" />
     <ClInclude Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.h" />
     <ClInclude Include="Engine\WireEngine.h" />
-    <ClInclude Include="Engine\WireAlphaState.h" />
-    <ClInclude Include="Engine\WireBillboardNode.h" />
     <ClInclude Include="Engine\WireBoundingVolume.h" />
     <ClInclude Include="Engine\WireBuffer.h" />
     <ClInclude Include="Engine\WireCamera.h" />
     <ClInclude Include="Engine\WireController.h" />
     <ClInclude Include="Engine\WireCuller.h" />
-    <ClInclude Include="Engine\WireCullState.h" />
-    <ClInclude Include="Engine\WireDLodNode.h" />
     <ClInclude Include="Engine\WireEffect.h" />
-    <ClInclude Include="Engine\WireFogState.h" />
     <ClInclude Include="Engine\WireGeometry.h" />
     <ClInclude Include="Engine\WireGlobalState.h" />
     <ClInclude Include="Engine\WireImage2D.h" />
     <ClInclude Include="Engine\WireIndexBuffer.h" />
     <ClInclude Include="Engine\WireLight.h" />
-    <ClInclude Include="Engine\WireLightNode.h" />
-    <ClInclude Include="Engine\WireMaterialState.h" />
     <ClInclude Include="Engine\WireNode.h" />
     <ClInclude Include="Engine\WireObject.h" />
     <ClInclude Include="Engine\WireRenderer.h" />
@@ -154,7 +157,6 @@
     <ClInclude Include="Engine\WireSmartPointer.h" />
     <ClInclude Include="Engine\WireSpatial.h" />
     <ClInclude Include="Engine\WireSphereBV.h" />
-    <ClInclude Include="Engine\WireSwitchNode.h" />
     <ClInclude Include="Engine\WireTexture2D.h" />
     <ClInclude Include="Engine\WireTextureEffect.h" />
     <ClInclude Include="Engine\WireTransformation.h" />
@@ -162,10 +164,12 @@
     <ClInclude Include="Engine\WireVertexBuffer.h" />
     <ClInclude Include="Engine\WireVisibleObject.h" />
     <ClInclude Include="Engine\WireVisibleSet.h" />
-    <ClInclude Include="Engine\WireWireframeState.h" />
-    <ClInclude Include="Engine\WireZBufferState.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\WireNodeBillboard.inl" />
+    <None Include="Engine\WireNodeDLod.inl" />
+    <None Include="Engine\WireNodeLight.inl" />
+    <None Include="Engine\WireNodeSwitch.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />
@@ -191,15 +195,12 @@
     <None Include="Foundation\Wii\WireSystemWii.inl" />
     <None Include="Foundation\Wii\WireVector3Wii.inl" />
     <None Include="Foundation\Dx9\WireSystemDx9.inl" />
-    <None Include="Engine\WireBillboardNode.inl" />
     <None Include="Engine\WireBuffer.inl" />
     <None Include="Engine\WireCamera.inl" />
     <None Include="Engine\WireController.inl" />
     <None Include="Engine\WireCuller.inl" />
-    <None Include="Engine\WireDLodNode.inl" />
     <None Include="Engine\WireImage2D.inl" />
     <None Include="Engine\WireIndexBuffer.inl" />
-    <None Include="Engine\WireLightNode.inl" />
     <None Include="Engine\WireNode.inl" />
     <None Include="Engine\WireObject.inl" />
     <None Include="Engine\WireRenderer.inl" />
@@ -208,7 +209,6 @@
     <None Include="Engine\WireSmartPointer.inl" />
     <None Include="Engine\WireSpatial.inl" />
     <None Include="Engine\WireSphereBV.inl" />
-    <None Include="Engine\WireSwitchNode.inl" />
     <None Include="Engine\WireTexture2D.inl" />
     <None Include="Engine\WireTransformation.inl" />
     <None Include="Engine\WireVertexAttributes.inl" />
@@ -217,6 +217,16 @@
     <None Include="Engine\WireVisibleSet.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\WireNodeBillboard.cpp" />
+    <ClCompile Include="Engine\WireNodeDLod.cpp" />
+    <ClCompile Include="Engine\WireNodeLight.cpp" />
+    <ClCompile Include="Engine\WireNodeSwitch.cpp" />
+    <ClCompile Include="Engine\WireStateAlpha.cpp" />
+    <ClCompile Include="Engine\WireStateCull.cpp" />
+    <ClCompile Include="Engine\WireStateFog.cpp" />
+    <ClCompile Include="Engine\WireStateMaterial.cpp" />
+    <ClCompile Include="Engine\WireStateWireframe.cpp" />
+    <ClCompile Include="Engine\WireStateZBuffer.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
     <ClCompile Include="Foundation\WireColorRGBA.cpp" />
@@ -238,18 +248,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXAlphaState.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXCullState.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXFogState.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateAlpha.cpp" />
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateCull.cpp" />
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateFog.cpp" />
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateMaterial.cpp" />
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateWireframe.cpp" />
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateZBuffer.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -258,11 +262,27 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXMaterialState.cpp">
+    <ClCompile Include="Renderer\GXRenderer\WireGXRenderer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXRenderer.cpp">
+    <ClCompile Include="Renderer\GXRenderer\WireGXStateAlpha.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXStateCull.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXStateFog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXStateMaterial.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXStateZBuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -278,40 +298,23 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXZBufferState.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9AlphaState.cpp" />
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9CullState.cpp" />
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9FogState.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9Light.cpp" />
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9MaterialState.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9Renderer.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9Texture2D.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9TextureEffect.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp" />
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9WireframeState.cpp" />
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9ZBufferState.cpp" />
-    <ClCompile Include="Engine\WireAlphaState.cpp" />
-    <ClCompile Include="Engine\WireBillboardNode.cpp" />
     <ClCompile Include="Engine\WireBoundingVolume.cpp" />
     <ClCompile Include="Engine\WireBuffer.cpp" />
     <ClCompile Include="Engine\WireCamera.cpp" />
     <ClCompile Include="Engine\WireController.cpp" />
     <ClCompile Include="Engine\WireCuller.cpp" />
-    <ClCompile Include="Engine\WireCullState.cpp" />
-    <ClCompile Include="Engine\WireDLodNode.cpp" />
     <ClCompile Include="Engine\WireEffect.cpp" />
-    <ClCompile Include="Engine\WireFogState.cpp" />
     <ClCompile Include="Engine\WireGeometry.cpp" />
     <ClCompile Include="Engine\WireGlobalState.cpp" />
     <ClCompile Include="Engine\WireImage2D.cpp" />
     <ClCompile Include="Engine\WireIndexBuffer.cpp" />
     <ClCompile Include="Engine\WireLight.cpp" />
-    <ClCompile Include="Engine\WireLightNode.cpp" />
-    <ClCompile Include="Engine\WireMaterialState.cpp" />
     <ClCompile Include="Engine\WireNode.cpp" />
     <ClCompile Include="Engine\WireObject.cpp" />
     <ClCompile Include="Engine\WireRenderer.cpp" />
@@ -319,15 +322,12 @@
     <ClCompile Include="Engine\WireSceneObject.cpp" />
     <ClCompile Include="Engine\WireSpatial.cpp" />
     <ClCompile Include="Engine\WireSphereBV.cpp" />
-    <ClCompile Include="Engine\WireSwitchNode.cpp" />
     <ClCompile Include="Engine\WireTexture2D.cpp" />
     <ClCompile Include="Engine\WireTextureEffect.cpp" />
     <ClCompile Include="Engine\WireTransformation.cpp" />
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
-    <ClCompile Include="Engine\WireWireframeState.cpp" />
-    <ClCompile Include="Engine\WireZBufferState.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,4 @@
-#include "WireBillboardNode.h"
+#include "WireNodeBillboard.h"
 
 #include "WireCamera.h"
 

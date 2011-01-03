@@ -1,18 +1,17 @@
-#include "WireCullState.h"
+#include "WireStateMaterial.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, StateCull, StateGlobal);
+WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, StateGlobal);
 
 //----------------------------------------------------------------------------
-StateCull::StateCull()
+StateMaterial::StateMaterial()
 	:
-	Enabled(true),
-	CullFace(CM_BACK)
+	Ambient(0.2F, 0.2F, 0.2F, 1.0F)
 {
 }
 
 //----------------------------------------------------------------------------
-StateCull::~StateCull()
+StateMaterial::~StateMaterial()
 {
 }

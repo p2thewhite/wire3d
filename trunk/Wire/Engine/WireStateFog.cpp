@@ -1,4 +1,4 @@
-#include "WireFogState.h"
+#include "WireStateFog.h"
 
 using namespace Wire;
 

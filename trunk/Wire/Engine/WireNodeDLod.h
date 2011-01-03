@@ -2,7 +2,7 @@
 #ifndef WIREDLODNODE_H
 #define WIREDLODNODE_H
 
-#include "WireSwitchNode.h"
+#include "WireNodeSwitch.h"
 
 namespace Wire
 {
@@ -51,7 +51,7 @@ protected:
 
 typedef Pointer<NodeDLod> NodeDLodPtr;
 
-#include "WireDLodNode.inl"
+#include "WireNodeDLod.inl"
 
 }
 

@@ -2,15 +2,15 @@
 #ifndef WIRERENDERER_H
 #define WIRERENDERER_H
 
-#include "WireAlphaState.h"
 #include "WireColorRGBA.h"
-#include "WireCullState.h"
-#include "WireFogState.h"
-#include "WireMaterialState.h"
 #include "WireSmartPointer.h"
+#include "WireStateAlpha.h"
+#include "WireStateCull.h"
+#include "WireStateFog.h"
+#include "WireStateMaterial.h"
+#include "WireStateWireframe.h"
+#include "WireStateZBuffer.h"
 #include "WireTHashTable.h"
-#include "WireWireframeState.h"
-#include "WireZBufferState.h"
 
 namespace Wire
 {

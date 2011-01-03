@@ -1,4 +1,4 @@
-#include "WireAlphaState.h"
+#include "WireStateAlpha.h"
 
 using namespace Wire;
 

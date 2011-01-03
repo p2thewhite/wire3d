@@ -1,4 +1,4 @@
-#include "WireDLodNode.h"
+#include "WireNodeDLod.h"
 
 #include "WireCuller.h"
 

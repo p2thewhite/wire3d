@@ -1,4 +1,4 @@
-#include "WireSwitchNode.h"
+#include "WireNodeSwitch.h"
 
 #include "WireCuller.h"
 

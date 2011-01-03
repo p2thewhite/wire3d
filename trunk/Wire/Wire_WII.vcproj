@@ -387,14 +387,6 @@
 				Name="Header Files"
 				>
 				<File
-					RelativePath=".\Engine\WireAlphaState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireBoundingVolume.h"
 					>
 				</File>
@@ -415,19 +407,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireDLodNode.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireEffect.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireFogState.h"
 					>
 				</File>
 				<File
@@ -451,15 +431,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireMaterialState.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireNode.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeBillboard.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.h"
 					>
 				</File>
 				<File
@@ -491,7 +479,27 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.h"
+					RelativePath=".\Engine\WireStateAlpha.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateCull.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateFog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateWireframe.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateZBuffer.h"
 					>
 				</File>
 				<File
@@ -522,22 +530,10 @@
 					RelativePath=".\Engine\WireVisibleSet.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Engine\WireWireframeState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireZBufferState.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
 				>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.inl"
-					>
-				</File>
 				<File
 					RelativePath=".\Engine\WireBuffer.inl"
 					>
@@ -555,10 +551,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireDLodNode.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>
@@ -567,11 +559,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.inl"
+					RelativePath=".\Engine\WireNode.inl"
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireNode.inl"
+					RelativePath=".\Engine\WireNodeBillboard.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.inl"
 					>
 				</File>
 				<File
@@ -603,10 +607,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireTexture2D.inl"
 					>
 				</File>
@@ -635,14 +635,6 @@
 				Name="Source Files"
 				>
 				<File
-					RelativePath=".\Engine\WireAlphaState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireBoundingVolume.cpp"
 					>
 				</File>
@@ -663,19 +655,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireDLodNode.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireEffect.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireFogState.cpp"
 					>
 				</File>
 				<File
@@ -699,15 +679,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireMaterialState.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeBillboard.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.cpp"
 					>
 				</File>
 				<File
@@ -735,7 +723,27 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.cpp"
+					RelativePath=".\Engine\WireStateAlpha.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateCull.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateFog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateWireframe.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateZBuffer.cpp"
 					>
 				</File>
 				<File
@@ -760,14 +768,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireVisibleSet.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireWireframeState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireZBufferState.cpp"
 					>
 				</File>
 			</Filter>
