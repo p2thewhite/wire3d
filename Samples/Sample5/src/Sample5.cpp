@@ -45,11 +45,11 @@ Bool Sample5::OnInitialize()
 	pLight2->Color = ColorRGB::RED;
 	pLight2->Ambient = ColorRGB(0.1F, 0.1F, 0.1F);
 
-	StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
-	pMaterialState->Ambient = ColorRGBA(1, 1, 0, 1);
+	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
+	pMaterial->Ambient = ColorRGBA(1, 1, 0, 1);
 
 	// attach lights and material state
-	pLitGroup->AttachGlobalState(pMaterialState);
+	pLitGroup->AttachState(pMaterial);
 	pLitGroup->AttachLight(pLight1);
 	pLitGroup->AttachLight(pLight2);
 

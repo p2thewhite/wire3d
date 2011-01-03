@@ -11,22 +11,22 @@ inline Spatial* Spatial::GetParent()
 }
 
 //----------------------------------------------------------------------------
-inline UInt Spatial::GetGlobalStateQuantity() const
+inline UInt Spatial::GetStateQuantity() const
 {
-	return mGlobalStates.GetQuantity();
+	return mStates.GetQuantity();
 }
 
 //----------------------------------------------------------------------------
-inline State* Spatial::GetGlobalState(UInt i) const
+inline State* Spatial::GetState(UInt i) const
 {
-	WIRE_ASSERT(i < mGlobalStates.GetQuantity());
-	return mGlobalStates[i];
+	WIRE_ASSERT(i < mStates.GetQuantity());
+	return mStates[i];
 }
 
 //----------------------------------------------------------------------------
-inline void Spatial::DetachAllGlobalStates()
+inline void Spatial::DetachAllStates()
 {
-	mGlobalStates.RemoveAll();
+	mStates.RemoveAll();
 }
 
 //----------------------------------------------------------------------------

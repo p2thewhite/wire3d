@@ -81,13 +81,13 @@ public:
 	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull) = 0;
 
-	// global state
-	inline UInt GetGlobalStateQuantity() const;
-	inline State* GetGlobalState(UInt i) const;
-	State* GetGlobalState(State::StateType type) const;
-	void AttachGlobalState(State* pState);
-	void DetachGlobalState(State::StateType type);
-	inline void DetachAllGlobalStates();
+	// render state
+	inline UInt GetStateQuantity() const;
+	inline State* GetState(UInt i) const;
+	State* GetState(State::StateType type) const;
+	void AttachState(State* pState);
+	void DetachState(State::StateType type);
+	inline void DetachAllStates();
 
     // light state
     inline UInt GetLightQuantity() const;
@@ -123,8 +123,8 @@ protected:
 	// support for hierarchical scene graph
 	Spatial* mpParent;
 
-	// global render state
-	TArray<StatePtr> mGlobalStates;
+	// render state
+	TArray<StatePtr> mStates;
 
 	// light state
 	TArray<LightPtr> mLights;
