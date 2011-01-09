@@ -54,8 +54,11 @@ void Sample4::OnIdle()
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
-	mAngle += static_cast<Float>(elapsedTime);
+	mAngle += static_cast<Float>(elapsedTime * 0.2F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
+
+	Matrix3F rot(Vector3F(0, 1, 0), mAngle);
+	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
 
 	mspLensflare->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspLensflare);

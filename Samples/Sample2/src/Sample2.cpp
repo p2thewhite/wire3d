@@ -16,9 +16,10 @@ Sample2::Sample2()
 	:
 	WIREAPPLICATION(
 		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
-		"Sample2 - Creating a Scene Graph",	// Name of the application,
-		0, 0,								// window position, size and
-		640, 480, true)						// fullscreen (ignored on the Wii).
+		"Sample2 - Creating a Scene Graph",	// title of the window,
+		0, 0,								// window position
+		640, 480,							// window size
+		true)								// fullscreen (ignored on the Wii).
 {
 }
 
@@ -124,51 +125,23 @@ void Sample2::OnIdle()
 //----------------------------------------------------------------------------
 Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 {
-	// Creation of Wire::Geometry objects is explained in detail in Sample1
+	// Creation of Wire::Geometry objects is explained in detail in Sample1.
+	UInt vertexColorChannels = 4;	// RGBA
+	Geometry* pCube = StandardMesh::CreateCube8(vertexColorChannels);
 
-	Float extent = 1.0F;
-	Vector3F vertices[] = {
-		Vector3F(-extent, -extent, -extent),
-		Vector3F(+extent, -extent, -extent),
-		Vector3F(+extent, +extent, -extent),
-		Vector3F(-extent, +extent, -extent),
-		Vector3F(-extent, -extent, +extent),
-		Vector3F(+extent, -extent, +extent),
-		Vector3F(+extent, +extent, +extent),
-		Vector3F(-extent, +extent, +extent)
-	};
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);	// XYZ
-	attributes.SetColorChannels(4);		// RGBA
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
-		vertexQuantity);
-
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
+	// initialize the cube's vertex colors with our supplied values
+	for (UInt i = 0; i < pCube->VBuffer->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
-		if (vertices[i].Y() > 0)
+		if (pCube->VBuffer->Position3(i).Y() > 0)
 		{
-			pCubeVerts->Color4(i) = top;
+			pCube->VBuffer->Color4(i) = top;
 		}
 		else
 		{
-			pCubeVerts->Color4(i) = bottom;
+			pCube->VBuffer->Color4(i) = bottom;
 		}
-	}
+ 	}
 
-	UInt indices[] = { 0, 2, 1,	0, 3, 2, 0, 1, 5, 0, 5, 4, 0, 4, 7,	0, 7, 3,
-		6, 4, 5, 6, 7, 4, 6, 5, 1, 6, 1, 2,	6, 2, 3, 6, 3, 7, };
-
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for (UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndices)[i] = indices[i];
-	}
-
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 	return pCube;
 }
 

@@ -6,28 +6,105 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 LensflareNode::LensflareNode()
 {
-	CreateTextures();
+	CreateFlares();
 
-	AttachChild(CreateQuad(0.498F, 0.0F, 0.0F, mspLensTex0));
-	AttachChild(CreateQuad(0.5F, 0.501F, 0.501F, mspLensTex0));
-	AttachChild(CreateQuad(0.5F, 0.501F, 0.0F, mspLensTex0));
-	AttachChild(CreateQuad(0.5F, 0.0F, 0.5F, mspLensTex0));
-	AttachChild(CreateQuad(1, 0, 0, mspLensTex1));
-
-	const UInt count = GetQuantity();
-	const Float stride = 3.5F;
-	const Float offset = count * -0.5F * stride + stride * 0.6F;
-
-	for (UInt i = 0; i < count; i++)
-	{
-		GetChild(i)->Local.SetTranslate(Vector3F(offset + stride * i, 0, -10));
-
-	}
+	// Never let this node be culled by the system, because we determine
+	// the visibility of this node and its children (i.e. flares) ourselves.
+	Culling = CULL_NEVER;
 }
 
 //----------------------------------------------------------------------------
-Geometry* LensflareNode::CreateQuad(Float uvFactor, Float uOffset,
-	Float vOffset, Texture2D* pTexture)
+void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
+{
+	const Camera* pCam = rCuller.GetCamera();
+//	LightPtr spLight = 
+
+	Transformation camTrafo;
+	camTrafo.SetTranslate(pCam->GetLocation());
+	camTrafo.SetRotate(Matrix3F(pCam->GetRVector(), pCam->GetUVector(),
+		pCam->GetDVector(), true));
+
+	const Vector3F& rCamPosition = camTrafo.GetTranslate();
+	Vector3F lightDirection = Vector3F(0, 0, 1) * 500.0F;
+ 	Vector3F lightPosWorld = rCamPosition + lightDirection;
+	lightPosWorld = Vector3F(20, 20, -500);
+
+	Float l, r, b, t, n, f;
+	pCam->GetFrustum(l, r, b, t, n, f);
+
+	Vector4F col0((2*n)/(r-l),	0.0F,			0.0F,			0.0F);
+	Vector4F col1(0.0F,			2*n/(t-b),		0.0F,			0.0F);
+	Vector4F col2((r+l)/(r-l),	(t+b)/(t-b),	-(f+n)/(f-n),	-1.0F);
+	Vector4F col3(0.0F,			0.0F,			-2*(f*n)/(f-n),	0.0F);
+	Matrix4F projectionMatrix;
+	projectionMatrix.SetColumn(0, col0);
+	projectionMatrix.SetColumn(1, col1);
+	projectionMatrix.SetColumn(2, col2);
+	projectionMatrix.SetColumn(3, col3);
+
+	// transform to camera space
+	Vector3F lightPosCamSpace = camTrafo.ApplyInverse(lightPosWorld);
+
+	// transform to screen space
+	Vector4F lightPosScreenSpace = projectionMatrix * Vector4F(
+		lightPosCamSpace.X(), lightPosCamSpace.Y(), lightPosCamSpace.Z(), 1);
+
+	float invW = 1.0F / lightPosScreenSpace.W();
+
+	//to screen coordinates [1,1 | -1,-1]
+	Vector2F lightPos2D = Vector2F((lightPosScreenSpace.X() * invW * -1),
+		(lightPosScreenSpace.Y() * invW * -1));
+
+	//to frustum coordinates [fL - fR | fT - fB]
+	lightPos2D[0] *= r;
+	lightPos2D[1] *= t;
+
+	Float position = 1.0F;
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Vector3F newPos = pCam->GetLocation() +
+			pCam->GetDVector() * (n + (0.01F * (GetQuantity()-i))) +
+			pCam->GetRVector() * lightPos2D[0] * position +
+			pCam->GetUVector() * lightPos2D[1] * position;
+
+		position -= 0.5F;
+
+		//set new position
+		GetChild(i)->Local.SetTranslate(newPos);
+
+		//set rotation from camera
+		GetChild(i)->Local.SetRotate(camTrafo.GetRotate());
+	}	
+
+	Node::GetVisibleSet(rCuller, noCull);
+}
+
+//----------------------------------------------------------------------------
+void LensflareNode::CreateFlares()
+{
+	CreateTextures();
+
+	AttachChild(CreateQuad(0.01F, 0.498F, 0.0F, 0.0F, mspLensTex0));
+	AttachChild(CreateQuad(0.01F, 0.5F, 0.501F, 0.501F, mspLensTex0));
+	AttachChild(CreateQuad(0.01F, 0.5F, 0.501F, 0.0F, mspLensTex0));
+	AttachChild(CreateQuad(0.01F, 0.5F, 0.0F, 0.5F, mspLensTex0));
+	AttachChild(CreateQuad(0.01F, 1, 0, 0, mspLensTex1));
+
+	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
+	pAlpha->BlendEnabled = true;
+	AttachState(pAlpha);
+
+	StateZBuffer* pZBuffer = WIRE_NEW StateZBuffer;
+	pZBuffer->Writable = false;
+	pZBuffer->Enabled = false;
+	AttachState(pZBuffer);
+	
+	UpdateRS();
+}
+
+//----------------------------------------------------------------------------
+Geometry* LensflareNode::CreateQuad(Float scale, Float uvFactor,
+	Float uOffset, Float vOffset, Texture2D* pTexture)
 {
 	const Vector3F vertices[] =
 	{
@@ -35,45 +112,29 @@ Geometry* LensflareNode::CreateQuad(Float uvFactor, Float uOffset,
 		Vector3F(1, -1, 0), Vector3F(-1, -1, 0)
 	};
 
-	// Texture coordinates
 	const Vector2F uvs[] =
 	{
-		// side 1
-		Vector2F(0.0F, 0.0F), Vector2F(1.0F, 0.0F),
-		Vector2F(1.0F, 1.0F), Vector2F(0.0F, 1.0F)
+		Vector2F(0, 0), Vector2F(1, 0), Vector2F(1, 1), Vector2F(0, 1)
 	};
 
-	// Indices provide connectivity information and define the triangle mesh.
-	// Every side of the cube consists of 2 triangles.
-	const UInt indices[] =
-	{
-		// side 1
-		0, 2, 1,
-		0, 3, 2,
-	};
+	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
 
-	// Before creating the VertexBuffer we need to define its format.
-	// It consists of 3d positions and 2d texture coordinates
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
 
-	// Now with the attributes being defined, we can create a VertexBuffer
-	// and fill it with data.
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
-
 	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
+		pCubeVerts->Position3(i) = vertices[i] * scale;
 		pCubeVerts->TCoord2(i) = uvs[i] * uvFactor;
  		pCubeVerts->TCoord2(i).X() += uOffset;
  		pCubeVerts->TCoord2(i).Y() += vOffset;
 	}
 
-	// Same for the IndexBuffer
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
 	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
@@ -81,11 +142,8 @@ Geometry* LensflareNode::CreateQuad(Float uvFactor, Float uOffset,
 		(*pIndices)[i] = indices[i];
 	}
 
-	// Geometric objects consist of a Vertex- and IndexBuffer.
 	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 
-	// The cube shall be textured. Therefore we create and attach a texture
-	// effect, where we add a texture and define its blending mode.
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
@@ -188,7 +246,7 @@ void LensflareNode::CreateTextures()
 	}
 
 	Random rand;
-	for (UInt count = 0; count < 200; count++)
+	for (UInt count = 0; count < 300; count++)
 	{
 		// pick a random direction
 		Float angle = rand.GetFloat() * MathF::TWO_PI;
@@ -220,7 +278,7 @@ void LensflareNode::CreateTextures()
 	max = 1/max;
 	for (UInt i = 0; i < width*height; i++)
 	{
-		Float f = pTemp[i] * max * 300.0F;
+		Float f = pTemp[i] * max * 5000.0F;
 		UChar val = static_cast<UChar>(MathF::Clamp(0, f, 255.0F));
 		pDst[i*bpp] = val;
 		pDst[i*bpp+1] = val;

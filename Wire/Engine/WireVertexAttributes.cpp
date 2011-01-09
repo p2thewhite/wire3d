@@ -47,6 +47,7 @@ void VertexAttributes::SetColorChannels(UInt colorChannels, UInt unit)
 	{
 		mColorChannels[unit] = colorChannels;
 	}
+
 	UpdateOffsets();
 }
 

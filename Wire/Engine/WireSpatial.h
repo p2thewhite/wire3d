@@ -45,12 +45,12 @@ public:
 		// to culling planes.
 		CULL_DYNAMIC,
 
-		// Force the object to be culled.  If a Node is culled, its entire
+		// Force the object to be culled. If a Node is culled, its entire
 		// subtree is culled.
 		CULL_ALWAYS,
 
-		// Never cull the object.  If a Node is never culled, its entire
-		// subtree is never culled.  To accomplish this, the first time such
+		// Never cull the object. If a Node is never culled, its entire
+		// subtree is never culled. To accomplish this, the first time such
 		// a Node is encountered, the 'noCull' parameter is set to 'true' in
 		// the recursive chain GetVisibleSet/OnGetVisibleSet.
 		CULL_NEVER,

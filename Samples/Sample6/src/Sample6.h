@@ -29,7 +29,6 @@ private:
 		TextureEffect::BlendMode Mode1;
 	};
 
-	Geometry* CreateCube(const UInt uvQuantity);
 	Texture2D* CreateTexture();
 	Texture2D* CreateTexture2();
 

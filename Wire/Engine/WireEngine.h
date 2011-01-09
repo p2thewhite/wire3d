@@ -24,6 +24,7 @@
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireSphereBV.h"
+#include "WireStandardMesh.h"
 #include "WireState.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
