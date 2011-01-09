@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Sample4</ProjectName>
+    <ProjectName>Sample4 - Custom Nodes</ProjectName>
     <ProjectGuid>{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}</ProjectGuid>
     <RootNamespace>Sample3_WIN32</RootNamespace>
   </PropertyGroup>

@@ -547,66 +547,6 @@
 					Name="Source Files"
 					>
 					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXAlphaState.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXCullState.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXFogState.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.cpp"
 						>
 						<FileConfiguration
@@ -647,7 +587,7 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXMaterialState.cpp"
+						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
@@ -667,7 +607,87 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
+						RelativePath=".\Renderer\GXRenderer\WireGXStateAlpha.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXStateCull.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXStateFog.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXStateMaterial.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXStateZBuffer.cpp"
 						>
 						<FileConfiguration
 							Name="Debug|Win32"
@@ -746,26 +766,6 @@
 							/>
 						</FileConfiguration>
 					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXZBufferState.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -799,18 +799,6 @@
 					Name="Source Files"
 					>
 					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9AlphaState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9CullState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9FogState.cpp"
-						>
-					</File>
-					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9IndexBuffer.cpp"
 						>
 					</File>
@@ -819,11 +807,31 @@
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9MaterialState.cpp"
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9Renderer.cpp"
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateAlpha.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateCull.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateFog.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateMaterial.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateWireframe.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9StateZBuffer.cpp"
 						>
 					</File>
 					<File
@@ -836,14 +844,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9WireframeState.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9ZBufferState.cpp"
 						>
 					</File>
 				</Filter>
@@ -859,14 +859,6 @@
 			<Filter
 				Name="Header Files"
 				>
-				<File
-					RelativePath=".\Engine\WireAlphaState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.h"
-					>
-				</File>
 				<File
 					RelativePath=".\Engine\WireBoundingVolume.h"
 					>
@@ -888,27 +880,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireDLodNode.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireEffect.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireFogState.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireGeometry.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireGlobalState.h"
 					>
 				</File>
 				<File
@@ -924,15 +900,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireMaterialState.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireNode.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeBillboard.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.h"
 					>
 				</File>
 				<File
@@ -964,7 +948,35 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.h"
+					RelativePath=".\Engine\WireStandardMesh.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireState.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateAlpha.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateCull.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateFog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateWireframe.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateZBuffer.h"
 					>
 				</File>
 				<File
@@ -995,22 +1007,10 @@
 					RelativePath=".\Engine\WireVisibleSet.h"
 					>
 				</File>
-				<File
-					RelativePath=".\Engine\WireWireframeState.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireZBufferState.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Inline Files"
 				>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.inl"
-					>
-				</File>
 				<File
 					RelativePath=".\Engine\WireBuffer.inl"
 					>
@@ -1028,10 +1028,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireDLodNode.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>
@@ -1040,11 +1036,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.inl"
+					RelativePath=".\Engine\WireNode.inl"
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireNode.inl"
+					RelativePath=".\Engine\WireNodeBillboard.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.inl"
 					>
 				</File>
 				<File
@@ -1076,10 +1084,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireTexture2D.inl"
 					>
 				</File>
@@ -1108,14 +1112,6 @@
 				Name="Source Files"
 				>
 				<File
-					RelativePath=".\Engine\WireAlphaState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireBillboardNode.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireBoundingVolume.cpp"
 					>
 				</File>
@@ -1136,27 +1132,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireDLodNode.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireEffect.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireFogState.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireGlobalState.cpp"
 					>
 				</File>
 				<File
@@ -1172,15 +1152,23 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireLightNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireMaterialState.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeBillboard.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeDLod.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeLight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSwitch.cpp"
 					>
 				</File>
 				<File
@@ -1208,7 +1196,35 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireSwitchNode.cpp"
+					RelativePath=".\Engine\WireStandardMesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireState.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateAlpha.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateCull.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateFog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateWireframe.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStateZBuffer.cpp"
 					>
 				</File>
 				<File
@@ -1233,14 +1249,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireVisibleSet.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireWireframeState.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireZBufferState.cpp"
 					>
 				</File>
 			</Filter>

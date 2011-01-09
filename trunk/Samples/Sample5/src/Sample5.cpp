@@ -89,6 +89,7 @@ Bool Sample5::OnInitialize()
 	// to be rendered manually in the render loop. This is only for the
 	// purpose of demonstrating scene graph and manual rendering with lights.
 	mspPlane = CreatePlane();
+	mspPlane->UpdateBS();	// manual update of world bounding volume
 	mspWhiteCube = CreateCube(false, false, true, ColorRGBA::WHITE);
 	mspWhiteCube->World.SetUniformScale(0.15F);
 
@@ -166,6 +167,7 @@ void Sample5::OnIdle()
 	mspWhiteCube->World.SetTranslate(
 		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
 	mspWhiteCube->World.SetRotate(rotateWorldLight3);
+	mspWhiteCube->UpdateBS();
 	mspPlane->Lights[0]->Position = mspWhiteCube->World.GetTranslate();
 	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().
 		GetColumn(2);
@@ -199,95 +201,25 @@ void Sample5::OnIdle()
 Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 	Bool useVertexColor, ColorRGBA vertexColor)
 {
-	// Creation of Wire::Geometry objects is explained in detail in Sample1
+	const UInt vertexColorChannels = useVertexColor ? 4 : 0;
+	Geometry* pCube = StandardMesh::CreateCube24(vertexColorChannels,
+		useTexture ? 1 : 0, useNormals);
 
-	const Vector3F vertices[] =
+	for (UInt i = 0; i < pCube->VBuffer->GetVertexQuantity(); i++)
 	{
-		Vector3F(-1.0F,  1.0F,  1.0F), Vector3F( 1.0F,  1.0F,  1.0F),
-		Vector3F( 1.0F, -1.0F,  1.0F), Vector3F(-1.0F, -1.0F,  1.0F),
-		Vector3F( 1.0F,  1.0F, -1.0F), Vector3F( 1.0F,  1.0F,  1.0F),
-		Vector3F(-1.0F,  1.0F,  1.0F), Vector3F(-1.0F,  1.0F, -1.0F),
-		Vector3F( 1.0F, -1.0F,  1.0F), Vector3F( 1.0F,  1.0F,  1.0F),
-		Vector3F( 1.0F,  1.0F, -1.0F), Vector3F( 1.0F, -1.0F, -1.0F),
-		Vector3F(-1.0F,  1.0F, -1.0F), Vector3F( 1.0F,  1.0F, -1.0F),
-		Vector3F( 1.0F, -1.0F, -1.0F), Vector3F(-1.0F, -1.0F, -1.0F),
-		Vector3F( 1.0F, -1.0F, -1.0F), Vector3F( 1.0F, -1.0F,  1.0F),
-		Vector3F(-1.0F, -1.0F,  1.0F), Vector3F(-1.0F, -1.0F, -1.0F),
-		Vector3F(-1.0F, -1.0F,  1.0F), Vector3F(-1.0F,  1.0F,  1.0F),
-		Vector3F(-1.0F,  1.0F, -1.0F), Vector3F(-1.0F, -1.0F, -1.0F)
-	};
-
-	const Vector2F uvs[] =
-	{
-		Vector2F(0.0F, 0.0F), Vector2F(1.0F, 0.0F), Vector2F(1.0F, 1.0F),
-		Vector2F(0.0F, 1.0F), Vector2F(0.0F, 0.0F),	Vector2F(1.0F, 0.0F),
-		Vector2F(1.0F, 1.0F), Vector2F(0.0F, 1.0F), Vector2F(0.0F, 0.0F),
-		Vector2F(1.0F, 0.0F), Vector2F(1.0F, 1.0F),	Vector2F(0.0F, 1.0F),
-		Vector2F(0.0F, 0.0F), Vector2F(1.0F, 0.0F),	Vector2F(1.0F, 1.0F),
-		Vector2F(0.0F, 1.0F), Vector2F(0.0F, 0.0F), Vector2F(1.0F, 0.0F),
-		Vector2F(1.0F, 1.0F), Vector2F(0.0F, 1.0F), Vector2F(0.0F, 0.0F),
-		Vector2F(1.0F, 0.0F), Vector2F(1.0F, 1.0F), Vector2F(0.0F, 1.0F)
-	};
-
-	const UInt indices[] =
-	{
-		0, 2, 1, 0, 3, 2, 4, 6, 5, 4, 7, 6,	8, 10, 9, 8, 11, 10, 12, 13, 14,
-		12, 14, 15, 16, 17, 18,	16, 18, 19,	20, 21, 22,	20, 22, 23
-	};
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-
-	if (useTexture)
-	{
-		attributes.SetTCoordChannels(2);	// channels: U, V
-	}
-
-	if (useNormals)
-	{
-		attributes.SetNormalChannels(3);	// channels: X, Y, Z
-	}
-
-	if (useVertexColor)
-	{
-		attributes.SetColorChannels(4);		// RGBA
-	}
-
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
-		vertexQuantity);
-
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
-	{
-		pCubeVerts->Position3(i) = vertices[i];
-
-		if (useTexture)
-		{
-			pCubeVerts->TCoord2(i) = uvs[i];
-		}
-
 		if (useVertexColor)
 		{
-			if (vertices[i].Z() > 0)
+			if (pCube->VBuffer->Position3(i).Z() > 0)
 			{
-				pCubeVerts->Color4(i) = vertexColor;
+				pCube->VBuffer->Color4(i) = vertexColor;
 			}
 			else
 			{
-				pCubeVerts->Color4(i) = vertexColor * 0.5F;
+				pCube->VBuffer->Color4(i) = vertexColor * 0.5F;
 			}
 		}
 	}
 
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for	(UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndices)[i] = indices[i];
-	}
-
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 	pCube->GenerateNormals();
 
 	if (useTexture)

@@ -21,7 +21,8 @@ Bool Sample6::OnInitialize()
 	pEffect->Textures.Append(CreateTexture());
 	pEffect->Textures.Append(CreateTexture2());
 
-	mspGeometry = CreateCube(pEffect->Textures.GetQuantity());
+	mspGeometry = StandardMesh::CreateCube14(3, pEffect->Textures.
+		GetQuantity());
 	mspGeometry->AttachEffect(pEffect);
 
 	// camera and viewing frustum setup
@@ -99,90 +100,6 @@ void Sample6::OnIdle()
 	GetRenderer()->Draw(mspGeometry);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
-}
-
-//----------------------------------------------------------------------------
-Geometry* Sample6::CreateCube(const UInt uvQuantity)
-{
-	// Creation of Wire::Geometry objects is explained in detail in Sample1
-
-	const Vector3F vertices[] = {
-		Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(-1.0F,  1.0F, -1.0F),
-		Vector3F( 1.0F,  1.0F, -1.0F), Vector3F( 1.0F, -1.0F, -1.0F),
-		Vector3F( 1.0F, -1.0F, 1.0F), Vector3F( 1.0F,  1.0F, 1.0F),
-		Vector3F(-1.0F,  1.0F, 1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
-		Vector3F( 1.0F,  1.0F, 1.0F), Vector3F(-1.0F,  1.0F, 1.0F),
-		Vector3F( 1.0F,  1.0F, 1.0F), Vector3F( 1.0F, -1.0F, 1.0F),
-		Vector3F(-1.0F, -1.0F, 1.0F), Vector3F( 1.0F, -1.0F, 1.0F)
-	};
-
-	const ColorRGB colors[] = {
-		ColorRGB(1.0F, 0.0F, 0.0F), ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F), ColorRGB(0.0F, 1.0F, 1.0F),
-		ColorRGB(1.0F, 1.0F, 1.0F), ColorRGB(0.0F, 0.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 0.0F), ColorRGB(0.0F, 1.0F, 0.0F),
-		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F),
-		ColorRGB(1.0F, 0.0F, 1.0F), ColorRGB(0.0F, 1.0F, 1.0F)
-	};
-
-	const Vector2F uvs[] = {
-		Vector2F(0.50F, 0.50F), Vector2F(0.50F, 0.25F),
-		Vector2F(0.25F, 0.25F), Vector2F(0.25F, 0.50F),
-		Vector2F(0.00F, 0.50F), Vector2F(0.00F, 0.25F),
-		Vector2F(0.75F, 0.25F), Vector2F(0.75F, 0.50F),
-		Vector2F(0.25F, 0.00F), Vector2F(0.50F, 0.00F),
-		Vector2F(1.00F, 0.25F), Vector2F(1.00F, 0.50F),
-		Vector2F(0.50F, 0.75F), Vector2F(0.25F, 0.75F)
-	};
-
-	const UInt indices[] = {
-		0, 1, 2, 3,	11, 10, 6, 7, 7, 6, 1, 0, 3, 2, 5, 4, 1, 9, 8, 2, 12, 0,
-		3, 13
-	};
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-
-	for (UInt unit = 0; unit < uvQuantity; unit++)
-	{
-		attributes.SetTCoordChannels(2, unit);	// channels: U, V
-	}
-
-	attributes.SetColorChannels(3);		// channels: R, G, B
-
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
-	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
-		vertexQuantity);
-
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
-	{
-		pCubeVerts->Position3(i) = vertices[i];
-
-		for (UInt unit = 0; unit < uvQuantity; unit++)
-		{
-			pCubeVerts->TCoord2(i, unit) = uvs[i];
-		}
-
-		pCubeVerts->Color3(i) = colors[i];
-	}
-
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
-	for	(UInt i = 0; i < 6; i++)
-	{
-		(*pIndices)[0+i*6] = indices[0+i*4];
-		(*pIndices)[1+i*6] = indices[1+i*4];
-		(*pIndices)[2+i*6] = indices[3+i*4];
-
-		(*pIndices)[3+i*6] = indices[3+i*4];
-		(*pIndices)[4+i*6] = indices[1+i*4];
-		(*pIndices)[5+i*6] = indices[2+i*4];
-	}
-
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
-	return pCube;
 }
 
 //----------------------------------------------------------------------------

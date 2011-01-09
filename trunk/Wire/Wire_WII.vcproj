@@ -475,6 +475,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireStandardMesh.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireState.h"
 					>
 				</File>
@@ -716,6 +720,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireSphereBV.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireStandardMesh.cpp"
 					>
 				</File>
 				<File

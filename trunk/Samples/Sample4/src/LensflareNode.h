@@ -12,9 +12,14 @@ class LensflareNode : public Node
 public:
 	LensflareNode();
 
+protected:
+	// we handle culling, so we override GetVisibleSet() from the parent class
+	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
+
 private:
-	Geometry* CreateQuad(Float uvFactor, Float uOffset, Float vOffset,
-		Texture2D* pTexture);
+	void CreateFlares();
+	Geometry* CreateQuad(Float scale, Float uvFactor, Float uOffset,
+		Float vOffset, Texture2D* pTexture);
 	void CreateTextures();
 	Float SmoothStep(Float a, Float b, Float x);
 	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);

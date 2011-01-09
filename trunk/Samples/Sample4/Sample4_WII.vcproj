@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample4"
+	Name="Sample4 - Custom Nodes"
 	ProjectGUID="{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
+	RootNamespace="Sample4 - Custom Nodes"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
