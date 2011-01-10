@@ -201,8 +201,7 @@ void Sample5::OnIdle()
 Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 	Bool useVertexColor, ColorRGBA vertexColor)
 {
-	const UInt vertexColorChannels = useVertexColor ? 4 : 0;
-	Geometry* pCube = StandardMesh::CreateCube24(vertexColorChannels,
+	Geometry* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
 		useTexture ? 1 : 0, useNormals);
 
 	for (UInt i = 0; i < pCube->VBuffer->GetVertexQuantity(); i++)
@@ -239,64 +238,15 @@ Geometry* Sample5::CreatePlane()
 {
 	const UInt tileXCount = 30;
 	const UInt tileYCount = 20;
-	const Float xSize = 12.0F;
-	const Float ySize = 8.0F;
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetTCoordChannels(2);	// channels: U, V
-	attributes.SetNormalChannels(3);	// channels: X, Y, Z
-
-	const UInt vertexCount = (tileXCount+1) * (tileYCount+1);
-	VertexBuffer* pVertices = WIRE_NEW VertexBuffer(attributes, vertexCount);
-
-	const Float xStride = xSize / tileXCount;
-	const Float yStride = ySize / tileYCount;
-	Float y = -ySize * 0.5F;
-	for (UInt j = 0; j < tileYCount+1; j++)
-	{
-		Float x = -xSize * 0.5F;;
-		for (UInt i = 0; i < tileXCount+1; i++)
-		{
-			pVertices->Position3(i + (tileXCount+1)*j) = Vector3F(x, y, 0);
-			pVertices->TCoord2(i + (tileXCount+1)*j) = Vector2F(x, y);
-			x += xStride;
-		}
-
-		y += yStride;
-	}
-
-	const UInt indexCount = tileXCount * tileYCount * 6;
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexCount);
-
-	for (UInt j = 0; j < tileYCount; j++)
-	{
-		UInt offset = (tileXCount+1)*j;
-		for (UInt i = 0; i < tileXCount; i++)
-		{
-			UInt index = tileXCount*j+i;
-			UInt index0 = i+offset;
-			UInt index1 = index0+tileXCount+1;
-			UInt index2 = index0+1;
-			UInt index3 = index0+tileXCount+2;
-
-			(*pIndices)[index*6] = index0;
-			(*pIndices)[index*6+1] = index2;
-			(*pIndices)[index*6+2] = index1;
-
-			(*pIndices)[index*6+3] = index1;
-			(*pIndices)[index*6+4] = index2;
-			(*pIndices)[index*6+5] = index3;
-
-		}
-	}
-
-	Geometry* pGeo = WIRE_NEW Geometry(pVertices, pIndices);
-	pGeo->GenerateNormals();
+	const Float xSizeTotal = 12.0F;
+	const Float ySizeTotal = 8.0F;
+	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
+		xSizeTotal, ySizeTotal, 0, 1, true);
+	pPlane->GenerateNormals();
 
 	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
-	pGeo->World.SetRotate(rotate);
-	pGeo->World.SetTranslate(Vector3F(0, -2.5F, 0));
+	pPlane->World.SetRotate(rotate);
+	pPlane->World.SetTranslate(Vector3F(0, -2.5F, 0));
 
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
@@ -304,35 +254,35 @@ Geometry* Sample5::CreatePlane()
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
 	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	pGeo->AttachEffect(pTextureEffect);
+	pPlane->AttachEffect(pTextureEffect);
 
 	// attach a material state and a light to the plane geometry directly
 	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
 	pMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
-	pGeo->States[State::MATERIAL] = pMaterial;
+	pPlane->States[State::MATERIAL] = pMaterial;
 
 	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
 	pLight->Position = Vector3F(0, 0, 10);
 	pLight->Direction = Vector3F(0, 0, -1);
 	pLight->Angle = 0.5F;
 	pLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
-	pGeo->Lights.Append(pLight);
+	pPlane->Lights.Append(pLight);
 
 	// Notice the difference between attaching a light directly:
-	// 	pGeo->Lights.Append(pLight);
+	// 	pPlane->Lights.Append(pLight);
 	//
 	// and attaching a light via the AttachLight() method used
 	// in OnInitialize():
-	//	pGeo->AttachLight(pLight);
+	//	pPlane->AttachLight(pLight);
 	//
-	// pGeo->Lights[] holds all lights that will be used for rendering.
-	// pGeo->AttachLight() adds a light to an internal container and
+	// pPlane->Lights[] holds all lights that will be used for rendering.
+	// pPlane->AttachLight() adds a light to an internal container and
 	// needs UpdateRS() to accumulate all lights from the internal container
-	// and the lights of all the parents of pGeo into pGeo->Lights.
+	// and the lights of all the parents of pPlane into pPlane->Lights.
 	// In short: use the first approach for direct rendering and the second
 	// if you are using the scene graph for rendering.
 
-	return pGeo;
+	return pPlane;
 }
 
 //----------------------------------------------------------------------------

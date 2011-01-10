@@ -25,6 +25,16 @@ public:
 	static Geometry* CreateCube24(const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
+
+	// Plane (mesh subdivided in x, y direction)
+	static Geometry* CreatePlane(const UInt xTileCount, const UInt yTileCount,
+		const Float xTotalSize, const Float yTotalSize,
+		const UInt vertexColorChannels = 0,
+		const UInt uvQuantity = 0, const Bool useNormals = false);
+
+	static Geometry* CreateQuad(const UInt vertexColorChannels = 0,
+		const UInt uvQuantity = 0, const Bool useNormals = false,
+		const Float extent = 1.0F);
 };
 
 }

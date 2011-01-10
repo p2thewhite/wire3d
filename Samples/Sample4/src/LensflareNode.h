@@ -17,6 +17,13 @@ protected:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:
+	struct Lensflare
+	{
+		Float sizeFactor;
+		Float positionFactor;
+		ColorRGB color;
+	};
+
 	void CreateFlares();
 	Geometry* CreateQuad(Float scale, Float uvFactor, Float uOffset,
 		Float vOffset, Texture2D* pTexture);

@@ -159,7 +159,7 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 	attributes.SetTCoordChannels(2);	// channels: U, V
 
 	const UInt vertexCount = segmentCount * shapeCount;
-	VertexBuffer* pVertices = WIRE_NEW VertexBuffer(attributes, vertexCount);
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, vertexCount);
 
 	// create the pq torus knot and position & align the shape along it
 	angleStride = MathF::TWO_PI / (segmentCount-1);
@@ -191,26 +191,26 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		for (UInt j = 0; j < shapeCount; j++)
 		{	
 			Vector3F newVertex = p0 + shape[j].X() * n + shape[j].Y() * b;
-			pVertices->Position3(i*shapeCount + j) = newVertex;
+			pVBuffer->Position3(i*shapeCount + j) = newVertex;
 
 			Vector2F uv((1.0F/(shapeCount-1))*j, (1.0F/(segmentCount-1))*i);
-			pVertices->TCoord2(i*shapeCount + j) = uv;
+			pVBuffer->TCoord2(i*shapeCount + j) = uv;
 		}
 	}
 
 	// the last segment can't share uv-coords, so we copy it from the first
 	for (UInt j = 0; j < shapeCount; j++)
 	{	
-		pVertices->Position3((segmentCount-1)*shapeCount + j) = pVertices->
+		pVBuffer->Position3((segmentCount-1)*shapeCount + j) = pVBuffer->
 			Position3(j);
-		Vector2F uv = pVertices->TCoord2(j);
+		Vector2F uv = pVBuffer->TCoord2(j);
 		uv.Y() += 1.0F;
-		pVertices->TCoord2((segmentCount-1)*shapeCount + j) = uv;
+		pVBuffer->TCoord2((segmentCount-1)*shapeCount + j) = uv;
 	}
 
 	// here we establish connectivity information defined in an IndexBuffer
 	const UInt indexCount = (segmentCount-1)*(shapeCount-1)*6;
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexCount);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexCount);
 	for (UInt j = 0; j < segmentCount-1; j++)
 	{
 		UInt offset = shapeCount*j;
@@ -222,17 +222,17 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 			UInt index2 = index0+1;
 			UInt index3 = index0+shapeCount+1;
 
-			(*pIndices)[index*6] = index0;
-			(*pIndices)[index*6+1] = index1;
-			(*pIndices)[index*6+2] = index2;
+			(*pIBuffer)[index*6] = index0;
+			(*pIBuffer)[index*6+1] = index1;
+			(*pIBuffer)[index*6+2] = index2;
 
-			(*pIndices)[index*6+3] = index2;
-			(*pIndices)[index*6+4] = index1;
-			(*pIndices)[index*6+5] = index3;
+			(*pIBuffer)[index*6+3] = index2;
+			(*pIBuffer)[index*6+4] = index1;
+			(*pIBuffer)[index*6+5] = index3;
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pVertices, pIndices);
+	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	return pGeo;
 }
 

@@ -106,50 +106,22 @@ void LensflareNode::CreateFlares()
 Geometry* LensflareNode::CreateQuad(Float scale, Float uvFactor,
 	Float uOffset, Float vOffset, Texture2D* pTexture)
 {
-	const Vector3F vertices[] =
+	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, scale);
+	VertexBuffer* pVBuffer = pQuad->VBuffer;
+
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		Vector3F(-1, 1, 0), Vector3F(1, 1, 0),
-		Vector3F(1, -1, 0), Vector3F(-1, -1, 0)
-	};
-
-	const Vector2F uvs[] =
-	{
-		Vector2F(0, 0), Vector2F(1, 0), Vector2F(1, 1), Vector2F(0, 1)
-	};
-
-	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetTCoordChannels(2);	// channels: U, V
-
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
-		vertexQuantity);
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
-	{
-		pCubeVerts->Position3(i) = vertices[i] * scale;
-		pCubeVerts->TCoord2(i) = uvs[i] * uvFactor;
- 		pCubeVerts->TCoord2(i).X() += uOffset;
- 		pCubeVerts->TCoord2(i).Y() += vOffset;
+		pVBuffer->TCoord2(i) *= uvFactor;
+ 		pVBuffer->TCoord2(i).X() += uOffset;
+ 		pVBuffer->TCoord2(i).Y() += vOffset;
 	}
-
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
-	for	(UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndices)[i] = indices[i];
-	}
-
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
 
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
-	pCube->AttachEffect(pTextureEffect);
+	pQuad->AttachEffect(pTextureEffect);
 
-	return pCube;
+	return pQuad;
 }
 
 //----------------------------------------------------------------------------
@@ -232,8 +204,6 @@ void LensflareNode::CreateTextures()
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	mspLensTex0 = WIRE_NEW Texture2D(pImage);
 
-
-	// 
  	width = 256;
  	height = 256;
 	r = MathF::Min(static_cast<Float>(width), static_cast<Float>(height))
