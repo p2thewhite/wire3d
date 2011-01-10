@@ -307,28 +307,28 @@ Geometry* Sample1::CreateCube()
 	// the assert fires and halts the application (in debug mode only)
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
-		pCubeVerts->TCoord2(i) = uvs[i];
+		pVBuffer->Position3(i) = vertices[i];
+		pVBuffer->TCoord2(i) = uvs[i];
 
 		// We don't provide normals here, we generate them later.
-//		pCubeVerts->Normal3(i) = normals[i];
+//		pVBuffer->Normal3(i) = normals[i];
 	}
 
 	// Fill the IndexBuffer with data.
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
-		(*pIndices)[i] = indices[i];
+		(*pIBuffer)[i] = indices[i];
 	}
 
 	// Geometric objects consist of a Vertex- and IndexBuffer.
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
 	// Generate normal vectors from the triangles of the geometry.
 	pCube->GenerateNormals();

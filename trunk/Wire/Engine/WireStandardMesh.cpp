@@ -41,21 +41,21 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 	}
 
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
+		pVBuffer->Position3(i) = vertices[i];
 		if (vertexColorChannels == 3)
 		{
-			pCubeVerts->Color3(i) = colors[i];
+			pVBuffer->Color3(i) = colors[i];
 		}
 		else if (vertexColorChannels == 4)
 		{
 			const ColorRGB& rCol = colors[i];
 			ColorRGBA col = ColorRGBA(rCol.R(), rCol.G(), rCol.B(), 1.0F);
-			pCubeVerts->Color4(i) = col;
+			pVBuffer->Color4(i) = col;
 		}
 
 		if (useNormals)
@@ -63,7 +63,7 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 			// use platonic normal as default
 			Vector3F normal = vertices[i];
 			normal.Normalize();
-			pCubeVerts->Normal3(i) =  normal;
+			pVBuffer->Normal3(i) =  normal;
 		}
 	}
 
@@ -71,13 +71,13 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 		6, 4, 5, 6, 7, 4, 6, 5, 1, 6, 1, 2,	6, 2, 3, 6, 3, 7, };
 
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for (UInt i = 0; i < indexQuantity; i++)
 	{
-		(*pIndices)[i] = indices[i];
+		(*pIBuffer)[i] = indices[i];
 	}
 
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	return pCube;
 }
 
@@ -149,27 +149,27 @@ Geometry* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
+		pVBuffer->Position3(i) = vertices[i];
 
 		for (UInt unit = 0; unit < uvQuantity; unit++)
 		{
-			pCubeVerts->TCoord2(i, unit) = uvs[i];
+			pVBuffer->TCoord2(i, unit) = uvs[i];
 		}
 
 		if (vertexColorChannels == 3)
 		{
-			pCubeVerts->Color3(i) = colors[i];
+			pVBuffer->Color3(i) = colors[i];
 		}
 		else if (vertexColorChannels == 4)
 		{
 			const ColorRGB& rCol = colors[i];
 			ColorRGBA col = ColorRGBA(rCol.R(), rCol.G(), rCol.B(), 1.0F);
-			pCubeVerts->Color4(i) = col;
+			pVBuffer->Color4(i) = col;
 		}
 
 		if (useNormals)
@@ -177,23 +177,23 @@ Geometry* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 			// use platonic normal as default
 			Vector3F normal = vertices[i];
 			normal.Normalize();
-			pCubeVerts->Normal3(i) =  normal;
+			pVBuffer->Normal3(i) =  normal;
 		}
 	}
 
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(6*6);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(6*6);
 	for	(UInt i = 0; i < 6; i++)
 	{
-		(*pIndices)[0+i*6] = indices[0+i*4];
-		(*pIndices)[1+i*6] = indices[1+i*4];
-		(*pIndices)[2+i*6] = indices[3+i*4];
+		(*pIBuffer)[0+i*6] = indices[0+i*4];
+		(*pIBuffer)[1+i*6] = indices[1+i*4];
+		(*pIBuffer)[2+i*6] = indices[3+i*4];
 
-		(*pIndices)[3+i*6] = indices[3+i*4];
-		(*pIndices)[4+i*6] = indices[1+i*4];
-		(*pIndices)[5+i*6] = indices[2+i*4];
+		(*pIBuffer)[3+i*6] = indices[3+i*4];
+		(*pIBuffer)[4+i*6] = indices[1+i*4];
+		(*pIBuffer)[5+i*6] = indices[2+i*4];
 	}
 
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	return pCube;
 }
 
@@ -284,27 +284,27 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
 	WIRE_ASSERT(vertexQuantity == (sizeof(colors) / sizeof(ColorRGB)));	
-	VertexBuffer* pCubeVerts = WIRE_NEW VertexBuffer(attributes,
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pCubeVerts->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		pCubeVerts->Position3(i) = vertices[i];
+		pVBuffer->Position3(i) = vertices[i];
 
 		for (UInt unit = 0; unit < uvQuantity; unit++)
 		{
-			pCubeVerts->TCoord2(i, unit) = uvs[i];
+			pVBuffer->TCoord2(i, unit) = uvs[i];
 		}
 
 		if (vertexColorChannels == 3)
 		{
-			pCubeVerts->Color3(i) = colors[i];
+			pVBuffer->Color3(i) = colors[i];
 		}
 		else if (vertexColorChannels == 4)
 		{
 			const ColorRGB& rCol = colors[i];
 			ColorRGBA col = ColorRGBA(rCol.R(), rCol.G(), rCol.B(), 1.0F);
-			pCubeVerts->Color4(i) = col;
+			pVBuffer->Color4(i) = col;
 		}
 
 		if (useNormals)
@@ -312,17 +312,200 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 			// use platonic normal as default
 			Vector3F normal = vertices[i];
 			normal.Normalize();
-			pCubeVerts->Normal3(i) =  normal;
+			pVBuffer->Normal3(i) =  normal;
 		}
 	}
 
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIndices = WIRE_NEW IndexBuffer(indexQuantity);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
-		(*pIndices)[i] = indices[i];
+		(*pIBuffer)[i] = indices[i];
 	}
 
-	Geometry* pCube = WIRE_NEW Geometry(pCubeVerts, pIndices);
+	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	return pCube;
+}
+
+//----------------------------------------------------------------------------
+Geometry* StandardMesh::CreatePlane(const UInt xTileCount,
+	const UInt yTileCount, const Float xSizeTotal, const Float ySizeTotal,
+	const UInt vertexColorChannels, const UInt uvQuantity,
+	const Bool useNormals)
+{
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);  // channels: X, Y, Z
+	
+	for (UInt unit = 0; unit < uvQuantity; unit++)
+	{
+		attributes.SetTCoordChannels(2, unit);	// channels: U, V
+	}
+
+	if (vertexColorChannels > 0)
+	{
+		WIRE_ASSERT(vertexColorChannels == 3 || vertexColorChannels == 4);
+		attributes.SetColorChannels(vertexColorChannels);	// RGB(A)
+	}
+
+	if (useNormals)
+	{
+		attributes.SetNormalChannels(3);	// channels: X, Y, Z
+	}
+
+	const UInt vertexCount = (xTileCount+1) * (yTileCount+1);
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, vertexCount);
+
+	const Float xStride = xSizeTotal / xTileCount;
+	const Float yStride = ySizeTotal / yTileCount;
+	Float y = -ySizeTotal * 0.5F;
+	for (UInt j = 0; j < yTileCount+1; j++)
+	{
+		Float x = -xSizeTotal * 0.5F;;
+		for (UInt i = 0; i < xTileCount+1; i++)
+		{
+			const UInt idx = i + (xTileCount+1)*j;
+			pVBuffer->Position3(idx) = Vector3F(x, y, 0);
+
+			for (UInt unit = 0; unit < uvQuantity; unit++)
+			{
+				pVBuffer->TCoord2(i + (xTileCount+1)*j, unit) =
+					Vector2F(x, y);
+			}
+
+			if (vertexColorChannels == 3)
+			{
+				pVBuffer->Color3(idx) = ColorRGB::WHITE;
+			}
+			else if (vertexColorChannels == 4)
+			{
+				pVBuffer->Color4(idx) = ColorRGBA::WHITE;
+			}
+			
+			if (useNormals)
+			{
+				// use platonic normal as default
+				Vector3F normal = pVBuffer->Position3(idx);
+				normal.Normalize();
+				pVBuffer->Normal3(idx) =  normal;
+			}
+			
+			x += xStride;
+		}
+
+		y += yStride;
+	}
+
+	const UInt indexCount = xTileCount * yTileCount * 6;
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexCount);
+
+	for (UInt j = 0; j < yTileCount; j++)
+	{
+		UInt offset = (xTileCount+1)*j;
+		for (UInt i = 0; i < xTileCount; i++)
+		{
+			UInt index = xTileCount*j+i;
+			UInt index0 = i+offset;
+			UInt index1 = index0+xTileCount+1;
+			UInt index2 = index0+1;
+			UInt index3 = index0+xTileCount+2;
+
+			(*pIBuffer)[index*6] = index0;
+			(*pIBuffer)[index*6+1] = index2;
+			(*pIBuffer)[index*6+2] = index1;
+
+			(*pIBuffer)[index*6+3] = index1;
+			(*pIBuffer)[index*6+4] = index2;
+			(*pIBuffer)[index*6+5] = index3;
+
+		}
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
+	const UInt uvQuantity, const Bool useNormals, const Float extent)
+{
+	const Vector3F vertices[] =
+	{
+		Vector3F(-extent, extent, 0), Vector3F(extent, extent, 0),
+		Vector3F(extent, -extent, 0), Vector3F(-extent, -extent, 0)
+	};
+
+	const Vector2F uvs[] =
+	{
+		Vector2F(0, 0), Vector2F(1, 0), Vector2F(1, 1), Vector2F(0, 1)
+	};
+
+	const ColorRGB colors[] = {
+		ColorRGB(1.0F, 0.0F, 0.0F), ColorRGB(0.0F, 1.0F, 0.0F),
+		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F)
+	};
+
+	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
+
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);  // channels: X, Y, Z
+
+	for (UInt unit = 0; unit < uvQuantity; unit++)
+	{
+		attributes.SetTCoordChannels(2, unit);	// channels: U, V
+	}
+
+	if (vertexColorChannels > 0)
+	{
+		WIRE_ASSERT(vertexColorChannels == 3 || vertexColorChannels == 4);
+		attributes.SetColorChannels(vertexColorChannels);	// RGB(A)
+	}
+
+	if (useNormals)
+	{
+		attributes.SetNormalChannels(3);	// channels: X, Y, Z
+	}
+
+	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
+		vertexQuantity);
+
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	{
+ 		pVBuffer->Position3(i) = vertices[i];
+
+		for (UInt unit = 0; unit < uvQuantity; unit++)
+		{
+			pVBuffer->TCoord2(i) = uvs[i];
+		}
+
+		if (vertexColorChannels == 3)
+		{
+			pVBuffer->Color3(i) = colors[i];
+		}
+		else if (vertexColorChannels == 4)
+		{
+			const ColorRGB& rCol = colors[i];
+			ColorRGBA col = ColorRGBA(rCol.R(), rCol.G(), rCol.B(), 1.0F);
+			pVBuffer->Color4(i) = col;
+		}
+		
+		if (useNormals)
+		{
+			// use platonic normal as default
+			Vector3F normal = vertices[i];
+			normal.Normalize();
+			pVBuffer->Normal3(i) =  normal;
+		}
+	}
+
+	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
+	for	(UInt i = 0; i < indexQuantity; i++)
+	{
+		(*pIBuffer)[i] = indices[i];
+	}
+
+	Geometry* pQuad = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	return pQuad;
 }
