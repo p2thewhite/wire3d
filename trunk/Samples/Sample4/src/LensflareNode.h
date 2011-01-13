@@ -17,22 +17,33 @@ protected:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:
-	struct Lensflare
+	enum FlareType
 	{
-		Float sizeFactor;
-		Float positionFactor;
-		ColorRGB color;
+		FT_FLARE_1,
+		FT_FLARE_2,
+		FT_FLARE_3,
+		FT_FLARE_4,
+		FT_FLARE_5
+	};
+
+	struct FlareDef
+	{
+		FlareType Type;
+		Float SizeFactor;
+		Float PositionFactor;
+		ColorRGB Color;
 	};
 
 	void CreateFlares();
-	Geometry* CreateQuad(Float scale, Float uvFactor, Float uOffset,
-		Float vOffset, Texture2D* pTexture);
+	Geometry* CreateFlare(const FlareDef& rDef);
 	void CreateTextures();
 	Float SmoothStep(Float a, Float b, Float x);
 	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);
 
 	Texture2DPtr mspLensTex0;
 	Texture2DPtr mspLensTex1;
+
+	static const FlareDef mDefaultDefs[];
 };
 
 typedef Pointer<LensflareNode> LensflareNodePtr;

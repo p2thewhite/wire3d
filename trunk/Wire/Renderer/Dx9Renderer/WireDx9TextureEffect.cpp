@@ -88,7 +88,7 @@ void Renderer::ApplyEffect(const TextureEffect* pEffect)
 
 		if (argAlphaCount > 1)
 		{
-			DWORD op = PdrRendererData::sTexBlend[idx+5];
+			DWORD op = (unit > 0) ? D3DTA_CURRENT : D3DTA_DIFFUSE;
 			hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAARG2, op);
 			WIRE_ASSERT(SUCCEEDED(hr));
 

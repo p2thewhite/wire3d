@@ -3,6 +3,14 @@
 
 using namespace Wire;
 
+const LensflareNode::FlareDef LensflareNode::mDefaultDefs[] = {
+	{ FT_FLARE_1, 0.01F, 1.0F, ColorRGB(1, 1, 1) },
+	{ FT_FLARE_2, 0.01F, 0.5F, ColorRGB(1, 0, 1) },
+	{ FT_FLARE_3, 0.01F, 0.0F, ColorRGB(1, 1, 0) },
+	{ FT_FLARE_4, 0.01F, -0.5F, ColorRGB(0, 1, 1) },
+	{ FT_FLARE_5, 0.01F, -1.0F, ColorRGB(1, 1, 1) }
+};
+
 //----------------------------------------------------------------------------
 LensflareNode::LensflareNode()
 {
@@ -59,15 +67,14 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	lightPos2D[0] *= r;
 	lightPos2D[1] *= t;
 
-	Float position = 1.0F;
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
+		Float position = mDefaultDefs[i].PositionFactor;
+
 		Vector3F newPos = pCam->GetLocation() +
 			pCam->GetDVector() * (n + (0.01F * (GetQuantity()-i))) +
 			pCam->GetRVector() * lightPos2D[0] * position +
 			pCam->GetUVector() * lightPos2D[1] * position;
-
-		position -= 0.5F;
 
 		//set new position
 		GetChild(i)->Local.SetTranslate(newPos);
@@ -83,12 +90,13 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 void LensflareNode::CreateFlares()
 {
 	CreateTextures();
-
-	AttachChild(CreateQuad(0.01F, 0.498F, 0.0F, 0.0F, mspLensTex0));
-	AttachChild(CreateQuad(0.01F, 0.5F, 0.501F, 0.501F, mspLensTex0));
-	AttachChild(CreateQuad(0.01F, 0.5F, 0.501F, 0.0F, mspLensTex0));
-	AttachChild(CreateQuad(0.01F, 0.5F, 0.0F, 0.5F, mspLensTex0));
-	AttachChild(CreateQuad(0.01F, 1, 0, 0, mspLensTex1));
+	
+	UInt quantity = sizeof(mDefaultDefs) / sizeof(FlareDef);
+	for (UInt i = 0; i < quantity; i++)
+	{
+		Geometry* pFlare = CreateFlare(mDefaultDefs[i]);
+		AttachChild(pFlare);
+	}
 
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
 	pAlpha->BlendEnabled = true;
@@ -103,14 +111,49 @@ void LensflareNode::CreateFlares()
 }
 
 //----------------------------------------------------------------------------
-Geometry* LensflareNode::CreateQuad(Float scale, Float uvFactor,
-	Float uOffset, Float vOffset, Texture2D* pTexture)
+Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 {
-	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, scale);
+	Float uvFactor;
+	Float uOffset;
+	Float vOffset;
+	Texture2D* pTexture = mspLensTex0;
+
+	switch (rDef.Type)
+	{
+	case FT_FLARE_1:
+		uvFactor = 0.498F; uOffset = 0.0F; vOffset = 0.0F;
+		break;
+
+	case FT_FLARE_2:
+		uvFactor = 0.5F; uOffset = 0.501F; vOffset = 0.501F;
+		break;
+
+	case FT_FLARE_3:
+		uvFactor = 0.5F; uOffset = 0.501F; vOffset = 0.0F;
+		break;
+
+	case FT_FLARE_4:
+		uvFactor = 0.5F; uOffset = 0.0F; vOffset = 0.5F;
+		break;
+
+	case FT_FLARE_5:
+		uvFactor = 1.0F; uOffset = 0.0F; vOffset = 0.0F;
+		pTexture = mspLensTex1;
+		break;
+
+	default:
+		WIRE_ASSERT(false);
+		return NULL;
+	}
+
+	Geometry* pQuad = StandardMesh::CreateQuad(4, 1, false, rDef.SizeFactor);
 	VertexBuffer* pVBuffer = pQuad->VBuffer;
+
+	ColorRGBA col(rDef.Color.R(), rDef.Color.G(), rDef.Color.B(), 1.0F);
 
 	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
+		pVBuffer->Color4(i) = col;
 		pVBuffer->TCoord2(i) *= uvFactor;
  		pVBuffer->TCoord2(i).X() += uOffset;
  		pVBuffer->TCoord2(i).Y() += vOffset;
@@ -118,7 +161,7 @@ Geometry* LensflareNode::CreateQuad(Float scale, Float uvFactor,
 
 	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
 	pQuad->AttachEffect(pTextureEffect);
 
 	return pQuad;
