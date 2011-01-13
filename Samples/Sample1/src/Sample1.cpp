@@ -13,7 +13,7 @@ WIRE_APPLICATION(Sample1);
 Bool Sample1::OnInitialize()
 {
 	// This function is called by the framework before the rendering loop
-	// starts. Put all you initializations here.
+	// starts. Put all your initializations here.
 
 	// The platform dependent part of the application might need to do some
 	// initialization. If it fails, we return false and the application exits.
