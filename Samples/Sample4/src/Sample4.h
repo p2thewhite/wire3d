@@ -3,7 +3,6 @@
 #define SAMPLE4_H
 
 #include "WireApplication.h"
-#include "LensflareNode.h"
 
 using namespace Wire;
 
@@ -14,16 +13,27 @@ class Sample4 : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
-	Sample4();
-
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
 private:
-	CameraPtr mspCamera;
-	Culler mCuller;
+	struct BlendMode
+	{
+		BlendMode(TextureEffect::BlendMode mode0,
+			TextureEffect::BlendMode mode1)
+			:
+		Mode0(mode0),
+			Mode1(mode1) {}
 
-	LensflareNodePtr mspLensflare;
+		TextureEffect::BlendMode Mode0;
+		TextureEffect::BlendMode Mode1;
+	};
+
+	Texture2D* CreateTexture();
+	Texture2D* CreateTexture2();
+
+	CameraPtr mspCamera;
+	GeometryPtr mspGeometry;
 
 	Float mAngle;
 	Double mLastTime;

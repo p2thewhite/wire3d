@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Sample6 - Multitexturing</ProjectName>
+    <ProjectName>Sample6 - Custom Nodes</ProjectName>
     <ProjectGuid>{B7E9591C-70B0-425C-B0A9-A7600E412B8B}</ProjectGuid>
     <RootNamespace>Sample6_WIN32</RootNamespace>
   </PropertyGroup>
@@ -120,9 +120,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\LensflareNode.cpp" />
     <ClCompile Include="src\Sample6.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LensflareNode.h" />
     <ClInclude Include="src\Sample6.h" />
   </ItemGroup>
   <ItemGroup>

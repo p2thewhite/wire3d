@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample4 - Custom Nodes"
+	Name="Sample4 - Multitexturing"
 	ProjectGUID="{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
 	RootNamespace="Sample3_WIN32"
 	>
@@ -188,18 +188,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Lensflare"
-			>
-			<File
-				RelativePath=".\src\LensflareNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\LensflareNode.h"
-				>
-			</File>
-		</Filter>
 		<File
 			RelativePath=".\src\Sample4.cpp"
 			>
