@@ -12,6 +12,8 @@ class Geometry;
 class StandardMesh
 {
 public:
+	// Standard meshes centered at (0,0,0)	
+
 	// Cube using 8 vertices
 	static Geometry* CreateCube8(const UInt vertexColorChannels = 0,
 		const Bool useNormals = false, const Float extent = 1.0F);
@@ -32,9 +34,13 @@ public:
 		const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false);
 
+	// Quad consisting of 2 triangles.
 	static Geometry* CreateQuad(const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
+
+	static Geometry* CreateSphere(Int zSampleCount, Int radialSampleCount,
+		Float radius);
 };
 
 }

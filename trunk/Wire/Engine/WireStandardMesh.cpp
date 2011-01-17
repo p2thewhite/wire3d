@@ -509,3 +509,207 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 	Geometry* pQuad = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	return pQuad;
 }
+
+//----------------------------------------------------------------------------
+Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
+	Float radius)
+{
+	VertexAttributes attr;
+	attr.SetPositionChannels(3);  // channels: X, Y, Z
+
+	Int iZSm1 = zSampleCount-1;
+	Int iZSm2 = zSampleCount-2;
+	Int iZSm3 = zSampleCount-3;
+	Int iRSp1 = radialSampleCount+1;
+	const Int vertexQuantity = iZSm2*iRSp1 + 2;
+	const Int triangleQuantity = 2*iZSm2*radialSampleCount;
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attr, vertexQuantity);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(3 * triangleQuantity);
+
+	// generate geometry
+	const Float invRS = 1.0F / static_cast<Float>(radialSampleCount);
+	const Float zFactor = 2.0F / static_cast<Float>(iZSm1);
+	Int iR;
+	Int iZ;
+	Int iZStart;
+	Int i;
+
+	// Generate points on the unit circle to be used in computing the mesh
+	// points on a cylinder slice.
+	Float* pSin = WIRE_NEW Float[iRSp1];
+	Float* pCos = WIRE_NEW Float[iRSp1];
+	for (iR = 0; iR < radialSampleCount; iR++)
+	{
+		Float angle = MathF::TWO_PI * invRS * iR;
+		pCos[iR] = MathF::Cos(angle);
+		pSin[iR] = MathF::Sin(angle);
+	}
+
+	pSin[radialSampleCount] = pSin[0];
+	pCos[radialSampleCount] = pCos[0];
+
+	// generate the cylinder itself
+	for (iZ = 1, i = 0; iZ < iZSm1; iZ++)
+	{
+		const Float zFraction = -1.0F + zFactor * iZ;  // in (-1,1)
+		const Float fZ = radius * zFraction;
+
+		// compute center of slice
+		Vector3F sliceCenter(0.0F, 0.0F, fZ);
+
+		// compute radius of slice
+		Float sliceRadius = MathF::Sqrt(MathF::FAbs(radius*radius - fZ*fZ));
+
+		// compute slice vertices with duplication at end point
+		Vector3F normal;
+		Int save = i;
+		for (iR = 0; iR < radialSampleCount; iR++)
+		{
+			Float radialFraction = iR * invRS;  // in [0,1)
+			Vector3F radial(pCos[iR], pSin[iR], 0.0F);
+			pVBuffer->Position3(i) = sliceCenter + sliceRadius * radial;
+			if (attr.HasNormal())
+			{
+				normal = pVBuffer->Position3(i);
+				normal.Normalize();
+				pVBuffer->Normal3(i) = normal;
+			}
+
+			if (attr.GetTCoordChannelQuantity() > 0)
+			{
+				Vector2F tCoord = Vector2F(radialFraction, 0.5F *
+					(zFraction+1.0F));
+				for (UInt unit = 0; unit < attr.GetTCoordChannelQuantity();
+					unit++)
+				{
+					if (attr.HasTCoord(unit))
+					{
+						pVBuffer->TCoord2(unit, i) = tCoord;
+					}
+				}
+			}
+
+			i++;
+		}
+
+		pVBuffer->Position3(i) = pVBuffer->Position3(save);
+		if (attr.HasNormal())
+		{
+			pVBuffer->Normal3(i) = pVBuffer->Normal3(save);
+		}
+
+		if (attr.GetTCoordChannelQuantity() > 0)
+		{
+			Vector2F tCoord = Vector2F(1.0F, 0.5F * (zFraction+1.0F));
+			for (UInt unit = 0; unit < attr.GetTCoordChannelQuantity();
+				unit++)
+			{
+				if (attr.HasTCoord(unit))
+				{
+					pVBuffer->TCoord2(unit, i) = tCoord;
+				}
+			}
+		}
+
+		i++;
+	}
+
+	// south pole
+	pVBuffer->Position3(i) = -radius * Vector3F::UNIT_Z;
+	if (attr.HasNormal())
+	{
+		pVBuffer->Normal3(i) = -Vector3F::UNIT_Z;
+	}
+
+	if (attr.GetTCoordChannelQuantity() > 0)
+	{
+		Vector2F tCoord = Vector2F(0.5F, 0.5F);
+		for (UInt unit = 0; unit < attr.GetTCoordChannelQuantity(); unit++)
+		{
+			if (attr.HasTCoord(unit))
+			{
+				pVBuffer->TCoord2(unit, i) = tCoord;
+			}
+		}
+	}
+
+	i++;
+
+	// north pole
+	pVBuffer->Position3(i) = radius * Vector3F::UNIT_Z;
+	if (attr.HasNormal())
+	{
+		pVBuffer->Normal3(i) = Vector3F::UNIT_Z;
+	}
+
+	if (attr.GetTCoordChannelQuantity() > 0)
+	{
+		Vector2F tCoord = Vector2F(0.5F, 1.0F);
+		for (UInt unit = 0; unit < attr.GetTCoordChannelQuantity(); unit++)
+		{
+			if (attr.HasTCoord(unit))
+			{
+				pVBuffer->TCoord2(unit, i) = tCoord;
+			}
+		}
+	}
+
+	i++;
+	WIRE_ASSERT(i == vertexQuantity);
+
+	// generate connectivity
+	UInt* pLocalIndex = pIBuffer->GetData();
+	for (iZ = 0, iZStart = 0; iZ < iZSm3; iZ++)
+	{
+		Int i0 = iZStart;
+		Int i1 = i0 + 1;
+		iZStart += iRSp1;
+		Int i2 = iZStart;
+		Int i3 = i2 + 1;
+		for (i = 0; i < radialSampleCount; i++)
+		{
+			pLocalIndex[0] = i0++;
+			pLocalIndex[1] = i1;
+			pLocalIndex[2] = i2;
+			pLocalIndex[3] = i1++;
+			pLocalIndex[4] = i3++;
+			pLocalIndex[5] = i2++;
+			pLocalIndex += 6;
+		}
+	}
+
+	// south pole triangles
+	Int iVQm2 = vertexQuantity-2;
+	for (i = 0; i < radialSampleCount; i++)
+	{
+		pLocalIndex[0] = i;
+		pLocalIndex[1] = iVQm2;
+		pLocalIndex[2] = i+1;
+		pLocalIndex += 3;
+	}
+
+	// north pole triangles
+	Int iVQm1 = vertexQuantity-1;
+	Int offset = iZSm3 * iRSp1;
+	for (i = 0; i < radialSampleCount; i++)
+	{
+		pLocalIndex[0] = i+offset;
+		pLocalIndex[1] = i+1+offset;
+		pLocalIndex[2] = iVQm1;
+		pLocalIndex += 3;
+	}
+
+	WIRE_ASSERT(pLocalIndex == pIBuffer->GetData() + 3*triangleQuantity);
+
+	WIRE_DELETE[] pCos;
+	WIRE_DELETE[] pSin;
+
+	Geometry* pMesh = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+
+	// The duplication of vertices at the seam cause the automatically
+	// generated bounding volume to be slightly off center. Reset the bound
+	// to use the true information.
+	pMesh->ModelBound->SetCenter(Vector3F::ZERO);
+	pMesh->ModelBound->SetRadius(radius);
+	return pMesh;
+}

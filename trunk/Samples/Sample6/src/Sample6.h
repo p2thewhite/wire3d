@@ -23,7 +23,7 @@ private:
 	CameraPtr mspCamera;
 	Culler mCuller;
 
-	LensflareNodePtr mspLensflare;
+	NodePtr mspRoot;
 
 	Float mAngle;
 	Double mLastTime;

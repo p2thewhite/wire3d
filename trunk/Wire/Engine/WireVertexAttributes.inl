@@ -23,6 +23,40 @@ inline void VertexAttributes::SetInterleaved(Bool isChannelInterleaved)
 }
 
 //----------------------------------------------------------------------------
+inline Bool VertexAttributes::HasPosition() const
+{
+	return mPositionChannels > 0;
+}
+
+//----------------------------------------------------------------------------
+inline Bool VertexAttributes::HasColor(UInt unit) const
+{
+	if (unit >= mColorChannels.GetQuantity())
+	{
+		return false;
+	}
+
+	return mColorChannels[unit] > 0;
+}
+
+//----------------------------------------------------------------------------
+inline Bool VertexAttributes::HasNormal() const
+{
+	return mNormalChannels > 0;
+}
+
+//----------------------------------------------------------------------------
+inline Bool VertexAttributes::HasTCoord(UInt unit) const
+{
+	if (unit >= mTCoordChannels.GetQuantity())
+	{
+		return false;
+	}
+
+	return mTCoordChannels[unit] > 0;
+}
+
+//----------------------------------------------------------------------------
 inline UInt VertexAttributes::GetPositionChannels() const
 {
 	return mPositionChannels;
