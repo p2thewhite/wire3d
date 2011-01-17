@@ -24,6 +24,11 @@ public:
 	void SetNormalChannels(UInt normalChannels);
 	void SetTCoordChannels(UInt tCoordChannels, UInt unit = 0);
 
+	inline Bool HasPosition() const;
+	inline Bool HasColor(UInt unit = 0) const;
+	inline Bool HasNormal() const;
+	inline Bool HasTCoord(UInt unit = 0) const;
+
 	inline UInt GetPositionChannels() const;
 	inline UInt GetColorChannels(UInt unit = 0) const;
 	inline UInt GetNormalChannels() const;

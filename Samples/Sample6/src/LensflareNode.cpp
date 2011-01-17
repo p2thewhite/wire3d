@@ -25,7 +25,6 @@ LensflareNode::LensflareNode()
 void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
 	const Camera* pCam = rCuller.GetCamera();
-//	LightPtr spLight = 
 
 	Transformation camTrafo;
 	camTrafo.SetTranslate(pCam->GetLocation());
@@ -33,10 +32,11 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 		pCam->GetDVector(), true));
 
 	const Vector3F& rCamPosition = camTrafo.GetTranslate();
-	Vector3F lightDirection = Vector3F(0, 0, 1) * 500.0F;
- 	Vector3F lightPosWorld = rCamPosition + lightDirection;
-	lightPosWorld = Vector3F(20, 20, -500);
+	Vector3F lightDirection = Vector3F(0.2F, 0.4F, 1.0F);
+	lightDirection.Normalize();
+ 	Vector3F lightPosWorld = rCamPosition + lightDirection * 500.0F;
 
+	// viewing frustum left, right, bottom, top, near, far
 	Float l, r, b, t, n, f;
 	pCam->GetFrustum(l, r, b, t, n, f);
 
@@ -49,7 +49,7 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	projectionMatrix.SetColumn(1, col1);
 	projectionMatrix.SetColumn(2, col2);
 	projectionMatrix.SetColumn(3, col3);
-
+		
 	// transform to camera space
 	Vector3F lightPosCamSpace = camTrafo.ApplyInverse(lightPosWorld);
 
@@ -57,31 +57,73 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	Vector4F lightPosScreenSpace = projectionMatrix * Vector4F(
 		lightPosCamSpace.X(), lightPosCamSpace.Y(), lightPosCamSpace.Z(), 1);
 
-	float invW = 1.0F / lightPosScreenSpace.W();
+	Float invW = 1.0F / lightPosScreenSpace.W();
 
-	//to screen coordinates [1,1 | -1,-1]
+	// to screen coordinates [1,1 | -1,-1]
 	Vector2F lightPos2D = Vector2F((lightPosScreenSpace.X() * invW * -1),
 		(lightPosScreenSpace.Y() * invW * -1));
 
-	//to frustum coordinates [fL - fR | fT - fB]
+	// to frustum coordinates [fL - fR | fT - fB]
 	lightPos2D[0] *= r;
 	lightPos2D[1] *= t;
 
+	Float alpha;
+	Float max = 0.9F * t * 1.5F;
+	Float min = 0.3F * t;
+
+// 	if (pCam->GetDVector().Dot(lightDirection) > 0)
+// 	{
+// 		alpha = 0;
+// 	}
+// 	else
+	{
+		if(lightPos2D[1] > max)
+		{
+			alpha = 1;
+		}
+		else
+		{
+			if(lightPos2D[1] < min)
+			{
+				alpha = 0;
+			}
+			else
+			{
+				alpha = (lightPos2D[1] - min) / (max-min);
+			}
+		}
+	}
+
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
-		Float position = mDefaultDefs[i].PositionFactor;
+		Spatial* pFlare = GetChild(i);
+		WIRE_ASSERT(pFlare);
+		if (alpha > 0.01F)
+		{
+			pFlare->Culling = CULL_NEVER;
+		}
+		else
+		{
+			pFlare->Culling = CULL_ALWAYS;
+		}
 
+		StateMaterial* pMaterial = DynamicCast<StateMaterial>(pFlare->
+			GetState(State::MATERIAL));
+		WIRE_ASSERT(pMaterial);
+		pMaterial->Ambient.A() = alpha;
+
+		Float position = mDefaultDefs[i].PositionFactor;
 		Vector3F newPos = pCam->GetLocation() +
 			pCam->GetDVector() * (n + (0.01F * (GetQuantity()-i))) +
 			pCam->GetRVector() * lightPos2D[0] * position +
 			pCam->GetUVector() * lightPos2D[1] * position;
 
 		//set new position
-		GetChild(i)->Local.SetTranslate(newPos);
+		pFlare->Local.SetTranslate(newPos);
 
 		//set rotation from camera
-		GetChild(i)->Local.SetRotate(camTrafo.GetRotate());
-	}	
+		pFlare->Local.SetRotate(camTrafo.GetRotate());
+	}
 
 	Node::GetVisibleSet(rCuller, noCull);
 }
@@ -106,7 +148,11 @@ void LensflareNode::CreateFlares()
 	pZBuffer->Writable = false;
 	pZBuffer->Enabled = false;
 	AttachState(pZBuffer);
-	
+
+	Light* pLight = WIRE_NEW Light;
+	pLight->Ambient = ColorRGB::WHITE;
+	AttachLight(pLight);
+
 	UpdateRS();
 }
 
@@ -146,14 +192,11 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 		return NULL;
 	}
 
-	Geometry* pQuad = StandardMesh::CreateQuad(4, 1, false, rDef.SizeFactor);
+	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, rDef.SizeFactor);
 	VertexBuffer* pVBuffer = pQuad->VBuffer;
-
-	ColorRGBA col(rDef.Color.R(), rDef.Color.G(), rDef.Color.B(), 1.0F);
 
 	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		pVBuffer->Color4(i) = col;
 		pVBuffer->TCoord2(i) *= uvFactor;
  		pVBuffer->TCoord2(i).X() += uOffset;
  		pVBuffer->TCoord2(i).Y() += vOffset;
@@ -163,6 +206,11 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	pTextureEffect->Textures.Append(pTexture);
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
 	pQuad->AttachEffect(pTextureEffect);
+
+	ColorRGBA col(rDef.Color.R(), rDef.Color.G(), rDef.Color.B(), 1.0F);
+	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
+	pMaterial->Ambient = col;
+	pQuad->AttachState(pMaterial);
 
 	return pQuad;
 }
@@ -291,7 +339,7 @@ void LensflareNode::CreateTextures()
 	max = 1/max;
 	for (UInt i = 0; i < width*height; i++)
 	{
-		Float f = pTemp[i] * max * 5000.0F;
+		Float f = pTemp[i] * max * 1000.0F;
 		UChar val = static_cast<UChar>(MathF::Clamp(0, f, 255.0F));
 		pDst[i*bpp] = val;
 		pDst[i*bpp+1] = val;
@@ -307,7 +355,7 @@ void LensflareNode::CreateTextures()
 void LensflareNode::DrawParticle(Float* const pDst, Float fx, Float fy,
 	UInt width)
 {
-	const Int partRadius = 3;
+	const Int partRadius = 10;
 
 	for (Int y = -partRadius; y < partRadius; y++)
 	{

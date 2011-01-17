@@ -18,7 +18,16 @@ Bool Sample6::OnInitialize()
 		return false;
 	}
 
-	mspLensflare = WIRE_NEW LensflareNode;
+	mspRoot = WIRE_NEW Node;
+	LensflareNode* pLensflare = WIRE_NEW LensflareNode;
+	mspRoot->AttachChild(pLensflare);
+
+	Geometry* pSphere = StandardMesh::CreateSphere(20, 20, 1);
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
+	pWireframe->Enabled = true;
+	pSphere->AttachState(pWireframe);
+	mspRoot->AttachChild(pSphere);
+	mspRoot->UpdateRS();
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -46,22 +55,18 @@ Bool Sample6::OnInitialize()
 //----------------------------------------------------------------------------
 void Sample6::OnIdle()
 {
-	// This function is called by the framework's render loop until the
-	// application exits. Perform all your rendering here.
-
-	// Determine how much time has passed since the last call, so we can
-	// move our objects independently of the actual frame rate.
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
-	mAngle += static_cast<Float>(elapsedTime * 0.2F);
+	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix3F rot(Vector3F(0, 1, 0), mAngle);
-	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
+	Matrix3F rot(Vector3F(0, 1, 0.5F), mAngle);
+//	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
+	mspRoot->GetChild(1)->Local.SetRotate(rot);
 
-	mspLensflare->UpdateGS(time);
-	mCuller.ComputeVisibleSet(mspLensflare);
+	mspRoot->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
