@@ -463,6 +463,9 @@
     <None Include="Engine\WireNodeSwitch.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
+    <None Include="Engine\WireGeometry.inl">
+      <Filter>Engine\Inline Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\WireApplication.cpp">

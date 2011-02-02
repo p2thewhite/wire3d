@@ -19,7 +19,7 @@ Sample2::Sample2()
 		"Sample2 - Creating a Scene Graph",	// title of the window,
 		0, 0,								// window position
 		640, 480,							// window size
-		true)								// fullscreen (ignored on the Wii).
+		false)								// fullscreen (ignored on the Wii).
 {
 }
 
@@ -49,7 +49,7 @@ Bool Sample2::OnInitialize()
 	// Once we finished creating the scene graph, we update the graph's
 	// render states. This propagates the fog state to all child nodes.
 	// Whenever you change the graph's render state (using Attach-/
-	// DetachGlobalState() on any of its children), you must call UpdateRS().
+	// DetachState() on any of its children), you must call UpdateRS().
 	mspRoot->UpdateRS();
 
 	// setup our camera at the origin, looking down the -z axis with y up
@@ -128,17 +128,18 @@ Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 	// Creation of Wire::Geometry objects is explained in detail in Sample1.
 	UInt vertexColorChannels = 4;	// RGBA
 	Geometry* pCube = StandardMesh::CreateCube8(vertexColorChannels);
+	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
 
 	// initialize the cube's vertex colors with our supplied values
-	for (UInt i = 0; i < pCube->VBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
-		if (pCube->VBuffer->Position3(i).Y() > 0)
+		if (pVBuffer->Position3(i).Y() > 0)
 		{
-			pCube->VBuffer->Color4(i) = top;
+			pVBuffer->Color4(i) = top;
 		}
 		else
 		{
-			pCube->VBuffer->Color4(i) = bottom;
+			pVBuffer->Color4(i) = bottom;
 		}
  	}
 
@@ -170,24 +171,28 @@ Node* Sample2::CreateHelicopter()
 	Geometry* pBody2 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pBody2->Local.SetScale(Vector3F(1, 2, 1));
 	pBody2->Local.SetTranslate(Vector3F(3, 1, 0));
-	pBody2->VBuffer->Position3(1).Y() = -0.5F;
-	pBody2->VBuffer->Position3(5).Y() = -0.5F;
+	pBody2->GetVBuffer()->Position3(1).Y() = -0.5F;
+	pBody2->GetVBuffer()->Position3(5).Y() = -0.5F;
+	// we changed the vertices, the model bound has potentially changed, too
+	pBody2->ModelBound->ComputeFromData(pBody2->GetVBuffer());
 	pNode->AttachChild(pBody2);
 
 	Geometry* pTail = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pTail->Local.SetTranslate(Vector3F(5, 2, 0));
-	pTail->VBuffer->Position3(2) = Vector3F(5, 0.6F, -0.1F);
-	pTail->VBuffer->Position3(6) = Vector3F(5, 0.6F, 0.1F);
-	pTail->VBuffer->Position3(1) = Vector3F(5, 0.1F, -0.1F);
-	pTail->VBuffer->Position3(5) = Vector3F(5, 0.1F, 0.1F);
+	pTail->GetVBuffer()->Position3(2) = Vector3F(5, 0.6F, -0.1F);
+	pTail->GetVBuffer()->Position3(6) = Vector3F(5, 0.6F, 0.1F);
+	pTail->GetVBuffer()->Position3(1) = Vector3F(5, 0.1F, -0.1F);
+	pTail->GetVBuffer()->Position3(5) = Vector3F(5, 0.1F, 0.1F);
+	pTail->ModelBound->ComputeFromData(pTail->GetVBuffer());
 	pNode->AttachChild(pTail);
 
 	Geometry* pNose = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pNose->Local.SetTranslate(Vector3F(-3, 0, 0));
-	pNose->VBuffer->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
-	pNose->VBuffer->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
-	pNose->VBuffer->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
-	pNose->VBuffer->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
+	pNose->GetVBuffer()->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
+	pNose->GetVBuffer()->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
+	pNose->GetVBuffer()->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
+	pNose->GetVBuffer()->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
+	pNose->ModelBound->ComputeFromData(pNose->GetVBuffer());
 	pNode->AttachChild(pNose);
 
 	// We save a reference to the rotors, so we can easily access them later
@@ -206,8 +211,9 @@ Node* Sample2::CreateHelicopter()
 		ColorRGBA(1, 1, 1, 0.5F));
 	pCockpit->Local.SetScale(Vector3F(2, 1, 1));
 	pCockpit->Local.SetTranslate(Vector3F(0, 2, 0));
-	pCockpit->VBuffer->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
-	pCockpit->VBuffer->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
+	pCockpit->GetVBuffer()->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
+	pCockpit->GetVBuffer()->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
+	pCockpit->ModelBound->ComputeFromData(pCockpit->GetVBuffer());
 	pNode->AttachChild(pCockpit);
 
 	// The cockpit is supposed to be transparent, so we create an StateAlpha 

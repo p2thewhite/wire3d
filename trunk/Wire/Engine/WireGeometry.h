@@ -21,13 +21,15 @@ public:
 
 	virtual void UpdateWorldBound();
 
+	inline VertexBuffer* GetVBuffer();
+	inline const VertexBuffer* GetVBuffer() const;
+	inline IndexBuffer* GetIBuffer();
+	inline const IndexBuffer* GetIBuffer() const;
+
 	void GenerateNormals(Bool ignoreHardEdges = false);
 
 	// member access
-	VertexBufferPtr VBuffer;
-	IndexBufferPtr IBuffer;
 	BoundingVolumePtr ModelBound;
-
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<LightPtr> Lights;
 
@@ -41,9 +43,14 @@ protected:
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
+
+private:
+	VertexBufferPtr mspVBuffer;
+	IndexBufferPtr mspIBuffer;
 };
 
 typedef Pointer<Geometry> GeometryPtr;
+#include "WireGeometry.inl"
 
 }
 

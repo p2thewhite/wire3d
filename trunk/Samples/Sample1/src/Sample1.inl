@@ -1,10 +1,10 @@
 /* GIMP RGB C-Source image dump (WireLogo.inl) */
 
 static struct {
-  unsigned int 	 width;
-  unsigned int 	 height;
-  unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
-  unsigned char	 pixel_data[128 * 128 * 3 + 1];
+  UInt	width;
+  UInt	height;
+  UInt	bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
+  UChar	pixel_data[128 * 128 * 3 + 1];
 } WireLogo = {
   128, 128, 3,
   "[dh\\di\\ci\\di\\di\\di\\di\\di]ej]ej^fk^fk^fk^fk^fj^fk_gk_gl_gl_gl_gl_g"

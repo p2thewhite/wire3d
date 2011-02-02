@@ -37,4 +37,8 @@ public:                                                                      \
 #define WIRE_IMPLEMENT_RTTI(nsName, className, baseClassName)                \
 	const Rtti className::TYPE(#nsName"."#className, &baseClassName::TYPE)
 
+//----------------------------------------------------------------------------
+#define WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(className, baseClassName)           \
+	const Rtti className::TYPE(#className, &baseClassName::TYPE)
+
 #endif

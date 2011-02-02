@@ -3,7 +3,7 @@
 
 using namespace Wire;
 
-Application* Application::mpApplication = NULL;
+Application* Application::smpApplication = NULL;
 
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA backgroundColor, const Char*
@@ -29,13 +29,13 @@ Application::~Application()
 //----------------------------------------------------------------------------
 void Application::SetApplication(Application* pApplication)
 {
-	mpApplication = pApplication;
+	smpApplication = pApplication;
 }
 
 //----------------------------------------------------------------------------
 Application* Application::GetApplication()
 {
-	return mpApplication;
+	return smpApplication;
 }
 
 //----------------------------------------------------------------------------

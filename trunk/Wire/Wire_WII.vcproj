@@ -555,6 +555,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireGeometry.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>

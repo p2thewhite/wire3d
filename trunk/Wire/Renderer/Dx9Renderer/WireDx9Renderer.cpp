@@ -36,7 +36,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	rPresent.hDeviceWindow = rInput.WindowHandle;
 	rPresent.Windowed = isFullscreen ? FALSE : TRUE;
 	rPresent.Flags = 0;
-	rPresent.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	rPresent.PresentationInterval = D3DPRESENT_INTERVAL_ONE; //D3DPRESENT_INTERVAL_IMMEDIATE;
 	if (isFullscreen)
 	{
 		rPresent.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
@@ -241,8 +241,8 @@ void Renderer::DrawElements()
 
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-		mpGeometry->VBuffer->GetVertexQuantity(), 0,
-		mpGeometry->IBuffer->GetIndexQuantity()/3);
+		mpGeometry->GetVBuffer()->GetVertexQuantity(), 0,
+		mpGeometry->GetIBuffer()->GetIndexQuantity()/3);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

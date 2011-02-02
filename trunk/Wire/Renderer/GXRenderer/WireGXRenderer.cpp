@@ -212,7 +212,7 @@ void Renderer::DrawElements()
 
 	GXSetNumChans(1);
 
-	const IndexBuffer& rIBuffer = *(mpGeometry->IBuffer);
+	const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
 	const StateWireframe* pWireframe = GetStateWireframe();
 	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
 

@@ -10,10 +10,18 @@ using namespace Wire;
 class LensflareNode : public Node
 {
 public:
-	LensflareNode();
+	// Declare the run-time type information for this class.
+	// This is optional, but recommended for every class derived from
+	// Wire::Object. If we do not declare the RTTI, LensflareNode
+	// objects will return the type of their parent (i.e. Wire::Node).
+	WIRE_DECLARE_RTTI;
+
+	LensflareNode(Spatial* pLightSource);
 
 protected:
-	// we handle culling, so we override GetVisibleSet() from the parent class
+	// We handle culling, so we override GetVisibleSet() from the parent
+	// class. See WireNodeSwitch, WireNodeBillboard or WireNodeLight for
+	// further examples of how Node derived classes work.
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:
@@ -31,7 +39,7 @@ private:
 		FlareType Type;
 		Float SizeFactor;
 		Float PositionFactor;
-		ColorRGB Color;
+		ColorRGBA Color;
 	};
 
 	void CreateFlares();
@@ -42,8 +50,10 @@ private:
 
 	Texture2DPtr mspLensTex0;
 	Texture2DPtr mspLensTex1;
+	SpatialPtr mspLightSource;
 
-	static const FlareDef mDefaultDefs[];
+	static const FlareDef sDefaultDef[];
+	static const Float sScale;
 };
 
 typedef Pointer<LensflareNode> LensflareNodePtr;

@@ -3,6 +3,7 @@
 #define WIREQUATERNION_H
 
 #include "WireTypes.h"
+#include "WireMatrix3.h"
 
 namespace Wire
 {
@@ -84,6 +85,9 @@ public:
 
 	// spherical linear interpolation
 	Quaternion& Slerp(Real t, const Quaternion& rP, const Quaternion& rQ);
+
+	/*WIRE_FOUNDATION_ITEM*/ static const Quaternion IDENTITY;
+	/*WIRE_FOUNDATION_ITEM*/ static const Quaternion ZERO;
 
 private:
 	Real mTuple[4];
