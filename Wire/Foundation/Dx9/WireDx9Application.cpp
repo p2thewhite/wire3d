@@ -108,10 +108,10 @@ Int Dx9Application::GetWindowID() const
 //----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {
-	mpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
+	smpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// allow work to be done before the window and renderer is created
-	if (!mpApplication->OnPrecreate())
+	if (!smpApplication->OnPrecreate())
 	{
 		return -1;
 	}
@@ -148,7 +148,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
-	if (mpApplication->OnInitialize())
+	if (smpApplication->OnInitialize())
 	{
 		// display the window
 		ShowWindow(hWnd, SW_SHOW);
@@ -176,12 +176,12 @@ Int Dx9Application::Main(Int, Char*[])
 			}
 			else
 			{
-				mpApplication->OnIdle();
+				smpApplication->OnIdle();
 			}
 		}
 	}
 
-	mpApplication->OnTerminate();
+	smpApplication->OnTerminate();
 	return 0;
 }
 

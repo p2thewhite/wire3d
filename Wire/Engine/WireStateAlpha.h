@@ -44,8 +44,8 @@ public:
 	inline virtual StateType GetStateType() const { return ALPHA; }
 
 	Bool BlendEnabled;      // default: false
-	SrcBlendMode SrcBlend;  // default: SBF_SRC_ALPHA
-	DstBlendMode DstBlend;  // default: DBF_ONE_MINUS_SRC_ALPHA
+	SrcBlendMode SrcBlend;  // default: SBM_SRC_ALPHA
+	DstBlendMode DstBlend;  // default: DBM_ONE_MINUS_SRC_ALPHA
 };
 
 typedef Pointer<StateAlpha> StateAlphaPtr;

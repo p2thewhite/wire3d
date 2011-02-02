@@ -8,12 +8,11 @@ WIRE_IMPLEMENT_RTTI(Wire, Geometry, Spatial);
 //----------------------------------------------------------------------------
 Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
  	:
- 	VBuffer(pVBuffer),
-	IBuffer(pIBuffer),
-	ModelBound(BoundingVolume::Create())
+	ModelBound(BoundingVolume::Create()),
+ 	mspVBuffer(pVBuffer),
+	mspIBuffer(pIBuffer)
 {
-	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(
-		State*));
+	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(State*));
 	UpdateModelBound();
 }
 
@@ -25,7 +24,7 @@ Geometry::~Geometry()
 //----------------------------------------------------------------------------
 void Geometry::UpdateModelBound()
 {
-	ModelBound->ComputeFromData(VBuffer);
+	ModelBound->ComputeFromData(mspVBuffer);
 }
 
 //----------------------------------------------------------------------------
@@ -63,26 +62,26 @@ void Geometry::GetVisibleSet(Culler& rCuller, Bool)
 //----------------------------------------------------------------------------
 void Geometry::GenerateNormals(Bool ignoreHardEdges)
 {
-	if (!VBuffer || !IBuffer)
+	if (!mspVBuffer || !mspIBuffer)
 	{
 		return;
 	}
 
-	if (VBuffer->GetAttributes().GetNormalChannels() != 3)
+	if (mspVBuffer->GetAttributes().GetNormalChannels() != 3)
 	{
 		return;
 	}
 
-	UInt* pIndices = IBuffer->GetData();
+	UInt* pIndices = mspIBuffer->GetData();
 
 	// calculate the normals of the individual triangles
-	TArray<Vector3F> faceNormals(IBuffer->GetIndexQuantity()/3);
-	for (UInt i = 0; i < IBuffer->GetIndexQuantity(); i +=3)
+	TArray<Vector3F> faceNormals(mspIBuffer->GetIndexQuantity()/3);
+	for (UInt i = 0; i < mspIBuffer->GetIndexQuantity(); i +=3)
 	{
-		Vector3F v1 = VBuffer->Position3(pIndices[i+1]) - VBuffer->Position3(
-			pIndices[i]);
-		Vector3F v2 = VBuffer->Position3(pIndices[i+2]) - VBuffer->Position3(
-			pIndices[i+1]);
+		Vector3F v1 = mspVBuffer->Position3(pIndices[i+1]) -
+			mspVBuffer->Position3(pIndices[i]);
+		Vector3F v2 = mspVBuffer->Position3(pIndices[i+2]) -
+			mspVBuffer->Position3(pIndices[i+1]);
 
 		Vector3F normal = v1.Cross(v2);
 		normal.Normalize();
@@ -90,36 +89,37 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 	}
 
 	// collect the triangles each vertex is part of
-	TArray<TArray<UInt> > buckets(VBuffer->GetVertexQuantity());
-	buckets.SetQuantity(VBuffer->GetVertexQuantity());
-	for (UInt i = 0; i < VBuffer->GetVertexQuantity(); i++)
-	{
-		TArray<UInt> indenticalVertices;
-		if (!ignoreHardEdges)
-		{
-			indenticalVertices.Append(i);
-		}
-		else
-		{
-			for (UInt k = 0; k < VBuffer->GetVertexQuantity(); k++)
-			{
-				Vector3F pos = VBuffer->Position3(i);
-				if (pos == VBuffer->Position3(k))
-				{
-					indenticalVertices.Append(k);
-				}
-			}
-		}
+	TArray<TArray<UInt> > buckets(mspVBuffer->GetVertexQuantity());
+	buckets.SetQuantity(mspVBuffer->GetVertexQuantity());
 
-		for (UInt j = 0; j < IBuffer->GetIndexQuantity(); j += 3)
+	UInt triIndex = 0;
+	for (UInt i = 0; i < mspIBuffer->GetIndexQuantity(); i += 3)
+	{
+		buckets[pIndices[i]].Append(triIndex);
+		buckets[pIndices[i+1]].Append(triIndex);
+		buckets[pIndices[i+2]].Append(triIndex);
+		triIndex++;
+	}
+
+	if (ignoreHardEdges)
+	{
+		for (UInt j = 0; j < mspVBuffer->GetVertexQuantity(); j++)
 		{
-			for (UInt k = 0; k < indenticalVertices.GetQuantity(); k++)
+			Vector3F vertex = mspVBuffer->Position3(j);
+			for (UInt i = j+1; i < mspVBuffer->GetVertexQuantity(); i++)
 			{
-				UInt i1 = indenticalVertices[k];
-				if (pIndices[j] == i1 || pIndices[j+1] == i1 ||
-					pIndices[j+2] == i1)
+				if (vertex == mspVBuffer->Position3(i))
 				{
-					buckets[i].Append(j/3);
+					UInt origCount = buckets[j].GetQuantity();
+					for (UInt k = 0; k < buckets[i].GetQuantity(); k++)
+					{
+						buckets[j].Append(buckets[i][k]);
+					}
+
+					for (UInt k = 0; k < origCount; k++)
+					{
+						buckets[i].Append(buckets[j][k]);
+					}
 				}
 			}
 		}
@@ -145,6 +145,6 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 			normal = Vector3F::UNIT_X;
 		}
 
-		VBuffer->Normal3(i) = normal;
+		mspVBuffer->Normal3(i) = normal;
 	}
 }

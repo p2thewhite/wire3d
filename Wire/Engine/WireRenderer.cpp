@@ -69,8 +69,8 @@ void Renderer::BindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		smRenderer->Bind(pGeometry->IBuffer);
-		smRenderer->Bind(pGeometry->VBuffer);
+		smRenderer->Bind(pGeometry->GetIBuffer());
+		smRenderer->Bind(pGeometry->GetVBuffer());
 
 		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
 		{
@@ -108,8 +108,8 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		smRenderer->Unbind(pGeometry->IBuffer);
-		smRenderer->Unbind(pGeometry->VBuffer);
+		smRenderer->Unbind(pGeometry->GetIBuffer());
+		smRenderer->Unbind(pGeometry->GetVBuffer());
 
 		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
 		{
@@ -406,8 +406,8 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
-	Enable(mpGeometry->IBuffer);
-	Enable(mpGeometry->VBuffer);
+	Enable(mpGeometry->GetIBuffer());
+	Enable(mpGeometry->GetVBuffer());
 
 	UInt effectCount = mpGeometry->GetEffectQuantity();
 
@@ -421,8 +421,8 @@ void Renderer::Draw(Geometry* pGeometry)
 		ApplyEffect(mpGeometry->GetEffect(i));
 	}
 
-	Disable(mpGeometry->VBuffer);
-	Disable(mpGeometry->IBuffer);
+	Disable(mpGeometry->GetVBuffer());
+	Disable(mpGeometry->GetIBuffer());
 	Disable(mpGeometry->Lights);
 
 	RestoreStates(mpGeometry->States);

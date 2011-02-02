@@ -1,3 +1,8 @@
+// Sample6 - Custom Nodes
+// This sample demonstrates how to create your own nodes to be used in the
+// scene graph. This way you can extend the functionality of the system and
+// suit it your own needs. See LensflareNode(.cpp/.h) for details.
+
 #include "Sample6.h"
 #include "LensflareNode.h"
 
@@ -18,36 +23,40 @@ Bool Sample6::OnInitialize()
 		return false;
 	}
 
+	// create a simple scene consisting of a sun, terrain and a lens flare
 	mspRoot = WIRE_NEW Node;
-	LensflareNode* pLensflare = WIRE_NEW LensflareNode;
+	
+	Geometry* pSun = CreateSun();
+	mspRoot->AttachChild(pSun);
+
+	Geometry* pTerrain = CreateTerrain();
+	mspRoot->AttachChild(pTerrain);
+
+	LensflareNode* pLensflare = WIRE_NEW LensflareNode(pSun);
 	mspRoot->AttachChild(pLensflare);
 
-	Geometry* pSphere = StandardMesh::CreateSphere(20, 20, 1);
-	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
-	pWireframe->Enabled = true;
-	pSphere->AttachState(pWireframe);
-	mspRoot->AttachChild(pSphere);
+	// initialize the render state of the scene graph
 	mspRoot->UpdateRS();
 
-	// Setup the position and orientation of the camera to look down
-	// the -z axis with y up.
-	Vector3F cameraLocation(0.0F, 0.0F, 4.0F);
+	// setup the camera
+	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
-	// By providing a field of view (FOV) in degrees, aspect ratio,
-	// near and far plane, we define a viewing frustum used for culling.
+	// initialize the viewing frustum and culler
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
-	// Initialize working variables used in the render loop (i.e. OnIdle()).
+	// initialize working variables used in the render loop (i.e. OnIdle())
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
+
+	GetRenderer()->SetClearColor(ColorRGBA(0.62F, 0.7F, 1.0F, 1.0F));
 
 	return true;
 }
@@ -61,11 +70,19 @@ void Sample6::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix3F rot(Vector3F(0, 1, 0.5F), mAngle);
+	Matrix3F rot(Vector3F(0, 1, 0), mAngle);
 //	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
-	mspRoot->GetChild(1)->Local.SetRotate(rot);
 
+	Transformation& sunTrafo = mspRoot->GetChild(0)->Local;
+ 	Vector3F sunPos(20 * MathF::Sin(mAngle*2) + 20, 20 * MathF::Cos(mAngle)+ 20, -100);
+ 	sunTrafo.SetTranslate(sunPos);
+
+	// Calculate local to world transformation
 	mspRoot->UpdateGS(time);
+
+	Vector3F lightPos = mspRoot->GetChild(0)->World.GetTranslate();
+	mspRoot->GetChild(1)->GetLight()->Position = lightPos;
+
 	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
@@ -73,4 +90,65 @@ void Sample6::OnIdle()
 	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+}
+
+//----------------------------------------------------------------------------
+Geometry* Sample6::CreateSun()
+{
+	// create a sun using a bright yellow colored sphere
+	Geometry* pSun = StandardMesh::CreateSphere(4, 16, 3, 0, 3);
+	for (UInt i = 0; i < pSun->GetVBuffer()->GetVertexQuantity(); i++)
+	{
+		pSun->GetVBuffer()->Color3(i) = ColorRGB(1.0F, 1.0F, 0.8F);
+	}
+
+	pSun->Local.SetTranslate(Vector3F(20, 20, -100));
+	return pSun;
+}
+
+//----------------------------------------------------------------------------
+Geometry* Sample6::CreateTerrain()
+{
+	// create a simple terrain using a plane with sinus modulated height
+	// values to represent hills
+	UInt tileXCount = 40;
+	UInt tileYCount = 20;
+	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
+		5, 5, 0, 0, true);
+	VertexBuffer* const pVBuffer = pPlane->GetVBuffer();
+
+	Float angleY = 0;
+	for (UInt y = 0; y <= tileYCount; y++)
+	{
+		Float angleX = 0;
+		Float factor = MathF::Sin(angleY);
+		for (UInt x = 0; x <= tileXCount; x++)
+		{
+			Float height = MathF::Sin(angleX) * 0.2F * factor;
+			UInt offset = (tileXCount+1) * y + x;
+			Vector3F pos = pVBuffer->Position3(offset);
+			pos.Z() = height;
+			pVBuffer->Position3(offset) = pos;
+			angleX += 0.5F;
+		}
+
+		angleY += 1;
+	}
+
+	// we changed the vertices so we need to recreate the model bound
+	// (which was automatically created by the constructor of Geometry)
+	pPlane->ModelBound->ComputeFromData(pPlane->GetVBuffer());
+	pPlane->GenerateNormals();
+
+	Matrix3F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F);
+	pPlane->Local.SetTranslate(Vector3F(0, -0.25F, 0));
+	pPlane->Local.SetRotate(mat);
+
+	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
+	pPlane->AttachLight(pLight);
+	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
+	pMaterial->Ambient = ColorRGBA::GREEN;
+	pPlane->AttachState(pMaterial);
+
+	return pPlane;
 }

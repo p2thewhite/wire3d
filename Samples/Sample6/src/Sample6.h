@@ -17,9 +17,13 @@ public:
 	Sample6();
 
 	virtual Bool OnInitialize();
+
 	virtual void OnIdle();
 
 private:
+	Geometry* CreateSun();
+	Geometry* CreateTerrain();
+
 	CameraPtr mspCamera;
 	Culler mCuller;
 

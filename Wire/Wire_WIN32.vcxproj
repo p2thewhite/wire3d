@@ -167,6 +167,7 @@
     <ClInclude Include="Engine\WireVisibleSet.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\WireGeometry.inl" />
     <None Include="Engine\WireNodeBillboard.inl" />
     <None Include="Engine\WireNodeDLod.inl" />
     <None Include="Engine\WireNodeLight.inl" />

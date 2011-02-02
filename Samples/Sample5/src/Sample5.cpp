@@ -203,18 +203,19 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 {
 	Geometry* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
 		useTexture ? 1 : 0, useNormals);
+	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
 
-	for (UInt i = 0; i < pCube->VBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
 		if (useVertexColor)
 		{
-			if (pCube->VBuffer->Position3(i).Z() > 0)
+			if (pVBuffer->Position3(i).Z() > 0)
 			{
-				pCube->VBuffer->Color4(i) = vertexColor;
+				pVBuffer->Color4(i) = vertexColor;
 			}
 			else
 			{
-				pCube->VBuffer->Color4(i) = vertexColor * 0.5F;
+				pVBuffer->Color4(i) = vertexColor * 0.5F;
 			}
 		}
 	}

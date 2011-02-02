@@ -3,27 +3,58 @@
 
 using namespace Wire;
 
-const LensflareNode::FlareDef LensflareNode::mDefaultDefs[] = {
-	{ FT_FLARE_1, 0.01F, 1.0F, ColorRGB(1, 1, 1) },
-	{ FT_FLARE_2, 0.01F, 0.5F, ColorRGB(1, 0, 1) },
-	{ FT_FLARE_3, 0.01F, 0.0F, ColorRGB(1, 1, 0) },
-	{ FT_FLARE_4, 0.01F, -0.5F, ColorRGB(0, 1, 1) },
-	{ FT_FLARE_5, 0.01F, -1.0F, ColorRGB(1, 1, 1) }
+// specify the parent of the LensflareNode class
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(LensflareNode, Node);
+
+// if LensflareNode would use a namespace, we would implement it like this:
+//WIRE_IMPLEMENT_RTTI(MyNamespace, LensflareNode, Node);
+
+// Note:
+// RTTI is used to determine the type of an object at run-time, e.g.:
+//	LensflareNode* pChild = DynamicCast<LensflareNode>(pNode->GetChild(0));
+//	if (pChild)
+//	...
+// If pChild (pNode->GetChild() returns a Spatial*) is a LensflareNode,
+// then pChild is a valid pointer, otherwise it is NULL.
+
+// Define the flares using an ID for the texture, flare size, position & color
+const Float LensflareNode::sScale = 0.015F;
+const LensflareNode::FlareDef LensflareNode::sDefaultDef[] = {
+	{ FT_FLARE_5, 4.0F * sScale,	1.775F, ColorRGBA(1, 1, 0.8F, 1) },
+	{ FT_FLARE_4, 0.25F * sScale,	0.7F, ColorRGBA(0.5F, 0.5F, 0.3F, 1) },
+	{ FT_FLARE_3, 0.35F * sScale,   0.35F, ColorRGBA(0.6F, 0.2F, 0.1F, 1) },
+	{ FT_FLARE_4, 0.25F * sScale,   -0.2F, ColorRGBA(0.4F, 0.4F, 0.5F, 1) },
+	{ FT_FLARE_1, 0.06F * sScale, -0.35F, ColorRGBA(0.3F, 1, 1, 1) },
+	{ FT_FLARE_4, 0.3F * sScale,   -0.45F, ColorRGBA(0.3F, 0.3F, 0.5F, 1) },
+	{ FT_FLARE_1, 0.08F * sScale,  -0.65F, ColorRGBA(0.3F, 1, 1, 1) },
+	{ FT_FLARE_3, 1.1F * sScale,   -1.5F, ColorRGBA(0.6F, 0.5F, 0.3F, 1) }
 };
 
 //----------------------------------------------------------------------------
-LensflareNode::LensflareNode()
+LensflareNode::LensflareNode(Spatial* pLightSource)
+	:
+	mspLightSource(pLightSource)
 {
+	// Create the flares defined by sDefaultDef
 	CreateFlares();
 
 	// Never let this node be culled by the system, because we determine
 	// the visibility of this node and its children (i.e. flares) ourselves.
 	Culling = CULL_NEVER;
+
+	Renderer::BindAll(this);
 }
 
 //----------------------------------------------------------------------------
 void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
+	// This function is called by the Culler (usually after UpdateGS() has
+	// transformed local space to world space), so we are dealing with
+	// world coordinates here.
+
+	// Determine the visibility of the flares by projecting the
+	// 3D light source to 2D space and align them through the center of the
+	// screen.
 	const Camera* pCam = rCuller.GetCamera();
 
 	Transformation camTrafo;
@@ -32,11 +63,11 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 		pCam->GetDVector(), true));
 
 	const Vector3F& rCamPosition = camTrafo.GetTranslate();
-	Vector3F lightDirection = Vector3F(0.2F, 0.4F, 1.0F);
+	Vector3F lightPosWorld = mspLightSource->World.GetTranslate();
+	Vector3F lightDirection = lightPosWorld - rCamPosition;
 	lightDirection.Normalize();
- 	Vector3F lightPosWorld = rCamPosition + lightDirection * 500.0F;
 
-	// viewing frustum left, right, bottom, top, near, far
+	// viewing frustum left, right, bottom, top, near, far of the camera
 	Float l, r, b, t, n, f;
 	pCam->GetFrustum(l, r, b, t, n, f);
 
@@ -68,30 +99,37 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	lightPos2D[1] *= t;
 
 	Float alpha;
-	Float max = 0.9F * t * 1.5F;
+	Float max = 0.9F * t;
 	Float min = 0.3F * t;
+	Float lightPosY = lightPos2D[1] < 0 ? -lightPos2D[1] : lightPos2D[1];
 
-// 	if (pCam->GetDVector().Dot(lightDirection) > 0)
-// 	{
-// 		alpha = 0;
-// 	}
-// 	else
+	// determine the transparency factor of the flare
+	if (pCam->GetDVector().Dot(lightDirection) < 0)
 	{
-		if(lightPos2D[1] > max)
+		alpha = 0;
+	}
+	else
+	{
+		if(lightPosY > max)
 		{
 			alpha = 1;
 		}
 		else
 		{
-			if(lightPos2D[1] < min)
+			if(lightPosY < min)
 			{
 				alpha = 0;
 			}
 			else
 			{
-				alpha = (lightPos2D[1] - min) / (max-min);
+				alpha = (lightPosY - min) / (max-min);
 			}
 		}
+	}
+
+	if (alpha > 0 && !rCuller.IsVisible(mspLightSource))
+	{
+		alpha = 0;
 	}
 
 	for (UInt i = 0; i < GetQuantity(); i++)
@@ -110,21 +148,23 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 		StateMaterial* pMaterial = DynamicCast<StateMaterial>(pFlare->
 			GetState(State::MATERIAL));
 		WIRE_ASSERT(pMaterial);
-		pMaterial->Ambient.A() = alpha;
+		pMaterial->Ambient.A() = sDefaultDef[i].Color.A() * alpha;
 
-		Float position = mDefaultDefs[i].PositionFactor;
+		Float position = sDefaultDef[i].PositionFactor;
 		Vector3F newPos = pCam->GetLocation() +
 			pCam->GetDVector() * (n + (0.01F * (GetQuantity()-i))) +
 			pCam->GetRVector() * lightPos2D[0] * position +
 			pCam->GetUVector() * lightPos2D[1] * position;
+	
+		// set new position
+		pFlare->World.SetTranslate(newPos);
 
-		//set new position
-		pFlare->Local.SetTranslate(newPos);
-
-		//set rotation from camera
-		pFlare->Local.SetRotate(camTrafo.GetRotate());
+		// set rotation from camera
+		pFlare->World.SetRotate(camTrafo.GetRotate());
 	}
 
+	// call the parent class function to collect the visible children
+	// of this node.
 	Node::GetVisibleSet(rCuller, noCull);
 }
 
@@ -133,22 +173,25 @@ void LensflareNode::CreateFlares()
 {
 	CreateTextures();
 	
-	UInt quantity = sizeof(mDefaultDefs) / sizeof(FlareDef);
+	UInt quantity = sizeof(sDefaultDef) / sizeof(FlareDef);
 	for (UInt i = 0; i < quantity; i++)
 	{
-		Geometry* pFlare = CreateFlare(mDefaultDefs[i]);
+		Geometry* pFlare = CreateFlare(sDefaultDef[i]);
 		AttachChild(pFlare);
 	}
 
+	// lens flares need to be blended
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
 	pAlpha->BlendEnabled = true;
 	AttachState(pAlpha);
 
+	// lens flares do not write the zbuffer
 	StateZBuffer* pZBuffer = WIRE_NEW StateZBuffer;
 	pZBuffer->Writable = false;
 	pZBuffer->Enabled = false;
 	AttachState(pZBuffer);
 
+	// we use light and material state to color the lens flare
 	Light* pLight = WIRE_NEW Light;
 	pLight->Ambient = ColorRGB::WHITE;
 	AttachLight(pLight);
@@ -164,14 +207,16 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	Float vOffset;
 	Texture2D* pTexture = mspLensTex0;
 
+	// There are 5 flare textures stored in 2 actual textures, so we
+	// map the type to the appropriate texture pointer and UV set.
 	switch (rDef.Type)
 	{
 	case FT_FLARE_1:
-		uvFactor = 0.498F; uOffset = 0.0F; vOffset = 0.0F;
+		uvFactor = 0.496F; uOffset = 0.0F; vOffset = 0.0F;
 		break;
 
 	case FT_FLARE_2:
-		uvFactor = 0.5F; uOffset = 0.501F; vOffset = 0.501F;
+		uvFactor = 0.5F; uOffset = 0.501F; vOffset = 0.502F;
 		break;
 
 	case FT_FLARE_3:
@@ -193,7 +238,7 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	}
 
 	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, rDef.SizeFactor);
-	VertexBuffer* pVBuffer = pQuad->VBuffer;
+	VertexBuffer* pVBuffer = pQuad->GetVBuffer();
 
 	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
 	{
@@ -207,10 +252,14 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
 	pQuad->AttachEffect(pTextureEffect);
 
-	ColorRGBA col(rDef.Color.R(), rDef.Color.G(), rDef.Color.B(), 1.0F);
+	// material state (used with light) to color the flare
 	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = col;
+	pMaterial->Ambient = rDef.Color;
 	pQuad->AttachState(pMaterial);
+
+	// tell the system that we are doing transformations manually
+	pQuad->WorldIsCurrent = true;
+	pQuad->WorldBoundIsCurrent = true;
 
 	return pQuad;
 }
@@ -218,6 +267,7 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 //----------------------------------------------------------------------------
 void LensflareNode::CreateTextures()
 {
+	// create 4 textures (256,256) and store them in one (1024,1024) texture
 	const Image2D::FormatMode format = Image2D::FM_RGBA8888;
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
 	UInt width = 1024;
@@ -239,8 +289,7 @@ void LensflareNode::CreateTextures()
 			const Float dy = r-y;
 			const Float r1 = MathF::Sqrt(dx*dx + dy*dy) / r;
 
-			// replace the if-statement with c *= 1-smoothstep(1-.01, 1+.01, r);
-
+			// first texture
 			Float c = 1-r1;
 			c = c*c;
 			c *= 1 - SmoothStep(1-0.01F, 1+0.01F, r1);
@@ -250,6 +299,7 @@ void LensflareNode::CreateTextures()
 			*pDst0++ = c0;
 			*pDst0++ = c0;
 
+			// second texture
 			c = r1*r1;
 			c = c*c;
 			c = c*c*c;
@@ -260,6 +310,7 @@ void LensflareNode::CreateTextures()
 			*pDst1++ = c1;
 			*pDst1++ = c1;
 
+			// third texture
 			c = r1;
 			c *= 1 - SmoothStep(1-0.01F, 1+0.01F, r1);
 			UChar c2 = static_cast<UChar>(c * 255.0F);
@@ -268,6 +319,7 @@ void LensflareNode::CreateTextures()
 			*pDst2++ = c2;
 			*pDst2++ = c2;
 
+			// fourth texture
 			c = 1-MathF::FAbs(r1 - 0.9F) / 0.1F;
 			if (c < 0)
 			{
@@ -295,6 +347,7 @@ void LensflareNode::CreateTextures()
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	mspLensTex0 = WIRE_NEW Texture2D(pImage);
 
+	// create a texture by shooting particles from its center
  	width = 256;
  	height = 256;
 	r = MathF::Min(static_cast<Float>(width), static_cast<Float>(height))
@@ -336,16 +389,29 @@ void LensflareNode::CreateTextures()
 		}
 	}
 
-	max = 1/max;
-	for (UInt i = 0; i < width*height; i++)
+	max = (1/max) * 500.0F;
+	const Vector2F center(width* 0.5F, height*0.5F);
+	const Float radius = width * 0.5F;
+
+	for (UInt x = 0; x < width; x++)
 	{
-		Float f = pTemp[i] * max * 1000.0F;
-		UChar val = static_cast<UChar>(MathF::Clamp(0, f, 255.0F));
-		pDst[i*bpp] = val;
-		pDst[i*bpp+1] = val;
-		pDst[i*bpp+2] = val;
-		pDst[i*bpp+3] = val;
+		for (UInt y = 0; y < height; y++)
+		{
+			const UInt i = y*width+x;
+			Float f = MathF::Clamp(0, pTemp[i] * max + 150.0F, 255.0F);
+			Vector2F pos(static_cast<Float>(x), static_cast<Float>(y));
+			Float distance = radius - (center - pos).Length();
+			distance = distance < 0 ? 0 : distance;
+			Float distFactor = distance / radius;
+			UChar val = static_cast<UChar>(f * distFactor);
+			pDst[i*bpp] = val;
+			pDst[i*bpp+1] = val;
+			pDst[i*bpp+2] = val;
+			pDst[i*bpp+3] = val;
+		}
 	}
+
+	WIRE_DELETE[] pTemp;
 
 	pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	mspLensTex1 = WIRE_NEW Texture2D(pImage);
@@ -355,7 +421,7 @@ void LensflareNode::CreateTextures()
 void LensflareNode::DrawParticle(Float* const pDst, Float fx, Float fy,
 	UInt width)
 {
-	const Int partRadius = 10;
+	const Int partRadius = 5;
 
 	for (Int y = -partRadius; y < partRadius; y++)
 	{
