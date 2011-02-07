@@ -1,0 +1,22 @@
+#summary Wire3D Samples description.
+
+Wire3D comes with the following samples that show how to use the framework:
+
+=== Sample1 - Basic Rendering ===
+This sample demonstrates how to create a transparent, textured cube and render it several times using different render states and a light.
+
+=== Sample2 - Scene Graph ===
+This sample demonstrates how to create and render a scene graph.
+Scene graphs serve the purpose of organizing your 3D objects (together with render states, lights, effects and controllers) in a hierarchy. The design of the classes is explained in detail [http://downloads.gamedev.net/pdf/Eberly-3.pdf here].
+
+=== Sample3 - Level of Detail ===
+This sample demonstrates how to use discrete LODs in the scene graph.
+
+=== Sample4 - Multitexturing ===
+This sample demonstrates how to blend individual textures together in a single rendering pass using multi-texturing.
+
+=== Sample5 - Lighting ===
+This sample demonstrates how to render objects using lights. For that purpose we create 2 cubes which are both lit by 2 point lights using the scene graph. Furthermore we create a plane which is lit by a spot light and rendered without using the scene graph. The positions of the lights are represent by small cubes which are colored using the light's color.
+
+=== Sample6 - Custom Nodes ===
+This sample demonstrates how to create your own nodes to be used in the scene graph. This way you can extend the functionality of the system and suit it your own needs. We create a custom node that renders a lens flare effect and seamlessly plugs into the existing system.
