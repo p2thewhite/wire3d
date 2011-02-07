@@ -1,1 +1,2 @@
-* [GettingStarted Getting started]
+* [GettingStarted Getting Started]
+* [Samples Samples]
