@@ -1,5 +1,4 @@
-#labels FAQ
-=== F.A.Q. ===
+#summary Frequently asked questions.
 
 *There's a gazillion 3D engines out there. Why did you roll your own?*
  This is just a pet project and on going learning experience for me, as well as my way of giving something back to the Wii homebrew scene.
