@@ -1,3 +1,3 @@
   * [GettingStarted Getting Started]
   * [Samples Samples]
-  * [FrequentlyAskedQuestions FAQ]
+  * [FAQ Frequently Asked Questions]
