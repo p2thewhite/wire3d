@@ -11,11 +11,6 @@ using namespace Wire;
 WIRE_APPLICATION(Sample6);
 
 //----------------------------------------------------------------------------
-Sample6::Sample6()
-{
-}
-
-//----------------------------------------------------------------------------
 Bool Sample6::OnInitialize()
 {
 	if (!Parent::OnInitialize())
@@ -70,12 +65,13 @@ void Sample6::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix3F rot(Vector3F(0, 1, 0), mAngle);
-//	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
-
-	Transformation& sunTrafo = mspRoot->GetChild(0)->Local;
- 	Vector3F sunPos(20 * MathF::Sin(mAngle*2) + 20, 20 * MathF::Cos(mAngle)+ 20, -100);
- 	sunTrafo.SetTranslate(sunPos);
+	// tilt the camera left/right & up/down to emphasize the lensflare effect
+	Float angleY = MathF::Sin(mAngle*2) * 0.4F + 75 * MathF::DEG_TO_RAD;
+	Matrix34F rotY(Vector3F(0, 1, 0), angleY);
+	Float angleX = MathF::Cos(mAngle) * 0.2F - 5 * MathF::DEG_TO_RAD;
+	Matrix34F rotX(Vector3F(0, 0, 1), angleX);
+	Matrix34F rot = rotY * rotX;
+	mspCamera->SetAxes(rot.GetColumn(0), rot.GetColumn(1), rot.GetColumn(2));
 
 	// Calculate local to world transformation
 	mspRoot->UpdateGS(time);

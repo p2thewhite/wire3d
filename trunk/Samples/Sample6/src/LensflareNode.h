@@ -6,7 +6,10 @@
 
 using namespace Wire;
 
-
+// To implement your own custom nodes for the scene graph and culling system,
+// you need to derive your class from Wire::Node.
+// See WireNodeSwitch, WireNodeBillboard or WireNodeLight for further examples
+// of how Node derived classes work.
 class LensflareNode : public Node
 {
 public:
@@ -19,9 +22,7 @@ public:
 	LensflareNode(Spatial* pLightSource);
 
 protected:
-	// We handle culling, so we override GetVisibleSet() from the parent
-	// class. See WireNodeSwitch, WireNodeBillboard or WireNodeLight for
-	// further examples of how Node derived classes work.
+	// We handle culling ourselves, so we override GetVisibleSet()
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:

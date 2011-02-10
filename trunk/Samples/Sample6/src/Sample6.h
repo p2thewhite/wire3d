@@ -14,10 +14,7 @@ class Sample6 : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
-	Sample6();
-
 	virtual Bool OnInitialize();
-
 	virtual void OnIdle();
 
 private:
