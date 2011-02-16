@@ -3,17 +3,15 @@
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
   * Install Visual Studio 2005 or later
-  * Add the following directories to Visual Studio's `Tools->Options->Projects and Solutions->VC++ Directories`:
-    * DirectX SDK's `Include` directory (e.g. `C:\Program Files\Microsoft DirectX SDK\Include`) to `Include files`
-    * DirectX SDK's `Lib` directory (e.g. `C:\Program Files\Microsoft DirectX SDK\Lib`) to `Library files`
-  * Open `Wire3D_WIN32.sln` with Visual Studio, compile and run any of the samples in the solution
+  * Open `Wire3D_WIN32.sln` with Visual Studio 2005/2008 or `Wire3D_WIN32_VS2010.sln` with Visual Studio 2010
+  * Compile and run any of the samples in the solution
 
-*Note*: The solution file is for Visual Studio 2005 Professional. However I tested using it with Visual Studio 2008 Express, too. On first launch, just let Visual Studio convert the solution and project files for you, after that it compiles without any warnings.
+*Note*: There are only solution and project files for Visual Studio 2005 and Visual Studio 2010. If you want to use Visual Studio 2008, just open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings.
 
 
 === Wii ===
   * Install the [http://wiibrew.org/wiki/Homebrew_setup Homebrew Channel] on your Wii
   * Install [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 DevkitPPC] on your Windows PC
-  * Open `Wire3D_WII.sln` with Visual Studio, compile and run any of the samples in the solution
+  * Open `Wire3D_WII.sln` with Visual Studio (let the solution be converted if necessary), compile and run any of the samples in the solution
 
 *Note*: If you run a program from Visual Studio, it will use [http://wiibrew.org/wiki/Wiiload Wiiload] (that comes with your DevkitPPC installation) to transfer the program to the Wii via network. Wiiload requires the environment variable `WIILOAD` to be set to `tcp:yourIP`, where _yourIP_ is the IP address of your Wii console.
