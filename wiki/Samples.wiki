@@ -4,7 +4,7 @@ The samples serve as tutorials and should be read in ascending order, since they
 The following samples show how to use the framework:
 
 === Sample1 - Basic Rendering ===
-This ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample1%2Fsrc Source]/[http://www.youtube.com/watch?v=llQveiCUlWQ Video]) sample demonstrates how to create a transparent, textured cube and render it several times (without a scene graph) using different render states and a light. In particular it shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample1%2Fsrc Source]/[http://www.youtube.com/watch?v=llQveiCUlWQ Video]) demonstrates how to create a transparent, textured cube and render it several times (without a scene graph) using different render states and a light. In particular it shows creation and/or usage of:
   * a Wire3D application including its renderer
   * vertex- and indexbuffers
   * renderable geometry (consisting of vertex- and indexbuffers)
@@ -42,3 +42,5 @@ In particular it shows creation and/or usage of:
 [http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample6%2Fsrc This] sample demonstrates how to create your own nodes to be used in the scene graph. This way you can extend the functionality of the system and suit it your own needs. We create a custom node that renders a lens flare effect and seamlessly plugs into the existing system. In particular this sample shows creation and/or usage of:
   * node derived classes
   * the run time type information (rtti) system
+
+[Samples#Sample1_-_Basic_Rendering]
