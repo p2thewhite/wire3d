@@ -15,7 +15,7 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * matrices and vectors performing geometric transformations
 
 === Sample2 - Scene Graph ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample2%2Fsrc This] sample demonstrates how to create and render a scene graph.
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample2%2Fsrc Source]/[http://www.youtube.com/watch?v=ItP0GHJqn3I Video]) demonstrates how to create and render a scene graph.
 Scene graphs serve the purpose of organizing your 3D objects (together with render states, lights, effects and controllers) in a hierarchy. The design of the classes is explained in detail [http://downloads.gamedev.net/pdf/Eberly-3.pdf here]. In particular this sample shows creation and/or usage of:
   * nodes and spatial hierarchies using nodes and geometries (i.e. a scene graph)
   * render state and light handling in scene graphs
@@ -23,24 +23,22 @@ Scene graphs serve the purpose of organizing your 3D objects (together with rend
   * calculation of a visible set to be rendered
 
 === Sample3 - Level of Detail ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample3%2Fsrc This] sample demonstrates how to use discrete LODs in the scene graph. In particular it shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample3%2Fsrc Source]/[http://www.youtube.com/watch?v=u_Zy2TFZL8E Video]) demonstrates how to use discrete LODs in the scene graph. In particular it shows creation and/or usage of:
   * a discrete level of detail (DLod) node
   * manual binding of resources
 
 === Sample4 - Multitexturing ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample4%2Fsrc This] sample demonstrates how to blend individual textures together in a single rendering pass using multitexturing.
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample4%2Fsrc Source]/[http://www.youtube.com/watch?v=wcuDh3NFq54 Video]) demonstrates how to blend individual textures together in a single rendering pass using multitexturing.
 In particular it shows creation and/or usage of:
   * texture blend modes
   * single pass multitexturing
 
 === Sample5 - Lighting ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample5%2Fsrc This] sample demonstrates how to render objects using lights. For that purpose we create 2 cubes which are both lit by 2 point lights using the scene graph. Furthermore we create a plane which is lit by a spot light and rendered without using the scene graph. The positions of the lights are represent by small cubes which are colored using the light's color. In particular this sample shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample5%2Fsrc Source]/[http://www.youtube.com/watch?v=6FewhqOKSVU Video]) demonstrates how to render objects using lights. For that purpose we create 2 cubes which are both lit by 2 point lights using the scene graph. Furthermore we create a plane which is lit by a spot light and rendered without using the scene graph. The positions of the lights are represent by small cubes which are colored using the light's color. In particular this sample shows creation and/or usage of:
   * a scene graph managing lights
   * direct rendering and scene graph rendering
 
 === Sample6 - Custom Nodes ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample6%2Fsrc This] sample demonstrates how to create your own nodes to be used in the scene graph. This way you can extend the functionality of the system and suit it your own needs. We create a custom node that renders a lens flare effect and seamlessly plugs into the existing system. In particular this sample shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample6%2Fsrc Source]/[http://www.youtube.com/watch?v=CgI6WTl5AWs Video]) demonstrates how to create your own nodes to be used in the scene graph. This way you can extend the functionality of the system and suit it your own needs. We create a custom node that renders a lens flare effect and seamlessly plugs into the existing system. In particular this sample shows creation and/or usage of:
   * node derived classes
   * the run time type information (rtti) system
-
-[Samples#Sample1_-_Basic_Rendering]
