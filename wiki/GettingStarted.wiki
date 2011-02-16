@@ -1,5 +1,9 @@
 #summary How to setup your system to use Wire3D.
 
+This guide assumes that your development machine is a Windows PC.
+
+You can build Wire3D for the following target platforms:
+
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
   * Install Visual Studio 2005 or later
@@ -12,6 +16,10 @@
 === Wii ===
   * Install the [http://wiibrew.org/wiki/Homebrew_setup Homebrew Channel] on your Wii
   * Install [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 DevkitPPC] on your Windows PC
-  * Open `Wire3D_WII.sln` with Visual Studio (let the solution be converted if necessary), compile and run any of the samples in the solution
+  * Open, compile and run any of the samples with:
+    * Programmer's Notepad2 (comes with your DevkitPPC installation): Open `Wire_WII.pnproj`
+    * Visual Studio 2005/2008/2010: Open `Wire3D_WII.sln`  and let the solution be converted if necessary
 
+<wiki:comment>
 *Note*: If you run a program from Visual Studio, it will use [http://wiibrew.org/wiki/Wiiload Wiiload] (that comes with your DevkitPPC installation) to transfer the program to the Wii via network. Wiiload requires the environment variable `WIILOAD` to be set to `tcp:yourIP`, where _yourIP_ is the IP address of your Wii console.
+</wiki:comment>
