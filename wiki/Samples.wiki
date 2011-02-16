@@ -1,10 +1,10 @@
-#summary Description of the samples that come with Wire3D.
+#summary Explaining Wire3D step by step.
 
 The samples serve as tutorials and should be read in ascending order, since they build upon concepts that are explained in preceding samples.
 The following samples show how to use the framework:
 
 === Sample1 - Basic Rendering ===
-[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample1%2Fsrc This] sample demonstrates how to create a transparent, textured cube and render it several times (without a scene graph) using different render states and a light. In particular it shows creation and/or usage of:
+This ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample1%2Fsrc Source]/[http://www.youtube.com/watch?v=llQveiCUlWQ Video]) sample demonstrates how to create a transparent, textured cube and render it several times (without a scene graph) using different render states and a light. In particular it shows creation and/or usage of:
   * a Wire3D application including its renderer
   * vertex- and indexbuffers
   * renderable geometry (consisting of vertex- and indexbuffers)
