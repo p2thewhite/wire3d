@@ -6,7 +6,6 @@
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
-#pragma comment(lib,"d3dx9.lib")
 
 using namespace Wire;
 
@@ -82,11 +81,29 @@ LRESULT CALLBACK MsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 			}
 		}
 
+	case WM_SIZE:
+		{
+			if (wParam != SIZE_MINIMIZED)
+			{
+				UInt width = static_cast<UInt>(LOWORD(lParam));
+				UInt height = static_cast<UInt>(HIWORD(lParam));
+				pApp->OnResize(width, height);
+			}
+			return 0;
+		}
+
+
 	case WM_ERASEBKGND:
 		{
 			// This tells Windows not to erase the background (and that the
 			// application is doing so).
 			return 1;
+		}
+
+	case WM_CLOSE:
+		{
+			PostQuitMessage(0);
+			return 0;
 		}
 
 	case WM_DESTROY:

@@ -39,6 +39,18 @@ Application* Application::GetApplication()
 }
 
 //----------------------------------------------------------------------------
+void Application::OnResize(UInt width, UInt height)
+{
+	if (mpRenderer)
+	{
+		mpRenderer->Resize(width, height);
+	}
+
+	mWidth = width;
+	mHeight = height;
+}
+
+//----------------------------------------------------------------------------
 Int main(Int argc, Char** argv)
 {
 	Main::Initialize();

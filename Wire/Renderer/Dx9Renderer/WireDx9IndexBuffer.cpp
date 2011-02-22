@@ -25,12 +25,11 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	}
 
 	// Create the index buffer.
-	const Buffer::UsageType usage = pIndexBuffer->GetUsage();
-	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
-		D3DPOOL_MANAGED;
+	const DWORD usage = PdrRendererData::sUsages[pIndexBuffer->GetUsage()];
+	const D3DPOOL pool = PdrRendererData::sPools[pIndexBuffer->GetUsage()];
 	HRESULT hr;
-	hr = rData.D3DDevice->CreateIndexBuffer(indexBufferSize,
-		D3DUSAGE_WRITEONLY, format, pool, &mpBuffer, NULL);
+	hr = rData.D3DDevice->CreateIndexBuffer(indexBufferSize, usage, format,
+		pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Copy the index buffer data from system memory to video memory.

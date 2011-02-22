@@ -82,11 +82,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 
 	// Create the vertex buffer.
 	UInt vbSize = vertexSize * pVertexBuffer->GetVertexQuantity();
-	const Buffer::UsageType usage = pVertexBuffer->GetUsage();
-	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
-		D3DPOOL_MANAGED;
-	hr = rDevice->CreateVertexBuffer(vbSize, D3DUSAGE_WRITEONLY, 0, pool,
-		&mpBuffer, NULL);
+	const DWORD usage = PdrRendererData::sUsages[pVertexBuffer->GetUsage()];
+	const D3DPOOL pool = PdrRendererData::sPools[pVertexBuffer->GetUsage()];
+	hr = rDevice->CreateVertexBuffer(vbSize, usage, 0, pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Copy the vertex buffer data from system memory to video memory.

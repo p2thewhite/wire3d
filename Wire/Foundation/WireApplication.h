@@ -31,6 +31,8 @@ public:
 	// Called before terminating the application.
 	virtual void OnTerminate() = 0;
 
+	virtual void OnResize(UInt width, UInt height);
+
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 
 

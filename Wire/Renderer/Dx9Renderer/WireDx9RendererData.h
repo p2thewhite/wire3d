@@ -15,9 +15,6 @@ class PdrRendererData
 public:
 	PdrRendererData(Renderer* pRenderer);
 
-	// device management
-	void ResetDevice();
-
 	// Platform-dependent data
 	IDirect3D9* D3D;
 	IDirect3DDevice9* D3DDevice;
@@ -36,8 +33,11 @@ public:
 	static DWORD sTexBlend[];
  	static D3DFORMAT sImage2DFormat[];
 	static DWORD sBufferLocking[];
+	static D3DPOOL sPools[];
+	static DWORD sUsages[];
 
 	Bool Supports32BitIndices;
+	Bool IsDeviceLost;
 
 private:
 	Renderer* mpRenderer;

@@ -89,13 +89,16 @@ public:
 
 	// Platform-dependent portion of the Renderer
 
-	// Support for predraw and postdraw semantics
+	// Support for predraw and postdraw semantics.
 	Bool PreDraw(Camera* pCamera);
 	void PostDraw();
 
 	// Apply camera changes to platform specific renderer.
 	void OnFrameChange();
 	void OnViewportChange();
+
+	// Handle window resize.
+	void Resize(UInt width, UInt height);
 
 	// Support for full-sized window buffer operations.
 	void SetClearColor(const ColorRGBA& rClearColor);
