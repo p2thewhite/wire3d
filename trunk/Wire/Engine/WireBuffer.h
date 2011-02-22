@@ -18,6 +18,7 @@ public:
 	{
 		UT_STATIC,
 		UT_DYNAMIC,
+		UT_DYNAMIC_WRITE_ONLY,
 		UT_QUANTITY
 	};
 

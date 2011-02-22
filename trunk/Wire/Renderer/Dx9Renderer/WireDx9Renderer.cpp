@@ -7,7 +7,6 @@
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
 #include "WireGeometry.h"
-#include <d3dx9.h>
 
 using namespace Wire;
 
@@ -145,6 +144,26 @@ void Renderer::DisplayBackBuffer()
 
 //----------------------------------------------------------------------------
 template <typename Resource, typename PdrResource>
+void DestroyNonManagedResources(THashTable<const Resource*,
+	PdrResource*>& rMap, TArray<const Resource*>& rSave)
+{
+	rSave.SetMaxQuantity(rMap.GetQuantity());
+	const Resource* pKey;
+	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
+		pValue = rMap.GetNext(&pKey))
+	{
+		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
+		if (PdrRendererData::sPools[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
+		{
+			WIRE_DELETE *pValue;
+			rSave.Append(pKey);
+			rMap.Remove(pKey);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
 void DestroyResources(THashTable<const Resource*, PdrResource*>& rMap,
 	TArray<const Resource*>& rSave)
 {
@@ -183,11 +202,12 @@ Bool Renderer::PreDraw(Camera* pCamera)
 	Float t = pCamera->GetUMax();
 	Float l = pCamera->GetRMin();
 	Float r = pCamera->GetRMax();
-	D3DXMATRIXA16 matProj(
+	D3DMATRIX matProj = {
 		2.0F*n/(r-l),	0.0F,			(r+l)/(r-l),	0.0F,
 		0.0F,			2.0F*n/(t-b),	(t+b)/(t-b),	0.0F,
 		0.0F,			0.0F,			f/(f-n),		1.0F,
-		0.0F,			0.0F,			-n*f/(f-n),		0.0F);
+		0.0F,			0.0F,			-n*f/(f-n),		0.0F};
+
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
@@ -200,19 +220,31 @@ Bool Renderer::PreDraw(Camera* pCamera)
     switch (hr)
     {
     case D3DERR_DEVICELOST:
+		mpData->IsDeviceLost = true;
 		return false;
 
 	case D3DERR_DEVICENOTRESET:
 		TArray<const IndexBuffer*> saveIndexBuffers;
 		TArray<const VertexBuffer*> saveVertexBuffers;
 		TArray<const Texture2D*> saveTexture2Ds;
-		DestroyResources(mIndexBufferMap, saveIndexBuffers);
-		DestroyResources(mVertexBufferMap, saveVertexBuffers);
-		DestroyResources(mTexture2DMap, saveTexture2Ds);
-		mpData->ResetDevice();
+		DestroyNonManagedResources(mIndexBufferMap, saveIndexBuffers);
+		DestroyNonManagedResources(mVertexBufferMap, saveVertexBuffers);
+		DestroyNonManagedResources(mTexture2DMap, saveTexture2Ds);
+
+		hr = rDevice->Reset(&mpData->Present);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		mpData->IsDeviceLost = false;
+
 		RecreateResources(this, saveIndexBuffers);
 		RecreateResources(this, saveVertexBuffers);
 		RecreateResources(this, saveTexture2Ds);
+
+		OnViewportChange();
+		hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+ 		hr = rDevice->LightEnable(0, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		SetStates(mspStates);
         break;
     }
 
@@ -227,7 +259,10 @@ void Renderer::PostDraw()
 {
 	HRESULT hr;
 	hr = mpData->D3DDevice->EndScene();
-	WIRE_ASSERT(SUCCEEDED(hr));
+	if (!mpData->IsDeviceLost)
+	{
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -276,6 +311,11 @@ void Renderer::OnFrameChange()
 //----------------------------------------------------------------------------
 void Renderer::OnViewportChange()
 {
+	if (!mpCamera)
+	{
+		return;
+	}
+
 	Float left;
 	Float right;
 	Float top;
@@ -308,6 +348,41 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Resize(UInt width, UInt height)
+{
+	mWidth = width;
+	mHeight = height;
+
+	TArray<const IndexBuffer*> saveIndexBuffers;
+	TArray<const VertexBuffer*> saveVertexBuffers;
+	TArray<const Texture2D*> saveTexture2Ds;
+	DestroyNonManagedResources(mIndexBufferMap, saveIndexBuffers);
+	DestroyNonManagedResources(mVertexBufferMap, saveVertexBuffers);
+	DestroyNonManagedResources(mTexture2DMap, saveTexture2Ds);
+
+	mpData->Present.BackBufferWidth = width;
+	mpData->Present.BackBufferHeight = height;
+
+	HRESULT hr;
+	hr = mpData->D3DDevice->Reset(&mpData->Present);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	mpData->IsDeviceLost = false;
+
+	RecreateResources(this, saveIndexBuffers);
+	RecreateResources(this, saveVertexBuffers);
+	RecreateResources(this, saveTexture2Ds);
+
+	OnViewportChange();
+
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
+	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	hr = rDevice->LightEnable(0, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	SetStates(mspStates);
+}
+
+//----------------------------------------------------------------------------
 DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] = 
 {
 	D3DLOCK_READONLY,           // Buffer::LM_READ_ONLY
@@ -316,19 +391,25 @@ DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-PdrRendererData::PdrRendererData(Renderer* pRenderer)
-	:
-	mpRenderer(pRenderer)
+D3DPOOL PdrRendererData::sPools[Buffer::UT_QUANTITY] =
 {
-}
+	D3DPOOL_MANAGED,	// Buffer::UT_STATIC
+	D3DPOOL_DEFAULT,	// Buffer::UT_DYNAMIC
+	D3DPOOL_DEFAULT		// Buffer::UT_DYNAMIC_WRITE_ONLY
+};
 
 //----------------------------------------------------------------------------
-void PdrRendererData::ResetDevice()
+DWORD PdrRendererData::sUsages[Buffer::UT_QUANTITY] =
 {
-	HRESULT hr;
-	hr = D3DDevice->Reset(&Present);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	D3DUSAGE_WRITEONLY,						// Buffer::UT_STATIC
+	D3DUSAGE_DYNAMIC,						// Buffer::UT_DYNAMIC
+	D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY	// Buffer::UT_DYNAMIC_WRITE_ONLY
+};
 
-	mpRenderer->OnViewportChange();
-	mpRenderer->OnFrameChange();
+//----------------------------------------------------------------------------
+PdrRendererData::PdrRendererData(Renderer* pRenderer)
+	:
+	IsDeviceLost(false),
+	mpRenderer(pRenderer)
+{
 }

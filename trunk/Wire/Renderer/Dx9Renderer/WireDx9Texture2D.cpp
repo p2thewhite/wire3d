@@ -4,7 +4,6 @@
 #include "WireImage2D.h"
 #include "WireRenderer.h"
 #include "WireTexture2D.h"
-#include <d3dx9tex.h>
 
 using namespace Wire;
 
@@ -132,46 +131,30 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		}
 	}
 
-	const Buffer::UsageType usage = pTexture->GetUsage();
-	const D3DPOOL pool = (usage == Buffer::UT_DYNAMIC) ? D3DPOOL_DEFAULT :
-		D3DPOOL_MANAGED;
+	const D3DPOOL pool = (pTexture->GetUsage() == Buffer::UT_STATIC) ?
+		D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
 	const UInt mipmapCount = pImage->GetMipmapCount();
+	const DWORD usage = 0;
 
 	HRESULT hr;
-	hr = D3DXCreateTexture(pRenderer->GetRendererData()->D3DDevice,
-		pImage->GetBound(0), pImage->GetBound(1), mipmapCount, 0,
-		PdrRendererData::sImage2DFormat[format], pool, &mpTexture);
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	hr = rDevice->CreateTexture(pImage->GetBound(0), pImage->GetBound(1),
+		mipmapCount, usage, PdrRendererData::sImage2DFormat[format], pool,
+		&mpTexture, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	if (pDst)
 	{
-		IDirect3DSurface9* pD3DSurface = NULL;
-
-		for (UInt i = 0; i < mipmapCount; i++)
+		for (UInt level = 0; level < mipmapCount; ++level)
 		{
-			hr = mpTexture->GetSurfaceLevel(i, &pD3DSurface);
-			WIRE_ASSERT(SUCCEEDED(hr) && pD3DSurface);
-
-			RECT r;
-			UInt pitch	= pImage->GetBound(0, i);
-			r.bottom	= pImage->GetBound(1, i);
-			r.right		= pitch;
-			r.top		= 0;
-			r.left		= 0;
-			UInt offset = (pImage->GetMipmapOffset(i) /
-				pImage->GetBytesPerPixel()) * bpp;
-
-			hr = D3DXLoadSurfaceFromMemory(pD3DSurface, NULL, NULL,
-				pDst+offset, PdrRendererData::sImage2DFormat[format],
-				pitch * bpp, NULL, &r, D3DX_FILTER_NONE, 0xFF000000);
-			WIRE_ASSERT(SUCCEEDED(hr));
-
-			pD3DSurface->Release();
+			void* pData = Lock(Buffer::LM_WRITE_ONLY, level);
+			WIRE_ASSERT(pData);
+			UInt size = pImage->GetQuantity(level) * bpp;
+			UInt offset = pImage->GetMipmapOffset(level) / pImage->
+				GetBytesPerPixel();
+			System::Memcpy(pData, size, pDst + offset * bpp, size);
+			Unlock(level);
 		}
-
-		// mark the texture as dirty
-		hr = mpTexture->AddDirtyRect(NULL);
-		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
 	if (pSrc != pDst)

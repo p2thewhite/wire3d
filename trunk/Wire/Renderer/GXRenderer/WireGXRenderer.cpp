@@ -664,6 +664,12 @@ void Renderer::SetState(StateWireframe* pState)
 	mspStates[State::WIREFRAME] = pState;
 }
 
+//----------------------------------------------------------------------------
+void Renderer::Resize(UInt, UInt)
+{
+	// nothing to do, window resizing not supported
+}
+
 // internally used by System::Assert
 //----------------------------------------------------------------------------
 void* PdrRendererData::GetFramebuffer()
