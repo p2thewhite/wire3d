@@ -9,11 +9,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2 - Scene Graph", "Sa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail", "Samples\Sample3\Sample3_WIN32.vcxproj", "{7FC321A4-570F-41A8-A845-F5A0FE9B5D94}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4", "Samples\Sample4\Sample4_WIN32.vcxproj", "{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4 - Multitexturing", "Samples\Sample4\Sample4_WIN32.vcxproj", "{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5 - Lighting", "Samples\Sample5\Sample5_WIN32.vcxproj", "{E960AE2F-C29B-452D-A24E-9178843D7E30}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Multitexturing", "Samples\Sample6\Sample6_WIN32.vcxproj", "{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Custom Nodes", "Samples\Sample6\Sample6_WIN32.vcxproj", "{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Accessing Resources", "Samples\Sample7\Sample7_WIN32.vcxproj", "{0A86B173-A63D-418D-ADB2-8AFD1D09278C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Debug|Win32.Build.0 = Debug|Win32
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Release|Win32.ActiveCfg = Release|Win32
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Release|Win32.Build.0 = Release|Win32
+		{0A86B173-A63D-418D-ADB2-8AFD1D09278C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A86B173-A63D-418D-ADB2-8AFD1D09278C}.Debug|Win32.Build.0 = Debug|Win32
+		{0A86B173-A63D-418D-ADB2-8AFD1D09278C}.Release|Win32.ActiveCfg = Release|Win32
+		{0A86B173-A63D-418D-ADB2-8AFD1D09278C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

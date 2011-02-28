@@ -67,7 +67,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	mMaxTextureStages = deviceCaps.MaxTextureBlendStages;
 	mMaxLights = deviceCaps.MaxActiveLights;
-	if (mMaxLights == 0)
+	if (mMaxLights <= 0)
 	{
 		mMaxLights = 8;
 	}
@@ -94,7 +94,10 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
+	if ((deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY ) > 0)
+	{
+		mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
+	}
 
 	// Initialize global render state to default settings.
 	SetStates(mspDefaultStates);
@@ -207,7 +210,6 @@ Bool Renderer::PreDraw(Camera* pCamera)
 		0.0F,			2.0F*n/(t-b),	(t+b)/(t-b),	0.0F,
 		0.0F,			0.0F,			f/(f-n),		1.0F,
 		0.0F,			0.0F,			-n*f/(f-n),		0.0F};
-
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);

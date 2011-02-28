@@ -33,6 +33,15 @@ Dx9Application::Dx9Application(const ColorRGBA backgroundColor, const Char*
 		height, isFullscreen),
 	mWindowID(0)
 {
+	DEVMODE mode;
+	mode.dmSize = sizeof(DEVMODE);
+	mode.dmDriverExtra = 0;
+	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &mode);
+	if (width == 0 && height == 0)
+	{
+		mWidth = mode.dmPelsWidth;
+		mHeight = mode.dmPelsHeight;
+	}
 }
 
 //----------------------------------------------------------------------------

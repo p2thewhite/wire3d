@@ -267,6 +267,9 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 //----------------------------------------------------------------------------
 void LensflareNode::CreateTextures()
 {
+	// Lens flare texture creation was taken from:
+	// http://www.blackpawn.com/texts/lensflare/
+	//
 	// create 4 textures (256,256) and store them in one (1024,1024) texture
 	const Image2D::FormatMode format = Image2D::FM_RGBA8888;
 	const UInt bpp = Image2D::GetBytesPerPixel(format);
