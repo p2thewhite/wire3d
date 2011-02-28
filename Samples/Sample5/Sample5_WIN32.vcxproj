@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>Sample5 - Lighting</ProjectName>
     <ProjectGuid>{E960AE2F-C29B-452D-A24E-9178843D7E30}</ProjectGuid>
-    <RootNamespace>Sample3_WIN32</RootNamespace>
+    <RootNamespace>Sample5_WIN32</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail",
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4", "Samples\Sample4\Sample4_WIN32.vcproj", "{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4 - Multitexturing", "Samples\Sample4\Sample4_WIN32.vcproj", "{E67596B8-DC4A-4A26-B5C7-18DD3A5CE67D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
@@ -28,7 +28,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5 - Lighting", "Sampl
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Multitexturing", "Samples\Sample6\Sample6_WIN32.vcproj", "{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Custom Nodes", "Samples\Sample6\Sample6_WIN32.vcproj", "{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Accessing Resources", "Samples\Sample7\Sample7_WIN32.vcproj", "{91F1F7BC-0641-4FE9-AB07-27203A37FA07}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
@@ -67,6 +72,10 @@ Global
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Debug|Win32.Build.0 = Debug|Win32
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Release|Win32.ActiveCfg = Release|Win32
 		{B7E9591C-70B0-425C-B0A9-A7600E412B8B}.Release|Win32.Build.0 = Release|Win32
+		{91F1F7BC-0641-4FE9-AB07-27203A37FA07}.Debug|Win32.ActiveCfg = Debug|Win32
+		{91F1F7BC-0641-4FE9-AB07-27203A37FA07}.Debug|Win32.Build.0 = Debug|Win32
+		{91F1F7BC-0641-4FE9-AB07-27203A37FA07}.Release|Win32.ActiveCfg = Release|Win32
+		{91F1F7BC-0641-4FE9-AB07-27203A37FA07}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

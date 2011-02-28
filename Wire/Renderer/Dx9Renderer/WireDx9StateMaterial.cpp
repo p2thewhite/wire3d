@@ -30,7 +30,7 @@ void Renderer::SetState(StateMaterial* pState)
 	material.Emissive.b = 0.0F;
 	material.Emissive.a = 0.0F;
 
-	material.Power = 1.0F;
+	material.Power = 0.0F;			// specularity
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

@@ -15,11 +15,12 @@ WIRE_APPLICATION(Sample2);
 Sample2::Sample2()
 	:
 	WIREAPPLICATION(
-		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// Background color.
+		ColorRGBA(0.0F, 0.0F, 0.2F, 1.0F),	// background color
+		// The following parameters are PC only:
 		"Sample2 - Creating a Scene Graph",	// title of the window,
-		0, 0,								// window position
-		640, 480,							// window size
-		false)								// fullscreen (ignored on the Wii).
+		0, 0,		// window position
+		640, 480,	// window size; (use (0,0) for current desktop resolution)
+		false)		// fullscreen
 {
 }
 
