@@ -217,7 +217,6 @@ Bool Dx9Application::OnPrecreate()
 	return true;
 }
 
-
 //----------------------------------------------------------------------------
 Bool Dx9Application::OnInitialize()
 {

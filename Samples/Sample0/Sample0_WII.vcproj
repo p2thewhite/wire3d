@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample7 - Dynamic Buffers"
-	ProjectGUID="{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}"
-	RootNamespace="Sample7 - Dynamic Buffers"
+	Name="Sample0 - User Application"
+	ProjectGUID="{535A54C5-0304-4361-A168-A8EC5BE41313}"
+	RootNamespace="Sample0 - User Application"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -62,11 +62,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\Sample7.cpp"
+			RelativePath=".\src\Sample0.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\Sample7.h"
+			RelativePath=".\src\Sample0.h"
 			>
 		</File>
 	</Files>

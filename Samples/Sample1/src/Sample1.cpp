@@ -6,26 +6,16 @@
 
 using namespace Wire;
 
-// This macro creates our user application.
 WIRE_APPLICATION(Sample1);
 
 //----------------------------------------------------------------------------
 Bool Sample1::OnInitialize()
 {
-	// This function is called by the framework before the rendering loop
-	// starts. Put all your initializations here.
-
-	// The platform dependent part of the application might need to do some
-	// initialization. If it fails, we return false and the application exits.
 	if (!Parent::OnInitialize())
 	{
 		return false;
 	}
 
-	// We create a cube here and reference it using a smart pointer.
-	// The smart pointer automatically deletes the object when it goes out
-	// of scope and no other references to the object exist. In this case
-	// deletion will happen when Sample1 is being destructed.
 	mspCube = CreateCube();
 
 	// Setup the position and orientation of the camera to look down

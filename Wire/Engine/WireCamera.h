@@ -14,6 +14,8 @@ class Camera : public Object
 
 public:
 	Camera();
+	Camera(const Vector3F& location, const Vector3F& direction,
+		const Vector3F& up);
 	virtual ~Camera();
 
 	enum

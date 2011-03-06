@@ -7,10 +7,20 @@ WIRE_IMPLEMENT_RTTI(Wire, Camera, Object);
 //----------------------------------------------------------------------------
 Camera::Camera()
 {
-	SetFrustum(-0.5F, 0.5F, -0.5F, 0.5F, 1.0F, 2.0F);
+	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
 	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
 	SetFrame(Vector3F::ZERO, -Vector3F::UNIT_Z, Vector3F::UNIT_Y,
 		Vector3F::UNIT_X);
+}
+
+//----------------------------------------------------------------------------
+Camera::Camera(const Vector3F& location, const Vector3F& direction,
+	const Vector3F& up)
+{
+	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
+	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
+	Vector3F right = direction.Cross(up);
+	SetFrame(location, direction, up, right);
 }
 
 //----------------------------------------------------------------------------

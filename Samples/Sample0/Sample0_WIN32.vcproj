@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample7 - Dynamic Buffers"
-	ProjectGUID="{91F1F7BC-0641-4FE9-AB07-27203A37FA07}"
-	RootNamespace="Sample7_WIN32"
+	Name="Sample0 - User Application"
+	ProjectGUID="{844C2C75-1547-4B74-9807-1497D32F7CF2}"
+	RootNamespace="Sample0_WIN32"
 	>
 	<Platforms>
 		<Platform
@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Sample7d.exe"
+				OutputFile="Sample0d.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -143,7 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="Sample7.exe"
+				OutputFile="Sample0.exe"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
@@ -181,11 +181,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\Sample7.cpp"
+			RelativePath=".\src\Sample0.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\Sample7.h"
+			RelativePath=".\src\Sample0.h"
 			>
 		</File>
 	</Files>
