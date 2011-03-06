@@ -72,21 +72,7 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 		return;
 	}
 
-	UInt* pIndices = mspIBuffer->GetData();
-
-	// calculate the normals of the individual triangles
-	TArray<Vector3F> faceNormals(mspIBuffer->GetIndexQuantity()/3);
-	for (UInt i = 0; i < mspIBuffer->GetIndexQuantity(); i +=3)
-	{
-		Vector3F v1 = mspVBuffer->Position3(pIndices[i+1]) -
-			mspVBuffer->Position3(pIndices[i]);
-		Vector3F v2 = mspVBuffer->Position3(pIndices[i+2]) -
-			mspVBuffer->Position3(pIndices[i+1]);
-
-		Vector3F normal = v1.Cross(v2);
-		normal.Normalize();
-		faceNormals.Append(normal);
-	}
+	UInt* const pIndices = mspIBuffer->GetData();
 
 	// collect the triangles each vertex is part of
 	TArray<TArray<UInt> > buckets(mspVBuffer->GetVertexQuantity());
@@ -105,7 +91,7 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 	{
 		for (UInt j = 0; j < mspVBuffer->GetVertexQuantity(); j++)
 		{
-			Vector3F vertex = mspVBuffer->Position3(j);
+			const Vector3F& vertex = mspVBuffer->Position3(j);
 			for (UInt i = j+1; i < mspVBuffer->GetVertexQuantity(); i++)
 			{
 				if (vertex == mspVBuffer->Position3(i))
@@ -123,6 +109,20 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 				}
 			}
 		}
+	}
+
+	// calculate the normals of the individual triangles
+	TArray<Vector3F> faceNormals(mspIBuffer->GetIndexQuantity()/3);
+	for (UInt i = 0; i < mspIBuffer->GetIndexQuantity(); i +=3)
+	{
+		Vector3F v1 = mspVBuffer->Position3(pIndices[i+1]) -
+			mspVBuffer->Position3(pIndices[i]);
+		Vector3F v2 = mspVBuffer->Position3(pIndices[i+2]) -
+			mspVBuffer->Position3(pIndices[i+1]);
+
+		Vector3F normal = v1.Cross(v2);
+		normal.Normalize();
+		faceNormals.Append(normal);
 	}
 
 	// calculate the normal of the vertex from the normals of its faces

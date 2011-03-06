@@ -12,7 +12,7 @@ Bool Sample7::OnInitialize()
 		return false;
 	}
 
-	mspGeometry = CreateGeometry(8, 128);
+	mspGeometry = CreateGeometry();
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -39,12 +39,15 @@ void Sample7::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	mAngle += static_cast<Float>(elapsedTime);
+	mAngle += static_cast<Float>(elapsedTime*0.5F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	// rotate and zoom the torus knots
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
 	mspGeometry->World.SetRotate(rotate);
+
+	Renderer::UnbindAll(mspGeometry->GetVBuffer());
+ 	GenerateVertices(mspGeometry->GetVBuffer(), mAngle*2);
+ 	GenerateNormals(mspGeometry->GetVBuffer(), mspGeometry->GetIBuffer());
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -54,42 +57,10 @@ void Sample7::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample7::CreateGeometry(UInt shapeCount, UInt segmentCount)
+Geometry* Sample7::CreateGeometry()
 {
-	// Create a PQ (4,3) torus knot with a inner radius of 0.2
-	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 3, 2);
-
-	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = ColorRGBA(1.0F, 1.0F, 0.5F, 1.0f); 
-	pTorus->States[State::MATERIAL] = pMaterial;
-
-	Light* pLight = WIRE_NEW Light;
-	pTorus->Lights.Append(pLight);
-
-	return pTorus;
-}
-
-//----------------------------------------------------------------------------
-Geometry* Sample7::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
-	UInt segmentCount, UInt p, UInt q)
-{
-	shapeCount++;
-	segmentCount++;
-
-	// create the inner shape (i.e. a circle)
-	TArray<Vector3F> shape(shapeCount);
-	Vector3F pos(0, shapeRadius, 0);
-	Float angleStride = MathF::TWO_PI / (shapeCount-1);
-	Float angle = 0;
-	for (UInt i = 0; i < (shapeCount-1); i++)
-	{
-		Matrix34F rot(Vector3F(0, 0, 1), angle);
-		shape.SetElement(i, pos * rot);
-		angle += angleStride;
-	}
-
-	// the last vertex can't share uv-coords, so we duplicate the first vertex
-	shape.SetElement(shapeCount-1, shape[0]);
+	const UInt shapeCount = smShapeCount+1;
+	const UInt segmentCount = smSegmentCount+1;
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
@@ -97,47 +68,6 @@ Geometry* Sample7::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 
 	const UInt vertexCount = segmentCount * shapeCount;
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, vertexCount);
-
-	// create the pq torus knot and position & align the shape along it
-	angleStride = MathF::TWO_PI / (segmentCount-1);
-	angle = 0;
-	for (UInt i = 0; i < segmentCount-1; i++)
-	{
-		Float r = 0.5F * (2 + MathF::Sin(q * angle));
-		Float x = r * MathF::Cos(p * angle);
-		Float y = r * MathF::Cos(q * angle);
-		Float z = r * MathF::Sin(p * angle);
-		Vector3F p0(x, y, z);
-
-		r = 0.5F * (2 + MathF::Sin(q * (angle+0.1F)));
-		x = r * MathF::Cos(p * (angle+0.1F));
-		y = r * MathF::Cos(q * (angle+0.1F));
-		z = r * MathF::Sin(p * (angle+0.1F));
-		Vector3F p1(x, y, z);
-
-		angle += angleStride;		
-
-		// approximate Frenet frame
-		Vector3F t = p1-p0;
-		Vector3F n = p1+p0;
-		Vector3F b = t.Cross(n);
-		n = b.Cross(t);
-		n.Normalize();
-		b.Normalize();
-
-		for (UInt j = 0; j < shapeCount; j++)
-		{	
-			Vector3F newVertex = p0 + shape[j].X() * n + shape[j].Y() * b;
-			pVBuffer->Position3(i*shapeCount + j) = newVertex;
-		}
-	}
-
-	// copy the last segment from the first
-	for (UInt j = 0; j < shapeCount; j++)
-	{	
-		pVBuffer->Position3((segmentCount-1)*shapeCount + j) = pVBuffer->
-			Position3(j);
-	}
 
 	// here we establish connectivity information defined in an IndexBuffer
 	const UInt indexCount = (segmentCount-1)*(shapeCount-1)*6;
@@ -163,14 +93,168 @@ Geometry* Sample7::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
-	pGeo->GenerateNormals(true);
-	return pGeo;
+	Geometry* pTorus = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	GenerateVertices(pVBuffer, 0);
+
+	// prepare calculation of vertex normals
+	UInt* pIndices = pIBuffer->GetData();
+	mBuckets.SetQuantity(pVBuffer->GetVertexQuantity());
+
+	// collect the triangles each vertex is part of
+	UInt triIndex = 0;
+	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i += 3)
+	{
+		mBuckets[pIndices[i]].Append(triIndex);
+		mBuckets[pIndices[i+1]].Append(triIndex);
+		mBuckets[pIndices[i+2]].Append(triIndex);
+		triIndex++;
+	}
+
+	for (UInt j = 0; j < pVBuffer->GetVertexQuantity(); j++)
+	{
+		const Vector3F& vertex = pVBuffer->Position3(j);
+		for (UInt i = j+1; i < pVBuffer->GetVertexQuantity(); i++)
+		{
+			if (vertex == pVBuffer->Position3(i))
+			{
+				UInt origCount = mBuckets[j].GetQuantity();
+				for (UInt k = 0; k < mBuckets[i].GetQuantity(); k++)
+				{
+					mBuckets[j].Append(mBuckets[i][k]);
+				}
+
+				for (UInt k = 0; k < origCount; k++)
+				{
+					mBuckets[i].Append(mBuckets[j][k]);
+				}
+			}
+		}
+	}
+	
+	// material for lighting
+	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
+	pMaterial->Ambient = ColorRGBA(1.0F, 1.0F, 0.7F, 1.0f); 
+	pTorus->States[State::MATERIAL] = pMaterial;
+
+	Light* pLight = WIRE_NEW Light;
+	pTorus->Lights.Append(pLight);
+
+	return pTorus;
 }
 
 //----------------------------------------------------------------------------
-struct Cell
+void Sample7::GenerateVertices(VertexBuffer* pVBuffer, Float radiusAngle)
 {
-	Vector2F point;
-	ColorRGB color;
-};
+	const Float shapeRadius = 0.2F;
+	const UInt p = smP;
+	const UInt q = smQ;
+	const UInt shapeCount = smShapeCount+1;
+	const UInt segmentCount = smSegmentCount+1;
+
+	// create the inner shape (i.e. a circle)
+	TArray<Vector3F> shape(shapeCount);
+	Vector3F pos(0, shapeRadius, 0);
+	Float angleStride = MathF::TWO_PI / (shapeCount-1);
+	Float angle = 0;
+	for (UInt i = 0; i < (shapeCount-1); i++)
+	{
+		Matrix34F rot(Vector3F(0, 0, 1), angle);
+		shape.SetElement(i, pos * rot);
+		angle += angleStride;
+	}
+
+	// duplicate the first vertex for the last one
+	shape.SetElement(shapeCount-1, shape[0]);
+
+	angle = 0;
+
+	// create the pq torus knot and position & align the shape along it
+	angleStride = MathF::TWO_PI / (segmentCount-1);
+	for (UInt i = 0; i < segmentCount-1; i++)
+	{
+		Float r = 0.5F * (2 + MathF::Sin(q * angle));
+		Float x = r * MathF::Cos(p * angle);
+		Float y = r * MathF::Cos(q * angle);
+		Float z = r * MathF::Sin(p * angle);
+		Vector3F p0(x, y, z);
+
+		r = 0.5F * (2 + MathF::Sin(q * (angle+0.1F)));
+		x = r * MathF::Cos(p * (angle+0.1F));
+		y = r * MathF::Cos(q * (angle+0.1F));
+		z = r * MathF::Sin(p * (angle+0.1F));
+		Vector3F p1(x, y, z);
+
+		// approximate Frenet frame
+		Vector3F t = p1-p0;
+		Vector3F n = p1+p0;
+		Vector3F b = t.Cross(n);
+		n = b.Cross(t);
+		n.Normalize();
+		b.Normalize();
+
+		angle += angleStride;
+
+		const Float radiusFactor = (MathF::Sin(radiusAngle*16)+2) * 0.5F *
+			(MathF::Sin(radiusAngle)*0.5F+1);
+		const UInt offset = i*shapeCount;
+		for (UInt j = 0; j < shapeCount; j++)
+		{
+			const Float xs = shape[j].X() * radiusFactor;
+			const Float ys = shape[j].Y() * radiusFactor;
+			Vector3F newVertex = p0 + xs * n + ys * b;
+			pVBuffer->Position3(offset + j) = newVertex;
+		}
+
+		radiusAngle += angleStride;
+	}
+
+	// copy the last segment from the first
+	const UInt offset = (segmentCount-1)*shapeCount;
+	for (UInt j = 0; j < shapeCount; j++)
+	{	
+		pVBuffer->Position3(offset + j) = pVBuffer->Position3(j);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Sample7::GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
+{
+	UInt* const pIndices = pIBuffer->GetData();
+
+	// calculate the normals of the individual triangles
+	TArray<Vector3F> faceNormals(pIBuffer->GetIndexQuantity()/3);
+	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i +=3)
+	{
+		Vector3F v1 = pVBuffer->Position3(pIndices[i+1]) -
+			pVBuffer->Position3(pIndices[i]);
+		Vector3F v2 = pVBuffer->Position3(pIndices[i+2]) -
+			pVBuffer->Position3(pIndices[i+1]);
+
+		Vector3F normal = v1.Cross(v2);
+		normal.Normalize();
+		faceNormals.Append(normal);
+	}
+
+	// calculate the normal of the vertex from the normals of its faces
+	for (UInt i = 0; i < mBuckets.GetQuantity(); i++)
+	{
+		Vector3F normal(Vector3F::ZERO);
+		for (UInt j = 0; j < mBuckets[i].GetQuantity(); j++)
+		{
+			normal += faceNormals[mBuckets[i][j]];
+		}
+
+		if (mBuckets[i].GetQuantity() > 0)
+		{
+			normal /= static_cast<Float>(mBuckets[i].GetQuantity());
+			normal.Normalize();
+		}
+		else
+		{
+			// vertex not used in mesh, use a default normal
+			normal = Vector3F::UNIT_X;
+		}
+
+		pVBuffer->Normal3(i) = normal;
+	}
+}
