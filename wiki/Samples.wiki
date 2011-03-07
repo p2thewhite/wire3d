@@ -3,9 +3,13 @@
 The samples serve as tutorials and should be read in ascending order, since they build upon concepts that are explained in preceding samples.
 The following samples show how to use the framework:
 
+=== Sample0 - User Application ===
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample0%2Fsrc Source]) shows how to define your own platform independent Wire3D application. In particular it shows creation and/or usage of:
+  * a Wire3D derived application
+  * smart pointers
+
 === Sample1 - Basic Rendering ===
 This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample1%2Fsrc Source]/[http://www.youtube.com/watch?v=llQveiCUlWQ Video]) demonstrates how to create a transparent, textured cube and render it several times (without a scene graph) using different render states and a light. In particular it shows creation and/or usage of:
-  * a Wire3D application including its renderer
   * vertex- and indexbuffers
   * renderable geometry (consisting of vertex- and indexbuffers)
   * a 2D texture with mipmaps
