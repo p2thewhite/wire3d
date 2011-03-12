@@ -37,6 +37,7 @@ public:
 
 	void Enable(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	void Disable(Renderer* pRenderer);
+	void Update(const VertexBuffer* pVertexBuffer);
 
 	TArray<DisplayList>& GetDisplayLists() { return mDisplayLists; }
 	const TArray<VertexElement>& GetVertexElements() const
@@ -45,8 +46,8 @@ public:
 	Bool HasNormals() { return mHasNormals; }
 
 private:
-	void Convert(const VertexBuffer* pSrc,
-		TArray<PdrVertexBuffer::VertexElement>& rElements);
+	void Convert(const VertexBuffer* pSrc, TArray<PdrVertexBuffer::
+		VertexElement>& rElements);
 
 	TArray<DisplayList> mDisplayLists;
 	TArray<VertexElement> mElements;

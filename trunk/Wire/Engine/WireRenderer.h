@@ -78,6 +78,7 @@ public:
 	void Enable(const VertexBuffer* pVertexBuffer);
 	void Disable(const VertexBuffer* pVertexBuffer);
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
+	void Update(const VertexBuffer* pVertexBuffer);
 
 	// 2D texture management
 	PdrTexture2D* Bind(const Texture2D* pTexture);

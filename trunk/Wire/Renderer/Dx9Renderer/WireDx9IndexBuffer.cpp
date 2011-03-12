@@ -32,8 +32,11 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 		pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
+	Buffer::LockingMode lockingMode = pIndexBuffer->GetUsage() ==
+		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
+
 	// Copy the index buffer data from system memory to video memory.
-	Char* pBuffer = reinterpret_cast<Char*>(Lock(Buffer::LM_WRITE_ONLY));	
+	Char* pBuffer = reinterpret_cast<Char*>(Lock(lockingMode));
 	if (rData.Supports32BitIndices)
 	{
 		System::Memcpy(pBuffer, indexBufferSize, pIndices,

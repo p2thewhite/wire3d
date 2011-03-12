@@ -19,7 +19,9 @@ public:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 	virtual ~Geometry();
 
+	// geometric updates
 	virtual void UpdateWorldBound();
+	virtual void UpdateModelBound();
 
 	inline VertexBuffer* GetVBuffer();
 	inline const VertexBuffer* GetVBuffer() const;
@@ -34,12 +36,9 @@ public:
 	TArray<LightPtr> Lights;
 
 protected:
-	// geometric updates
-	virtual void UpdateModelBound();
-
 	// render state updates
-	virtual void UpdateState(TArray<State*>* pGStack,
-		TArray<Light*>* pLStack);
+	virtual void UpdateState(TArray<State*>* pGStack, TArray<Light*>*
+		pLStack);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);

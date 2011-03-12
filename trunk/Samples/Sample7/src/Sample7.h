@@ -18,7 +18,7 @@ public:
 
 private:
 	Geometry* CreateGeometry();
-	void GenerateVertices(VertexBuffer* pVBuffer, Float radiusAngle);
+	void GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle);
 	void GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 
 	CameraPtr mspCamera;
@@ -27,8 +27,8 @@ private:
 	Float mAngle;
 	Double mLastTime;
 
-	static const UInt smShapeCount = 16;
-	static const UInt smSegmentCount = 128;
+	static const UInt smShapeCount = 24;
+	static const UInt smSegmentCount = 192;
 	static const UInt smP = 3;
 	static const UInt smQ = 2;
 	TArray<TArray<UInt> > mBuckets;

@@ -24,13 +24,14 @@ public:
 	void Disable(Renderer* pRenderer);
 	void* Lock(Buffer::LockingMode mode);
 	void Unlock();
+	void Update(const VertexBuffer* pVertexBuffer);
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	IDirect3DVertexBuffer9* mpBuffer;
 	IDirect3DVertexDeclaration9* mpDeclaration;
-	UInt mSize;
+	UInt mVertexSize;
 };
 
 }

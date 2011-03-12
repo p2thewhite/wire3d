@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Sample7 - Accessing Resources</ProjectName>
+    <ProjectName>Sample7 - Dynamic Buffers</ProjectName>
     <ProjectGuid>{0A86B173-A63D-418D-ADB2-8AFD1D09278C}</ProjectGuid>
     <RootNamespace>Sample7_WIN32</RootNamespace>
   </PropertyGroup>

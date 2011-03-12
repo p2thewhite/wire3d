@@ -18,7 +18,6 @@ public:
 	inline UInt GetColorChannelQuantity() const;
 	inline UInt GetTCoordChannelQuantity() const;
 
-	inline void SetInterleaved(Bool isChannelInterleaved);
 	void SetPositionChannels(UInt positionChannels);
 	void SetColorChannels(UInt colorChannels, UInt unit = 0);
 	void SetNormalChannels(UInt normalChannels);
@@ -56,8 +55,6 @@ private:
 
 	TArray<Int> mTCoordChannels;
 	TArray<Int> mTCoordOffset;
-
-	Bool mIsChannelInterleaved;
 };
 
 #include "WireVertexAttributes.inl"

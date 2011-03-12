@@ -271,6 +271,20 @@ void Renderer::Disable(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Update(const VertexBuffer* pVertexBuffer)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Update(pVertexBuffer);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Vertex buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
 PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 {
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);

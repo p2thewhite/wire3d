@@ -1,3 +1,9 @@
+// Sample7 - Dynamic Buffers
+// This sample demonstrates how to create and use a dynamic vertex buffer.
+// On creation of the vertex buffer a usage type is passed indicating how the
+// buffer is going to be used. With this information he framework can make
+// correct assumptions and use the hardware accordingly.
+
 #include "Sample7.h"
 
 using namespace Wire;
@@ -12,11 +18,19 @@ Bool Sample7::OnInitialize()
 		return false;
 	}
 
+	// create a cube with a dynamic vertex buffer
 	mspGeometry = CreateGeometry();
+
+	// Bind the geometry to the renderer, i.e. create hardware buffer objects.
+	// This would happen automatically when the geometry is rendered for the
+	// first time. However we want to dynamically fill the vertex buffer each
+	// frame, so the hardware buffer object already has to exist before we
+	// are rendering it. Thus we bind it manually.
+	Renderer::BindAll(mspGeometry);
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
-	Vector3F cameraLocation(0.0F, 0.0F, 6.0F);
+	Vector3F cameraLocation(0.0F, 0.0F, 4.5F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -45,9 +59,19 @@ void Sample7::OnIdle()
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
 	mspGeometry->World.SetRotate(rotate);
 
-	Renderer::UnbindAll(mspGeometry->GetVBuffer());
- 	GenerateVertices(mspGeometry->GetVBuffer(), mAngle*2);
+	// animate the positions of the PQ torus knot
+	GeneratePositions(mspGeometry->GetVBuffer(), mAngle*2);
+
+	// positions changed, so we need to recalculate the normals
  	GenerateNormals(mspGeometry->GetVBuffer(), mspGeometry->GetIBuffer());
+
+	// update the hardware vertex buffer data
+	GetRenderer()->Update(mspGeometry->GetVBuffer());
+
+	// We know that animating the positions in this case does not change the
+	// model bounding volume. If it did, we would need to recalculate it,
+	// otherwise the culling system would produce incorrect results.
+//	mspGeometry->UpdateModelBound();
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -59,6 +83,7 @@ void Sample7::OnIdle()
 //----------------------------------------------------------------------------
 Geometry* Sample7::CreateGeometry()
 {
+	// Create a PQ torus knot, which we will later animate per frame.
 	const UInt shapeCount = smShapeCount+1;
 	const UInt segmentCount = smSegmentCount+1;
 
@@ -67,7 +92,22 @@ Geometry* Sample7::CreateGeometry()
 	attributes.SetNormalChannels(3);
 
 	const UInt vertexCount = segmentCount * shapeCount;
-	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, vertexCount);
+
+	// The usage types for buffers are:
+	//   Buffer::UT_STATIC: This is the default. The buffer's content never
+	//     (or rarely) changes.
+	//   Buffer::UT_DYNAMIC: The buffer's content changes frequently (e.g.
+	//     every frame), and it is also being read from.
+	//   Buffer::UT_DYNAMIC_WRITE_ONLY: The buffer's content changes
+	//     frequently, and is never read from.
+	//
+	// Specify the usage accordingly, so Wire can use the platform dependent
+	// graphics API and hardware optimally.
+	//
+	// We are going to fill the vertex buffer every frame without having to
+	// read from it, so pass Buffer::UT_DYNAMIC_WRITE_ONLY as its usage type.
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, vertexCount,
+		Buffer::UT_DYNAMIC_WRITE_ONLY);
 
 	// here we establish connectivity information defined in an IndexBuffer
 	const UInt indexCount = (segmentCount-1)*(shapeCount-1)*6;
@@ -94,9 +134,11 @@ Geometry* Sample7::CreateGeometry()
 	}
 
 	Geometry* pTorus = WIRE_NEW Geometry(pVBuffer, pIBuffer);
-	GenerateVertices(pVBuffer, 0);
 
-	// prepare calculation of vertex normals
+	// fill the vertex buffer (i.e. initialize positions)
+	GeneratePositions(pVBuffer, MathF::PI * 0.5F);
+
+	// prepare calculation of vertex normals (requires initialized positions)
 	UInt* pIndices = pIBuffer->GetData();
 	mBuckets.SetQuantity(pVBuffer->GetVertexQuantity());
 
@@ -133,7 +175,7 @@ Geometry* Sample7::CreateGeometry()
 	
 	// material for lighting
 	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = ColorRGBA(1.0F, 1.0F, 0.7F, 1.0f); 
+	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0f); 
 	pTorus->States[State::MATERIAL] = pMaterial;
 
 	Light* pLight = WIRE_NEW Light;
@@ -143,9 +185,9 @@ Geometry* Sample7::CreateGeometry()
 }
 
 //----------------------------------------------------------------------------
-void Sample7::GenerateVertices(VertexBuffer* pVBuffer, Float radiusAngle)
+void Sample7::GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle)
 {
-	const Float shapeRadius = 0.2F;
+	const Float shapeRadius = 0.2F * (MathF::Sin(radiusAngle) * 0.25F + 1.0F);
 	const UInt p = smP;
 	const UInt q = smQ;
 	const UInt shapeCount = smShapeCount+1;
