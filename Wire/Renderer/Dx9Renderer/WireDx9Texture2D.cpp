@@ -145,9 +145,12 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 
 	if (pDst)
 	{
+		Buffer::LockingMode lockingMode = pTexture->GetUsage() ==
+			Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
+
 		for (UInt level = 0; level < mipmapCount; ++level)
 		{
-			void* pData = Lock(Buffer::LM_WRITE_ONLY, level);
+			void* pData = Lock(lockingMode, level);
 			WIRE_ASSERT(pData);
 			UInt size = pImage->GetQuantity(level) * bpp;
 			UInt offset = pImage->GetMipmapOffset(level) / pImage->

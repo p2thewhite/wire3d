@@ -17,12 +17,6 @@ inline UInt VertexAttributes::GetTCoordChannelQuantity() const
 }
 
 //----------------------------------------------------------------------------
-inline void VertexAttributes::SetInterleaved(Bool isChannelInterleaved)
-{
-	mIsChannelInterleaved = isChannelInterleaved;
-}
-
-//----------------------------------------------------------------------------
 inline Bool VertexAttributes::HasPosition() const
 {
 	return mPositionChannels > 0;

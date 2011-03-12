@@ -388,7 +388,7 @@ void Renderer::Resize(UInt width, UInt height)
 DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] = 
 {
 	D3DLOCK_READONLY,           // Buffer::LM_READ_ONLY
-	0,                          // Buffer::LM_WRITE_ONLY
+	D3DLOCK_DISCARD,            // Buffer::LM_WRITE_ONLY
 	0                           // Buffer::LM_READ_WRITE
 };
 

@@ -72,18 +72,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		}
 	}
 
-	WIRE_ASSERT(mElements.GetQuantity() > 0);
-	Convert(pVertexBuffer, mElements);
-
-	for (UInt i = 0; i < mElements.GetQuantity(); i++)
-	{
-		DCStoreRangeNoSync(mElements[i].Data, mElements[i].Size);
-	}
-
-	PPCSync();
-
-	// Invalidate vertex cache in GP
-	GXInvalidateVtxCache();
+	Update(pVertexBuffer);
 }
 
 //----------------------------------------------------------------------------
@@ -157,9 +146,26 @@ void PdrVertexBuffer::Disable(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
+void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
+{
+	Convert(pVertexBuffer, mElements);
+
+	for (UInt i = 0; i < mElements.GetQuantity(); i++)
+	{
+		DCStoreRangeNoSync(mElements[i].Data, mElements[i].Size);
+	}
+
+	PPCSync();
+
+	// Invalidate vertex cache in GP
+	GXInvalidateVtxCache();
+}
+
+//----------------------------------------------------------------------------
 void PdrVertexBuffer::Convert(const VertexBuffer* pSrc,
 	TArray<PdrVertexBuffer::VertexElement>& rElements)
 {
+	WIRE_ASSERT(rElements.GetQuantity() > 0);
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
 
 	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)

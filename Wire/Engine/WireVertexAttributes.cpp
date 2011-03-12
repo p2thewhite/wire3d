@@ -7,8 +7,7 @@ VertexAttributes::VertexAttributes()
 	:
 	mChannelQuantity(0),
 	mPositionChannels(0),
-	mNormalChannels(0),
-	mIsChannelInterleaved(true)
+	mNormalChannels(0)
 {
 	ResetOffsets();
 }
@@ -90,6 +89,12 @@ void VertexAttributes::UpdateOffsets()
 		mChannelQuantity += mPositionChannels;
 	}
 
+	if (mNormalChannels > 0)
+	{
+		mNormalOffset = mChannelQuantity;
+		mChannelQuantity += mNormalChannels;
+	}
+
 	if (mColorChannels.GetQuantity() > 0)
 	{
 		for (UInt i = 0; i < mColorChannels.GetQuantity(); i++)
@@ -100,12 +105,6 @@ void VertexAttributes::UpdateOffsets()
 				mChannelQuantity += mColorChannels[i];
 			}
 		}
-	}
-
-	if (mNormalChannels > 0)
-	{
-		mNormalOffset = mChannelQuantity;
-		mChannelQuantity += mNormalChannels;
 	}
 
 	if (mTCoordChannels.GetQuantity() > 0)
