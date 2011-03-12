@@ -6,5 +6,6 @@
     * [Samples#Sample3_-_Level_of_Detail Sample3 - Level of Detail]
     * [Samples#Sample4_-_Multitexturing Sample4 - Multitexturing]
     * [Samples#Sample5_-_Lighting Sample5 - Lighting]
-    * [Samples#Sample6_-_Custom_Nodes Sample6 - Custom_Nodes]
+    * [Samples#Sample6_-_Custom_Nodes Sample6 - Custom Nodes]
+    * [Samples#Sample7_-_Dynamic_Buffers Sample7 - Dynamic Buffers]
   * [FAQ Frequently Asked Questions]
