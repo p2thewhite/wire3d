@@ -546,6 +546,7 @@ void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
 				break;
 
 			case GX_VA_CLR0:
+			case GX_VA_CLR1:
 				GXColor1x16(index);
 				break;
 
