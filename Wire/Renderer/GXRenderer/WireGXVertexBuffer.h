@@ -18,8 +18,6 @@ public:
 	struct VertexElement
 	{
 		void* Data;
-		UInt Size;
-		UChar Stride;
 		UChar Attr;
 		UChar CompCnt;
 		UChar CompType;
@@ -46,12 +44,13 @@ public:
 	Bool HasNormals() { return mHasNormals; }
 
 private:
-	void Convert(const VertexBuffer* pSrc, TArray<PdrVertexBuffer::
-		VertexElement>& rElements);
+	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	TArray<DisplayList> mDisplayLists;
 	TArray<VertexElement> mElements;
 
+	void* mpData;
+	UChar mVertexSize;
 	Bool mHasNormals;
 };
 

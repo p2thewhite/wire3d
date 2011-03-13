@@ -10,13 +10,14 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	pVertexBuffer)
+	:
+	mVertexSize(0)
 {
 	TArray<D3DVERTEXELEMENT9> elements(8);
 	D3DVERTEXELEMENT9 element;
 	element.Stream = 0;
 	element.Method = D3DDECLMETHOD_DEFAULT;
 
-	mVertexSize = 0;
 	UInt channels = 0;
 
 	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
