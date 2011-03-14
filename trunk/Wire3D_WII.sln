@@ -15,8 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample2 - Scene Graph", "Sa
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail", "Samples\Sample3\Sample3_WII.vcproj", "{5B8835D8-A708-4650-9C67-D0599D9A8899}"
 	ProjectSection(ProjectDependencies) = postProject
-		{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E} = {4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+		{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E} = {4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4 - Multitexturing", "Samples\Sample4\Sample4_WII.vcproj", "{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
@@ -40,6 +40,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Dynamic Buffers",
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application", "Samples\Sample0\Sample0_WII.vcproj", "{535A54C5-0304-4361-A168-A8EC5BE41313}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Accessing Resources", "Samples\Sample8\Sample8_WII.vcproj", "{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
@@ -86,6 +91,10 @@ Global
 		{535A54C5-0304-4361-A168-A8EC5BE41313}.Debug|Win32.Build.0 = Debug|Win32
 		{535A54C5-0304-4361-A168-A8EC5BE41313}.Release|Win32.ActiveCfg = Release|Win32
 		{535A54C5-0304-4361-A168-A8EC5BE41313}.Release|Win32.Build.0 = Release|Win32
+		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Debug|Win32.Build.0 = Debug|Win32
+		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Release|Win32.ActiveCfg = Release|Win32
+		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

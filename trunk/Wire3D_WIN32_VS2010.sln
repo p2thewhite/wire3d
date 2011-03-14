@@ -15,9 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample5 - Lighting", "Sampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample6 - Custom Nodes", "Samples\Sample6\Sample6_WIN32.vcxproj", "{B7E9591C-70B0-425C-B0A9-A7600E412B8B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Accessing Resources", "Samples\Sample7\Sample7_WIN32.vcxproj", "{0A86B173-A63D-418D-ADB2-8AFD1D09278C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Dynamic Buffers", "Samples\Sample7\Sample7_WIN32.vcxproj", "{0A86B173-A63D-418D-ADB2-8AFD1D09278C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - Empty Application", "Samples\Sample0\Sample0_WIN32.vcxproj", "{4710F372-2A7B-4BCE-B38B-063DF884E17A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application", "Samples\Sample0\Sample0_WIN32.vcxproj", "{4710F372-2A7B-4BCE-B38B-063DF884E17A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics Integration", "Samples\Sample8\Sample8_WIN32.vcxproj", "{1788AD0D-546B-4412-A7F5-086923EBA2FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{4710F372-2A7B-4BCE-B38B-063DF884E17A}.Debug|Win32.Build.0 = Debug|Win32
 		{4710F372-2A7B-4BCE-B38B-063DF884E17A}.Release|Win32.ActiveCfg = Release|Win32
 		{4710F372-2A7B-4BCE-B38B-063DF884E17A}.Release|Win32.Build.0 = Release|Win32
+		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Debug|Win32.Build.0 = Debug|Win32
+		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Release|Win32.ActiveCfg = Release|Win32
+		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
