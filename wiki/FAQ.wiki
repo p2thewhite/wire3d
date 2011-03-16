@@ -1,7 +1,7 @@
 #summary Frequently asked questions.
 
 *There's a gazillion 3D engines out there. Why did you roll your own?*
- This is just a pet project and on going learning experience for me, as well as my way of giving something back to the Wii homebrew scene.
+ This is just a pet project and on going learning experience for me, as well as my way of giving something back to the Wii homebrew scene. It is also the _only_ open source multiplatform 3D engine supporting the Nintendo Wii (as far as I know).
 
 *Why do you use the [http://www.gnu.org/copyleft/lesser.html LGPL]?*
  Significant parts of the code were taken and adapted from the [http://www.geometrictools.com Wild Magic] engine by Dave Eberly, which uses the LGPL itself.
