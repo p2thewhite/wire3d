@@ -1,8 +1,21 @@
 #summary How to setup your system to use Wire3D.
 
-This guide assumes that your development machine is a Windows PC.
-
 You can build Wire3D for the following target platforms:
+
+=== Wii ===
+  * Install the [http://wiibrew.org/wiki/Homebrew_setup Homebrew Channel] on your Wii
+  * Install [http://wiibrew.org/wiki/DevkitPPC DevkitPPC] on  your [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 Windows], [http://wiibrew.org/wiki/Devkitppc_setup_%28Mac_OS_X%29 Mac OSX] or [http://wiibrew.org/wiki/Devkitppc_setup_%28Linux%29 Linux] machine
+  * Provided project files for Windows:
+    * Visual Studio 2005/2008/2010: `Wire3D_WII.sln`
+    * Programmer's Notepad2 (optional part of the DevkitPPC installation): `Wire3D_WII.pnproj`
+  * Compilation of Wire3D and its Samples:
+    * Windows: use Visual Studio, Programmer's Notepad2 or `make`.
+    * Mac OSX: use `make`.
+    * Linux: use `make`.
+      
+<wiki:comment>
+*Note*: If you run a program from Visual Studio, it will use [http://wiibrew.org/wiki/Wiiload Wiiload] (that comes with your DevkitPPC installation) to transfer the program to the Wii via network. Wiiload requires the environment variable `WIILOAD` to be set to `tcp:yourIP`, where _yourIP_ is the IP address of your Wii console.
+</wiki:comment>
 
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
@@ -11,15 +24,3 @@ You can build Wire3D for the following target platforms:
   * Compile and run any of the samples in the solution
 
 *Note*: There are only solution and project files for Visual Studio 2005 and Visual Studio 2010. If you want to use Visual Studio 2008, just open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings.
-
-
-=== Wii ===
-  * Install the [http://wiibrew.org/wiki/Homebrew_setup Homebrew Channel] on your Wii
-  * Install [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 DevkitPPC] on your Windows PC
-  * Open, compile and run any of the samples with:
-    * Programmer's Notepad2 (comes with your DevkitPPC installation): Open `Wire_WII.pnproj`
-    * Visual Studio 2005/2008/2010: Open `Wire3D_WII.sln`  and let the solution be converted if necessary
-
-<wiki:comment>
-*Note*: If you run a program from Visual Studio, it will use [http://wiibrew.org/wiki/Wiiload Wiiload] (that comes with your DevkitPPC installation) to transfer the program to the Wii via network. Wiiload requires the environment variable `WIILOAD` to be set to `tcp:yourIP`, where _yourIP_ is the IP address of your Wii console.
-</wiki:comment>
