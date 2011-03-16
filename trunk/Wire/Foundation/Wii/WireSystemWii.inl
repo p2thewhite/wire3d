@@ -25,6 +25,7 @@ Double System::GetTime()
 //----------------------------------------------------------------------------
 void System::Print(const Char* pFormat, ...)
 {
+	return;
 	static Bool sIsInitialized = false;
 
 	if (!sIsInitialized)

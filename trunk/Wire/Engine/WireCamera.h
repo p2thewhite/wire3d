@@ -34,9 +34,6 @@ public:
 	inline Vector3F GetUVector() const;
 	inline Vector3F GetRVector() const;
 
-	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
-		const Vector3F& rRVector);
-
 	// The camera frame is always in world coordinates.
 	//   default location  E = (0, 0, 0)
 	//   default direction D = (0, 0,-1)
@@ -44,6 +41,12 @@ public:
 	//   default right     R = (1, 0, 0)
 	void SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
 		const Vector3F& rUVector, const Vector3F& rRVector);
+
+	void LookAt(const Vector3F& rLocation, const Vector3F& rLookAt,
+		const Vector3F& rUp);
+
+	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
+		const Vector3F& rRVector);
 
 	// Set the view frustum. The interval [rmin, rmax] is measured in the
 	// right direction R. These are the "left" and "right" frustum values.

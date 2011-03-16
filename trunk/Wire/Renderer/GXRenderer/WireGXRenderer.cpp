@@ -135,12 +135,6 @@ Bool Renderer::PreDraw(Camera* pCamera)
 //----------------------------------------------------------------------------
 void Renderer::ClearBuffers()
 {
-	// The console understands VT terminal escape codes
-	// This positions the cursor on row 2, column 0
-	// we can use variables for this with format codes too
-	// e.g. printf ("\x1b[%d;%dH", row, column );
-	System::Print("\x1b[4;0H");
-
 	if (mpData->IsFrameBufferDirty)
 	{
 		GXCopyDisp(mpData->FrameBuffer[(mpData->FrameBufferIndex)^1], GX_TRUE);

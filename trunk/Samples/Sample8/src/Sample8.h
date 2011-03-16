@@ -21,8 +21,8 @@ public:
 
 private:
 	void CreatePhysics();
-	void UpdatePhysics();
-
+	void DestroyPhysics();
+	void UpdatePhysics(btScalar elapsedTime);
 
 	inline btVector3 ToBtVector3(Vector3F in)
 	{
@@ -37,6 +37,8 @@ private:
 	Culler mCuller;
 	TArray<GeometryPtr> mCubes;
 	CameraPtr mspCamera;
+	Float mAngle;
+	Double mLastTime;
 
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;

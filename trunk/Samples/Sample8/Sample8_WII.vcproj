@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample8 - Accessing Resources"
+	Name="Sample8 - Bullet Physics Integration"
 	ProjectGUID="{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}"
+	RootNamespace="Sample8 - Bullet Physics Integration"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>

@@ -84,9 +84,6 @@ void Sample2::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 	
-	System::Print("%f, %f\n", static_cast<Float>(time),
- 		static_cast<Float>(elapsedTime));
-
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
