@@ -16,7 +16,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample3 - Level of Detail", "Samples\Sample3\Sample3_WII.vcproj", "{5B8835D8-A708-4650-9C67-D0599D9A8899}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
-		{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E} = {4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample4 - Multitexturing", "Samples\Sample4\Sample4_WII.vcproj", "{B5F244AA-B3C6-45DC-831E-3C4AA5C91898}"
@@ -44,7 +43,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application"
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Accessing Resources", "Samples\Sample8\Sample8_WII.vcproj", "{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics Integration", "Samples\Sample8\Sample8_WII.vcproj", "{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
