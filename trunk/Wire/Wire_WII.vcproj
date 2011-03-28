@@ -115,6 +115,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireNoisePerlin.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WirePlane3.h"
 					>
 				</File>
@@ -211,6 +215,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireNoisePerlin.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WirePlane3.inl"
 					>
 				</File>
@@ -296,6 +304,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireMatrix4.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireNoisePerlin.cpp"
 					>
 				</File>
 				<File

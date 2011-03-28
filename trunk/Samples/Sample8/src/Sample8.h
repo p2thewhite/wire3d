@@ -20,25 +20,38 @@ public:
 	virtual void OnTerminate();
 
 private:
+	TextureEffect* CreateTextureEffect();
 	void CreatePhysics();
-	void DestroyPhysics();
+	void CreateRigidBody(btCollisionShape* pColShape, Float mass,
+		Vector3F position, Float extent = 1.0F);
+	void ResetRigidBodies();
 	void UpdatePhysics(btScalar elapsedTime);
+	void DestroyPhysics();
 
-	inline btVector3 ToBtVector3(Vector3F in)
+	inline btVector3 Convert(Vector3F in)
 	{
 		return btVector3(in.X(), in.Y(), in.Z());
 	}
 
-	inline void ToWireQuaternion(const btQuaternion& in, QuaternionF& out)
+	inline Vector3F Convert(btVector3& in)
 	{
-		out = QuaternionF(in.getW(), in.getX(), in.getY(), in.getZ());
+		return Vector3F(in.getX(), in.getY(), in.getZ());
+	}
+
+	inline QuaternionF Convert(const btQuaternion& in)
+	{
+		return QuaternionF(in.getW(), in.getX(), in.getY(), in.getZ());
 	}
 
 	Culler mCuller;
-	TArray<GeometryPtr> mCubes;
+	TArray<GeometryPtr> mGeometries;
 	CameraPtr mspCamera;
+	StateMaterialPtr mspMaterial;
+	LightPtr mspLightA;
+	LightPtr mspLightB;
 	Float mAngle;
 	Double mLastTime;
+	Double mResetTime;
 
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
@@ -46,6 +59,9 @@ private:
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
+
+	static const UInt smBoxCountX = 5;
+	static const UInt smBoxCountY = 6;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample8);

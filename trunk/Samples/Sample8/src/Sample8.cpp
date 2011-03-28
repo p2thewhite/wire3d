@@ -25,28 +25,44 @@ Bool Sample8::OnInitialize()
 		return false;
 	}
 
-	Geometry* pGeometry = StandardMesh::CreateCube8(4, false, 0.5F);
+	Geometry* pGeometry = StandardMesh::CreateCube24(0, 0, true, 0.5F);
 	pGeometry->World.SetScale(Vector3F(10.0F, 0.25F, 10.0F));
 	pGeometry->World.SetTranslate(Vector3F(0, -4.125F, 0));
-	mCubes.Append(pGeometry);
+	mGeometries.Append(pGeometry);
 
-	Random rnd;
-	for (Float y = -1.5F; y < 4.0F; y = y+1.0F)
+	TextureEffect* pEffect = CreateTextureEffect();
+
+	Bool switchX = false;
+	Float y = -3.25F + 2;
+	for (UInt yCount = 0; yCount < smBoxCountY;	yCount++)
 	{
-		for (Float x = -2.5F; x < 3.0F; x = x+1.0F)
+		Float x = static_cast<Float>(smBoxCountX)*-0.5F;
+		for (UInt xCount = 0; xCount < smBoxCountX; xCount++)
 		{
-			Geometry* pGeometry = StandardMesh::CreateCube8(4, false, 0.5F);
-			pGeometry->World.SetTranslate(Vector3F(x, y, rnd.GetFloat()));
-			mCubes.Append(pGeometry);
+			Geometry* pGeometry = StandardMesh::CreateCube24(0, 1, true, 0.5F);
+			pGeometry->AttachEffect(pEffect);
+			pGeometry->GenerateNormals();
+
+			if (switchX)
+			{
+				pGeometry->World.SetTranslate(Vector3F(x, y, 0));			
+			}
+			else
+			{
+				pGeometry->World.SetTranslate(Vector3F(x+0.35F, y, 0));
+			}
+
+			mGeometries.Append(pGeometry);
+			x += 1.25F;
 		}
+
+		y += 1.0F;
+		switchX = !switchX;
 	}
 
 	CreatePhysics();
 
 	mspCamera = WIRE_NEW Camera;
-
-	// By providing a field of view (FOV) in degrees, aspect ratio,
-	// near and far plane, we define a viewing frustum used for culling.
 	UInt width = GetRenderer()->GetWidth();
 	UInt height = GetRenderer()->GetHeight();
 	Float fieldOfView = 45.0F;
@@ -55,6 +71,18 @@ Bool Sample8::OnInitialize()
 	Float farPlane = 300.0F;
 	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
 
+	mspLightA = WIRE_NEW Light;
+	mspLightA->Direction = Vector3F(0.5F, -0.2F, 1.0F);
+	mspLightA->Color = ColorRGB(0.8F, 0.7F, 0.5F);
+	mspLightB = WIRE_NEW Light;
+	mspLightB->Direction = Vector3F(-0.5F, -0.2F, -1.0F);
+	mspLightB->Color = ColorRGB(0.7F, 0.8F, 0.5F);
+
+	mspMaterial = WIRE_NEW StateMaterial;
+	mspMaterial->Ambient = ColorRGBA::WHITE;
+
+	Double time = System::GetTime();
+	mResetTime = time + 4.0F;
 	return true;
 }
 
@@ -67,6 +95,12 @@ void Sample8::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime*0.5);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
+	if (time > mResetTime)
+	{
+		mResetTime += 4.0F;
+		ResetRigidBodies();
+	}
+
 	Float sinus = MathF::Sin(mAngle); 
 	Float d = 15.0F + 5 * sinus;
 	Float camY = -1.5F;
@@ -78,9 +112,14 @@ void Sample8::OnIdle()
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 
-	for (UInt i = 0; i < mCubes.GetQuantity(); i++)
+	GetRenderer()->SetState(mspMaterial);
+	GetRenderer()->SetLight(mspLightA, 0);
+	GetRenderer()->SetLight(mspLightB, 1);
+	GetRenderer()->EnableLighting();
+
+	for (UInt i = 0; i < mGeometries.GetQuantity(); i++)
 	{
-		Geometry* pGeometry = mCubes[i];
+		Geometry* pGeometry = mGeometries[i];
 		WIRE_ASSERT(pGeometry);
 		pGeometry->UpdateWorldBound();
 		if (mCuller.IsVisible(pGeometry))
@@ -100,10 +139,48 @@ void Sample8::OnTerminate()
 }
 
 //----------------------------------------------------------------------------
+TextureEffect* Sample8::CreateTextureEffect()
+{
+	const UInt width = 64;
+	const UInt height = 64;
+	const Image2D::FormatMode format = Image2D::FM_RGB888;
+	const UInt bpp = Image2D::GetBytesPerPixel(format);
+
+	NoisePerlin<Float> perlin;
+
+	const Float hf = static_cast<Float>(height) * 0.25F;
+	const Float wf = static_cast<Float>(width) * 0.25F;
+	UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
+
+	for (UInt y = 0; y < height; y++)
+	{
+		for (UInt x = 0; x < width; x++)
+		{
+			Float xf = static_cast<Float>(x);
+			Float yf = static_cast<Float>(y);
+
+			UChar t = static_cast<UChar>((perlin.Noise(xf/wf, yf/hf, 0)*0.5F
+				+ 0.5F) * 255.0F);
+			pDst[(y*width + x)*bpp] = t;
+			pDst[(y*width + x)*bpp+1] = t;
+			pDst[(y*width + x)*bpp+2] = t;
+		}
+	}
+
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+
+	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
+	pTextureEffect->Textures.Append(pTexture);
+	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
+	return pTextureEffect;
+}
+
+//----------------------------------------------------------------------------
 void Sample8::CreatePhysics()
 {
-	///collision configuration contains default setup for memory,
-	// collision setup. Advanced users can create their own configuration.
+	///collision configuration contains default setup for memory.
+	// Advanced users can create their own configuration.
 	mpCollisionConfiguration = WIRE_NEW btDefaultCollisionConfiguration();
 
 	///use the default collision dispatcher. For parallel processing you
@@ -131,80 +208,143 @@ void Sample8::CreatePhysics()
 
 	///create a few basic rigid bodies
 
+	///Please don't make the box sizes larger then 1000: the collision
+	// detection will be inaccurate.
+	///See http://www.continuousphysics.com/Bullet/phpBB2/viewtopic.php?t=346
+
+	btCollisionShape* pColShape = WIRE_NEW btBoxShape(btVector3(
+		btScalar(5), btScalar(0.25F), btScalar(5)));
+
+	CreateRigidBody(pColShape, 0.0F, mGeometries[0]->World.GetTranslate());
+
+	for (UInt i = 1; i < mGeometries.GetQuantity(); i++)
 	{
-		///Please don't make the box sizes larger then 1000: the collision
-		// detection will be inaccurate.
-		///See http://www.continuousphysics.com/Bullet/phpBB2/viewtopic.php?t=346
+ 		btCollisionShape* pColShape = WIRE_NEW btBoxShape(btVector3(0.5F,
+ 			0.5F, 0.5F));
+		CreateRigidBody(pColShape, 1.0F, mGeometries[i]->World.GetTranslate());
+	}
+}
 
-		btCollisionShape* pGroundShape = WIRE_NEW btBoxShape(btVector3(
-			btScalar(5), btScalar(0.25F), btScalar(5)));
+//----------------------------------------------------------------------------
+void Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass,
+	Vector3F position, Float extent)
+{
+	//btCollisionShape* pColShape = WIRE_NEW btSphereShape(btScalar(1.));
+	mCollisionShapes.push_back(pColShape);
 
-		//keep track of the shapes, we release memory at exit. make sure to
-		// re-use collision shapes among rigid bodies whenever possible!
-		mCollisionShapes.push_back(pGroundShape);
+	pColShape->setMargin(0.05F);
 
-		btTransform groundTransform;
-		groundTransform.setIdentity();
-		btVector3 origin = ToBtVector3(mCubes[0]->World.GetTranslate());
-		groundTransform.setOrigin(origin);
+	/// Create Dynamic Objects
+	btTransform trafo;
+	trafo.setIdentity();
+	btVector3 origin = Convert(position);
+	trafo.setOrigin(origin);
 
-		btScalar mass(0.0F);
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.0F);
-		btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
-		{
-			pGroundShape->calculateLocalInertia(mass, localInertia);
-		}
-
-		//using motionstate is recommended, it provides interpolation
-		// capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(
-			groundTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, pMotionState,
-			pGroundShape, localInertia);
-		btRigidBody* pBody = WIRE_NEW btRigidBody(rbInfo);
-
-		//add the pBody to the dynamics world
-		mpDynamicsWorld->addRigidBody(pBody);
+	//rigidbody is dynamic if and only if mass is non zero
+	bool isDynamic = (mass != 0.0F);
+	btVector3 localInertia(0, 0, 0);
+	if (isDynamic)
+	{
+		pColShape->calculateLocalInertia(mass, localInertia);
 	}
 
-	for (UInt i = 1; i < mCubes.GetQuantity(); i++)
+	//using motionstate is recommended, it provides interpolation
+	//capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(
+		trafo);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, pMotionState,
+		pColShape, localInertia);
+	btRigidBody* pBody = WIRE_NEW btRigidBody(rbInfo);
+
+	// Only do CCD if  motion in one timestep (1/60) exceeds 
+	pBody->setCcdMotionThreshold(extent*0.5F);
+
+	//Experimental: better estimation of CCD Time of Impact:
+	pBody->setCcdSweptSphereRadius(extent*0.2F);
+
+	mpDynamicsWorld->addRigidBody(pBody);
+}
+
+//----------------------------------------------------------------------------
+void Sample8::ResetRigidBodies()
+{
+	if (!mpDynamicsWorld)
 	{
-		//create a dynamic rigidbody
+		return;
+	}
 
-		btCollisionShape* pColShape = WIRE_NEW btBoxShape(btVector3(0.5F,
-			0.5F, 0.5F));
-		//btCollisionShape* pColShape = WIRE_NEW btSphereShape(btScalar(1.));
-		mCollisionShapes.push_back(pColShape);
+	Int objectCount = mpDynamicsWorld->getNumCollisionObjects();
 
-		/// Create Dynamic Objects
-		btTransform startTransform;
-		startTransform.setIdentity();
+	///create a copy of the array, not a reference!
+	btCollisionObjectArray copy = mpDynamicsWorld->getCollisionObjectArray();
 
-		btScalar mass(1.0F);
-
-		//rigidbody is dynamic if and only if mass is non zero
-		bool isDynamic = (mass != 0.0F);
-
-		btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
+	for (Int i = 0; i < objectCount; i++)
+	{
+		btCollisionObject* pColObj = copy[i];
+		btRigidBody* pBody = btRigidBody::upcast(pColObj);
+		if (pBody)
 		{
-			pColShape->calculateLocalInertia(mass, localInertia);
+			if (pBody->getMotionState())
+			{
+				btDefaultMotionState* pState = static_cast<
+					btDefaultMotionState*>(pBody->getMotionState());
+				pState->m_graphicsWorldTrans = pState->m_startWorldTrans;
+				pBody->setCenterOfMassTransform(pState->m_graphicsWorldTrans);
+				pColObj->setInterpolationWorldTransform(pState->m_startWorldTrans);
+				pColObj->forceActivationState(ACTIVE_TAG);
+				pColObj->activate();
+				pColObj->setDeactivationTime(0);
+				//pColObj->setActivationState(WANTS_DEACTIVATION);
+			}
+
+			//removed cached contact points (this is not necessary if all
+			// objects have been removed from the dynamics world)
+			btBroadphaseInterface* pPhase = mpDynamicsWorld->getBroadphase();
+			if (pPhase->getOverlappingPairCache())
+			{
+				pPhase->getOverlappingPairCache()->cleanProxyFromPairs(
+					pColObj->getBroadphaseHandle(), mpDynamicsWorld->getDispatcher());
+			}
+
+			if (pBody && !pBody->isStaticObject())
+			{
+				btRigidBody::upcast(pColObj)->setLinearVelocity(btVector3(0,0,0));
+				btRigidBody::upcast(pColObj)->setAngularVelocity(btVector3(0,0,0));
+			}
 		}
 
-		btVector3 origin = ToBtVector3(mCubes[i]->World.GetTranslate());
-		startTransform.setOrigin(origin);
+	}
 
-		//using motionstate is recommended, it provides interpolation
-		//capabilities, and only synchronizes 'active' objects
-		btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(
-			startTransform);
-		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, pMotionState,
-			pColShape, localInertia);
-		btRigidBody* body = WIRE_NEW btRigidBody(rbInfo);
+	///reset some internal cached data in the broadphase
+	mpDynamicsWorld->getBroadphase()->resetPool(mpDynamicsWorld->getDispatcher());
+	mpDynamicsWorld->getConstraintSolver()->reset();
+}
 
-		mpDynamicsWorld->addRigidBody(body);
+//----------------------------------------------------------------------------
+void Sample8::UpdatePhysics(btScalar elapsedTime)
+{
+	// fixed 1/60 timestep
+	mpDynamicsWorld->stepSimulation(elapsedTime, 10);
+
+	QuaternionF quat;
+	Matrix3F mat;
+
+	const btCollisionObjectArray& objectArray = mpDynamicsWorld->
+		getCollisionObjectArray();
+
+	for (Int i = 0; i < mpDynamicsWorld->getNumCollisionObjects(); i++)
+	{
+		btRigidBody* pBody = btRigidBody::upcast(objectArray[i]);
+		if (pBody && pBody->getMotionState())
+		{
+			btTransform trans;
+			pBody->getMotionState()->getWorldTransform(trans);
+			Vector3F pos = Convert(trans.getOrigin());
+			QuaternionF quat = Convert(trans.getRotation());
+			quat.ToRotationMatrix(mat);
+			mGeometries[i]->World.SetTranslate(pos);
+			mGeometries[i]->World.SetRotate(mat);
+		}
 	}
 }
 
@@ -245,36 +385,4 @@ void Sample8::DestroyPhysics()
 	//next line is optional: it will be cleared by the destructor when the
 	//array goes out of scope
 	mCollisionShapes.clear();
-}
-
-//----------------------------------------------------------------------------
-void Sample8::UpdatePhysics(btScalar elapsedTime)
-{
-	mpDynamicsWorld->stepSimulation(elapsedTime, 10);
-
-	QuaternionF quat;
-	Matrix3F mat;
-
-	const btCollisionObjectArray& objectArray = mpDynamicsWorld->
-		getCollisionObjectArray();
-
-	for (Int j = mpDynamicsWorld->getNumCollisionObjects()-1; j>=0 ;j--)
-	{
-		btCollisionObject* obj = objectArray[j];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-		{
-			btTransform trans;
-			body->getMotionState()->getWorldTransform(trans);
-
-			Vector3F pos = Vector3F(Float(trans.getOrigin().getX()), Float(
-				trans.getOrigin().getY()), Float(trans.getOrigin().getZ()));
-
-			QuaternionF quat;
-			ToWireQuaternion(trans.getRotation(), quat);
-			quat.ToRotationMatrix(mat);
-			mCubes[j]->World.SetTranslate(pos);
-			mCubes[j]->World.SetRotate(mat);
-		}
-	}
 }

@@ -39,6 +39,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample7 - Dynamic Buffers",
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application", "Samples\Sample0\Sample0_WIN32.vcproj", "{844C2C75-1547-4B74-9807-1497D32F7CF2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics Integration", "Samples\Sample8\Sample8_WIN32.vcproj", "{E69FDDF0-8094-4FF0-ABA4-39732FBE5C5A}"
 	ProjectSection(ProjectDependencies) = postProject

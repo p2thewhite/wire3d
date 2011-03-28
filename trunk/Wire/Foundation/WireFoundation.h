@@ -13,6 +13,7 @@
 #include "WireMatrix34.h"
 #include "WireMatrix4.h"
 #include "WireMemory.h"
+#include "WireNoisePerlin.h"
 #include "WirePlane3.h"
 #include "WireQuaternion.h"
 #include "WireRandom.h"
