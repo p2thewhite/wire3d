@@ -20,13 +20,33 @@ public:
 	virtual void OnTerminate();
 
 private:
+	struct GameObject  
+	{
+		GameObject() {};
+		GameObject(Geometry* pGeo, btCollisionShape* pCol,
+			btRigidBody* pRigidBody)
+		{
+			spRenderObject = pGeo;
+			pCollisionObject = pCol;
+			pRigidBody = pRigidBody;
+		}
+
+		GeometryPtr spRenderObject;
+		btCollisionShape* pCollisionObject;
+		btRigidBody* pRigidBody;
+	};
+
+	void CreateGameObjects();
 	TextureEffect* CreateTextureEffect();
-	void CreatePhysics();
-	void CreateRigidBody(btCollisionShape* pColShape, Float mass,
+	void CreatePhysicsWorld();
+	btRigidBody* CreateRigidBody(btCollisionShape* pColShape, Float mass,
 		Vector3F position, Float extent = 1.0F);
 	void ResetRigidBodies();
-	void UpdatePhysics(btScalar elapsedTime);
-	void DestroyPhysics();
+
+	void RandomizeBalls(btRigidBody* pBody);
+	void UpdatePhysicsWorld(btScalar elapsedTime);
+	void DestroyPhysicsWorld();
+
 
 	inline btVector3 Convert(Vector3F in)
 	{
@@ -43,22 +63,26 @@ private:
 		return QuaternionF(in.getW(), in.getX(), in.getY(), in.getZ());
 	}
 
-	Culler mCuller;
-	TArray<GeometryPtr> mGeometries;
+
 	CameraPtr mspCamera;
+	Culler mCuller;
+
+	TArray<GameObject> mGameObjects;
+
 	StateMaterialPtr mspMaterial;
 	LightPtr mspLightA;
 	LightPtr mspLightB;
+
 	Float mAngle;
 	Double mLastTime;
 	Double mResetTime;
+	Random mRandom;
 
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
 	btAxisSweep3* mpOverlappingPairCache;
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
-	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
 
 	static const UInt smBoxCountX = 5;
 	static const UInt smBoxCountY = 6;

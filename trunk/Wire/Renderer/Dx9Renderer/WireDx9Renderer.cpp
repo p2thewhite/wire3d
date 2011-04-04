@@ -146,53 +146,6 @@ void Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
-template <typename Resource, typename PdrResource>
-void DestroyNonManagedResources(THashTable<const Resource*,
-	PdrResource*>& rMap, TArray<const Resource*>& rSave)
-{
-	rSave.SetMaxQuantity(rMap.GetQuantity());
-	const Resource* pKey;
-	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
-		pValue = rMap.GetNext(&pKey))
-	{
-		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
-		if (PdrRendererData::sPools[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
-		{
-			WIRE_DELETE *pValue;
-			rSave.Append(pKey);
-			rMap.Remove(pKey);
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
-template <typename Resource, typename PdrResource>
-void DestroyResources(THashTable<const Resource*, PdrResource*>& rMap,
-	TArray<const Resource*>& rSave)
-{
-	rSave.SetMaxQuantity(rMap.GetQuantity());
-	const Resource* pKey;
-	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
-		pValue = rMap.GetNext(&pKey))
-	{
-		WIRE_DELETE *pValue;
-		rSave.Append(pKey);
-	}
-
-	rMap.RemoveAll();
-}
-
-//----------------------------------------------------------------------------
-template <typename Resource>
-void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
-{
-	for (UInt i = 0; i < rSave.GetQuantity(); i++)
-	{
-		pRenderer->Bind(rSave[i]);
-	}
-}
-
-//----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
 	mpCamera = pCamera;
@@ -226,28 +179,8 @@ Bool Renderer::PreDraw(Camera* pCamera)
 		return false;
 
 	case D3DERR_DEVICENOTRESET:
-		TArray<const IndexBuffer*> saveIndexBuffers;
-		TArray<const VertexBuffer*> saveVertexBuffers;
-		TArray<const Texture2D*> saveTexture2Ds;
-		DestroyNonManagedResources(mIndexBufferMap, saveIndexBuffers);
-		DestroyNonManagedResources(mVertexBufferMap, saveVertexBuffers);
-		DestroyNonManagedResources(mTexture2DMap, saveTexture2Ds);
-
-		hr = rDevice->Reset(&mpData->Present);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		mpData->IsDeviceLost = false;
-
-		RecreateResources(this, saveIndexBuffers);
-		RecreateResources(this, saveVertexBuffers);
-		RecreateResources(this, saveTexture2Ds);
-
-		OnViewportChange();
-		hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-		WIRE_ASSERT(SUCCEEDED(hr));
- 		hr = rDevice->LightEnable(0, FALSE);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		SetStates(mspStates);
-        break;
+		mpData->ResetDevice();
+		break;
     }
 
     hr = rDevice->BeginScene();
@@ -355,33 +288,10 @@ void Renderer::Resize(UInt width, UInt height)
 	mWidth = width;
 	mHeight = height;
 
-	TArray<const IndexBuffer*> saveIndexBuffers;
-	TArray<const VertexBuffer*> saveVertexBuffers;
-	TArray<const Texture2D*> saveTexture2Ds;
-	DestroyNonManagedResources(mIndexBufferMap, saveIndexBuffers);
-	DestroyNonManagedResources(mVertexBufferMap, saveVertexBuffers);
-	DestroyNonManagedResources(mTexture2DMap, saveTexture2Ds);
-
 	mpData->Present.BackBufferWidth = width;
 	mpData->Present.BackBufferHeight = height;
 
-	HRESULT hr;
-	hr = mpData->D3DDevice->Reset(&mpData->Present);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	mpData->IsDeviceLost = false;
-
-	RecreateResources(this, saveIndexBuffers);
-	RecreateResources(this, saveVertexBuffers);
-	RecreateResources(this, saveTexture2Ds);
-
-	OnViewportChange();
-
-	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->LightEnable(0, FALSE);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	SetStates(mspStates);
+	mpData->ResetDevice();
 }
 
 //----------------------------------------------------------------------------
@@ -414,4 +324,85 @@ PdrRendererData::PdrRendererData(Renderer* pRenderer)
 	IsDeviceLost(false),
 	mpRenderer(pRenderer)
 {
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+void DestroyNonManagedResources(THashTable<const Resource*,
+	PdrResource*>& rMap, TArray<const Resource*>& rSave)
+{
+	rSave.SetMaxQuantity(rMap.GetQuantity());
+	const Resource* pKey;
+	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
+		pValue = rMap.GetNext(&pKey))
+	{
+		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
+		if (PdrRendererData::sPools[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
+		{
+			WIRE_DELETE *pValue;
+			rSave.Append(pKey);
+			rMap.Remove(pKey);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+void DestroyResources(THashTable<const Resource*,
+	PdrResource*>& rMap, TArray<const Resource*>& rSave)
+{
+	rSave.SetMaxQuantity(rMap.GetQuantity());
+	const Resource* pKey;
+	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
+		pValue = rMap.GetNext(&pKey))
+	{
+		WIRE_DELETE *pValue;
+		rSave.Append(pKey);
+	}
+
+	rMap.RemoveAll();
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource>
+void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
+{
+	for (UInt i = 0; i < rSave.GetQuantity(); i++)
+	{
+		pRenderer->Bind(rSave[i]);
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ResetDevice()
+{
+	Renderer& renderer = *mpRenderer;
+	TArray<const IndexBuffer*> saveIndexBuffers;
+	TArray<const VertexBuffer*> saveVertexBuffers;
+	TArray<const Texture2D*> saveTexture2Ds;
+	DestroyNonManagedResources(renderer.mIndexBufferMap, saveIndexBuffers);
+	DestroyNonManagedResources(renderer.mVertexBufferMap, saveVertexBuffers);
+	DestroyNonManagedResources(renderer.mTexture2DMap, saveTexture2Ds);
+
+	HRESULT hr;
+	hr = D3DDevice->Reset(&Present);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	IsDeviceLost = false;
+
+	RecreateResources(&renderer, saveIndexBuffers);
+	RecreateResources(&renderer, saveVertexBuffers);
+	RecreateResources(&renderer, saveTexture2Ds);
+
+	renderer.OnViewportChange();
+
+	hr = D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+
+	for (UInt i = 0; i < renderer.mMaxLights; i++)
+	{
+		hr = D3DDevice->LightEnable(i, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+
+	renderer.SetStates(renderer.mspStates);
 }

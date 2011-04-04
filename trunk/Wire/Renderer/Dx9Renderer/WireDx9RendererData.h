@@ -14,6 +14,7 @@ class PdrRendererData
 {
 public:
 	PdrRendererData(Renderer* pRenderer);
+	void ResetDevice();
 
 	// Platform-dependent data
 	IDirect3D9* D3D;

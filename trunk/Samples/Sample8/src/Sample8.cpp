@@ -1,3 +1,7 @@
+// Sample8 - Bullet Physics Integration
+// This sample demonstrates how to integrate the Bullet Physics engine into
+// Wire.
+
 #include "Sample8.h"
 
 using namespace Wire;
@@ -25,42 +29,8 @@ Bool Sample8::OnInitialize()
 		return false;
 	}
 
-	Geometry* pGeometry = StandardMesh::CreateCube24(0, 0, true, 0.5F);
-	pGeometry->World.SetScale(Vector3F(10.0F, 0.25F, 10.0F));
-	pGeometry->World.SetTranslate(Vector3F(0, -4.125F, 0));
-	mGeometries.Append(pGeometry);
-
-	TextureEffect* pEffect = CreateTextureEffect();
-
-	Bool switchX = false;
-	Float y = -3.25F + 2;
-	for (UInt yCount = 0; yCount < smBoxCountY;	yCount++)
-	{
-		Float x = static_cast<Float>(smBoxCountX)*-0.5F;
-		for (UInt xCount = 0; xCount < smBoxCountX; xCount++)
-		{
-			Geometry* pGeometry = StandardMesh::CreateCube24(0, 1, true, 0.5F);
-			pGeometry->AttachEffect(pEffect);
-			pGeometry->GenerateNormals();
-
-			if (switchX)
-			{
-				pGeometry->World.SetTranslate(Vector3F(x, y, 0));			
-			}
-			else
-			{
-				pGeometry->World.SetTranslate(Vector3F(x+0.35F, y, 0));
-			}
-
-			mGeometries.Append(pGeometry);
-			x += 1.25F;
-		}
-
-		y += 1.0F;
-		switchX = !switchX;
-	}
-
-	CreatePhysics();
+	CreatePhysicsWorld();
+	CreateGameObjects();
 
 	mspCamera = WIRE_NEW Camera;
 	UInt width = GetRenderer()->GetWidth();
@@ -102,13 +72,13 @@ void Sample8::OnIdle()
 	}
 
 	Float sinus = MathF::Sin(mAngle); 
-	Float d = 15.0F + 5 * sinus;
+	Float d = 20.0F + 10 * sinus;
 	Float camY = -1.5F;
 	Vector3F camPos(sinus*d, camY, MathF::Cos(mAngle)*d);
 	mspCamera->LookAt(camPos, Vector3F(0, camY, 0), Vector3F::UNIT_Y);
 	mCuller.SetCamera(mspCamera);
 
-	UpdatePhysics(static_cast<btScalar>(elapsedTime));
+	UpdatePhysicsWorld(static_cast<btScalar>(elapsedTime));
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 
@@ -117,9 +87,9 @@ void Sample8::OnIdle()
 	GetRenderer()->SetLight(mspLightB, 1);
 	GetRenderer()->EnableLighting();
 
-	for (UInt i = 0; i < mGeometries.GetQuantity(); i++)
+	for (UInt i = 0; i < mGameObjects.GetQuantity(); i++)
 	{
-		Geometry* pGeometry = mGeometries[i];
+		Geometry* pGeometry = mGameObjects[i].spRenderObject;
 		WIRE_ASSERT(pGeometry);
 		pGeometry->UpdateWorldBound();
 		if (mCuller.IsVisible(pGeometry))
@@ -135,7 +105,90 @@ void Sample8::OnIdle()
 //----------------------------------------------------------------------------
 void Sample8::OnTerminate()
 {
-	DestroyPhysics();
+	DestroyPhysicsWorld();
+}
+
+//----------------------------------------------------------------------------
+void Sample8::CreateGameObjects()
+{
+	WIRE_ASSERT(mpDynamicsWorld); // Has the physics world been created?
+
+	TextureEffect* pEffect = CreateTextureEffect();
+	
+	// create a few basic rigid bodies and their rendering representation
+	///Please don't make the box sizes larger then 1000: the collision
+	// detection will be inaccurate.
+	///See http://www.continuousphysics.com/Bullet/phpBB2/viewtopic.php?t=346
+
+	// create the (static, i.e. mass = 0) ground floor
+	const Float floorX = 10;
+	const Float floorY = 0.25F;
+	const Float floorZ = 10;
+	Geometry* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
+	pFloor->World.SetScale(Vector3F(floorX * 2, floorY, floorZ * 2));
+	pFloor->World.SetTranslate(Vector3F(0, -4.125F, 0));
+
+	btCollisionShape* pColFloor = WIRE_NEW btBoxShape(btVector3(
+		btScalar(floorX), btScalar(floorY), btScalar(floorZ)));
+	btRigidBody* pRigidFloor = CreateRigidBody(pColFloor, 0.0F, pFloor->
+		World.GetTranslate());
+
+	GameObject groundFloor(pFloor, pColFloor, pRigidFloor);
+	mGameObjects.Append(groundFloor);
+
+	// create a stack of boxes
+	Bool switchX = false;
+	Float y = -3.25F;
+	for (UInt yCount = 0; yCount < smBoxCountY;	yCount++)
+	{
+		Float x = static_cast<Float>(smBoxCountX)*-0.5F;
+		for (UInt xCount = 0; xCount < smBoxCountX; xCount++)
+		{
+			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, 0.5F);
+			pBox->AttachEffect(pEffect);
+			pBox->GenerateNormals();
+
+			if (switchX)
+			{
+				pBox->World.SetTranslate(Vector3F(x, y, 0));			
+			}
+			else
+			{
+				pBox->World.SetTranslate(Vector3F(x+0.35F, y, 0));
+			}
+
+			btCollisionShape* pColBox = WIRE_NEW btBoxShape(btVector3(0.5F,
+				0.5F, 0.5F));
+			btRigidBody* pRigidBox = CreateRigidBody(pColBox, 1.0F, pBox->
+				World.GetTranslate());
+
+			GameObject box(pBox, pColBox, pRigidBox);
+			mGameObjects.Append(box);
+			x += 1.25F;
+		}
+
+		y += 1.0F;
+		switchX = !switchX;
+	}
+
+	Float sign = 1;
+	for (UInt i = 0; i < 2; i++)
+	{
+		const Float radius = 0.75F;
+		Geometry* pBall = StandardMesh::CreateSphere(16, 16, radius, 0, 0,
+			true);
+		pBall->World.SetTranslate(Vector3F(1.5F * sign, -0.5F, 10 * sign));
+
+		btCollisionShape* pColBall = WIRE_NEW btSphereShape(radius);
+		btRigidBody* pRigidBall = CreateRigidBody(pColBall, 1.0F, pBall->
+			World.GetTranslate());
+		RandomizeBalls(pRigidBall);
+
+		GameObject ball(pBall, pColBall, pRigidBall);
+		mGameObjects.Append(ball);
+
+		sign = -sign;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -159,7 +212,7 @@ TextureEffect* Sample8::CreateTextureEffect()
 			Float xf = static_cast<Float>(x);
 			Float yf = static_cast<Float>(y);
 
-			UChar t = static_cast<UChar>((perlin.Noise(xf/wf, yf/hf, 0)*0.5F
+			UChar t = static_cast<UChar>((perlin.Noise(xf/wf, yf/hf)*0.5F
 				+ 0.5F) * 255.0F);
 			pDst[(y*width + x)*bpp] = t;
 			pDst[(y*width + x)*bpp+1] = t;
@@ -177,7 +230,7 @@ TextureEffect* Sample8::CreateTextureEffect()
 }
 
 //----------------------------------------------------------------------------
-void Sample8::CreatePhysics()
+void Sample8::CreatePhysicsWorld()
 {
 	///collision configuration contains default setup for memory.
 	// Advanced users can create their own configuration.
@@ -205,32 +258,12 @@ void Sample8::CreatePhysics()
 		mpOverlappingPairCache, mpSolver, mpCollisionConfiguration);
 
 	mpDynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-	///create a few basic rigid bodies
-
-	///Please don't make the box sizes larger then 1000: the collision
-	// detection will be inaccurate.
-	///See http://www.continuousphysics.com/Bullet/phpBB2/viewtopic.php?t=346
-
-	btCollisionShape* pColShape = WIRE_NEW btBoxShape(btVector3(
-		btScalar(5), btScalar(0.25F), btScalar(5)));
-
-	CreateRigidBody(pColShape, 0.0F, mGeometries[0]->World.GetTranslate());
-
-	for (UInt i = 1; i < mGeometries.GetQuantity(); i++)
-	{
- 		btCollisionShape* pColShape = WIRE_NEW btBoxShape(btVector3(0.5F,
- 			0.5F, 0.5F));
-		CreateRigidBody(pColShape, 1.0F, mGeometries[i]->World.GetTranslate());
-	}
 }
 
 //----------------------------------------------------------------------------
-void Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass,
-	Vector3F position, Float extent)
+btRigidBody* Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass, Vector3F position, Float extent /*= 1.0F*/)
 {
 	//btCollisionShape* pColShape = WIRE_NEW btSphereShape(btScalar(1.));
-	mCollisionShapes.push_back(pColShape);
 
 	pColShape->setMargin(0.05F);
 
@@ -263,6 +296,7 @@ void Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass,
 	pBody->setCcdSweptSphereRadius(extent*0.2F);
 
 	mpDynamicsWorld->addRigidBody(pBody);
+	return pBody;
 }
 
 //----------------------------------------------------------------------------
@@ -282,37 +316,44 @@ void Sample8::ResetRigidBodies()
 	{
 		btCollisionObject* pColObj = copy[i];
 		btRigidBody* pBody = btRigidBody::upcast(pColObj);
-		if (pBody)
+		if (!pBody)
 		{
-			if (pBody->getMotionState())
-			{
-				btDefaultMotionState* pState = static_cast<
-					btDefaultMotionState*>(pBody->getMotionState());
-				pState->m_graphicsWorldTrans = pState->m_startWorldTrans;
-				pBody->setCenterOfMassTransform(pState->m_graphicsWorldTrans);
-				pColObj->setInterpolationWorldTransform(pState->m_startWorldTrans);
-				pColObj->forceActivationState(ACTIVE_TAG);
-				pColObj->activate();
-				pColObj->setDeactivationTime(0);
-				//pColObj->setActivationState(WANTS_DEACTIVATION);
-			}
-
-			//removed cached contact points (this is not necessary if all
-			// objects have been removed from the dynamics world)
-			btBroadphaseInterface* pPhase = mpDynamicsWorld->getBroadphase();
-			if (pPhase->getOverlappingPairCache())
-			{
-				pPhase->getOverlappingPairCache()->cleanProxyFromPairs(
-					pColObj->getBroadphaseHandle(), mpDynamicsWorld->getDispatcher());
-			}
-
-			if (pBody && !pBody->isStaticObject())
-			{
-				btRigidBody::upcast(pColObj)->setLinearVelocity(btVector3(0,0,0));
-				btRigidBody::upcast(pColObj)->setAngularVelocity(btVector3(0,0,0));
-			}
+			continue;
 		}
 
+		if (pBody->getMotionState())
+		{
+			btDefaultMotionState* pState = static_cast<
+				btDefaultMotionState*>(pBody->getMotionState());
+			pState->m_graphicsWorldTrans = pState->m_startWorldTrans;
+			pBody->setCenterOfMassTransform(pState->m_graphicsWorldTrans);
+			pColObj->setInterpolationWorldTransform(pState->m_startWorldTrans);
+			pColObj->forceActivationState(ACTIVE_TAG);
+			pColObj->activate();
+			pColObj->setDeactivationTime(0);
+			//pColObj->setActivationState(WANTS_DEACTIVATION);
+		}
+
+		//removed cached contact points (this is not necessary if all
+		// objects have been removed from the dynamics world)
+		btBroadphaseInterface* pPhase = mpDynamicsWorld->getBroadphase();
+		if (pPhase->getOverlappingPairCache())
+		{
+			pPhase->getOverlappingPairCache()->cleanProxyFromPairs(
+				pColObj->getBroadphaseHandle(), mpDynamicsWorld->getDispatcher());
+		}
+
+		if (pBody && !pBody->isStaticObject())
+		{
+			pBody->setLinearVelocity(btVector3(0,0,0));
+			pBody->setAngularVelocity(btVector3(0,0,0));
+
+			if (pColObj->getCollisionShape()->getShapeType() ==  
+				SPHERE_SHAPE_PROXYTYPE)
+			{
+				RandomizeBalls(pBody);
+			}
+		}
 	}
 
 	///reset some internal cached data in the broadphase
@@ -321,7 +362,24 @@ void Sample8::ResetRigidBodies()
 }
 
 //----------------------------------------------------------------------------
-void Sample8::UpdatePhysics(btScalar elapsedTime)
+void Sample8::RandomizeBalls(btRigidBody* pBody)
+{
+	Float velZ = mRandom.GetFloat() + 0.5F;
+	Float velY = (mRandom.GetFloat() - 0.5F) * 20.0F;
+	btTransform trans;
+	pBody->getMotionState()->getWorldTransform(trans);
+	if (trans.getOrigin().z() > 0)
+	{
+		pBody->setLinearVelocity(btVector3(0, velY, -50 * velZ));
+	}
+	else
+	{
+		pBody->setLinearVelocity(btVector3(0, velY, 50 * velZ));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Sample8::UpdatePhysicsWorld(btScalar elapsedTime)
 {
 	// fixed 1/60 timestep
 	mpDynamicsWorld->stepSimulation(elapsedTime, 10);
@@ -342,14 +400,14 @@ void Sample8::UpdatePhysics(btScalar elapsedTime)
 			Vector3F pos = Convert(trans.getOrigin());
 			QuaternionF quat = Convert(trans.getRotation());
 			quat.ToRotationMatrix(mat);
-			mGeometries[i]->World.SetTranslate(pos);
-			mGeometries[i]->World.SetRotate(mat);
+			mGameObjects[i].spRenderObject->World.SetTranslate(pos);
+			mGameObjects[i].spRenderObject->World.SetRotate(mat);
 		}
 	}
 }
 
 //----------------------------------------------------------------------------
-void Sample8::DestroyPhysics()
+void Sample8::DestroyPhysicsWorld()
 {
 	//cleanup in the reverse order of creation/initialization
 
@@ -369,10 +427,9 @@ void Sample8::DestroyPhysics()
 	}
 
 	//delete collision shapes
-	for (Int j = 0; j < mCollisionShapes.size(); j++)
+	for (UInt i = 0; i < mGameObjects.GetQuantity(); i++)
 	{
-		btCollisionShape* pShape = mCollisionShapes[j];
-		mCollisionShapes[j] = 0;
+		btCollisionShape* pShape = mGameObjects[i].pCollisionObject;
 		WIRE_DELETE pShape;
 	}
 
@@ -381,8 +438,4 @@ void Sample8::DestroyPhysics()
 	WIRE_DELETE mpOverlappingPairCache;
 	WIRE_DELETE mpDispatcher;
 	WIRE_DELETE mpCollisionConfiguration;
-
-	//next line is optional: it will be cleared by the destructor when the
-	//array goes out of scope
-	mCollisionShapes.clear();
 }
