@@ -1,5 +1,28 @@
 //----------------------------------------------------------------------------
 template <typename Real>
+Real NoisePerlin<Real>::Noise(Real x, Real y)
+{
+	Int X = static_cast<Int>(Math<Real>::Floor(x)) & 255;
+	Int	Y = static_cast<Int>(Math<Real>::Floor(y)) & 255;
+	x -= Math<Real>::Floor(x);
+	y -= Math<Real>::Floor(y);
+	Real u = Fade(x);
+	Real v = Fade(y);
+	Int A = smP[X] + Y;
+	Int	AA = smP[A];
+	Int AB = smP[A+1];
+	Int B = smP[X+1] + Y;
+	Int BA = smP[B];
+	Int BB = smP[B+1];
+
+	return Lerp(v, Lerp(u, Grad(smP[AA], x, y, 0),
+		                   Grad(smP[BA], x-1, y, 0)),
+		           Lerp(u, Grad(smP[AB], x, y-1, 0),
+		                   Grad(smP[BB], x-1, y-1, 0)));
+}
+
+//----------------------------------------------------------------------------
+template <typename Real>
 Real NoisePerlin<Real>::Noise(Real x, Real y, Real z) 
 {
 	Int X = static_cast<Int>(Math<Real>::Floor(x)) & 255; /* FIND CUBE THAT */

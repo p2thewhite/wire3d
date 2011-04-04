@@ -25,6 +25,7 @@ template <typename Real>
 class NoisePerlin : public NoisePerlinBase
 {
 public:
+	Real Noise(Real x, Real y);
 	Real Noise(Real x, Real y, Real z);
 
 private:

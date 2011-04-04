@@ -171,6 +171,8 @@ private:
 	UInt mMaxLights;
 
 	static Renderer* smRenderer;
+
+	friend class PdrRendererData;
 	PdrRendererData* mpData;
 	
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
