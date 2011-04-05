@@ -51,3 +51,11 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
 This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample7%2Fsrc Source]/[http://www.youtube.com/watch?v=4tlhkP-1uRc Video]) demonstrates how to create and use a dynamic vertex buffer. On creation of the vertex buffer a usage type is passed, indicating how the buffer is going to be used. With this information the framework can make correct assumptions and use the hardware accordingly. In particular it shows creation and/or usage of:
   * types of buffer usage
   * updating renderer bound (i.e. hardware) buffers
+
+=== Sample8 - Bullet Physics Integration ===
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample8%2Fsrc Source]) demonstrates how to integrate the [http://code.google.com/p/bullet/ Bullet] physics engine into Wire3D. The sample creates a static floor, a dynamic stack of boxes and 2 balls that collide with the stack and cause it to collapse. In particular the sample shows creation and/or usage of:
+  * Bullet dynamics
+    * continuous collision detection 
+    * rigid bodies
+
+*Note*: This sample only compiles if you have setup Bullet first.
