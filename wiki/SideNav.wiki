@@ -9,5 +9,5 @@
     * [Samples#Sample6_-_Custom_Nodes Sample6 - Custom Nodes]
     * [Samples#Sample7_-_Dynamic_Buffers Sample7 - Dynamic Buffers]
     * [Samples#Sample8_-_Bullet_Physics_Integration Sample8 - Bullet Physics Integration]
-  * [BulletPhysicsSetup Bullet Physics Engine Setup]
+  * [BulletPhysicsSetup Bullet Physics Setup]
   * [FAQ Frequently Asked Questions]
