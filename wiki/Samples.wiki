@@ -58,4 +58,4 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
     * continuous collision detection 
     * rigid bodies
 
-*Note*: This sample only compiles if you have setup Bullet first.
+*Note*: This sample only compiles if you have setup Bullet first, read [http://code.google.com/p/wire3d/wiki/BulletPhysicsSetup this].
