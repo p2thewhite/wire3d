@@ -43,7 +43,7 @@ private:
 		Vector3F position, Float extent = 1.0F);
 	void ResetRigidBodies();
 
-	void RandomizeBalls(btRigidBody* pBody);
+	void RandomizeBallVelocity(btRigidBody* pBody);
 	void UpdatePhysicsWorld(btScalar elapsedTime);
 	void DestroyPhysicsWorld();
 
