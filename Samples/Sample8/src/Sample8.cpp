@@ -141,7 +141,7 @@ void Sample8::CreateGameObjects()
 	const Float floorZ = 10;
 	Geometry* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
 	pFloor->World.SetScale(Vector3F(floorX * 2, floorY, floorZ * 2));
-	pFloor->World.SetTranslate(Vector3F(0, -4.125F, 0));
+	pFloor->World.SetTranslate(Vector3F(0, -4.0F, 0));
 
 	btCollisionShape* pColFloor = WIRE_NEW btBoxShape(btVector3(
 		btScalar(floorX), btScalar(floorY), btScalar(floorZ)));
