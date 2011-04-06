@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics Integration", "Samples\Sample8\Sample8_WIN32.vcxproj", "{1788AD0D-546B-4412-A7F5-086923EBA2FB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample9 - Custom Main", "Samples\Sample9 _WIN32\Sample9_WIN32.vcxproj", "{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -67,6 +69,10 @@ Global
 		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Debug|Win32.Build.0 = Debug|Win32
 		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Release|Win32.ActiveCfg = Release|Win32
 		{1788AD0D-546B-4412-A7F5-086923EBA2FB}.Release|Win32.Build.0 = Release|Win32
+		{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}.Debug|Win32.Build.0 = Debug|Win32
+		{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}.Release|Win32.ActiveCfg = Release|Win32
+		{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

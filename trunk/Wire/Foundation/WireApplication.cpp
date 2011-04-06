@@ -49,22 +49,3 @@ void Application::OnResize(UInt width, UInt height)
 	mWidth = width;
 	mHeight = height;
 }
-
-//----------------------------------------------------------------------------
-Int main(Int argc, Char** argv)
-{
-	Main::Initialize();
-
-	Application* pApplication = Application::GetApplication();
-	if (pApplication)
-	{
-		pApplication->Main(argc, argv);
-
-		WIRE_DELETE pApplication;
-		Application::SetApplication(NULL);
-	}
-
-	Main::Terminate();
-
-	return 0;
-}

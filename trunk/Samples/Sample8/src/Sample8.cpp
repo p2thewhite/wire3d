@@ -1,6 +1,21 @@
 // Sample8 - Bullet Physics Integration
 // This sample demonstrates how to integrate the Bullet Physics engine into
 // Wire.
+// Bullet can be downloaded from http://code.google.com/p/wire3d/downloads/list.
+// Download the appropriate version for the target platform which you want to
+// build for. The sample project files expect the following directory
+// structure:
+//
+// bullet-2.77
+// bullet-2.77-wii
+// Wire3D
+// Wire3D/Samples
+// Wire3D/Wire
+// ...
+//
+// The Bullet Wii package contains pre-built library files. For Windows you
+// have to build the libraries yourself and put them in the bullet-2.77\lib
+// directory.
 
 #include "Sample8.h"
 
@@ -182,7 +197,7 @@ void Sample8::CreateGameObjects()
 		btCollisionShape* pColBall = WIRE_NEW btSphereShape(radius);
 		btRigidBody* pRigidBall = CreateRigidBody(pColBall, 1.0F, pBall->
 			World.GetTranslate());
-		RandomizeBalls(pRigidBall);
+		RandomizeBallVelocity(pRigidBall);
 
 		GameObject ball(pBall, pColBall, pRigidBall);
 		mGameObjects.Append(ball);
@@ -261,10 +276,9 @@ void Sample8::CreatePhysicsWorld()
 }
 
 //----------------------------------------------------------------------------
-btRigidBody* Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass, Vector3F position, Float extent /*= 1.0F*/)
+btRigidBody* Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass,
+	Vector3F position, Float extent /*= 1.0F*/)
 {
-	//btCollisionShape* pColShape = WIRE_NEW btSphereShape(btScalar(1.));
-
 	pColShape->setMargin(0.05F);
 
 	/// Create Dynamic Objects
@@ -351,18 +365,19 @@ void Sample8::ResetRigidBodies()
 			if (pColObj->getCollisionShape()->getShapeType() ==  
 				SPHERE_SHAPE_PROXYTYPE)
 			{
-				RandomizeBalls(pBody);
+				RandomizeBallVelocity(pBody);
 			}
 		}
 	}
 
 	///reset some internal cached data in the broadphase
-	mpDynamicsWorld->getBroadphase()->resetPool(mpDynamicsWorld->getDispatcher());
+	mpDynamicsWorld->getBroadphase()->resetPool(mpDynamicsWorld->
+		getDispatcher());
 	mpDynamicsWorld->getConstraintSolver()->reset();
 }
 
 //----------------------------------------------------------------------------
-void Sample8::RandomizeBalls(btRigidBody* pBody)
+void Sample8::RandomizeBallVelocity(btRigidBody* pBody)
 {
 	Float velZ = mRandom.GetFloat() + 0.5F;
 	Float velY = (mRandom.GetFloat() - 0.5F) * 20.0F;

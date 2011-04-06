@@ -48,6 +48,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics In
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample9 - Custom Main", "Samples\Sample9_WII\Sample9_WII.vcproj", "{7A7EA69E-5EF7-4F57-93C0-343E31EEB7B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -94,6 +99,10 @@ Global
 		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Debug|Win32.Build.0 = Debug|Win32
 		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Release|Win32.ActiveCfg = Release|Win32
 		{1C6DEE24-1F60-40B0-92A5-C264AEE84DBB}.Release|Win32.Build.0 = Release|Win32
+		{7A7EA69E-5EF7-4F57-93C0-343E31EEB7B0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7A7EA69E-5EF7-4F57-93C0-343E31EEB7B0}.Debug|Win32.Build.0 = Debug|Win32
+		{7A7EA69E-5EF7-4F57-93C0-343E31EEB7B0}.Release|Win32.ActiveCfg = Release|Win32
+		{7A7EA69E-5EF7-4F57-93C0-343E31EEB7B0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

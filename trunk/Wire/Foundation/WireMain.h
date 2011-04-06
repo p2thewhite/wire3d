@@ -89,6 +89,24 @@ WIRE_IMPLEMENT_INITIALIZE(classname);                                        \
 void classname::Initialize()                                                 \
 {                                                                            \
 	SetApplication(WIRE_NEW classname);                                      \
-}
+}                                                                            \
+                                                                             \
+Int main(Int argc, Char** argv)                                              \
+{                                                                            \
+	Main::Initialize();                                                      \
+                                                                             \
+	Application* pApplication = Application::GetApplication();               \
+	if (pApplication)                                                        \
+	{                                                                        \
+		pApplication->Main(argc, argv);                                      \
+		                                                                     \
+		WIRE_DELETE pApplication;                                            \
+		Application::SetApplication(NULL);                                   \
+	}                                                                        \
+                                                                             \
+	Main::Terminate();                                                       \
+                                                                             \
+	return 0;                                                                \
+}                                                                            \
 
 #endif
