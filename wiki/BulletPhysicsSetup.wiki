@@ -1,6 +1,6 @@
 #summary How to setup the Bullet physics engine for the samples provided by Wire3D.
 
-The samples use Bullet 2.77, which can be downloaded [http://code.google.com/p/wire3d/downloads/list here]. Download the appropriate version for the target platform which you want to build for. The sample project files expect the following directory structure:
+Some of the samples use Bullet 2.77, which can be downloaded [http://code.google.com/p/wire3d/downloads/list here]. Download the appropriate version for the target platform which you want to build for. The sample project files expect the following directory structure:
 
 {{{
 bullet-2.77
