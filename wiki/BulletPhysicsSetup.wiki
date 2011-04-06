@@ -1,0 +1,15 @@
+#summary How to setup the Bullet physics engine for the samples provided by Wire3D.
+
+The samples use Bullet 2.77, which can be downloaded [http://code.google.com/p/wire3d/downloads/list here]. Download the appropriate version for the target platform which you want to build for. The sample project files expect the following directory structure:
+
+{{{
+bullet-2.77
+bullet-2.77-wii
+Wire3D
+Wire3D/Samples
+Wire3D/Wire
+...
+}}}
+
+Bullet for Wii contains pre-built library files.
+For Windows you have to build the library yourself and put them in the `bullet-2.77\lib` directory.
