@@ -52,7 +52,7 @@ Dx9Application::~Dx9Application()
 }
 
 //----------------------------------------------------------------------------
-LRESULT CALLBACK MsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
+LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 	LPARAM lParam)
 {
 	Dx9Application* pApp = static_cast<Dx9Application*>(
@@ -146,7 +146,7 @@ Int Dx9Application::Main(Int, Char*[])
 	static Char sWindowClass[] = "Wire Application";
 	WNDCLASS wc;
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc   = MsWindowEventHandler;
+	wc.lpfnWndProc   = WireMsWindowEventHandler;
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = 0;
