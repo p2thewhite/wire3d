@@ -53,7 +53,7 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * updating renderer bound (i.e. hardware) buffers
 
 === Sample8 - Bullet Physics Integration ===
-This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample8%2Fsrc Source]) demonstrates how to integrate the [http://code.google.com/p/bullet/ Bullet] physics engine into Wire3D. The sample creates a static floor, a dynamic stack of boxes and 2 balls that collide with the stack and cause it to collapse. In particular the sample shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample8%2Fsrc Source]/[http://www.youtube.com/watch?v=qDFjKriAeko Video]) demonstrates how to integrate the [http://code.google.com/p/bullet/ Bullet] physics engine into Wire3D. The sample creates a static floor, a dynamic stack of boxes and 2 balls that collide with the stack and cause it to collapse. In particular the sample shows creation and/or usage of:
   * Bullet dynamics
     * continuous collision detection 
     * rigid bodies
