@@ -16,6 +16,7 @@ CameraPtr gspCamera;
 //----------------------------------------------------------------------------
 void OnIdle()
 {
+	// the render loop
 	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F), MathF::FMod(
 		static_cast<Float>(System::GetTime()), MathF::TWO_PI));
 	gspCube->World.SetRotate(rotate);
@@ -103,8 +104,11 @@ LRESULT CALLBACK MsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 //----------------------------------------------------------------------------
 Int main(Int argc, Char** argv)
 {
+	// this initializes all classes that were statically registered using
+	// the WIRE_REGISTER_INITIALIZE macros.
 	Main::Initialize();
 
+	// Windows specific setup code...
 	const UInt width = 640;
 	const UInt height = 480;
 	Bool isFullscreen = false;
@@ -135,11 +139,12 @@ Int main(Int argc, Char** argv)
 
 	gWindowID = PtrToInt(hWnd);
 
+	// create the Wire renderer (pass the window handle)
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
-
 	gpRenderer = WIRE_NEW Renderer(input, width, height, isFullscreen);
 	
+	// create a cube to be rendered
 	gspCube = StandardMesh::CreateCube8(/* RGB(A) channels */ 4);
 	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
@@ -172,6 +177,7 @@ Int main(Int argc, Char** argv)
 		}
 		else
 		{
+			// render the cube
 			OnIdle();
 		}
 	}
@@ -180,6 +186,7 @@ Int main(Int argc, Char** argv)
 	gspCamera = NULL;
 	gspCube = NULL;
 
+	// delete the renderer
 	WIRE_DELETE gpRenderer;
 	gpRenderer = NULL;
 	Main::Terminate();

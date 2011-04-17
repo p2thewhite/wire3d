@@ -44,7 +44,11 @@ Bool Sample8::OnInitialize()
 		return false;
 	}
 
+
+	// create the bullet objects necessary to run a rigid body simulation
 	CreatePhysicsWorld();
+
+	// create the physics objects and the rendering objects representing them
 	CreateGameObjects();
 
 	mspCamera = WIRE_NEW Camera;
@@ -139,13 +143,14 @@ void Sample8::CreateGameObjects()
 	const Float floorX = 10;
 	const Float floorY = 0.25F;
 	const Float floorZ = 10;
+	const Float floorMass = 0;
 	Geometry* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
 	pFloor->World.SetScale(Vector3F(floorX * 2, floorY, floorZ * 2));
 	pFloor->World.SetTranslate(Vector3F(0, -4.0F, 0));
 
 	btCollisionShape* pColFloor = WIRE_NEW btBoxShape(btVector3(
 		btScalar(floorX), btScalar(floorY), btScalar(floorZ)));
-	btRigidBody* pRigidFloor = CreateRigidBody(pColFloor, 0.0F, pFloor->
+	btRigidBody* pRigidFloor = CreateRigidBody(pColFloor, floorMass, pFloor->
 		World.GetTranslate());
 
 	GameObject groundFloor(pFloor, pColFloor, pRigidFloor);
@@ -159,7 +164,8 @@ void Sample8::CreateGameObjects()
 		Float x = static_cast<Float>(smBoxCountX)*-0.5F;
 		for (UInt xCount = 0; xCount < smBoxCountX; xCount++)
 		{
-			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, 0.5F);
+			const Float extent = 0.5F;
+			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
 			pBox->AttachEffect(pEffect);
 			pBox->GenerateNormals();
 
@@ -172,9 +178,10 @@ void Sample8::CreateGameObjects()
 				pBox->World.SetTranslate(Vector3F(x+0.35F, y, 0));
 			}
 
-			btCollisionShape* pColBox = WIRE_NEW btBoxShape(btVector3(0.5F,
-				0.5F, 0.5F));
-			btRigidBody* pRigidBox = CreateRigidBody(pColBox, 1.0F, pBox->
+			btCollisionShape* pColBox = WIRE_NEW btBoxShape(btVector3(extent,
+				extent, extent));
+			const Float mass = 1.0F;
+			btRigidBody* pRigidBox = CreateRigidBody(pColBox, mass, pBox->
 				World.GetTranslate());
 
 			GameObject box(pBox, pColBox, pRigidBox);
@@ -186,6 +193,7 @@ void Sample8::CreateGameObjects()
 		switchX = !switchX;
 	}
 
+	// create 2 balls that collide with the boxes and cause them to collapse
 	Float sign = 1;
 	for (UInt i = 0; i < 2; i++)
 	{
@@ -195,7 +203,8 @@ void Sample8::CreateGameObjects()
 		pBall->World.SetTranslate(Vector3F(1.5F * sign, -0.5F, 10 * sign));
 
 		btCollisionShape* pColBall = WIRE_NEW btSphereShape(radius);
-		btRigidBody* pRigidBall = CreateRigidBody(pColBall, 1.0F, pBall->
+		const Float mass = 1.0F;
+		btRigidBody* pRigidBall = CreateRigidBody(pColBall, mass, pBall->
 			World.GetTranslate());
 		RandomizeBallVelocity(pRigidBall);
 
@@ -399,9 +408,7 @@ void Sample8::UpdatePhysicsWorld(btScalar elapsedTime)
 	// fixed 1/60 timestep
 	mpDynamicsWorld->stepSimulation(elapsedTime, 10);
 
-	QuaternionF quat;
 	Matrix3F mat;
-
 	const btCollisionObjectArray& objectArray = mpDynamicsWorld->
 		getCollisionObjectArray();
 

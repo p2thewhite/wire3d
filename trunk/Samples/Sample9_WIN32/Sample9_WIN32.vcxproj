@@ -131,9 +131,6 @@
     <ClCompile Include="src\Sample9.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Sample9.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Wire\Wire_WIN32.vcxproj">
       <Project>{b0895837-1f40-4f57-8f36-1df861114254}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
