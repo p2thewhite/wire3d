@@ -59,3 +59,9 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
     * rigid bodies
 
 *Note*: This sample only compiles if you have setup Bullet first, read [http://code.google.com/p/wire3d/wiki/BulletPhysicsSetup this].
+
+=== Sample9 - Custom Main ===
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample9_WII%2Fsrc Wii Source]/[http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample9_WIN32%2Fsrc Win Source]) demonstrates how to use the Wire framework in your own, non-WireApplication derived program. The benefit of this is that you have complete control over the entry point and order of execution, however this breaks plattform independency unless you take care of that yourself. In particular the sample shows creation and/or usage of:
+  * custom entry point
+  * initialization of the Wire framework
+  * Wire renderer
