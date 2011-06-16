@@ -317,6 +317,9 @@
     <ClInclude Include="Foundation\WireNoisePerlin.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h">
+      <Filter>Renderer\GXRenderer\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -704,6 +707,9 @@
     </ClCompile>
     <ClCompile Include="Foundation\WireNoisePerlin.cpp">
       <Filter>Foundation\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp">
+      <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
