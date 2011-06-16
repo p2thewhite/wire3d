@@ -163,6 +163,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTStack.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTypes.h"
 					>
 				</File>
@@ -252,6 +256,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTMap.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTStack.inl"
 					>
 				</File>
 				<File
