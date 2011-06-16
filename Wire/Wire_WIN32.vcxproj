@@ -130,6 +130,7 @@
     <ClInclude Include="Foundation\Wii\WireGXApplication.h" />
     <ClInclude Include="Foundation\Wii\WireOgcDefines.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
+    <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXIndexBuffer.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXRendererData.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXRendererInput.h" />
@@ -261,6 +262,10 @@
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateMaterial.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateWireframe.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateZBuffer.cpp" />
+    <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

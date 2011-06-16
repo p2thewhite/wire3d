@@ -208,16 +208,16 @@ void Renderer::DrawElements()
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
 	const StateWireframe* pWireframe = GetStateWireframe();
-	PdrVertexBuffer*& rPdrVBuffer = mpData->PdrVBuffer;
+	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 
 	if (pWireframe && pWireframe->Enabled)
 	{
-		mpData->DrawWireframe(rPdrVBuffer, rIBuffer);
+		mpData->DrawWireframe(pPdrVBuffer, rIBuffer);
 	}
 	else
 	{
 		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
-			rPdrVBuffer->GetDisplayLists();
+			pPdrVBuffer->GetDisplayLists();
 
 		Bool foundDL = false;
 		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
@@ -231,7 +231,7 @@ void Renderer::DrawElements()
 
 		if (!foundDL)
 		{
-			mpData->Draw(rPdrVBuffer, rIBuffer);
+			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
 		}
 	}
 }
@@ -504,7 +504,7 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 	DCInvalidateRange(displayList.DL, maxSize);
 
 	GXBeginDisplayList(displayList.DL, maxSize);
-	Draw(pPdrVBuffer, rIBuffer);
+	Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
 	displayList.Size = GXEndDisplayList();
 	WIRE_ASSERT(displayList.Size);
 
@@ -516,12 +516,9 @@ void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::Draw(const PdrVertexBuffer* pPdrVBuffer,
-	const IndexBuffer& rIBuffer)
+void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
+	rElements, const IndexBuffer& rIBuffer)
 {
-	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
-		GetVertexElements();
-
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
 	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
 	{

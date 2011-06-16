@@ -535,6 +535,10 @@
 					Name="Header Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.h"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.h"
 						>
 					</File>
@@ -558,6 +562,26 @@
 				<Filter
 					Name="Source Files"
 					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.cpp"
 						>

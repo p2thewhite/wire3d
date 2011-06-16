@@ -34,8 +34,8 @@ public:
 	// GX rendering specific functions
 	void CreateDisplayList(PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
-	void Draw(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
-		rIBuffer);
+	void Draw(const TArray<PdrVertexBuffer::VertexElement>& rElements,
+		const IndexBuffer& rIBuffer);
 	void DrawWireframe(const PdrVertexBuffer* pPdrVBuffer, const IndexBuffer&
 		rIBuffer);
 

@@ -13,16 +13,16 @@ Random::Random(UInt seed)
 //----------------------------------------------------------------------------
 UInt Random::Get()
 {
-	ULongLong c = 2111111111*x[3] + 1492 * x[2] + 1776 * x[1] + 5115 * x[0] +
-	  x[4];
+	ULongLong c = 2111111111*mX[3] + 1492 * mX[2] + 1776 * mX[1] + 
+		5115 * mX[0] + mX[4];
 
-	x[4] = (c>>32) & 0xFFFFFFFF;
-	x[3] = x[2];
-	x[2] = x[1];
-	x[1] = x[0];
-	x[0] = c & 0xFFFFFFFF;
+	mX[4] = (c>>32) & 0xFFFFFFFF;
+	mX[3] = mX[2];
+	mX[2] = mX[1];
+	mX[1] = mX[0];
+	mX[0] = c & 0xFFFFFFFF;
 
-	return static_cast<UInt>(x[0]);
+	return static_cast<UInt>(mX[0]);
 }
 
 //----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ void Random::Init(UInt seed)
 	for (UInt i = 0; i < 5; i++)
 	{
 		s = s * 29943829 - 1;
-		x[i] = s;
+		mX[i] = s;
 	}
 
 	// randomize some more

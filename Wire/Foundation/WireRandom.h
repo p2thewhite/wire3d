@@ -23,7 +23,7 @@ public:
 	Double GetDouble();
 
 protected:
-	ULongLong x[5];
+	ULongLong mX[5];
 };
 
 }
