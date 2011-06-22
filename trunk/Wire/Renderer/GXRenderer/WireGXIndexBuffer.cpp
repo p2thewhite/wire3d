@@ -9,6 +9,7 @@
 #include "WireGXIndexBuffer.h"
 
 #include "WireIndexBuffer.h"
+#include "WireGXDisplayList.h"
 #include "WireGXRendererData.h"
 #include "WireGXVertexBuffer.h"
 #include "WireRenderer.h"
@@ -28,14 +29,14 @@ PdrIndexBuffer::~PdrIndexBuffer()
 {
 	for (UInt i = 0; i < mPdrVBuffers.GetQuantity(); i++)
 	{
-		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
+		TArray<PdrDisplayList*>& rDisplayLists =
 			mPdrVBuffers[i]->GetDisplayLists();
 
 		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
 		{
-			if (rDisplayLists[j].RegisteredIBuffer == this)
+			if (rDisplayLists[j]->RegisteredIBuffer == this)
 			{
-				free(rDisplayLists[i].DL);	// allocated using memalign
+				WIRE_DELETE rDisplayLists[j];
 				rDisplayLists.RemoveAt(j);
 				break;
 			}

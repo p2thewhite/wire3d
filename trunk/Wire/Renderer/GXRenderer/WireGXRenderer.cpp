@@ -11,6 +11,7 @@
 #include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireImage2D.h"
+#include "WireGXDisplayList.h"
 #include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
 #include "WireGXRendererInput.h"
@@ -224,16 +225,16 @@ void Renderer::DrawElements()
 	}
 	else
 	{
-		TArray<PdrVertexBuffer::DisplayList>& rDisplayLists =
+		TArray<PdrDisplayList*>& rDisplayLists =
 			pPdrVBuffer->GetDisplayLists();
 
 		Bool foundDL = false;
 		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 		{
-			if (rDisplayLists[i].RegisteredIBuffer == mpData->PdrIBuffer)
+			if (rDisplayLists[i]->RegisteredIBuffer == mpData->PdrIBuffer)
 			{
 				foundDL = true;
-				GXCallDisplayList(rDisplayLists[i].DL, rDisplayLists[i].Size);
+				rDisplayLists[i]->Draw();
 			}
 		}
 
@@ -502,25 +503,12 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
 	const IndexBuffer& rIBuffer)
 {
-	PdrVertexBuffer::DisplayList displayList;
+	PdrDisplayList* pDisplayList = WIRE_NEW PdrDisplayList(this, rIBuffer,
+		pPdrVBuffer->GetVertexElements());
 
-	// Note that the display-list buffer area must be forced out of
-	// the CPU cache since it will be written using the write-gather pipe
-	const UInt maxSize = ((rIBuffer.GetIndexQuantity() * pPdrVBuffer->
-		GetVertexElements().GetQuantity()*2) & 0xFFFFFFE0) + 64;
-	displayList.DL = memalign(32, maxSize);
-	DCInvalidateRange(displayList.DL, maxSize);
-
-	GXBeginDisplayList(displayList.DL, maxSize);
-	Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
-	displayList.Size = GXEndDisplayList();
-	WIRE_ASSERT(displayList.Size);
-
-	DCFlushRange(displayList.DL, maxSize);
-
-	displayList.RegisteredIBuffer = PdrIBuffer;
+	pDisplayList->RegisteredIBuffer = PdrIBuffer;
 	PdrIBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
-	pPdrVBuffer->GetDisplayLists().Append(displayList);
+	pPdrVBuffer->GetDisplayLists().Append(pDisplayList);
 }
 
 //----------------------------------------------------------------------------

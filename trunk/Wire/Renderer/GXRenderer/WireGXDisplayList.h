@@ -10,15 +10,36 @@
 #ifndef WIREGXDISPLAYLIST_H
 #define WIREGXDISPLAYLIST_H
 
+#include "WireIndexBuffer.h"
+#include "WireGXVertexBuffer.h"
+#include "WireObject.h"
+#include "WireTArray.h"
+#include "WireVertexBuffer.h"
+
 namespace Wire
 {
 
+class PdrRendererData;
+
 class PdrDisplayList : public Object
 {
+public:
+	PdrDisplayList(PdrRendererData* pRendererData, const IndexBuffer&
+		rIBuffer, const TArray<PdrVertexBuffer::VertexElement>& rElements);
+	~PdrDisplayList();
 
+	inline void Draw();
+
+	PdrIndexBuffer* RegisteredIBuffer;
+
+private:
+	void* mpData;
+	UInt mSize;
 };
 
 typedef Pointer<PdrDisplayList> PdrDisplayListPtr;
+
+#include "WireGXDisplayList.inl"
 
 }
 

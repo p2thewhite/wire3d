@@ -890,6 +890,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.inl"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Dx9Renderer"

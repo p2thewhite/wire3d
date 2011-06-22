@@ -36,7 +36,6 @@ protected:
 
 private:
 	TArray<ControllerPtr> mControllers;
-
 };
 
 typedef Pointer<SceneObject> SceneObjectPtr;

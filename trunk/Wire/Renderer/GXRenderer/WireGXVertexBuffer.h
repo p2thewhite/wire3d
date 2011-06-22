@@ -16,6 +16,7 @@
 namespace Wire
 {
 
+class PdrDisplayList;
 class PdrIndexBuffer;
 class Renderer;
 class VertexBuffer;
@@ -31,13 +32,6 @@ public:
 		UChar CompType;
 	};
 
-	struct DisplayList
-	{
-		void* DL;
-		UInt Size;
-		PdrIndexBuffer* RegisteredIBuffer;
-	};
-
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	~PdrVertexBuffer();
 
@@ -45,7 +39,7 @@ public:
 	void Disable(Renderer* pRenderer);
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	TArray<DisplayList>& GetDisplayLists() { return mDisplayLists; }
+	TArray<PdrDisplayList*>& GetDisplayLists() { return mDisplayLists; }
 	const TArray<VertexElement>& GetVertexElements() const
 		{ return mElements; }
 
@@ -54,7 +48,7 @@ public:
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
-	TArray<DisplayList> mDisplayLists;
+	TArray<PdrDisplayList*> mDisplayLists;
 	TArray<VertexElement> mElements;
 
 	void* mpData;
