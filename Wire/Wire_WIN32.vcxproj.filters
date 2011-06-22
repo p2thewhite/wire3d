@@ -75,6 +75,9 @@
     <Filter Include="Engine\Source Files">
       <UniqueIdentifier>{d8fd3029-0b4b-4846-89b0-1258ba25e210}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\GXRenderer\Inline Files">
+      <UniqueIdentifier>{bd39d828-f729-4633-b4f5-8c95223fdaf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\WireFoundation.h">
@@ -474,6 +477,9 @@
     </None>
     <None Include="Foundation\WireNoisePerlin.inl">
       <Filter>Foundation\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GXRenderer\WireGXDisplayList.inl">
+      <Filter>Renderer\GXRenderer\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

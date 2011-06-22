@@ -6,3 +6,36 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
+#include "WireGXDisplayList.h"
+
+#include "WireGXRendererData.h"
+#include "WireIndexBuffer.h"
+#include <malloc.h>
+
+using namespace Wire;
+
+//----------------------------------------------------------------------------
+PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
+	const IndexBuffer& rIBuffer, const TArray<PdrVertexBuffer::VertexElement>&
+	rElements)
+{
+	// Note that the display-list buffer area must be forced out of
+	// the CPU cache since it will be written using the write-gather pipe
+	const UInt maxSize = ((rIBuffer.GetIndexQuantity() *
+		rElements.GetQuantity()*2) & 0xFFFFFFE0) + 64;
+	mpData = memalign(32, maxSize);
+	DCInvalidateRange(mpData, maxSize);
+
+	GXBeginDisplayList(mpData, maxSize);
+	pRendererData->Draw(rElements, rIBuffer);
+	mSize = GXEndDisplayList();
+	WIRE_ASSERT(mSize);
+
+	DCFlushRange(mpData, maxSize);
+}
+
+//----------------------------------------------------------------------------
+PdrDisplayList::~PdrDisplayList()
+{
+	free(mpData);	// allocated using memalign
+}

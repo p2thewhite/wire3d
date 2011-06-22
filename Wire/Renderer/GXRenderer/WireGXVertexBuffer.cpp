@@ -9,6 +9,7 @@
 #include "WireGXVertexBuffer.h"
 
 #include "WireGeometry.h"
+#include "WireGXDisplayList.h"
 #include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
@@ -96,10 +97,10 @@ PdrVertexBuffer::~PdrVertexBuffer()
 
 	for (UInt i = 0; i < mDisplayLists.GetQuantity(); i++)
 	{
-		free(mDisplayLists[i].DL);	// allocated using memalign, not using new
+//		free(mDisplayLists[i]->DL);	// allocated using memalign, not using new
 
 		TArray<PdrVertexBuffer*>& rVBuffers =
-			mDisplayLists[i].RegisteredIBuffer->GetPdrVBuffers();
+			mDisplayLists[i]->RegisteredIBuffer->GetPdrVBuffers();
 
 		for (UInt j = 0; j < rVBuffers.GetQuantity(); j++)
 		{
@@ -134,7 +135,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
 	Bool foundDL = false;
 	for (UInt i = 0; i < mDisplayLists.GetQuantity(); i++)
 	{
-		if (mDisplayLists[i].RegisteredIBuffer == rData.PdrIBuffer)
+		if (mDisplayLists[i]->RegisteredIBuffer == rData.PdrIBuffer)
 		{
 			foundDL = true;
 			break;
