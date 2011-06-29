@@ -221,6 +221,7 @@
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
     <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
+    <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />

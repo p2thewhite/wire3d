@@ -897,6 +897,10 @@
 						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.inl"
 						>
 					</File>
+					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.inl"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

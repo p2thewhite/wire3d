@@ -35,7 +35,7 @@ public:
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	~PdrVertexBuffer();
 
-	void Enable(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
+	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 	void Update(const VertexBuffer* pVertexBuffer);
 
@@ -43,7 +43,7 @@ public:
 	const TArray<VertexElement>& GetVertexElements() const
 		{ return mElements; }
 
-	Bool HasNormals() { return mHasNormals; }
+	inline Bool HasNormals();
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
@@ -52,9 +52,11 @@ private:
 	TArray<VertexElement> mElements;
 
 	void* mpData;
+	UShort mElementId;
 	UChar mVertexSize;
-	Bool mHasNormals;
 };
+
+#include "WireGXVertexBuffer.inl"
 
 }
 

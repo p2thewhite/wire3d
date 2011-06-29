@@ -108,7 +108,7 @@ PdrVertexBuffer::~PdrVertexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*)
+void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;

@@ -180,8 +180,8 @@ void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 	}
 	else
 	{
-		PdrIndexBuffer* pPdrTexture = Bind(pIndexBuffer);
-		pPdrTexture->Enable(this, pIndexBuffer);
+		PdrIndexBuffer* pPdrIndexBuffer = Bind(pIndexBuffer);
+		pPdrIndexBuffer->Enable(this, pIndexBuffer);
 	}
 }
 
@@ -254,12 +254,12 @@ void Renderer::Enable(const VertexBuffer* pVertexBuffer)
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 	if (pValue)
 	{
-		(*pValue)->Enable(this, pVertexBuffer);
+		(*pValue)->Enable(this);
 	}
 	else
 	{
-		PdrVertexBuffer* pPdrTexture =	Bind(pVertexBuffer);
-		pPdrTexture->Enable(this, pVertexBuffer);
+		PdrVertexBuffer* pPdrVertexBuffer =	Bind(pVertexBuffer);
+		pPdrVertexBuffer->Enable(this);
 	}
 }
 

@@ -21,10 +21,10 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	:
-	mVertexSize(0),
-	mHasNormals(false)
+	mVertexSize(0)
 {
 	VertexElement element;
+	mElementId = 0;
 
 	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
 	UInt channels = rIAttr.GetPositionChannels();
@@ -36,18 +36,19 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		element.CompCnt = GX_POS_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
+		mElementId = 1;
 	}
 
 	channels = rIAttr.GetNormalChannels();
 	if (channels > 0)
 	{
-		mHasNormals = true;
 		element.Data = reinterpret_cast<void*>(mVertexSize);
 		mVertexSize += channels * sizeof(Float);
 		element.Attr = GX_VA_NRM;
 		element.CompCnt = GX_NRM_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
+		mElementId |= 2;
 	}
 
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
@@ -60,6 +61,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_CLR_RGBA;
 			element.CompType = GX_RGBA8;
 			mElements.Append(element);
+			mElementId |= 4 << unit;
 		}
 	}
 
@@ -74,6 +76,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_TEX_ST;
 			element.CompType = GX_F32;
 			mElements.Append(element);
+			mElementId |= 16 << unit;
 		}
 	}
 
@@ -114,8 +117,7 @@ PdrVertexBuffer::~PdrVertexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Enable(Renderer* pRenderer, const VertexBuffer*
-	pVertexBuffer)
+void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
