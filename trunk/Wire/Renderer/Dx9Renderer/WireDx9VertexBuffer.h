@@ -28,7 +28,7 @@ public:
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	~PdrVertexBuffer();
 
-	void Enable(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
+	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 	void* Lock(Buffer::LockingMode mode);
 	void Unlock();
