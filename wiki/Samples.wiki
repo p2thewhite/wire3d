@@ -29,6 +29,7 @@ Scene graphs serve the purpose of organizing your 3D objects (together with rend
 === Sample3 - Level of Detail ===
 This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample3%2Fsrc Source]/[http://www.youtube.com/watch?v=u_Zy2TFZL8E Video]) demonstrates how to use discrete LODs in the scene graph. In particular it shows creation and/or usage of:
   * a discrete level of detail (DLod) node
+  * wireframe state
   * manual binding of resources
 
 === Sample4 - Multitexturing ===
