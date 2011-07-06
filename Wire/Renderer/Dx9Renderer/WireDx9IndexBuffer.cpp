@@ -82,7 +82,7 @@ PdrIndexBuffer::~PdrIndexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*)
+void PdrIndexBuffer::Enable(Renderer* pRenderer)
 {
 	HRESULT hr;
 	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpBuffer);

@@ -26,13 +26,22 @@ public:
 	PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
 	~PdrIndexBuffer();
 
-	void Enable(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
+	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
 	TArray<PdrVertexBuffer*>& GetPdrVBuffers() { return mPdrVBuffers; }
 
 private:
 	TArray<PdrVertexBuffer*> mPdrVBuffers;
+
+// 	struct DisplayListEntry 
+// 	{
+// 			DisplayListEntry(UShort id) : mId(id)  {}
+// 		private:
+// 			friend class PdrIndexBuffer;
+// 			UShort mId;
+// 	};
+
 };
 
 }

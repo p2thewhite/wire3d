@@ -27,7 +27,7 @@ public:
 	PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
 	~PdrIndexBuffer();
 
-	void Enable(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
+	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 	void* Lock(Buffer::LockingMode mode);
 	void Unlock();

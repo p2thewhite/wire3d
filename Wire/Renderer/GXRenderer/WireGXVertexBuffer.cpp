@@ -131,31 +131,13 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer)
 		GXSetArray(mElements[i].Attr, mElements[i].Data, mVertexSize);
 	}
 
-	// Check if there is a displaylist for this Vertex- and Indexbuffer
-	// combination.
-	PdrRendererData& rData = *(pRenderer->GetRendererData());
-	Bool foundDL = false;
-	for (UInt i = 0; i < mDisplayLists.GetQuantity(); i++)
-	{
-		if (mDisplayLists[i]->RegisteredIBuffer == rData.PdrIBuffer)
-		{
-			foundDL = true;
-			break;
-		}
-	}
-
-	if (!foundDL)
-	{
-		rData.CreateDisplayList(this, *(rData.IBuffer));
-	}
-
-	rData.PdrVBuffer = this;
+	pRenderer->GetRendererData()->PdrVBuffer = this;
 }
 
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Disable(Renderer* pRenderer)
 {
-	// Nothing to do.
+	pRenderer->GetRendererData()->PdrVBuffer = NULL;
 }
 
 //----------------------------------------------------------------------------

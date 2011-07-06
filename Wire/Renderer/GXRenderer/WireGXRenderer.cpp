@@ -228,7 +228,27 @@ void Renderer::DrawElements()
 		TArray<PdrDisplayList*>& rDisplayLists =
 			pPdrVBuffer->GetDisplayLists();
 
+		// Check if there is a displaylist for this Vertex- and Indexbuffer
+		// combination.
 		Bool foundDL = false;
+		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
+		{
+			if (rDisplayLists[i]->RegisteredIBuffer == mpData->PdrIBuffer)
+			{
+				foundDL = true;
+				break;
+			}
+		}
+
+		const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
+		if (!foundDL && rIBuffer.GetUsage() == Buffer::UT_STATIC)
+		{
+			mpData->CreateDisplayList(pPdrVBuffer, rIBuffer);
+		}
+
+
+
+		foundDL = false;
 		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
 		{
 			if (rDisplayLists[i]->RegisteredIBuffer == mpData->PdrIBuffer)
@@ -309,7 +329,6 @@ PdrRendererData::PdrRendererData()
 	RMode(NULL),
 	PdrVBuffer(NULL),
 	PdrIBuffer(NULL),
-	IBuffer(NULL),
 	FrameBufferIndex(0),
 	IsFrameBufferDirty(false),
 	LightsMask(0)

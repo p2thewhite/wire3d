@@ -176,12 +176,12 @@ void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
 	if (pValue)
 	{
-		(*pValue)->Enable(this, pIndexBuffer);
+		(*pValue)->Enable(this);
 	}
 	else
 	{
 		PdrIndexBuffer* pPdrIndexBuffer = Bind(pIndexBuffer);
-		pPdrIndexBuffer->Enable(this, pIndexBuffer);
+		pPdrIndexBuffer->Enable(this);
 	}
 }
 
@@ -423,15 +423,15 @@ void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
 
-	SetStates(mpGeometry->States);
-	Enable(mpGeometry->Lights);
+	SetStates(pGeometry->States);
+	Enable(pGeometry->Lights);
 
 	// Enable the index buffer. The connectivity information is the same
 	// across all effects and all passes per effect.
-	Enable(mpGeometry->GetIBuffer());
-	Enable(mpGeometry->GetVBuffer());
+	Enable(pGeometry->GetIBuffer());
+	Enable(pGeometry->GetVBuffer());
 
-	UInt effectCount = mpGeometry->GetEffectQuantity();
+	UInt effectCount = pGeometry->GetEffectQuantity();
 
 	if (effectCount == 0)
 	{
@@ -440,14 +440,14 @@ void Renderer::Draw(Geometry* pGeometry)
 
 	for (UInt i = 0; i < effectCount; i++)
 	{
-		ApplyEffect(mpGeometry->GetEffect(i));
+		ApplyEffect(pGeometry->GetEffect(i));
 	}
 
-	Disable(mpGeometry->GetVBuffer());
-	Disable(mpGeometry->GetIBuffer());
-	Disable(mpGeometry->Lights);
+	Disable(pGeometry->GetVBuffer());
+	Disable(pGeometry->GetIBuffer());
+	Disable(pGeometry->Lights);
 
-	RestoreStates(mpGeometry->States);
+	RestoreStates(pGeometry->States);
 }
 
 //----------------------------------------------------------------------------
