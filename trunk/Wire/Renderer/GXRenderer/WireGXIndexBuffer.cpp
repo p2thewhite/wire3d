@@ -45,12 +45,10 @@ PdrIndexBuffer::~PdrIndexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
-	pIndexBuffer)
+void PdrIndexBuffer::Enable(Renderer* pRenderer)
 {
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->PdrIBuffer = this;
-	pData->IBuffer = const_cast<IndexBuffer*>(pIndexBuffer);
 
 	GXSetNumTexGens(0);
 	GXSetNumTevStages(1);
@@ -62,5 +60,6 @@ void PdrIndexBuffer::Enable(Renderer* pRenderer, const IndexBuffer*
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Disable(Renderer* pRenderer)
 {
-	// Nothing to do.
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	pData->PdrIBuffer = NULL;
 }

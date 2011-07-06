@@ -14,7 +14,6 @@ Int main(Int argc, Char** argv)
 
 	// Renderer must be created before calling PADInit
 	PADInit();
-	WPAD_ScanPads();
 
 	GeometryPtr spCube = StandardMesh::CreateCube8(/* RGB(A) channels */ 4);
 	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
@@ -22,7 +21,7 @@ Int main(Int argc, Char** argv)
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	CameraPtr spCamera = WIRE_NEW Camera(cameraLocation, viewDirection, up);
 
-	while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME))
+	do 
 	{
 		Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F), MathF::FMod(
 			static_cast<Float>(System::GetTime()), MathF::TWO_PI));
@@ -35,7 +34,8 @@ Int main(Int argc, Char** argv)
 		pRenderer->DisplayBackBuffer();
 		
 		WPAD_ScanPads();
-	}
+	} while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME));
+
 
 	// dereference (i.e. destroy) before destroying the renderer
 	spCamera = NULL;

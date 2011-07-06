@@ -58,7 +58,6 @@ public:
 
 	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
-	IndexBuffer* IBuffer;
 
 	GXColor ClearColor;
 
