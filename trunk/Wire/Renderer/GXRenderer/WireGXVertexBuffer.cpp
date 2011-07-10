@@ -9,8 +9,6 @@
 #include "WireGXVertexBuffer.h"
 
 #include "WireGeometry.h"
-#include "WireGXDisplayList.h"
-#include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
@@ -24,7 +22,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	mVertexSize(0)
 {
 	VertexElement element;
-	mElementId = 0;
+	mElementsId = 0;
 
 	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
 	UInt channels = rIAttr.GetPositionChannels();
@@ -36,7 +34,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		element.CompCnt = GX_POS_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
-		mElementId = 1;
+		mElementsId = 1;
 	}
 
 	channels = rIAttr.GetNormalChannels();
@@ -48,7 +46,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		element.CompCnt = GX_NRM_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
-		mElementId |= 2;
+		mElementsId |= 2;
 	}
 
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
@@ -61,7 +59,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_CLR_RGBA;
 			element.CompType = GX_RGBA8;
 			mElements.Append(element);
-			mElementId |= 4 << unit;
+			mElementsId |= 4 << unit;
 		}
 	}
 
@@ -76,7 +74,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_TEX_ST;
 			element.CompType = GX_F32;
 			mElements.Append(element);
-			mElementId |= 16 << unit;
+			mElementsId |= 16 << unit;
 		}
 	}
 
@@ -97,23 +95,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 PdrVertexBuffer::~PdrVertexBuffer()
 {
 	free(mpData);	// allocated using memalign, not using new
-
-	for (UInt i = 0; i < mDisplayLists.GetQuantity(); i++)
-	{
-//		free(mDisplayLists[i]->DL);	// allocated using memalign, not using new
-
-		TArray<PdrVertexBuffer*>& rVBuffers =
-			mDisplayLists[i]->RegisteredIBuffer->GetPdrVBuffers();
-
-		for (UInt j = 0; j < rVBuffers.GetQuantity(); j++)
-		{
-			if (rVBuffers[j] == this)
-			{
-				rVBuffers.RemoveAt(j);
-				break;
-			}
-		}
-	}
 }
 
 //----------------------------------------------------------------------------

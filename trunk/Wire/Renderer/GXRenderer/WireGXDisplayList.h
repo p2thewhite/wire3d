@@ -12,9 +12,7 @@
 
 #include "WireIndexBuffer.h"
 #include "WireGXVertexBuffer.h"
-#include "WireObject.h"
 #include "WireTArray.h"
-#include "WireVertexBuffer.h"
 
 namespace Wire
 {
@@ -29,8 +27,6 @@ public:
 	~PdrDisplayList();
 
 	inline void Draw();
-
-	PdrIndexBuffer* RegisteredIBuffer;
 
 private:
 	void* mpData;

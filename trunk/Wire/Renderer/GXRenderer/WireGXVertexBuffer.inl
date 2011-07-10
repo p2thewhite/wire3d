@@ -7,7 +7,20 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline const TArray<PdrVertexBuffer::VertexElement>&
+PdrVertexBuffer::GetVertexElements() const
+{
+	return mElements;
+}
+
+//----------------------------------------------------------------------------
+inline const UShort PdrVertexBuffer::GetVertexElementsId() const
+{
+	return mElementsId;
+}
+
+//----------------------------------------------------------------------------
 inline Bool PdrVertexBuffer::HasNormals()
 {
-	return (mElementId & 2) != 0;
+	return (mElementsId & 2) != 0;
 }

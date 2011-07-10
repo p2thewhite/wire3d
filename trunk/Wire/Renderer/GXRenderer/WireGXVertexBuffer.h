@@ -11,13 +11,11 @@
 #define WIREGXVERTEXBUFFER_H
 
 #include "WireTArray.h"
-#include "WireTypes.h"
 
 namespace Wire
 {
 
 class PdrDisplayList;
-class PdrIndexBuffer;
 class Renderer;
 class VertexBuffer;
 
@@ -39,20 +37,16 @@ public:
 	void Disable(Renderer* pRenderer);
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	TArray<PdrDisplayList*>& GetDisplayLists() { return mDisplayLists; }
-	const TArray<VertexElement>& GetVertexElements() const
-		{ return mElements; }
-
+	inline const TArray<VertexElement>& GetVertexElements() const;
 	inline Bool HasNormals();
+	inline const UShort GetVertexElementsId() const;
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
-	TArray<PdrDisplayList*> mDisplayLists;
 	TArray<VertexElement> mElements;
-
 	void* mpData;
-	UShort mElementId;
+	UShort mElementsId;
 	UChar mVertexSize;
 };
 
