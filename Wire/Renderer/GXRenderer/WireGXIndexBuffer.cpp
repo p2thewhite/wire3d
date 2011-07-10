@@ -11,7 +11,6 @@
 #include "WireIndexBuffer.h"
 #include "WireGXDisplayList.h"
 #include "WireGXRendererData.h"
-#include "WireGXVertexBuffer.h"
 #include "WireRenderer.h"
 #include <malloc.h>
 
@@ -27,20 +26,12 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
-	for (UInt i = 0; i < mPdrVBuffers.GetQuantity(); i++)
-	{
-		TArray<PdrDisplayList*>& rDisplayLists =
-			mPdrVBuffers[i]->GetDisplayLists();
+	TArray<TMap<UShort, DisplayListEntry>::MapElement>* pArray =
+		mDisplayLists.GetArray();
 
-		for (UInt j = 0; j < rDisplayLists.GetQuantity(); j++)
-		{
-			if (rDisplayLists[j]->RegisteredIBuffer == this)
-			{
-				WIRE_DELETE rDisplayLists[j];
-				rDisplayLists.RemoveAt(j);
-				break;
-			}
-		}
+	for (UInt i = 0; i < pArray->GetQuantity(); i++)
+	{
+		WIRE_DELETE (*pArray)[i].Value.DisplayList;
 	}
 }
 

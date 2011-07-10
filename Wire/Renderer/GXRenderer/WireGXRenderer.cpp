@@ -216,49 +216,40 @@ void Renderer::DrawElements()
 	GXSetNumChans(1);
 
 	const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
-	const StateWireframe* pWireframe = GetStateWireframe();
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
+	WIRE_ASSERT(pPdrVBuffer);
+	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;
+	WIRE_ASSERT(pPdrIBuffer);
 
-	if (pWireframe && pWireframe->Enabled)
+	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
 		mpData->DrawWireframe(pPdrVBuffer, rIBuffer);
 	}
 	else
 	{
-		TArray<PdrDisplayList*>& rDisplayLists =
-			pPdrVBuffer->GetDisplayLists();
+		const UShort elementsId = pPdrVBuffer->GetVertexElementsId();
+		PdrIndexBuffer::DisplayListEntry* pEntry = pPdrIBuffer->mDisplayLists.
+			Find(elementsId);
+		PdrDisplayList* pDisplayList = NULL;
 
-		// Check if there is a displaylist for this Vertex- and Indexbuffer
-		// combination.
-		Bool foundDL = false;
-		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
+		if (pEntry)
 		{
-			if (rDisplayLists[i]->RegisteredIBuffer == mpData->PdrIBuffer)
-			{
-				foundDL = true;
-				break;
-			}
+			pDisplayList = pEntry->DisplayList;
+		}
+		else if (rIBuffer.GetUsage() == Buffer::UT_STATIC)
+		{
+			PdrIndexBuffer::DisplayListEntry entry;
+			entry.DisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
+				pPdrVBuffer->GetVertexElements());
+			pPdrIBuffer->mDisplayLists.Insert(elementsId, entry);
+			pDisplayList = entry.DisplayList;
 		}
 
-		const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
-		if (!foundDL && rIBuffer.GetUsage() == Buffer::UT_STATIC)
+		if (pDisplayList)
 		{
-			mpData->CreateDisplayList(pPdrVBuffer, rIBuffer);
+			pDisplayList->Draw();
 		}
-
-
-
-		foundDL = false;
-		for (UInt i = 0; i < rDisplayLists.GetQuantity(); i++)
-		{
-			if (rDisplayLists[i]->RegisteredIBuffer == mpData->PdrIBuffer)
-			{
-				foundDL = true;
-				rDisplayLists[i]->Draw();
-			}
-		}
-
-		if (!foundDL)
+		else
 		{
 			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
 		}
@@ -516,18 +507,6 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 	{
 		rWidth = 4;
 	}
-}
-
-//----------------------------------------------------------------------------
-void PdrRendererData::CreateDisplayList(PdrVertexBuffer* pPdrVBuffer,
-	const IndexBuffer& rIBuffer)
-{
-	PdrDisplayList* pDisplayList = WIRE_NEW PdrDisplayList(this, rIBuffer,
-		pPdrVBuffer->GetVertexElements());
-
-	pDisplayList->RegisteredIBuffer = PdrIBuffer;
-	PdrIBuffer->GetPdrVBuffers().Append(pPdrVBuffer);
-	pPdrVBuffer->GetDisplayLists().Append(pDisplayList);
 }
 
 //----------------------------------------------------------------------------

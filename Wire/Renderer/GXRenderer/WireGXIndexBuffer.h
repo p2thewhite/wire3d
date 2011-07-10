@@ -10,7 +10,7 @@
 #ifndef WIREGXINDEXBUFFER_H
 #define WIREGXINDEXBUFFER_H
 
-#include "WireTArray.h"
+#include "WireTMap.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -18,7 +18,7 @@ namespace Wire
 
 class Renderer;
 class IndexBuffer;
-class PdrVertexBuffer;
+class PdrDisplayList;
 
 class PdrIndexBuffer
 {
@@ -29,19 +29,20 @@ public:
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
-	TArray<PdrVertexBuffer*>& GetPdrVBuffers() { return mPdrVBuffers; }
-
 private:
-	TArray<PdrVertexBuffer*> mPdrVBuffers;
+	friend class Renderer;
+	struct DisplayListEntry 
+	{
+		DisplayListEntry() {}
+		DisplayListEntry(PdrDisplayList* pDisplayList)
+			:
+			DisplayList(pDisplayList), References(1) {}
 
-// 	struct DisplayListEntry 
-// 	{
-// 			DisplayListEntry(UShort id) : mId(id)  {}
-// 		private:
-// 			friend class PdrIndexBuffer;
-// 			UShort mId;
-// 	};
+			PdrDisplayList* DisplayList;
+			UInt References;
+	};
 
+	TMap<UShort, DisplayListEntry> mDisplayLists;
 };
 
 }
