@@ -26,12 +26,12 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
-	TArray<TMap<UShort, DisplayListEntry>::MapElement>* pArray =
+	TArray<TMap<UShort, PdrDisplayList*>::MapElement>* pArray =
 		mDisplayLists.GetArray();
 
 	for (UInt i = 0; i < pArray->GetQuantity(); i++)
 	{
-		WIRE_DELETE (*pArray)[i].Value.DisplayList;
+		WIRE_DELETE (*pArray)[i].Value;
 	}
 }
 
