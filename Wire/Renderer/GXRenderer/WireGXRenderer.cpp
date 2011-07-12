@@ -228,21 +228,19 @@ void Renderer::DrawElements()
 	else
 	{
 		const UShort elementsId = pPdrVBuffer->GetVertexElementsId();
-		PdrIndexBuffer::DisplayListEntry* pEntry = pPdrIBuffer->mDisplayLists.
-			Find(elementsId);
+		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(
+			elementsId);
 		PdrDisplayList* pDisplayList = NULL;
 
 		if (pEntry)
 		{
-			pDisplayList = pEntry->DisplayList;
+			pDisplayList = *pEntry;
 		}
 		else if (rIBuffer.GetUsage() == Buffer::UT_STATIC)
 		{
-			PdrIndexBuffer::DisplayListEntry entry;
-			entry.DisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
+			pDisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
 				pPdrVBuffer->GetVertexElements());
-			pPdrIBuffer->mDisplayLists.Insert(elementsId, entry);
-			pDisplayList = entry.DisplayList;
+			pPdrIBuffer->GetDisplayLists().Insert(elementsId, pDisplayList);
 		}
 
 		if (pDisplayList)

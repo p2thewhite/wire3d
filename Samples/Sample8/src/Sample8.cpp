@@ -44,7 +44,6 @@ Bool Sample8::OnInitialize()
 		return false;
 	}
 
-
 	// create the bullet objects necessary to run a rigid body simulation
 	CreatePhysicsWorld();
 

@@ -29,21 +29,13 @@ public:
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
+	inline TMap<UShort, PdrDisplayList*>& GetDisplayLists();
+
 private:
-	friend class Renderer;
-	struct DisplayListEntry 
-	{
-		DisplayListEntry() {}
-		DisplayListEntry(PdrDisplayList* pDisplayList)
-			:
-			DisplayList(pDisplayList), References(1) {}
-
-			PdrDisplayList* DisplayList;
-			UInt References;
-	};
-
-	TMap<UShort, DisplayListEntry> mDisplayLists;
+	TMap<UShort, PdrDisplayList*> mDisplayLists;
 };
+
+#include "WireGXIndexBuffer.inl"
 
 }
 

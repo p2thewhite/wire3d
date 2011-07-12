@@ -898,6 +898,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.inl"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.inl"
 						>
 					</File>

@@ -260,6 +260,7 @@ void TArray<T>::Append(const T& rElement)
 		}
 
 		// cannot grow the array, overwrite the last element
+		WIRE_ASSERT(false);
 		--mQuantity;
 	}
 
@@ -270,7 +271,14 @@ void TArray<T>::Append(const T& rElement)
 template <class T>
 void TArray<T>::Insert(UInt i, const T& rElement)
 {
-	SetQuantity(GetQuantity()+1);
+	WIRE_ASSERT(i <= mQuantity);
+	if (mQuantity == mMaxQuantity)
+	{
+		SetMaxQuantity(mMaxQuantity+mGrowBy);
+	}
+
+	SetQuantity(mQuantity+1);
+
 	for (UInt j = GetQuantity()-1; j > 0 && j > i; j--)
 	{
 		mpArray[j] = mpArray[j-1];
@@ -310,9 +318,11 @@ void TArray<T>::SetElement(UInt i, const T& rElement)
 			else
 			{
 				// cannot grow the array, overwrite the last element
+				WIRE_ASSERT(false);
 				i = mQuantity-1;
 			}
 		}
+
 		mQuantity = i+1;
 	}
 
