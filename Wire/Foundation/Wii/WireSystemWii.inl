@@ -71,14 +71,17 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile,
 		lineNumber);
 
-	Print("Press 'HOME' button to exit.");
+	Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
 
 	do
 	{
 		WPAD_ScanPads();
-	} while (!(WPAD_ButtonsDown(0) & Application::KEY_ESCAPE));
+		if (WPAD_ButtonsDown(0) & Application::KEY_ESCAPE)
+		{
+			exit(0);
+		}
 
-	exit(0);
+	} while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_A));
 }
 
 //----------------------------------------------------------------------------
