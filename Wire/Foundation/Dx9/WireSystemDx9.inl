@@ -7,6 +7,7 @@
 // that agreement.
 
 #include <sys/timeb.h>
+#include <stdlib.h>
 
 //----------------------------------------------------------------------------
 Double System::GetTime()
@@ -51,10 +52,22 @@ void System::Print(const Char* pFormat, ...)
 
 //----------------------------------------------------------------------------
 void System::Assert(const Char* pExpression, const Char* pFile,
-					Int lineNumber)
+	Int lineNumber)
 {
-	Print("Assertion failed, %s, %s, line %d", pExpression, pFile,
-		lineNumber);
+	size_t convertedChars = 0;
+
+	size_t size = strlen(pExpression) + 1;
+	wchar_t* pWcExpression = WIRE_NEW wchar_t[size];
+	mbstowcs_s(&convertedChars, pWcExpression, size, pExpression, _TRUNCATE);
+
+	size = strlen(pFile) + 1;
+	wchar_t* pWcFile = WIRE_NEW wchar_t[size];
+	mbstowcs_s(&convertedChars, pWcFile, size, pFile, _TRUNCATE);
+
+	_wassert(pWcExpression, pWcFile, lineNumber);
+
+	WIRE_DELETE[] pWcFile;
+	WIRE_DELETE[] pWcExpression;
 }
 
 //----------------------------------------------------------------------------

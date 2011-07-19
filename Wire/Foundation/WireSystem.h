@@ -21,22 +21,18 @@
 #ifdef WIRE_WII
 	#include <math.h>
 	#include "Wii/WireOgcDefines.h"
-	#ifdef WIRE_DEBUG
-		#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
-	#else
-		#define WIRE_ASSERT(expression) if (!(expression)) System::Assert(#expression, __FILE__, __LINE__);
-//		#define WIRE_ASSERT(expression)
-	#endif
 #else
 	#include <stddef.h>
 	#include <assert.h>
 	#include <cmath>
-	#ifdef WIRE_DEBUG
-		#define WIRE_ASSERT(expression) assert(expression)
-	#else
-		#define WIRE_ASSERT(expression)
-	#endif
 #endif /* WIRE_WII */
+
+#ifdef WIRE_DEBUG
+	#define WIRE_ASSERT(e) \
+	(void)((!!(e)) || (System::Assert(#e, __FILE__, __LINE__), 0))
+#else
+	#define WIRE_ASSERT(expression)
+#endif
 
 #include <float.h>
 #include <limits.h>
