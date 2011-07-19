@@ -25,12 +25,20 @@ DATA		:=	data
 INCLUDES	:=	Foundation \
 				Engine \
 				Renderer/GXRenderer
+ifeq ($(WIRE_DEBUG),y)
+LIBWIRE		:=	libWired.a
+else
+LIBWIRE		:=	libWire.a
+endif
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
 CFLAGS	= -save-temps -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+ifeq ($(WIRE_DEBUG),y)
+CFLAGS += -DWIRE_DEBUG
+endif
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -103,15 +111,15 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-	@cp -p $(BUILD)/libWire.a lib/libWire.a
+	@cp -p $(BUILD)/$(LIBWIRE) lib/$(LIBWIRE)
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
 	@rm -f $(BUILD)/*.*
-	@rm -f lib/libWire.a
+	@rm -f lib/$(LIBWIRE)
 #---------------------------------------------------------------------------------
-lib: libWire.a
+lib: $(LIBWIRE)
 
 #---------------------------------------------------------------------------------
 else
@@ -121,7 +129,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-libWire.a: $(OFILES)
+$(LIBWIRE): $(OFILES)
 
 -include $(DEPENDS)
 

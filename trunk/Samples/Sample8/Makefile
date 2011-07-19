@@ -22,13 +22,23 @@ BUILD		:=	build
 SOURCES		:=	src
 DATA		:=	data  
 INCLUDES	:=
-LIBWIRE_LIB :=	$(WIREDIR)
+LIBWIRE_LIB :=	$(WIREDIR)/lib
+ifeq ($(WIRE_DEBUG),y)
+LIBWIRE		:=	libWired.a
+LIBWIREPOSTFIX	:=	d
+else
+LIBWIRE		:=	libWire.a
+LIBWIREPOSTFIX	:=
+endif
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 
 CFLAGS	= -save-temps -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+ifeq ($(WIRE_DEBUG),y)
+CFLAGS += -DWIRE_DEBUG
+endif
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -36,7 +46,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lBulletDynamics -lBulletCollision -lLinearMath -lWire -lwiiuse -lbte -logc -lm
+LIBS	:=	-lBulletDynamics -lBulletCollision -lLinearMath -lWire$(LIBWIREPOSTFIX) -lwiiuse -lbte -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -97,7 +107,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -L$(LIBWIRE_LIB) -L$(BULLETDIR)/lib/wii
+					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(BULLETDIR)/lib/wii
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
@@ -124,7 +134,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).dol: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES) $(WIREDIR)/lib/libWire.a
+$(OUTPUT).elf: $(OFILES) $(LIBWIRE_LIB)/$(LIBWIRE)
 
 -include $(DEPENDS)
 

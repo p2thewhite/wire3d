@@ -16,7 +16,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetLight(const Light* pLight, UInt unit)
 {
-	WIRE_ASSERT(unit < PdrRendererData::MaxLights)
+	WIRE_ASSERT(unit < PdrRendererData::MaxLights);
 
 	Bool useLight = pLight ? pLight->Enabled : false;
 	if (!useLight)
