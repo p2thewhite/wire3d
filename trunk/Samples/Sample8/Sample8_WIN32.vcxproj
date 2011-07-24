@@ -74,7 +74,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>..\..\Wire\lib\debug;..\..\..\bullet-2.77\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Wire\lib\debug;..\..\..\bullet-2.77\lib\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>Wired.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
@@ -115,7 +115,7 @@
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>Wire.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Wire\lib\release;..\..\..\bullet-2.77\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\Wire\lib\release;..\..\..\bullet-2.77\lib\Release</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <OutputFile>$(OutDir)$(TargetFileName).bsc</OutputFile>
