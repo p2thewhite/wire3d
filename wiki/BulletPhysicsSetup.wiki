@@ -12,6 +12,8 @@ Wire3D/Wire
 }}}
 
 Bullet for Wii contains pre-built library files.
-For Windows you have to build the library files yourself and put them in the `bullet-2.77\lib` directory.
+
+
+For Windows you have to build the library files yourself and put them in the `bullet-2.77\lib\Debug` and `bullet-2.77\lib\Release` directory respectively.
 
 Detailed information on Bullet can be found [http://bulletphysics.org here].
