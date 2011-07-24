@@ -13,9 +13,9 @@
 // Wire3D/Wire
 // ...
 //
-// The Bullet Wii package contains pre-built library files. For Windows you
-// have to build the libraries yourself and put them in the bullet-2.77\lib
-// directory.
+// The Bullet Wii package contains pre-built library files.
+// For Windows you have to build the libraries yourself and put them in 
+// the bullet-2.77\lib\Debug and bullet-2.77\lib\Release directory.
 
 #include "Sample8.h"
 
