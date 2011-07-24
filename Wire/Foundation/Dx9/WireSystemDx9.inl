@@ -50,6 +50,7 @@ void System::Print(const Char* pFormat, ...)
 	va_end(args);
 }
 
+#ifdef WIRE_DEBUG
 //----------------------------------------------------------------------------
 void System::Assert(const Char* pExpression, const Char* pFile,
 	Int lineNumber)
@@ -69,6 +70,7 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	WIRE_DELETE[] pWcFile;
 	WIRE_DELETE[] pWcExpression;
 }
+#endif
 
 //----------------------------------------------------------------------------
 FILE* System::Fopen(const Char* pFilename, const Char* pMode)
