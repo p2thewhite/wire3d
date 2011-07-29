@@ -26,8 +26,10 @@ INCLUDES	:=	Foundation \
 				Engine \
 				Renderer/GXRenderer
 ifeq ($(WIRE_DEBUG),y)
+BUILD		:=	build_wii_debug
 LIBWIRE		:=	libWired.a
 else
+BUILD		:=	build_wii_release
 LIBWIRE		:=	libWire.a
 endif
 
