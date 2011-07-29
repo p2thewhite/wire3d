@@ -15,19 +15,20 @@ include $(DEVKITPPC)/wii_rules
 # SOURCES is a list of directories containing source code
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
-WIREDIR		:=  ../../../Wire
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	src
-DATA		:=	data  
-INCLUDES	:=
-LIBWIRE_LIB :=	$(WIREDIR)/lib
+WIREDIR			:=  ../../../Wire
+TARGET			:=	$(notdir $(CURDIR))
+SOURCES			:=	src
+DATA			:=	data  
+INCLUDES		:=
+LIBWIRE_LIB 	:=	$(WIREDIR)/lib
 ifeq ($(WIRE_DEBUG),y)
-LIBWIRE		:=	libWired.a
-LIBWIREPOSTFIX	:=	d
+BUILD			:=	build_wii_debug
+LIBWIRE			:=	libWired.a
+BUILDPOSTFIX	:=	d
 else
-LIBWIRE		:=	libWire.a
-LIBWIREPOSTFIX	:=
+BUILD			:=	build_wii_release
+LIBWIRE			:=	libWire.a
+BUILDPOSTFIX	:=
 endif
 
 #---------------------------------------------------------------------------------
@@ -45,7 +46,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lWire$(LIBWIREPOSTFIX) -lwiiuse -lbte -logc -lm
+LIBS	:=	-lWire$(BUILDPOSTFIX) -lwiiuse -lbte -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -60,7 +61,7 @@ LIBDIRS	:= $(WIREDIR)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export OUTPUT	:=	$(CURDIR)/$(TARGET)$(BUILDPOSTFIX)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
@@ -107,7 +108,6 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
 					-L$(LIBOGC_LIB) -L$(WIREDIR)
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
 
 #---------------------------------------------------------------------------------
