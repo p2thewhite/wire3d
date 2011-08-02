@@ -288,6 +288,9 @@
     <ClInclude Include="Renderer\GXRenderer\WireGXVertexBuffer.h">
       <Filter>Renderer\GXRenderer\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\WireTQueue.h">
+      <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -448,6 +451,9 @@
     </None>
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl">
       <Filter>Renderer\GXRenderer\Inline Files</Filter>
+    </None>
+    <None Include="Foundation\WireTQueue.inl">
+      <Filter>Foundation\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

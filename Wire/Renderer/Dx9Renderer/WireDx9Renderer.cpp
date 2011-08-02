@@ -341,8 +341,10 @@ void DestroyNonManagedResources(THashTable<const Resource*,
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity());
 	const Resource* pKey;
-	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
-		pValue = rMap.GetNext(&pKey))
+	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
+
+	for (PdrResource** pValue = it.GetFirst(&pKey); pValue;
+		pValue = it.GetNext(&pKey))
 	{
 		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
 		if (PdrRendererData::sPools[pBuffer->GetUsage()] != D3DPOOL_MANAGED)

@@ -163,6 +163,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTQueue.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTStack.h"
 					>
 				</File>
@@ -256,6 +260,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTMap.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTQueue.inl"
 					>
 				</File>
 				<File

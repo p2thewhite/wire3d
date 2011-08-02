@@ -8,14 +8,12 @@
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-THashTable<TKEY,TVALUE>::THashTable(UInt tableSize)
+THashTable<TKEY, TVALUE>::THashTable(UInt tableSize)
 {
     WIRE_ASSERT(tableSize > 0);
 
     mTableSize = tableSize;
     mQuantity = 0;
-    mIndex = 0;
-    mpItem = NULL;
     mpTable = WIRE_NEW HashItem*[mTableSize];
 	WIRE_ASSERT(mpTable);
 
@@ -25,7 +23,7 @@ THashTable<TKEY,TVALUE>::THashTable(UInt tableSize)
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-THashTable<TKEY,TVALUE>::~THashTable()
+THashTable<TKEY, TVALUE>::~THashTable()
 {
     RemoveAll();
     WIRE_DELETE[] mpTable;
@@ -33,14 +31,14 @@ THashTable<TKEY,TVALUE>::~THashTable()
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-inline UInt THashTable<TKEY,TVALUE>::GetQuantity() const
+inline UInt THashTable<TKEY, TVALUE>::GetQuantity() const
 {
     return mQuantity;
 }
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-Bool THashTable<TKEY,TVALUE>::Insert(const TKEY& rKey, const TVALUE& rValue)
+Bool THashTable<TKEY, TVALUE>::Insert(const TKEY& rKey, const TVALUE& rValue)
 {
     // find hash table entry for given key
     UInt index = HashFunction(rKey);
@@ -72,7 +70,7 @@ Bool THashTable<TKEY,TVALUE>::Insert(const TKEY& rKey, const TVALUE& rValue)
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-TVALUE* THashTable<TKEY,TVALUE>::Find(const TKEY& rKey) const
+TVALUE* THashTable<TKEY, TVALUE>::Find(const TKEY& rKey) const
 {
     // find hash table entry for given key
     UInt index = HashFunction(rKey);
@@ -95,7 +93,7 @@ TVALUE* THashTable<TKEY,TVALUE>::Find(const TKEY& rKey) const
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-Bool THashTable<TKEY,TVALUE>::Remove(const TKEY& rKey)
+Bool THashTable<TKEY, TVALUE>::Remove(const TKEY& rKey)
 {
     // find hash table entry for given key
     UInt index = HashFunction(rKey);
@@ -139,7 +137,7 @@ Bool THashTable<TKEY,TVALUE>::Remove(const TKEY& rKey)
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-void THashTable<TKEY,TVALUE>::RemoveAll()
+void THashTable<TKEY, TVALUE>::RemoveAll()
 {
     if (mQuantity > 0)
     {
@@ -161,66 +159,7 @@ void THashTable<TKEY,TVALUE>::RemoveAll()
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-TVALUE* THashTable<TKEY,TVALUE>::GetFirst(TKEY* pKey) const
-{
-    if (mQuantity > 0)
-    {
-        for (mIndex = 0; mIndex < mTableSize; mIndex++)
-        {
-            if (mpTable[mIndex])
-            {
-                mpItem = mpTable[mIndex];
-				if (pKey)
-				{
-					*pKey = mpItem->mKey;
-				}
-
-				return &mpItem->mValue;
-            }
-        }
-    }
-
-    return NULL;
-}
-
-//----------------------------------------------------------------------------
-template <class TKEY, class TVALUE>
-TVALUE* THashTable<TKEY,TVALUE>::GetNext(TKEY* pKey) const
-{
-    if (mQuantity > 0)
-    {
-        mpItem = mpItem->mpNext;
-        if (mpItem)
-        {
-			if (pKey)
-			{
-				*pKey = mpItem->mKey;
-			}
-
-			return &mpItem->mValue;
-        }
-        
-        for (mIndex++; mIndex < mTableSize; mIndex++)
-        {
-            if (mpTable[mIndex])
-            {
-                mpItem = mpTable[mIndex];
-				if (pKey)
-				{
-					*pKey = mpItem->mKey;
-				}
-
-				return &mpItem->mValue;
-            }
-        }
-    }
-
-    return NULL;
-}
-
-//----------------------------------------------------------------------------
-template <class TKEY, class TVALUE>
-UInt THashTable<TKEY,TVALUE>::HashFunction(const TKEY& rKey) const
+UInt THashTable<TKEY, TVALUE>::HashFunction(const TKEY& rKey) const
 {
 	if (UserHashFunction)
     {
@@ -229,8 +168,78 @@ UInt THashTable<TKEY,TVALUE>::HashFunction(const TKEY& rKey) const
 
     // default hash function
     static Double sHashMultiplier = 0.5 * (MathD::Sqrt(5.0) - 1.0);
-	UInt key = reinterpret_cast<UInt>(rKey);
-    key %= mTableSize;
+	UInt key = (UInt)(rKey);
+	key %= mTableSize;
 	Double fraction = MathD::FMod(sHashMultiplier * key, 1.0);
 	return static_cast<UInt>(MathD::Floor(mTableSize*fraction));
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY, class TVALUE>
+THashTable<TKEY, TVALUE>::Iterator::Iterator(THashTable* pHashTable)
+	:
+	mpHashTable(pHashTable),
+	mIndex(0),
+	mpItem(NULL)
+{
+	WIRE_ASSERT(pHashTable);
+}
+
+// ----------------------------------------------------------------------------
+template <class TKEY, class TVALUE>
+TVALUE* THashTable<TKEY, TVALUE>::Iterator::GetFirst(TKEY* pKey) const
+{
+	if (mpHashTable->mQuantity > 0)
+	{
+		for (mIndex = 0; mIndex < mpHashTable->mTableSize; mIndex++)
+		{
+			if (mpHashTable->mpTable[mIndex])
+			{
+				mpItem = mpHashTable->mpTable[mIndex];
+				if (pKey)
+				{
+					*pKey = mpItem->mKey;
+				}
+
+				return &mpItem->mValue;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY, class TVALUE>
+TVALUE* THashTable<TKEY, TVALUE>::Iterator::GetNext(TKEY* pKey) const
+{
+	if (mpHashTable->mQuantity > 0)
+	{
+		mpItem = mpItem->mpNext;
+		if (mpItem)
+		{
+			if (pKey)
+			{
+				*pKey = mpItem->mKey;
+			}
+
+			return &mpItem->mValue;
+		}
+
+		for (mIndex++; mIndex < mpHashTable->mTableSize; mIndex++)
+		{
+			if (mpHashTable->mpTable[mIndex])
+			{
+				mpItem = mpHashTable->mpTable[mIndex];
+				if (pKey)
+				{
+					*pKey = mpItem->mKey;
+				}
+
+				return &mpItem->mValue;
+			}
+		}
+	}
+
+	return NULL;
 }
