@@ -7,7 +7,8 @@ You can build Wire3D for the following target platforms:
   * Install [http://wiibrew.org/wiki/DevkitPPC DevkitPPC] on your [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 Windows], [http://wiibrew.org/wiki/Devkitppc_setup_%28Mac_OS_X%29 Mac OSX] or [http://wiibrew.org/wiki/Devkitppc_setup_%28Linux%29 Linux] machine
   * Get the [http://code.google.com/p/wire3d/source/checkout source] via SVN.
   * Provided project files for Windows:
-    * Visual Studio 2005/2008/2010: `Wire3D_WII.sln`
+    * Visual Studio 2005/2008: `Wire3D_WII.sln`
+    * Visual Studio 2010: `Wire3D_WII_VS2010.sln`
     * Programmer's Notepad2 (optional part of the DevkitPPC installation): `Wire3D_WII.pnproj`
   * Compilation of Wire3D and its Samples:
     * Windows: use Visual Studio, Programmer's Notepad2 or `make`.
