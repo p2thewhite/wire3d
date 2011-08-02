@@ -385,8 +385,9 @@ PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllIndexBuffers()
 {
- 	for (PdrIndexBuffer** pValue = mIndexBufferMap.GetFirst(); pValue;
-		pValue = mIndexBufferMap.GetNext())
+	IndexBufferMap::Iterator it(&mIndexBufferMap);
+ 	for (PdrIndexBuffer** pValue = it.GetFirst(); pValue; pValue = it.
+		GetNext())
  	{
  		WIRE_DELETE *pValue;
  	}
@@ -397,8 +398,9 @@ void Renderer::DestroyAllIndexBuffers()
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllVertexBuffers()
 {
-	for (PdrVertexBuffer** pValue = mVertexBufferMap.GetFirst(); pValue;
-		pValue = mVertexBufferMap.GetNext())
+	VertexBufferMap::Iterator it(&mVertexBufferMap);
+	for (PdrVertexBuffer** pValue = it.GetFirst(); pValue; pValue = it.
+		GetNext())
 	{
 		WIRE_DELETE *pValue;
 	}
@@ -409,8 +411,9 @@ void Renderer::DestroyAllVertexBuffers()
 //----------------------------------------------------------------------------
 void Renderer::DestroyAllTexture2Ds()
 {
-	for (PdrTexture2D** pValue = mTexture2DMap.GetFirst(); pValue;
-		pValue = mTexture2DMap.GetNext())
+	Texture2DMap::Iterator it(&mTexture2DMap);
+	for (PdrTexture2D** pValue = it.GetFirst(); pValue; pValue = it.
+		GetNext())
 	{
 		WIRE_DELETE *pValue;
 	}

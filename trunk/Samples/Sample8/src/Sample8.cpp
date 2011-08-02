@@ -296,7 +296,7 @@ btRigidBody* Sample8::CreateRigidBody(btCollisionShape* pColShape, Float mass,
 	trafo.setOrigin(origin);
 
 	//rigidbody is dynamic if and only if mass is non zero
-	bool isDynamic = (mass != 0.0F);
+	Bool isDynamic = (mass != 0.0F);
 	btVector3 localInertia(0, 0, 0);
 	if (isDynamic)
 	{

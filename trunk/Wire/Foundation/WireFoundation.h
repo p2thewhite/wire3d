@@ -33,6 +33,7 @@
 #include "WireTHashTable.h"
 #include "WireTList.h"
 #include "WireTMap.h"
+#include "WireTQueue.h"
 #include "WireTStack.h"
 #include "WireTypes.h"
 #include "WireVector2.h"

@@ -14,8 +14,6 @@ THashSet<TKEY>::THashSet(UInt tableSize)
 
     mTableSize = tableSize;
     mQuantity = 0;
-    mIndex = 0;
-    mpItem = 0;
     mpTable = WIRE_NEW HashItem*[mTableSize];
 	System::Memset(mpTable, 0, mTableSize*sizeof(HashItem*));
     UserHashFunction = NULL;
@@ -157,50 +155,6 @@ void THashSet<TKEY>::RemoveAll()
 
 //----------------------------------------------------------------------------
 template <class TKEY>
-TKEY* THashSet<TKEY>::GetFirst() const
-{
-    if (mQuantity > 0)
-    {
-        for (mIndex = 0; mIndex < mTableSize; mIndex++)
-        {
-            if (mpTable[mIndex])
-            {
-                mpItem = mpTable[mIndex];
-                return &mpItem->mKey;
-            }
-        }
-    }
-
-    return NULL;
-}
-
-//----------------------------------------------------------------------------
-template <class TKEY>
-TKEY* THashSet<TKEY>::GetNext() const
-{
-    if (mQuantity > 0)
-    {
-        mpItem = mpItem->mpNext;
-        if (mpItem)
-        {
-            return &mpItem->mKey;
-        }
-        
-        for (mIndex++; mIndex < mTableSize; mIndex++)
-        {
-            if (mpTable[mIndex])
-            {
-                mpItem = mpTable[mIndex];
-                return &mpItem->mKey;
-            }
-        }
-    }
-
-    return NULL;
-}
-
-//----------------------------------------------------------------------------
-template <class TKEY>
 UInt THashSet<TKEY>::HashFunction(const TKEY& rKey) const
 {
     if (UserHashFunction)
@@ -210,8 +164,63 @@ UInt THashSet<TKEY>::HashFunction(const TKEY& rKey) const
 
 	// default hash function
 	static Double sHashMultiplier = 0.5 * (MathD::Sqrt(5.0) - 1.0);
-	UInt key = reinterpret_cast<UInt>(rKey);
+	UInt key = (UInt)(rKey);
 	key %= mTableSize;
 	Double fraction = MathD::FMod(sHashMultiplier * key, 1.0);
 	return static_cast<UInt>(MathD::Floor(mTableSize*fraction));
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY>
+THashSet<TKEY>::Iterator::Iterator(THashSet* pHashSet)
+	:
+	mpHashSet(pHashSet),
+	mIndex(0),
+	mpItem(NULL)
+{
+	WIRE_ASSERT(pHashSet);
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY>
+TKEY* THashSet<TKEY>::Iterator::GetFirst() const
+{
+    if (mpHashSet->mQuantity > 0)
+    {
+        for (mIndex = 0; mIndex < mpHashSet->mTableSize; mIndex++)
+        {
+            if (mpHashSet->mpTable[mIndex])
+            {
+                mpItem = mpHashSet->mpTable[mIndex];
+                return &mpItem->mKey;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY>
+TKEY* THashSet<TKEY>::Iterator::GetNext() const
+{
+    if (mpHashSet->mQuantity > 0)
+    {
+        mpItem = mpItem->mpNext;
+        if (mpItem)
+        {
+            return &mpItem->mKey;
+        }
+        
+        for (mIndex++; mIndex < mpHashSet->mTableSize; mIndex++)
+        {
+            if (mpHashSet->mpTable[mIndex])
+            {
+                mpItem = mpHashSet->mpTable[mIndex];
+                return &mpItem->mKey;
+            }
+        }
+    }
+
+    return NULL;
 }

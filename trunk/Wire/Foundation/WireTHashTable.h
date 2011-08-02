@@ -53,15 +53,9 @@ public:
 	Bool Remove(const TKEY& rKey);
 	void RemoveAll();
 
-	// linear traversal of table
-	// TODO: implement this as an iterator
-	TVALUE* GetFirst(TKEY* pKey = NULL) const;
-	TVALUE* GetNext(TKEY* pKey = NULL) const;
-
 	// user-specified key-to-index construction
 	UInt (*UserHashFunction)(const TKEY&);
 
-private:
 	struct HashItem
 	{
 		TKEY mKey;
@@ -69,6 +63,22 @@ private:
 		HashItem* mpNext;
 	};
 
+	// linear traversal of table
+	class Iterator
+	{
+	public:
+		Iterator(THashTable* hashTable);
+
+ 		TVALUE* GetFirst(TKEY* pKey = NULL) const;
+ 		TVALUE* GetNext(TKEY* pKey = NULL) const;
+
+	private:
+		THashTable* mpHashTable;
+		mutable UInt mIndex;
+		mutable HashItem* mpItem;
+	};
+
+private:
 	// Default key-to-index construction (override by user-specified when
 	// requested).
 	UInt HashFunction(const TKEY& rKey) const;
@@ -77,10 +87,6 @@ private:
 	UInt mTableSize;
 	UInt mQuantity;
 	HashItem** mpTable;
-
-	// iterator for traversal
-	mutable UInt mIndex;
-	mutable HashItem* mpItem;
 };
 
 #include "WireTHashTable.inl"
