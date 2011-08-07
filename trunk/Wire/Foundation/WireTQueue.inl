@@ -8,13 +8,14 @@
 
 //----------------------------------------------------------------------------
 template <class T>
-TQueue<T>::TQueue(int maxQuantity)
+TQueue<T>::TQueue(UInt maxQuantity)
+	:
+	mMaxQuantity(maxQuantity),
+	mBack(0),
+	mFront(0),
+	mIsEmpty(true)
 {
     WIRE_ASSERT(maxQuantity > 0);
-    mMaxQuantity = maxQuantity;
-    mBack = 0;
-	mFront = 0;
-	mIsEmpty = true;
     mpQueue = WIRE_NEW T[mMaxQuantity];
 }
 

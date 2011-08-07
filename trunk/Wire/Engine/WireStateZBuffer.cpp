@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateZBuffer, State);
+WIRE_IMPLEMENT_INITIALIZE(StateZBuffer);
+WIRE_IMPLEMENT_TERMINATE(StateZBuffer);
+
+//----------------------------------------------------------------------------
+void StateZBuffer::Initialize()
+{
+	Default[ZBUFFER] = WIRE_NEW StateZBuffer;
+}
+
+//----------------------------------------------------------------------------
+void StateZBuffer::Terminate()
+{
+	Default[ZBUFFER] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateZBuffer::StateZBuffer()

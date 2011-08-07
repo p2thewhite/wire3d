@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateCull, State);
+WIRE_IMPLEMENT_INITIALIZE(StateCull);
+WIRE_IMPLEMENT_TERMINATE(StateCull);
+
+//----------------------------------------------------------------------------
+void StateCull::Initialize()
+{
+	Default[CULL] = WIRE_NEW StateCull;
+}
+
+//----------------------------------------------------------------------------
+void StateCull::Terminate()
+{
+	Default[CULL] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateCull::StateCull()

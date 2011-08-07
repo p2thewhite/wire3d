@@ -38,6 +38,8 @@ public:
 
 	virtual StateType GetStateType() const = 0;
 
+	static Pointer<State> Default[MAX_STATE_TYPE];
+
 protected:
 	State();
 };

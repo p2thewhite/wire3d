@@ -18,6 +18,8 @@ namespace Wire
 class StateWireframe : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	StateWireframe();
@@ -29,6 +31,9 @@ public:
 };
 
 typedef Pointer<StateWireframe> StateWireframePtr;
+
+WIRE_REGISTER_INITIALIZE(StateWireframe);
+WIRE_REGISTER_TERMINATE(StateWireframe);
 
 }
 

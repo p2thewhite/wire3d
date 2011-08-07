@@ -158,7 +158,6 @@ private:
 
 	// Global render states
 	StatePtr mspStates[State::MAX_STATE_TYPE];
-	StatePtr mspDefaultStates[State::MAX_STATE_TYPE];
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;

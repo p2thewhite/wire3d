@@ -18,6 +18,8 @@ namespace Wire
 class StateZBuffer : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	StateZBuffer();
@@ -44,6 +46,9 @@ public:
 };
 
 typedef Pointer<StateZBuffer> StateZBufferPtr;
+
+WIRE_REGISTER_INITIALIZE(StateZBuffer);
+WIRE_REGISTER_TERMINATE(StateZBuffer);
 
 }
 

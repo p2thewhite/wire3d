@@ -12,6 +12,8 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, State, Object);
 
+StatePtr State::Default[MAX_STATE_TYPE];
+
 //----------------------------------------------------------------------------
 State::State()
 {

@@ -207,7 +207,7 @@ void Spatial::UpdateRS(TArray<State*>* pGStack, TArray<Light*>* pLStack)
 
 		for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 		{
-			pGStack[i].Append(NULL);
+			pGStack[i].Append(State::Default[i]);
 		}
 
         // stack has no lights initially

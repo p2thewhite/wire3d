@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateWireframe, State);
+WIRE_IMPLEMENT_INITIALIZE(StateWireframe);
+WIRE_IMPLEMENT_TERMINATE(StateWireframe);
+
+//----------------------------------------------------------------------------
+void StateWireframe::Initialize()
+{
+	Default[WIREFRAME] = WIRE_NEW StateWireframe;
+}
+
+//----------------------------------------------------------------------------
+void StateWireframe::Terminate()
+{
+	Default[WIREFRAME] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateWireframe::StateWireframe()

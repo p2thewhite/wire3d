@@ -18,6 +18,8 @@ namespace Wire
 class StateCull : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	StateCull();
@@ -38,6 +40,9 @@ public:
 };
 
 typedef Pointer<StateCull> StateCullPtr;
+
+WIRE_REGISTER_INITIALIZE(StateCull);
+WIRE_REGISTER_TERMINATE(StateCull);
 
 }
 
