@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateAlpha, State);
+WIRE_IMPLEMENT_INITIALIZE(StateAlpha);
+WIRE_IMPLEMENT_TERMINATE(StateAlpha);
+
+//----------------------------------------------------------------------------
+void StateAlpha::Initialize()
+{
+	Default[ALPHA] = WIRE_NEW StateAlpha;
+}
+
+//----------------------------------------------------------------------------
+void StateAlpha::Terminate()
+{
+	Default[ALPHA] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateAlpha::StateAlpha()

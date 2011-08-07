@@ -67,7 +67,7 @@ public:
 	class Iterator
 	{
 	public:
-		Iterator(THashTable* hashTable);
+		Iterator(THashTable* pHashTable);
 
  		TVALUE* GetFirst(TKEY* pKey = NULL) const;
  		TVALUE* GetNext(TKEY* pKey = NULL) const;

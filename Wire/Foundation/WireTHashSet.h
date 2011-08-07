@@ -64,7 +64,7 @@ public:
 	class Iterator
 	{
 	public:
-		Iterator(THashSet* hashSet);
+		Iterator(THashSet* pHashSet);
 
 		TKEY* GetFirst() const;
 		TKEY* GetNext() const;

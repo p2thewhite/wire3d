@@ -25,7 +25,7 @@ template <class T>
 class TQueue
 {
 public:
-    TQueue(int maxQuantity = 64);
+    TQueue(UInt maxQuantity = 64);
     ~TQueue();
 
     inline Bool IsEmpty() const;
@@ -38,9 +38,9 @@ public:
 	inline T& GetFront() const;
 
 private:
-    int mMaxQuantity;
-	int mBack;
-	int mFront;
+    UInt mMaxQuantity;
+	UInt mBack;
+	UInt mFront;
     T* mpQueue;
 	Bool mIsEmpty;
 };

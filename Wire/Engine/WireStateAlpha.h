@@ -18,6 +18,8 @@ namespace Wire
 class StateAlpha : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	enum SrcBlendMode
@@ -57,6 +59,9 @@ public:
 };
 
 typedef Pointer<StateAlpha> StateAlphaPtr;
+
+WIRE_REGISTER_INITIALIZE(StateAlpha);
+WIRE_REGISTER_TERMINATE(StateAlpha);
 
 }
 

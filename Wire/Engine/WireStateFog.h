@@ -19,6 +19,8 @@ namespace Wire
 class StateFog : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	StateFog();
@@ -42,6 +44,9 @@ public:
 };
 
 typedef Pointer<StateFog> StateFogPtr;
+
+WIRE_REGISTER_INITIALIZE(StateFog);
+WIRE_REGISTER_TERMINATE(StateFog);
 
 }
 

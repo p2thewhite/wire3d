@@ -19,6 +19,8 @@ namespace Wire
 class StateMaterial : public State
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	StateMaterial();
@@ -30,6 +32,9 @@ public:
 };
 
 typedef Pointer<StateMaterial> StateMaterialPtr;
+
+WIRE_REGISTER_INITIALIZE(StateMaterial);
+WIRE_REGISTER_TERMINATE(StateMaterial);
 
 }
 

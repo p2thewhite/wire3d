@@ -108,7 +108,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	}
 
 	// Initialize global render state to default settings.
-	SetStates(mspDefaultStates);
+	SetStates(State::Default);
 }
 
 //----------------------------------------------------------------------------
@@ -205,6 +205,12 @@ void Renderer::PostDraw()
 	if (!mpData->IsDeviceLost)
 	{
 		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+
+	// reset state cache (state is not preserved between End/BeginScene())
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
+	{
+		mspStates[i] = NULL;
 	}
 }
 

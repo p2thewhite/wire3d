@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateMaterial, State);
+WIRE_IMPLEMENT_INITIALIZE(StateMaterial);
+WIRE_IMPLEMENT_TERMINATE(StateMaterial);
+
+//----------------------------------------------------------------------------
+void StateMaterial::Initialize()
+{
+	Default[MATERIAL] = WIRE_NEW StateMaterial;
+}
+
+//----------------------------------------------------------------------------
+void StateMaterial::Terminate()
+{
+	Default[MATERIAL] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateMaterial::StateMaterial()

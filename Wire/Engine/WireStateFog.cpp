@@ -11,6 +11,20 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, StateFog, State);
+WIRE_IMPLEMENT_INITIALIZE(StateFog);
+WIRE_IMPLEMENT_TERMINATE(StateFog);
+
+//----------------------------------------------------------------------------
+void StateFog::Initialize()
+{
+	Default[FOG] = WIRE_NEW StateFog;
+}
+
+//----------------------------------------------------------------------------
+void StateFog::Terminate()
+{
+	Default[FOG] = NULL;
+}
 
 //----------------------------------------------------------------------------
 StateFog::StateFog()

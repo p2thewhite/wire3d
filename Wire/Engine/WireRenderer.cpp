@@ -40,13 +40,6 @@ void Renderer::Initialize(UInt width, UInt height)
 	smRenderer = this;
 	mpCamera = NULL;
 	mpGeometry = NULL;
-
-	mspDefaultStates[State::ALPHA] = WIRE_NEW StateAlpha;
-	mspDefaultStates[State::CULL] = WIRE_NEW StateCull;
-	mspDefaultStates[State::FOG] = WIRE_NEW StateFog;
-	mspDefaultStates[State::MATERIAL] = WIRE_NEW StateMaterial;
-	mspDefaultStates[State::WIREFRAME] = WIRE_NEW StateWireframe;
-	mspDefaultStates[State::ZBUFFER] = WIRE_NEW StateZBuffer;
 }
 
 //----------------------------------------------------------------------------
@@ -449,8 +442,6 @@ void Renderer::Draw(Geometry* pGeometry)
 	Disable(pGeometry->GetVBuffer());
 	Disable(pGeometry->GetIBuffer());
 	Disable(pGeometry->Lights);
-
-	RestoreStates(pGeometry->States);
 }
 
 //----------------------------------------------------------------------------
@@ -515,80 +506,38 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 void Renderer::SetStates(StatePtr spStates[])
 {
 	State* pState = spStates[State::ALPHA];
-	if (pState)
+	if (pState && pState != mspStates[State::ALPHA])
 	{
 		SetState(StaticCast<StateAlpha>(pState));
 	}
 
 	pState = spStates[State::CULL];
-	if (pState)
+	if (pState && pState != mspStates[State::CULL])
 	{
 		SetState(StaticCast<StateCull>(pState));
 	}
 
 	pState = spStates[State::FOG];
-	if (pState)
+	if (pState && pState != mspStates[State::FOG])
 	{
 		SetState(StaticCast<StateFog>(pState));
 	}
 
 	pState = spStates[State::MATERIAL];
-	if (pState)
+	if (pState && pState != mspStates[State::MATERIAL])
 	{
 		SetState(StaticCast<StateMaterial>(pState));
 	}
 
 	pState = spStates[State::WIREFRAME];
-	if (pState)
+	if (pState && pState != mspStates[State::WIREFRAME])
 	{
 		SetState(StaticCast<StateWireframe>(pState));
 	}
 
 	pState = spStates[State::ZBUFFER];
-	if (pState)
+	if (pState && pState != mspStates[State::ZBUFFER])
 	{
-		SetState(StaticCast<StateZBuffer>(pState));
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::RestoreStates(StatePtr spStates[])
-{
-	State* pState;
-
-	if (spStates[State::ALPHA])
-	{
-		pState = mspDefaultStates[State::ALPHA];
-		SetState(StaticCast<StateAlpha>(pState));
-	}
-
-	if (spStates[State::CULL])
-	{
-		pState = mspDefaultStates[State::CULL];
-		SetState(StaticCast<StateCull>(pState));
-	}
-
-	if (spStates[State::FOG])
-	{
-		pState = mspDefaultStates[State::FOG];
-		SetState(StaticCast<StateFog>(pState));
-	}
-
-	if (spStates[State::MATERIAL])
-	{
-		pState = mspDefaultStates[State::MATERIAL];
-		SetState(StaticCast<StateMaterial>(pState));
-	}
-
-	if (spStates[State::WIREFRAME])
-	{
-		pState = mspDefaultStates[State::WIREFRAME];
-		SetState(StaticCast<StateWireframe>(pState));
-	}
-
-	if (spStates[State::ZBUFFER])
-	{
-		pState = mspDefaultStates[State::ZBUFFER];
 		SetState(StaticCast<StateZBuffer>(pState));
 	}
 }
