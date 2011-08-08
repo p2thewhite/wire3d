@@ -156,6 +156,72 @@ void Renderer::DisplayBackBuffer()
 //----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
+	SetCamera(pCamera);
+
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
+	HRESULT hr;
+	hr = rDevice->TestCooperativeLevel();
+    
+    switch (hr)
+    {
+    case D3DERR_DEVICELOST:
+		mpData->IsDeviceLost = true;
+		return false;
+
+	case D3DERR_DEVICENOTRESET:
+		mpData->ResetDevice();
+		break;
+    }
+
+    hr = rDevice->BeginScene();
+    WIRE_ASSERT(SUCCEEDED(hr));
+
+	// reset state cache (state is not preserved outside Begin/EndScene())
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
+	{
+		mspStates[i] = NULL;
+	}
+
+	SetStates(State::Default);
+
+	return true;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::PostDraw()
+{
+	HRESULT hr;
+	hr = mpData->D3DDevice->EndScene();
+	if (!mpData->IsDeviceLost)
+	{
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DrawElements()
+{
+	// Set up world matrix
+	Matrix4F world;
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
+	mpGeometry->World.GetHomogeneous(world);
+	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
+
+	HRESULT hr;
+	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
+		mpGeometry->GetVBuffer()->GetVertexQuantity(), 0,
+		mpGeometry->GetIBuffer()->GetIndexQuantity()/3);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetCamera(Camera* pCamera)
+{
+	if (!pCamera)
+	{
+		return;
+	}
+
 	mpCamera = pCamera;
 	OnFrameChange();
 	OnViewportChange();
@@ -176,58 +242,6 @@ Bool Renderer::PreDraw(Camera* pCamera)
 	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
 		ViewMatrix));
-
-	HRESULT hr;
-	hr = rDevice->TestCooperativeLevel();
-    
-    switch (hr)
-    {
-    case D3DERR_DEVICELOST:
-		mpData->IsDeviceLost = true;
-		return false;
-
-	case D3DERR_DEVICENOTRESET:
-		mpData->ResetDevice();
-		break;
-    }
-
-    hr = rDevice->BeginScene();
-    WIRE_ASSERT(SUCCEEDED(hr));
-
-	return true;
-}
-
-//----------------------------------------------------------------------------
-void Renderer::PostDraw()
-{
-	HRESULT hr;
-	hr = mpData->D3DDevice->EndScene();
-	if (!mpData->IsDeviceLost)
-	{
-		WIRE_ASSERT(SUCCEEDED(hr));
-	}
-
-	// reset state cache (state is not preserved between End/BeginScene())
-	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
-	{
-		mspStates[i] = NULL;
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DrawElements()
-{
-	// Set up world matrix
-	Matrix4F world;
-	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	mpGeometry->World.GetHomogeneous(world);
-	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
-
-	HRESULT hr;
-	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-		mpGeometry->GetVBuffer()->GetVertexQuantity(), 0,
-		mpGeometry->GetIBuffer()->GetIndexQuantity()/3);
-	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------

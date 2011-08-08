@@ -29,7 +29,7 @@
 
 using namespace Wire;
 
-Renderer* Renderer::smRenderer = NULL;
+Renderer* Renderer::s_pRenderer = NULL;
 
 //----------------------------------------------------------------------------
 void Renderer::Initialize(UInt width, UInt height)
@@ -37,7 +37,7 @@ void Renderer::Initialize(UInt width, UInt height)
 	mWidth = width;
 	mHeight = height;
 	mMaxAnisotropy = 1.0F;
-	smRenderer = this;
+	s_pRenderer = this;
 	mpCamera = NULL;
 	mpGeometry = NULL;
 }
@@ -70,8 +70,8 @@ void Renderer::BindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		smRenderer->Bind(pGeometry->GetIBuffer());
-		smRenderer->Bind(pGeometry->GetVBuffer());
+		s_pRenderer->Bind(pGeometry->GetIBuffer());
+		s_pRenderer->Bind(pGeometry->GetVBuffer());
 
 		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
 		{
@@ -82,7 +82,7 @@ void Renderer::BindAll(const Spatial* pSpatial)
 			{
 				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
 				{
-					smRenderer->Bind(pEffect->Textures[j]);
+					s_pRenderer->Bind(pEffect->Textures[j]);
 				}
 			}
 		}
@@ -109,8 +109,8 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		smRenderer->Unbind(pGeometry->GetIBuffer());
-		smRenderer->Unbind(pGeometry->GetVBuffer());
+		s_pRenderer->Unbind(pGeometry->GetIBuffer());
+		s_pRenderer->Unbind(pGeometry->GetVBuffer());
 
 		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
 		{
@@ -121,7 +121,7 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 			{
 				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
 				{
-					smRenderer->Unbind(pEffect->Textures[j]);
+					s_pRenderer->Unbind(pEffect->Textures[j]);
 				}
 			}
 		}
@@ -159,7 +159,7 @@ void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
 {
-	smRenderer->Unbind(pIndexBuffer);
+	s_pRenderer->Unbind(pIndexBuffer);
 }
 
 //----------------------------------------------------------------------------
@@ -237,7 +237,7 @@ void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
 {
-	smRenderer->Unbind(pVertexBuffer);
+	s_pRenderer->Unbind(pVertexBuffer);
 }
 
 //----------------------------------------------------------------------------
@@ -328,7 +328,7 @@ void Renderer::Unbind(const Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const Texture2D* pTexture)
 {
-	smRenderer->Unbind(pTexture);
+	s_pRenderer->Unbind(pTexture);
 }
 
 //----------------------------------------------------------------------------

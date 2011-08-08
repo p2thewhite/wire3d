@@ -9,10 +9,11 @@
 //----------------------------------------------------------------------------
 template <class T>
 TStack<T>::TStack(Int maxQuantity)
+	:
+	mMaxQuantity(maxQuantity),
+	mTop(-1)
 {
-    WIRE_ASSERT(maxQuantity > 0);
-    mMaxQuantity = maxQuantity;
-    mTop = -1;
+    WIRE_ASSERT(mMaxQuantity > 0);
     mpStack = WIRE_NEW T[mMaxQuantity];
 }
 

@@ -9,17 +9,18 @@
 //----------------------------------------------------------------------------
 template <class T>
 TList<T>::TList()
+	:
+	mpNext(NULL)
 {
-    mpNext = NULL;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 TList<T>::TList(const T& rItem, TList* pNext)
     :
-    mItem(rItem)
+    mItem(rItem),
+	mpNext(pNext)
 {
-    mpNext = pNext;
 }
 
 //----------------------------------------------------------------------------

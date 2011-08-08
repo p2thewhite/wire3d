@@ -114,7 +114,7 @@ Int main(Int argc, Char** argv)
 	Bool isFullscreen = false;
 
 	// register the window class
-	static Char sWindowClass[] = "Wire Application";
+	static Char s_WindowClass[] = "Wire Application";
 	WNDCLASS wc;
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc   = MsWindowEventHandler;
@@ -124,7 +124,7 @@ Int main(Int argc, Char** argv)
 	wc.hIcon         = LoadIcon(0,IDI_APPLICATION);
 	wc.hCursor       = LoadCursor(0,IDC_ARROW);
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	wc.lpszClassName = sWindowClass;
+	wc.lpszClassName = s_WindowClass;
 	wc.lpszMenuName  = 0;
 	RegisterClass(&wc);
 
@@ -133,7 +133,7 @@ Int main(Int argc, Char** argv)
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	// create the application window
-	HWND hWnd = CreateWindow(sWindowClass, "Sample - Custom Main",
+	HWND hWnd = CreateWindow(s_WindowClass, "Sample - Custom Main",
 		WS_OVERLAPPEDWINDOW, 0, 0, rect.right-rect.left+1,
 		rect.bottom-rect.top+1, 0, 0, 0, 0);
 

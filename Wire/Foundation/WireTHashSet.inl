@@ -9,14 +9,14 @@
 //----------------------------------------------------------------------------
 template <class TKEY>
 THashSet<TKEY>::THashSet(UInt tableSize)
+	:
+	UserHashFunction(NULL),
+	mTableSize(tableSize),
+	mQuantity(0)
 {
-    WIRE_ASSERT(tableSize > 0);
-
-    mTableSize = tableSize;
-    mQuantity = 0;
     mpTable = WIRE_NEW HashItem*[mTableSize];
+	WIRE_ASSERT(mpTable);
 	System::Memset(mpTable, 0, mTableSize*sizeof(HashItem*));
-    UserHashFunction = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -163,10 +163,10 @@ UInt THashSet<TKEY>::HashFunction(const TKEY& rKey) const
     }
 
 	// default hash function
-	static Double sHashMultiplier = 0.5 * (MathD::Sqrt(5.0) - 1.0);
+	static Double s_HashMultiplier = 0.5 * (MathD::Sqrt(5.0) - 1.0);
 	UInt key = (UInt)(rKey);
 	key %= mTableSize;
-	Double fraction = MathD::FMod(sHashMultiplier * key, 1.0);
+	Double fraction = MathD::FMod(s_HashMultiplier * key, 1.0);
 	return static_cast<UInt>(MathD::Floor(mTableSize*fraction));
 }
 

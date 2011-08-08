@@ -36,13 +36,13 @@ UInt Random::Get()
 //----------------------------------------------------------------------------
 Float Random::GetFloat()
 {
-	return static_cast<Float>(Get()) / System::MaxUInt;
+	return static_cast<Float>(Get()) / System::MAX_UINT;
 }
 
 //----------------------------------------------------------------------------
 Double Random::GetDouble()
 {
-	return static_cast<Double>(Get()) / System::MaxUInt;
+	return static_cast<Double>(Get()) / System::MAX_UINT;
 }
 
 //----------------------------------------------------------------------------

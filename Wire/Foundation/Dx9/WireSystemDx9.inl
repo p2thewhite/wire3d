@@ -12,24 +12,24 @@
 //----------------------------------------------------------------------------
 Double System::GetTime()
 {
-	static Long sInitialSec = 0;
-	static Long sInitialUSec = 0;
+	static Long s_InitialSec = 0;
+	static Long s_InitialUSec = 0;
 
 	struct timeb tb;
 
-	if (!msInitializedTime)
+	if (!s_InitializedTime)
 	{
-		msInitializedTime = true;
+		s_InitializedTime = true;
 		ftime(&tb);
-		sInitialSec = static_cast<Long>(tb.time);
-		sInitialUSec = 1000 * tb.millitm;
+		s_InitialSec = static_cast<Long>(tb.time);
+		s_InitialUSec = 1000 * tb.millitm;
 	}
 
 	ftime(&tb);
 	Long currentSec = static_cast<Long>(tb.time);
 	Long currentUSec = 1000 * tb.millitm;
-	Long deltaSec = currentSec - sInitialSec;
-	Long deltaUSec = currentUSec - sInitialUSec;
+	Long deltaSec = currentSec - s_InitialSec;
+	Long deltaUSec = currentUSec - s_InitialUSec;
 	if (deltaUSec < 0)
 	{
 		deltaUSec += 1000000;
@@ -128,4 +128,21 @@ Char* System::Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
 	{
 		return NULL;
 	}
+}
+
+//----------------------------------------------------------------------------
+Int System::Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...)
+{
+	if (!pDst || dstSize == 0 || !pFormat)
+	{
+		return -1;
+	}
+
+	va_list args;
+	va_start(args, pFormat);
+
+	Int numWritten = vsprintf_s(pDst, dstSize, pFormat, args);
+
+	va_end(args);
+	return numWritten;
 }

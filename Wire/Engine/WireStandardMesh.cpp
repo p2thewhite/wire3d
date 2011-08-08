@@ -8,9 +8,22 @@
 
 #include "WireStandardMesh.h"
 
+#include "WireImage2D.h"
 #include "WireGeometry.h"
+#include "WireTexture2D.h"
+#include "WireTextureEffect.h"
 
 using namespace Wire;
+
+Texture2DPtr StandardMesh::s_spFontTexture;
+
+WIRE_IMPLEMENT_TERMINATE(StandardMesh);
+
+//----------------------------------------------------------------------------
+void StandardMesh::Terminate()
+{
+	s_spFontTexture = NULL;
+}
 
 //----------------------------------------------------------------------------
 Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
@@ -782,4 +795,84 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	pMesh->ModelBound->SetCenter(Vector3F::ZERO);
 	pMesh->ModelBound->SetRadius(radius);
 	return pMesh;
+}
+
+//----------------------------------------------------------------------------
+Geometry* StandardMesh::CreateText(const Char* pText)
+{
+	if (!pText)
+	{
+		return NULL;
+	}
+
+	UInt textLength = System::Strlen(pText);
+	UInt meshChars = 0;
+	for (UInt i = 0; i < textLength; i++)
+	{
+		if (pText[i] > 32)
+		{
+			meshChars++;
+		}
+	}
+
+	if (meshChars == 0)
+	{
+		return NULL;
+	}
+
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);
+	attributes.SetTCoordChannels(2);
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
+	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
+
+	Float x = 0;
+	Float y = 0;
+	Float xStride = 8;
+	Float yStride = 8;
+	for (UInt i = 0; i < meshChars; i++)
+	{
+		pVBuffer->Position3(i*4) = Vector3F(x, y, 0);
+		pVBuffer->Position3(i*4+1) = Vector3F(x+xStride, y, 0);
+		pVBuffer->Position3(i*4+2) = Vector3F(x+xStride, y+yStride, 0);
+		pVBuffer->Position3(i*4+3) = Vector3F(x, y+yStride, 0);
+
+		pVBuffer->TCoord2(i*4) = Vector2F(0, 0);
+		pVBuffer->TCoord2(i*4+1) = Vector2F(255, 0);
+		pVBuffer->TCoord2(i*4+2) = Vector2F(255, 255);
+		pVBuffer->TCoord2(i*4+3) = Vector2F(0, 255);
+
+		for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
+		{
+			(*pIBuffer)[i*6+j] = indices[j] + i*4;
+		}
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+
+	const UInt texWidth = 256;
+	const UInt texHeight = 256;
+	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
+	for (UInt y = 0; y < texHeight; y++)
+	{
+		for (UInt x = 0; x < texWidth; x++)
+		{
+			pDst[(y*texWidth + x)*4] = 0xFF;	// R
+			pDst[(y*texWidth + x)*4+1] = 0xFF;	// G
+			pDst[(y*texWidth + x)*4+2] = 0xFF;	// B
+			pDst[(y*texWidth + x)*4+3] = 0xFF;
+		}
+	}
+
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
+		texHeight, pDst, false);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	TextureEffect* pEffect = WIRE_NEW TextureEffect;
+	pEffect->Textures.Append(pTexture);
+	pEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
+	pGeo->AttachEffect(pEffect);
+
+
+	return pGeo;
 }

@@ -144,16 +144,16 @@ Int Dx9Application::GetWindowID() const
 //----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {
-	smpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
+	s_pApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// allow work to be done before the window and renderer is created
-	if (!smpApplication->OnPrecreate())
+	if (!s_pApplication->OnPrecreate())
 	{
 		return -1;
 	}
 
 	// register the window class
-	static Char sWindowClass[] = "Wire Application";
+	static Char s_WindowClass[] = "Wire Application";
 	WNDCLASS wc;
 	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc   = WireMsWindowEventHandler;
@@ -163,7 +163,7 @@ Int Dx9Application::Main(Int, Char*[])
 	wc.hIcon         = LoadIcon(0,IDI_APPLICATION);
 	wc.hCursor       = LoadCursor(0,IDC_ARROW);
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
-	wc.lpszClassName = sWindowClass;
+	wc.lpszClassName = s_WindowClass;
 	wc.lpszMenuName  = 0;
 	RegisterClass(&wc);
 
@@ -172,7 +172,7 @@ Int Dx9Application::Main(Int, Char*[])
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	// create the application window
-	HWND hWnd = CreateWindow(sWindowClass, mpWindowTitle,
+	HWND hWnd = CreateWindow(s_WindowClass, mpWindowTitle,
 		WS_OVERLAPPEDWINDOW, mXPosition, mYPosition,
 		rect.right-rect.left+1, rect.bottom-rect.top+1, 0, 0, 0, 0);
 
@@ -184,7 +184,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
-	if (smpApplication->OnInitialize())
+	if (s_pApplication->OnInitialize())
 	{
 		// display the window
 		ShowWindow(hWnd, SW_SHOW);
@@ -212,12 +212,12 @@ Int Dx9Application::Main(Int, Char*[])
 			}
 			else
 			{
-				smpApplication->OnIdle();
+				s_pApplication->OnIdle();
 			}
 		}
 	}
 
-	smpApplication->OnTerminate();
+	s_pApplication->OnTerminate();
 	return 0;
 }
 

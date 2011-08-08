@@ -10,7 +10,7 @@
 
 using namespace Wire;
 
-const Char* String::smpEmpty = "";
+const Char* String::s_pEmpty = "";
 
 //----------------------------------------------------------------------------
 String::String(const Char* pText)
@@ -25,7 +25,7 @@ String::String(const Char* pText)
     else
     {
         mLength = 0;
-		mpText = const_cast<Char*>(smpEmpty);
+		mpText = const_cast<Char*>(s_pEmpty);
     }
 }
 
@@ -52,7 +52,7 @@ String::String(UInt length, const Char* pText)
     }
     else
     {
-		mpText = const_cast<Char*>(smpEmpty);
+		mpText = const_cast<Char*>(s_pEmpty);
     }
 }
 
@@ -66,7 +66,7 @@ String::String(const String& rString)
 //----------------------------------------------------------------------------
 String::~String()
 {
-	if(mpText != smpEmpty)
+	if(mpText != s_pEmpty)
 	{
 		WIRE_DELETE[] mpText;
 	}
@@ -80,7 +80,7 @@ String& String::operator= (const String& rString)
 		return *this;
 	}
 
-	if(mpText != smpEmpty)
+	if(mpText != s_pEmpty)
 	{
 		WIRE_DELETE[] mpText;
 	}
@@ -88,7 +88,7 @@ String& String::operator= (const String& rString)
     mLength = rString.mLength;
 	if (mLength == 0)
 	{
-		mpText = const_cast<Char*>(smpEmpty);
+		mpText = const_cast<Char*>(s_pEmpty);
 		return *this;
 	}
 
@@ -105,7 +105,7 @@ String& String::operator+= (const String& rString)
     const size_t size = mLength + 1;
     Char* pNew = WIRE_NEW Char[size];
     System::Strcpy(pNew,size,mpText);
-	if (mpText != smpEmpty)
+	if (mpText != s_pEmpty)
 	{
 		WIRE_DELETE[] mpText;
 	}

@@ -14,16 +14,16 @@
 //----------------------------------------------------------------------------
 Double System::GetTime()
 {
-	static ULongLong msInitialTicks = 0;
+	static ULongLong s_InitialTicks = 0;
 
-	if (!msInitializedTime)
+	if (!s_InitializedTime)
 	{
-		msInitializedTime = true;
-		msInitialTicks = gettime();
+		s_InitializedTime = true;
+		s_InitialTicks = gettime();
 	}
 
 	ULongLong ticks = gettime();
-	ULongLong deltaTicks = ticks - msInitialTicks;
+	ULongLong deltaTicks = ticks - s_InitialTicks;
 
 	Double deltaSec = static_cast<Double>(ticks_to_millisecs(deltaTicks));
 
@@ -33,9 +33,9 @@ Double System::GetTime()
 //----------------------------------------------------------------------------
 void System::Print(const Char* pFormat, ...)
 {
-	static Bool sIsInitialized = false;
+	static Bool s_IsInitialized = false;
 
-	if (!sIsInitialized)
+	if (!s_IsInitialized)
 	{
 		Application* pApp = Application::GetApplication();
 		Renderer* pRenderer = pApp->GetRenderer();
@@ -46,7 +46,7 @@ void System::Print(const Char* pFormat, ...)
 		// Initialize the console, required for printf
 		console_init(pFrameBuffer, 20, 20, pRMode->fbWidth, pRMode->xfbHeight,
 			pRMode->fbWidth * VI_DISPLAY_PIX_SZ);
-		sIsInitialized = true;
+		s_IsInitialized = true;
 	}
 
 	va_list args;
@@ -158,4 +158,21 @@ Char* System::Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
 
 	strncpy(pDst, pSrc, srcSize);
 	return pDst;
+}
+
+//----------------------------------------------------------------------------
+Int System::Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...)
+{
+	if (!pDst || dstSize == 0 || !pFormat)
+	{
+		return -1;
+	}
+
+	va_list args;
+	va_start(args, pFormat);
+
+	int numWritten = vsprintf(pDst, pFormat, args);
+
+	va_end(args);
+	return numWritten;
 }

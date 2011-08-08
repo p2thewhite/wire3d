@@ -58,7 +58,7 @@ protected:
 		Bool isFullscreen);
 
 	// the unique application object
-	static Application* smpApplication;
+	static Application* s_pApplication;
 
 	Renderer* mpRenderer;
 

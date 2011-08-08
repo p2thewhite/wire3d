@@ -10,6 +10,8 @@
 #ifndef WIRESTANDARDMESH_H
 #define WIRESTANDARDMESH_H
 
+#include "WireMain.h"
+#include "WireTexture2D.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -19,6 +21,8 @@ class Geometry;
 
 class StandardMesh
 {
+	WIRE_DECLARE_TERMINATE;
+
 public:
 	// Helper class for creating standard meshes centered at (0,0,0).
 	// Parameters:
@@ -55,7 +59,14 @@ public:
 	static Geometry* CreateSphere(Int zSampleCount, Int radialSampleCount,
 		Float radius, const UInt uvQuantity = 0,
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
+
+	static Geometry* CreateText(const Char* pText);
+
+private:
+	static Texture2DPtr s_spFontTexture;
 };
+
+WIRE_REGISTER_TERMINATE(StandardMesh);
 
 }
 

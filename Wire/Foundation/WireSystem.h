@@ -47,8 +47,8 @@ namespace Wire
 class System
 {
 public:
-	static UInt MaxUInt;
-	static Int MaxInt;
+	static const UInt MAX_UINT;
+	static const Int MAX_INT;
 
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
@@ -75,12 +75,13 @@ public:
 	static Char* Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
         size_t srcSize);
 	static UInt Strlen(const Char* pString);
+	static Int Sprintf (Char* pDst, size_t dstSize, const Char* pFormat, ...);
 
 	static Int Toupper(Int c);
 	static Int Tolower(Int c);
 
 private:
-	static Bool msInitializedTime;
+	static Bool s_InitializedTime;
 };
 
 }

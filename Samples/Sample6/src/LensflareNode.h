@@ -53,8 +53,8 @@ private:
 	Texture2DPtr mspLensTex1;
 	SpatialPtr mspLightSource;
 
-	static const FlareDef sDefaultDef[];
-	static const Float sScale;
+	static const FlareDef s_DefaultDef[];
+	static const Float s_Scale;
 };
 
 typedef Pointer<LensflareNode> LensflareNodePtr;

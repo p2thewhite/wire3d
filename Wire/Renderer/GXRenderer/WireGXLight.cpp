@@ -16,7 +16,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetLight(const Light* pLight, UInt unit)
 {
-	WIRE_ASSERT(unit < PdrRendererData::MaxLights);
+	WIRE_ASSERT(unit < PdrRendererData::MAXLIGHTS);
 
 	Bool useLight = pLight ? pLight->Enabled : false;
 	if (!useLight)
@@ -51,8 +51,8 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	{
 		Light* pL = const_cast<Light*>(pLight);
 		Vec lightDir = *(reinterpret_cast<Vec*>(&pL->Direction));
-		static Vec zero = {0, 0, 0};
-		VECSubtract(&zero, &lightDir, &lightDir);
+		static Vec s_zero = {0, 0, 0};
+		VECSubtract(&s_zero, &lightDir, &lightDir);
 		lightDir.x = lightDir.x * 1000000;
 		lightDir.y = lightDir.y * 1000000;
 		lightDir.z = lightDir.z * 1000000;

@@ -58,7 +58,7 @@ inline UInt Image2D::GetBytesPerPixel() const
 //----------------------------------------------------------------------------
 inline UInt Image2D::GetBytesPerPixel(FormatMode format)
 {
-	return sImageBpp[format];
+	return s_ImageBpp[format];
 }
 
 //----------------------------------------------------------------------------

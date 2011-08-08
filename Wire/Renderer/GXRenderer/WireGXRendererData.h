@@ -63,7 +63,7 @@ public:
 	// Transforms world space to camera space.
 	Matrix34F ViewMatrix;
 
-	static const UInt MaxLights = 8;
+	static const UInt MAXLIGHTS = 8;
 	UInt FrameBufferIndex;
 	Bool IsFrameBufferDirty;
 
