@@ -158,10 +158,10 @@ void Sample8::CreateGameObjects()
 	// create a stack of boxes
 	Bool switchX = false;
 	Float y = -3.25F;
-	for (UInt yCount = 0; yCount < smBoxCountY;	yCount++)
+	for (UInt yCount = 0; yCount < s_BoxCountY;	yCount++)
 	{
-		Float x = static_cast<Float>(smBoxCountX)*-0.5F;
-		for (UInt xCount = 0; xCount < smBoxCountX; xCount++)
+		Float x = static_cast<Float>(s_BoxCountX)*-0.5F;
+		for (UInt xCount = 0; xCount < s_BoxCountX; xCount++)
 		{
 			const Float extent = 0.5F;
 			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, extent);

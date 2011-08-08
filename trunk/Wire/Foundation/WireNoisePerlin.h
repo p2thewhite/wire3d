@@ -22,8 +22,8 @@ class NoisePerlinBase
 	WIRE_DECLARE_INITIALIZE;
 
 protected:
-	static const Int smPermutation[];
-	static Int smP[];
+	static const Int s_Permutation[];
+	static Int s_P[];
 };
 
 WIRE_REGISTER_INITIALIZE(NoisePerlinBase);

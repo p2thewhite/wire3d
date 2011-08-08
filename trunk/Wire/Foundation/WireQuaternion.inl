@@ -368,9 +368,9 @@ Quaternion<Real>& Quaternion<Real>::FromRotationMatrix(
 			i = 2;
 		}
 
-		static const UInt next[3] = { 1, 2, 0 };
-		UInt j = next[i];
-		UInt k = next[j];
+		static const UInt s_next[3] = { 1, 2, 0 };
+		UInt j = s_next[i];
+		UInt k = s_next[j];
 
 		root = Math<Real>::Sqrt(rRot(i,i)-rRot(j,j)-rRot(k,k)+
 			static_cast<Real>(1.0));

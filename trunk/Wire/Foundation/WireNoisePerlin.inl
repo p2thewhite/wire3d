@@ -16,17 +16,17 @@ Real NoisePerlin<Real>::Noise(Real x, Real y)
 	y -= Math<Real>::Floor(y);
 	Real u = Fade(x);
 	Real v = Fade(y);
-	Int A = smP[X] + Y;
-	Int	AA = smP[A];
-	Int AB = smP[A+1];
-	Int B = smP[X+1] + Y;
-	Int BA = smP[B];
-	Int BB = smP[B+1];
+	Int A = s_P[X] + Y;
+	Int	AA = s_P[A];
+	Int AB = s_P[A+1];
+	Int B = s_P[X+1] + Y;
+	Int BA = s_P[B];
+	Int BB = s_P[B+1];
 
-	return Lerp(v, Lerp(u, Grad(smP[AA], x, y, 0),
-		                   Grad(smP[BA], x-1, y, 0)),
-		           Lerp(u, Grad(smP[AB], x, y-1, 0),
-		                   Grad(smP[BB], x-1, y-1, 0)));
+	return Lerp(v, Lerp(u, Grad(s_P[AA], x, y, 0),
+		                   Grad(s_P[BA], x-1, y, 0)),
+		           Lerp(u, Grad(s_P[AB], x, y-1, 0),
+		                   Grad(s_P[BB], x-1, y-1, 0)));
 }
 
 //----------------------------------------------------------------------------
@@ -42,21 +42,21 @@ Real NoisePerlin<Real>::Noise(Real x, Real y, Real z)
 	Real u = Fade(x);                                /* COMPUTE FADE CURVES */
 	Real v = Fade(y);                                /* FOR EACH OF X,Y,Z.  */
 	Real w = Fade(z);
-	Int A = smP[X] + Y; 
-	Int	AA = smP[A] + Z;
-	Int AB = smP[A+1] + Z;					         /* HASH COORDINATES OF */
-	Int B = smP[X+1] + Y; 
-	Int BA = smP[B] + Z;
-	Int BB = smP[B+1] + Z;					         /* THE 8 CUBE CORNERS, */
+	Int A = s_P[X] + Y; 
+	Int	AA = s_P[A] + Z;
+	Int AB = s_P[A+1] + Z;					         /* HASH COORDINATES OF */
+	Int B = s_P[X+1] + Y; 
+	Int BA = s_P[B] + Z;
+	Int BB = s_P[B+1] + Z;					         /* THE 8 CUBE CORNERS, */
 
-	return Lerp(w, Lerp(v, Lerp(u, Grad(smP[AA], x, y, z),       /* AND ADD */
-                                   Grad(smP[BA], x-1, y, z)),    /* BLENDED */
-                           Lerp(u, Grad(smP[AB], x, y-1, z),     /* RESULTS */
-                                   Grad(smP[BB], x-1, y-1, z))), /* FROM  8 */
-                   Lerp(v, Lerp(u, Grad(smP[AA+1], x, y, z-1 ),  /* CORNERS */
-                                   Grad(smP[BA+1], x-1, y, z-1)),/* OF CUBE */
-                           Lerp(u, Grad(smP[AB+1], x, y-1, z-1),
-                                   Grad(smP[BB+1], x-1, y-1, z-1))));
+	return Lerp(w, Lerp(v, Lerp(u, Grad(s_P[AA], x, y, z),       /* AND ADD */
+                                   Grad(s_P[BA], x-1, y, z)),    /* BLENDED */
+                           Lerp(u, Grad(s_P[AB], x, y-1, z),     /* RESULTS */
+                                   Grad(s_P[BB], x-1, y-1, z))), /* FROM  8 */
+                   Lerp(v, Lerp(u, Grad(s_P[AA+1], x, y, z-1 ),  /* CORNERS */
+                                   Grad(s_P[BA+1], x-1, y, z-1)),/* OF CUBE */
+                           Lerp(u, Grad(s_P[AB+1], x, y-1, z-1),
+                                   Grad(s_P[BB+1], x-1, y-1, z-1))));
 }
 
 //----------------------------------------------------------------------------

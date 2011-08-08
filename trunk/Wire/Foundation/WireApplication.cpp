@@ -11,7 +11,7 @@
 
 using namespace Wire;
 
-Application* Application::smpApplication = NULL;
+Application* Application::s_pApplication = NULL;
 
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA backgroundColor, const Char*
@@ -37,13 +37,13 @@ Application::~Application()
 //----------------------------------------------------------------------------
 void Application::SetApplication(Application* pApplication)
 {
-	smpApplication = pApplication;
+	s_pApplication = pApplication;
 }
 
 //----------------------------------------------------------------------------
 Application* Application::GetApplication()
 {
-	return smpApplication;
+	return s_pApplication;
 }
 
 //----------------------------------------------------------------------------

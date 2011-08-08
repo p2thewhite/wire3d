@@ -12,7 +12,7 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Image2D, Object);
 
-const UChar Image2D::sImageBpp[] =
+const UChar Image2D::s_ImageBpp[] =
 {
 	3,	// FM_RGB888,
 	4,	// FM_RGBA8888,

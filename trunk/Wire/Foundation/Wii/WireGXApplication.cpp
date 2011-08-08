@@ -36,7 +36,7 @@ GXApplication::~GXApplication()
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
 	// allow work to be done before the renderer is created
-	if (!smpApplication->OnPrecreate())
+	if (!s_pApplication->OnPrecreate())
 	{
 		return -1;
 	}
@@ -44,21 +44,21 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	PdrRendererInput input;
 	input.BackgroundColor = mBackgroundColor;
 	mpRenderer = WIRE_NEW Renderer(input, 0, 0, mIsFullscreen);
-	smpApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
+	s_pApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// VIInit must be called before PADInit
 	PADInit();
 	WPAD_ScanPads();
-	if (smpApplication->OnInitialize())
+	if (s_pApplication->OnInitialize())
 	{
-		while (!(WPAD_ButtonsDown(0) & smpApplication->KEY_TERMINATE))
+		while (!(WPAD_ButtonsDown(0) & s_pApplication->KEY_TERMINATE))
 		{
-			smpApplication->OnIdle();
+			s_pApplication->OnIdle();
 			WPAD_ScanPads();
 		}
 	}
 
-	smpApplication->OnTerminate();
+	s_pApplication->OnTerminate();
 
 	return 0;
 }

@@ -84,8 +84,8 @@ private:
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 
-	static const UInt smBoxCountX = 5;
-	static const UInt smBoxCountY = 6;
+	static const UInt s_BoxCountX = 5;
+	static const UInt s_BoxCountY = 6;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample8);

@@ -30,7 +30,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	:
 	mMaxAnisotropy(4.0F),
 	mMaxTextureStages(8),
-	mMaxLights(PdrRendererData::MaxLights),
+	mMaxLights(PdrRendererData::MAXLIGHTS),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mTexture2DMap(256)
@@ -125,15 +125,7 @@ Renderer::~Renderer()
 //----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
-	mpCamera = pCamera;
-	OnFrameChange();
-	OnViewportChange();
-
-	Mtx44 perspective;
-	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
-		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
-		pCamera->GetDMax());
-	GXSetProjection(perspective, GX_PERSPECTIVE);
+	SetCamera(pCamera);
 
 	// Invalidate texture cache in GP
 	GXInvalidateTexAll();
@@ -252,6 +244,25 @@ void Renderer::DrawElements()
 			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetCamera(Camera* pCamera)
+{
+	if (!pCamera)
+	{
+		return;
+	}
+
+	mpCamera = pCamera;
+	OnFrameChange();
+	OnViewportChange();
+
+	Mtx44 perspective;
+	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
+		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
+		pCamera->GetDMax());
+	GXSetProjection(perspective, GX_PERSPECTIVE);
 }
 
 //----------------------------------------------------------------------------

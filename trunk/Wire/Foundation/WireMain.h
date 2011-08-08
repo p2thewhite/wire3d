@@ -30,8 +30,8 @@ public:
 	static void Terminate();
 
 private:
-	static InitializerArray* smpInitializers;
-	static TerminatorArray* smpTerminators;
+	static InitializerArray* s_pInitializers;
+	static TerminatorArray* s_pTerminators;
 };
 
 }
@@ -42,7 +42,7 @@ public:                                                                      \
 	static Bool RegisterInitialize();                                        \
 	static void Initialize();                                                \
 private:                                                                     \
-	static Bool msInitializeRegistered
+	static Bool s_InitializeRegistered
 
 //----------------------------------------------------------------------------
 #define WIRE_DECLARE_TERMINATE                                               \
@@ -50,44 +50,44 @@ public:                                                                      \
 	static Bool RegisterTerminate();                                         \
 	static void Terminate();                                                 \
 private:                                                                     \
-	static Bool msTerminateRegistered
+	static Bool s_TerminateRegistered
 
 //----------------------------------------------------------------------------
 #define WIRE_REGISTER_INITIALIZE(classname)                                  \
-static Bool gsInitializeRegistered##classname =                              \
+static Bool gs_InitializeRegistered##classname =                             \
 	classname::RegisterInitialize()
 
 //----------------------------------------------------------------------------
 #define WIRE_REGISTER_TERMINATE(classname)                                   \
-	static Bool gsTerminateRegistered##classname =                           \
+static Bool gs_TerminateRegistered##classname =                              \
 	classname::RegisterTerminate()
 
 //----------------------------------------------------------------------------
 #define WIRE_IMPLEMENT_INITIALIZE(classname)                                 \
-Bool classname::msInitializeRegistered = false;                              \
+Bool classname::s_InitializeRegistered = false;                              \
 Bool classname::RegisterInitialize()                                         \
 {                                                                            \
-	if (!msInitializeRegistered)                                             \
+	if (!s_InitializeRegistered)                                             \
 	{                                                                        \
 		Main::AddInitializer(classname::Initialize);                         \
-		msInitializeRegistered = true;                                       \
+		s_InitializeRegistered = true;                                       \
 	}                                                                        \
                                                                              \
-	return msInitializeRegistered;                                           \
+	return s_InitializeRegistered;                                           \
 }
 
 //----------------------------------------------------------------------------
 #define WIRE_IMPLEMENT_TERMINATE(classname)                                  \
-Bool classname::msTerminateRegistered = false;                               \
+Bool classname::s_TerminateRegistered = false;                               \
 Bool classname::RegisterTerminate()                                          \
 {                                                                            \
-	if (!msTerminateRegistered)                                              \
+	if (!s_TerminateRegistered)                                              \
 	{                                                                        \
 		Main::AddTerminator(classname::Terminate);                           \
-		msTerminateRegistered = true;                                        \
+		s_TerminateRegistered = true;                                        \
 	}                                                                        \
 	                                                                         \
-	return msTerminateRegistered;                                            \
+	return s_TerminateRegistered;                                            \
 }
 
 //----------------------------------------------------------------------------

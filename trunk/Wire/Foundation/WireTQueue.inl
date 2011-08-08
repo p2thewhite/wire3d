@@ -15,7 +15,6 @@ TQueue<T>::TQueue(UInt maxQuantity)
 	mFront(0),
 	mIsEmpty(true)
 {
-    WIRE_ASSERT(maxQuantity > 0);
     mpQueue = WIRE_NEW T[mMaxQuantity];
 }
 

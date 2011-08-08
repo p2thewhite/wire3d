@@ -44,7 +44,7 @@ private:
 	
 	UInt mLength;
 	Char* mpText;
-	static const Char* smpEmpty;
+	static const Char* s_pEmpty;
 };
 
 #include "WireString.inl"

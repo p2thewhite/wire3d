@@ -10,57 +10,57 @@
 
 using namespace Wire;
 
-Main::InitializerArray* Main::smpInitializers = NULL;
-Main::TerminatorArray* Main::smpTerminators = NULL;
+Main::InitializerArray* Main::s_pInitializers = NULL;
+Main::TerminatorArray* Main::s_pTerminators = NULL;
 
 //----------------------------------------------------------------------------
 void Main::AddInitializer(Initializer initializer)
 {
-	if (!smpInitializers)
+	if (!s_pInitializers)
 	{
-		smpInitializers = WIRE_NEW InitializerArray(10, 10);
+		s_pInitializers = WIRE_NEW InitializerArray(10, 10);
 	}
 
-	smpInitializers->Append(initializer);
+	s_pInitializers->Append(initializer);
 }
 
 //----------------------------------------------------------------------------
 void Main::AddTerminator(Terminator terminator)
 {
-	if (!smpTerminators)
+	if (!s_pTerminators)
 	{
-		smpTerminators = WIRE_NEW TerminatorArray(10, 10);
+		s_pTerminators = WIRE_NEW TerminatorArray(10, 10);
 	}
 
-	smpTerminators->Append(terminator);
+	s_pTerminators->Append(terminator);
 }
 
 //----------------------------------------------------------------------------
 void Main::Initialize()
 {
-	if (smpInitializers)
+	if (s_pInitializers)
 	{
-		for (UInt i = 0; i < smpInitializers->GetQuantity(); i++)
+		for (UInt i = 0; i < s_pInitializers->GetQuantity(); i++)
 		{
-			(*smpInitializers)[i]();
+			(*s_pInitializers)[i]();
 		}
 	}
 
-	WIRE_DELETE smpInitializers;
-	smpInitializers = NULL;
+	WIRE_DELETE s_pInitializers;
+	s_pInitializers = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Main::Terminate()
 {
-	if (smpTerminators)
+	if (s_pTerminators)
 	{
-		for (UInt i = 0; i < smpTerminators->GetQuantity(); i++)
+		for (UInt i = 0; i < s_pTerminators->GetQuantity(); i++)
 		{
-			(*smpTerminators)[i]();
+			(*s_pTerminators)[i]();
 		}
 	}
 
-	WIRE_DELETE smpTerminators;
-	smpTerminators = NULL;
+	WIRE_DELETE s_pTerminators;
+	s_pTerminators = NULL;
 }

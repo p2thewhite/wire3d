@@ -71,7 +71,7 @@ private:
 	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 
-	static const UChar sImageBpp[];
+	static const UChar s_ImageBpp[];
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];

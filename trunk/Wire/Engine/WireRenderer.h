@@ -99,10 +99,11 @@ public:
 	// Platform-dependent portion of the Renderer
 
 	// Support for predraw and postdraw semantics.
-	Bool PreDraw(Camera* pCamera);
+	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
 
 	// Apply camera changes to platform specific renderer.
+	void SetCamera(Camera* pCamera);
 	void OnFrameChange();
 	void OnViewportChange();
 
@@ -177,7 +178,7 @@ private:
 	UInt mMaxTextureStages;
 	UInt mMaxLights;
 
-	static Renderer* smRenderer;
+	static Renderer* s_pRenderer;
 
 	friend class PdrRendererData;
 	PdrRendererData* mpData;

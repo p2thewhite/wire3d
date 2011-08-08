@@ -84,8 +84,8 @@ void Sample7::OnIdle()
 Geometry* Sample7::CreateGeometry()
 {
 	// Create a PQ torus knot, which we will later animate per frame.
-	const UInt shapeCount = smShapeCount+1;
-	const UInt segmentCount = smSegmentCount+1;
+	const UInt shapeCount = s_ShapeCount+1;
+	const UInt segmentCount = s_SegmentCount+1;
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
@@ -188,10 +188,10 @@ Geometry* Sample7::CreateGeometry()
 void Sample7::GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle)
 {
 	const Float shapeRadius = 0.2F * (MathF::Sin(radiusAngle) * 0.25F + 1.0F);
-	const UInt p = smP;
-	const UInt q = smQ;
-	const UInt shapeCount = smShapeCount+1;
-	const UInt segmentCount = smSegmentCount+1;
+	const UInt p = s_P;
+	const UInt q = s_Q;
+	const UInt shapeCount = s_ShapeCount+1;
+	const UInt segmentCount = s_SegmentCount+1;
 
 	// create the inner shape (i.e. a circle)
 	TArray<Vector3F> shape(shapeCount);

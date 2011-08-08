@@ -20,9 +20,9 @@ using namespace Wire;
 #include "Dx9/WireSystemDx9.inl"
 #endif
 
-Bool System::msInitializedTime = false;
-UInt System::MaxUInt = UINT_MAX;
-Int System::MaxInt = INT_MAX;
+Bool System::s_InitializedTime = false;
+const UInt System::MAX_UINT = UINT_MAX;
+const Int System::MAX_INT = INT_MAX;
 
 //----------------------------------------------------------------------------
 void* System::Memcpy(void* pDst, size_t dstSize, const void* pSrc,

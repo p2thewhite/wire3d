@@ -27,10 +27,10 @@ private:
 	Float mAngle;
 	Double mLastTime;
 
-	static const UInt smShapeCount = 24;
-	static const UInt smSegmentCount = 192;
-	static const UInt smP = 3;
-	static const UInt smQ = 2;
+	static const UInt s_ShapeCount = 24;
+	static const UInt s_SegmentCount = 192;
+	static const UInt s_P = 3;
+	static const UInt s_Q = 2;
 	TArray<TArray<UInt> > mBuckets;
 
 };
