@@ -95,8 +95,8 @@ public:
 	Matrix3 TimesDiagonal(const Vector3<Real>& rDiag) const;
 
 	// special matrices
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix3 ZERO;
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix3 IDENTITY;
+	static const Matrix3 ZERO;
+	static const Matrix3 IDENTITY;
 
 private:
     Real mEntry[9];

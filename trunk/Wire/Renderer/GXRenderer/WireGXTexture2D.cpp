@@ -16,7 +16,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sImage2DFormat[Image2D::FM_QUANTITY] =
+const UChar PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_QUANTITY] =
 {
 	GX_TF_RGBA8,	// Image2D::FM_RGB888
 	GX_TF_RGBA8,	// Image2D::FM_RGBA8888
@@ -24,7 +24,7 @@ UChar PdrRendererData::sImage2DFormat[Image2D::FM_QUANTITY] =
 	GX_TF_RGB5A3,	// Image2D::FM_RGBA4444
 };
 
-UChar PdrRendererData::sTexMinFilter[Texture2D::FT_QUANTITY] =
+const UChar PdrRendererData::TEX_MIN_FILTER[Texture2D::FT_QUANTITY] =
 {
 	GX_NEAR,			// Texture2D::FT_NEAREST
 	GX_LINEAR,			// Texture2D::FT_LINEAR
@@ -34,7 +34,7 @@ UChar PdrRendererData::sTexMinFilter[Texture2D::FT_QUANTITY] =
 	GX_LIN_MIP_LIN,		// Texture2D::FT_LINEAR_LINEAR
 };
 
-UChar PdrRendererData::sTexWrapMode[Texture2D::WT_QUANTITY] =
+const UChar PdrRendererData::TEX_WRAP_MODE[Texture2D::WT_QUANTITY] =
 {
 	GX_CLAMP,	// Texture2D::WT_CLAMP
 	GX_REPEAT,	// Texture2D::WT_REPEAT
@@ -102,9 +102,9 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	UShort height = pImage->GetBound(1);
 	UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
 	GXInitTexObj(&mTexObj, mpImage, width, height,
-		PdrRendererData::sImage2DFormat[format],
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(0)],
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(1)],
+		PdrRendererData::IMAGE2D_FORMAT[format],
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)],
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)],
 		usesMipmaps);
 }
 
@@ -128,8 +128,8 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 		color);
 
 	GXInitTexObjWrapMode(&mTexObj,
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(0)],
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(1)]);
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)],
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)]);
 
 	Float anisotropy = static_cast<UInt>(pTexture->GetAnisotropyValue());
 	UChar anisoEnum = GX_ANISO_1;
@@ -142,7 +142,7 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 
 	UChar magFilter = pTexture->GetFilterType() == Texture2D::FT_NEAREST ?
 		GX_NEAR : GX_LINEAR;
-	GXInitTexObjLOD(&mTexObj, PdrRendererData::sTexMinFilter[pTexture->
+	GXInitTexObjLOD(&mTexObj, PdrRendererData::TEX_MIN_FILTER[pTexture->
 		GetFilterType()], magFilter, 0, 10.0F, 0, GX_FALSE, doEdgeLod,
 		anisoEnum);
 

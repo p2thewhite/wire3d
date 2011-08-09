@@ -85,11 +85,11 @@ public:
 	static void GenerateComplementBasis(Vector3& rU, Vector3& rV,
 		const Vector3& rW);
 
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ZERO;    // (0,0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_X;  // (1,0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_Y;  // (0,1,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 UNIT_Z;  // (0,0,1)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector3 ONE;     // (1,1,1)
+	static const Vector3 ZERO;    // (0,0,0)
+	static const Vector3 UNIT_X;  // (1,0,0)
+	static const Vector3 UNIT_Y;  // (0,1,0)
+	static const Vector3 UNIT_Z;  // (0,0,1)
+	static const Vector3 ONE;     // (1,1,1)
 
 private:
 #ifdef WIRE_WII

@@ -81,8 +81,8 @@ public:
 	Matrix2 Inverse() const;
 
 	// special matrices
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix2 ZERO;
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix2 IDENTITY;
+	static const Matrix2 ZERO;
+	static const Matrix2 IDENTITY;
 
 private:
 	Real mEntry[4];

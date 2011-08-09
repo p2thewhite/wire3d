@@ -74,8 +74,8 @@ public:
 	Matrix4 Inverse() const;
 
 	// special matrices
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix4 ZERO;
-	/*WIRE_FOUNDATION_ITEM*/ static const Matrix4 IDENTITY;
+	static const Matrix4 ZERO;
+	static const Matrix4 IDENTITY;
 
 private:
 	Real mEntry[16];

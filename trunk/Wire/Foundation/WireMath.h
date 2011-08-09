@@ -38,13 +38,13 @@ public:
 	static Real Clamp(Real min, Real value, Real max);
 
 	// common constants
-	/*WIRE_FOUNDATION_ITEM*/ static const Real MAX_REAL;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real PI;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real TWO_PI;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real HALF_PI;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real DEG_TO_RAD;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real RAD_TO_DEG;
-	/*WIRE_FOUNDATION_ITEM*/ static const Real ZERO_TOLERANCE;
+	static const Real MAX_REAL;
+	static const Real PI;
+	static const Real TWO_PI;
+	static const Real HALF_PI;
+	static const Real DEG_TO_RAD;
+	static const Real RAD_TO_DEG;
+	static const Real ZERO_TOLERANCE;
 };
 
 #include "WireMath.inl"

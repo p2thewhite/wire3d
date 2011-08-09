@@ -323,7 +323,7 @@ void Renderer::Resize(UInt width, UInt height)
 }
 
 //----------------------------------------------------------------------------
-DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] = 
+const DWORD PdrRendererData::BUFFER_LOCKING[Buffer::LM_QUANTITY] = 
 {
 	D3DLOCK_READONLY,           // Buffer::LM_READ_ONLY
 	D3DLOCK_DISCARD,            // Buffer::LM_WRITE_ONLY
@@ -331,7 +331,7 @@ DWORD PdrRendererData::sBufferLocking[Buffer::LM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-D3DPOOL PdrRendererData::sPools[Buffer::UT_QUANTITY] =
+const D3DPOOL PdrRendererData::POOLS[Buffer::UT_QUANTITY] =
 {
 	D3DPOOL_MANAGED,	// Buffer::UT_STATIC
 	D3DPOOL_DEFAULT,	// Buffer::UT_DYNAMIC
@@ -339,7 +339,7 @@ D3DPOOL PdrRendererData::sPools[Buffer::UT_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-DWORD PdrRendererData::sUsages[Buffer::UT_QUANTITY] =
+const DWORD PdrRendererData::USAGES[Buffer::UT_QUANTITY] =
 {
 	D3DUSAGE_WRITEONLY,						// Buffer::UT_STATIC
 	D3DUSAGE_DYNAMIC,						// Buffer::UT_DYNAMIC
@@ -367,7 +367,7 @@ void DestroyNonManagedResources(THashTable<const Resource*,
 		pValue = it.GetNext(&pKey))
 	{
 		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
-		if (PdrRendererData::sPools[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
+		if (PdrRendererData::POOLS[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
 		{
 			WIRE_DELETE *pValue;
 			rSave.Append(pKey);

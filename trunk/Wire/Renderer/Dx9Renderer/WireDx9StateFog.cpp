@@ -12,7 +12,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sFogDensity[StateFog::DF_QUANTITY] = 
+const DWORD PdrRendererData::FOG_DENSITY[StateFog::DF_QUANTITY] = 
 {
 	D3DFOG_LINEAR,  // StateFog::DF_LINEAR
 	D3DFOG_EXP,     // StateFog::DF_EXP
@@ -51,13 +51,13 @@ void Renderer::SetState(StateFog* pState)
 //		if (pState->ApplyFunction == StateFog::AF_PER_PIXEL)
 // 		{
 // 			hr = rDevice->SetRenderState(D3DRS_FOGTABLEMODE,
-// 				PdrRendererData::sFogDensity[pState->DensityFunc]);
+// 				PdrRendererData::FOG_DENSITY[pState->DensityFunc]);
 // 			WIRE_ASSERT(SUCCEEDED(hr));
 // 		}
 // 		else
 // 		{
 			hr = rDevice->SetRenderState(D3DRS_FOGVERTEXMODE,
-				PdrRendererData::sFogDensity[pState->DensityFunc]);    
+				PdrRendererData::FOG_DENSITY[pState->DensityFunc]);    
 			WIRE_ASSERT(SUCCEEDED(hr));
 // 		}
 	}

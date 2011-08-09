@@ -14,7 +14,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sTexBlend[TextureEffect::BM_QUANTITY * 8] =
+const DWORD PdrRendererData::TEX_BLEND[TextureEffect::BM_QUANTITY * 8] =
 {
 	// TextureEffect::BM_REPLACE
 	1, D3DTOP_SELECTARG1, D3DTA_TEXTURE, 0,
@@ -53,13 +53,13 @@ void Renderer::ApplyEffect(const TextureEffect* pEffect)
 	for (UInt unit = 0; unit < pEffect->BlendOps.GetQuantity(); unit++)
 	{
 		UInt idx = pEffect->BlendOps[unit] * 8;
-		const UInt argColorCount = PdrRendererData::sTexBlend[idx];
+		const UInt argColorCount = PdrRendererData::TEX_BLEND[idx];
 
-		DWORD colorOp = PdrRendererData::sTexBlend[idx+1];
+		DWORD colorOp = PdrRendererData::TEX_BLEND[idx+1];
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, colorOp);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		DWORD colorA1 = PdrRendererData::sTexBlend[idx+2];
+		DWORD colorA1 = PdrRendererData::TEX_BLEND[idx+2];
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG1, colorA1);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -71,7 +71,7 @@ void Renderer::ApplyEffect(const TextureEffect* pEffect)
 
 			if (argColorCount > 2)
 			{
-				DWORD colorA0 = PdrRendererData::sTexBlend[idx+3];
+				DWORD colorA0 = PdrRendererData::TEX_BLEND[idx+3];
 				hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG0,
 					colorA0);
 				WIRE_ASSERT(SUCCEEDED(hr));
@@ -85,12 +85,12 @@ void Renderer::ApplyEffect(const TextureEffect* pEffect)
 			idx = TextureEffect::BM_PASS * 8;
 		}
 
-		const UInt argAlphaCount = PdrRendererData::sTexBlend[idx+4];
-		DWORD alphaOp = PdrRendererData::sTexBlend[idx+5];
+		const UInt argAlphaCount = PdrRendererData::TEX_BLEND[idx+4];
+		DWORD alphaOp = PdrRendererData::TEX_BLEND[idx+5];
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP, alphaOp);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		DWORD alphaA0 = PdrRendererData::sTexBlend[idx+6];
+		DWORD alphaA0 = PdrRendererData::TEX_BLEND[idx+6];
 		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAARG1, alphaA0);
 		WIRE_ASSERT(SUCCEEDED(hr));
 

@@ -63,10 +63,10 @@ public:
 	// perpendicular).
 	static void Orthonormalize(Vector2& rU, Vector2& rV);
 
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 ZERO;    // (0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 UNIT_X;  // (1,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 UNIT_Y;  // (0,1)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector2 ONE;     // (1,1)
+	static const Vector2 ZERO;    // (0,0)
+	static const Vector2 UNIT_X;  // (1,0)
+	static const Vector2 UNIT_Y;  // (0,1)
+	static const Vector2 ONE;     // (1,1)
 
 private:
 	Real mTuple[2];

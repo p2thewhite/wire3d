@@ -48,12 +48,13 @@ void Renderer::Terminate()
 	DestroyAllIndexBuffers();
 	DestroyAllVertexBuffers();
 	DestroyAllTexture2Ds();
+	s_pRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::BindAll(const Spatial* pSpatial)
 {
-	if (!pSpatial)
+	if (!pSpatial || !s_pRenderer)
 	{
 		return;
 	}
@@ -92,7 +93,7 @@ void Renderer::BindAll(const Spatial* pSpatial)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const Spatial* pSpatial)
 {
-	if (!pSpatial)
+	if (!pSpatial || !s_pRenderer)
 	{
 		return;
 	}
@@ -159,7 +160,10 @@ void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
 {
-	s_pRenderer->Unbind(pIndexBuffer);
+	if (s_pRenderer)
+	{
+		s_pRenderer->Unbind(pIndexBuffer);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -237,7 +241,10 @@ void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
 {
-	s_pRenderer->Unbind(pVertexBuffer);
+	if (s_pRenderer)
+	{
+		s_pRenderer->Unbind(pVertexBuffer);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -328,7 +335,10 @@ void Renderer::Unbind(const Texture2D* pTexture)
 //----------------------------------------------------------------------------
 void Renderer::UnbindAll(const Texture2D* pTexture)
 {
-	s_pRenderer->Unbind(pTexture);
+	if (s_pRenderer)
+	{
+		s_pRenderer->Unbind(pTexture);
+	}
 }
 
 //----------------------------------------------------------------------------

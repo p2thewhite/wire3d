@@ -12,7 +12,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] = 
+const UChar PdrRendererData::ZBUFFER_COMPARE[StateZBuffer::CF_QUANTITY] = 
 {
 	GX_NEVER,     // StateZBuffer::CF_NEVER
 	GX_LESS,      // StateZBuffer::CF_LESS
@@ -32,6 +32,6 @@ void Renderer::SetState(StateZBuffer* pState)
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;
 	UChar writable = pState->Writable ? GX_TRUE : GX_FALSE;
 
-	GXSetZMode(enable, PdrRendererData::sZBufferCompare[pState->Compare],
+	GXSetZMode(enable, PdrRendererData::ZBUFFER_COMPARE[pState->Compare],
 		writable);
 }
