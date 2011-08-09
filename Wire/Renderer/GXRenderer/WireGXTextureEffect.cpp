@@ -13,7 +13,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sTexBlend[TextureEffect::BM_QUANTITY] =
+const UChar PdrRendererData::TEX_BLEND[TextureEffect::BM_QUANTITY] =
 {
 	GX_REPLACE,			// TextureEffect::BM_REPLACE
 	GX_MODULATE,		// TextureEffect::BM_MODULATE
@@ -32,7 +32,7 @@ void Renderer::ApplyEffect(const TextureEffect* pEffect)
 
 	for (UInt unit = 0; unit < textureCount; unit++)
 	{
-		GXSetTevOp(GX_TEVSTAGE0 + unit, PdrRendererData::sTexBlend[pEffect->
+		GXSetTevOp(GX_TEVSTAGE0 + unit, PdrRendererData::TEX_BLEND[pEffect->
 			BlendOps[unit]]);
 	}
 

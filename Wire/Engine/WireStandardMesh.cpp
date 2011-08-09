@@ -820,6 +820,27 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 		return NULL;
 	}
 
+	if (!s_spFontTexture)
+	{
+		const UInt texWidth = 256;
+		const UInt texHeight = 256;
+		UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
+		for (UInt y = 0; y < texHeight; y++)
+		{
+			for (UInt x = 0; x < texWidth; x++)
+			{
+				pDst[(y*texWidth + x)*4] = (UChar)y;	// R
+				pDst[(y*texWidth + x)*4+1] = (UChar)y;	// G
+				pDst[(y*texWidth + x)*4+2] = (UChar)y;	// B
+				pDst[(y*texWidth + x)*4+3] = (UChar)y;
+			}
+		}
+
+		Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
+			texHeight, pDst, false);
+		s_spFontTexture = WIRE_NEW Texture2D(pImage);
+	}
+
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
 	attributes.SetTCoordChannels(2);
@@ -833,46 +854,39 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 	Float yStride = 8;
 	for (UInt i = 0; i < meshChars; i++)
 	{
-		pVBuffer->Position3(i*4) = Vector3F(x, y, 0);
-		pVBuffer->Position3(i*4+1) = Vector3F(x+xStride, y, 0);
-		pVBuffer->Position3(i*4+2) = Vector3F(x+xStride, y+yStride, 0);
-		pVBuffer->Position3(i*4+3) = Vector3F(x, y+yStride, 0);
-
-		pVBuffer->TCoord2(i*4) = Vector2F(0, 0);
-		pVBuffer->TCoord2(i*4+1) = Vector2F(255, 0);
-		pVBuffer->TCoord2(i*4+2) = Vector2F(255, 255);
-		pVBuffer->TCoord2(i*4+3) = Vector2F(0, 255);
-
-		for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
+		if (pText[i] > 32)
 		{
-			(*pIBuffer)[i*6+j] = indices[j] + i*4;
+			pVBuffer->Position3(i*4) = Vector3F(x, y, 0);
+			pVBuffer->Position3(i*4+1) = Vector3F(x+xStride, y, 0);
+			pVBuffer->Position3(i*4+2) = Vector3F(x+xStride, y+yStride, 0);
+			pVBuffer->Position3(i*4+3) = Vector3F(x, y+yStride, 0);
+
+			pVBuffer->TCoord2(i*4) = Vector2F(0, 0);
+			pVBuffer->TCoord2(i*4+1) = Vector2F(1.0F, 0);
+			pVBuffer->TCoord2(i*4+2) = Vector2F(1.0F, 1.0F);
+			pVBuffer->TCoord2(i*4+3) = Vector2F(0, 1.0F);
+
+			for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
+			{
+				(*pIBuffer)[i*6+j] = indices[j] + i*4;
+			}
+		}
+
+		x += xStride;
+
+		if (pText[i] == '\n')
+		{
+			x = 0;
+			y += yStride;
 		}
 	}
 
 	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
-	const UInt texWidth = 256;
-	const UInt texHeight = 256;
-	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
-	for (UInt y = 0; y < texHeight; y++)
-	{
-		for (UInt x = 0; x < texWidth; x++)
-		{
-			pDst[(y*texWidth + x)*4] = 0xFF;	// R
-			pDst[(y*texWidth + x)*4+1] = 0xFF;	// G
-			pDst[(y*texWidth + x)*4+2] = 0xFF;	// B
-			pDst[(y*texWidth + x)*4+3] = 0xFF;
-		}
-	}
-
-	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
-		texHeight, pDst, false);
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	TextureEffect* pEffect = WIRE_NEW TextureEffect;
-	pEffect->Textures.Append(pTexture);
+	pEffect->Textures.Append(s_spFontTexture);
 	pEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
 	pGeo->AttachEffect(pEffect);
-
 
 	return pGeo;
 }

@@ -12,7 +12,7 @@
 
 using namespace Wire;
 
-UChar PdrRendererData::sCullType[StateCull::CM_QUANTITY] = 
+const UChar PdrRendererData::CULL_TYPE[StateCull::CM_QUANTITY] = 
 {
 	GX_CULL_NONE,
 	GX_CULL_BACK,
@@ -26,7 +26,7 @@ void Renderer::SetState(StateCull* pState)
 
 	if (pState->Enabled)
 	{
-		GXSetCullMode(PdrRendererData::sCullType[pState->CullFace]);
+		GXSetCullMode(PdrRendererData::CULL_TYPE[pState->CullFace]);
 	}
 	else
 	{

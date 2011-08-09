@@ -15,7 +15,7 @@
 
 using namespace Wire;
 
-D3DFORMAT PdrRendererData::sImage2DFormat[Image2D::FM_QUANTITY] =
+const D3DFORMAT PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_QUANTITY] =
 {
 	D3DFMT_A8R8G8B8,	// Image2D::FM_RGB888
 	D3DFMT_A8R8G8B8,	// Image2D::FM_RGBA8888
@@ -23,7 +23,7 @@ D3DFORMAT PdrRendererData::sImage2DFormat[Image2D::FM_QUANTITY] =
 	D3DFMT_A4R4G4B4,	// Image2D::FM_RGBA4444
 };
 
-DWORD PdrRendererData::sTexMinFilter[Texture2D::FT_QUANTITY] =
+const DWORD PdrRendererData::TEX_MIN_FILTER[Texture2D::FT_QUANTITY] =
 {
 	D3DTEXF_POINT,  // Texture2D::FT_NEAREST
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR
@@ -33,7 +33,7 @@ DWORD PdrRendererData::sTexMinFilter[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::sTexMipFilter[Texture2D::FT_QUANTITY] =
+const DWORD PdrRendererData::TEX_MIP_FILTER[Texture2D::FT_QUANTITY] =
 {
 	D3DTEXF_NONE,   // Texture2D::FT_NEAREST
 	D3DTEXF_NONE,   // Texture2D::FT_LINEAR
@@ -43,7 +43,7 @@ DWORD PdrRendererData::sTexMipFilter[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-DWORD PdrRendererData::sTexWrapMode[Texture2D::WT_QUANTITY] =
+const DWORD PdrRendererData::TEX_WRAP_MODE[Texture2D::WT_QUANTITY] =
 {
 	D3DTADDRESS_CLAMP,      // Texture2D::WT_CLAMP
 	D3DTADDRESS_WRAP,       // Texture2D::WT_REPEAT
@@ -147,7 +147,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	HRESULT hr;
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	hr = rDevice->CreateTexture(pImage->GetBound(0), pImage->GetBound(1),
-		mipmapCount, usage, PdrRendererData::sImage2DFormat[format], pool,
+		mipmapCount, usage, PdrRendererData::IMAGE2D_FORMAT[format], pool,
 		&mpTexture, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -250,11 +250,11 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	else
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
-			PdrRendererData::sTexMinFilter[filterType]);
+			PdrRendererData::TEX_MIN_FILTER[filterType]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
-			PdrRendererData::sTexMipFilter[filterType]);
+			PdrRendererData::TEX_MIP_FILTER[filterType]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
@@ -266,10 +266,10 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU,
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(0)]);
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV,
-		PdrRendererData::sTexWrapMode[pTexture->GetWrapType(1)]);
+		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	hr = rDevice->SetTexture(unit, mpTexture);
@@ -294,7 +294,7 @@ void* PdrTexture2D::Lock(Buffer::LockingMode mode, UInt level)
 	D3DLOCKED_RECT rect;
 	HRESULT hr;
 	hr = mpTexture->LockRect(level, &rect, NULL,
-		PdrRendererData::sBufferLocking[mode]);
+		PdrRendererData::BUFFER_LOCKING[mode]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	return rect.pBits;
 }

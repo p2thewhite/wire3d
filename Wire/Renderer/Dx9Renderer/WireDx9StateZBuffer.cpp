@@ -12,7 +12,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sZBufferCompare[StateZBuffer::CF_QUANTITY] = 
+const DWORD PdrRendererData::ZBUFFER_COMPARE[StateZBuffer::CF_QUANTITY] = 
 {
 	D3DCMP_NEVER,           // StateZBuffer::CF_NEVER
 	D3DCMP_LESS,            // StateZBuffer::CF_LESS
@@ -34,7 +34,7 @@ void Renderer::SetState(StateZBuffer* pState)
 	if (pState->Enabled)
 	{
 		hr = rDevice->SetRenderState(D3DRS_ZFUNC,
-			PdrRendererData::sZBufferCompare[pState->Compare]);
+			PdrRendererData::ZBUFFER_COMPARE[pState->Compare]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else

@@ -12,7 +12,7 @@
 
 using namespace Wire;
 
-DWORD PdrRendererData::sCullType[StateCull::CM_QUANTITY] = 
+const DWORD PdrRendererData::CULL_TYPE[StateCull::CM_QUANTITY] = 
 {
 	D3DCULL_NONE,
 	D3DCULL_CCW,  // StateCull::CM_FRONT(front CCW -> cull backface CCW in DX)
@@ -29,7 +29,7 @@ void Renderer::SetState(StateCull* pState)
 	if (pState->Enabled)
 	{
 		hr = rDevice->SetRenderState(D3DRS_CULLMODE,
-			PdrRendererData::sCullType[pState->CullFace]);
+			PdrRendererData::CULL_TYPE[pState->CullFace]);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 	else

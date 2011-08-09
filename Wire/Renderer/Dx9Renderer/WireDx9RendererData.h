@@ -31,19 +31,19 @@ public:
 
 	Matrix4F ViewMatrix;
 
- 	static DWORD sAlphaSrcBlend[];
- 	static DWORD sAlphaDstBlend[];
- 	static DWORD sCullType[];
- 	static DWORD sFogDensity[];
- 	static DWORD sZBufferCompare[];
- 	static DWORD sTexMinFilter[];
- 	static DWORD sTexMipFilter[];
- 	static DWORD sTexWrapMode[];
-	static DWORD sTexBlend[];
- 	static D3DFORMAT sImage2DFormat[];
-	static DWORD sBufferLocking[];
-	static D3DPOOL sPools[];
-	static DWORD sUsages[];
+ 	static const DWORD ALPHA_SRC_BLEND[];
+ 	static const DWORD ALPHA_DST_BLEND[];
+ 	static const DWORD CULL_TYPE[];
+ 	static const DWORD FOG_DENSITY[];
+ 	static const DWORD ZBUFFER_COMPARE[];
+ 	static const DWORD TEX_MIN_FILTER[];
+ 	static const DWORD TEX_MIP_FILTER[];
+ 	static const DWORD TEX_WRAP_MODE[];
+	static const DWORD TEX_BLEND[];
+ 	static const D3DFORMAT IMAGE2D_FORMAT[];
+	static const DWORD BUFFER_LOCKING[];
+	static const D3DPOOL POOLS[];
+	static const DWORD USAGES[];
 
 	Bool Supports32BitIndices;
 	Bool IsDeviceLost;

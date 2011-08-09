@@ -62,12 +62,12 @@ public:
 	inline Real Dot(const Vector4& rVector) const;
 	inline Real Normalize();
 
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 ZERO;    // (0,0,0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 UNIT_X;  // (1,0,0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 UNIT_Y;  // (0,1,0,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 UNIT_Z;  // (0,0,1,0)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 UNIT_W;  // (0,0,0,1)
-	/*WIRE_FOUNDATION_ITEM*/ static const Vector4 ONE;     // (1,1,1,1)
+	static const Vector4 ZERO;    // (0,0,0,0)
+	static const Vector4 UNIT_X;  // (1,0,0,0)
+	static const Vector4 UNIT_Y;  // (0,1,0,0)
+	static const Vector4 UNIT_Z;  // (0,0,1,0)
+	static const Vector4 UNIT_W;  // (0,0,0,1)
+	static const Vector4 ONE;     // (1,1,1,1)
 
 private:
 	Real mTuple[4];

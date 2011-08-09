@@ -69,15 +69,15 @@ public:
 
 	UChar LightsMask;
 
-	static UChar sAlphaSrcBlend[];
-	static UChar sAlphaDstBlend[];
-	static UChar sCullType[];
-	static UChar sFogDensity[];
-	static UChar sZBufferCompare[];
-	static UChar sTexMinFilter[];
-	static UChar sTexWrapMode[];
-	static UChar sTexBlend[];
-	static UChar sImage2DFormat[];
+	static const UChar ALPHA_SRC_BLEND[];
+	static const UChar ALPHA_DST_BLEND[];
+	static const UChar CULL_TYPE[];
+	static const UChar FOG_DENSITY[];
+	static const UChar ZBUFFER_COMPARE[];
+	static const UChar TEX_MIN_FILTER[];
+	static const UChar TEX_WRAP_MODE[];
+	static const UChar TEX_BLEND[];
+	static const UChar IMAGE2D_FORMAT[];
 };
 
 }
