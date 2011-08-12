@@ -64,16 +64,7 @@ public:
 
 private:
 	static Texture2DPtr s_spFontTexture;
-
-	struct Font
-	{
- 		unsigned int 	 width;
- 		unsigned int 	 height;
- 		unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
-		unsigned char	 pixel_data[128 * 48 * 3 + 1];
-	};
-
-	static const Font s_Font;
+	static const UChar s_Font[];
 };
 
 WIRE_REGISTER_TERMINATE(StandardMesh);
