@@ -17,13 +17,13 @@ Bool Sample4::OnInitialize()
 	}
 
 	// create a cube with vertex colors using a texture effect with 2 textures
-	TextureEffect* pEffect = WIRE_NEW TextureEffect;
-	pEffect->Textures.Append(CreateTexture());
-	pEffect->Textures.Append(CreateTexture2());
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(CreateTexture());
+	pMaterial->AddTexture(CreateTexture2());
 
-	mspGeometry = StandardMesh::CreateCube14(3, pEffect->Textures.
-		GetQuantity());
-	mspGeometry->AttachEffect(pEffect);
+	mspGeometry = StandardMesh::CreateCube14(3, pMaterial->
+		GetTextureQuantity());
+	mspGeometry->SetMaterial(pMaterial);
 
 	// camera and viewing frustum setup
 	Vector3F cameraLocation(0.0F, 0.0F, -7.0F);
@@ -63,23 +63,23 @@ void Sample4::OnIdle()
 	{
 		// texture0 passes the previous stage (i.e. vertex color),
 		// so does texture1, thus only the vertex color is visible
-		BlendMode(TextureEffect::BM_PASS, TextureEffect::BM_PASS),
+		BlendMode(Material::BM_PASS, Material::BM_PASS),
 
 		// texture0 replaces the vertex color, texture1 passes the
 		// the previous stage, thus only texture0 is visible
-		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_PASS),
+		BlendMode(Material::BM_REPLACE, Material::BM_PASS),
 
 		// texture0 blends with the vertex color
-		BlendMode(TextureEffect::BM_BLEND, TextureEffect::BM_PASS),
+		BlendMode(Material::BM_BLEND, Material::BM_PASS),
 
 		// texture0 replaces the vertex color, texture1 is applied as a decal
 		// over the previous stage (i.e. texture0)
-		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_DECAL),
+		BlendMode(Material::BM_REPLACE, Material::BM_DECAL),
 
-		// and so on... check WireTextureEffect.h for the formulas
-		BlendMode(TextureEffect::BM_REPLACE, TextureEffect::BM_BLEND),
-		BlendMode(TextureEffect::BM_MODULATE, TextureEffect::BM_BLEND),
-		BlendMode(TextureEffect::BM_BLEND, TextureEffect::BM_BLEND)
+		// and so on... check WireMaterial.h for the formulas
+		BlendMode(Material::BM_REPLACE, Material::BM_BLEND),
+		BlendMode(Material::BM_MODULATE, Material::BM_BLEND),
+		BlendMode(Material::BM_BLEND, Material::BM_BLEND)
 	};
 
 	// we change the blending mode every second
@@ -87,12 +87,11 @@ void Sample4::OnIdle()
 	UInt modeIndex = static_cast<UInt>(MathF::FMod(static_cast<Float>(time),
 		static_cast<Float>(modeQuantity)));
 	WIRE_ASSERT(0 <= modeIndex && modeIndex < modeQuantity);
-	TextureEffect* pEffect = DynamicCast<TextureEffect>(mspGeometry->
-		GetEffect());
-	if (pEffect)
+	Material* pMaterial = mspGeometry->GetMaterial();
+	if (pMaterial)
 	{
-		pEffect->BlendOps.SetElement(0, modes[modeIndex].Mode0);
-		pEffect->BlendOps.SetElement(1, modes[modeIndex].Mode1);
+		pMaterial->SetBlendMode(modes[modeIndex].Mode0, 0);
+		pMaterial->SetBlendMode(modes[modeIndex].Mode1, 1);
 	}
 
 	GetRenderer()->ClearBuffers();

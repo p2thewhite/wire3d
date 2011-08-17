@@ -7,32 +7,23 @@
 // that agreement.
 
 #pragma once
-#ifndef WIRETEXTUREEFFECT_H
-#define WIRETEXTUREEFFECT_H
+#ifndef WIREMATERIAL_H
+#define WIREMATERIAL_H
 
-#include "WireEffect.h"
+#include "WireObject.h"
 #include "WireTArray.h"
 #include "WireTexture2D.h"
 
 namespace Wire
 {
 
-class TextureEffect : public Effect
+class Material : public Object
 {
 	WIRE_DECLARE_RTTI;
 
-	// Texture blending modes.
-	// Legend symbols mainly taken from the OpenGL "red book".
-	//  C  - result color (RGB)
-	//  A  - result alpha
-	//  Ct - texture color
-	//  At - texture alpha
-	//  Cf - fragment (current) color
-	//  Af - fragment (current) alpha
-	//  C1 - color argument 1
-	//  A1 - alpha argument 1
-	//  C2 - alpha argument 2
-	//  A2 - alpha argument 2
+public:
+	Material();
+	virtual ~Material();
 
 	enum BlendMode
 	{
@@ -43,16 +34,28 @@ class TextureEffect : public Effect
 		BM_DECAL,		// C=At*Ct+(1-At)*Cf, Ct=C1, Cf=C2, A=Af, Af=A1
 		BM_QUANTITY
 	};
+	
+	inline UInt GetTextureQuantity() const;
+	inline Texture2D* GetTexture(UInt i = 0) const;
+	inline BlendMode GetBlendMode(UInt i = 0) const;
+	inline void SetBlendMode(BlendMode blendMode, UInt i = 0);
 
-public:
-	TextureEffect();
-	virtual ~TextureEffect();
+	void AddTexture(Texture2D* pTexture, BlendMode blendMode = BM_MODULATE);
+ 	void SetTexture(UInt i, Texture2D* pTexture, BlendMode blendMode = 
+		BM_MODULATE);
 
-	TArray<Texture2DPtr> Textures;
-	TArray<BlendMode> BlendOps;
+private:
+	struct TextureBlendMode
+	{
+		Texture2DPtr Texture;
+		Material::BlendMode BlendMode;
+	};
+
+	TArray<TextureBlendMode> mTextures;
 };
 
-typedef Pointer<TextureEffect> TextureEffectPtr;
+typedef Pointer<Material> MaterialPtr;
+#include "WireMaterial.inl"
 
 }
 

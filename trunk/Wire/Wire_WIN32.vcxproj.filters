@@ -263,9 +263,6 @@
     <ClInclude Include="Engine\WireTexture2D.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireTextureEffect.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WireTransformation.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -325,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="Foundation\WireTQueue.h">
       <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\WireMaterial.h">
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +493,9 @@
     <None Include="Foundation\WireTQueue.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
+    <None Include="Engine\WireMaterial.inl">
+      <Filter>Engine\Inline Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\WireApplication.cpp">
@@ -579,9 +582,6 @@
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9Texture2D.cpp">
       <Filter>Renderer\Dx9Renderer\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9TextureEffect.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp">
       <Filter>Renderer\Dx9Renderer\Source Files</Filter>
     </ClCompile>
@@ -637,9 +637,6 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireTexture2D.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\WireTextureEffect.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireTransformation.cpp">
@@ -727,6 +724,15 @@
       <Filter>Foundation\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp">
+      <Filter>Renderer\GXRenderer\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireMaterial.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9Renderer\WireDx9BlendMode.cpp">
+      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp">
       <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

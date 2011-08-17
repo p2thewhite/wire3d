@@ -29,3 +29,33 @@ inline const IndexBuffer* Geometry::GetIBuffer() const
 {
 	return mspIBuffer;
 }
+
+//----------------------------------------------------------------------------
+inline Material* Geometry::GetMaterial()
+{
+	return mspMaterial;
+}
+
+//----------------------------------------------------------------------------
+inline const Material* Geometry::GetMaterial() const
+{
+	return mspMaterial;
+}
+
+//----------------------------------------------------------------------------
+inline void Geometry::SetMaterial(Material* pMaterial)
+{
+	mspMaterial = pMaterial;
+}
+
+//----------------------------------------------------------------------------
+inline BoundingVolume* Geometry::GetModelBound()
+{
+	return mspModelBound;
+}
+
+//----------------------------------------------------------------------------
+inline const BoundingVolume* Geometry::GetModelBound() const
+{
+	return mspModelBound;
+}

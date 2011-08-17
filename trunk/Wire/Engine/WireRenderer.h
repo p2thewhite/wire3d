@@ -11,6 +11,7 @@
 #define WIRERENDERER_H
 
 #include "WireColorRGBA.h"
+#include "WireMaterial.h"
 #include "WireSmartPointer.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
@@ -24,7 +25,6 @@ namespace Wire
 {
 
 class Camera;
-class Effect;
 class Geometry;
 class IndexBuffer;
 class Light;
@@ -35,7 +35,6 @@ class PdrRendererInput;
 class PdrTexture2D;
 class Spatial;
 class Texture2D;
-class TextureEffect;
 class VertexBuffer;
 class VisibleSet;
 
@@ -96,6 +95,10 @@ public:
 	void Disable(Texture2D* pTexture, UInt unit = 0);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
 
+	// Material management
+	void Enable(Material* pMaterial);
+	void Disable(Material* pMaterial);
+
 	// Platform-dependent portion of the Renderer
 
 	// Support for predraw and postdraw semantics.
@@ -139,7 +142,8 @@ public:
 	inline PdrRendererData* GetRendererData() const;
 
 private:
-	void ApplyEffect(const TextureEffect* pEffect);
+	void SetBlendMode(Material::BlendMode blendMode, UInt unit = 0,
+		Bool hasAlpha = true);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements();
@@ -153,9 +157,6 @@ private:
 	void DestroyAllIndexBuffers();
  	void DestroyAllTexture2Ds();
 	void DestroyAllVertexBuffers();
-
-	// Render geometry using this effect
-	void ApplyEffect(Effect* pEffect);
 
 	// Global render states
 	StatePtr mspStates[State::MAX_STATE_TYPE];

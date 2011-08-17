@@ -13,6 +13,7 @@
 #include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
+#include "WireMaterial.h"
 #include "WireSpatial.h"
 #include "WireVertexBuffer.h"
 
@@ -24,24 +25,33 @@ class Geometry : public Spatial
 	WIRE_DECLARE_RTTI;
 
 public:
-	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
+	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
+		pMaterial = NULL);
 	virtual ~Geometry();
 
 	// geometric updates
 	virtual void UpdateWorldBound();
-	virtual void UpdateModelBound();
+	void UpdateModelBound();
 
 	inline VertexBuffer* GetVBuffer();
 	inline const VertexBuffer* GetVBuffer() const;
+
 	inline IndexBuffer* GetIBuffer();
 	inline const IndexBuffer* GetIBuffer() const;
+
+	inline Material* GetMaterial();
+	inline const Material* GetMaterial() const;
+	inline void SetMaterial(Material* pMaterial);
+
+	inline BoundingVolume* GetModelBound();
+	inline const BoundingVolume* GetModelBound() const;
 
 	void GenerateNormals(Bool ignoreHardEdges = false);
 
 	// member access
-	BoundingVolumePtr ModelBound;
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<LightPtr> Lights;
+
 
 protected:
 	// render state updates
@@ -54,6 +64,8 @@ protected:
 private:
 	VertexBufferPtr mspVBuffer;
 	IndexBufferPtr mspIBuffer;
+	BoundingVolumePtr mspModelBound;
+	MaterialPtr mspMaterial;
 };
 
 typedef Pointer<Geometry> GeometryPtr;

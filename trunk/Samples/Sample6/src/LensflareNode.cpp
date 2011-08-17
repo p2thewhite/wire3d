@@ -247,15 +247,14 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
  		pVBuffer->TCoord2(i).Y() += vOffset;
 	}
 
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	pQuad->AttachEffect(pTextureEffect);
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(pTexture, Material::BM_MODULATE);
+	pQuad->SetMaterial(pMaterial);
 
 	// material state (used with light) to color the flare
-	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = rDef.Color;
-	pQuad->AttachState(pMaterial);
+	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
+	pStateMaterial->Ambient = rDef.Color;
+	pQuad->AttachState(pStateMaterial);
 
 	// tell the system that we are doing transformations manually
 	pQuad->WorldIsCurrent = true;

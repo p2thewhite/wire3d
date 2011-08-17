@@ -72,6 +72,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
     <ClInclude Include="Foundation\WireBox3.h" />
@@ -136,7 +137,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireStateWireframe.h" />
     <ClInclude Include="Engine\WireStateZBuffer.h" />
     <ClInclude Include="Engine\WireTexture2D.h" />
-    <ClInclude Include="Engine\WireTextureEffect.h" />
     <ClInclude Include="Engine\WireTransformation.h" />
     <ClInclude Include="Engine\WireVertexAttributes.h" />
     <ClInclude Include="Engine\WireVertexBuffer.h" />
@@ -150,6 +150,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Renderer\GXRenderer\WireGXVertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Engine\WireMaterial.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />
@@ -206,6 +207,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
     <ClCompile Include="Foundation\WireColorRGBA.cpp" />
@@ -254,11 +256,11 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Engine\WireStateWireframe.cpp" />
     <ClCompile Include="Engine\WireStateZBuffer.cpp" />
     <ClCompile Include="Engine\WireTexture2D.cpp" />
-    <ClCompile Include="Engine\WireTextureEffect.cpp" />
     <ClCompile Include="Engine\WireTransformation.cpp" />
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
+    <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXLight.cpp" />
@@ -269,7 +271,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Renderer\GXRenderer\WireGXStateMaterial.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXStateZBuffer.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXTexture2D.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXTextureEffect.cpp" />
     <ClCompile Include="Renderer\GXRenderer\WireGXVertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

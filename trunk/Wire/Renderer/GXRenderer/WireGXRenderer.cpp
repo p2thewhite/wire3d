@@ -207,6 +207,16 @@ void Renderer::DrawElements()
 
 	GXSetNumChans(1);
 
+	if (mpGeometry->GetMaterial())
+	{
+		UInt textureCount = mpGeometry->GetMaterial()->GetTextureQuantity();
+		if (textureCount > 0)
+		{
+			GXSetNumTexGens(textureCount);
+			GXSetNumTevStages(textureCount);
+		}
+	}
+
 	const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);

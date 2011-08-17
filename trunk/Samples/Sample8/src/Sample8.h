@@ -37,7 +37,7 @@ private:
 	};
 
 	void CreateGameObjects();
-	TextureEffect* CreateTextureEffect();
+	Material* CreateMaterial();
 	void CreatePhysicsWorld();
 	btRigidBody* CreateRigidBody(btCollisionShape* pColShape, Float mass,
 		Vector3F position, Float extent = 1.0F);
@@ -69,7 +69,8 @@ private:
 
 	TArray<GameObject> mGameObjects;
 
-	StateMaterialPtr mspMaterial;
+	MaterialPtr mspMaterial;
+	StateMaterialPtr mspStateMaterial;
 	LightPtr mspLightA;
 	LightPtr mspLightB;
 

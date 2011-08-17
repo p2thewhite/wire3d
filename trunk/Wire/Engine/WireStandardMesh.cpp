@@ -11,7 +11,6 @@
 #include "WireImage2D.h"
 #include "WireGeometry.h"
 #include "WireTexture2D.h"
-#include "WireTextureEffect.h"
 
 using namespace Wire;
 
@@ -792,8 +791,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
 	// to use the true information.
-	pMesh->ModelBound->SetCenter(Vector3F::ZERO);
-	pMesh->ModelBound->SetRadius(radius);
+	pMesh->GetModelBound()->SetCenter(Vector3F::ZERO);
+	pMesh->GetModelBound()->SetRadius(radius);
 	return pMesh;
 }
 
@@ -908,10 +907,9 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 
 	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
-	TextureEffect* pEffect = WIRE_NEW TextureEffect;
-	pEffect->Textures.Append(s_spFontTexture);
-	pEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
-	pGeo->AttachEffect(pEffect);
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(s_spFontTexture, Material::BM_REPLACE);
+	pGeo->SetMaterial(pMaterial);
 
 	return pGeo;
 }

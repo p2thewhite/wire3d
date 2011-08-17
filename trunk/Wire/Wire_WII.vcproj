@@ -455,6 +455,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMaterial.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.h"
 					>
 				</File>
@@ -539,10 +543,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTextureEffect.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireTransformation.h"
 					>
 				</File>
@@ -592,6 +592,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMaterial.inl"
 					>
 				</File>
 				<File
@@ -711,6 +715,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMaterial.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.cpp"
 					>
 				</File>
@@ -791,10 +799,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTextureEffect.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireTransformation.cpp"
 					>
 				</File>
@@ -850,6 +854,10 @@
 					Name="Source Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXBlendMode.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.cpp"
 						>
 					</File>
@@ -887,10 +895,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXTextureEffect.cpp"
 						>
 					</File>
 					<File

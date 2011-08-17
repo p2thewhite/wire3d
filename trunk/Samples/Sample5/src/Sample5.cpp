@@ -224,11 +224,9 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 
 	if (useTexture)
 	{
-		TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-		Texture2D* pTexture = CreateTexture();
-		pTextureEffect->Textures.Append(pTexture);
-		pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-		pCube->AttachEffect(pTextureEffect);
+		Material* pMaterial = WIRE_NEW Material;
+		pMaterial->AddTexture(CreateTexture(), Material::BM_MODULATE);
+		pCube->SetMaterial(pMaterial);
 	}
 
 	return pCube;
@@ -249,18 +247,17 @@ Geometry* Sample5::CreatePlane()
 	pPlane->World.SetRotate(rotate);
 	pPlane->World.SetTranslate(Vector3F(0, -2.5F, 0));
 
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
 	Texture2D* pTexture = CreateTexture();
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);
 	pTexture->SetWrapType(1, Texture2D::WT_REPEAT);
-	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	pPlane->AttachEffect(pTextureEffect);
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(pTexture, Material::BM_MODULATE);
+	pPlane->SetMaterial(pMaterial);
 
 	// attach a material state and a light to the plane geometry directly
-	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
-	pPlane->States[State::MATERIAL] = pMaterial;
+	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
+	pStateMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
+	pPlane->States[State::MATERIAL] = pStateMaterial;
 
 	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
 	pLight->Position = Vector3F(0, 0, 10);
