@@ -13,7 +13,7 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * vertex- and indexbuffers
   * renderable geometry (consisting of vertex- and indexbuffers)
   * a 2D texture with mipmaps
-  * an effect applying textures to geometries
+  * a material applying textures to geometries
   * render states (alpha blending, material state) and a light
   * a camera including frustum setup and culling
   * matrices and vectors performing geometric transformations
