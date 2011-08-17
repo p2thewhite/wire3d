@@ -571,6 +571,26 @@
 					Name="Source Files"
 					>
 					<File
+						RelativePath=".\Renderer\GXRenderer\WireGXBlendMode.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.cpp"
 						>
 						<FileConfiguration
@@ -771,26 +791,6 @@
 						</FileConfiguration>
 					</File>
 					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXTextureEffect.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
 						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.cpp"
 						>
 						<FileConfiguration
@@ -859,6 +859,10 @@
 					Name="Source Files"
 					>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9BlendMode.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9IndexBuffer.cpp"
 						>
 					</File>
@@ -896,10 +900,6 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9Texture2D.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\Dx9Renderer\WireDx9TextureEffect.cpp"
 						>
 					</File>
 					<File
@@ -957,6 +957,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireLight.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMaterial.h"
 					>
 				</File>
 				<File
@@ -1044,10 +1048,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireTextureEffect.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireTransformation.h"
 					>
 				</File>
@@ -1097,6 +1097,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMaterial.inl"
 					>
 				</File>
 				<File
@@ -1216,6 +1220,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMaterial.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.cpp"
 					>
 				</File>
@@ -1293,10 +1301,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireTexture2D.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireTextureEffect.cpp"
 					>
 				</File>
 				<File

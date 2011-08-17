@@ -66,8 +66,8 @@ Bool Sample8::OnInitialize()
 	mspLightB->Direction = Vector3F(-0.5F, -0.2F, -1.0F);
 	mspLightB->Color = ColorRGB(0.7F, 0.8F, 0.5F);
 
-	mspMaterial = WIRE_NEW StateMaterial;
-	mspMaterial->Ambient = ColorRGBA::WHITE;
+	mspStateMaterial = WIRE_NEW StateMaterial;
+	mspStateMaterial->Ambient = ColorRGBA::WHITE;
 
 	Double time = System::GetTime();
 	mResetTime = time + 4.0F;
@@ -100,7 +100,7 @@ void Sample8::OnIdle()
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 
-	GetRenderer()->SetState(mspMaterial);
+	GetRenderer()->SetState(mspStateMaterial);
 	GetRenderer()->SetLight(mspLightA, 0);
 	GetRenderer()->SetLight(mspLightB, 1);
 	GetRenderer()->EnableLighting();
@@ -131,7 +131,7 @@ void Sample8::CreateGameObjects()
 {
 	WIRE_ASSERT(mpDynamicsWorld); // Has the physics world been created?
 
-	TextureEffect* pEffect = CreateTextureEffect();
+	Material* pMaterial = CreateMaterial();
 	
 	// create a few basic rigid bodies and their rendering representation
 	///Please don't make the box sizes larger then 1000: the collision
@@ -165,7 +165,7 @@ void Sample8::CreateGameObjects()
 		{
 			const Float extent = 0.5F;
 			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
-			pBox->AttachEffect(pEffect);
+			pBox->SetMaterial(pMaterial);
 			pBox->GenerateNormals();
 
 			if (switchX)
@@ -215,7 +215,7 @@ void Sample8::CreateGameObjects()
 }
 
 //----------------------------------------------------------------------------
-TextureEffect* Sample8::CreateTextureEffect()
+Material* Sample8::CreateMaterial()
 {
 	const UInt width = 64;
 	const UInt height = 64;
@@ -246,10 +246,10 @@ TextureEffect* Sample8::CreateTextureEffect()
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	pTextureEffect->Textures.Append(pTexture);
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	return pTextureEffect;
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(pTexture, Material::BM_MODULATE);
+
+	return pMaterial;
 }
 
 //----------------------------------------------------------------------------

@@ -172,7 +172,7 @@ Node* Sample2::CreateHelicopter()
 	pBody2->GetVBuffer()->Position3(1).Y() = -0.5F;
 	pBody2->GetVBuffer()->Position3(5).Y() = -0.5F;
 	// we changed the vertices, the model bound has potentially changed, too
-	pBody2->ModelBound->ComputeFromData(pBody2->GetVBuffer());
+	pBody2->UpdateModelBound();
 	pNode->AttachChild(pBody2);
 
 	Geometry* pTail = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
@@ -181,7 +181,7 @@ Node* Sample2::CreateHelicopter()
 	pTail->GetVBuffer()->Position3(6) = Vector3F(5, 0.6F, 0.1F);
 	pTail->GetVBuffer()->Position3(1) = Vector3F(5, 0.1F, -0.1F);
 	pTail->GetVBuffer()->Position3(5) = Vector3F(5, 0.1F, 0.1F);
-	pTail->ModelBound->ComputeFromData(pTail->GetVBuffer());
+	pTail->UpdateModelBound();
 	pNode->AttachChild(pTail);
 
 	Geometry* pNose = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
@@ -190,7 +190,7 @@ Node* Sample2::CreateHelicopter()
 	pNose->GetVBuffer()->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
 	pNose->GetVBuffer()->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
 	pNose->GetVBuffer()->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
-	pNose->ModelBound->ComputeFromData(pNose->GetVBuffer());
+	pNose->UpdateModelBound();
 	pNode->AttachChild(pNose);
 
 	// We save a reference to the rotors, so we can easily access them later
@@ -211,7 +211,7 @@ Node* Sample2::CreateHelicopter()
 	pCockpit->Local.SetTranslate(Vector3F(0, 2, 0));
 	pCockpit->GetVBuffer()->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
 	pCockpit->GetVBuffer()->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
-	pCockpit->ModelBound->ComputeFromData(pCockpit->GetVBuffer());
+	pCockpit->UpdateModelBound();
 	pNode->AttachChild(pCockpit);
 
 	// The cockpit is supposed to be transparent, so we create an StateAlpha 

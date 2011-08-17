@@ -14,11 +14,13 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Geometry, Spatial);
 
 //----------------------------------------------------------------------------
-Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
+Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
+	pMaterial)
  	:
-	ModelBound(BoundingVolume::Create()),
  	mspVBuffer(pVBuffer),
-	mspIBuffer(pIBuffer)
+	mspIBuffer(pIBuffer),
+	mspModelBound(BoundingVolume::Create()),
+	mspMaterial(pMaterial)
 {
 	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(State*));
 	UpdateModelBound();
@@ -32,13 +34,13 @@ Geometry::~Geometry()
 //----------------------------------------------------------------------------
 void Geometry::UpdateModelBound()
 {
-	ModelBound->ComputeFromData(mspVBuffer);
+	mspModelBound->ComputeFromData(mspVBuffer);
 }
 
 //----------------------------------------------------------------------------
 void Geometry::UpdateWorldBound()
 {
-	ModelBound->TransformBy(World, WorldBound);
+	mspModelBound->TransformBy(World, WorldBound);
 }
 
 //----------------------------------------------------------------------------

@@ -29,7 +29,6 @@ private:
 	Culler mCuller;
 
 	GeometryPtr mspCube;
-	TextureEffectPtr mspTextureEffect;
 
 	LightPtr mspLight;
 	StateMaterialPtr mspMaterial;

@@ -133,7 +133,7 @@ Geometry* Sample6::CreateTerrain()
 
 	// we changed the vertices so we need to recreate the model bound
 	// (which was automatically created by the constructor of Geometry)
-	pPlane->ModelBound->ComputeFromData(pPlane->GetVBuffer());
+	pPlane->UpdateModelBound();
 	pPlane->GenerateNormals();
 
 	Matrix3F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F);
@@ -142,9 +142,9 @@ Geometry* Sample6::CreateTerrain()
 
 	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
 	pPlane->AttachLight(pLight);
-	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = ColorRGBA::GREEN;
-	pPlane->AttachState(pMaterial);
+	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
+	pStateMaterial->Ambient = ColorRGBA::GREEN;
+	pPlane->AttachState(pStateMaterial);
 
 	return pPlane;
 }

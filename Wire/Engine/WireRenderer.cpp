@@ -10,10 +10,10 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
+#include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireNode.h"
 #include "WireTexture2D.h"
-#include "WireTextureEffect.h"
 #include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
@@ -74,17 +74,12 @@ void Renderer::BindAll(const Spatial* pSpatial)
 		s_pRenderer->Bind(pGeometry->GetIBuffer());
 		s_pRenderer->Bind(pGeometry->GetVBuffer());
 
-		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
+		const Material* pMaterial = pGeometry->GetMaterial();
+		if (pMaterial)
 		{
-			TextureEffect* pEffect = DynamicCast<TextureEffect>(
-				pGeometry->GetEffect(i));
-
-			if (pEffect)
+			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 			{
-				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
-				{
-					s_pRenderer->Bind(pEffect->Textures[j]);
-				}
+				s_pRenderer->Bind(pMaterial->GetTexture(i));
 			}
 		}
 	}
@@ -113,17 +108,12 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 		s_pRenderer->Unbind(pGeometry->GetIBuffer());
 		s_pRenderer->Unbind(pGeometry->GetVBuffer());
 
-		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
+		const Material* pMaterial = pGeometry->GetMaterial();
+		if (pMaterial)
 		{
-			TextureEffect* pEffect = DynamicCast<TextureEffect>(
-				pGeometry->GetEffect(i));
-
-			if (pEffect)
+			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 			{
-				for (UInt j = 0; j < pEffect->Textures.GetQuantity(); j++)
-				{
-					s_pRenderer->Unbind(pEffect->Textures[j]);
-				}
+				s_pRenderer->Unbind(pMaterial->GetTexture(i));
 			}
 		}
 	}
@@ -425,30 +415,49 @@ void Renderer::DestroyAllTexture2Ds()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Enable(Material* pMaterial)
+{
+	if (!pMaterial)
+	{
+		return;
+	}
+
+	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+	{
+		Enable(pMaterial->GetTexture(i), i);
+		SetBlendMode(pMaterial->GetBlendMode(i), i, pMaterial->GetTexture(i)->
+			GetImage()->HasAlpha());
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(Material* pMaterial)
+{
+	if (!pMaterial)
+	{
+		return;
+	}
+
+	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+	{
+		Disable(pMaterial->GetTexture(i), i);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
 	mpGeometry = pGeometry;
 
 	SetStates(pGeometry->States);
 	Enable(pGeometry->Lights);
-
-	// Enable the index buffer. The connectivity information is the same
-	// across all effects and all passes per effect.
 	Enable(pGeometry->GetIBuffer());
 	Enable(pGeometry->GetVBuffer());
+	Enable(pGeometry->GetMaterial());
 
-	UInt effectCount = pGeometry->GetEffectQuantity();
+	DrawElements();
 
-	if (effectCount == 0)
-	{
-		DrawElements();
-	}
-
-	for (UInt i = 0; i < effectCount; i++)
-	{
-		ApplyEffect(pGeometry->GetEffect(i));
-	}
-
+	Disable(pGeometry->GetMaterial());
 	Disable(pGeometry->GetVBuffer());
 	Disable(pGeometry->GetIBuffer());
 	Disable(pGeometry->Lights);
@@ -593,26 +602,5 @@ void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 	for (UInt i = 0; i < lightCount; i++)
 	{
 		SetLight(NULL, i);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::ApplyEffect(Effect* pEffect)
-{
-	TextureEffect* pTextureEffect = DynamicCast<TextureEffect>(pEffect);
-	if (pTextureEffect)
-	{
-		for (UInt i = 0; i < pTextureEffect->Textures.GetQuantity(); i++)
-		{
-			Enable(pTextureEffect->Textures[i], i);
-		}
-
-		ApplyEffect(pTextureEffect);
-		DrawElements();
-
-		for (UInt i = 0; i < pTextureEffect->Textures.GetQuantity(); i++)
-		{
-			Disable(pTextureEffect->Textures[i], i);
-		}
 	}
 }

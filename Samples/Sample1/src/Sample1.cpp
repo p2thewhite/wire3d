@@ -98,7 +98,7 @@ void Sample1::OnIdle()
  	GetRenderer()->SetState(mspMaterial);
 
 	// modulate the texture with the light
-	mspTextureEffect->BlendOps[0] = TextureEffect::BM_MODULATE;
+	mspCube->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
 
 	GetRenderer()->EnableLighting();
 	GetRenderer()->SetLight(mspLight);
@@ -139,7 +139,7 @@ void Sample1::OnIdle()
 
 	// There is no more light, so the texture blending needs to be reset,
 	// otherwise it will modulate undefined values.
-	mspTextureEffect->BlendOps[0] = TextureEffect::BM_REPLACE;
+	mspCube->GetMaterial()->SetBlendMode(Material::BM_REPLACE);
 	
 	z = MathF::Cos(mAngle) * 3.0F;
 	for (UInt i = 0; i < cubeCount; i++)
@@ -317,24 +317,22 @@ Geometry* Sample1::CreateCube()
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	// Geometric objects consist of a Vertex- and IndexBuffer.
-	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	// The cube shall be textured. Therefore we create and attach a material,
+	// where we add textures and define their blending modes.
+ 	Material* pMaterial = WIRE_NEW Material;
+ 	pMaterial->AddTexture(CreateTexture(), Material::BM_MODULATE);
+
+	// Geometric objects consist of a Vertex-, an IndexBuffer and optionally
+	// a material
+	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
 
 	// Generate normal vectors from the triangles of the geometry.
 	pCube->GenerateNormals();
 
-	// The cube shall be textured. Therefore we create and attach a texture
-	// effect, where we add textures and define their blending modes.
-	mspTextureEffect = WIRE_NEW TextureEffect;
-	Texture2D* pTexture = CreateTexture();
-	mspTextureEffect->Textures.Append(pTexture);
-	mspTextureEffect->BlendOps.Append(TextureEffect::BM_MODULATE);
-	pCube->AttachEffect(mspTextureEffect);
-
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
 	// smart pointers. Thus, you can share these buffers amongst Geometry 
 	// objects without having to worry about deletion. Same applies to
-	// Effects, Textures and Images.
+	// Materials, Effects, Textures and Images.
 
 	return pCube;
 }

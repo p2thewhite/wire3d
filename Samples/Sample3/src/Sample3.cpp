@@ -124,10 +124,10 @@ Geometry* Sample3::CreateGeometry(UInt shapeCount, UInt segmentCount)
 	// Create a PQ (4,3) torus knot with a inner radius of 0.2
 	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);
 
-	TextureEffect* pTextureEffect = WIRE_NEW TextureEffect;
-	pTextureEffect->Textures.Append(CreateTexture());
-	pTextureEffect->BlendOps.Append(TextureEffect::BM_REPLACE);
-	pTorus->AttachEffect(pTextureEffect);
+	Material* pMaterial = WIRE_NEW Material;
+	pMaterial->AddTexture(CreateTexture(), Material::BM_REPLACE);
+
+	pTorus->SetMaterial(pMaterial);
 
 	return pTorus;
 }
