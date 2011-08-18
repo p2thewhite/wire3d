@@ -199,18 +199,18 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements()
+void Renderer::DrawElements(Geometry* pGeometry)
 {
 	// Set up world matrix
 	Matrix4F world;
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	mpGeometry->World.GetHomogeneous(world);
+	pGeometry->World.GetHomogeneous(world);
 	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
 
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-		mpGeometry->GetVBuffer()->GetVertexQuantity(), 0,
-		mpGeometry->GetIBuffer()->GetIndexQuantity()/3);
+		pGeometry->GetVBuffer()->GetVertexQuantity(), 0,
+		pGeometry->GetIBuffer()->GetIndexQuantity()/3);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -353,6 +353,9 @@ const DWORD PdrRendererData::USAGES[Buffer::UT_QUANTITY] =
 //----------------------------------------------------------------------------
 PdrRendererData::PdrRendererData(Renderer* pRenderer)
 	:
+	D3D(NULL),
+	D3DDevice(NULL),
+	Supports32BitIndices(false),
 	IsDeviceLost(false),
 	mpRenderer(pRenderer)
 {

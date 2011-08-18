@@ -31,9 +31,11 @@ template <class Real>
 class Matrix4
 {
 public:
+	Matrix4();	// uninitialized
+
 	// If zero is true, create the zero matrix.  Otherwise, create the
 	// identity matrix.
-	Matrix4(Bool zero = true);
+	Matrix4(Bool zero);
 
 	// input mRC is in row R, column C
 	Matrix4(Real m00, Real m01, Real m02, Real m03,

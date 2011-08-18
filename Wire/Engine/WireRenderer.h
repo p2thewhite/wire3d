@@ -146,7 +146,7 @@ private:
 		Bool hasAlpha = true);
 
 	// The main entry point to drawing in the derived-class renderers
-	void DrawElements();
+	void DrawElements(Geometry* pGeometry);
 
 	// Global render state management
 	void SetStates(StatePtr spStates[]);
@@ -163,9 +163,6 @@ private:
 
 	// The camera for establishing the view frustum
 	Camera* mpCamera;
-
-	// Current Geometry object for drawing
-	Geometry* mpGeometry;
 
 	// The color used for clearing the backbuffer
 	ColorRGBA mClearColor;
