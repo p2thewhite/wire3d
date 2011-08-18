@@ -52,9 +52,11 @@ class Matrix34
 public:
 	typedef Real Real4[4];
 
+	Matrix34();	// uninitialized
+	
 	// If zero is true, create the zero matrix. Otherwise, create the
 	// identity matrix.
-	Matrix34(Bool zero = true);
+	Matrix34(Bool zero);
 
 	// input mRC is in row R, column C
 	Matrix34(Real m00, Real m01, Real m02, Real m03,

@@ -8,6 +8,13 @@
 
 //----------------------------------------------------------------------------
 template <class Real>
+Matrix3<Real>::Matrix3()
+{
+	// uninitialized for performance in array construction
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Matrix3<Real>::Matrix3(Bool zero)
 {
 	if (zero)

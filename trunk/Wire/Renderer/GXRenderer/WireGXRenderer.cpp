@@ -187,12 +187,12 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements()
+void Renderer::DrawElements(Geometry* pGeometry)
 {
 	mpData->IsFrameBufferDirty = true;
 
 	Matrix34F model;
-	mpGeometry->World.GetTransformation(model);
+	pGeometry->World.GetTransformation(model);
 	// load the modelview matrix into matrix memory
 	Matrix34F modelView = mpData->ViewMatrix * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
@@ -207,9 +207,9 @@ void Renderer::DrawElements()
 
 	GXSetNumChans(1);
 
-	if (mpGeometry->GetMaterial())
+	if (pGeometry->GetMaterial())
 	{
-		UInt textureCount = mpGeometry->GetMaterial()->GetTextureQuantity();
+		UInt textureCount = pGeometry->GetMaterial()->GetTextureQuantity();
 		if (textureCount > 0)
 		{
 			GXSetNumTexGens(textureCount);
@@ -217,7 +217,7 @@ void Renderer::DrawElements()
 		}
 	}
 
-	const IndexBuffer& rIBuffer = *(mpGeometry->GetIBuffer());
+	const IndexBuffer& rIBuffer = *(pGeometry->GetIBuffer());
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);
 	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;
@@ -349,6 +349,7 @@ PdrRendererData::PdrRendererData()
 	ClearColor.g = 0;
 	ClearColor.b = 0;
 	ClearColor.a = 0xFF;
+	ViewMatrix.MakeZero();
 }
 
 //----------------------------------------------------------------------------

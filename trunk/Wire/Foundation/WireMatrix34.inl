@@ -8,6 +8,13 @@
 
 //----------------------------------------------------------------------------
 template <class Real>
+Matrix34<Real>::Matrix34()
+{
+	// uninitialized for performance in array construction
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Matrix34<Real>::Matrix34(Bool zero)
 {
 	if (zero)

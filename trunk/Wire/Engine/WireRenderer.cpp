@@ -39,7 +39,6 @@ void Renderer::Initialize(UInt width, UInt height)
 	mMaxAnisotropy = 1.0F;
 	s_pRenderer = this;
 	mpCamera = NULL;
-	mpGeometry = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -447,15 +446,13 @@ void Renderer::Disable(Material* pMaterial)
 //----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
-	mpGeometry = pGeometry;
-
 	SetStates(pGeometry->States);
 	Enable(pGeometry->Lights);
 	Enable(pGeometry->GetIBuffer());
 	Enable(pGeometry->GetVBuffer());
 	Enable(pGeometry->GetMaterial());
 
-	DrawElements();
+	DrawElements(pGeometry);
 
 	Disable(pGeometry->GetMaterial());
 	Disable(pGeometry->GetVBuffer());
