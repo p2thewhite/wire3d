@@ -366,7 +366,7 @@ Matrix34<Real> Matrix34<Real>::Inverse() const
     // Invert a 3x3 using cofactors. This is faster than using a generic
     // Gaussian elimination because of the loop overhead of such a method.
 
-    Matrix34 inverse;
+    Matrix34<Real> inverse;
 
 	inverse.mEntry[0][0] = mEntry[1][1]*mEntry[2][2] - 
 		mEntry[1][2]*mEntry[2][1];

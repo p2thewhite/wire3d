@@ -236,12 +236,13 @@ void Renderer::SetCamera(Camera* pCamera)
 	const Float w = 1.0F/(r-l);
 	const Float h = 1.0F/(t-b);
 	const Float d = 1.0F/(f-n);
-	D3DMATRIX matProj = {
-		2.0F*n*w, 0.0F,     (r+l)*w, 0.0F,
-		0.0F,     2.0F*n*h, (t+b)*h, 0.0F,
-		0.0F,     0.0F,     f*d,     1.0F,
-		0.0F,     0.0F,     -n*f*d,  0.0F};
 
+	D3DMATRIX matProj = {
+		2.0F*n*w, 0.0F,     0.0F,  0.0F,
+		0.0F,     2.0F*n*h, 0.0F,  0.0F,
+		-(r+l)*w, -(t+b)*h, f*d,   1.0F,
+		0.0F,     0.0F,    -n*f*d, 0.0F };
+	
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
