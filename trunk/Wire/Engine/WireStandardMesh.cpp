@@ -797,7 +797,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateText(const Char* pText)
+Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
+	const Float screenHeight)
 {
 	if (!pText)
 	{
@@ -859,12 +860,12 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 	attributes.SetTCoordChannels(2);
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
-	const UInt indices[] = { 0, 1, 2, 0, 2, 3 };
+	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
 
+	const Float xStride = 8.0F;
+	const Float yStride = 8.0F;
 	Float x = 0;
-	Float y = 0;
-	Float xStride = 1.0F;
-	Float yStride = 1.0F;
+	Float y = screenHeight - yStride + 0.5F;
 	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
 	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
 	UInt k = 0;
@@ -878,10 +879,10 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 			Float u = offsetX * cw;
 			Float v = offsetY * ch;
 
-			pVBuffer->Position3(k*4) = Vector3F(x, y, 0);
-			pVBuffer->Position3(k*4+1) = Vector3F(x+xStride, y, 0);
-			pVBuffer->Position3(k*4+2) = Vector3F(x+xStride, y+yStride, 0);
-			pVBuffer->Position3(k*4+3) = Vector3F(x, y+yStride, 0);
+			pVBuffer->Position3(k*4+1) = Vector3F(x+xStride, y+yStride, 0);
+			pVBuffer->Position3(k*4) = Vector3F(x, y+yStride, 0);
+			pVBuffer->Position3(k*4+3) = Vector3F(x, y, 0);
+			pVBuffer->Position3(k*4+2) = Vector3F(x+xStride, y, 0);
 		
 			pVBuffer->TCoord2(k*4) = Vector2F(u, v);
  			pVBuffer->TCoord2(k*4+1) = Vector2F(u+cw, v);
@@ -898,10 +899,10 @@ Geometry* StandardMesh::CreateText(const Char* pText)
 
 		x += xStride;
 
-		if (pText[i] == '\n')
+		if (pText[i] == '\n' || x > (screenWidth-xStride))
 		{
 			x = 0;
-			y += yStride;
+			y -= yStride;
 		}
 	}
 

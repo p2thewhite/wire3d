@@ -99,6 +99,7 @@ typedef guVector Vec;
 #define MTXLookAt guLookAt
 #define MTXMultVec guVecMultiply
 #define MTXMultVecSR guVecMultiplySR
+#define MTXOrtho guOrtho
 #define MTXPerspective guPerspective
 #define MTXRotAxisRad guMtxRotAxisRad
 #define MTXTrans guMtxTrans

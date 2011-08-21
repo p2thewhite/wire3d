@@ -264,24 +264,36 @@ void Renderer::SetCamera(Camera* pCamera)
 		return;
 	}
 
-	mpCamera = pCamera;
+	mspCamera = pCamera;
 	OnFrameChange();
 	OnViewportChange();
 
-	Mtx44 perspective;
-	MTXFrustum(perspective, pCamera->GetUMax(), pCamera->GetUMin(),
-		pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
-		pCamera->GetDMax());
-	GXSetProjection(perspective, GX_PERSPECTIVE);
+	Mtx44 projection;
+
+	if (pCamera->IsPerspective())
+	{
+		MTXFrustum(projection, pCamera->GetUMax(), pCamera->GetUMin(),
+			pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
+			pCamera->GetDMax());
+		GXSetProjection(projection, GX_PERSPECTIVE);
+	}
+	else
+	{
+		MTXOrtho(projection, pCamera->GetUMax(), pCamera->GetUMin(),
+			pCamera->GetRMin(), pCamera->GetRMax(), pCamera->GetDMin(),
+			pCamera->GetDMax());
+		GXSetProjection(projection, GX_ORTHOGRAPHIC);
+	}
 }
 
 //----------------------------------------------------------------------------
 void Renderer::OnFrameChange()
 {
-	Vector3F eye = mpCamera->GetLocation();
-	Vector3F rVector = mpCamera->GetRVector();
-	Vector3F uVector = mpCamera->GetUVector();
-	Vector3F dVector = -mpCamera->GetDVector();
+	WIRE_ASSERT(mspCamera);
+	Vector3F eye = mspCamera->GetLocation();
+	Vector3F rVector = mspCamera->GetRVector();
+	Vector3F uVector = mspCamera->GetUVector();
+	Vector3F dVector = -mspCamera->GetDVector();
 
 	Matrix34F& rViewMatrix = mpData->ViewMatrix;
 	rViewMatrix[0][0] = rVector[0];
@@ -301,6 +313,7 @@ void Renderer::OnFrameChange()
 //----------------------------------------------------------------------------
 void Renderer::OnViewportChange()
 {
+	WIRE_ASSERT(mspCamera);
 	Float left;
 	Float right;
 	Float top;
@@ -311,7 +324,7 @@ void Renderer::OnViewportChange()
 	// 'bottom' specifies the relative distance from the bottom of the
 	// screen. GX needs a specification of relative distance from the
 	// top of the screen, which is 1 - 'top'.
-	mpCamera->GetViewport(left, right, top, bottom);
+	mspCamera->GetViewport(left, right, top, bottom);
 	GXRenderModeObj*& rRMode = mpData->RMode;
 	Float originX = left * static_cast<Float>(mWidth);
 	Float width = (right - left) *  static_cast<Float>(mWidth);
@@ -662,6 +675,7 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 //----------------------------------------------------------------------------
 void Renderer::PostDraw()
 {
+	ClearReferences();
 }
 
 //----------------------------------------------------------------------------

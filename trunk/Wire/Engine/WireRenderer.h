@@ -158,11 +158,15 @@ private:
  	void DestroyAllTexture2Ds();
 	void DestroyAllVertexBuffers();
 
+	// Clear all the smart pointers that the Renderer caches between PreDraw()
+	// and PostDraw() calls.
+	void ClearReferences();
+
 	// Global render states
 	StatePtr mspStates[State::MAX_STATE_TYPE];
 
 	// The camera for establishing the view frustum
-	Camera* mpCamera;
+	Pointer<Camera> mspCamera;
 
 	// The color used for clearing the backbuffer
 	ColorRGBA mClearColor;

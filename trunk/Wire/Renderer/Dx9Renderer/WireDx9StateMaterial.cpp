@@ -15,6 +15,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateMaterial* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::MATERIAL] = pState;
 
 	D3DMATERIAL9 material;

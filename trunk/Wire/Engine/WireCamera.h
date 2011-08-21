@@ -21,9 +21,9 @@ class Camera : public Object
 	WIRE_DECLARE_RTTI;
 
 public:
-	Camera();
+	Camera(Bool isPerspective = true);
 	Camera(const Vector3F& location, const Vector3F& direction,
-		const Vector3F& up);
+		const Vector3F& up, Bool isPerspective = true);
 	virtual ~Camera();
 
 	enum
@@ -99,6 +99,8 @@ public:
 	void GetViewport(Float& rLeft, Float& rRight, Float& rTop,
 		Float& rBottom);
 
+	inline Bool IsPerspective() const;
+
 private:
 	// world coordinate frame
 	Vector3F mLocation;
@@ -114,6 +116,9 @@ private:
 	Float mPortRight;
 	Float mPortTop;
 	Float mPortBottom;
+
+	// perspective or orthographic
+	Bool mIsPerspective;
 };
 
 typedef Pointer<Camera> CameraPtr;

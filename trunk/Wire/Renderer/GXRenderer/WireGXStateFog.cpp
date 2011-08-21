@@ -23,14 +23,16 @@ const UChar PdrRendererData::FOG_DENSITY[StateFog::DF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateFog* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::FOG] = pState;
 
 	if (pState->Enabled)
 	{
+		WIRE_ASSERT(mspCamera);
  		GXColor color = { pState->Color.R() * 255.0F, pState->Color.G() *
 			255.0F, pState->Color.B() * 255.0F, 255};
 		GXSetFog(PdrRendererData::FOG_DENSITY[pState->DensityFunc],
-			pState->Start, pState->End, mpCamera->GetDMin(), mpCamera->
+			pState->Start, pState->End, mspCamera->GetDMin(), mspCamera->
 			GetDMax(), color);
 	}
 	else

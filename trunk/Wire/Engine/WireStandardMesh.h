@@ -60,7 +60,8 @@ public:
 		Float radius, const UInt uvQuantity = 0,
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
-	static Geometry* CreateText(const Char* pText);
+	static Geometry* CreateText(const Char* pText, const Float screenWidth,
+		const Float screenHeight);
 
 private:
 	static Texture2DPtr s_spFontTexture;
