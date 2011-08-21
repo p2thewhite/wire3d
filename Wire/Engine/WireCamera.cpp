@@ -13,7 +13,9 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Camera, Object);
 
 //----------------------------------------------------------------------------
-Camera::Camera()
+Camera::Camera(Bool isPerspective)
+	:
+	mIsPerspective(isPerspective)
 {
 	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
 	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
@@ -23,7 +25,9 @@ Camera::Camera()
 
 //----------------------------------------------------------------------------
 Camera::Camera(const Vector3F& location, const Vector3F& direction,
-	const Vector3F& up)
+	const Vector3F& up, Bool isPerspective)
+	:
+	mIsPerspective(isPerspective)
 {
 	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
 	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);

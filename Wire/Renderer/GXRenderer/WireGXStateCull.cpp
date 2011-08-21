@@ -22,6 +22,7 @@ const UChar PdrRendererData::CULL_TYPE[StateCull::CM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateCull* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::CULL] = pState;
 
 	if (pState->Enabled)

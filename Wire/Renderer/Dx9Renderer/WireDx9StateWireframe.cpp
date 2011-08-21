@@ -15,6 +15,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateWireframe* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::WIREFRAME] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;

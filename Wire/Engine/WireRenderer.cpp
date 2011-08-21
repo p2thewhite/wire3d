@@ -38,16 +38,28 @@ void Renderer::Initialize(UInt width, UInt height)
 	mHeight = height;
 	mMaxAnisotropy = 1.0F;
 	s_pRenderer = this;
-	mpCamera = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Terminate()
 {
+	ClearReferences();
+
 	DestroyAllIndexBuffers();
 	DestroyAllVertexBuffers();
 	DestroyAllTexture2Ds();
 	s_pRenderer = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::ClearReferences()
+{
+	mspCamera = NULL;
+
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
+	{
+		mspStates[i] = NULL;
+	}
 }
 
 //----------------------------------------------------------------------------

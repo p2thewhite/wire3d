@@ -22,6 +22,7 @@ const DWORD PdrRendererData::FOG_DENSITY[StateFog::DF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateFog* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::FOG] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;

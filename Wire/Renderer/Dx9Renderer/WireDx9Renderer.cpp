@@ -156,6 +156,10 @@ void Renderer::DisplayBackBuffer()
 //----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
+	// Reset state cache (state is not preserved outside Begin/EndScene()),
+	// and smart pointers used by the Renderer to cache references.
+	ClearReferences();
+
 	SetCamera(pCamera);
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
@@ -176,12 +180,6 @@ Bool Renderer::PreDraw(Camera* pCamera)
     hr = rDevice->BeginScene();
     WIRE_ASSERT(SUCCEEDED(hr));
 
-	// reset state cache (state is not preserved outside Begin/EndScene())
-	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
-	{
-		mspStates[i] = NULL;
-	}
-
 	SetStates(State::Default);
 
 	return true;
@@ -196,6 +194,8 @@ void Renderer::PostDraw()
 	{
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
+
+	ClearReferences();
 }
 
 //----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ void Renderer::SetCamera(Camera* pCamera)
 		return;
 	}
 
-	mpCamera = pCamera;
+	mspCamera = pCamera;
 	OnFrameChange();
 	OnViewportChange();
 
@@ -237,14 +237,29 @@ void Renderer::SetCamera(Camera* pCamera)
 	const Float h = 1.0F/(t-b);
 	const Float d = 1.0F/(f-n);
 
-	D3DMATRIX matProj = {
-		2.0F*n*w, 0.0F,     0.0F,  0.0F,
-		0.0F,     2.0F*n*h, 0.0F,  0.0F,
-		-(r+l)*w, -(t+b)*h, f*d,   1.0F,
-		0.0F,     0.0F,    -n*f*d, 0.0F };
-	
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+	
+	if (pCamera->IsPerspective())
+	{
+		D3DMATRIX matProj = {
+			2.0F*n*w, 0.0F,     0.0F,  0.0F,
+			0.0F,     2.0F*n*h, 0.0F,  0.0F,
+			-(r+l)*w, -(t+b)*h, f*d,   1.0F,
+			0.0F,     0.0F,    -n*f*d, 0.0F };
+
+		rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+	}
+	else
+	{
+		D3DMATRIX matProj = {
+			2.0F*w,   0.0F,     0.0F, 0.0F,
+			0.0F,     2.0F*h,   0.0F, 0.0F,
+			0.0F,     0.0F,     d,    0.0F,
+			-(l+r)*w, -(t+b)*h, -n*d, 1.0F };
+
+		rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+	}
+
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
 		ViewMatrix));
 }
@@ -252,10 +267,11 @@ void Renderer::SetCamera(Camera* pCamera)
 //----------------------------------------------------------------------------
 void Renderer::OnFrameChange()
 {
-	Vector3F eye = mpCamera->GetLocation();
-	Vector3F rVector = mpCamera->GetRVector();
-	Vector3F uVector = mpCamera->GetUVector();
-	Vector3F dVector = mpCamera->GetDVector();
+	WIRE_ASSERT(mspCamera);
+	Vector3F eye = mspCamera->GetLocation();
+	Vector3F rVector = mspCamera->GetRVector();
+	Vector3F uVector = mspCamera->GetUVector();
+	Vector3F dVector = mspCamera->GetDVector();
 
 	Matrix4F& rViewMatrix = mpData->ViewMatrix;
 	rViewMatrix[0][0] = rVector[0];
@@ -279,7 +295,7 @@ void Renderer::OnFrameChange()
 //----------------------------------------------------------------------------
 void Renderer::OnViewportChange()
 {
-	if (!mpCamera)
+	if (!mspCamera)
 	{
 		return;
 	}
@@ -289,7 +305,7 @@ void Renderer::OnViewportChange()
 	Float top;
 	Float bottom;
 
-	mpCamera->GetViewport(left, right, top, bottom);
+	mspCamera->GetViewport(left, right, top, bottom);
 
 	// DirectX defines the full-sized viewport to have origin at the upper
 	// left corner of the screen. Wire uses the OpenGL convention that

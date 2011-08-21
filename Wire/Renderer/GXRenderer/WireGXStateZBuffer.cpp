@@ -27,6 +27,7 @@ const UChar PdrRendererData::ZBUFFER_COMPARE[StateZBuffer::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateZBuffer* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::ZBUFFER] = pState;
 
 	UChar enable = pState->Enabled ? GX_TRUE : GX_FALSE;

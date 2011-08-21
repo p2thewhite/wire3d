@@ -22,6 +22,7 @@ const DWORD PdrRendererData::CULL_TYPE[StateCull::CM_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateCull* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::CULL] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;

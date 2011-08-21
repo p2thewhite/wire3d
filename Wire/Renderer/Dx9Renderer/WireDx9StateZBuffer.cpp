@@ -27,6 +27,7 @@ const DWORD PdrRendererData::ZBUFFER_COMPARE[StateZBuffer::CF_QUANTITY] =
 //----------------------------------------------------------------------------
 void Renderer::SetState(StateZBuffer* pState)
 {
+	WIRE_ASSERT(pState);
 	mspStates[State::ZBUFFER] = pState;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;

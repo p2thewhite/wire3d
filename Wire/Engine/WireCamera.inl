@@ -71,3 +71,9 @@ inline Float Camera::GetRMax() const
 {
 	return mFrustum[VF_RMAX];
 }
+
+//----------------------------------------------------------------------------
+inline Bool Camera::IsPerspective() const
+{
+	return mIsPerspective;
+}
