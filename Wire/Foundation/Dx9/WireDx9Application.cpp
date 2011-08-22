@@ -33,11 +33,11 @@ using namespace Wire;
 const UInt Application::KEY_ESCAPE = VK_ESCAPE;
 
 //----------------------------------------------------------------------------
-Dx9Application::Dx9Application(const ColorRGBA backgroundColor, const Char*
+Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool isFullscreen)
 	:
-	Application(backgroundColor, pWindowTitle, xPosition, yPosition, width,
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
 		height, isFullscreen),
 	mWindowID(0)
 {

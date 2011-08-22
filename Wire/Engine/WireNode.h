@@ -42,19 +42,19 @@ public:
 	// child. Otherwise, the function returns -1.
  	Int DetachChild(Spatial* pChild);
  
-	// Detach a child from this node. If 0 <= i < GetQuantity(), the
+	// Detach a child from this node. If i < GetQuantity(), the
 	// return value is the child at index i; otherwise, the function returns
 	// null.
 	SpatialPtr DetachChildAt(UInt i);
 
 	// The same comments for AttachChild apply here regarding the inability
-	// to have multiple parents. If 0 <= i < GetQuantity(), the function
+	// to have multiple parents. If i < GetQuantity(), the function
 	// succeeds and returns i. If i is out of range, the function *still*
 	// succeeds, appending the child to the end of the array.  The return
 	// value is the previous child stored at index i.
 	SpatialPtr SetChild(UInt i, Spatial* pChild);
 
-	// Get the child at the specified index. If 0 <= i < GetQuantity(),
+	// Get the child at the specified index. If i < GetQuantity(),
 	// the function succeeds and returns the child at that index. Keep in mind
 	// that child[i] could very well be null. If i is out of range, the
 	// function returns null.

@@ -49,7 +49,7 @@ Image2D::~Image2D()
 //----------------------------------------------------------------------------
 UInt Image2D::GetBound(UInt i, UInt level) const
 {
-	WIRE_ASSERT(0 <= i && i < 2);
+	WIRE_ASSERT(i < 2);
 	if (GetMipmapCount() <= level)
 	{
 		return 0;

@@ -14,12 +14,12 @@ using namespace Wire;
 Application* Application::s_pApplication = NULL;
 
 //----------------------------------------------------------------------------
-Application::Application(const ColorRGBA backgroundColor, const Char*
+Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool isFullscreen)
 	:
 	mpRenderer(NULL),
-	mBackgroundColor(backgroundColor),
+	mBackgroundColor(rBackgroundColor),
 	mpWindowTitle(pWindowTitle),
 	mXPosition(xPosition),
 	mYPosition(yPosition),

@@ -53,7 +53,7 @@ public:
 	static const UInt KEY_ESCAPE;
 
 protected:
-	Application(const ColorRGBA backgroundColor, const Char* pWindowTitle,
+	Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle,
 		Int xPosition, Int yPosition, UInt width, UInt height,
 		Bool isFullscreen);
 

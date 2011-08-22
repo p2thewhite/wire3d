@@ -86,7 +86,7 @@ void Sample4::OnIdle()
 	UInt modeQuantity = sizeof(modes) / sizeof(BlendMode);
 	UInt modeIndex = static_cast<UInt>(MathF::FMod(static_cast<Float>(time),
 		static_cast<Float>(modeQuantity)));
-	WIRE_ASSERT(0 <= modeIndex && modeIndex < modeQuantity);
+	WIRE_ASSERT(modeIndex < modeQuantity);
 	Material* pMaterial = mspGeometry->GetMaterial();
 	if (pMaterial)
 	{

@@ -16,11 +16,11 @@ using namespace Wire;
 const UInt Application::KEY_ESCAPE = WPAD_BUTTON_HOME;
 
 //----------------------------------------------------------------------------
-GXApplication::GXApplication(const ColorRGBA backgroundColor, const Char*
+GXApplication::GXApplication(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool)
 	:
-	Application(backgroundColor, pWindowTitle, xPosition, yPosition, width,
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
 		height, true)
 {
 }

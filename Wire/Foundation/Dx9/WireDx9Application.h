@@ -20,7 +20,7 @@ class Dx9Application : public Application
 {
 
 public:
-	Dx9Application(const ColorRGBA backgroundColor = ColorRGBA::BLACK,
+	Dx9Application(const ColorRGBA& rBackgroundColor = ColorRGBA::BLACK,
 		const Char* windowTitle = NULL, Int xPosition = 0, Int yPosition = 0,
 		UInt width = 640, UInt height = 480, Bool isFullscreen = false);
 	virtual ~Dx9Application();
