@@ -26,8 +26,7 @@ Node::~Node()
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
- 		SpatialPtr spChild = DetachChildAt(i);
- 		spChild = NULL;
+ 		DetachChildAt(i);
 	}
 }
 

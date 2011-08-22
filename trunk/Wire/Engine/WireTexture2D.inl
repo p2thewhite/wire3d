@@ -32,13 +32,13 @@ inline Texture2D::FilterType Texture2D::GetFilterType() const
 //----------------------------------------------------------------------------
 inline void Texture2D::SetWrapType(UInt i, WrapType wrapType)
 {
-	WIRE_ASSERT(0 <= i && i < 2);
+	WIRE_ASSERT(i < 2);
 	mWarpType[i] = wrapType;
 }
 //----------------------------------------------------------------------------
 inline Texture2D::WrapType Texture2D::GetWrapType(UInt i) const
 {
-	WIRE_ASSERT(0 <= i && i < 2);
+	WIRE_ASSERT(i < 2);
 	return mWarpType[i];
 }
 

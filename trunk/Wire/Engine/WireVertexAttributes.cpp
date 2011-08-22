@@ -35,7 +35,7 @@ void VertexAttributes::ResetOffsets()
 //----------------------------------------------------------------------------
 void VertexAttributes::SetPositionChannels(UInt positionChannels)
 {
-	WIRE_ASSERT(0 <= positionChannels && positionChannels <= 3);
+	WIRE_ASSERT(positionChannels <= 3);
 
 	mPositionChannels = positionChannels;
 	UpdateOffsets();
@@ -44,7 +44,7 @@ void VertexAttributes::SetPositionChannels(UInt positionChannels)
 //----------------------------------------------------------------------------
 void VertexAttributes::SetColorChannels(UInt colorChannels, UInt unit)
 {
-	WIRE_ASSERT(0 <= colorChannels && colorChannels <= 4);
+	WIRE_ASSERT(colorChannels <= 4);
 
 	if (mColorChannels.GetQuantity() <= unit)
 	{
@@ -61,7 +61,7 @@ void VertexAttributes::SetColorChannels(UInt colorChannels, UInt unit)
 //----------------------------------------------------------------------------
 void VertexAttributes::SetNormalChannels(UInt normalChannels)
 {
-	WIRE_ASSERT(0 <= normalChannels && normalChannels <= 4);
+	WIRE_ASSERT(normalChannels <= 4);
 
 	mNormalChannels = normalChannels;
 	UpdateOffsets();
@@ -70,7 +70,7 @@ void VertexAttributes::SetNormalChannels(UInt normalChannels)
 //----------------------------------------------------------------------------
 void VertexAttributes::SetTCoordChannels(UInt tCoordChannels, UInt unit)
 {
-	WIRE_ASSERT(0 <= tCoordChannels && tCoordChannels <= 4);
+	WIRE_ASSERT(tCoordChannels <= 4);
 
 	if (mTCoordChannels.GetQuantity() <= unit)
 	{
