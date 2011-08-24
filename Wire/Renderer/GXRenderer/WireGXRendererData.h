@@ -66,6 +66,7 @@ public:
 	static const UInt MAXLIGHTS = 8;
 	UInt FrameBufferIndex;
 	Bool IsFrameBufferDirty;
+	Bool UseVSync;
 
 	UChar LightsMask;
 

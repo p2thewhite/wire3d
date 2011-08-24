@@ -8,6 +8,9 @@
 
 #include "WireNodeLight.h"
 
+#include "WireEffect.h"
+#include "WireLight.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, NodeLight, Node);

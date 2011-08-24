@@ -10,7 +10,10 @@ Int main(Int argc, Char** argv)
 	Main::Initialize();
 
 	PdrRendererInput input;
-	Renderer* pRenderer = WIRE_NEW Renderer(input, 0, 0, true);
+	const Bool useVSync = true;
+
+	// window width/height and windowed mode not supported on the Wii
+	Renderer* pRenderer = WIRE_NEW Renderer(input, 0, 0, true, useVSync);
 
 	// Renderer must be created before calling PADInit
 	PADInit();

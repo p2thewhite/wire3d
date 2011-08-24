@@ -10,15 +10,16 @@
 #ifndef WIREGEOMETRY_H
 #define WIREGEOMETRY_H
 
-#include "WireBoundingVolume.h"
-#include "WireIndexBuffer.h"
-#include "WireLight.h"
-#include "WireMaterial.h"
 #include "WireSpatial.h"
-#include "WireVertexBuffer.h"
 
 namespace Wire
 {
+
+class BoundingVolume;
+class IndexBuffer;
+class Light;
+class Material;
+class VertexBuffer;
 
 class Geometry : public Spatial
 {
@@ -50,7 +51,7 @@ public:
 
 	// member access
 	StatePtr States[State::MAX_STATE_TYPE];
-	TArray<LightPtr> Lights;
+	TArray<Pointer<Light> > Lights;
 
 
 protected:
@@ -62,10 +63,10 @@ protected:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:
-	VertexBufferPtr mspVBuffer;
-	IndexBufferPtr mspIBuffer;
-	BoundingVolumePtr mspModelBound;
-	MaterialPtr mspMaterial;
+	Pointer<VertexBuffer> mspVBuffer;
+	Pointer<IndexBuffer> mspIBuffer;
+	Pointer<BoundingVolume> mspModelBound;
+	Pointer<Material> mspMaterial;
 };
 
 typedef Pointer<Geometry> GeometryPtr;

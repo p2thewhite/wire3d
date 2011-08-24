@@ -111,7 +111,8 @@ Int main(Int argc, Char** argv)
 	// Windows specific setup code...
 	const UInt width = 640;
 	const UInt height = 480;
-	Bool isFullscreen = false;
+	const Bool isFullscreen = false;
+	const Bool useVSync = false;
 
 	// register the window class
 	static Char s_WindowClass[] = "Wire Application";
@@ -142,7 +143,8 @@ Int main(Int argc, Char** argv)
 	// create the Wire renderer (pass the window handle)
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
-	gpRenderer = WIRE_NEW Renderer(input, width, height, isFullscreen);
+	gpRenderer = WIRE_NEW Renderer(input, width, height, isFullscreen,
+		useVSync);
 	
 	// create a cube to be rendered
 	gspCube = StandardMesh::CreateCube8(/* RGB(A) channels */ 4);

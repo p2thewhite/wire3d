@@ -8,8 +8,10 @@
 
 #include "WireGXVertexBuffer.h"
 
+#include "WireEffect.h"
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
+#include "WireLight.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>

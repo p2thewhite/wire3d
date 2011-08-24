@@ -7,7 +7,14 @@
 // that agreement.
 
 #include "WireGeometry.h"
+
+#include "WireBoundingVolume.h"
 #include "WireCuller.h"
+#include "WireEffect.h"
+#include "WireIndexBuffer.h"
+#include "WireLight.h"
+#include "WireMaterial.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 

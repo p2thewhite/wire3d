@@ -35,10 +35,10 @@ const UInt Application::KEY_ESCAPE = VK_ESCAPE;
 //----------------------------------------------------------------------------
 Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
-	Bool isFullscreen)
+	Bool isFullscreen, Bool useVSync)
 	:
 	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
-		height, isFullscreen),
+		height, isFullscreen, useVSync),
 	mWindowID(0)
 {
 	_set_error_mode(_OUT_TO_MSGBOX);
@@ -181,7 +181,8 @@ Int Dx9Application::Main(Int, Char*[])
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
 
-	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen);
+	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen,
+		mUseVSync);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
 	if (s_pApplication->OnInitialize())

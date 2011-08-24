@@ -16,7 +16,7 @@ Application* Application::s_pApplication = NULL;
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
-	Bool isFullscreen)
+	Bool isFullscreen, Bool useVSync)
 	:
 	mpRenderer(NULL),
 	mBackgroundColor(rBackgroundColor),
@@ -25,7 +25,8 @@ Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	mYPosition(yPosition),
 	mWidth(width),
 	mHeight(height),
-	mIsFullscreen(isFullscreen)
+	mIsFullscreen(isFullscreen),
+	mUseVSync(useVSync)
 {
 }
 

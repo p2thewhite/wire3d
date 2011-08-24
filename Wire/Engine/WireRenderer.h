@@ -41,8 +41,9 @@ class VisibleSet;
 class Renderer
 {
 public:
+
 	Renderer(PdrRendererInput& rInput, UInt width, UInt height,
-		Bool isFullscreen);
+		Bool isFullscreen, Bool useVSync);
 	~Renderer();
 
 	// The platform-dependent constructor must call this function first before
