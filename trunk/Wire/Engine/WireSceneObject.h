@@ -10,12 +10,13 @@
 #ifndef WIRESCENEOBJECT_H
 #define WIRESCENEOBJECT_H
 
-#include "WireController.h"
 #include "WireObject.h"
 #include "WireTArray.h"
 
 namespace Wire
 {
+
+class Controller;
 
 class SceneObject : public Object
 {
@@ -35,7 +36,7 @@ protected:
 	SceneObject();
 
 private:
-	TArray<ControllerPtr> mControllers;
+	TArray<Pointer<Controller> > mControllers;
 };
 
 typedef Pointer<SceneObject> SceneObjectPtr;

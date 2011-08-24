@@ -36,7 +36,7 @@ protected:
 private:
 	void LightToLocalTransform();
 
-	LightPtr mspLight;
+	Pointer<Light> mspLight;
 };
 
 typedef Pointer<NodeLight> NodeLightPtr;

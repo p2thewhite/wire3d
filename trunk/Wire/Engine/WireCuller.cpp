@@ -8,6 +8,8 @@
 
 #include "WireCuller.h"
 
+#include "WireEffect.h"
+#include "WireLight.h"
 #include "WireSpatial.h"
 
 using namespace Wire;

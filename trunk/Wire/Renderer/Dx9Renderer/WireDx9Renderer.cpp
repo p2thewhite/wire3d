@@ -14,13 +14,17 @@
 #include "WireDx9RendererInput.h"
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
+#include "WireEffect.h"
 #include "WireGeometry.h"
+#include "WireIndexBuffer.h"
+#include "WireLight.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
-	Bool isFullscreen)
+	Bool isFullscreen, Bool useVSync)
 	:
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
@@ -41,14 +45,24 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	rPresent.BackBufferCount = 1;
 	rPresent.hDeviceWindow = rInput.WindowHandle;
-	rPresent.Windowed = isFullscreen ? FALSE : TRUE;
 	rPresent.Flags = 0;
-	rPresent.PresentationInterval = D3DPRESENT_INTERVAL_ONE; //D3DPRESENT_INTERVAL_IMMEDIATE;
+	if (useVSync)
+	{
+		rPresent.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+	}
+	else
+	{
+		rPresent.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	}
+
 	if (isFullscreen)
 	{
+		rPresent.Windowed = FALSE;
 		rPresent.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 	}
+	else
 	{
+		rPresent.Windowed = TRUE;
 		rPresent.FullScreen_RefreshRateInHz = 0;
 	}
 
@@ -334,6 +348,7 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 //----------------------------------------------------------------------------
 void Renderer::Resize(UInt width, UInt height)
 {
+	WIRE_ASSERT(mpData);
 	mWidth = width;
 	mHeight = height;
 

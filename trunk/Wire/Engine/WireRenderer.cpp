@@ -9,9 +9,11 @@
 #include "WireRenderer.h"
 
 #include "WireCamera.h"
+#include "WireEffect.h"
 #include "WireGeometry.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
+#include "WireLight.h"
 #include "WireNode.h"
 #include "WireTexture2D.h"
 #include "WireVertexBuffer.h"

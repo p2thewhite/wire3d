@@ -17,6 +17,7 @@
 namespace Wire
 {
 
+class ColorRGBA;
 class Geometry;
 
 class StandardMesh
@@ -61,7 +62,7 @@ public:
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
 	static Geometry* CreateText(const Char* pText, const Float screenWidth,
-		const Float screenHeight);
+		const Float screenHeight, const ColorRGBA& rColor);
 
 private:
 	static Texture2DPtr s_spFontTexture;

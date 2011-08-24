@@ -9,6 +9,8 @@
 #include "WireNodeSwitch.h"
 
 #include "WireCuller.h"
+#include "WireEffect.h"
+#include "WireLight.h"
 
 using namespace Wire;
 

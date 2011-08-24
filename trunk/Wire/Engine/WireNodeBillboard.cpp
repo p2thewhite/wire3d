@@ -9,6 +9,8 @@
 #include "WireNodeBillboard.h"
 
 #include "WireCamera.h"
+#include "WireEffect.h"
+#include "WireLight.h"
 
 using namespace Wire;
 

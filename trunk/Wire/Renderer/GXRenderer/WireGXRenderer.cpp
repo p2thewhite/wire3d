@@ -10,12 +10,14 @@
 
 #include "WireCamera.h"
 #include "WireGeometry.h"
+#include "WireEffect.h"
 #include "WireImage2D.h"
 #include "WireGXDisplayList.h"
 #include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
 #include "WireGXRendererInput.h"
 #include "WireGXVertexBuffer.h"
+#include "WireLight.h"
 #include "WireMatrix4.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
@@ -26,7 +28,7 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
-	Bool)
+	Bool, Bool useVSync)
 	:
 	mMaxAnisotropy(4.0F),
 	mMaxTextureStages(8),
@@ -39,6 +41,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);
+	mpData->UseVSync = useVSync;
 
 	VIInit();
 
@@ -169,7 +172,10 @@ void Renderer::DisplayBackBuffer()
 	// Tell VI device driver to write the current VI settings so far
 	VIFlush();
 
-	VIWaitForRetrace();
+	if (mpData->UseVSync)
+	{
+		VIWaitForRetrace();
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -354,6 +360,7 @@ PdrRendererData::PdrRendererData()
 	PdrIBuffer(NULL),
 	FrameBufferIndex(0),
 	IsFrameBufferDirty(false),
+	UseVSync(true),
 	LightsMask(0)
 {
 	FrameBuffer[0] = NULL;

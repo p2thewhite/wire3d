@@ -10,9 +10,6 @@
 #ifndef WIRESPATIAL_H
 #define WIRESPATIAL_H
 
-#include "WireBoundingVolume.h"
-#include "WireEffect.h"
-#include "WireLight.h"
 #include "WireSceneObject.h"
 #include "WireState.h"
 #include "WireTransformation.h"
@@ -20,7 +17,10 @@
 namespace Wire
 {
 
+class BoundingVolume;
 class Culler;
+class Effect;
+class Light;
 
 class Spatial : public SceneObject
 {
@@ -43,7 +43,7 @@ public:
 	// world bound directly and bypass the Spatial::UpdateGS() mechanism. If
 	// WorldBound is set directly, the WorldBoundIsCurrent flag should be set
 	// to true.
-	BoundingVolumePtr WorldBound;
+	Pointer<BoundingVolume> WorldBound;
 	Bool WorldBoundIsCurrent;
 
 	// Culling parameters.
@@ -135,13 +135,13 @@ protected:
 	TArray<StatePtr> mStates;
 
 	// light state
-	TArray<LightPtr> mLights;
+	TArray<Pointer<Light> > mLights;
 
 	// Effect state. If the effect is attached to a Geometry object, it
 	// applies to that object alone. If the effect is attached to a Node
 	// object, it applies to all Geometry objects in the subtree rooted at
 	// the Node.
-	TArray<EffectPtr> mEffects;
+	TArray<Pointer<Effect> > mEffects;
 };
 
 typedef Pointer<Spatial> SpatialPtr;

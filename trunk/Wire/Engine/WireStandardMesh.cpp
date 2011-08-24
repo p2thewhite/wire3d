@@ -8,9 +8,17 @@
 
 #include "WireStandardMesh.h"
 
+#include "WireBoundingVolume.h"
+#include "WireColorRGB.h"
+#include "WireEffect.h"
 #include "WireImage2D.h"
+#include "WireIndexBuffer.h"
 #include "WireGeometry.h"
+#include "WireLight.h"
+#include "WireMaterial.h"
+#include "WireStateAlpha.h"
 #include "WireTexture2D.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
@@ -798,7 +806,7 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 
 //----------------------------------------------------------------------------
 Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
-	const Float screenHeight)
+	const Float screenHeight, const ColorRGBA& rColor)
 {
 	if (!pText)
 	{
@@ -824,7 +832,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 	{
 		const UInt texWidth = 128;
 		const UInt texHeight = 64;
-		UChar* const pRaw = WIRE_NEW UChar[texWidth * texHeight * 3];
+		UChar* const pRaw = WIRE_NEW UChar[texWidth * texHeight * 4];
 		UChar* pDst = pRaw;
 		UChar* pSrc = const_cast<UChar*>(s_Font);
 
@@ -837,9 +845,11 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 					*pDst++ = 0xFF;
 					*pDst++ = 0xFF;
 					*pDst++ = 0xFF;
+					*pDst++ = 0xFF;
 				}
 				else
 				{
+					*pDst++ = 0;
 					*pDst++ = 0;
 					*pDst++ = 0;
 					*pDst++ = 0;
@@ -849,7 +859,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 			pSrc++;
 		}
 
-		Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGB888, texWidth,
+		Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
 			texHeight, pRaw, false);
 		s_spFontTexture = WIRE_NEW Texture2D(pImage);
 		s_spFontTexture->SetFilterType(Texture2D::FT_NEAREST);
@@ -857,6 +867,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
+	attributes.SetColorChannels(4);
 	attributes.SetTCoordChannels(2);
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
@@ -889,6 +900,11 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
  			pVBuffer->TCoord2(k*4+2) = Vector2F(u+cw, v+ch);
  			pVBuffer->TCoord2(k*4+3) = Vector2F(u, v+ch);
 
+			for (UInt j = 0; j < 4; j++)
+			{
+				pVBuffer->Color4(k*4+j) = rColor;
+			}
+
 			for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
 			{
 				(*pIBuffer)[k*6+j] = indices[j] + k*4;
@@ -909,8 +925,13 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
 	Material* pMaterial = WIRE_NEW Material;
-	pMaterial->AddTexture(s_spFontTexture, Material::BM_REPLACE);
+	pMaterial->AddTexture(s_spFontTexture, Material::BM_MODULATE);
 	pGeo->SetMaterial(pMaterial);
+
+	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
+	pAlpha->BlendEnabled = true;
+	pGeo->AttachState(pAlpha);
+	pGeo->UpdateRS();
 
 	return pGeo;
 }
