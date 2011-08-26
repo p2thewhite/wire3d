@@ -875,7 +875,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 
 	const Float xStride = 8.0F;
 	const Float yStride = 8.0F;
-	Float x = 0;
+	Float x = 0 + 0.5F;
 	Float y = screenHeight - yStride + 0.5F;
 	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
 	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
@@ -922,18 +922,9 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
-
 	Material* pMaterial = WIRE_NEW Material;
 	pMaterial->AddTexture(s_spFontTexture, Material::BM_MODULATE);
-	pGeo->SetMaterial(pMaterial);
-
-	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
-	pAlpha->BlendEnabled = true;
-	pGeo->AttachState(pAlpha);
-	pGeo->UpdateRS();
-
-	return pGeo;
+	return WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
 }
 
 const UChar StandardMesh::s_Font[] = 

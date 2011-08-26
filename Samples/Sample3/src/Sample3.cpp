@@ -59,6 +59,8 @@ Bool Sample3::OnInitialize()
 
 	mCuller.SetCamera(mspCamera);
 
+	mspOrthographic = WIRE_NEW Camera(false);
+
 	GetRenderer()->SetClearColor(ColorRGBA::WHITE);
 
 	mAngle = 0.0F;
@@ -93,21 +95,73 @@ void Sample3::OnIdle()
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	DrawLodTextLabel();
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------
+void Sample3::DrawLodTextLabel()
+{
+	NodeDLod* pLodRoot = DynamicCast<NodeDLod>(mspRoot->GetChild(0));
+	WIRE_ASSERT(pLodRoot);	// assumption that lod node is child of root node
+	if (!pLodRoot)
+	{
+		return;
+	}
+
+	Int activeLod = pLodRoot->GetActiveChild();
+	if (activeLod < 0)
+	{
+		// no lod is visible
+		return;
+	}
+
+	Geometry* pGeo = DynamicCast<Geometry>(pLodRoot->GetChild(activeLod));
+	WIRE_ASSERT(pLodRoot);	// assumption that lod geo is child of lod node
+
+	// set the frustum for the text camera (screenWidth and screenHeight
+	// could have been changed by the user resizing the window)
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	mspOrthographic->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	GetRenderer()->SetCamera(mspOrthographic);
+
+	const UInt textArraySize = 100;
+	Char test[textArraySize];
+	System::Sprintf(test, textArraySize, "\n\n\n\n\n\nLOD %d, %d Triangles",
+		activeLod, pGeo->GetIBuffer()->GetIndexQuantity() / 3);
+
+	// The text mesh will be created and destroyed every frame (incl. Vertex-,
+	// Indexbuffers, Material, attached Render State, etc.). Therefore this
+	// function is only meant for debugging purposes.
+	GeometryPtr spText = StandardMesh::CreateText(test, screenWidth,
+		screenHeight, ColorRGBA::BLACK);
+	Int offset = static_cast<Int>((screenWidth - 21.0F*8.0F) * 0.5F);
+	spText->Local.SetTranslate(Vector3F(static_cast<Float>(offset), 0, 0));
+	spText->UpdateGS();
+
+	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
+	pAlpha->BlendEnabled = true;
+	spText->AttachState(pAlpha);
+
+	// Push the default render states onto the text mesh, otherwise current
+	// render states (wireframe in this particular case) will stay active.
+	spText->UpdateRS();
+
+	GetRenderer()->Draw(spText);
+}
+
+//----------------------------------------------------------------------------
 NodeDLod* Sample3::CreateLods()
 {
-	NodeDLod* pLod = WIRE_NEW NodeDLod;
-
 	// Create different levels of the same object
-	Geometry* pLod0 = CreateGeometry(14, 192);	// 5376 triangles
-	Geometry* pLod1 = CreateGeometry(10, 160);	// 3200 triangles
-	Geometry* pLod2 = CreateGeometry(8, 128);	// 2048 triangles
-	Geometry* pLod3 = CreateGeometry(6, 96);	// 1152 triangles
+	Spatial* pLod0 = CreateLod(14, 192);	// 5376 triangles
+	Spatial* pLod1 = CreateLod(10, 160);	// 3200 triangles
+	Spatial* pLod2 = CreateLod(8, 128);	// 2048 triangles
+	Spatial* pLod3 = CreateLod(6, 96);	// 1152 triangles
 
+	NodeDLod* pLod = WIRE_NEW NodeDLod;
 	pLod->SetLod(0, pLod0, 0, 5);		// level0 from distance 0-5 units
 	pLod->SetLod(1, pLod1, 5, 10);		// level1 from distance 5-10 units
 	pLod->SetLod(2, pLod2, 10, 15);		// level2 from distance 10-15 units
@@ -119,7 +173,7 @@ NodeDLod* Sample3::CreateLods()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample3::CreateGeometry(UInt shapeCount, UInt segmentCount)
+Spatial* Sample3::CreateLod(UInt shapeCount, UInt segmentCount)
 {
 	// Create a PQ (4,3) torus knot with a inner radius of 0.2
 	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);

@@ -23,6 +23,7 @@ inline void Texture2D::SetFilterType(FilterType filterType)
 {
 	mFilterType = filterType;
 }
+
 //----------------------------------------------------------------------------
 inline Texture2D::FilterType Texture2D::GetFilterType() const
 {
@@ -35,6 +36,7 @@ inline void Texture2D::SetWrapType(UInt i, WrapType wrapType)
 	WIRE_ASSERT(i < 2);
 	mWarpType[i] = wrapType;
 }
+
 //----------------------------------------------------------------------------
 inline Texture2D::WrapType Texture2D::GetWrapType(UInt i) const
 {
@@ -47,6 +49,7 @@ inline void Texture2D::SetAnisotropyValue(Float anisotropy)
 {
 	mAnisotropy = anisotropy;
 }
+
 //----------------------------------------------------------------------------
 inline Float Texture2D::GetAnisotropyValue() const
 {
