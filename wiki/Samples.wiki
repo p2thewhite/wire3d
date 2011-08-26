@@ -31,6 +31,7 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * a discrete level of detail (DLod) node
   * wireframe state
   * manual binding of resources
+  * orthographic projection and text meshes
 
 === Sample4 - Multitexturing ===
 This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample4%2Fsrc Source]/[http://www.youtube.com/watch?v=wcuDh3NFq54 Video]) demonstrates how to blend individual textures together in a single rendering pass using multitexturing.
