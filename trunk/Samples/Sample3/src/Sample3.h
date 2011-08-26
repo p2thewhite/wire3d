@@ -18,14 +18,19 @@ public:
 
 private:
 	NodeDLod* CreateLods();
-	Geometry* CreateGeometry(UInt shapeCount, UInt segmentCount);
+	Spatial* CreateLod(UInt shapeCount, UInt segmentCount);
 
 	Geometry* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		UInt segmentCount, UInt p, UInt q);
 	Texture2D* CreateTexture();
 
+	void DrawLodTextLabel();
+
 	CameraPtr mspCamera;
 	Culler mCuller;
+
+	// camera for GUI/text
+	CameraPtr mspOrthographic;
 
 	Float mAngle;
 	Double mLastTime;
