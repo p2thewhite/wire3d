@@ -875,8 +875,16 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 
 	const Float xStride = 8.0F;
 	const Float yStride = 8.0F;
-	Float x = 0 + 0.5F;
-	Float y = screenHeight - yStride + 0.5F;
+	Float x = 0;
+	Float y = screenHeight - yStride;
+
+	// DirectX9 oddity, pixel's center is at (0.5,0.5)
+	if (System::GetPlatform() == System::PF_DX9)
+	{
+		x += 0.5F;
+		y += 0.5F;
+	}
+
 	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
 	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
 	UInt k = 0;

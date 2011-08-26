@@ -47,6 +47,13 @@ namespace Wire
 class System
 {
 public:
+	enum Platform
+	{
+		PF_WII,
+		PF_DX9,
+		PF_QUANTITY
+	};
+
 	static const UInt MAX_UINT;
 	static const Int MAX_INT;
 
@@ -79,6 +86,8 @@ public:
 
 	static Int Toupper(Int c);
 	static Int Tolower(Int c);
+
+	static Platform GetPlatform();
 
 private:
 	static Bool s_InitializedTime;

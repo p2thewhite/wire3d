@@ -176,3 +176,9 @@ Int System::Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...)
 	va_end(args);
 	return numWritten;
 }
+
+//----------------------------------------------------------------------------
+System::Platform System::GetPlatform()
+{
+	return System::PF_WII;
+}
