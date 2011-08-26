@@ -16,4 +16,4 @@
  RTTI needs (very little) additional memory. In order to control that, Wire::Objects use their own RTTI (but other Wire classes that were not derived from Wire::Object don't!). Note: the Wire class hierarchy is a single inheritance class tree, therefore the RTTI system does not work with multiple inheritance.
  
 *Why isn't the renderer an abstract interface?*
- Because I wanted to avoid virtual functions in order to maximize performance. So while the scene graph (which is optional for rendering) and its subsystems use a fair share of virtual functions due to architectural reasons, the renderer and platform dependent renderer related classes do not, linking platform rendering code directly into the application.
+ Because I wanted to avoid virtual functions in order to maximize performance. So while the scene graph (which is optional for rendering) and its subsystems use virtual functions due to architectural reasons, the renderer and platform dependent renderer related classes do not, linking platform rendering code directly into the application.
