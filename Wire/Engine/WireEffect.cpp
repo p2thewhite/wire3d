@@ -8,6 +8,11 @@
 
 #include "WireEffect.h"
 
+#include "WireGeometry.h"
+#include "WireLight.h"
+#include "WireRenderer.h"
+#include "WireVisibleObject.h"
+
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Effect, Object);
@@ -20,4 +25,22 @@ Effect::Effect()
 //----------------------------------------------------------------------------
 Effect::~Effect()
 {
+}
+
+//----------------------------------------------------------------------------
+void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
+	VisibleObject* pVisible)
+{
+	// The default drawing function for global effects. Essentially, this
+	// draws all the visible leaf geometry, as if no effect was applied.
+	// Override to obtain a different behavior.
+	for (UInt i = min; i <= max; i++)
+	{
+		if (pVisible[i].IsDrawable())
+		{
+			Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i].Object);
+			WIRE_ASSERT(pGeometry);
+			pRenderer->Draw(pGeometry);
+		}
+	}
 }

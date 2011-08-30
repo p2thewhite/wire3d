@@ -15,6 +15,10 @@
 namespace Wire
 {
 
+class Renderer;
+class Spatial;
+class VisibleObject;
+
 class Effect : public Object
 {
 	WIRE_DECLARE_RTTI;
@@ -22,6 +26,12 @@ class Effect : public Object
 public:
 	// abstract base class
 	virtual ~Effect();
+
+	// Override this function to obtain whatever drawing behavior your effect
+	// requires. If this is not overridden, the default behavior is to
+	// draw all the Geometry objects in pVisible.
+	virtual void Draw(Renderer* pRenderer, Spatial* pGlobalObject, UInt min,
+		UInt max, VisibleObject* pVisible);
 
 protected:
 	Effect();

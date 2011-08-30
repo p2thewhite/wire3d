@@ -108,9 +108,39 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	}
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	hr = rD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-		rInput.WindowHandle, behaviorFlags, &rPresent, &rDevice);
-	WIRE_ASSERT(SUCCEEDED(hr));
+
+	hr = -1;
+
+#ifdef WIRE_DEBUG
+	// Look for 'NVIDIA PerfHUD' adapter
+	// If it is present, override default settings
+	for (UINT adapter = 0; adapter < rD3D->GetAdapterCount(); adapter++)
+	{
+		D3DADAPTER_IDENTIFIER9 Identifier;
+		HRESULT res = rD3D->GetAdapterIdentifier(adapter, 0, &Identifier);
+		WIRE_ASSERT(SUCCEEDED(res));
+		if (strstr(Identifier.Description,"PerfHUD") != 0)
+		{
+			// try to create a NVPerfHUD compatible adapter
+			hr = rD3D->CreateDevice(
+				adapter,
+				D3DDEVTYPE_REF,
+				rInput.WindowHandle,
+				D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE,
+				&rPresent,
+				&rDevice);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			break;
+		}
+	}
+#endif
+
+	if (FAILED(hr))
+	{
+		hr = rD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+			rInput.WindowHandle, behaviorFlags, &rPresent, &rDevice);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
 
 	// Turn off lighting (DX defaults to lighting on).
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
