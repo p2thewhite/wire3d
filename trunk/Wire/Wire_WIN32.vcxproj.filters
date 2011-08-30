@@ -564,9 +564,6 @@
     <ClCompile Include="Renderer\GXRenderer\WireGXTexture2D.cpp">
       <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXTextureEffect.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\GXRenderer\WireGXVertexBuffer.cpp">
       <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>

@@ -482,9 +482,9 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 	// in the same path is small (that is a *lot* of effects to apply in
 	// one frame). If it needs to be larger for your applications, increase
 	// the maximum size.
-	const Int maxTuples = 64;    // maximum number of stack elements
-	Int indexStack[maxTuples][2];  // elements are (startIndex, finalIndex)
-	Int top = -1;                // stack is initially empty
+	const UInt maxTuples = 64;		// maximum number of stack elements
+	UInt indexStack[maxTuples][2];	// elements are (startIndex, finalIndex)
+	Int top = -1;					// stack is initially empty
 
 	const UInt visibleQuantity = rVisibleSet.GetQuantity();
 	VisibleObject* pVisible = rVisibleSet.GetVisible();
@@ -492,16 +492,15 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 	{
 		if (pVisible[i].Object)
 		{
-// TODO: support Effects
-// 			if (pVisible[i].GlobalEffect)
-// 			{
-// 				// Begin the scope of a global effect.
-// 				top++;
-// 				assert(top < maxTuples);
-// 				indexStack[top][0] = i;
-// 				indexStack[top][1] = i;
-// 			}
-// 			else
+			if (pVisible[i].GlobalEffect)
+			{
+				// Begin the scope of a global effect.
+				top++;
+				WIRE_ASSERT(top < maxTuples);
+				indexStack[top][0] = i;
+				indexStack[top][1] = i;
+			}
+			else
 			{
 				// Found a leaf Geometry object.
 				if (top == -1)
@@ -514,21 +513,21 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 				}
 			}
 		}
-// 		else
-// 		{
-// 			// End the scope of a global effect.
-//			WIRE_ASSERT(!pVisible[i].GlobalEffect);
-// 			Int min = indexStack[top][0];
-// 			Int max = indexStack[top][1];
-// 
-// 			pVisible[min].GlobalEffect->Draw(this, pVisible[min].Object,
-// 				min+1,max,pVisible);
-// 
-// 			if (--top >= 0)
-// 			{
-// 				indexStack[top][1] = max + 1;
-// 			}
-// 		}
+		else
+		{
+			// End the scope of a global effect.
+			WIRE_ASSERT(!pVisible[i].GlobalEffect);
+			UInt min = indexStack[top][0];
+			UInt max = indexStack[top][1];
+
+			pVisible[min].GlobalEffect->Draw(this, pVisible[min].Object,
+				min+1, max, pVisible);
+
+			if (--top >= 0)
+			{
+				indexStack[top][1] = max + 1;
+			}
+		}
 	}
 }
 
