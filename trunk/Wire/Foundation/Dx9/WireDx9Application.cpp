@@ -108,6 +108,7 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 				UInt height = static_cast<UInt>(HIWORD(lParam));
 				pApp->OnResize(width, height);
 			}
+
 			return 0;
 		}
 
