@@ -42,7 +42,6 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	D3DPRESENT_PARAMETERS& rPresent = mpData->Present;
 	rPresent.BackBufferWidth = width;
 	rPresent.BackBufferHeight = height;
-	rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	rPresent.BackBufferCount = 1;
 	rPresent.hDeviceWindow = rInput.WindowHandle;
 	rPresent.Flags = 0;
@@ -59,11 +58,13 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	{
 		rPresent.Windowed = FALSE;
 		rPresent.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+		rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
 	}
 	else
 	{
 		rPresent.Windowed = TRUE;
 		rPresent.FullScreen_RefreshRateInHz = 0;
+		rPresent.BackBufferFormat = D3DFMT_UNKNOWN;
 	}
 
 	// Request depth and stencil buffers. The parameters are not independent
@@ -176,6 +177,11 @@ Renderer::~Renderer()
 //----------------------------------------------------------------------------
 void Renderer::ClearBuffers()
 {
+	if (mpData->IsDeviceLost)
+	{
+		return;
+	}
+
 	DWORD clearColor = D3DCOLOR_COLORVALUE(mClearColor.R(),
 		mClearColor.G(), mClearColor.B(), mClearColor.A());
 
@@ -189,8 +195,19 @@ void Renderer::ClearBuffers()
 //----------------------------------------------------------------------------
 void Renderer::DisplayBackBuffer()
 {
+	if (mpData->IsDeviceLost)
+	{
+		return;
+	}
+
 	HRESULT hr;
 	hr = mpData->D3DDevice->Present(NULL, NULL, NULL, NULL);
+
+	if (hr == D3DERR_DEVICELOST)
+	{
+		mpData->IsDeviceLost = true;
+	}
+
 	if (hr != D3DERR_DEVICELOST)
 	{
 		WIRE_ASSERT(SUCCEEDED(hr));
@@ -217,8 +234,25 @@ Bool Renderer::PreDraw(Camera* pCamera)
 		return false;
 
 	case D3DERR_DEVICENOTRESET:
+		if (!mpData->IsDeviceLost)
+		{
+			mpData->IsDeviceLost = true;
+			return false;
+		}
+
 		mpData->ResetDevice();
 		break;
+
+	case D3D_OK:
+		if (mpData->IsDeviceLost)
+		{
+			mpData->ResetDevice();
+		}
+
+		break;
+
+	default:
+		WIRE_ASSERT(false);
     }
 
     hr = rDevice->BeginScene();
@@ -452,8 +486,10 @@ void DestroyResources(THashTable<const Resource*,
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity());
 	const Resource* pKey;
-	for (PdrResource** pValue = rMap.GetFirst(&pKey); pValue;
-		pValue = rMap.GetNext(&pKey))
+	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
+
+	for (PdrResource** pValue = it.GetFirst(&pKey); pValue;
+		pValue = it.GetNext(&pKey))
 	{
 		WIRE_DELETE *pValue;
 		rSave.Append(pKey);
