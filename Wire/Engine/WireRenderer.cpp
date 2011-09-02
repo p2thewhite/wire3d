@@ -496,7 +496,7 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 			{
 				// Begin the scope of a global effect.
 				top++;
-				WIRE_ASSERT(top < maxTuples);
+				WIRE_ASSERT(top < static_cast<Int>(maxTuples));
 				indexStack[top][0] = i;
 				indexStack[top][1] = i;
 			}
