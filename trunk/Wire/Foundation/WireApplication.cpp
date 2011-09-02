@@ -53,8 +53,7 @@ void Application::OnResize(UInt width, UInt height)
 	if (mpRenderer)
 	{
 		mpRenderer->Resize(width, height);
+		mWidth = width;
+		mHeight = height;
 	}
-
-	mWidth = width;
-	mHeight = height;
 }

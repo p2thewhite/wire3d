@@ -188,7 +188,8 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 {
 	WIRE_ASSERT(unit < pRenderer->GetMaxTextureStages());
 
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	IDirect3DDevice9*& rDevice = pData->D3DDevice;
 	HRESULT hr;
 
 	// Anisotropic filtering value.
@@ -222,7 +223,8 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	}
 	else
 	{
-		if (1.0F < anisotropy && anisotropy <= pRenderer->GetMaxAnisotropy())
+		if (pData->SupportsMagFAniso && (1.0F < anisotropy &&
+			anisotropy <= pRenderer->GetMaxAnisotropy()))
 		{
 			hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
 				D3DTEXF_ANISOTROPIC);
@@ -237,13 +239,10 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	}
 
 	// Set the mipmap mode.
-	if (1.0F < anisotropy && anisotropy <= pRenderer->GetMaxAnisotropy())
+	if (pData->SupportsMinFAniso && (1.0F < anisotropy &&
+		anisotropy <= pRenderer->GetMaxAnisotropy()))
 	{
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
-			D3DTEXF_ANISOTROPIC);
-		WIRE_ASSERT(SUCCEEDED(hr));
-
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
 			D3DTEXF_ANISOTROPIC);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
@@ -252,11 +251,11 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
 			PdrRendererData::TEX_MIN_FILTER[filterType]);
 		WIRE_ASSERT(SUCCEEDED(hr));
-
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
-			PdrRendererData::TEX_MIP_FILTER[filterType]);
-		WIRE_ASSERT(SUCCEEDED(hr));
 	}
+
+	hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
+		PdrRendererData::TEX_MIP_FILTER[filterType]);
+	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Set the border color (for clamp to border).
 	const ColorRGBA borderColor(ColorRGBA::BLACK); //pTexture->GetBorderColor();

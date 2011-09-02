@@ -46,6 +46,8 @@ public:
 	static const DWORD USAGES[];
 
 	Bool Supports32BitIndices;
+	Bool SupportsMinFAniso;
+	Bool SupportsMagFAniso;
 	Bool IsDeviceLost;
 
 private:
