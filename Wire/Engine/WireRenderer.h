@@ -106,6 +106,10 @@ public:
 	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
 
+	// Clear all the smart pointers that the Renderer caches between PreDraw()
+	// and PostDraw() calls.
+	void ClearReferences();
+
 	// Apply camera changes to platform specific renderer.
 	void SetCamera(Camera* pCamera);
 	void OnFrameChange();
@@ -158,10 +162,6 @@ private:
 	void DestroyAllIndexBuffers();
  	void DestroyAllTexture2Ds();
 	void DestroyAllVertexBuffers();
-
-	// Clear all the smart pointers that the Renderer caches between PreDraw()
-	// and PostDraw() calls.
-	void ClearReferences();
 
 	// Global render states
 	StatePtr mspStates[State::MAX_STATE_TYPE];
