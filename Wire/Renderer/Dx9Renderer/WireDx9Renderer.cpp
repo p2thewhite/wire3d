@@ -149,6 +149,16 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	if ((deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY ) > 0)
 	{
+		if (deviceCaps.TextureCaps & D3DPTFILTERCAPS_MINFANISOTROPIC)
+		{
+			mpData->SupportsMinFAniso = true;
+		}
+
+		if (deviceCaps.TextureCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC)
+		{
+			mpData->SupportsMagFAniso = true;
+		}
+
 		mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
 	}
 
@@ -452,6 +462,8 @@ PdrRendererData::PdrRendererData(Renderer* pRenderer)
 	D3D(NULL),
 	D3DDevice(NULL),
 	Supports32BitIndices(false),
+	SupportsMinFAniso(false),
+	SupportsMagFAniso(false),
 	IsDeviceLost(false),
 	mpRenderer(pRenderer)
 {
