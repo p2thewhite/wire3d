@@ -77,6 +77,7 @@ public:
 	static void UnbindAll(const IndexBuffer* pIndexBuffer);
 	void Enable(const IndexBuffer* pIndexBuffer);
 	void Disable(const IndexBuffer* pIndexBuffer);
+	void Set(const IndexBuffer* pIndexBuffer);
 	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 
 	// Vertex buffer management
@@ -92,13 +93,15 @@ public:
 	PdrTexture2D* Bind(const Texture2D* pTexture);
 	void Unbind(const Texture2D* pTexture);
 	static void UnbindAll(const Texture2D* pTexture);
-	void Enable(Texture2D* pTexture, UInt unit = 0);
-	void Disable(Texture2D* pTexture, UInt unit = 0);
+	void Enable(const Texture2D* pTexture, UInt unit = 0);
+	void Disable(const Texture2D* pTexture, UInt unit = 0);
+	void Set(const Texture2D* pTexture, UInt unit = 0);
 	PdrTexture2D* GetResource(const Texture2D* pTexture);
 
 	// Material management
-	void Enable(Material* pMaterial);
-	void Disable(Material* pMaterial);
+	void Enable(const Material* pMaterial);
+	void Disable(const Material* pMaterial);
+	void Set(const Material* pMaterial);
 
 	// Platform-dependent portion of the Renderer
 
@@ -106,9 +109,9 @@ public:
 	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
 
-	// Clear all the smart pointers that the Renderer caches between PreDraw()
+	// Release all the smart pointers that the Renderer caches between PreDraw()
 	// and PostDraw() calls.
-	void ClearReferences();
+	void ReleaseReferences();
 
 	// Apply camera changes to platform specific renderer.
 	void SetCamera(Camera* pCamera);
@@ -155,7 +158,8 @@ private:
 
 	// Global render state management
 	void SetStates(StatePtr spStates[]);
-	void RestoreStates(StatePtr spStates[]);
+	void Enable(StatePtr spStates[]);
+	void Disable(StatePtr spStates[]);
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
@@ -163,8 +167,11 @@ private:
  	void DestroyAllTexture2Ds();
 	void DestroyAllVertexBuffers();
 
-	// Global render states
+	// Objects currently in use by the Renderer
 	StatePtr mspStates[State::MAX_STATE_TYPE];
+	Pointer<IndexBuffer> mspIndexBuffer;
+	Pointer<Material> mspMaterial;
+	TArray<Pointer<Texture2D> > mTexture2Ds;
 
 	// The camera for establishing the view frustum
 	Pointer<Camera> mspCamera;

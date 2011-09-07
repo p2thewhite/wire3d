@@ -89,6 +89,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 		true : false;
 
 	mMaxTextureStages = deviceCaps.MaxTextureBlendStages;
+	mTexture2Ds.SetQuantity(mMaxTextureStages);
 	mMaxLights = deviceCaps.MaxActiveLights;
 	if (mMaxLights <= 0)
 	{
@@ -228,8 +229,8 @@ void Renderer::DisplayBackBuffer()
 Bool Renderer::PreDraw(Camera* pCamera)
 {
 	// Reset state cache (state is not preserved outside Begin/EndScene()),
-	// and smart pointers used by the Renderer to cache references.
-	ClearReferences();
+	// and release smart pointers cached by the Renderer.
+	ReleaseReferences();
 
 	SetCamera(pCamera);
 
@@ -283,7 +284,7 @@ void Renderer::PostDraw()
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	ClearReferences();
+	ReleaseReferences();
 }
 
 //----------------------------------------------------------------------------

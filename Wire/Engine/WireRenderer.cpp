@@ -45,7 +45,7 @@ void Renderer::Initialize(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Renderer::Terminate()
 {
-	ClearReferences();
+	ReleaseReferences();
 
 	DestroyAllIndexBuffers();
 	DestroyAllVertexBuffers();
@@ -54,9 +54,27 @@ void Renderer::Terminate()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::ClearReferences()
+void Renderer::ReleaseReferences()
 {
 	mspCamera = NULL;
+
+	if (mspIndexBuffer)
+	{
+		Disable(mspIndexBuffer);
+	}
+
+	if (mspMaterial)
+	{
+		Disable(mspMaterial);
+	}
+
+	for (UInt i = 0; i < mTexture2Ds.GetQuantity(); i++)
+	{
+		if (mTexture2Ds[i])
+		{
+			Disable(mTexture2Ds[i]);
+		}
+	}
 
 	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 	{
@@ -172,6 +190,7 @@ void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 {
+	WIRE_ASSERT(mspIndexBuffer == NULL /* Disable the previous IB first. */);
 	WIRE_ASSERT(pIndexBuffer);
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
 	if (pValue)
@@ -183,12 +202,15 @@ void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 		PdrIndexBuffer* pPdrIndexBuffer = Bind(pIndexBuffer);
 		pPdrIndexBuffer->Enable(this);
 	}
+
+	mspIndexBuffer = const_cast<IndexBuffer*>(pIndexBuffer);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Disable(const IndexBuffer* pIndexBuffer)
 {
 	WIRE_ASSERT(pIndexBuffer);
+	WIRE_ASSERT(mspIndexBuffer == pIndexBuffer /* This IB is not enabled */);
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
 	if (pValue)
 	{
@@ -197,6 +219,22 @@ void Renderer::Disable(const IndexBuffer* pIndexBuffer)
 	else
 	{
 		WIRE_ASSERT(false); // Index buffer is not bound
+	}
+
+	mspIndexBuffer = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const IndexBuffer* pIndexBuffer)
+{
+	if (mspIndexBuffer != pIndexBuffer)
+	{
+		if (mspIndexBuffer)
+		{
+			Disable(mspIndexBuffer);
+		}
+
+		Enable(pIndexBuffer);
 	}
 }
 
@@ -345,8 +383,10 @@ void Renderer::UnbindAll(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(Texture2D* pTexture, UInt unit)
+void Renderer::Enable(const Texture2D* pTexture, UInt unit)
 {
+	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
+	WIRE_ASSERT(mTexture2Ds[unit] == NULL /* Disable previous first */);
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
@@ -358,11 +398,15 @@ void Renderer::Enable(Texture2D* pTexture, UInt unit)
 		PdrTexture2D* pPdrTexture =	Bind(pTexture);
 		pPdrTexture->Enable(this, pTexture, unit);
 	}
+
+	mTexture2Ds[unit] = const_cast<Texture2D*>(pTexture);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(Texture2D* pTexture, UInt unit)
+void Renderer::Disable(const Texture2D* pTexture, UInt unit)
 {
+	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
+	WIRE_ASSERT(mTexture2Ds[unit] == pTexture /* This Tex is not enabled */);
 	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 	if (pValue)
@@ -372,6 +416,23 @@ void Renderer::Disable(Texture2D* pTexture, UInt unit)
 	else
 	{
 		WIRE_ASSERT(false); // Texture is not bound
+	}
+
+	mTexture2Ds[unit] = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const Texture2D* pTexture, UInt unit)
+{
+	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
+	if (mTexture2Ds[unit] != pTexture)
+	{
+		if (mTexture2Ds[unit])
+		{
+			Disable(mTexture2Ds[unit], unit);
+		}
+
+		Enable(pTexture, unit);
 	}
 }
 
@@ -428,7 +489,7 @@ void Renderer::DestroyAllTexture2Ds()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(Material* pMaterial)
+void Renderer::Enable(const Material* pMaterial)
 {
 	if (!pMaterial)
 	{
@@ -441,10 +502,12 @@ void Renderer::Enable(Material* pMaterial)
 		SetBlendMode(pMaterial->GetBlendMode(i), i, pMaterial->GetTexture(i)->
 			GetImage()->HasAlpha());
 	}
+
+	mspMaterial = const_cast<Material*>(pMaterial);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(Material* pMaterial)
+void Renderer::Disable(const Material* pMaterial)
 {
 	if (!pMaterial)
 	{
@@ -455,12 +518,28 @@ void Renderer::Disable(Material* pMaterial)
 	{
 		Disable(pMaterial->GetTexture(i), i);
 	}
+
+	mspMaterial = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const Material* pMaterial)
+{
+	if (mspMaterial != pMaterial)
+	{
+		if (mspMaterial)
+		{
+			Disable(mspMaterial);
+		}
+
+		Enable(pMaterial);
+	}
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry)
 {
-	SetStates(pGeometry->States);
+	Enable(pGeometry->States);
 	Enable(pGeometry->Lights);
 	Enable(pGeometry->GetIBuffer());
 	Enable(pGeometry->GetVBuffer());
@@ -472,6 +551,7 @@ void Renderer::Draw(Geometry* pGeometry)
 	Disable(pGeometry->GetVBuffer());
 	Disable(pGeometry->GetIBuffer());
 	Disable(pGeometry->Lights);
+	Disable(pGeometry->States);
 }
 
 //----------------------------------------------------------------------------
@@ -528,6 +608,88 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 				indexStack[top][1] = max + 1;
 			}
 		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(StatePtr spStates[])
+{
+	State* pState = spStates[State::ALPHA];
+	if (pState)
+	{
+		SetState(StaticCast<StateAlpha>(pState));
+	}
+
+	pState = spStates[State::CULL];
+	if (pState)
+	{
+		SetState(StaticCast<StateCull>(pState));
+	}
+
+	pState = spStates[State::FOG];
+	if (pState)
+	{
+		SetState(StaticCast<StateFog>(pState));
+	}
+
+	pState = spStates[State::MATERIAL];
+	if (pState)
+	{
+		SetState(StaticCast<StateMaterial>(pState));
+	}
+
+	pState = spStates[State::WIREFRAME];
+	if (pState)
+	{
+		SetState(StaticCast<StateWireframe>(pState));
+	}
+
+	pState = spStates[State::ZBUFFER];
+	if (pState)
+	{
+		SetState(StaticCast<StateZBuffer>(pState));
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(StatePtr spStates[])
+{
+	State* pState;
+
+	if (spStates[State::ALPHA])
+	{
+		pState = State::Default[State::ALPHA];
+		SetState(StaticCast<StateAlpha>(pState));
+	}
+
+	if (spStates[State::CULL])
+	{
+		pState = State::Default[State::CULL];
+		SetState(StaticCast<StateCull>(pState));
+	}
+
+	if (spStates[State::FOG])
+	{
+		pState = State::Default[State::FOG];
+		SetState(StaticCast<StateFog>(pState));
+	}
+
+	if (spStates[State::MATERIAL])
+	{
+		pState = State::Default[State::MATERIAL];
+		SetState(StaticCast<StateMaterial>(pState));
+	}
+
+	if (spStates[State::WIREFRAME])
+	{
+		pState = State::Default[State::WIREFRAME];
+		SetState(StaticCast<StateWireframe>(pState));
+	}
+
+	if (spStates[State::ZBUFFER])
+	{
+		pState = State::Default[State::ZBUFFER];
+		SetState(StaticCast<StateZBuffer>(pState));
 	}
 }
 

@@ -20,7 +20,7 @@ class TArray
 {
 public:
 	// construction and destruction
-	TArray(UInt quantity = 0, UInt growBy = 1);
+	TArray(UInt maxQuantity = 0, UInt growBy = 1);
 	TArray(const TArray& rObject);
 	~TArray();
 
