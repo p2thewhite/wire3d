@@ -8,10 +8,10 @@
 
 //----------------------------------------------------------------------------
 template <class T>
-TArray<T>::TArray(UInt quantity, UInt growBy)
+TArray<T>::TArray(UInt maxQuantity, UInt growBy)
 {
 	mQuantity = 0;
-	mMaxQuantity = quantity;
+	mMaxQuantity = maxQuantity;
 	mGrowBy = growBy;
 	mpArray = (mMaxQuantity > 0 ? WIRE_NEW T[mMaxQuantity] : NULL);
 }

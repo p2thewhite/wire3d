@@ -30,6 +30,7 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
+	mTexture2Ds(8, 0),
 	mMaxAnisotropy(4.0F),
 	mMaxTextureStages(8),
 	mMaxLights(PdrRendererData::MAXLIGHTS),
@@ -67,6 +68,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	// clears the bg to color and clears the z buffer
 	SetClearColor(rInput.BackgroundColor);
+
+	mTexture2Ds.SetQuantity(8);
 
 	// InitGX
 	f32 yScale = GXGetYScaleFactor(rRMode->efbHeight, rRMode->xfbHeight);
@@ -213,14 +216,25 @@ void Renderer::DrawElements(Geometry* pGeometry)
 
 	GXSetNumChans(1);
 
+	Bool hasTextures = false;
 	if (pGeometry->GetMaterial())
 	{
 		UInt textureCount = pGeometry->GetMaterial()->GetTextureQuantity();
 		if (textureCount > 0)
 		{
+			hasTextures = true;
 			GXSetNumTexGens(textureCount);
 			GXSetNumTevStages(textureCount);
 		}
+	}
+
+	if (!hasTextures)
+	{
+		GXSetNumTexGens(0);
+		GXSetNumTevStages(1);
+		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+			GX_COLOR0A0);
+		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
 	const IndexBuffer& rIBuffer = *(pGeometry->GetIBuffer());
@@ -682,7 +696,9 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 //----------------------------------------------------------------------------
 void Renderer::PostDraw()
 {
-	ClearReferences();
+	// Reset state cache (state is not preserved outside Begin/EndScene()),
+	// and release smart pointers cached by the Renderer.
+	ReleaseReferences();
 }
 
 //----------------------------------------------------------------------------
