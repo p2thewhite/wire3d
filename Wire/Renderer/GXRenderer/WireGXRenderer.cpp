@@ -19,6 +19,7 @@
 #include "WireGXVertexBuffer.h"
 #include "WireLight.h"
 #include "WireMatrix4.h"
+#include "WireVertexBuffer.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
 
@@ -118,7 +119,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mHeight = rRMode->efbHeight;
 
 	// Initialize global render state to default settings.
-	SetStates(State::Default);
+	Set(State::Default);
 }
 
 //----------------------------------------------------------------------------
@@ -217,9 +218,9 @@ void Renderer::DrawElements(Geometry* pGeometry)
 	GXSetNumChans(1);
 
 	Bool hasTextures = false;
-	if (pGeometry->GetMaterial())
+	if (mspMaterial)
 	{
-		UInt textureCount = pGeometry->GetMaterial()->GetTextureQuantity();
+		UInt textureCount = mspMaterial->GetTextureQuantity();
 		if (textureCount > 0)
 		{
 			hasTextures = true;
@@ -237,7 +238,8 @@ void Renderer::DrawElements(Geometry* pGeometry)
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	const IndexBuffer& rIBuffer = *(pGeometry->GetIBuffer());
+	WIRE_ASSERT(mspIndexBuffer);
+	const IndexBuffer& rIBuffer = *mspIndexBuffer;
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);
 	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;

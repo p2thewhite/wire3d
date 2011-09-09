@@ -164,7 +164,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	}
 
 	// Initialize global render state to default settings.
-	SetStates(State::Default);
+	Set(State::Default);
 }
 
 //----------------------------------------------------------------------------
@@ -269,7 +269,7 @@ Bool Renderer::PreDraw(Camera* pCamera)
     hr = rDevice->BeginScene();
     WIRE_ASSERT(SUCCEEDED(hr));
 
-	SetStates(State::Default);
+	Set(State::Default);
 
 	return true;
 }
@@ -552,5 +552,5 @@ void PdrRendererData::ResetDevice()
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	renderer.SetStates(renderer.mspStates);
+	renderer.Set(renderer.mspStates);
 }
