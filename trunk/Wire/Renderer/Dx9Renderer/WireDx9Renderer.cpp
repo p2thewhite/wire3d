@@ -475,7 +475,7 @@ template <typename Resource, typename PdrResource>
 void DestroyNonManagedResources(THashTable<const Resource*,
 	PdrResource*>& rMap, TArray<const Resource*>& rSave)
 {
-	rSave.SetMaxQuantity(rMap.GetQuantity());
+	rSave.SetMaxQuantity(rMap.GetQuantity(), false);
 	const Resource* pKey;
 	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
 
@@ -497,7 +497,7 @@ template <typename Resource, typename PdrResource>
 void DestroyResources(THashTable<const Resource*,
 	PdrResource*>& rMap, TArray<const Resource*>& rSave)
 {
-	rSave.SetMaxQuantity(rMap.GetQuantity());
+	rSave.SetMaxQuantity(rMap.GetQuantity(), false);
 	const Resource* pKey;
 	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
 

@@ -274,7 +274,7 @@ void TArray<T>::Insert(UInt i, const T& rElement)
 	WIRE_ASSERT(i <= mQuantity);
 	if (mQuantity == mMaxQuantity)
 	{
-		SetMaxQuantity(mMaxQuantity+mGrowBy);
+		SetMaxQuantity(mMaxQuantity+mGrowBy, true);
 	}
 
 	SetQuantity(mQuantity+1);

@@ -15,12 +15,14 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Culler::Culler(Int maxQuantity, Int growBy, const Camera* pCamera)
+Culler::Culler(const Camera* pCamera, UInt maxQuantity, UInt growBy)
 	:
 	mpCamera(pCamera),
-	mPlaneQuantity(6),
-	mVisible(maxQuantity, growBy)
+	mPlaneQuantity(6)
 {
+	VisibleSet visibleSet(maxQuantity, growBy);
+	mVisibleSets.Append(visibleSet);
+
 	// The data members mFrustum, mPlane, and mPlaneState are uninitialized.
 	// They are initialized in the GetVisibleSet call.
 }
@@ -155,7 +157,11 @@ void Culler::ComputeVisibleSet(Spatial* pScene)
 	if (mpCamera && pScene)
 	{
 		SetFrustum(mpCamera->GetFrustum());
-		mVisible.Clear();
+		for (UInt i = 0; i < mVisibleSets.GetQuantity(); i++)
+		{
+			mVisibleSets[i].Clear();
+		}
+
 		pScene->OnGetVisibleSet(*this, false);
 	}
 }

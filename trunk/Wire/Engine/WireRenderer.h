@@ -56,6 +56,7 @@ public:
 
 	// Object drawing
 	void DrawScene(VisibleSet& rVisibleSet);
+	void DrawScene(TArray<VisibleSet>& rVisibleSets);
 	void Draw(Geometry* pGeometry);
 
 	// Backbuffer functions

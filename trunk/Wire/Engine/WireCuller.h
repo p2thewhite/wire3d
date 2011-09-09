@@ -22,19 +22,20 @@ class Spatial;
 class Culler
 {
 public:
-	// Construction and destruction. The first two input parameters are used
-	// to create the set of potentially visible objects. If the camera is
-	// not passed to the constructor, you should set it using SetCamera before
-	// calling ComputeVisibleSet.
-	Culler(Int maxQuantity = VisibleSet::VS_DEFAULT_MAX_QUANTITY, Int growBy =
-		VisibleSet::VS_DEFAULT_GROWBY, const Camera* pCamera = 0);
+	// Construction and destruction. If the camera is not passed to the
+	// constructor, you should set it using SetCamera before calling
+	// ComputeVisibleSet. The other two input parameters are used to define the
+	// behavior of the container of the set of potentially visible objects.
+	Culler(const Camera* pCamera = NULL, UInt maxQuantity = VisibleSet::
+		VS_DEFAULT_MAX_QUANTITY, UInt growBy = VisibleSet::VS_DEFAULT_GROWBY);
 	virtual ~Culler();
 
 	// Access to the camera, frustum copy, and potentially visible set.
 	inline void SetCamera(const Camera* pCamera);
 	inline const Camera* GetCamera() const;
 	void SetFrustum(const Float* pFrustum);
-	inline VisibleSet& GetVisibleSet();
+	inline VisibleSet& GetVisibleSet(UInt i = 0);
+	inline TArray<VisibleSet>& GetVisibleSets();
 
 	// This is the main function you should use for culling within a scene
 	// graph. Traverse the scene and construct the potentially visible set
@@ -84,8 +85,8 @@ protected:
 	Plane3F mPlanes[VS_MAX_PLANE_QUANTITY];
 	UInt mPlaneState;
 
-	// The potentially visible set for a call to GetVisibleSet.
-	VisibleSet mVisible;
+	// The potentially visible sets for a call to GetVisibleSet.
+	TArray<VisibleSet> mVisibleSets;
 };
 
 #include "WireCuller.inl"

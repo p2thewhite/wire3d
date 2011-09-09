@@ -637,6 +637,15 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::DrawScene(TArray<VisibleSet>& rVisibleSets)
+{
+	for (UInt i = 0; i < rVisibleSets.GetQuantity(); i++)
+	{
+		DrawScene(rVisibleSets[i]);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Enable(StatePtr spStates[])
 {
 	State* pState = spStates[State::ALPHA];
