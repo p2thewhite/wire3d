@@ -63,6 +63,11 @@ void Renderer::ReleaseReferences()
 		Disable(mspIndexBuffer);
 	}
 
+	if (mspVertexBuffer)
+	{
+		Disable(mspVertexBuffer);
+	}
+
 	if (mspMaterial)
 	{
 		Disable(mspMaterial);
@@ -291,6 +296,7 @@ void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::Enable(const VertexBuffer* pVertexBuffer)
 {
+	WIRE_ASSERT(mspVertexBuffer == NULL /* Disable the previous VB first. */);
 	WIRE_ASSERT(pVertexBuffer);
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 	if (pValue)
@@ -302,12 +308,15 @@ void Renderer::Enable(const VertexBuffer* pVertexBuffer)
 		PdrVertexBuffer* pPdrVertexBuffer =	Bind(pVertexBuffer);
 		pPdrVertexBuffer->Enable(this);
 	}
+
+	mspVertexBuffer = const_cast<VertexBuffer*>(pVertexBuffer);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Disable(const VertexBuffer* pVertexBuffer)
 {
 	WIRE_ASSERT(pVertexBuffer);
+	WIRE_ASSERT(mspVertexBuffer == pVertexBuffer /* This VB is not enabled */);
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 	if (pValue)
 	{
@@ -317,6 +326,8 @@ void Renderer::Disable(const VertexBuffer* pVertexBuffer)
 	{
 		WIRE_ASSERT(false); // Vertex buffer is not bound
 	}
+
+	mspVertexBuffer = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -330,6 +341,20 @@ void Renderer::Update(const VertexBuffer* pVertexBuffer)
 	else
 	{
 		WIRE_ASSERT(false); // Vertex buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const VertexBuffer* pVertexBuffer)
+{
+	if (mspVertexBuffer != pVertexBuffer)
+	{
+		if (mspVertexBuffer)
+		{
+			Disable(mspVertexBuffer);
+		}
+
+		Enable(pVertexBuffer);
 	}
 }
 
@@ -694,7 +719,7 @@ void Renderer::Disable(StatePtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetStates(StatePtr spStates[])
+void Renderer::Set(StatePtr spStates[])
 {
 	State* pState = spStates[State::ALPHA];
 	if (pState && pState != mspStates[State::ALPHA])

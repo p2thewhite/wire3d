@@ -86,6 +86,7 @@ public:
 	static void UnbindAll(const VertexBuffer* pVertexBuffer);
 	void Enable(const VertexBuffer* pVertexBuffer);
 	void Disable(const VertexBuffer* pVertexBuffer);
+	void Set(const VertexBuffer* pIndexBuffer);
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 	void Update(const VertexBuffer* pVertexBuffer);
 
@@ -157,7 +158,7 @@ private:
 	void DrawElements(Geometry* pGeometry);
 
 	// Global render state management
-	void SetStates(StatePtr spStates[]);
+	void Set(StatePtr spStates[]);
 	void Enable(StatePtr spStates[]);
 	void Disable(StatePtr spStates[]);
 
@@ -171,6 +172,7 @@ private:
 	StatePtr mspStates[State::MAX_STATE_TYPE];
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<Material> mspMaterial;
+	Pointer<VertexBuffer> mspVertexBuffer;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 
 	// The camera for establishing the view frustum
