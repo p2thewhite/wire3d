@@ -12,9 +12,9 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 VisibleSet::VisibleSet(UInt maxQuantity, UInt growBy)
+	:
+	mVisible(maxQuantity, growBy)
 {
-	mVisible.SetGrowBy(growBy);
-	mVisible.SetMaxQuantity(maxQuantity, false);
 }
 
 //----------------------------------------------------------------------------
