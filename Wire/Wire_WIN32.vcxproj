@@ -122,6 +122,7 @@
     <ClInclude Include="Foundation\WireTArray.h" />
     <ClInclude Include="Foundation\WireTHashSet.h" />
     <ClInclude Include="Foundation\WireTHashTable.h" />
+    <ClInclude Include="Foundation\WireTInstanceID.h" />
     <ClInclude Include="Foundation\WireTList.h" />
     <ClInclude Include="Foundation\WireTMap.h" />
     <ClInclude Include="Foundation\WireTQueue.h" />
@@ -193,6 +194,7 @@
     <None Include="Foundation\WireTArray.inl" />
     <None Include="Foundation\WireTHashSet.inl" />
     <None Include="Foundation\WireTHashTable.inl" />
+    <None Include="Foundation\WireTInstanceID.inl" />
     <None Include="Foundation\WireTList.inl" />
     <None Include="Foundation\WireTMap.inl" />
     <None Include="Foundation\WireTQueue.inl" />
