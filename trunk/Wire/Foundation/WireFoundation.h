@@ -31,6 +31,7 @@
 #include "WireTArray.h"
 #include "WireTHashSet.h"
 #include "WireTHashTable.h"
+#include "WireTInstanceID.h"
 #include "WireTList.h"
 #include "WireTMap.h"
 #include "WireTQueue.h"
