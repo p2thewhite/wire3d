@@ -10,6 +10,12 @@
 #ifndef WIRETINSTANCEID_H
 #define WIRETINSTANCEID_H
 
+// TInstanceID assigns every instance of type T a unique identification
+// number that is never bigger than the total number of objects of type T.
+// Be careful when caching IDs, because just like pointers, the same ID might
+// be reassigned to a different object when destroying and creating objects
+// of the same type.
+
 #include "WireTArray.h"
 
 namespace Wire
@@ -21,6 +27,8 @@ class TInstanceID
 public:
 	TInstanceID();
 	~TInstanceID();
+
+	operator UInt () const;
 
 private:
 	UInt mID;
