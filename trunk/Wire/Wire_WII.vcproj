@@ -155,6 +155,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTInstanceID.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTList.h"
 					>
 				</File>
@@ -252,6 +256,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTHashTable.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTInstanceID.inl"
 					>
 				</File>
 				<File
@@ -432,6 +440,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCuller.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireCullerSorter.h"
 					>
 				</File>
 				<File
@@ -692,6 +704,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCuller.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireCulllerSorter.cpp"
 					>
 				</File>
 				<File
