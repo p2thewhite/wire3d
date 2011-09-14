@@ -19,7 +19,12 @@ TInstanceID<T>::TInstanceID()
 
 		if (*s_pVacant)
 		{
-			s_pVacant = &(s_Instances[(*s_pVacant)->mID]);
+			s_pVacant = &(s_Instances[reinterpret_cast<TInstanceID<T>**>
+				(*s_pVacant) - s_Instances.GetArray()]);
+		}
+		else
+		{
+			s_pVacant = NULL;
 		}
 	}
 	else
@@ -36,16 +41,15 @@ TInstanceID<T>::~TInstanceID()
 {
 	if (s_pVacant)
 	{
-		if (*s_pVacant)
-		{
-			s_Instances[(*s_pVacant)->mID] = reinterpret_cast<TInstanceID<T>*>(
-				s_pVacant);
-		}
-		else
-		{
-			s_Instances[mID] = reinterpret_cast<TInstanceID<T>*>(s_pVacant);
-		}
+		s_Instances[mID] = reinterpret_cast<TInstanceID<T>*>(s_pVacant);
 	}
 
 	s_pVacant = &(s_Instances[mID]);
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+TInstanceID<T>::operator UInt () const
+{
+	return mID;
 }
