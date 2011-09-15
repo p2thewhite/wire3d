@@ -231,7 +231,7 @@
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\WireCulllerSorter.cpp" />
+    <ClCompile Include="Engine\WireCullerSorter.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />
     <ClCompile Include="Engine\WireNodeDLod.cpp" />

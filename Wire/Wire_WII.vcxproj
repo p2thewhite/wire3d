@@ -210,7 +210,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\WireCulllerSorter.cpp" />
+    <ClCompile Include="Engine\WireCullerSorter.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
