@@ -664,7 +664,7 @@
     <ClCompile Include="Engine\WireMaterial.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\WireCulllerSorter.cpp">
+    <ClCompile Include="Engine\WireCullerSorter.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
