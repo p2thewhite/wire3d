@@ -33,8 +33,8 @@ public:
 private:
 	UInt mID;
 
-	static TArray<TInstanceID<T>*> s_Instances;
-	static TInstanceID<T>** s_pVacant;
+	static TArray<UInt> s_Instances;
+	static UInt s_FreeID;
 };
 
 #include "WireTInstanceID.inl"

@@ -6,45 +6,36 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-template<class T> TArray<TInstanceID<T>*> TInstanceID<T>::s_Instances(0, 10);
-template<class T> TInstanceID<T>** TInstanceID<T>::s_pVacant = NULL;
+template<class T> TArray<UInt> TInstanceID<T>::s_Instances(0, 10);
+template<class T> UInt TInstanceID<T>::s_FreeID = 0;
 
 //----------------------------------------------------------------------------
 template <class T>
 TInstanceID<T>::TInstanceID()
 {
-	if (s_pVacant)
+	if (s_FreeID > 0)
 	{
-		mID = s_pVacant - s_Instances.GetArray();
-
-		if (*s_pVacant)
-		{
-			s_pVacant = &(s_Instances[reinterpret_cast<TInstanceID<T>**>
-				(*s_pVacant) - s_Instances.GetArray()]);
-		}
-		else
-		{
-			s_pVacant = NULL;
-		}
+		mID = s_FreeID-1;
+		s_FreeID = s_Instances[mID];
 	}
 	else
 	{
 		mID = s_Instances.GetQuantity();
 	}
 
-	s_Instances.SetElement(mID, NULL);
+	s_Instances.SetElement(mID, 0);
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 TInstanceID<T>::~TInstanceID()
 {
-	if (s_pVacant)
+	if (s_FreeID > 0)
 	{
-		s_Instances[mID] = reinterpret_cast<TInstanceID<T>*>(s_pVacant);
+		s_Instances[mID] = s_FreeID;
 	}
 
-	s_pVacant = &(s_Instances[mID]);
+	s_FreeID = mID + 1;
 }
 
 //----------------------------------------------------------------------------
