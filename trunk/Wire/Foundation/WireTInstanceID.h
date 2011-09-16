@@ -31,10 +31,13 @@ public:
 	operator UInt () const;
 
 private:
+	void SiftUp(UInt nodeIndex);
+	void SiftDown(UInt nodeIndex);
+
 	UInt mID;
 
-	static TArray<UInt> s_Instances;
-	static UInt s_FreeID;
+	static TArray<UInt> s_FreeIDs;
+	static UInt s_MaxID;
 };
 
 #include "WireTInstanceID.inl"
