@@ -6,55 +6,35 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-template<class T> TArray<UInt> TInstanceID<T>::s_Instances(0, 10);
-template<class T> UInt TInstanceID<T>::s_FreeID = 0;
+template<class T> TArray<UInt> TInstanceID<T>::s_FreeIDs(0, 10);
+template<class T> UInt TInstanceID<T>::s_MaxID = 0;
 
 //----------------------------------------------------------------------------
 template <class T>
 TInstanceID<T>::TInstanceID()
 {
-	if (s_FreeID > 0)
+	if (s_FreeIDs.GetQuantity() > 0)
 	{
-		mID = s_FreeID-1;
-		s_FreeID = s_Instances[mID];
-	}
-	else
-	{
-		mID = s_Instances.GetQuantity();
+		mID = s_FreeIDs[0];
+		s_FreeIDs[0] = s_FreeIDs[s_FreeIDs.GetQuantity()-1];
+		s_FreeIDs.SetQuantity(s_FreeIDs.GetQuantity()-1);
+		if (s_FreeIDs.GetQuantity() > 0)
+		{
+			SiftDown(0);
+		}
+
+		return;
 	}
 
-	s_Instances.SetElement(mID, 0);
+	mID = s_MaxID++;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 TInstanceID<T>::~TInstanceID()
 {
-	if (s_FreeID > 0)
-	{
-		if (s_FreeID > mID+1)
-		{
-			s_Instances[mID] = s_FreeID;
-		}
-		else
-		{
-			// sort mID into descending order so new instances always get
-			// the lowest free ID.
-			UInt freeID = s_FreeID-1;
-			UInt lastValidFreeID = freeID;
-			while (freeID < mID)
-			{
-				lastValidFreeID = freeID;
-				freeID = s_Instances[freeID]-1;
-			}
-
-			s_Instances[mID] = s_Instances[lastValidFreeID];
-			s_Instances[lastValidFreeID] = mID+1;
-			return;
-		}	
-	}
-
-	s_FreeID = mID+1;
+	s_FreeIDs.Append(mID);
+	SiftUp(s_FreeIDs.GetQuantity()-1);
 }
 
 //----------------------------------------------------------------------------
@@ -62,4 +42,62 @@ template <class T>
 TInstanceID<T>::operator UInt () const
 {
 	return mID;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+void TInstanceID<T>::SiftUp(UInt nodeIndex)
+{
+	if (nodeIndex != 0)
+	{
+		UInt parentIndex = (nodeIndex - 1) / 2;
+
+		if (s_FreeIDs[parentIndex] > s_FreeIDs[nodeIndex])
+		{
+			UInt tmp = s_FreeIDs[parentIndex];
+			s_FreeIDs[parentIndex] = s_FreeIDs[nodeIndex];
+			s_FreeIDs[nodeIndex] = tmp;
+			SiftUp(parentIndex);
+		}
+	}
+}
+	
+//----------------------------------------------------------------------------
+template <class T>
+void TInstanceID<T>::SiftDown(UInt nodeIndex)
+{
+	UInt minIndex;
+	UInt leftChildIndex = 2*nodeIndex+1;
+	UInt rightChildIndex = leftChildIndex+1;
+
+	if (rightChildIndex >= s_FreeIDs.GetQuantity())
+	{
+		if (leftChildIndex >= s_FreeIDs.GetQuantity())
+		{
+			return;
+		}
+		else
+		{
+			minIndex = leftChildIndex;
+		}
+	}
+	else
+	{
+		if (s_FreeIDs[leftChildIndex] <= s_FreeIDs[rightChildIndex])
+		{
+			minIndex = leftChildIndex;
+		}
+		else
+		{
+			minIndex = rightChildIndex;
+		}
+	}
+
+	if (s_FreeIDs[nodeIndex] > s_FreeIDs[minIndex])
+	{
+		UInt tmp = s_FreeIDs[minIndex];
+		s_FreeIDs[minIndex] = s_FreeIDs[nodeIndex];
+		s_FreeIDs[nodeIndex] = tmp;
+		SiftDown(minIndex);
+	}
 }
