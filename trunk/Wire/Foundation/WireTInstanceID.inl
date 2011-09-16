@@ -32,10 +32,29 @@ TInstanceID<T>::~TInstanceID()
 {
 	if (s_FreeID > 0)
 	{
-		s_Instances[mID] = s_FreeID;
+		if (s_FreeID > mID+1)
+		{
+			s_Instances[mID] = s_FreeID;
+		}
+		else
+		{
+			// sort mID into descending order so new instances always get
+			// the lowest free ID.
+			UInt freeID = s_FreeID-1;
+			UInt lastValidFreeID = freeID;
+			while (freeID < mID)
+			{
+				lastValidFreeID = freeID;
+				freeID = s_Instances[freeID]-1;
+			}
+
+			s_Instances[mID] = s_Instances[lastValidFreeID];
+			s_Instances[lastValidFreeID] = mID+1;
+			return;
+		}	
 	}
 
-	s_FreeID = mID + 1;
+	s_FreeID = mID+1;
 }
 
 //----------------------------------------------------------------------------
