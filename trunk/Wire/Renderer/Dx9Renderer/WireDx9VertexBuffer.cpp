@@ -90,7 +90,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Create the vertex buffer.
-	UInt vbSize = mVertexSize * pVertexBuffer->GetVertexQuantity();
+	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
 	const DWORD usage = PdrRendererData::USAGES[pVertexBuffer->GetUsage()];
 	const D3DPOOL pool = PdrRendererData::POOLS[pVertexBuffer->GetUsage()];
 	hr = rDevice->CreateVertexBuffer(vbSize, usage, 0, pool, &mpBuffer, NULL);
@@ -168,7 +168,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 	}
 	else
 	{
-		UInt size =  mVertexSize * pVertexBuffer->GetVertexQuantity();
+		UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
  		WIRE_ASSERT(mVertexSize == rIAttr.GetChannelQuantity()*sizeof(Float));
 		System::Memcpy(pVBData, size, pVertexBuffer->GetData(), size);
 	}
@@ -181,7 +181,7 @@ void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, Float* pDst)
 {
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
 
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pSrc->GetQuantity(); i++)
 	{
 		if (rIAttr.GetPositionChannels() > 0)
 		{

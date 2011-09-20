@@ -7,7 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline UInt IndexBuffer::GetIndexQuantity() const
+inline UInt IndexBuffer::GetQuantity() const
 {
 	return mQuantity;
 }

@@ -240,7 +240,7 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, rDef.SizeFactor);
 	VertexBuffer* pVBuffer = pQuad->GetVBuffer();
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		pVBuffer->TCoord2(i) *= uvFactor;
  		pVBuffer->TCoord2(i).X() += uOffset;

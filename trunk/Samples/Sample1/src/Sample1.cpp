@@ -300,7 +300,7 @@ Geometry* Sample1::CreateCube()
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		pVBuffer->Position3(i) = vertices[i];
 		pVBuffer->TCoord2(i) = uvs[i];

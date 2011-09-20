@@ -72,7 +72,7 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		pVBuffer->Position3(i) = vertices[i];
 		if (vertexColorChannels == 3)
@@ -180,7 +180,7 @@ Geometry* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		pVBuffer->Position3(i) = vertices[i];
 
@@ -315,7 +315,7 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		pVBuffer->Position3(i) = vertices[i];
 
@@ -498,7 +498,7 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
 		vertexQuantity);
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
  		pVBuffer->Position3(i) = vertices[i];
 

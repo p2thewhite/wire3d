@@ -7,7 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline UInt VertexBuffer::GetVertexQuantity() const
+inline UInt VertexBuffer::GetQuantity() const
 {
 	return mVertexQuantity;
 }

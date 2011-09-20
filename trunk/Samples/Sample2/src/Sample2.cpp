@@ -129,7 +129,7 @@ Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
 
 	// initialize the cube's vertex colors with our supplied values
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		if (pVBuffer->Position3(i).Y() > 0)
 		{

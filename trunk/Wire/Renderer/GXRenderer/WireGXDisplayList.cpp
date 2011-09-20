@@ -21,8 +21,8 @@ PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
 {
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe
-	const UInt maxSize = ((rIBuffer.GetIndexQuantity() *
-		rElements.GetQuantity()*2) & 0xFFFFFFE0) + 64;
+	const UInt maxSize = ((rIBuffer.GetQuantity() * rElements.
+		GetQuantity()*2) & 0xFFFFFFE0) + 64;
 	mpData = memalign(32, maxSize);
 	DCInvalidateRange(mpData, maxSize);
 

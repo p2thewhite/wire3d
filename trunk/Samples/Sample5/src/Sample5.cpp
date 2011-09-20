@@ -205,7 +205,7 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 		useTexture ? 1 : 0, useNormals);
 	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
 
-	for (UInt i = 0; i < pVBuffer->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
 		if (useVertexColor)
 		{
