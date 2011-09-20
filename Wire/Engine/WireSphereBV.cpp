@@ -46,7 +46,7 @@ void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
 {
 	if (pVBuffer)
 	{
-		UInt quantity = pVBuffer->GetVertexQuantity();
+		UInt quantity = pVBuffer->GetQuantity();
 
 		mSphere.Center = Vector3F::ZERO;
 		mSphere.Radius = 0.0F;

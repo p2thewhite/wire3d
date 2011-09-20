@@ -29,8 +29,8 @@ public:
 
 	// Direct access to the index buffer data. The quantity is the number of
 	// UInt elements. The number of bytes for the entire index buffer is
-	// GetIndexQuantity()*sizeof(UInt).
-	inline UInt GetIndexQuantity() const;
+	// GetQuantity()*sizeof(UInt).
+	inline UInt GetQuantity() const;
 	inline UInt* GetData();
 	inline const UInt* GetData() const;
 

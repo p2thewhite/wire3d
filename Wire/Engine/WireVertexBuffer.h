@@ -29,7 +29,7 @@ public:
 		UsageType usage = UT_STATIC);
 	virtual ~VertexBuffer();
 
-	inline UInt GetVertexQuantity() const;
+	inline UInt GetQuantity() const;
 	inline Float* GetData();
 	inline const Float* GetData() const;
 	inline const VertexAttributes& GetAttributes() const;

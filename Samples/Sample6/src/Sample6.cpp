@@ -93,7 +93,7 @@ Geometry* Sample6::CreateSun()
 {
 	// create a sun using a bright yellow colored sphere
 	Geometry* pSun = StandardMesh::CreateSphere(4, 16, 3, 0, 3);
-	for (UInt i = 0; i < pSun->GetVBuffer()->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pSun->GetVBuffer()->GetQuantity(); i++)
 	{
 		pSun->GetVBuffer()->Color3(i) = ColorRGB(1.0F, 1.0F, 0.8F);
 	}

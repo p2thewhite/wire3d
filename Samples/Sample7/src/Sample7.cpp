@@ -140,11 +140,11 @@ Geometry* Sample7::CreateGeometry()
 
 	// prepare calculation of vertex normals (requires initialized positions)
 	UInt* pIndices = pIBuffer->GetData();
-	mBuckets.SetQuantity(pVBuffer->GetVertexQuantity());
+	mBuckets.SetQuantity(pVBuffer->GetQuantity());
 
 	// collect the triangles each vertex is part of
 	UInt triIndex = 0;
-	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i += 3)
+	for (UInt i = 0; i < pIBuffer->GetQuantity(); i += 3)
 	{
 		mBuckets[pIndices[i]].Append(triIndex);
 		mBuckets[pIndices[i+1]].Append(triIndex);
@@ -152,10 +152,10 @@ Geometry* Sample7::CreateGeometry()
 		triIndex++;
 	}
 
-	for (UInt j = 0; j < pVBuffer->GetVertexQuantity(); j++)
+	for (UInt j = 0; j < pVBuffer->GetQuantity(); j++)
 	{
 		const Vector3F& vertex = pVBuffer->Position3(j);
-		for (UInt i = j+1; i < pVBuffer->GetVertexQuantity(); i++)
+		for (UInt i = j+1; i < pVBuffer->GetQuantity(); i++)
 		{
 			if (vertex == pVBuffer->Position3(i))
 			{
@@ -264,8 +264,8 @@ void Sample7::GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 	UInt* const pIndices = pIBuffer->GetData();
 
 	// calculate the normals of the individual triangles
-	TArray<Vector3F> faceNormals(pIBuffer->GetIndexQuantity()/3);
-	for (UInt i = 0; i < pIBuffer->GetIndexQuantity(); i +=3)
+	TArray<Vector3F> faceNormals(pIBuffer->GetQuantity()/3);
+	for (UInt i = 0; i < pIBuffer->GetQuantity(); i +=3)
 	{
 		Vector3F v1 = pVBuffer->Position3(pIndices[i+1]) -
 			pVBuffer->Position3(pIndices[i]);

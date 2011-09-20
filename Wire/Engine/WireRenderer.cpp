@@ -562,21 +562,52 @@ void Renderer::Set(const Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(Geometry* pGeometry)
+void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 {
-	Enable(pGeometry->States);
-	Enable(pGeometry->Lights);
-	Enable(pGeometry->GetIBuffer());
-	Enable(pGeometry->GetVBuffer());
-	Enable(pGeometry->GetMaterial());
+	if (useEffect && pGeometry->GetEffectQuantity() > 0)
+	{
+		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
+		{
+			VisibleObject visibleObject;
+			visibleObject.Object = pGeometry;
+			visibleObject.GlobalEffect = NULL;
+			pGeometry->GetEffect(i)->Draw(this, pGeometry, 0, 0,
+				&visibleObject);
+		}
 
-	DrawElements(pGeometry);
+		return;
+	}
 
-	Disable(pGeometry->GetMaterial());
-	Disable(pGeometry->GetVBuffer());
-	Disable(pGeometry->GetIBuffer());
-	Disable(pGeometry->Lights);
-	Disable(pGeometry->States);
+	if (restoreState)
+	{
+		Enable(pGeometry->States);
+		Enable(pGeometry->Lights);
+		Enable(pGeometry->GetIBuffer());
+		Enable(pGeometry->GetVBuffer());
+		Enable(pGeometry->GetMaterial());
+
+		SetWorldTransformation(pGeometry->World);
+		DrawElements();
+
+		Disable(pGeometry->GetMaterial());
+		Disable(pGeometry->GetVBuffer());
+		Disable(pGeometry->GetIBuffer());
+		Disable(pGeometry->Lights);
+		Disable(pGeometry->States);
+	}
+	else
+	{
+		Set(pGeometry->States);
+		Enable(pGeometry->Lights);
+		Set(pGeometry->GetIBuffer());
+		Set(pGeometry->GetVBuffer());
+		Set(pGeometry->GetMaterial());
+
+		SetWorldTransformation(pGeometry->World);
+		DrawElements();
+
+		Disable(pGeometry->Lights);
+	}
 }
 
 //----------------------------------------------------------------------------

@@ -288,18 +288,24 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(Geometry* pGeometry)
+void Renderer::SetWorldTransformation(Transformation& rWorld)
 {
 	// Set up world matrix
 	Matrix4F world;
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	pGeometry->World.GetHomogeneous(world);
+	rWorld.GetHomogeneous(world);
 	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
+}
 
+//----------------------------------------------------------------------------
+void Renderer::DrawElements()
+{
+	WIRE_ASSERT(mspVertexBuffer);
+	WIRE_ASSERT(mspIndexBuffer);
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-		pGeometry->GetVBuffer()->GetVertexQuantity(), 0,
-		pGeometry->GetIBuffer()->GetIndexQuantity()/3);
+		mspVertexBuffer->GetQuantity(), 0, mspIndexBuffer->GetQuantity()/3);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

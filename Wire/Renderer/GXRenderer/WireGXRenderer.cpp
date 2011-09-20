@@ -197,23 +197,28 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(Geometry* pGeometry)
+void Renderer::SetWorldTransformation(Transformation& rWorld)
 {
-	mpData->IsFrameBufferDirty = true;
-
 	Matrix34F model;
-	pGeometry->World.GetTransformation(model);
+	rWorld.GetTransformation(model);
 	// load the modelview matrix into matrix memory
 	Matrix34F modelView = mpData->ViewMatrix * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
+	WIRE_ASSERT(mpData->PdrVBuffer /* Enable VertexBuffer first */);
 	if (mpData->PdrVBuffer->HasNormals())
 	{
 		Mtx modelViewInverse;
-		MTXInverse(modelView, modelViewInverse); 
-		MTXTranspose(modelViewInverse, modelView); 
+		MTXInverse(modelView, modelViewInverse);
+		MTXTranspose(modelViewInverse, modelView);
 		GXLoadNrmMtxImm(modelView, GX_PNMTX0);
 	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DrawElements()
+{
+	mpData->IsFrameBufferDirty = true;
 
 	GXSetNumChans(1);
 
@@ -569,8 +574,8 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 	rElements, const IndexBuffer& rIBuffer)
 {
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetIndexQuantity());
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i++)
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetQuantity());
+	for (UInt i = 0; i < rIBuffer.GetQuantity(); i++)
 	{
 		UShort index = static_cast<UShort>(rIBuffer[i]);
 
@@ -618,9 +623,9 @@ void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
 	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
 		GetVertexElements();
 
-	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetIndexQuantity() * 2);
+	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetQuantity() * 2);
 
-	for (UInt i = 0; i < rIBuffer.GetIndexQuantity(); i += 3)
+	for (UInt i = 0; i < rIBuffer.GetQuantity(); i += 3)
 	{
 		for (UInt k = 0; k < 3; k++)
 		{

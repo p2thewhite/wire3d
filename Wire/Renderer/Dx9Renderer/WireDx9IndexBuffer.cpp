@@ -19,7 +19,7 @@ using namespace Wire;
 PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	pIndexBuffer)
 {
-	UInt quantity = pIndexBuffer->GetIndexQuantity();
+	UInt quantity = pIndexBuffer->GetQuantity();
 	const UInt* pIndices = pIndexBuffer->GetData();
 	UInt indexBufferSize = quantity * sizeof(UInt);
 	D3DFORMAT format = D3DFMT_INDEX32;

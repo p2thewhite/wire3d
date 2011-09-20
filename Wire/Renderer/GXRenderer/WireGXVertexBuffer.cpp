@@ -80,7 +80,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		}
 	}
 
-	UInt vbSize = mVertexSize * pVertexBuffer->GetVertexQuantity();
+	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
 	mpData = memalign(32, vbSize);
 
 	for (UInt i = 0; i < mElements.GetQuantity(); i++)
@@ -144,12 +144,12 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 	}
 	else
 	{
-		UInt size =  mVertexSize * pVertexBuffer->GetVertexQuantity();
+		UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
 		WIRE_ASSERT(mVertexSize == rIAttr.GetChannelQuantity()*sizeof(Float));
 		System::Memcpy(pVBData, size, pVertexBuffer->GetData(), size);
 	}
 
-	DCStoreRange(mpData, mVertexSize * pVertexBuffer->GetVertexQuantity());
+	DCStoreRange(mpData, mVertexSize * pVertexBuffer->GetQuantity());
 	GXInvalidateVtxCache();
 }
 
@@ -158,7 +158,7 @@ void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, Float* pDst)
 {
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
 
-	for (UInt i = 0; i < pSrc->GetVertexQuantity(); i++)
+	for (UInt i = 0; i < pSrc->GetQuantity(); i++)
 	{
 		if (rIAttr.GetPositionChannels() > 0)
 		{

@@ -20,6 +20,7 @@
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 #include "WireTHashTable.h"
+#include "WireTransformation.h"
 
 namespace Wire
 {
@@ -57,7 +58,8 @@ public:
 	// Object drawing
 	void DrawScene(VisibleSet& rVisibleSet);
 	void DrawScene(TArray<VisibleSet>& rVisibleSets);
-	void Draw(Geometry* pGeometry);
+	void Draw(Geometry* pGeometry, Bool restoreState = true,
+		Bool useEffect = true);
 
 	// Backbuffer functions
 	inline UInt GetWidth() const;
@@ -67,6 +69,44 @@ public:
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
 	inline UInt GetMaxTextureStages() const;
+
+	// Resource management.
+	//
+	// Bind:  Create a resource corresponding to the input object. The
+	//    renderer maintains a mapping between the object and the resource.
+	//    In most cases, video memory is allocated and a copy is made from
+	//    the corresponding system memory of the object. If Enable is called
+	//    before Bind, the renderer silently creates a resource rather than
+	//    cause an exception.
+	//
+	// BindAll:  Create the resources corresponding to the input object for
+	//    all renderers in the system.
+	//
+	// Unbind:  Destroy the resource corresponding to the input object. The
+	//    renderer removes the object-resource pair from the mapping. The
+	//    object maintains its system memory copy and properties, so it can
+	//    always be bound again.
+	//
+	// UnbindAll:  Destroy the resources corresponding to the input object
+	//    for all renderers that created a resource from the object. This
+	//    function is called in the destructors for the objects.
+	//
+	// Enable:  The resource is made active during the current draw call but
+	//    before the DrawElements call is made.
+	//
+	// Disable:  The resource is made inactive during the current draw call
+	//    but after the DrawElements call is made.
+	//
+	// Set:  The resource is only enabled, if it is inactive. This is used
+	//    instead of Enable/Disable pairs to avoid redundant resource
+	//    activation. However changing activated input objects between Set
+	//    calls do not propagate their change.
+	//
+	// Update:  Lock the video memory of the resource, copy the system memory
+	//    contents to it, and then unlock the video memory. This is the
+	//    recommended way for updating resources (update the system memory and
+	//    then call Update). The update is for the renderer calling the
+	//    function.
 
 	// Bind/Unbind all resources of a geometry object or a scene graph
 	static void BindAll(const Spatial* pSpatial);
@@ -155,8 +195,10 @@ private:
 	void SetBlendMode(Material::BlendMode blendMode, UInt unit = 0,
 		Bool hasAlpha = true);
 
+	void SetWorldTransformation(Transformation& rWorld);
+
 	// The main entry point to drawing in the derived-class renderers
-	void DrawElements(Geometry* pGeometry);
+	void DrawElements();
 
 	// Global render state management
 	void Set(StatePtr spStates[]);
