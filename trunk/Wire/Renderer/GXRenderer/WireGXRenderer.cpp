@@ -32,9 +32,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
 	mTexture2Ds(8, 0),
+	mLights(PdrRendererData::MAXLIGHTS, 0),
 	mMaxAnisotropy(4.0F),
-	mMaxTextureStages(8),
-	mMaxLights(PdrRendererData::MAXLIGHTS),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mTexture2DMap(256)
@@ -71,6 +70,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	SetClearColor(rInput.BackgroundColor);
 
 	mTexture2Ds.SetQuantity(8);
+	mLights.SetQuantity(PdrRendererData::MAXLIGHTS);
 
 	// InitGX
 	f32 yScale = GXGetYScaleFactor(rRMode->efbHeight, rRMode->xfbHeight);

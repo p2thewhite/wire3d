@@ -77,7 +77,15 @@ void Renderer::ReleaseReferences()
 	{
 		if (mTexture2Ds[i])
 		{
-			Disable(mTexture2Ds[i]);
+			Disable(mTexture2Ds[i], i);
+		}
+	}
+
+	for (UInt i = 0; i < mLights.GetQuantity(); i++)
+	{
+		if (mLights[i])
+		{
+			Disable(mLights[i], i);
 		}
 	}
 
@@ -809,14 +817,14 @@ void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
 
 	EnableLighting();
 
- 	if (lightCount > mMaxLights)
+ 	if (lightCount > mLights.GetQuantity())
  	{
- 		lightCount = mMaxLights;
+ 		lightCount = mLights.GetQuantity();
  	}
 	
 	for (UInt i = 0; i < lightCount; i++)
 	{
-		SetLight(rLights[i], i);
+		Enable(rLights[i], i);
 	}
 }
 
@@ -831,13 +839,38 @@ void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 
 	DisableLighting();
 
-	if (lightCount > mMaxLights)
+	if (lightCount > mLights.GetQuantity())
 	{
-		lightCount = mMaxLights;
+		lightCount = mLights.GetQuantity();
 	}
 
 	for (UInt i = 0; i < lightCount; i++)
 	{
-		SetLight(NULL, i);
+		Disable(rLights[i], i);
 	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const Light* pLight, UInt unit)
+{
+	WIRE_ASSERT(mLights.GetQuantity() > unit);
+	WIRE_ASSERT(mLights[unit] == NULL /* Disable previous Light first */);
+	WIRE_ASSERT(pLight);
+
+	SetLight(pLight, unit);
+
+	mLights[unit] = const_cast<Light*>(pLight);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const Light* pLight, UInt unit)
+{
+	WIRE_ASSERT(mLights.GetQuantity() > unit);
+	WIRE_ASSERT(mLights[unit] == pLight /* This Light is not enabled */);
+	WIRE_ASSERT(pLight);
+
+	Light* pNull = NULL;
+	SetLight(pNull, unit);
+
+	mLights[unit] = NULL;
 }

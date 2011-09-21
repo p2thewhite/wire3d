@@ -101,7 +101,7 @@ void Sample1::OnIdle()
 	mspCube->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
 
 	GetRenderer()->EnableLighting();
-	GetRenderer()->SetLight(mspLight);
+	GetRenderer()->Enable(mspLight);
 
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;

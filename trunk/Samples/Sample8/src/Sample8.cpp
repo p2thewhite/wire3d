@@ -101,8 +101,8 @@ void Sample8::OnIdle()
 	GetRenderer()->PreDraw(mspCamera);
 
 	GetRenderer()->SetState(mspStateMaterial);
-	GetRenderer()->SetLight(mspLightA, 0);
-	GetRenderer()->SetLight(mspLightB, 1);
+	GetRenderer()->Enable(mspLightA, 0);
+	GetRenderer()->Enable(mspLightB, 1);
 	GetRenderer()->EnableLighting();
 
 	for (UInt i = 0; i < mGameObjects.GetQuantity(); i++)
