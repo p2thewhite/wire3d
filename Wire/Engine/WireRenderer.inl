@@ -27,7 +27,13 @@ inline Float Renderer::GetMaxAnisotropy() const
 //----------------------------------------------------------------------------
 inline UInt Renderer::GetMaxTextureStages() const
 {
-	return mMaxTextureStages;
+	return mTexture2Ds.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxLights() const
+{
+	return mLights.GetQuantity();
 }
 
 //----------------------------------------------------------------------------

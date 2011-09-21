@@ -70,6 +70,8 @@ public:
 	inline Float GetMaxAnisotropy() const;
 	inline UInt GetMaxTextureStages() const;
 
+	inline UInt GetMaxLights() const;
+
 	// Resource management.
 	//
 	// Bind:  Create a resource corresponding to the input object. The
@@ -183,6 +185,8 @@ public:
 	inline const StateZBuffer* GetStateZBuffer() const;
 
 	// Light state handling
+	void Enable(const Light* pLight, UInt unit = 0);
+	void Disable(const Light* pLight, UInt unit = 0);
 	void SetLight(const Light* pLight, UInt unit = 0);
 	void Enable(const TArray<Pointer<Light> >& rLights);
 	void Disable(const TArray<Pointer<Light> >& rLights);
@@ -217,6 +221,7 @@ private:
 	Pointer<Material> mspMaterial;
 	Pointer<VertexBuffer> mspVertexBuffer;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
+	TArray<Pointer<Light> > mLights;
 
 	// The camera for establishing the view frustum
 	Pointer<Camera> mspCamera;
@@ -230,8 +235,6 @@ private:
 
 	// Maximum anisotropy value supported for texture filtering by the device
 	Float mMaxAnisotropy;
-	UInt mMaxTextureStages;
-	UInt mMaxLights;
 
 	static Renderer* s_pRenderer;
 

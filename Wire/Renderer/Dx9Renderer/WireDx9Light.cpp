@@ -16,6 +16,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 void Renderer::SetLight(const Light* pLight, UInt unit)
 {
+	WIRE_ASSERT(mLights.GetQuantity() > unit);
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 

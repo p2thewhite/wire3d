@@ -88,13 +88,9 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mpData->Supports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
 		true : false;
 
-	mMaxTextureStages = deviceCaps.MaxTextureBlendStages;
-	mTexture2Ds.SetQuantity(mMaxTextureStages);
-	mMaxLights = deviceCaps.MaxActiveLights;
-	if (mMaxLights <= 0)
-	{
-		mMaxLights = 8;
-	}
+	mTexture2Ds.SetQuantity(deviceCaps.MaxTextureBlendStages);
+	UInt maxLights = deviceCaps.MaxActiveLights;
+	mLights.SetQuantity(maxLights <= 0 ? 8 : maxLights);
 
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders
 	// in HW then switch to SWVP.
@@ -552,7 +548,7 @@ void PdrRendererData::ResetDevice()
 	hr = D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	for (UInt i = 0; i < renderer.mMaxLights; i++)
+	for (UInt i = 0; i < renderer.mLights.GetQuantity(); i++)
 	{
 		hr = D3DDevice->LightEnable(i, FALSE);
 		WIRE_ASSERT(SUCCEEDED(hr));
