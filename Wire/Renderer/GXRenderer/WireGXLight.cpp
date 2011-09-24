@@ -17,6 +17,7 @@ using namespace Wire;
 void Renderer::SetLight(const Light* pLight, UInt unit)
 {
 	WIRE_ASSERT(unit < PdrRendererData::MAXLIGHTS);
+	mLights[unit] = const_cast<Light*>(pLight);
 
 	Bool useLight = pLight ? pLight->Enabled : false;
 	if (!useLight)
@@ -102,15 +103,15 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	mpData->LightsMask |= 1<<unit;
 	GXSetChanCtrl(GX_COLOR0A0, GX_ENABLE, GX_SRC_REG, GX_SRC_REG, mpData->
 		LightsMask, GX_DF_CLAMP, GX_AF_SPOT);
-
-	const ColorRGB& rAmb = pLight->Ambient;
-	const GXColor amb = { rAmb.R()*255, rAmb.G()*255, rAmb.B()*255, 255};
-	GXSetChanAmbColor(GX_COLOR0A0, amb);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EnableLighting()
+void Renderer::EnableLighting(const ColorRGB& rAmbient)
 {
+	const GXColor amb = { rAmbient.R()*255, rAmbient.G()*255,
+		rAmbient.B()*255, 255 };
+	GXSetChanAmbColor(GX_COLOR0A0, amb);
+
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
 }
 

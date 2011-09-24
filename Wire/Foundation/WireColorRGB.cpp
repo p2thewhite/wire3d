@@ -33,28 +33,10 @@ ColorRGB::ColorRGB(Float red, Float green, Float blue)
 }
 
 //----------------------------------------------------------------------------
-ColorRGB ColorRGB::operator* (Float scalar) const
+void ColorRGB::Saturate()
 {
-	return ColorRGB(
-		scalar * mTuple[0],
-		scalar * mTuple[1],
-		scalar * mTuple[2]);
-}
-
-//----------------------------------------------------------------------------
-ColorRGB& ColorRGB::operator*= (Float scalar)
-{
-	mTuple[0] *= scalar;
-	mTuple[1] *= scalar;
-	mTuple[2] *= scalar;
-	return *this;
-}
-
-//----------------------------------------------------------------------------
-ColorRGB operator* (Float scalar, const ColorRGB& rCol)
-{
-	return ColorRGB(
-		scalar * rCol.R(),
-		scalar * rCol.G(),
-		scalar * rCol.B());
+	for (UInt i = 0; i < 3; i++)
+	{
+		mTuple[i] = mTuple[i] > 1.0F ? 1.0F : mTuple[i];
+	}
 }

@@ -47,9 +47,9 @@ void Renderer::Terminate()
 {
 	ReleaseReferences();
 
-	DestroyAllIndexBuffers();
-	DestroyAllVertexBuffers();
-	DestroyAllTexture2Ds();
+	DestroyAll(mIndexBufferMap);
+	DestroyAll(mVertexBufferMap);
+	DestroyAll(mTexture2DMap);
 	s_pRenderer = NULL;
 }
 
@@ -85,7 +85,7 @@ void Renderer::ReleaseReferences()
 	{
 		if (mLights[i])
 		{
-			Disable(mLights[i], i);
+			SetLight(NULL, i);
 		}
 	}
 
@@ -483,42 +483,42 @@ PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAllIndexBuffers()
+void Renderer::DestroyAll(IndexBufferMap& rIndexBufferMap)
 {
-	IndexBufferMap::Iterator it(&mIndexBufferMap);
+	IndexBufferMap::Iterator it(&rIndexBufferMap);
  	for (PdrIndexBuffer** pValue = it.GetFirst(); pValue; pValue = it.
 		GetNext())
  	{
  		WIRE_DELETE *pValue;
  	}
 
-	mIndexBufferMap.RemoveAll();
+	rIndexBufferMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAllVertexBuffers()
+void Renderer::DestroyAll(VertexBufferMap& rVertexBufferMap)
 {
-	VertexBufferMap::Iterator it(&mVertexBufferMap);
+	VertexBufferMap::Iterator it(&rVertexBufferMap);
 	for (PdrVertexBuffer** pValue = it.GetFirst(); pValue; pValue = it.
 		GetNext())
 	{
 		WIRE_DELETE *pValue;
 	}
 
-	mVertexBufferMap.RemoveAll();
+	rVertexBufferMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAllTexture2Ds()
+void Renderer::DestroyAll(Texture2DMap& rTexture2DMap)
 {
-	Texture2DMap::Iterator it(&mTexture2DMap);
+	Texture2DMap::Iterator it(&rTexture2DMap);
 	for (PdrTexture2D** pValue = it.GetFirst(); pValue; pValue = it.
 		GetNext())
 	{
 		WIRE_DELETE *pValue;
 	}
 
-	mTexture2DMap.RemoveAll();
+	rTexture2DMap.RemoveAll();
 }
 
 //----------------------------------------------------------------------------
@@ -606,15 +606,13 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 	else
 	{
 		Set(pGeometry->States);
-		Enable(pGeometry->Lights);
+		Set(pGeometry->Lights);
 		Set(pGeometry->GetIBuffer());
 		Set(pGeometry->GetVBuffer());
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World);
 		DrawElements();
-
-		Disable(pGeometry->Lights);
 	}
 }
 
@@ -649,7 +647,8 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 				// Found a leaf Geometry object.
 				if (top == -1)
 				{
-					Draw(StaticCast<Geometry>(pVisible[i].Object));
+					Draw(StaticCast<Geometry>(pVisible[i].Object), false,
+						true);
 				}
 				else
 				{
@@ -673,6 +672,8 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 			}
 		}
 	}
+
+	ReleaseReferences();
 }
 
 //----------------------------------------------------------------------------
@@ -815,23 +816,26 @@ void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
 		return;
 	}
 
-	EnableLighting();
-
  	if (lightCount > mLights.GetQuantity())
  	{
  		lightCount = mLights.GetQuantity();
  	}
 	
+	ColorRGB ambient = ColorRGB::BLACK;
 	for (UInt i = 0; i < lightCount; i++)
 	{
-		Enable(rLights[i], i);
+		ambient += rLights[i]->Ambient;
+		SetLight(rLights[i], i);
 	}
+
+	ambient.Saturate();
+	EnableLighting(ambient);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 {
-	UInt lightCount = rLights.GetQuantity();
+	 UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
 	{
 		return;
@@ -846,31 +850,46 @@ void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 
 	for (UInt i = 0; i < lightCount; i++)
 	{
-		Disable(rLights[i], i);
+		SetLight(NULL, i);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const Light* pLight, UInt unit)
+void Renderer::Set(const TArray<Pointer<Light> >& rLights)
 {
-	WIRE_ASSERT(mLights.GetQuantity() > unit);
-	WIRE_ASSERT(mLights[unit] == NULL /* Disable previous Light first */);
-	WIRE_ASSERT(pLight);
+	UInt lightCount = rLights.GetQuantity();
+	if (lightCount > mLights.GetQuantity())
+	{
+		lightCount = mLights.GetQuantity();
+	}
 
-	SetLight(pLight, unit);
+	ColorRGB ambient = ColorRGB::BLACK;
+	UInt unit = 0;
+	for (unit = 0; unit < lightCount; unit++)
+	{
+		if (mLights[unit] != rLights[unit])
+		{
+			SetLight(rLights[unit], unit);
+		}
 
-	mLights[unit] = const_cast<Light*>(pLight);
-}
+		ambient += rLights[unit]->Ambient;
+	}
 
-//----------------------------------------------------------------------------
-void Renderer::Disable(const Light* pLight, UInt unit)
-{
-	WIRE_ASSERT(mLights.GetQuantity() > unit);
-	WIRE_ASSERT(mLights[unit] == pLight /* This Light is not enabled */);
-	WIRE_ASSERT(pLight);
+	for (; unit < mLights.GetQuantity(); unit++)
+	{
+		if (mLights[unit])
+		{
+			SetLight(NULL, unit);
+		}
+	}
 
-	Light* pNull = NULL;
-	SetLight(pNull, unit);
-
-	mLights[unit] = NULL;
+	if (lightCount > 0)
+	{
+		ambient.Saturate();
+		EnableLighting(ambient);
+	}
+	else
+	{
+		DisableLighting();
+	}
 }

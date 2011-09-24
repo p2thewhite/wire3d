@@ -7,6 +7,18 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline ColorRGB::operator Float* ()
+{
+	return mTuple;
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB::operator const Float* () const
+{
+	return mTuple;
+}
+
+//----------------------------------------------------------------------------
 inline Float ColorRGB::R() const
 {
 	return mTuple[0];
@@ -40,4 +52,40 @@ inline Float ColorRGB::B() const
 inline Float& ColorRGB::B()
 {
 	return mTuple[2];
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB ColorRGB::operator* (Float scalar) const
+{
+	return ColorRGB(
+		scalar * mTuple[0],
+		scalar * mTuple[1],
+		scalar * mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB& ColorRGB::operator*= (Float scalar)
+{
+	mTuple[0] *= scalar;
+	mTuple[1] *= scalar;
+	mTuple[2] *= scalar;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB& ColorRGB::operator+= (const ColorRGB& rCol)
+{
+	mTuple[0] += rCol[0];
+	mTuple[1] += rCol[1];
+	mTuple[2] += rCol[2];
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB operator* (Float scalar, const ColorRGB& rCol)
+{
+	return ColorRGB(
+		scalar * rCol[0],
+		scalar * rCol[1],
+		scalar * rCol[2]);
 }
