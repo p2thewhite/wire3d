@@ -107,8 +107,7 @@ public:
 	// Update:  Lock the video memory of the resource, copy the system memory
 	//    contents to it, and then unlock the video memory. This is the
 	//    recommended way for updating resources (update the system memory and
-	//    then call Update). The update is for the renderer calling the
-	//    function.
+	//    then call Update).
 
 	// Bind/Unbind all resources of a geometry object or a scene graph
 	static void BindAll(const Spatial* pSpatial);
@@ -170,7 +169,7 @@ public:
 	void ClearBuffers();
 	void DisplayBackBuffer();
 
-	// Render state handling
+	// Immediate render state handling
 	void SetState(StateAlpha* pState);
 	void SetState(StateCull* pState);
 	void SetState(StateFog* pState);
@@ -183,15 +182,19 @@ public:
 	inline const StateMaterial* GetStateMaterial() const;
 	inline const StateWireframe* GetStateWireframe() const;
 	inline const StateZBuffer* GetStateZBuffer() const;
+	// Renderer render state handling
+	void Set(StatePtr spStates[]);
+	void Enable(StatePtr spStates[]);
+	void Disable(StatePtr spStates[]);
 
-	// Light state handling
-	void Enable(const Light* pLight, UInt unit = 0);
-	void Disable(const Light* pLight, UInt unit = 0);
+	// Immediate Light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
+	void EnableLighting(const ColorRGB& rAmbient = ColorRGB::BLACK);
+	void DisableLighting();
+	// Renderer light state handling
 	void Enable(const TArray<Pointer<Light> >& rLights);
 	void Disable(const TArray<Pointer<Light> >& rLights);
-	void EnableLighting();
-	void DisableLighting();
+	void Set(const TArray<Pointer<Light> >& rLights);
 
 	inline PdrRendererData* GetRendererData() const;
 
@@ -204,16 +207,15 @@ private:
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements();
 
-	// Global render state management
-	void Set(StatePtr spStates[]);
-	void Enable(StatePtr spStates[]);
-	void Disable(StatePtr spStates[]);
+	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
+	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
+	typedef THashTable<const Texture2D*, PdrTexture2D*> Texture2DMap;
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
-	void DestroyAllIndexBuffers();
- 	void DestroyAllTexture2Ds();
-	void DestroyAllVertexBuffers();
+	void DestroyAll(IndexBufferMap& rIndexBufferMap);
+	void DestroyAll(VertexBufferMap& rVertexBufferMap);
+ 	void DestroyAll(Texture2DMap& rTexture2DMap);
 
 	// Objects currently in use by the Renderer
 	StatePtr mspStates[State::MAX_STATE_TYPE];
@@ -241,9 +243,6 @@ private:
 	friend class PdrRendererData;
 	PdrRendererData* mpData;
 	
-	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
-	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
-	typedef THashTable<const Texture2D*, PdrTexture2D*> Texture2DMap;
 	IndexBufferMap mIndexBufferMap;
 	VertexBufferMap mVertexBufferMap;
 	Texture2DMap mTexture2DMap;

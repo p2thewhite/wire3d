@@ -100,8 +100,8 @@ void Sample1::OnIdle()
 	// modulate the texture with the light
 	mspCube->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
 
-	GetRenderer()->EnableLighting();
-	GetRenderer()->Enable(mspLight);
+	GetRenderer()->EnableLighting(mspLight->Ambient);
+	GetRenderer()->SetLight(mspLight);
 
 	// Draw the upper row of cubes.
 	const UInt cubeCount = 5;

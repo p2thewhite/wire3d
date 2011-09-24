@@ -35,31 +35,10 @@ ColorRGBA::ColorRGBA(Float red, Float green, Float blue, Float alpha)
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA ColorRGBA::operator* (Float scalar) const
+void ColorRGBA::Saturate()
 {
-	return ColorRGBA(
-		scalar * mTuple[0],
-		scalar * mTuple[1],
-		scalar * mTuple[2],
-		scalar * mTuple[3]);
-}
-
-//----------------------------------------------------------------------------
-ColorRGBA& ColorRGBA::operator*= (Float scalar)
-{
-	mTuple[0] *= scalar;
-	mTuple[1] *= scalar;
-	mTuple[2] *= scalar;
-	mTuple[3] *= scalar;
-	return *this;
-}
-
-//----------------------------------------------------------------------------
-ColorRGBA operator* (Float scalar, const ColorRGBA& rCol)
-{
-	return ColorRGBA(
-		scalar * rCol.R(),
-		scalar * rCol.G(),
-		scalar * rCol.B(),
-		scalar * rCol.A());
+	for (UInt i = 0; i < 4; i++)
+	{
+		mTuple[i] = mTuple[i] > 1.0F ? 1.0F : mTuple[i];
+	}
 }

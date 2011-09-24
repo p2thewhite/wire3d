@@ -21,6 +21,8 @@ public:
 	ColorRGBA();  // initial values (0, 0, 0, 0)
 	ColorRGBA(Float red, Float green, Float blue, Float alpha);
 
+	inline operator Float* ();
+	inline operator const Float* () const;
 	inline Float R() const;
 	inline Float& R();
 	inline Float G() const;
@@ -31,11 +33,14 @@ public:
 	inline Float& A();
 
 	// arithmetic operations
-	ColorRGBA operator* (Float scalar) const;
-	friend ColorRGBA operator* (Float scalar, const ColorRGBA& rCol);
+	inline ColorRGBA operator* (Float scalar) const;
+	inline friend ColorRGBA operator* (Float scalar, const ColorRGBA& rCol);
 
 	// arithmetic updates
-	ColorRGBA& operator*= (Float scalar);
+	inline ColorRGBA& operator*= (Float scalar);
+	inline ColorRGBA& operator+= (const ColorRGBA& rCol);
+
+	void Saturate();
 
 	static const ColorRGBA BLACK;
 	static const ColorRGBA WHITE;

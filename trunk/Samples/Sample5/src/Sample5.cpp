@@ -185,7 +185,7 @@ void Sample5::OnIdle()
 	}
 
 	// render the bottom plane which is being lit by the spot light
-	GetRenderer()->EnableLighting();
+	GetRenderer()->EnableLighting(mspPlane->Lights[0]->Ambient);
 	if (mCuller.IsVisible(mspPlane))
 	{
 		GetRenderer()->Draw(mspPlane);

@@ -17,6 +17,8 @@ using namespace Wire;
 void Renderer::SetLight(const Light* pLight, UInt unit)
 {
 	WIRE_ASSERT(mLights.GetQuantity() > unit);
+	mLights[unit] = const_cast<Light*>(pLight);
+
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
@@ -91,19 +93,19 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		WIRE_ASSERT(false);
 	}
 
-	const ColorRGB& rC = pLight->Ambient;
-	DWORD ambientColor = D3DCOLOR_COLORVALUE(rC.R(), rC.G(), rC.B(), 1.0F);
-	rDevice->SetRenderState(D3DRS_AMBIENT, ambientColor);
-
 	hr = rDevice->SetLight(unit, &d3dLight);
  	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
-void Renderer::EnableLighting()
+void Renderer::EnableLighting(const ColorRGB& rAmbient)
 {
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
+
+	DWORD ambientColor = D3DCOLOR_COLORVALUE(rAmbient.R(), rAmbient.G(),
+		rAmbient.B(), 1.0F);
+	rDevice->SetRenderState(D3DRS_AMBIENT, ambientColor);
 
 	hr = rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	WIRE_ASSERT(SUCCEEDED(hr));

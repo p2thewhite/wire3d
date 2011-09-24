@@ -21,6 +21,8 @@ public:
 	ColorRGB();  // initial values (0, 0, 0)
 	ColorRGB(Float red, Float green, Float blue);
 
+	inline operator Float* ();
+	inline operator const Float* () const;
 	inline Float R() const;
 	inline Float& R();
 	inline Float G() const;
@@ -29,11 +31,14 @@ public:
 	inline Float& B();
 
 	// arithmetic operations
-	ColorRGB operator* (Float scalar) const;
-	friend ColorRGB operator* (Float scalar, const ColorRGB& rCol);
+	inline ColorRGB operator* (Float scalar) const;
+	inline friend ColorRGB operator* (Float scalar, const ColorRGB& rCol);
 
 	// arithmetic updates
-	ColorRGB& operator*= (Float scalar);
+	inline ColorRGB& operator*= (Float scalar);
+	inline ColorRGB& operator+= (const ColorRGB& rCol);
+
+	void Saturate();
 
 	static const ColorRGB BLACK;
 	static const ColorRGB WHITE;
