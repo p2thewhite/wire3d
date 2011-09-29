@@ -11,6 +11,7 @@
 #define WIRECULLSTATE_H
 
 #include "WireState.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -37,6 +38,8 @@ public:
 
 	Bool Enabled;         // default: true
 	CullMode CullFace;    // default: CM_BACK
+
+	TInstanceID<StateCull> ID;
 };
 
 typedef Pointer<StateCull> StateCullPtr;

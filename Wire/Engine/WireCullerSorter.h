@@ -23,7 +23,15 @@ public:
 		VS_DEFAULT_MAX_QUANTITY, UInt growBy = VisibleSet::VS_DEFAULT_GROWBY);
 	virtual ~CullerSorter();
 
+	virtual void ComputeVisibleSet(Spatial* pScene);
 	virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);
+
+protected:
+	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
+		pDestination);
+
+	VisibleSet* mpOpaqueGeometry;
+	VisibleSet* mpTransparentGeometry;
 };
 
 }

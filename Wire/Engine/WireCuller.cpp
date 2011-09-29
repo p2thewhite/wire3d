@@ -20,8 +20,7 @@ Culler::Culler(const Camera* pCamera, UInt maxQuantity, UInt growBy)
 	mpCamera(pCamera),
 	mPlaneQuantity(6)
 {
-	VisibleSet visibleSet(maxQuantity, growBy);
-	mVisibleSets.Append(visibleSet);
+	mVisibleSets.Append(WIRE_NEW VisibleSet(maxQuantity, growBy));
 
 	// The data members mFrustum, mPlane, and mPlaneState are uninitialized.
 	// They are initialized in the GetVisibleSet call.
@@ -30,6 +29,10 @@ Culler::Culler(const Camera* pCamera, UInt maxQuantity, UInt growBy)
 //----------------------------------------------------------------------------
 Culler::~Culler()
 {
+	for (UInt i = 0; i < mVisibleSets.GetQuantity(); i++)
+	{
+		WIRE_DELETE mVisibleSets[i];
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -159,7 +162,7 @@ void Culler::ComputeVisibleSet(Spatial* pScene)
 		SetFrustum(mpCamera->GetFrustum());
 		for (UInt i = 0; i < mVisibleSets.GetQuantity(); i++)
 		{
-			mVisibleSets[i].Clear();
+			mVisibleSets[i]->Clear();
 		}
 
 		pScene->OnGetVisibleSet(*this, false);

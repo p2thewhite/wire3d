@@ -19,6 +19,18 @@ inline UInt VisibleSet::GetQuantity() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt VisibleSet::GetMaxQuantity() const
+{
+	return mVisible.GetMaxQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
+{
+	mVisible.SetMaxQuantity(maxQuantity);
+}
+
+//----------------------------------------------------------------------------
 inline VisibleObject* VisibleSet::GetVisible()
 {
 	return mVisible.GetArray();

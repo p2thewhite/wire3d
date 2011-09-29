@@ -32,14 +32,14 @@ inline UInt Culler::GetPlaneState() const
 }
 
 //----------------------------------------------------------------------------
-inline VisibleSet& Culler::GetVisibleSet(UInt i)
+inline VisibleSet* Culler::GetVisibleSet(UInt i)
 {
 	WIRE_ASSERT(i < mVisibleSets.GetQuantity());
 	return mVisibleSets[i];
 }
 
 //----------------------------------------------------------------------------
-inline TArray<VisibleSet>& Culler::GetVisibleSets()
+inline TArray<VisibleSet*>& Culler::GetVisibleSets()
 {
 	return mVisibleSets;
 }
@@ -47,5 +47,5 @@ inline TArray<VisibleSet>& Culler::GetVisibleSets()
 //----------------------------------------------------------------------------
 inline void Culler::Insert(Spatial* pObject, Effect* pGlobalEffect)
 {
-	GetVisibleSet().Insert(pObject, pGlobalEffect);
+	GetVisibleSet()->Insert(pObject, pGlobalEffect);
 }

@@ -10,6 +10,7 @@
 #ifndef WIREALPHASTATE_H
 #define WIREALPHASTATE_H
 
+#include "WireTInstanceID.h"
 #include "WireState.h"
 
 namespace Wire
@@ -56,6 +57,8 @@ public:
 	Bool BlendEnabled;      // default: false
 	SrcBlendMode SrcBlend;  // default: SBM_SRC_ALPHA
 	DstBlendMode DstBlend;  // default: DBM_ONE_MINUS_SRC_ALPHA
+
+	TInstanceID<StateAlpha> ID;
 };
 
 typedef Pointer<StateAlpha> StateAlphaPtr;

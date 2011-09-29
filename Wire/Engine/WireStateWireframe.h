@@ -11,6 +11,7 @@
 #define WIREWIREFRAMESTATE_H
 
 #include "WireState.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -28,6 +29,8 @@ public:
 	inline virtual StateType GetStateType() const { return WIREFRAME; }
 
 	Bool Enabled;         // default: false
+
+	TInstanceID<StateWireframe> ID;
 };
 
 typedef Pointer<StateWireframe> StateWireframePtr;

@@ -12,6 +12,7 @@
 
 #include "WireColorRGBA.h"
 #include "WireState.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -29,6 +30,8 @@ public:
 	inline virtual StateType GetStateType() const { return MATERIAL; }
 
     ColorRGBA Ambient;   // default:  ColorRGBA(0.2, 0.2, 0.2, 1)
+
+	TInstanceID<StateMaterial> ID;
 };
 
 typedef Pointer<StateMaterial> StateMaterialPtr;

@@ -56,8 +56,8 @@ public:
 	void Terminate();
 
 	// Object drawing
-	void DrawScene(VisibleSet& rVisibleSet);
-	void DrawScene(TArray<VisibleSet>& rVisibleSets);
+	void DrawScene(VisibleSet* rVisibleSet);
+	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
 	void Draw(Geometry* pGeometry, Bool restoreState = true,
 		Bool useEffect = true);
 
@@ -197,6 +197,11 @@ public:
 	void Set(const TArray<Pointer<Light> >& rLights);
 
 	inline PdrRendererData* GetRendererData() const;
+
+	enum
+	{
+		MAX_GLOBAL_EFFECTS = 64
+	};
 
 private:
 	void SetBlendMode(Material::BlendMode blendMode, UInt unit = 0,

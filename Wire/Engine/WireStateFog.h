@@ -12,6 +12,7 @@
 
 #include "WireColorRGB.h"
 #include "WireState.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -41,6 +42,8 @@ public:
 	DensityFunction DensityFunc;	// default: DF_LINEAR
 	Float Start;					// default: 0.0F
 	Float End;						// default: 1.0F
+
+	TInstanceID<StateFog> ID;
 };
 
 typedef Pointer<StateFog> StateFogPtr;

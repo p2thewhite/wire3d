@@ -33,6 +33,8 @@ public:
 	virtual ~VisibleSet ();
 
 	inline UInt GetQuantity() const;
+	inline UInt GetMaxQuantity() const;
+	inline void SetMaxQuantity(UInt maxQuantity);
 	inline VisibleObject* GetVisible();
 	inline VisibleObject& GetVisible(UInt i);
 
