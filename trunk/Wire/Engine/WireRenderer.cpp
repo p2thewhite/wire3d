@@ -617,19 +617,18 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawScene(VisibleSet& rVisibleSet)
+void Renderer::DrawScene(VisibleSet* pVisibleSet)
 {
-	// NOTE: The stack of 2-tuples is limited to having 64 elements. This
-	// should be plenty, because the chances of having 64 global effects
-	// in the same path is small (that is a *lot* of effects to apply in
-	// one frame). If it needs to be larger for your applications, increase
-	// the maximum size.
-	const UInt maxTuples = 64;		// maximum number of stack elements
-	UInt indexStack[maxTuples][2];	// elements are (startIndex, finalIndex)
-	Int top = -1;					// stack is initially empty
+	// NOTE: The stack of 2-tuples is limited to having MAX_GLOBAL_EFFECTS
+	// elements. This should be plenty, because the chances of having that
+	// many global effects in the same path is small (that is a *lot* of
+	// effects to apply in one frame). If it needs to be larger for your
+	// applications, increase the maximum size.
+	UInt indexStack[MAX_GLOBAL_EFFECTS][2]; // startIndex, finalIndex
+	Int top = -1;							// stack is initially empty
 
-	const UInt visibleQuantity = rVisibleSet.GetQuantity();
-	VisibleObject* pVisible = rVisibleSet.GetVisible();
+	const UInt visibleQuantity = pVisibleSet->GetQuantity();
+	VisibleObject* pVisible = pVisibleSet->GetVisible();
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i].Object)
@@ -638,7 +637,7 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 			{
 				// Begin the scope of a global effect.
 				top++;
-				WIRE_ASSERT(top < static_cast<Int>(maxTuples));
+				WIRE_ASSERT(top < static_cast<Int>(MAX_GLOBAL_EFFECTS));
 				indexStack[top][0] = i;
 				indexStack[top][1] = i;
 			}
@@ -677,7 +676,7 @@ void Renderer::DrawScene(VisibleSet& rVisibleSet)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawScene(TArray<VisibleSet>& rVisibleSets)
+void Renderer::DrawScene(TArray<VisibleSet*>& rVisibleSets)
 {
 	for (UInt i = 0; i < rVisibleSets.GetQuantity(); i++)
 	{

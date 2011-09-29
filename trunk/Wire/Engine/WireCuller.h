@@ -34,13 +34,13 @@ public:
 	inline void SetCamera(const Camera* pCamera);
 	inline const Camera* GetCamera() const;
 	void SetFrustum(const Float* pFrustum);
-	inline VisibleSet& GetVisibleSet(UInt i = 0);
-	inline TArray<VisibleSet>& GetVisibleSets();
+	inline VisibleSet* GetVisibleSet(UInt i = 0);
+	inline TArray<VisibleSet*>& GetVisibleSets();
 
 	// This is the main function you should use for culling within a scene
 	// graph. Traverse the scene and construct the potentially visible set
 	// relative to the world planes.
-	void ComputeVisibleSet(Spatial* pScene);
+	virtual void ComputeVisibleSet(Spatial* pScene);
 
 	// Compare the object's world bounding volume against all culling planes.
 	Bool IsVisible(const Spatial* pSpatial) const;
@@ -86,7 +86,7 @@ protected:
 	UInt mPlaneState;
 
 	// The potentially visible sets for a call to GetVisibleSet.
-	TArray<VisibleSet> mVisibleSets;
+	TArray<VisibleSet*> mVisibleSets;
 };
 
 #include "WireCuller.inl"

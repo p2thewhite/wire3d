@@ -11,6 +11,7 @@
 #define WIREZBUFFERSTATE_H
 
 #include "WireState.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -43,6 +44,8 @@ public:
 	Bool Enabled;				// default: true
 	Bool Writable;				// default: true
 	CompareFunction Compare;	// default: CF_LEQUAL
+
+	TInstanceID<StateZBuffer> ID;
 };
 
 typedef Pointer<StateZBuffer> StateZBufferPtr;

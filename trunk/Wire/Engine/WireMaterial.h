@@ -13,6 +13,7 @@
 #include "WireObject.h"
 #include "WireTArray.h"
 #include "WireTexture2D.h"
+#include "WireTInstanceID.h"
 
 namespace Wire
 {
@@ -43,6 +44,8 @@ public:
 	void AddTexture(Texture2D* pTexture, BlendMode blendMode = BM_MODULATE);
  	void SetTexture(UInt i, Texture2D* pTexture, BlendMode blendMode = 
 		BM_MODULATE);
+
+	TInstanceID<Material> ID;
 
 private:
 	struct TextureBlendMode
