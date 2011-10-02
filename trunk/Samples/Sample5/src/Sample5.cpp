@@ -176,7 +176,7 @@ void Sample5::OnIdle()
 	GetRenderer()->PreDraw(mspCamera);
 
 	// render the scene graph
-	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 
 	// render the white cube representing the spot light
 	if (mCuller.IsVisible(mspWhiteCube))

@@ -29,9 +29,11 @@ public:
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		pDestination);
+	void QuickSort(UInt arr[], UInt left, UInt right);
 
 	VisibleSet* mpOpaqueGeometry;
 	VisibleSet* mpTransparentGeometry;
+	TArray<UInt> mKeys;
 };
 
 }

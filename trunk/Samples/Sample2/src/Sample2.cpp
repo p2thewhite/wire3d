@@ -115,7 +115,7 @@ void Sample2::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSet());
+	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
