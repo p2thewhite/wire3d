@@ -60,11 +60,13 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	pDestination)
 {
 	pDestination->Clear();
+	mKeys.SetQuantity(0, false);
 
 	// The destination set will have at least the size of the source set.
 	if (pDestination->GetMaxQuantity() < pSource->GetMaxQuantity())
 	{
 		pDestination->SetMaxQuantity(pSource->GetQuantity());
+		mKeys.SetMaxQuantity(pSource->GetQuantity());
 	}
 
 	UInt indexStack[Renderer::MAX_GLOBAL_EFFECTS][2];
@@ -98,10 +100,23 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
- 			for (UInt i = min; i <= max; i++)
+			pDestination->Insert(pVisible[i].Object, pVisible[i].
+				GlobalEffect);
+
+ 			for (UInt i = min+1; i <= max; i++)
  			{
-				pDestination->Insert(pVisible[i].Object, pVisible[i].
-					GlobalEffect);
+				WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
+				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+				UInt id = 0;
+				Material* pMaterial = StaticCast<Geometry>(pVisible[i].
+					Object)->GetMaterial();
+				if (pMaterial)
+				{
+					id = pMaterial->ID;
+				}
+
+				mKeys.Append(id);
+				pDestination->Insert(pVisible[i].Object, NULL);
 			}
 
 			pDestination->Insert(NULL, NULL);
@@ -116,7 +131,58 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	WIRE_ASSERT(top == 0);
 	for (UInt i = indexStack[0][0]; i < indexStack[0][1]; i++)
 	{
+		WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
+		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+		UInt id = 0;
+		Material* pMaterial = StaticCast<Geometry>(pVisible[i].
+			Object)->GetMaterial();
+		if (pMaterial)
+		{
+			id = pMaterial->ID;
+		}
+
+		mKeys.Append(id);
 		pDestination->Insert(pVisible[i].Object, pVisible[i].GlobalEffect);
+	}
+}
+
+//----------------------------------------------------------------------------
+void CullerSorter::QuickSort(UInt arr[], UInt left, UInt right)
+{
+	UInt i = left;
+	UInt j = right;
+	UInt pivot = arr[(left + right) / 2];
+
+	while (i <= j)
+	{
+		while (arr[i] < pivot)
+		{
+			i++;
+		}
+
+		while (arr[j] > pivot)
+		{
+			j--;
+		}
+
+		if (i <= j)
+		{
+			UInt tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+			i++;
+			j--;
+		}
+	};
+
+	if (left < j)
+	{
+		QuickSort(arr, left, j);
+	}
+
+	if (i < right)
+	{
+		QuickSort(arr, i, right);
 	}
 }
 

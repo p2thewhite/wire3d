@@ -646,6 +646,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 				// Found a leaf Geometry object.
 				if (top == -1)
 				{
+					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
 					Draw(StaticCast<Geometry>(pVisible[i].Object), false,
 						true);
 				}
