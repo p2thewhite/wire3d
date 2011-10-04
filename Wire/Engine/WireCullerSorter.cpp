@@ -26,6 +26,8 @@ CullerSorter::CullerSorter(const Camera* pCamera, UInt maxQuantity,
 	mVisibleSets.Append(WIRE_NEW VisibleSet(maxQuantity, growBy));
 	mpOpaqueGeometry = WIRE_NEW VisibleSet(maxQuantity, growBy);
 	mpTransparentGeometry = WIRE_NEW VisibleSet(maxQuantity, growBy);
+	mKeys.SetMaxQuantity(maxQuantity);
+	mKeys.SetGrowBy(growBy);
 }
 
 //----------------------------------------------------------------------------
@@ -66,7 +68,6 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	if (pDestination->GetMaxQuantity() < pSource->GetMaxQuantity())
 	{
 		pDestination->SetMaxQuantity(pSource->GetQuantity());
-		mKeys.SetMaxQuantity(pSource->GetQuantity());
 	}
 
 	UInt indexStack[Renderer::MAX_GLOBAL_EFFECTS][2];
@@ -75,7 +76,7 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	UInt top = 0;
 
 	const UInt visibleQuantity = pSource->GetQuantity();
-	VisibleObject* pVisible = pSource->GetVisible();
+	VisibleObject* const pVisible = pSource->GetVisible();
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i].Object)
@@ -119,6 +120,10 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 				pDestination->Insert(pVisible[i].Object, NULL);
 			}
 
+//			QuickSort(mKeys.GetArray(), pDestination->GetVisible(), min+1,
+			QuickSort(mKeys, pDestination->GetVisible(), min+1,
+				max);
+
 			pDestination->Insert(NULL, NULL);
 
 			if (--top > 0)
@@ -144,32 +149,47 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		mKeys.Append(id);
 		pDestination->Insert(pVisible[i].Object, pVisible[i].GlobalEffect);
 	}
+
+	if (indexStack[0][0] < indexStack[0][1])
+	{
+		//	QuickSort(mKeys.GetArray(), pDestination->GetVisible(), indexStack[0][0],
+		QuickSort(mKeys, pDestination->GetVisible(), indexStack[0][0],
+			indexStack[0][1]-1);
+	}
 }
 
 //----------------------------------------------------------------------------
-void CullerSorter::QuickSort(UInt arr[], UInt left, UInt right)
+//void CullerSorter::QuickSort(UInt* const pKeys, VisibleObject* const
+void CullerSorter::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
+	pVisibles, Int left, Int right)
 {
-	UInt i = left;
-	UInt j = right;
-	UInt pivot = arr[(left + right) / 2];
+	Int i = left;
+	Int j = right;
+	UInt pivot = pKeys[(left + right) / 2];
 
 	while (i <= j)
 	{
-		while (arr[i] < pivot)
+		while (pKeys[i] < pivot)
 		{
 			i++;
 		}
 
-		while (arr[j] > pivot)
+		while (pKeys[j] > pivot)
 		{
 			j--;
 		}
 
 		if (i <= j)
 		{
-			UInt tmp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = tmp;
+			UInt tmp = pKeys[i];
+			pKeys[i] = pKeys[j];
+			pKeys[j] = tmp;
+
+			WIRE_ASSERT(pVisibles[i].GlobalEffect == NULL);
+			Spatial* pTmp = pVisibles[i].Object;
+			pVisibles[i].Object = pVisibles[j].Object;
+			pVisibles[j].Object = pTmp;
+
 			i++;
 			j--;
 		}
@@ -177,12 +197,12 @@ void CullerSorter::QuickSort(UInt arr[], UInt left, UInt right)
 
 	if (left < j)
 	{
-		QuickSort(arr, left, j);
+		QuickSort(pKeys, pVisibles, left, j);
 	}
 
 	if (i < right)
 	{
-		QuickSort(arr, i, right);
+		QuickSort(pKeys, pVisibles, i, right);
 	}
 }
 
