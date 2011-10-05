@@ -193,12 +193,15 @@ void Spatial::AttachEffect(Effect* pEffect)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateRS(TArray<State*>* pGStack, TArray<Light*>* pLStack)
+void Spatial::UpdateRS(TArray<State*>* pStateStacks, TArray<Light*>*
+	pLightStack, THashTable<UInt, UInt>* pStateKeys)
 {
-	Bool isInitiator = (pGStack == NULL);
+	Bool isInitiator = (pStateStacks == NULL);
 
 	if (isInitiator)
 	{
+		const UInt growBy = 16;
+
 		// The order of preference is
 		//   (1) Default global states are used.
 		//   (2) Geometry can override them, but if global state FOOBAR
@@ -206,81 +209,88 @@ void Spatial::UpdateRS(TArray<State*>* pGStack, TArray<Light*>* pLStack)
 		//       the current FOOBAR remains in effect (rather than the
 		//       default FOOBAR being used).
 		//   (3) Effect can override default or Geometry render states.
-		pGStack = WIRE_NEW TArray<State*>[State::MAX_STATE_TYPE];
+		pStateStacks = WIRE_NEW TArray<State*>[State::MAX_STATE_TYPE];
 
 		for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 		{
-			pGStack[i].Append(State::Default[i]);
+			pStateStacks[i].SetGrowBy(growBy);
+			pStateStacks[i].Append(State::Default[i]);
 		}
 
         // stack has no lights initially
-        pLStack = WIRE_NEW TArray<Light*>;
+        pLightStack = WIRE_NEW TArray<Light*>(0, growBy);
+
+		// Geometry identifies sets of identical states and shares their ID
+		pStateKeys = WIRE_NEW THashTable<UInt, UInt>;
 
 		// traverse to root and push states from root to this node
-		PropagateStateFromRoot(pGStack, pLStack);
+		PropagateStateFromRoot(pStateStacks, pLightStack, pStateKeys);
 	}
 	else
 	{
 		// push states at this node
-		PushState(pGStack, pLStack);
+		PushState(pStateStacks, pLightStack);
 	}
 
 	// propagate the new state to the subtree rooted here
-	UpdateState(pGStack, pLStack);
+	UpdateState(pStateStacks, pLightStack, pStateKeys);
 
 	if (isInitiator)
 	{
-		WIRE_DELETE[] pGStack;
-		WIRE_DELETE pLStack;
+		WIRE_DELETE[] pStateStacks;
+		WIRE_DELETE pLightStack;
+		WIRE_DELETE pStateKeys;
 	}
 	else
 	{
 		// pop states at this node
-		PopState(pGStack, pLStack);
+		PopState(pStateStacks, pLightStack);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PropagateStateFromRoot(TArray<State*>* pGStack,
-	TArray<Light*>* pLStack)
+void Spatial::PropagateStateFromRoot(TArray<State*>* pStateStacks,
+	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
 {
 	// traverse to root to allow downward state propagation
 	if (mpParent)
 	{
-		mpParent->PropagateStateFromRoot(pGStack, pLStack);
+		mpParent->PropagateStateFromRoot(pStateStacks, pLightStack,
+			pStateKeys);
 	}
 
 	// push states onto current render state stack
-	PushState(pGStack, pLStack);
+	PushState(pStateStacks, pLightStack);
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PushState(TArray<State*>* pGStack, TArray<Light*>*
-	pLStack)
+void Spatial::PushState(TArray<State*>* pStateStacks,
+	TArray<Light*>* pLightStack)
 {
 	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
 		State::StateType type = mStates[i]->GetStateType();
-		pGStack[type].Append(mStates[i]);
+		pStateStacks[type].Append(mStates[i]);
 	}
 
 	for (UInt i = 0; i < mLights.GetQuantity(); i++)
 	{
-		pLStack->Append(mLights[i]);
+		pLightStack->Append(mLights[i]);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PopState(TArray<State*>* pGStack, TArray<Light*>* pLStack)
+void Spatial::PopState(TArray<State*>* pStateStacks,
+	TArray<Light*>* pLightStack)
 {
 	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
 		State::StateType type = mStates[i]->GetStateType();
-		pGStack[type].RemoveLast();
+		pStateStacks[type].RemoveLast();
 	}
 
 	for (UInt i = 0; i < mLights.GetQuantity(); i++)
 	{
-		pLStack->RemoveLast();
+		pLightStack->RemoveLast();
 	}
 }
