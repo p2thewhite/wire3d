@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Sample10 - Terrain</ProjectName>
-    <ProjectGuid>{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}</ProjectGuid>
+    <ProjectName>Sample10 - Material Sorting</ProjectName>
+    <ProjectGuid>{0673CD71-783F-40E8-A877-BEF7A4EBBFBC}</ProjectGuid>
     <RootNamespace>Sample10 - Terrain</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>

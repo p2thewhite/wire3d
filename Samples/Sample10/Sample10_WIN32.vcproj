@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="Sample10 - Terrain"
-	ProjectGUID="{91F1F7BC-0641-4FE9-AB07-27203A37FA07}"
+	Name="Sample10 - Material Sorting"
+	ProjectGUID="{D46B0F8C-BE11-4926-AE49-92B38846E3A7}"
 	RootNamespace="Sample10_WIN32"
 	>
 	<Platforms>

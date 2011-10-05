@@ -326,11 +326,11 @@
     <ClInclude Include="Engine\WireMaterial.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireCullerSorter.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\WireTInstanceID.h">
       <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\WireCullerSorting.h">
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -741,7 +741,7 @@
     <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp">
       <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\WireCullerSorter.cpp">
+    <ClCompile Include="Engine\WireCullerSorting.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
