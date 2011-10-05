@@ -6,7 +6,7 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-#include "WireCullerSorter.h"
+#include "WireCullerSorting.h"
 
 #include "WireEffect.h"
 #include "WireGeometry.h"

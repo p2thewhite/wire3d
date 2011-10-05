@@ -86,7 +86,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\WireCullerSorter.h" />
+    <ClInclude Include="Engine\WireCullerSorting.h" />
     <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Engine\WireNodeBillboard.h" />
     <ClInclude Include="Engine\WireNodeDLod.h" />
@@ -231,7 +231,7 @@
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\WireCullerSorter.cpp" />
+    <ClCompile Include="Engine\WireCullerSorting.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />
     <ClCompile Include="Engine\WireNodeDLod.cpp" />

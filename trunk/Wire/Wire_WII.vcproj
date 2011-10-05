@@ -443,7 +443,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullerSorter.h"
+					RelativePath=".\Engine\WireCullerSorting.h"
 					>
 				</File>
 				<File
@@ -707,7 +707,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireCullerSorter.cpp"
+					RelativePath=".\Engine\WireCullerSorting.cpp"
 					>
 				</File>
 				<File
