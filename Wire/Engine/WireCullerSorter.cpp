@@ -107,16 +107,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
  			for (UInt i = min+1; i <= max; i++)
  			{
 				WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
-				UInt id = 0;
-				Material* pMaterial = StaticCast<Geometry>(pVisible[i].
-					Object)->GetMaterial();
-				if (pMaterial)
-				{
-					id = pMaterial->ID;
-				}
-
-				mKeys.Append(id);
+					mKeys.Append(GetKey(pVisible[i].Object));
 				pDestination->Insert(pVisible[i].Object, NULL);
 			}
 
@@ -137,16 +128,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	for (UInt i = indexStack[0][0]; i < indexStack[0][1]; i++)
 	{
 		WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
-		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
-		UInt id = 0;
-		Material* pMaterial = StaticCast<Geometry>(pVisible[i].
-			Object)->GetMaterial();
-		if (pMaterial)
-		{
-			id = pMaterial->ID;
-		}
-
-		mKeys.Append(id);
+		mKeys.Append(GetKey(pVisible[i].Object));
 		pDestination->Insert(pVisible[i].Object, pVisible[i].GlobalEffect);
 	}
 
@@ -233,4 +215,39 @@ void CullerSorting::Insert(Spatial* pObject, Effect* pGlobalEffect)
 			GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+UInt CullerSorting::GetKey(Spatial* pSpatial)
+{
+	WIRE_ASSERT(pSpatial);
+	WIRE_ASSERT(DynamicCast<Geometry>(pSpatial));
+
+	Geometry* pGeometry = StaticCast<Geometry>(pSpatial);
+	UInt key = 0;
+
+	// number of bits we use for each Geometry's sorting key
+	enum
+	{
+		MATERIAL = 16,
+		STATESET = 16
+	};
+	
+	 // The sum of the ranges must fit in the key
+	WIRE_ASSERT((MATERIAL + STATESET) <= sizeof(key) * 8);
+
+	// The following asserts let you know when you have created more materials
+	// and state sets than the key can handle. 
+
+	Material* pMaterial = pGeometry->GetMaterial();
+	if (pMaterial)
+	{
+		WIRE_ASSERT(pMaterial->ID < (1<<MATERIAL));
+		key = pMaterial->ID;
+	}
+
+	WIRE_ASSERT(pGeometry->StateSetID < (1<<STATESET));
+	key |= pGeometry->StateSetID << MATERIAL;
+
+	return key;
 }

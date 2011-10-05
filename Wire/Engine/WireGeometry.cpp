@@ -67,8 +67,17 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
   		States[i] = rState[rState.GetQuantity()-1];
 	}
 
+	// check if other Geometry objects share the same states
 	UInt key = GetStateSetKey();
-//	pStateKeys->Find(key)
+	UInt* pStateSetID = pStateKeys->Find(key);
+	if (pStateSetID)
+	{
+		StateSetID = *pStateSetID;
+	}
+	else
+	{
+		pStateKeys->Insert(key, pStateKeys->GetQuantity()+1);
+	}
 
 	// update light state
 	Lights.RemoveAll();
@@ -178,6 +187,8 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 //----------------------------------------------------------------------------
 UInt Geometry::GetStateSetKey()
 {
+	UInt key = 0;
+
 	// number of bits we use for each state's ID
 	enum
 	{
@@ -189,13 +200,12 @@ UInt Geometry::GetStateSetKey()
 		ZBUFFER = 5		// 2^5-1 = 31
 	};
 
-	UInt key = 0;
 	WIRE_ASSERT((ALPHA + CULL + FOG + MATERIAL + WIREFRAME + ZBUFFER) <=
 		sizeof(key) * 8); // The sum of the ranges must fit in the key
 
 	// The following asserts let you know when you have created more states
 	// than the key can handle. This is only important if you need the
-	// StateSetID to be unique (like the CullerSorting class uses it to
+	// StateSetID to be unique (e.g. the CullerSorting class uses it to
 	// sort its objects by state), otherwise you can ignore the asserts
 	// completely.
 	if (States[State::ALPHA])
