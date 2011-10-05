@@ -66,8 +66,8 @@ protected:
 	virtual void UpdateWorldBound();
 
 	// render state updates
-	virtual void UpdateState(TArray<State*>* pGStack,
-		TArray<Light*>* pLStack);
+	virtual void UpdateState(TArray<State*>* pStateStacks,
+		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);

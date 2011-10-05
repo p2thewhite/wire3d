@@ -53,16 +53,21 @@ public:
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<Pointer<Light> > Lights;
 
+	// Identical IDs among different Geometry objects mean that all their
+	// States[] are identical. This is used for sorting Geometry by state.
+	UInt StateSetID;
 
 protected:
 	// render state updates
-	virtual void UpdateState(TArray<State*>* pGStack, TArray<Light*>*
-		pLStack);
+	virtual void UpdateState(TArray<State*>* pStateStacks,
+		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 private:
+	UInt GetStateSetKey();
+
 	Pointer<VertexBuffer> mspVBuffer;
 	Pointer<IndexBuffer> mspIBuffer;
 	Pointer<BoundingVolume> mspModelBound;

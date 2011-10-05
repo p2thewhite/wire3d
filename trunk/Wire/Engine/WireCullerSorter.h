@@ -15,13 +15,13 @@
 namespace Wire
 {
 
-class CullerSorter : public Culler
+class CullerSorting : public Culler
 {
 
 public:
-	CullerSorter(const Camera* pCamera = NULL, UInt maxQuantity = VisibleSet::
+	CullerSorting(const Camera* pCamera = NULL, UInt maxQuantity = VisibleSet::
 		VS_DEFAULT_MAX_QUANTITY, UInt growBy = VisibleSet::VS_DEFAULT_GROWBY);
-	virtual ~CullerSorter();
+	virtual ~CullerSorting();
 
 	virtual void ComputeVisibleSet(Spatial* pScene);
 	virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);

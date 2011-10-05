@@ -18,7 +18,7 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-CullerSorter::CullerSorter(const Camera* pCamera, UInt maxQuantity,
+CullerSorting::CullerSorting(const Camera* pCamera, UInt maxQuantity,
 	UInt growBy)
 	:
 	Culler(pCamera, maxQuantity, growBy)
@@ -31,7 +31,7 @@ CullerSorter::CullerSorter(const Camera* pCamera, UInt maxQuantity,
 }
 
 //----------------------------------------------------------------------------
-CullerSorter::~CullerSorter()
+CullerSorting::~CullerSorting()
 {
 	// The visible set created and stored in mVisibleSets in the constructor
 	// is deleted by the destructor of the parent class, not here.
@@ -40,7 +40,7 @@ CullerSorter::~CullerSorter()
 }
 
 //----------------------------------------------------------------------------
-void CullerSorter::ComputeVisibleSet(Spatial* pScene)
+void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 {
 	Culler::ComputeVisibleSet(pScene);
 
@@ -58,7 +58,7 @@ void CullerSorter::ComputeVisibleSet(Spatial* pScene)
 }
 
 //----------------------------------------------------------------------------
-void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
+void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	pDestination)
 {
 	pDestination->Clear();
@@ -159,8 +159,8 @@ void CullerSorter::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 }
 
 //----------------------------------------------------------------------------
-//void CullerSorter::QuickSort(UInt* const pKeys, VisibleObject* const
-void CullerSorter::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
+//void CullerSorting::QuickSort(UInt* const pKeys, VisibleObject* const
+void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 	pVisibles, Int left, Int right)
 {
 	Int i = left;
@@ -207,7 +207,7 @@ void CullerSorter::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 }
 
 //----------------------------------------------------------------------------
-void CullerSorter::Insert(Spatial* pObject, Effect* pGlobalEffect)
+void CullerSorting::Insert(Spatial* pObject, Effect* pGlobalEffect)
 {
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
 

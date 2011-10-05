@@ -12,6 +12,7 @@
 
 #include "WireSceneObject.h"
 #include "WireState.h"
+#include "WireTHashTable.h"
 #include "WireTransformation.h"
 
 namespace Wire
@@ -78,8 +79,8 @@ public:
 	void UpdateBS();
 
 	// update render state
-	virtual void UpdateRS(TArray<State*>* pGStack = NULL,
-		TArray<Light*>* pLStack = NULL);
+	virtual void UpdateRS(TArray<State*>* pStateStacks = NULL, TArray<Light*>*
+		pLightStack = NULL, THashTable<UInt, UInt>* pStateKeys = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
 	inline void SetParent(Spatial* pParent);
@@ -120,12 +121,12 @@ protected:
 	void PropagateBoundToRoot();
 
 	// render state updates
-	void PropagateStateFromRoot(TArray<State*>* pGStack,
-		TArray<Light*>* pLStack);
-	void PushState(TArray<State*>* pGStack, TArray<Light*>* pLStack);
-	void PopState(TArray<State*>* pGStack, TArray<Light*>* pLStack);
-	virtual void UpdateState(TArray<State*>* pGStack,
-		TArray<Light*>* pLStack) = 0;
+	void PropagateStateFromRoot(TArray<State*>* pStateStacks,
+		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
+	void PushState(TArray<State*>* pStateStacks, TArray<Light*>* pLightStack);
+	void PopState(TArray<State*>* pStateStacks, TArray<Light*>* pLightStack);
+	virtual void UpdateState(TArray<State*>* pStateStacks,
+		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys) = 0;
 
 protected:
 	// support for hierarchical scene graph

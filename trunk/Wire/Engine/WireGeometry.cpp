@@ -14,6 +14,12 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMaterial.h"
+#include "WireStateAlpha.h"
+#include "WireStateCull.h"
+#include "WireStateFog.h"
+#include "WireStateMaterial.h"
+#include "WireStateWireframe.h"
+#include "WireStateZBuffer.h"
 #include "WireVertexBuffer.h"
 
 using namespace Wire;
@@ -51,22 +57,25 @@ void Geometry::UpdateWorldBound()
 }
 
 //----------------------------------------------------------------------------
-void Geometry::UpdateState(TArray<State*>* pGStack,
-	TArray<Light*>* pLStack)
+void Geometry::UpdateState(TArray<State*>* pStateStacks,
+	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
 {
 	// update global state
 	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 	{
-		TArray<State*>& rState = pGStack[i];
+		TArray<State*>& rState = pStateStacks[i];
   		States[i] = rState[rState.GetQuantity()-1];
 	}
 
+	UInt key = GetStateSetKey();
+//	pStateKeys->Find(key)
+
 	// update light state
 	Lights.RemoveAll();
-	Lights.SetQuantity(pLStack->GetQuantity());
-	for (UInt i = 0; i < pLStack->GetQuantity(); i++)
+	Lights.SetQuantity(pLightStack->GetQuantity());
+	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
 	{
-		Lights[i] = (*pLStack)[i];
+		Lights[i] = (*pLightStack)[i];
 	}
 }
 
@@ -164,4 +173,75 @@ void Geometry::GenerateNormals(Bool ignoreHardEdges)
 
 		mspVBuffer->Normal3(i) = normal;
 	}
+}
+
+//----------------------------------------------------------------------------
+UInt Geometry::GetStateSetKey()
+{
+	// number of bits we use for each state's ID
+	enum
+	{
+		ALPHA = 7,		// 2^7-1 = 127 Alpha states can be handled
+		CULL = 2,		// 2^2-1 = 3
+		FOG = 4,		// 2^4-1 = 15
+		MATERIAL = 12,	// 2^12-1 = 4095
+		WIREFRAME = 2,	// 2^2-1 = 3
+		ZBUFFER = 5		// 2^5-1 = 31
+	};
+
+	UInt key = 0;
+	WIRE_ASSERT((ALPHA + CULL + FOG + MATERIAL + WIREFRAME + ZBUFFER) <=
+		sizeof(key) * 8); // The sum of the ranges must fit in the key
+
+	// The following asserts let you know when you have created more states
+	// than the key can handle. This is only important if you need the
+	// StateSetID to be unique (like the CullerSorting class uses it to
+	// sort its objects by state), otherwise you can ignore the asserts
+	// completely.
+	if (States[State::ALPHA])
+	{
+		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);
+		WIRE_ASSERT(pState->ID < (1<<ALPHA));
+		key |= pState->ID;
+	}
+
+	if (States[State::CULL])
+	{
+		StateCull* pState = StaticCast<StateCull>(States[State::CULL]);
+		WIRE_ASSERT(pState->ID < (1<<CULL));
+		key |= pState->ID << ALPHA;
+	}
+
+	if (States[State::FOG])
+	{
+		StateFog* pState = StaticCast<StateFog>(States[State::FOG]);
+		WIRE_ASSERT(pState->ID < (1<<FOG));
+		key |= pState->ID << (ALPHA+CULL);
+	}
+
+	if (States[State::MATERIAL])
+	{
+		StateMaterial* pState = StaticCast<StateMaterial>(
+			States[State::MATERIAL]);
+		WIRE_ASSERT(pState->ID < (1<<MATERIAL));
+		key |= pState->ID << (ALPHA+CULL+FOG);
+	}
+
+	if (States[State::WIREFRAME])
+	{
+		StateWireframe* pState = StaticCast<StateWireframe>(
+			States[State::WIREFRAME]);
+		WIRE_ASSERT(pState->ID < (1<<WIREFRAME));
+		key |= pState->ID << (ALPHA+CULL+FOG+MATERIAL);
+	}
+
+	if (States[State::ZBUFFER])
+	{
+		StateZBuffer* pState = StaticCast<StateZBuffer>(
+			States[State::ZBUFFER]);
+		WIRE_ASSERT(pState->ID < (1<<ZBUFFER));
+		key |= pState->ID << (ALPHA+CULL+FOG+MATERIAL+WIREFRAME);
+	}
+
+	return key;
 }
