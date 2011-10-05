@@ -32,6 +32,7 @@ protected:
 	void QuickSort(TArray<UInt>& pKeys, VisibleObject* const pVisibles,
 //	void QuickSort(UInt* const pKeys, VisibleObject* const pVisibles,
 		Int left, Int right);
+	UInt GetKey(Spatial* pSpatial);
 
 	VisibleSet* mpOpaqueGeometry;
 	VisibleSet* mpTransparentGeometry;
