@@ -238,7 +238,7 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	}
 
 	Geometry* pQuad = StandardMesh::CreateQuad(0, 1, false, rDef.SizeFactor);
-	VertexBuffer* pVBuffer = pQuad->GetVBuffer();
+	VertexBuffer* pVBuffer = pQuad->GetMesh()->GetVertexBuffer();
 
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{

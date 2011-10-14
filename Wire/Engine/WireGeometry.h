@@ -15,10 +15,10 @@
 namespace Wire
 {
 
-class BoundingVolume;
 class IndexBuffer;
 class Light;
 class Material;
+class Mesh;
 class VertexBuffer;
 
 class Geometry : public Spatial
@@ -28,26 +28,19 @@ class Geometry : public Spatial
 public:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 		pMaterial = NULL);
+	Geometry(Mesh* pMesh, Material* pMaterial = NULL);
 	virtual ~Geometry();
 
 	// geometric updates
 	virtual void UpdateWorldBound();
-	void UpdateModelBound();
 
-	inline VertexBuffer* GetVBuffer();
-	inline const VertexBuffer* GetVBuffer() const;
-
-	inline IndexBuffer* GetIBuffer();
-	inline const IndexBuffer* GetIBuffer() const;
+	inline Mesh* GetMesh();
+	inline const Mesh* GetMesh() const;
+	inline void SetMesh(Mesh* pMesh);
 
 	inline Material* GetMaterial();
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
-
-	inline BoundingVolume* GetModelBound();
-	inline const BoundingVolume* GetModelBound() const;
-
-	void GenerateNormals(Bool ignoreHardEdges = false);
 
 	// member access
 	StatePtr States[State::MAX_STATE_TYPE];
@@ -67,10 +60,9 @@ protected:
 
 private:
 	UInt GetStateSetKey();
+	void Init();
 
-	Pointer<VertexBuffer> mspVBuffer;
-	Pointer<IndexBuffer> mspIBuffer;
-	Pointer<BoundingVolume> mspModelBound;
+	Pointer<Mesh> mspMesh;
 	Pointer<Material> mspMaterial;
 };
 

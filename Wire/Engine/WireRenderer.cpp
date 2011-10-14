@@ -14,6 +14,7 @@
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireNode.h"
 #include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
@@ -115,8 +116,12 @@ void Renderer::BindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		s_pRenderer->Bind(pGeometry->GetIBuffer());
-		s_pRenderer->Bind(pGeometry->GetVBuffer());
+		const Mesh* pMesh = pGeometry->GetMesh();
+		if (pMesh)
+		{
+			s_pRenderer->Bind(pMesh->GetIndexBuffer());
+			s_pRenderer->Bind(pMesh->GetVertexBuffer());
+		}
 
 		const Material* pMaterial = pGeometry->GetMaterial();
 		if (pMaterial)
@@ -149,8 +154,12 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
 	if (pGeometry)
 	{
-		s_pRenderer->Unbind(pGeometry->GetIBuffer());
-		s_pRenderer->Unbind(pGeometry->GetVBuffer());
+		const Mesh* pMesh = pGeometry->GetMesh();
+		if (pMesh)
+		{
+			s_pRenderer->Unbind(pMesh->GetIndexBuffer());
+			s_pRenderer->Unbind(pMesh->GetVertexBuffer());
+		}
 
 		const Material* pMaterial = pGeometry->GetMaterial();
 		if (pMaterial)
@@ -166,6 +175,7 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 //----------------------------------------------------------------------------
 PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
 {
+	WIRE_ASSERT(pIndexBuffer);
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
 
 	if (!pValue)
@@ -267,6 +277,7 @@ PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 //----------------------------------------------------------------------------
 PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
 {
+	WIRE_ASSERT(pVertexBuffer);
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 
 	if (!pValue)
@@ -382,6 +393,7 @@ PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
 {
+	WIRE_ASSERT(pTexture);
 	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
 
 	if (!pValue)
@@ -572,6 +584,7 @@ void Renderer::Set(const Material* pMaterial)
 //----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 {
+	WIRE_ASSERT(pGeometry && pGeometry->GetMesh());
 	if (useEffect && pGeometry->GetEffectQuantity() > 0)
 	{
 		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
@@ -588,27 +601,29 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 
 	if (restoreState)
 	{
+		Mesh* pMesh = pGeometry->GetMesh();
 		Enable(pGeometry->States);
 		Enable(pGeometry->Lights);
-		Enable(pGeometry->GetIBuffer());
-		Enable(pGeometry->GetVBuffer());
+		Enable(pMesh->GetIndexBuffer());
+		Enable(pMesh->GetVertexBuffer());
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World);
 		DrawElements();
 
 		Disable(pGeometry->GetMaterial());
-		Disable(pGeometry->GetVBuffer());
-		Disable(pGeometry->GetIBuffer());
+		Disable(pMesh->GetVertexBuffer());
+		Disable(pMesh->GetIndexBuffer());
 		Disable(pGeometry->Lights);
 		Disable(pGeometry->States);
 	}
 	else
 	{
+		Mesh* pMesh = pGeometry->GetMesh();
 		Set(pGeometry->States);
 		Set(pGeometry->Lights);
-		Set(pGeometry->GetIBuffer());
-		Set(pGeometry->GetVBuffer());
+		Set(pMesh->GetIndexBuffer());
+		Set(pMesh->GetVertexBuffer());
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World);

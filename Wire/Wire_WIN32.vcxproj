@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\WireCullerSorting.h" />
     <ClInclude Include="Engine\WireMaterial.h" />
+    <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeBillboard.h" />
     <ClInclude Include="Engine\WireNodeDLod.h" />
     <ClInclude Include="Engine\WireNodeLight.h" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <None Include="Engine\WireGeometry.inl" />
     <None Include="Engine\WireMaterial.inl" />
+    <None Include="Engine\WireMesh.inl" />
     <None Include="Engine\WireNodeBillboard.inl" />
     <None Include="Engine\WireNodeDLod.inl" />
     <None Include="Engine\WireNodeLight.inl" />
@@ -233,6 +235,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
+    <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />
     <ClCompile Include="Engine\WireNodeDLod.cpp" />
     <ClCompile Include="Engine\WireNodeLight.cpp" />

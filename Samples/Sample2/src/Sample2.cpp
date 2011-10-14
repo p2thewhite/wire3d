@@ -126,7 +126,7 @@ Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 	// Creation of Wire::Geometry objects is explained in detail in Sample1.
 	UInt vertexColorChannels = 4;	// RGBA
 	Geometry* pCube = StandardMesh::CreateCube8(vertexColorChannels);
-	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
+	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
 	// initialize the cube's vertex colors with our supplied values
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
@@ -169,28 +169,31 @@ Node* Sample2::CreateHelicopter()
 	Geometry* pBody2 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pBody2->Local.SetScale(Vector3F(1, 2, 1));
 	pBody2->Local.SetTranslate(Vector3F(3, 1, 0));
-	pBody2->GetVBuffer()->Position3(1).Y() = -0.5F;
-	pBody2->GetVBuffer()->Position3(5).Y() = -0.5F;
+	VertexBuffer* pBody2VB = pBody2->GetMesh()->GetVertexBuffer();
+	pBody2VB->Position3(1).Y() = -0.5F;
+	pBody2VB->Position3(5).Y() = -0.5F;
 	// we changed the vertices, the model bound has potentially changed, too
-	pBody2->UpdateModelBound();
+	pBody2->GetMesh()->UpdateModelBound();
 	pNode->AttachChild(pBody2);
 
 	Geometry* pTail = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pTail->Local.SetTranslate(Vector3F(5, 2, 0));
-	pTail->GetVBuffer()->Position3(2) = Vector3F(5, 0.6F, -0.1F);
-	pTail->GetVBuffer()->Position3(6) = Vector3F(5, 0.6F, 0.1F);
-	pTail->GetVBuffer()->Position3(1) = Vector3F(5, 0.1F, -0.1F);
-	pTail->GetVBuffer()->Position3(5) = Vector3F(5, 0.1F, 0.1F);
-	pTail->UpdateModelBound();
+	VertexBuffer* pTailVB = pTail->GetMesh()->GetVertexBuffer();
+	pTailVB->Position3(2) = Vector3F(5, 0.6F, -0.1F);
+	pTailVB->Position3(6) = Vector3F(5, 0.6F, 0.1F);
+	pTailVB->Position3(1) = Vector3F(5, 0.1F, -0.1F);
+	pTailVB->Position3(5) = Vector3F(5, 0.1F, 0.1F);
+	pTail->GetMesh()->UpdateModelBound();
 	pNode->AttachChild(pTail);
 
 	Geometry* pNose = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	pNose->Local.SetTranslate(Vector3F(-3, 0, 0));
-	pNose->GetVBuffer()->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
-	pNose->GetVBuffer()->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
-	pNose->GetVBuffer()->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
-	pNose->GetVBuffer()->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
-	pNose->UpdateModelBound();
+	VertexBuffer* pNoseVB = pNose->GetMesh()->GetVertexBuffer();
+	pNoseVB->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
+	pNoseVB->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
+	pNoseVB->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
+	pNoseVB->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
+	pNose->GetMesh()->UpdateModelBound();
 	pNode->AttachChild(pNose);
 
 	// We save a reference to the rotors, so we can easily access them later
@@ -209,9 +212,10 @@ Node* Sample2::CreateHelicopter()
 		ColorRGBA(1, 1, 1, 0.5F));
 	pCockpit->Local.SetScale(Vector3F(2, 1, 1));
 	pCockpit->Local.SetTranslate(Vector3F(0, 2, 0));
-	pCockpit->GetVBuffer()->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
-	pCockpit->GetVBuffer()->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
-	pCockpit->UpdateModelBound();
+	VertexBuffer* pCockpitVB = pCockpit->GetMesh()->GetVertexBuffer();
+	pCockpitVB->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
+	pCockpitVB->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
+	pCockpit->GetMesh()->UpdateModelBound();
 	pNode->AttachChild(pCockpit);
 
 	// The cockpit is supposed to be transparent, so we create an StateAlpha 

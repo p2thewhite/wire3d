@@ -22,6 +22,7 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMaterial.h"
+#include "WireMesh.h"
 #include "WireNode.h"
 #include "WireNodeBillboard.h"
 #include "WireNodeDLod.h"

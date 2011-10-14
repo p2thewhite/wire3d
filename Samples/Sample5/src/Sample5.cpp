@@ -203,7 +203,7 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 {
 	Geometry* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
 		useTexture ? 1 : 0, useNormals);
-	VertexBuffer* const pVBuffer = pCube->GetVBuffer();
+	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
@@ -220,7 +220,7 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 		}
 	}
 
-	pCube->GenerateNormals();
+	pCube->GetMesh()->GenerateNormals();
 
 	if (useTexture)
 	{
@@ -241,7 +241,7 @@ Geometry* Sample5::CreatePlane()
 	const Float ySizeTotal = 8.0F;
 	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
 		xSizeTotal, ySizeTotal, 0, 1, true);
-	pPlane->GenerateNormals();
+	pPlane->GetMesh()->GenerateNormals();
 
 	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
 	pPlane->World.SetRotate(rotate);

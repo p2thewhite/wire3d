@@ -7,37 +7,37 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline Mesh* Geometry::GetMesh()
+inline VertexBuffer* Mesh::GetVertexBuffer()
 {
-	return mspMesh;
+	return mspVertexBuffer;
 }
 
 //----------------------------------------------------------------------------
-inline const Mesh* Geometry::GetMesh() const
+inline const VertexBuffer* Mesh::GetVertexBuffer() const
 {
-	return mspMesh;
+	return mspVertexBuffer;
 }
 
 //----------------------------------------------------------------------------
-inline void Geometry::SetMesh(Mesh* pMesh)
+inline IndexBuffer* Mesh::GetIndexBuffer()
 {
-	mspMesh = pMesh;
+	return mspIndexBuffer;
 }
 
 //----------------------------------------------------------------------------
-inline Material* Geometry::GetMaterial()
+inline const IndexBuffer* Mesh::GetIndexBuffer() const
 {
-	return mspMaterial;
+	return mspIndexBuffer;
 }
 
 //----------------------------------------------------------------------------
-inline const Material* Geometry::GetMaterial() const
+inline BoundingVolume* Mesh::GetModelBound()
 {
-	return mspMaterial;
+	return mspModelBound;
 }
 
 //----------------------------------------------------------------------------
-inline void Geometry::SetMaterial(Material* pMaterial)
+inline const BoundingVolume* Mesh::GetModelBound() const
 {
-	mspMaterial = pMaterial;
+	return mspModelBound;
 }

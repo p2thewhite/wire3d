@@ -59,14 +59,16 @@ void Sample7::OnIdle()
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
 	mspGeometry->World.SetRotate(rotate);
 
+	Mesh* pMesh = mspGeometry->GetMesh();
+
 	// animate the positions of the PQ torus knot
-	GeneratePositions(mspGeometry->GetVBuffer(), mAngle*2);
+	GeneratePositions(pMesh->GetVertexBuffer(), mAngle*2);
 
 	// positions changed, so we need to recalculate the normals
- 	GenerateNormals(mspGeometry->GetVBuffer(), mspGeometry->GetIBuffer());
+ 	GenerateNormals(pMesh->GetVertexBuffer(), pMesh->GetIndexBuffer());
 
 	// update the hardware vertex buffer data
-	GetRenderer()->Update(mspGeometry->GetVBuffer());
+	GetRenderer()->Update(pMesh->GetVertexBuffer());
 
 	// We know that animating the positions in this case does not change the
 	// model bounding volume. If it did, we would need to recalculate it,
