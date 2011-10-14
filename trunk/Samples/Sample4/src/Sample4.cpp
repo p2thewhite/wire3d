@@ -145,6 +145,8 @@ Texture2D* Sample4::CreateTexture()
 		}
 	}
 
+	WIRE_DELETE[] pMap;
+
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pData);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	return pTexture;

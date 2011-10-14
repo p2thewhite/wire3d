@@ -471,6 +471,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMesh.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.h"
 					>
 				</File>
@@ -611,6 +615,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireMesh.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNode.inl"
 					>
 				</File>
@@ -732,6 +740,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireMesh.cpp"
 					>
 				</File>
 				<File

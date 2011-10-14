@@ -14,11 +14,11 @@ Bool Sample10::OnInitialize()
 		return false;
 	}
 
-	mspGeo = StandardMesh::CreateCube8(/* number of RGB(A) channels */ 4);
+	mspRoot = CreateScene();
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
-	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
+	Vector3F cameraLocation(0.0F, 0.0F, 5.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -44,11 +44,159 @@ void Sample10::OnIdle()
 {
 	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F),
 		MathF::FMod(static_cast<Float>(System::GetTime()), MathF::TWO_PI));
-	mspGeo->World.SetRotate(rotate);
+	mspRoot->Local.SetRotate(rotate);
+
+	mspRoot->UpdateGS(System::GetTime());
+	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->Draw(mspGeo);
+	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+}
+
+//----------------------------------------------------------------------------
+Node* Sample10::CreateScene()
+{
+	Node* pRoot = WIRE_NEW Node;
+
+	const UInt xCount = 5;
+	const UInt yCount = 5;
+	const UInt zCount = 5;
+	Bool useA = true;
+
+	Float z = static_cast<Float>(zCount)*-0.5F;
+	for (UInt k = 0; k < yCount; k++)
+	{
+		Float y = static_cast<Float>(yCount)*-0.5F;
+		for (UInt j = 0; j < yCount; j++)
+		{
+			Float x = static_cast<Float>(xCount)*-0.5F;
+			for (UInt i = 0; i < xCount; i++)
+			{
+				Spatial* pGeo = useA ? CreateGeometryA() : CreateGeometryB();
+				pGeo->Local.SetTranslate(Vector3F(x+i, y+j, z+k));
+				pRoot->AttachChild(pGeo);
+				useA = !useA;
+			}
+		}
+	}
+
+	Light* pLight = WIRE_NEW Light;
+	pRoot->AttachLight(pLight);
+
+	pRoot->UpdateRS();
+	return pRoot;
+}
+
+//----------------------------------------------------------------------------
+Geometry* Sample10::CreateGeometryA()
+{
+	if (!mspMeshA)
+	{
+		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
+		mspMeshA = spTmp->GetMesh();
+		mspMeshA->GenerateNormals();
+	}
+
+	if (!mspMaterialA)
+	{
+		const UInt width = 256;
+		const UInt height = 256;
+		const Image2D::FormatMode format = Image2D::FM_RGB888;
+		const UInt bpp = Image2D::GetBytesPerPixel(format);
+
+		NoisePerlin<Float> perlin;
+		const Float hf = static_cast<Float>(height) * 0.25F;
+		const Float wf = static_cast<Float>(width) * 0.25F;
+		UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
+
+		for (UInt y = 0; y < height; y++)
+		{
+			for (UInt x = 0; x < width; x++)
+			{
+				Float xf = static_cast<Float>(x);
+				Float yf = static_cast<Float>(y);
+
+				UChar t = static_cast<UChar>((perlin.Noise(xf/wf, yf/hf)*0.5F
+					+ 0.5F) * 255.0F);
+				pDst[(y*width + x)*bpp] = t;
+				pDst[(y*width + x)*bpp+1] = t;
+				pDst[(y*width + x)*bpp+2] = t;
+			}
+		}
+
+		Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
+		Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+
+		mspMaterialA = WIRE_NEW Material;
+		mspMaterialA->AddTexture(pTexture, Material::BM_MODULATE);
+	}
+
+	if (!mspStateMaterialA)
+	{
+		mspStateMaterialA = WIRE_NEW StateMaterial;
+		mspStateMaterialA->Ambient = ColorRGBA(0.9F, 1, 1, 1);
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(mspMeshA, mspMaterialA);
+	pGeo->AttachState(mspStateMaterialA);
+
+	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+Geometry* Sample10::CreateGeometryB()
+{
+	if (!mspMeshB)
+	{
+		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
+		mspMeshB = spTmp->GetMesh();
+	}
+
+	if (!mspMaterialB)
+	{
+		const UInt width = 512;
+		const UInt height = 128;
+
+		Image2D::FormatMode format = Image2D::FM_RGB888;
+		const UInt bpp = Image2D::GetBytesPerPixel(format);
+
+		UChar* pMap = WIRE_NEW UChar[width * height * bpp];
+		UInt seed = 7;
+		for (UInt x = 0; x < width*bpp; x++)
+		{
+			pMap[x] = seed;
+		}
+
+		for (UInt i = width; i < (width * height)-1; i++)
+		{
+			seed *= 0x06255;
+			seed = (seed >> 7) | (seed << (32-7));
+			UInt val = (7 & seed) - 1;
+			UChar texel = (pMap[(i-width)*bpp] + pMap[(i-width+1)*bpp]) >> 1;
+			for (UInt j = 0; j < bpp; j++)
+			{
+				pMap[i*bpp+j] = val + texel;
+			}
+		}
+
+		Image2D* pImage = WIRE_NEW Image2D(format, width, height, pMap);
+		Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+
+		mspMaterialB = WIRE_NEW Material;
+		mspMaterialB->AddTexture(pTexture, Material::BM_MODULATE);
+	}
+
+	if (!mspStateMaterialB)
+	{
+		mspStateMaterialB = WIRE_NEW StateMaterial;
+		mspStateMaterialB->Ambient = ColorRGBA(1, 1, 0.9F, 1);
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(mspMeshB, mspMaterialB);
+	pGeo->AttachState(mspStateMaterialB);
+
+	return pGeo;
 }

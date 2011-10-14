@@ -1,7 +1,7 @@
 // Sample8 - Bullet Physics Integration
 // This sample demonstrates how to integrate the Bullet Physics engine into
 // Wire.
-// Bullet can be downloaded from http://code.google.com/p/wire3d/downloads/list.
+// Bullet can be downloaded from http://code.google.com/p/wire3d/downloads/list
 // Download the appropriate version for the target platform which you want to
 // build for. The sample project files expect the following directory
 // structure:
@@ -166,16 +166,8 @@ void Sample8::CreateGameObjects()
 			const Float extent = 0.5F;
 			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
 			pBox->SetMaterial(pMaterial);
-			pBox->GenerateNormals();
-
-			if (switchX)
-			{
-				pBox->World.SetTranslate(Vector3F(x, y, 0));			
-			}
-			else
-			{
-				pBox->World.SetTranslate(Vector3F(x+0.35F, y, 0));
-			}
+			pBox->GetMesh()->GenerateNormals();
+			pBox->World.SetTranslate(Vector3F(switchX ? x : x+0.35F, y, 0));			
 
 			btCollisionShape* pColBox = WIRE_NEW btBoxShape(btVector3(extent,
 				extent, extent));

@@ -93,9 +93,10 @@ Geometry* Sample6::CreateSun()
 {
 	// create a sun using a bright yellow colored sphere
 	Geometry* pSun = StandardMesh::CreateSphere(4, 16, 3, 0, 3);
-	for (UInt i = 0; i < pSun->GetVBuffer()->GetQuantity(); i++)
+	VertexBuffer* pSunVB = pSun->GetMesh()->GetVertexBuffer();
+	for (UInt i = 0; i < pSunVB->GetQuantity(); i++)
 	{
-		pSun->GetVBuffer()->Color3(i) = ColorRGB(1.0F, 1.0F, 0.8F);
+		pSunVB->Color3(i) = ColorRGB(1.0F, 1.0F, 0.8F);
 	}
 
 	pSun->Local.SetTranslate(Vector3F(20, 20, -100));
@@ -111,7 +112,7 @@ Geometry* Sample6::CreateTerrain()
 	UInt tileYCount = 20;
 	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
 		5, 5, 0, 0, true);
-	VertexBuffer* const pVBuffer = pPlane->GetVBuffer();
+	VertexBuffer* const pVBuffer = pPlane->GetMesh()->GetVertexBuffer();
 
 	Float angleY = 0;
 	for (UInt y = 0; y <= tileYCount; y++)
@@ -133,8 +134,8 @@ Geometry* Sample6::CreateTerrain()
 
 	// we changed the vertices so we need to recreate the model bound
 	// (which was automatically created by the constructor of Geometry)
-	pPlane->UpdateModelBound();
-	pPlane->GenerateNormals();
+	pPlane->GetMesh()->UpdateModelBound();
+	pPlane->GetMesh()->GenerateNormals();
 
 	Matrix3F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F);
 	pPlane->Local.SetTranslate(Vector3F(0, -0.25F, 0));

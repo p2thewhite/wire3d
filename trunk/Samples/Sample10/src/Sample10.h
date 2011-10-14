@@ -17,7 +17,20 @@ public:
 	virtual void OnIdle();
 
 private:
-	GeometryPtr mspGeo;
+	Node* CreateScene();
+	Geometry* CreateGeometryA();
+	Geometry* CreateGeometryB();
+
+	NodePtr mspRoot;
+
+	MeshPtr mspMeshA;
+	MaterialPtr mspMaterialA;
+	StateMaterialPtr mspStateMaterialA;
+
+	MeshPtr mspMeshB;
+	MaterialPtr mspMaterialB;
+	StateMaterialPtr mspStateMaterialB;
+
 	CameraPtr mspCamera;
 	Culler mCuller;
 };

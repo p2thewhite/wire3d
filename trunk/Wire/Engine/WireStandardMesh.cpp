@@ -16,6 +16,7 @@
 #include "WireGeometry.h"
 #include "WireLight.h"
 #include "WireMaterial.h"
+#include "WireMesh.h"
 #include "WireStateAlpha.h"
 #include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
@@ -799,8 +800,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
 	// to use the true information.
-	pMesh->GetModelBound()->SetCenter(Vector3F::ZERO);
-	pMesh->GetModelBound()->SetRadius(radius);
+	pMesh->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	pMesh->GetMesh()->GetModelBound()->SetRadius(radius);
 	return pMesh;
 }
 

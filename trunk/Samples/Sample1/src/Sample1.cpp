@@ -327,7 +327,7 @@ Geometry* Sample1::CreateCube()
 	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
 
 	// Generate normal vectors from the triangles of the geometry.
-	pCube->GenerateNormals();
+	pCube->GetMesh()->GenerateNormals();
 
 	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
 	// smart pointers. Thus, you can share these buffers amongst Geometry 

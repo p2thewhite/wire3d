@@ -18,6 +18,7 @@
 #include "WireGeometry.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireVertexBuffer.h"
 
 using namespace Wire;

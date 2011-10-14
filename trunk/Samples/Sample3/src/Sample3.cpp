@@ -130,7 +130,7 @@ void Sample3::DrawLodTextLabel()
 	const UInt textArraySize = 100;
 	Char test[textArraySize];
 	System::Sprintf(test, textArraySize, "\n\n\n\n\n\nLOD %d, %d Triangles",
-		activeLod, pGeo->GetIBuffer()->GetQuantity() / 3);
+		activeLod, pGeo->GetMesh()->GetIndexBuffer()->GetQuantity() / 3);
 
 	// The text mesh will be created and destroyed every frame (incl. Vertex-,
 	// Indexbuffers, Material, attached Render State, etc.). Therefore this

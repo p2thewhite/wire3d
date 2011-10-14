@@ -12,6 +12,7 @@
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>

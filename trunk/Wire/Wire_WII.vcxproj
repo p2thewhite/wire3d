@@ -74,6 +74,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <ClInclude Include="Engine\WireCullerSorting.h" />
     <ClInclude Include="Engine\WireMaterial.h" />
+    <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
     <ClInclude Include="Foundation\WireBox3.h" />
@@ -153,6 +154,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
+    <None Include="Engine\WireMesh.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />
@@ -212,6 +214,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
+    <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
     <ClCompile Include="Foundation\WireColorRGBA.cpp" />

@@ -332,6 +332,9 @@
     <ClInclude Include="Engine\WireCullerSorting.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\WireMesh.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -504,6 +507,9 @@
     </None>
     <None Include="Foundation\WireTInstanceID.inl">
       <Filter>Foundation\Inline Files</Filter>
+    </None>
+    <None Include="Engine\WireMesh.inl">
+      <Filter>Engine\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -742,6 +748,9 @@
       <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireCullerSorting.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireMesh.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

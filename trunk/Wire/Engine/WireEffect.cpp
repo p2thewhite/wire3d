@@ -10,6 +10,7 @@
 
 #include "WireGeometry.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireRenderer.h"
 #include "WireVisibleObject.h"
 

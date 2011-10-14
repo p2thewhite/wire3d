@@ -19,6 +19,7 @@
 #include "WireGXVertexBuffer.h"
 #include "WireLight.h"
 #include "WireMatrix4.h"
+#include "WireMesh.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
