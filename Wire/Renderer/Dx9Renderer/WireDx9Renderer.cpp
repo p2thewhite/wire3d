@@ -215,8 +215,7 @@ void Renderer::DisplayBackBuffer()
 	{
 		mpData->IsDeviceLost = true;
 	}
-
-	if (hr != D3DERR_DEVICELOST)
+	else
 	{
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}

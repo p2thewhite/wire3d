@@ -8,10 +8,42 @@
 
 #include <sys/timeb.h>
 #include <stdlib.h>
+#include <windows.h>
 
 //----------------------------------------------------------------------------
 Double System::GetTime()
 {
+	// time with microseconds resolution
+	static LARGE_INTEGER s_HRFrequency;
+	static LARGE_INTEGER s_InitialHRTime;
+	static Bool s_UseHRTimer = true;
+
+	if (!s_InitializedTime)
+	{
+		if (QueryPerformanceFrequency(&s_HRFrequency))
+		{
+			QueryPerformanceCounter(&s_InitialHRTime);
+			s_InitializedTime = true;
+		}
+		else
+		{
+			s_UseHRTimer = false;
+		}
+	}
+
+	if (s_UseHRTimer)
+	{
+		LARGE_INTEGER hRTime;
+		QueryPerformanceCounter(&hRTime);
+		
+		LONGLONG timeDiff = hRTime.QuadPart - s_InitialHRTime.QuadPart;
+		Double time = (static_cast<Double>(timeDiff)) / static_cast<Double>(
+			s_HRFrequency.QuadPart);
+		return time;
+	}
+	
+	// fall back if QueryPerformance is not supported:
+	// time with milliseconds resolution
 	static Long s_InitialSec = 0;
 	static Long s_InitialUSec = 0;
 

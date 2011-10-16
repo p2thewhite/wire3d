@@ -7,6 +7,20 @@ using namespace Wire;
 WIRE_APPLICATION(Sample10);		// This macro creates our user application.
 
 //----------------------------------------------------------------------------
+Sample10::Sample10()
+	:
+	WIREAPPLICATION(
+	ColorRGBA(0.0F, 0.0F, 0.0F, 1.0F),	// background color
+	// The following parameters are PC only:
+	"Sample10 - Material Sorting",	// title of the window,
+	0, 0,		// window position
+	640, 480,	// window size; (use (0,0) for current desktop resolution)
+	false,		// fullscreen
+	false)		// vsync
+{
+}
+
+//----------------------------------------------------------------------------
 Bool Sample10::OnInitialize()
 {
 	if (!Parent::OnInitialize())
@@ -36,22 +50,31 @@ Bool Sample10::OnInitialize()
 	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
 	mCuller.SetCamera(mspCamera);
 
+	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
+	mspTextAlpha = WIRE_NEW StateAlpha();
+	mspTextAlpha->BlendEnabled = true;
+
 	return true;
 }
 
 //----------------------------------------------------------------------------
 void Sample10::OnIdle()
 {
+	Double time = System::GetTime();
+	Double elapsedTime = time - mLastTime;
+	mLastTime = time;
+
 	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F),
-		MathF::FMod(static_cast<Float>(System::GetTime()), MathF::TWO_PI));
+		MathF::FMod(static_cast<Float>(time), MathF::TWO_PI));
 	mspRoot->Local.SetRotate(rotate);
 
-	mspRoot->UpdateGS(System::GetTime());
+	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
+	DrawFPS(elapsedTime);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -199,4 +222,26 @@ Geometry* Sample10::CreateGeometryB()
 	pGeo->AttachState(mspStateMaterialB);
 
 	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+void Sample10::DrawFPS(Double elapsed)
+{
+	// set the frustum for the text camera (screenWidth and screenHeight
+	// could have been changed by the user resizing the window)
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	GetRenderer()->SetCamera(mspTextCamera);
+
+	UInt fps = 1/elapsed;
+	System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nFPS: %d", fps);
+
+	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
+		screenHeight, ColorRGBA::WHITE);
+	spText->AttachState(mspTextAlpha);
+	spText->UpdateRS();
+
+	GetRenderer()->DisableLighting();
+	GetRenderer()->Draw(spText);
 }
