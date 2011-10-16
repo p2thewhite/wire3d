@@ -171,7 +171,7 @@ Int System::Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...)
 	va_list args;
 	va_start(args, pFormat);
 
-	int numWritten = vsprintf(pDst, pFormat, args);
+	Int numWritten = vsprintf(pDst, pFormat, args);
 
 	va_end(args);
 	return numWritten;

@@ -13,6 +13,7 @@ class Sample10 : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
+	Sample10();
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
@@ -33,6 +34,15 @@ private:
 
 	CameraPtr mspCamera;
 	Culler mCuller;
+
+	// frames per second text
+	void DrawFPS(Double elapsed);
+	CameraPtr mspTextCamera;
+	StateAlphaPtr mspTextAlpha;
+	Double mLastTime;
+
+	static const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
 };
 
 WIRE_REGISTER_INITIALIZE(Sample10);

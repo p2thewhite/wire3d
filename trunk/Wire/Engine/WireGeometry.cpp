@@ -84,6 +84,7 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 	else
 	{
 		pStateKeys->Insert(key, pStateKeys->GetQuantity()+1);
+		StateSetID = pStateKeys->GetQuantity()+1;
 	}
 
 	// update light state

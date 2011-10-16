@@ -59,7 +59,7 @@ Bool Sample3::OnInitialize()
 
 	mCuller.SetCamera(mspCamera);
 
-	mspOrthographic = WIRE_NEW Camera(false);
+	mspOrthographic = WIRE_NEW Camera(/* isPerspective */ false);
 
 	GetRenderer()->SetClearColor(ColorRGBA::WHITE);
 
@@ -128,14 +128,14 @@ void Sample3::DrawLodTextLabel()
 	GetRenderer()->SetCamera(mspOrthographic);
 
 	const UInt textArraySize = 100;
-	Char test[textArraySize];
-	System::Sprintf(test, textArraySize, "\n\n\n\n\n\nLOD %d, %d Triangles",
+	Char text[textArraySize];
+	System::Sprintf(text, textArraySize, "\n\n\n\n\n\nLOD %d, %d Triangles",
 		activeLod, pGeo->GetMesh()->GetIndexBuffer()->GetQuantity() / 3);
 
 	// The text mesh will be created and destroyed every frame (incl. Vertex-,
 	// Indexbuffers, Material, attached Render State, etc.). Therefore this
 	// function is only meant for debugging purposes.
-	GeometryPtr spText = StandardMesh::CreateText(test, screenWidth,
+	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
 		screenHeight, ColorRGBA::BLACK);
 	Int offset = static_cast<Int>((screenWidth - 21.0F*8.0F) * 0.5F);
 	spText->Local.SetTranslate(Vector3F(static_cast<Float>(offset), 0, 0));
