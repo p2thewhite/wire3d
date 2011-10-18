@@ -16,8 +16,6 @@
 namespace Wire
 {
 
-class VertexBuffer;
-
 class PdrRendererData
 {
 public:

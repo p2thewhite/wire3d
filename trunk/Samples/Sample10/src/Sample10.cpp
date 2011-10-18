@@ -49,6 +49,7 @@ Bool Sample10::OnInitialize()
 	Float farPlane = 300.0F;
 	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
 	mCuller.SetCamera(mspCamera);
+	mCullerSorting.SetCamera(mspCamera);
 
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspTextAlpha = WIRE_NEW StateAlpha();
@@ -69,12 +70,22 @@ void Sample10::OnIdle()
 	mspRoot->Local.SetRotate(rotate);
 
 	mspRoot->UpdateGS(time);
-	mCuller.ComputeVisibleSet(mspRoot);
 
+	Bool usesSorting = false;
+	Culler* pCuller = &mCuller;
+	if (MathF::FMod(static_cast<Float>(time), 10) > 5)
+	{
+		pCuller = &mCullerSorting;
+		usesSorting = true;
+	}
+
+	pCuller->ComputeVisibleSet(mspRoot);
+
+	GetRenderer()->ResetStatistics();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
-	DrawFPS(elapsedTime);
+	GetRenderer()->DrawScene(pCuller->GetVisibleSets());
+	DrawFPS(elapsedTime, usesSorting);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -225,7 +236,7 @@ Geometry* Sample10::CreateGeometryB()
 }
 
 //----------------------------------------------------------------------------
-void Sample10::DrawFPS(Double elapsed)
+void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 {
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
@@ -234,8 +245,26 @@ void Sample10::DrawFPS(Double elapsed)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	UInt fps = 1/elapsed;
-	System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nFPS: %d", fps);
+	Renderer::Statistics statistics = GetRenderer()->GetStatistics();
+
+	UInt fps = static_cast<UInt>(1/elapsed);
+	const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
+
+	if (usesSorting)
+	{
+		System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nSorting: \1\1\255\1\255"
+			"ON\2\nDraw Calls: %d\n"
+			"Triangles: %d, Vertices: %d\nFPS: %d", statistics.DrawCalls,
+			statistics.Triangles, statistics.Vertices, fps);
+	}
+	else
+	{
+		System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nSorting: \1\255\1\1\255"
+			"OFF\2\nDraw Calls: %d\n"
+			"Triangles: %d, Vertices: %d\nFPS: %d", statistics.DrawCalls,
+			statistics.Triangles, statistics.Vertices, fps);
+	}
 
 	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
 		screenHeight, ColorRGBA::WHITE);

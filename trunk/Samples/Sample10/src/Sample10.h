@@ -34,15 +34,13 @@ private:
 
 	CameraPtr mspCamera;
 	Culler mCuller;
+	CullerSorting mCullerSorting;
 
 	// frames per second text
-	void DrawFPS(Double elapsed);
+	void DrawFPS(Double elapsed, Bool usesSorting);
 	CameraPtr mspTextCamera;
 	StateAlphaPtr mspTextAlpha;
 	Double mLastTime;
-
-	static const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
 };
 
 WIRE_REGISTER_INITIALIZE(Sample10);
