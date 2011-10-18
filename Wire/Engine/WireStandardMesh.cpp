@@ -889,6 +889,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
 	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
 	UInt k = 0;
+	ColorRGBA color = rColor;
 	for (UInt i = 0; i < textLength; i++)
 	{
 		if (pText[i] > 32)
@@ -911,7 +912,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 
 			for (UInt j = 0; j < 4; j++)
 			{
-				pVBuffer->Color4(k*4+j) = rColor;
+				pVBuffer->Color4(k*4+j) = color;
 			}
 
 			for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
@@ -920,6 +921,20 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 			}
 
 			k++;
+		}
+		else if (pText[i] == 1)
+		{
+			i++;
+			Float r = static_cast<Float>(pText[i++]) / 255.0f;
+			Float g = static_cast<Float>(pText[i++]) / 255.0f;
+			Float b = static_cast<Float>(pText[i++]) / 255.0f;
+			Float a = static_cast<Float>(pText[i]) / 255.0f;		
+			color = ColorRGBA(r, g, b, a);
+		}
+		else if (pText[i] == 2)
+		{
+			i++;
+			color = rColor;
 		}
 
 		x += xStride;

@@ -40,6 +40,7 @@ void Renderer::Initialize(UInt width, UInt height)
 	mWidth = width;
 	mHeight = height;
 	mMaxAnisotropy = 1.0F;
+	ResetStatistics();
 	s_pRenderer = this;
 }
 
@@ -907,4 +908,12 @@ void Renderer::Set(const TArray<Pointer<Light> >& rLights)
 	{
 		DisableLighting();
 	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::ResetStatistics()
+{
+	mStatistics.DrawCalls = 0;
+	mStatistics.Triangles = 0;
+	mStatistics.Vertices = 0;
 }

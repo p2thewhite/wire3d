@@ -219,6 +219,12 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 //----------------------------------------------------------------------------
 void Renderer::DrawElements()
 {
+	WIRE_ASSERT(mspIndexBuffer);
+	WIRE_ASSERT(mspVertexBuffer);
+	mStatistics.DrawCalls++;
+	mStatistics.Triangles += mspIndexBuffer->GetQuantity()/3;
+	mStatistics.Vertices += mspVertexBuffer->GetQuantity();
+
 	mpData->IsFrameBufferDirty = true;
 
 	GXSetNumChans(1);
@@ -244,7 +250,6 @@ void Renderer::DrawElements()
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	WIRE_ASSERT(mspIndexBuffer);
 	const IndexBuffer& rIBuffer = *mspIndexBuffer;
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);

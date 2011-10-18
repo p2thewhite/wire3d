@@ -230,25 +230,39 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	// number of bits we use for each Geometry's sorting key
 	enum
 	{
-		MATERIAL = 16,
-		STATESET = 16
+		MATERIAL = 10,
+		STATESET = 10,
+		DEPTH = 12
 	};
 	
 	 // The sum of the ranges must fit in the key
-	WIRE_ASSERT((MATERIAL + STATESET) <= sizeof(key) * 8);
+	WIRE_ASSERT((MATERIAL + STATESET + DEPTH) <= sizeof(key) * 8);
+
+	Float z = GetCamera()->GetLocation().Z() - pGeometry->WorldBound->
+		GetCenter().Z();
+	const Float far = GetCamera()->GetDMax();
+	const Float far3 = far*3;
+
+	z += far;
+	z /= far3;
+
+	z = z < 0 ? 0 : z;
+	z = z > far3 ? far3 : z;
+
+	key = static_cast<UInt>(z * (1<<DEPTH));
+	WIRE_ASSERT(key < (1<<DEPTH));
 
 	// The following asserts let you know when you have created more materials
 	// and state sets than the key can handle. 
-
 	Material* pMaterial = pGeometry->GetMaterial();
 	if (pMaterial)
 	{
 		WIRE_ASSERT(pMaterial->ID < (1<<MATERIAL));
-		key = pMaterial->ID;
+		key |= pMaterial->ID << DEPTH;
 	}
 
 	WIRE_ASSERT(pGeometry->StateSetID < (1<<STATESET));
-	key |= pGeometry->StateSetID << MATERIAL;
+	key |= pGeometry->StateSetID << (MATERIAL + DEPTH);
 
 	return key;
 }

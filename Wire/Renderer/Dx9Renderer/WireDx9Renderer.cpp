@@ -296,12 +296,18 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 //----------------------------------------------------------------------------
 void Renderer::DrawElements()
 {
+	const UInt triangleCount = mspIndexBuffer->GetQuantity()/3;
+	const UInt vertexCount = mspVertexBuffer->GetQuantity();
+	mStatistics.DrawCalls++;
+	mStatistics.Triangles += triangleCount;
+	mStatistics.Vertices += vertexCount;
+
 	WIRE_ASSERT(mspVertexBuffer);
 	WIRE_ASSERT(mspIndexBuffer);
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0,
-		mspVertexBuffer->GetQuantity(), 0, mspIndexBuffer->GetQuantity()/3);
+	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
+		0, triangleCount);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

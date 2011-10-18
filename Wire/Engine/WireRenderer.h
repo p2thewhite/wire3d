@@ -196,6 +196,16 @@ public:
 	void Disable(const TArray<Pointer<Light> >& rLights);
 	void Set(const TArray<Pointer<Light> >& rLights);
 
+	struct Statistics
+	{
+		UInt DrawCalls;
+		UInt Triangles;
+		UInt Vertices;
+	};
+
+	inline const Statistics& GetStatistics() const;
+	void ResetStatistics();
+
 	inline PdrRendererData* GetRendererData() const;
 
 	enum
@@ -251,6 +261,8 @@ private:
 	IndexBufferMap mIndexBufferMap;
 	VertexBufferMap mVertexBufferMap;
 	Texture2DMap mTexture2DMap;
+
+	Statistics mStatistics;
 };
 
 #include "WireRenderer.inl"

@@ -37,12 +37,6 @@ inline UInt Renderer::GetMaxLights() const
 }
 
 //----------------------------------------------------------------------------
-inline PdrRendererData* Renderer::GetRendererData() const
-{
-	return mpData;
-}
-
-//----------------------------------------------------------------------------
 inline const ColorRGBA& Renderer::GetClearColor() const
 {
 	return mClearColor;
@@ -82,4 +76,16 @@ inline const StateWireframe* Renderer::GetStateWireframe() const
 inline const StateZBuffer* Renderer::GetStateZBuffer() const
 {
 	return StaticCast<StateZBuffer>(mspStates[State::ZBUFFER]);
+}
+
+//----------------------------------------------------------------------------
+inline const Renderer::Statistics& Renderer::GetStatistics() const
+{
+	return mStatistics;
+}
+
+//----------------------------------------------------------------------------
+inline PdrRendererData* Renderer::GetRendererData() const
+{
+	return mpData;
 }
