@@ -302,14 +302,18 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	if (usesSorting)
 	{
 		str = msg0 + "\x01\xff\x01\x01\xffON" + msg1;
+		System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
+			statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
+		WIRE_ASSERT(text[msg0.GetLength()] == 1);
+		WIRE_ASSERT(text[msg0.GetLength()+1] == 0x00);
 	}
 	else
 	{
-		str = msg0 + "\x01\x01\xff\x01\xffOFF" + msg1;
+		str = msg0 + "\x01\x01\x7f\x01\x7fOFF" + msg1;
+		System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
+			statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
 	}
 
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
-		statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
 
 	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
 		screenHeight, ColorRGBA::WHITE);
