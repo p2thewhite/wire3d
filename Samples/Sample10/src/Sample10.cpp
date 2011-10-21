@@ -125,8 +125,10 @@ Node* Sample10::CreateScene()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample10::CreateGeometryA()
+Spatial* Sample10::CreateGeometryA()
 {
+	Node* pRootA = WIRE_NEW Node;
+
 	if (!mspMeshA)
 	{
 		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
@@ -138,7 +140,7 @@ Geometry* Sample10::CreateGeometryA()
 	{
 		const UInt width = 256;
 		const UInt height = 256;
-		const Image2D::FormatMode format = Image2D::FM_RGB888;
+		const Image2D::FormatMode format = Image2D::FM_RGBA8888;
 		const UInt bpp = Image2D::GetBytesPerPixel(format);
 
 		NoisePerlin<Float> perlin;
@@ -158,6 +160,7 @@ Geometry* Sample10::CreateGeometryA()
 				pDst[(y*width + x)*bpp] = t;
 				pDst[(y*width + x)*bpp+1] = t;
 				pDst[(y*width + x)*bpp+2] = t;
+				pDst[(y*width + x)*bpp+3] = t;
 			}
 		}
 
@@ -174,14 +177,54 @@ Geometry* Sample10::CreateGeometryA()
 		mspStateMaterialA->Ambient = ColorRGBA(0.9F, 1, 1, 1);
 	}
 
+	if (!mspCullA)
+	{
+		mspCullA = WIRE_NEW StateCull;
+		mspCullA->CullFace = StateCull::CM_FRONT;
+	}
+
+	if (!mspAlphaA)
+	{
+		mspAlphaA = WIRE_NEW StateAlpha;
+		mspAlphaA->BlendEnabled = true;
+	}
+
+	if (!mspZBufferA)
+	{
+		mspZBufferA = WIRE_NEW StateZBuffer;
+		mspZBufferA->Writable = false;
+	}
+
+	if (!mspVertexBufferA)
+	{
+		WIRE_ASSERT(mspMeshA);
+		mspVertexBufferA = WIRE_NEW VertexBuffer(mspMeshA->GetVertexBuffer());
+		WIRE_ASSERT(mspVertexBufferA->GetAttributes().GetNormalChannels() > 0);
+		for (UInt i = 0; i < mspVertexBufferA->GetQuantity(); i++)
+		{
+			mspVertexBufferA->Normal3(i) = -mspVertexBufferA->Normal3(i);
+		}
+	}
+
 	Geometry* pGeo = WIRE_NEW Geometry(mspMeshA, mspMaterialA);
 	pGeo->AttachState(mspStateMaterialA);
 
-	return pGeo;
+	Geometry* pGeo2 = WIRE_NEW Geometry(mspVertexBufferA, mspMeshA->
+		GetIndexBuffer(), mspMaterialA);
+	pGeo2->AttachState(mspStateMaterialA);
+	pGeo2->AttachState(mspCullA);
+
+	pRootA->AttachChild(pGeo);
+	pRootA->AttachChild(pGeo2);
+
+	pRootA->AttachState(mspAlphaA);
+	pRootA->AttachState(mspZBufferA);
+
+	return pRootA;
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample10::CreateGeometryB()
+Spatial* Sample10::CreateGeometryB()
 {
 	if (!mspMeshB)
 	{
@@ -208,11 +251,12 @@ Geometry* Sample10::CreateGeometryB()
 		{
 			seed *= 0x06255;
 			seed = (seed >> 7) | (seed << (32-7));
-			UInt val = (7 & seed) - 1;
-			UChar texel = (pMap[(i-width)*bpp] + pMap[(i-width+1)*bpp]) >> 1;
+			UShort t0 = ((pMap[(i-width)*bpp] + pMap[(i-width+1)*bpp]) >> 1);
+			t0 += (7 & seed) - 1;
+			UChar texel = t0 > 255 ? 255 : t0;
 			for (UInt j = 0; j < bpp; j++)
 			{
-				pMap[i*bpp+j] = val + texel;
+				pMap[i*bpp+j] = texel;
 			}
 		}
 
@@ -251,20 +295,21 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
 
+	String msg0 = "\n\n\n\n\n\nSorting: ";
+	String msg1 = "\2\nDraw Calls: %d\nTriangles: %d, Vertices: %d\nFPS: %d";
+	String str;
+
 	if (usesSorting)
 	{
-		System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nSorting: \1\1\255\1\255"
-			"ON\2\nDraw Calls: %d\n"
-			"Triangles: %d, Vertices: %d\nFPS: %d", statistics.DrawCalls,
-			statistics.Triangles, statistics.Vertices, fps);
+		str = msg0 + "\x01\xff\x01\x01\xffON" + msg1;
 	}
 	else
 	{
-		System::Sprintf(text, TextArraySize, "\n\n\n\n\n\nSorting: \1\255\1\1\255"
-			"OFF\2\nDraw Calls: %d\n"
-			"Triangles: %d, Vertices: %d\nFPS: %d", statistics.DrawCalls,
-			statistics.Triangles, statistics.Vertices, fps);
+		str = msg0 + "\x01\x01\xff\x01\xffOFF" + msg1;
 	}
+
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
+		statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
 
 	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
 		screenHeight, ColorRGBA::WHITE);

@@ -227,7 +227,7 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	Geometry* pGeometry = StaticCast<Geometry>(pSpatial);
 	UInt key = 0;
 
-	// number of bits we use for each Geometry's sorting key
+	// number of bits we use for the sorting key
 	enum
 	{
 		MATERIAL = 10,
@@ -247,9 +247,15 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	z /= far3;
 
 	z = z < 0 ? 0 : z;
-	z = z > far3 ? far3 : z;
+	z = z >= 1.0f ? 1.0f - MathF::ZERO_TOLERANCE : z;
 
 	key = static_cast<UInt>(z * (1<<DEPTH));
+	if (pGeometry->States[State::ALPHA] && StaticCast<StateAlpha>(pGeometry->
+		States[State::ALPHA])->BlendEnabled)
+	{
+		key = (((1<<DEPTH)-1) - key);
+	}
+
 	WIRE_ASSERT(key < (1<<DEPTH));
 
 	// The following asserts let you know when you have created more materials

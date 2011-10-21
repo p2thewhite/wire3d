@@ -24,6 +24,17 @@ IndexBuffer::IndexBuffer(UInt quantity, UsageType usage)
 }
 
 //----------------------------------------------------------------------------
+IndexBuffer::IndexBuffer(const IndexBuffer* pIndexBuffer)
+	:
+	Buffer(pIndexBuffer->GetUsage()),
+	mQuantity(pIndexBuffer->mQuantity)
+{
+	mpIndices = WIRE_NEW UInt[mQuantity];
+	size_t size = mQuantity*sizeof(UInt);
+	System::Memcpy(mpIndices, size, pIndexBuffer->mpIndices, size);
+}
+
+//----------------------------------------------------------------------------
 IndexBuffer::~IndexBuffer()
 {
 	// Inform all renderers using this index buffer that it is being

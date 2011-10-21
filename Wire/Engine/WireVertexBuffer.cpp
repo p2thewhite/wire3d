@@ -20,11 +20,23 @@ VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 	:
 	Buffer(usage),
 	mAttributes(rAttributes),
-	mVertexQuantity(vertexQuantity),
-	mpChannel(NULL)
+	mVertexQuantity(vertexQuantity)
 {
 	mpChannel = WIRE_NEW Float[mVertexQuantity * mAttributes.
 		GetChannelQuantity()];
+}
+
+//----------------------------------------------------------------------------
+VertexBuffer::VertexBuffer(const VertexBuffer* pVertexBuffer)
+	:
+	Buffer(pVertexBuffer->GetUsage())
+{
+	mAttributes = pVertexBuffer->mAttributes;
+	mVertexQuantity = pVertexBuffer->mVertexQuantity;
+	UInt floatQuantity = mVertexQuantity * mAttributes.GetChannelQuantity();
+	mpChannel = WIRE_NEW Float[floatQuantity];
+	size_t size = floatQuantity*sizeof(Float);
+	System::Memcpy(mpChannel, size, pVertexBuffer->mpChannel, size);
 }
 
 //----------------------------------------------------------------------------

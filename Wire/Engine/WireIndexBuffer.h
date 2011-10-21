@@ -21,6 +21,7 @@ class IndexBuffer : public Buffer
 
 public:
 	IndexBuffer(UInt quantity, UsageType usage = UT_STATIC);
+	IndexBuffer(const IndexBuffer* pIndexBuffer);
 	virtual ~IndexBuffer();
 
 	// Access to indices.

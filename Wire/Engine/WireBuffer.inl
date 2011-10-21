@@ -9,5 +9,6 @@
 //----------------------------------------------------------------------------
 inline Buffer::UsageType Buffer::GetUsage() const
 {
+	WIRE_ASSERT(this != NULL);
 	return mUsage;
 }
