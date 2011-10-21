@@ -19,14 +19,18 @@ public:
 
 private:
 	Node* CreateScene();
-	Geometry* CreateGeometryA();
-	Geometry* CreateGeometryB();
+	Spatial* CreateGeometryA();
+	Spatial* CreateGeometryB();
 
 	NodePtr mspRoot;
 
 	MeshPtr mspMeshA;
 	MaterialPtr mspMaterialA;
+	StateAlphaPtr mspAlphaA;
+	StateCullPtr mspCullA;
 	StateMaterialPtr mspStateMaterialA;
+	StateZBufferPtr mspZBufferA;
+	VertexBufferPtr mspVertexBufferA;
 
 	MeshPtr mspMeshB;
 	MaterialPtr mspMaterialB;

@@ -920,24 +920,28 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 				(*pIBuffer)[k*6+j] = indices[j] + k*4;
 			}
 
+			x += xStride;
 			k++;
+		}
+		else if (pText[i] == 32)
+		{
+			x += xStride;
 		}
 		else if (pText[i] == 1)
 		{
+			const Float f = 1.0f/255.0f;
 			i++;
-			Float r = static_cast<Float>(pText[i++]) / 255.0f;
-			Float g = static_cast<Float>(pText[i++]) / 255.0f;
-			Float b = static_cast<Float>(pText[i++]) / 255.0f;
-			Float a = static_cast<Float>(pText[i]) / 255.0f;		
-			color = ColorRGBA(r, g, b, a);
+			Float r = static_cast<Float>(static_cast<UChar>(pText[i++]));
+			Float g = static_cast<Float>(static_cast<UChar>(pText[i++]));
+			Float b = static_cast<Float>(static_cast<UChar>(pText[i++]));
+			Float a = static_cast<Float>(static_cast<UChar>(pText[i]));
+			color = ColorRGBA(r*f, g*f, b*f, a*f);
 		}
 		else if (pText[i] == 2)
 		{
 			i++;
 			color = rColor;
 		}
-
-		x += xStride;
 
 		if (pText[i] == '\n' || x > (screenWidth-xStride))
 		{

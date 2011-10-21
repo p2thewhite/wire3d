@@ -27,6 +27,7 @@ class VertexBuffer : public Buffer
 public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity,
 		UsageType usage = UT_STATIC);
+	VertexBuffer(const VertexBuffer* pVertexBuffer);
 	virtual ~VertexBuffer();
 
 	inline UInt GetQuantity() const;
