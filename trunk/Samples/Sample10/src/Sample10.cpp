@@ -294,28 +294,24 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	UInt fps = static_cast<UInt>(1/elapsed);
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
+	String msg1 = "\2\nDraw Calls: %d\nTriangles: %d, Vertices: %d\nFPS: %d";
+
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1),
+		statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
 
 	String msg0 = "\n\n\n\n\n\nSorting: ";
-	String msg1 = "\2\nDraw Calls: %d\nTriangles: %d, Vertices: %d\nFPS: %d";
 	String str;
 
 	if (usesSorting)
 	{
-		str = msg0 + "\x01\xff\x01\x01\xffON" + msg1;
-		System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
-			statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
-		WIRE_ASSERT(text[msg0.GetLength()] == 1);
-		WIRE_ASSERT(text[msg0.GetLength()+1] == 0x00);
+		str = msg0 + "\x01\xff\x01\x01\xffON" + text;
 	}
 	else
 	{
-		str = msg0 + "\x01\x01\x7f\x01\x7fOFF" + msg1;
-		System::Sprintf(text, TextArraySize, static_cast<const Char*>(str),
-			statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
+		str = msg0 + "\x01\x01\xff\x01\xffOFF" + text;
 	}
 
-
-	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
+	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
 		screenHeight, ColorRGBA::WHITE);
 	spText->AttachState(mspTextAlpha);
 	spText->UpdateRS();
