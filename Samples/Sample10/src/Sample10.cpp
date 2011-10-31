@@ -294,10 +294,10 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	UInt fps = static_cast<UInt>(1/elapsed);
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
-	String msg1 = "\2\nDraw Calls: %d\nTriangles: %d, Vertices: %d\nFPS: %d";
+	String msg1 = "\2\nDraw Calls: %d, Triangles: %d\nFPS: %d";
 
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1),
-		statistics.DrawCalls, statistics.Triangles, statistics.Vertices, fps);
+		statistics.DrawCalls, statistics.Triangles, fps);
 
 	String msg0 = "\n\n\n\n\n\nSorting: ";
 	String str;

@@ -610,7 +610,7 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World);
-		DrawElements();
+		DrawElements(pGeometry->ActiveIndexCount, pGeometry->StartIndex);
 
 		Disable(pGeometry->GetMaterial());
 		Disable(pMesh->GetVertexBuffer());
@@ -628,7 +628,7 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World);
-		DrawElements();
+		DrawElements(pGeometry->ActiveIndexCount, pGeometry->StartIndex);
 	}
 }
 
@@ -915,5 +915,4 @@ void Renderer::ResetStatistics()
 {
 	mStatistics.DrawCalls = 0;
 	mStatistics.Triangles = 0;
-	mStatistics.Vertices = 0;
 }

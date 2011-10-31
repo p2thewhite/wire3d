@@ -11,11 +11,13 @@ inline Bool Transformation::IsIdentity() const
 {
 	return mIsIdentity;
 }
+
 //----------------------------------------------------------------------------
 inline Bool Transformation::IsRSMatrix() const
 {
 	return mIsRSMatrix;
 }
+
 //----------------------------------------------------------------------------
 inline Bool Transformation::IsUniformScale() const
 {

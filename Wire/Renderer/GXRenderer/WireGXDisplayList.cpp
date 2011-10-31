@@ -27,7 +27,7 @@ PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
 	DCInvalidateRange(mpData, maxSize);
 
 	GXBeginDisplayList(mpData, maxSize);
-	pRendererData->Draw(rElements, rIBuffer);
+	pRendererData->Draw(rElements, rIBuffer, rIBuffer.GetQuantity(), 0);
 	mSize = GXEndDisplayList();
 	WIRE_ASSERT(mSize);
 

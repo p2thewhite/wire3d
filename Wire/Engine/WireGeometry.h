@@ -46,6 +46,11 @@ public:
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<Pointer<Light> > Lights;
 
+	// Control over which continuous part of the mesh is rendered.
+	// Default values render the entire mesh.
+	UInt ActiveIndexCount;	// default: quantity of the mesh's indexbuffer
+	UInt StartIndex;		// default: 0
+
 	// Identical IDs among different Geometry objects mean that all their
 	// States[] are identical. This is used for sorting Geometry by state.
 	UInt StateSetID;
