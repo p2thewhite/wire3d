@@ -200,7 +200,6 @@ public:
 	{
 		UInt DrawCalls;
 		UInt Triangles;
-		UInt Vertices;
 	};
 
 	inline const Statistics& GetStatistics() const;
@@ -220,7 +219,7 @@ private:
 	void SetWorldTransformation(Transformation& rWorld);
 
 	// The main entry point to drawing in the derived-class renderers
-	void DrawElements();
+	void DrawElements(UInt activeIndexCount, UInt indexOffset);
 
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;

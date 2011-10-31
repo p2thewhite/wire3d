@@ -217,13 +217,11 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements()
+void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 {
-	WIRE_ASSERT(mspIndexBuffer);
 	WIRE_ASSERT(mspVertexBuffer);
 	mStatistics.DrawCalls++;
-	mStatistics.Triangles += mspIndexBuffer->GetQuantity()/3;
-	mStatistics.Vertices += mspVertexBuffer->GetQuantity();
+	mStatistics.Triangles += activeIndexCount/3;
 
 	mpData->IsFrameBufferDirty = true;
 
@@ -250,6 +248,7 @@ void Renderer::DrawElements()
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
+	WIRE_ASSERT(mspIndexBuffer);
 	const IndexBuffer& rIBuffer = *mspIndexBuffer;
 	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);
@@ -258,7 +257,8 @@ void Renderer::DrawElements()
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
-		mpData->DrawWireframe(pPdrVBuffer, rIBuffer);
+		mpData->DrawWireframe(pPdrVBuffer->GetVertexElements(), rIBuffer,
+			activeIndexCount, indexOffset);
 	}
 	else
 	{
@@ -267,24 +267,28 @@ void Renderer::DrawElements()
 			elementsId);
 		PdrDisplayList* pDisplayList = NULL;
 
+		Bool isStatic = ((indexOffset == 0) && 
+			(activeIndexCount == mspIndexBuffer->GetQuantity()));
+
 		if (pEntry)
 		{
 			pDisplayList = *pEntry;
 		}
-		else if (rIBuffer.GetUsage() == Buffer::UT_STATIC)
+		else if ((rIBuffer.GetUsage() == Buffer::UT_STATIC) && isStatic)
 		{
 			pDisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
 				pPdrVBuffer->GetVertexElements());
 			pPdrIBuffer->GetDisplayLists().Insert(elementsId, pDisplayList);
 		}
 
-		if (pDisplayList)
+		if (pDisplayList && isStatic)
 		{
 			pDisplayList->Draw();
 		}
 		else
 		{
-			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer);
+			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer,
+				activeIndexCount, indexOffset);
 		}
 	}
 }
@@ -578,10 +582,11 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 
 //----------------------------------------------------------------------------
 void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
-	rElements, const IndexBuffer& rIBuffer)
+	rElements, const IndexBuffer& rIBuffer, UInt activeIndexCount,
+	UInt indexOffset)
 {
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, rIBuffer.GetQuantity());
-	for (UInt i = 0; i < rIBuffer.GetQuantity(); i++)
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, activeIndexCount);
+	for (UInt i = indexOffset; i < (indexOffset+activeIndexCount); i++)
 	{
 		UShort index = static_cast<UShort>(rIBuffer[i]);
 
@@ -623,15 +628,19 @@ void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::DrawWireframe(const PdrVertexBuffer* pPdrVBuffer,
-	const IndexBuffer& rIBuffer)
+void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
+	VertexElement>& rElements, const IndexBuffer& rIBuffer,
+	UInt activeIndexCount, UInt indexOffset)
 {
-	const TArray<PdrVertexBuffer::VertexElement>& rElements = pPdrVBuffer->
-		GetVertexElements();
+	UInt indexCount = (activeIndexCount / 3) * 3;
+	if (indexCount == 0)
+	{
+		return;
+	}
 
-	GXBegin(GX_LINES, GX_VTXFMT0, rIBuffer.GetQuantity() * 2);
+	GXBegin(GX_LINES, GX_VTXFMT0, indexCount * 2);
 
-	for (UInt i = 0; i < rIBuffer.GetQuantity(); i += 3)
+	for (UInt i = indexOffset; i < (indexOffset+indexCount); i += 3)
 	{
 		for (UInt k = 0; k < 3; k++)
 		{

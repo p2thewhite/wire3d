@@ -47,6 +47,7 @@ public:
 	Bool SupportsMinFAniso;
 	Bool SupportsMagFAniso;
 	Bool IsDeviceLost;
+	Bool UsesRenormalizeNormals;
 
 private:
 	Renderer* mpRenderer;

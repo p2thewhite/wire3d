@@ -141,10 +141,6 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	// Turn off lighting (DX defaults to lighting on).
-	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	WIRE_ASSERT(SUCCEEDED(hr));
-
 	if ((deviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY ) > 0)
 	{
 		if (deviceCaps.TextureCaps & D3DPTFILTERCAPS_MINFANISOTROPIC)
@@ -159,6 +155,14 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 		mMaxAnisotropy = static_cast<Float>(deviceCaps.MaxAnisotropy);
 	}
+
+	// Turn off lighting (DX defaults to lighting on).
+	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+
+	hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	mpData->UsesRenormalizeNormals = false;
 
 	// Initialize global render state to default settings.
 	Set(State::Default);
@@ -290,24 +294,52 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 	Matrix4F world;
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	rWorld.GetHomogeneous(world);
-	rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(&world));
+
+	Bool needsRenormalization = true;
+	if (rWorld.IsUniformScale())
+	{
+		if (rWorld.GetUniformScale() == 1.0F)
+		{
+			needsRenormalization = false;
+		}
+	}
+
+	HRESULT hr;
+	
+	if (needsRenormalization != mpData->UsesRenormalizeNormals)
+	{
+		if (needsRenormalization)
+		{
+			hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+		}
+		else
+		{
+			hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
+		}
+
+		WIRE_ASSERT(SUCCEEDED(hr));
+		mpData->UsesRenormalizeNormals = needsRenormalization;
+	}
+
+	hr = rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
+		&world));
+	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements()
+void Renderer::DrawElements(UInt activeIndexCount, UInt startIndex)
 {
-	const UInt triangleCount = mspIndexBuffer->GetQuantity()/3;
+	const UInt triangleCount = activeIndexCount/3;
 	const UInt vertexCount = mspVertexBuffer->GetQuantity();
 	mStatistics.DrawCalls++;
 	mStatistics.Triangles += triangleCount;
-	mStatistics.Vertices += vertexCount;
 
 	WIRE_ASSERT(mspVertexBuffer);
 	WIRE_ASSERT(mspIndexBuffer);
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
-		0, triangleCount);
+		startIndex, triangleCount);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -474,6 +506,7 @@ PdrRendererData::PdrRendererData(Renderer* pRenderer)
 	SupportsMinFAniso(false),
 	SupportsMagFAniso(false),
 	IsDeviceLost(false),
+	UsesRenormalizeNormals(false),
 	mpRenderer(pRenderer)
 {
 }
@@ -553,6 +586,10 @@ void PdrRendererData::ResetDevice()
 
 	hr = D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
+
+	hr = D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	UsesRenormalizeNormals = false;
 
 	for (UInt i = 0; i < renderer.mLights.GetQuantity(); i++)
 	{
