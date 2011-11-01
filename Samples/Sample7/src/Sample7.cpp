@@ -43,6 +43,8 @@ Bool Sample7::OnInitialize()
 
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
+	mIsExpanding = true;
+	mSegmentCount = 0;
 	return true;
 }
 
@@ -56,28 +58,71 @@ void Sample7::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime*0.5F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
-	mspGeometry->World.SetRotate(rotate);
-
 	Mesh* pMesh = mspGeometry->GetMesh();
+	IndexBuffer* pIndexBuffer = pMesh->GetIndexBuffer();
 
 	// animate the positions of the PQ torus knot
 	GeneratePositions(pMesh->GetVertexBuffer(), mAngle*2);
 
 	// positions changed, so we need to recalculate the normals
- 	GenerateNormals(pMesh->GetVertexBuffer(), pMesh->GetIndexBuffer());
+ 	GenerateNormals(pMesh->GetVertexBuffer(), pIndexBuffer);
 
 	// update the hardware vertex buffer data
 	GetRenderer()->Update(pMesh->GetVertexBuffer());
 
-	// We know that animating the positions in this case does not change the
-	// model bounding volume. If it did, we would need to recalculate it,
-	// otherwise the culling system would produce incorrect results.
+	// We are not using culling since our transformations do not change
+	// and both torus knots are on screen. If we did, we would need to
+	// recalculate the model bounds since the positions of the mesh changed.
 //	mspGeometry->UpdateModelBound();
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
+
+	// render centered torus knot
+	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
+	mspGeometry->World.SetTranslate(Vector3F::ZERO);
+	mspGeometry->World.SetUniformScale(1);
+	mspGeometry->World.SetRotate(rotate);
+	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspGeometry->States[
+		State::MATERIAL]);
+	WIRE_ASSERT(pMaterial);
+	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0f); 
+	mspGeometry->ActiveIndexCount = pIndexBuffer->GetQuantity();
+	mspGeometry->StartIndex = 0;
 	GetRenderer()->Draw(mspGeometry);
+
+	// render small torus knot
+	mspGeometry->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
+	mspGeometry->World.SetUniformScale(0.18F);
+	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0f);
+
+	// Use the Geometry's StartIndex and ActiveIndexCount to control what
+	// part of the mesh is being rendered.
+	mSegmentCount += MathD::FMod(elapsedTime * 50, s_SegmentCount);
+	UInt segmentCount = static_cast<UInt>(mSegmentCount);
+	Bool isExpanding = mIsExpanding;
+	if (segmentCount > (s_SegmentCount-1))
+	{
+		mIsExpanding = !mIsExpanding;
+		mSegmentCount = 0;
+		segmentCount = s_SegmentCount-1;
+	}
+	
+	if (isExpanding)
+	{
+		mspGeometry->ActiveIndexCount = (segmentCount + 1) * s_ShapeCount*6;
+		mspGeometry->StartIndex = 0;
+	}
+	else
+	{
+		mspGeometry->StartIndex = segmentCount * s_ShapeCount*6;
+		mspGeometry->ActiveIndexCount = pIndexBuffer->GetQuantity() - 
+			mspGeometry->StartIndex;
+	}
+
+	WIRE_ASSERT(mspGeometry->ActiveIndexCount <= pIndexBuffer->GetQuantity());
+	GetRenderer()->Draw(mspGeometry);
+
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -176,9 +221,7 @@ Geometry* Sample7::CreateGeometry()
 	}
 	
 	// material for lighting
-	StateMaterial* pMaterial = WIRE_NEW StateMaterial;
-	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0f); 
-	pTorus->States[State::MATERIAL] = pMaterial;
+	pTorus->States[State::MATERIAL] = WIRE_NEW StateMaterial;
 
 	Light* pLight = WIRE_NEW Light;
 	pTorus->Lights.Append(pLight);

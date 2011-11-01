@@ -33,6 +33,8 @@ private:
 	static const UInt s_Q = 2;
 	TArray<TArray<UInt> > mBuckets;
 
+	Double mSegmentCount;
+	Bool mIsExpanding;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample7);
