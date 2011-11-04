@@ -85,8 +85,9 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 	}
 	else
 	{
-		pStateKeys->Insert(key, pStateKeys->GetQuantity()+1);
-		StateSetID = pStateKeys->GetQuantity()+1;
+		UInt id = pStateKeys->GetQuantity()+1;
+		pStateKeys->Insert(key, id);
+		StateSetID = id;
 	}
 
 	// update light state
@@ -126,8 +127,11 @@ UInt Geometry::GetStateSetKey()
 	// The following asserts let you know when you have created more states
 	// than the key can handle. This is only important if you need the
 	// StateSetID to be unique (e.g. the CullerSorting class uses it to
-	// sort its objects by state), otherwise you can ignore the asserts
-	// completely.
+	// sort its objects by state), otherwise you can ignore the asserts.
+	// If you need unique IDs, change the layout of the bits in the key to
+	// match your needs, or try to reuse or get rid of redundant states.
+	// E.g. you do not need more than 3 cull states, as a cull state can only
+	// be 'front', 'back' or 'off'.
 	if (States[State::ALPHA])
 	{
 		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);

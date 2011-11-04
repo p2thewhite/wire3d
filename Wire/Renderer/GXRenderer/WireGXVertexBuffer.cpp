@@ -25,7 +25,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	mVertexSize(0)
 {
 	VertexElement element;
-	mElementsId = 0;
 
 	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
 	UInt channels = rIAttr.GetPositionChannels();
@@ -37,7 +36,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		element.CompCnt = GX_POS_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
-		mElementsId = 1;
 	}
 
 	channels = rIAttr.GetNormalChannels();
@@ -49,7 +47,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 		element.CompCnt = GX_NRM_XYZ;
 		element.CompType = GX_F32;
 		mElements.Append(element);
-		mElementsId |= 2;
 	}
 
 	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
@@ -62,7 +59,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_CLR_RGBA;
 			element.CompType = GX_RGBA8;
 			mElements.Append(element);
-			mElementsId |= 4 << unit;
 		}
 	}
 
@@ -77,7 +73,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 			element.CompCnt = GX_TEX_ST;
 			element.CompType = GX_F32;
 			mElements.Append(element);
-			mElementsId |= 16 << unit;
 		}
 	}
 

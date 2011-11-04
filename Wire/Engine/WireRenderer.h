@@ -154,7 +154,7 @@ public:
 
 	// Release all the smart pointers that the Renderer caches between PreDraw()
 	// and PostDraw() calls.
-	void ReleaseReferences();
+	void ReleaseResources();
 
 	// Apply camera changes to platform specific renderer.
 	void SetCamera(Camera* pCamera);

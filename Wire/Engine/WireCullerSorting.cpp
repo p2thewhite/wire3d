@@ -71,19 +71,35 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		pDestination->SetMaxQuantity(pSource->GetQuantity());
 	}
 
+	if (mKeys.GetMaxQuantity() < pSource->GetMaxQuantity())
+	{
+		mKeys.SetMaxQuantity(pSource->GetQuantity());
+	}
+
 	UInt indexStack[Renderer::MAX_GLOBAL_EFFECTS][2];
 	indexStack[0][0] = 0;
 	indexStack[0][1] = 0;
 	UInt top = 0;
+	UInt left;
 
 	const UInt visibleQuantity = pSource->GetQuantity();
 	VisibleObject* const pVisible = pSource->GetVisible();
+	VisibleObject* const pVisibleDst = pDestination->GetVisible();
+
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i].Object)
 		{
 			if (pVisible[i].GlobalEffect)
 			{
+				if (indexStack[0][0] < indexStack[0][1])
+				{
+					WIRE_ASSERT(i == indexStack[0][1]); // TODO check
+					// Sort leaves with no effect
+					QuickSort(mKeys, pDestination->GetVisible(),
+						indexStack[0][0], i-1);
+				}
+
 				// Begin the scope of a global effect.
 				top++;
 				WIRE_ASSERT(top < Renderer::MAX_GLOBAL_EFFECTS);
@@ -92,6 +108,14 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			}
 			else
 			{
+				// Found a leaf Geometry object.
+				if (top == 0)
+				{
+					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));					
+					pDestination->Insert(pVisible[i].Object, NULL);
+					mKeys.Append(GetKey(pVisible[i].Object));
+				}
+
 				indexStack[top][1]++;
 			}
 		}
@@ -102,42 +126,42 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
-			pDestination->Insert(pVisible[i].Object, pVisible[i].
+			pDestination->Insert(pVisible[min].Object, pVisible[min].
 				GlobalEffect);
+			mKeys.Append(0);	// dummy key to pad the array
+			left = pDestination->GetQuantity();
 
- 			for (UInt i = min+1; i <= max; i++)
+			for (UInt j = min+1; j <= max; j++)
  			{
-				WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
-					mKeys.Append(GetKey(pVisible[i].Object));
-				pDestination->Insert(pVisible[i].Object, NULL);
+				if (pVisible[j].IsDrawable())
+				{
+					pDestination->Insert(pVisible[j].Object, NULL);
+					mKeys.Append(GetKey(pVisible[j].Object));
+				}
 			}
 
-//			QuickSort(mKeys.GetArray(), pDestination->GetVisible(), min+1,
-			QuickSort(mKeys, pDestination->GetVisible(), min+1,
-				max);
+// TODO: clean-up
+//			QuickSort(mKeys.GetArray(), pDestination->GetVisible(), left,
+			QuickSort(mKeys, pDestination->GetVisible(), left,
+				pDestination->GetQuantity()-1);
 
 			pDestination->Insert(NULL, NULL);
+			mKeys.Append(0);
 
-			if (--top > 0)
-			{
-				indexStack[top][1] = max + 1;
-			}
+			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/); // TODO
+			--top;
+			indexStack[top][1] = max + 1;
+			indexStack[0][0] = pDestination->GetQuantity();
+			indexStack[0][1] = pDestination->GetQuantity();
 		}
 	}
 
 	WIRE_ASSERT(top == 0);
-	for (UInt i = indexStack[0][0]; i < indexStack[0][1]; i++)
+	if (indexStack[0][0] < pDestination->GetQuantity()-1)
 	{
-		WIRE_ASSERT(pVisible[i].GlobalEffect == NULL);
-		mKeys.Append(GetKey(pVisible[i].Object));
-		pDestination->Insert(pVisible[i].Object, pVisible[i].GlobalEffect);
-	}
-
-	if (indexStack[0][0] < indexStack[0][1])
-	{
-		//	QuickSort(mKeys.GetArray(), pDestination->GetVisible(), indexStack[0][0],
+//	QuickSort(mKeys.GetArray(), pDestination->GetVisible(), indexStack[0][0],
 		QuickSort(mKeys, pDestination->GetVisible(), indexStack[0][0],
-			indexStack[0][1]-1);
+			pDestination->GetQuantity()-1);
 	}
 }
 

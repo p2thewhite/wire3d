@@ -38,15 +38,12 @@ public:
 	void Update(const VertexBuffer* pVertexBuffer);
 
 	inline const TArray<VertexElement>& GetVertexElements() const;
-	inline Bool HasNormals();
-	inline const UShort GetVertexElementsId() const;
 
 private:
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	TArray<VertexElement> mElements;
 	void* mpData;
-	UShort mElementsId;
 	UChar mVertexSize;
 };
 

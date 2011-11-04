@@ -12,15 +12,3 @@ PdrVertexBuffer::GetVertexElements() const
 {
 	return mElements;
 }
-
-//----------------------------------------------------------------------------
-inline const UShort PdrVertexBuffer::GetVertexElementsId() const
-{
-	return mElementsId;
-}
-
-//----------------------------------------------------------------------------
-inline Bool PdrVertexBuffer::HasNormals()
-{
-	return (mElementsId & 2) != 0;
-}

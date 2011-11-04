@@ -230,7 +230,7 @@ Bool Renderer::PreDraw(Camera* pCamera)
 {
 	// Reset state cache (state is not preserved outside Begin/EndScene()),
 	// and release smart pointers cached by the Renderer.
-	ReleaseReferences();
+	ReleaseResources();
 
 	SetCamera(pCamera);
 
@@ -284,17 +284,13 @@ void Renderer::PostDraw()
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	ReleaseReferences();
+	ReleaseResources();
+	mspCamera = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::SetWorldTransformation(Transformation& rWorld)
 {
-	// Set up world matrix
-	Matrix4F world;
-	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	rWorld.GetHomogeneous(world);
-
 	Bool needsRenormalization = true;
 	if (rWorld.IsUniformScale())
 	{
@@ -305,22 +301,18 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 	}
 
 	HRESULT hr;
-	
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
+
 	if (needsRenormalization != mpData->UsesRenormalizeNormals)
 	{
-		if (needsRenormalization)
-		{
-			hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
-		}
-		else
-		{
-			hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
-		}
-
+		DWORD normalize = needsRenormalization ? TRUE : FALSE;
+		hr = rDevice->SetRenderState(D3DRS_NORMALIZENORMALS, normalize);
 		WIRE_ASSERT(SUCCEEDED(hr));
 		mpData->UsesRenormalizeNormals = needsRenormalization;
 	}
 
+	Matrix4F world;
+	rWorld.GetHomogeneous(world);
 	hr = rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
 		&world));
 	WIRE_ASSERT(SUCCEEDED(hr));

@@ -206,8 +206,8 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 	Matrix34F modelView = mpData->ViewMatrix * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
-	WIRE_ASSERT(mpData->PdrVBuffer /* Enable VertexBuffer first */);
-	if (mpData->PdrVBuffer->HasNormals())
+	WIRE_ASSERT(mspVertexBuffer /* Enable VertexBuffer first */);
+	if (mspVertexBuffer->GetAttributes().HasNormal())
 	{
 		Mtx modelViewInverse;
 		MTXInverse(modelView, modelViewInverse);
@@ -219,7 +219,6 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 {
-	WIRE_ASSERT(mspVertexBuffer);
 	mStatistics.DrawCalls++;
 	mStatistics.Triangles += activeIndexCount/3;
 
@@ -262,9 +261,9 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 	}
 	else
 	{
-		const UShort elementsId = pPdrVBuffer->GetVertexElementsId();
-		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(
-			elementsId);
+		WIRE_ASSERT(mspVertexBuffer);
+		const UInt key = mspVertexBuffer->GetAttributes().GetKey();
+		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
 
 		Bool isStatic = ((indexOffset == 0) && 
@@ -278,7 +277,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		{
 			pDisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
 				pPdrVBuffer->GetVertexElements());
-			pPdrIBuffer->GetDisplayLists().Insert(elementsId, pDisplayList);
+			pPdrIBuffer->GetDisplayLists().Insert(key, pDisplayList);
 		}
 
 		if (pDisplayList && isStatic)
@@ -720,7 +719,8 @@ void Renderer::PostDraw()
 {
 	// Reset state cache (state is not preserved outside Begin/EndScene()),
 	// and release smart pointers cached by the Renderer.
-	ReleaseReferences();
+	ReleaseResources();
+	mspCamera = NULL;
 }
 
 //----------------------------------------------------------------------------

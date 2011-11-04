@@ -46,6 +46,8 @@ public:
 	inline UInt GetNormalOffset() const;
 	inline UInt GetTCoordOffset(UInt unit = 0) const;
 
+	inline UInt GetKey() const;
+
 private:
 	void UpdateOffsets();
 	void ResetOffsets();
@@ -63,6 +65,8 @@ private:
 
 	TArray<Int> mTCoordChannels;
 	TArray<Int> mTCoordOffset;
+
+	UInt mKey;
 };
 
 #include "WireVertexAttributes.inl"
