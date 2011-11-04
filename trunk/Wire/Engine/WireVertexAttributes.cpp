@@ -15,7 +15,8 @@ VertexAttributes::VertexAttributes()
 	:
 	mChannelQuantity(0),
 	mPositionChannels(0),
-	mNormalChannels(0)
+	mNormalChannels(0),
+	mKey(0)
 {
 	ResetOffsets();
 }
@@ -88,6 +89,7 @@ void VertexAttributes::SetTCoordChannels(UInt tCoordChannels, UInt unit)
 void VertexAttributes::UpdateOffsets()
 {
 	mChannelQuantity = 0;
+	mKey = 0;
 
 	ResetOffsets();	
 
@@ -95,16 +97,21 @@ void VertexAttributes::UpdateOffsets()
 	{
 		mPositionOffset = mChannelQuantity;
 		mChannelQuantity += mPositionChannels;
+		mKey |= 1;
 	}
 
 	if (mNormalChannels > 0)
 	{
 		mNormalOffset = mChannelQuantity;
 		mChannelQuantity += mNormalChannels;
+		mKey |= 2;
 	}
 
 	if (mColorChannels.GetQuantity() > 0)
 	{
+		WIRE_ASSERT(mColorChannels.GetQuantity() <= 3);
+		mKey |= mColorChannels.GetQuantity() << 2;
+
 		for (UInt i = 0; i < mColorChannels.GetQuantity(); i++)
 		{
 			if (mColorChannels[i] > 0)
@@ -117,6 +124,7 @@ void VertexAttributes::UpdateOffsets()
 
 	if (mTCoordChannels.GetQuantity() > 0)
 	{
+		mKey |= mTCoordChannels.GetQuantity() << 4;
 		for (UInt i = 0; i < mTCoordChannels.GetQuantity(); i++)
 		{
 			if (mTCoordChannels[i] > 0)

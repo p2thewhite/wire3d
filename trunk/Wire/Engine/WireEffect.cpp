@@ -30,7 +30,7 @@ Effect::~Effect()
 
 //----------------------------------------------------------------------------
 void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
-	VisibleObject* pVisible)
+	VisibleObject* pVisible, Bool restoreState)
 {
 	// The default drawing function for global effects. Essentially, this
 	// draws all the visible leaf geometry, as if no effect was applied.
@@ -43,10 +43,9 @@ void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
 			WIRE_ASSERT(pGeometry);
 
 			// Set useEffect to 'true' only if you detach this effect here
-			// (and attach some other effect of use), otherwise an infinite
+			// (and/or attach some other effect of use), otherwise an infinite
 			// loop will be triggered.
 			Bool useEffect = false;
-			Bool restoreState = true;
 			pRenderer->Draw(pGeometry, restoreState, useEffect);
 		}
 	}

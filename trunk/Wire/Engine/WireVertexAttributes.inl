@@ -109,3 +109,9 @@ inline UInt VertexAttributes::GetTCoordOffset(UInt unit) const
 	WIRE_ASSERT(unit < mTCoordOffset.GetQuantity());
 	return mTCoordOffset[unit];
 }
+
+//----------------------------------------------------------------------------
+inline UInt VertexAttributes::GetKey() const
+{
+	return mKey;
+}

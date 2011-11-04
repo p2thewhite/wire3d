@@ -7,7 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline TMap<UShort, PdrDisplayList*>& PdrIndexBuffer::GetDisplayLists()
+inline TMap<UInt, PdrDisplayList*>& PdrIndexBuffer::GetDisplayLists()
 {
 	return mDisplayLists;
 }

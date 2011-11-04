@@ -31,10 +31,10 @@ public:
 	// requires. If this is not overridden, the default behavior is to
 	// draw all the Geometry objects in pVisible.
 	virtual void Draw(Renderer* pRenderer, Spatial* pGlobalObject, UInt min,
-		UInt max, VisibleObject* pVisible);
+		UInt max, VisibleObject* pVisible, Bool restoreState);
 
 protected:
-	Effect();
+ 	Effect();
 };
 
 typedef Pointer<Effect> EffectPtr;

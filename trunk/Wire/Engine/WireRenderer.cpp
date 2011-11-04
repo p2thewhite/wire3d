@@ -47,7 +47,8 @@ void Renderer::Initialize(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Renderer::Terminate()
 {
-	ReleaseReferences();
+	ReleaseResources();
+	mspCamera = NULL;
 
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
@@ -56,10 +57,8 @@ void Renderer::Terminate()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::ReleaseReferences()
+void Renderer::ReleaseResources()
 {
-	mspCamera = NULL;
-
 	if (mspIndexBuffer)
 	{
 		Disable(mspIndexBuffer);
@@ -594,15 +593,15 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 			visibleObject.Object = pGeometry;
 			visibleObject.GlobalEffect = NULL;
 			pGeometry->GetEffect(i)->Draw(this, pGeometry, 0, 0,
-				&visibleObject);
+				&visibleObject, restoreState);
 		}
 
 		return;
 	}
 
+	Mesh* pMesh = pGeometry->GetMesh();
 	if (restoreState)
 	{
-		Mesh* pMesh = pGeometry->GetMesh();
 		Enable(pGeometry->States);
 		Enable(pGeometry->Lights);
 		Enable(pMesh->GetIndexBuffer());
@@ -620,7 +619,6 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 	}
 	else
 	{
-		Mesh* pMesh = pGeometry->GetMesh();
 		Set(pGeometry->States);
 		Set(pGeometry->Lights);
 		Set(pMesh->GetIndexBuffer());
@@ -680,7 +678,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 			UInt max = indexStack[top][1];
 
 			pVisible[min].GlobalEffect->Draw(this, pVisible[min].Object,
-				min+1, max, pVisible);
+				min+1, max, pVisible, false);
 
 			if (--top >= 0)
 			{
@@ -689,7 +687,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 		}
 	}
 
-	ReleaseReferences();
+	ReleaseResources();
 }
 
 //----------------------------------------------------------------------------
