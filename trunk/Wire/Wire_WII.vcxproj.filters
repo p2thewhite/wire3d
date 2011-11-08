@@ -473,6 +473,9 @@
     <None Include="Engine\WireMesh.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
+    <None Include="Foundation\WireApplication.inl">
+      <Filter>Foundation\Inline Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\WireApplication.cpp">

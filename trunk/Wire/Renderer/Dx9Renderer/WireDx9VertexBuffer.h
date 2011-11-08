@@ -11,15 +11,13 @@
 #define WIREDX9VERTEXBUFFER_H
 
 #include "WireBuffer.h"
-#include "WireTypes.h"
-
-struct IDirect3DVertexBuffer9;
-struct IDirect3DVertexDeclaration9;
+#include "WireDx9RendererData.h"
+#include "WireRenderer.h"
 
 namespace Wire
 {
 
-class Renderer;
+class VertexAttributes;
 class VertexBuffer;
 
 class PdrVertexBuffer
@@ -30,17 +28,26 @@ public:
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
+
 	void* Lock(Buffer::LockingMode mode);
-	void Unlock();
+	inline void Unlock();
+
 	void Update(const VertexBuffer* pVertexBuffer);
 
+	inline void SetBuffer(Renderer* pRenderer);
+	inline void SetDeclaration(Renderer* pRenderer);
+
 private:
+	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
+		rAttributes);
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	IDirect3DVertexBuffer9* mpBuffer;
 	IDirect3DVertexDeclaration9* mpDeclaration;
 	UInt mVertexSize;
 };
+
+#include "WireDx9VertexBuffer.inl"
 
 }
 

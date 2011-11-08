@@ -10,6 +10,7 @@
 #ifndef WIREGXVERTEXBUFFER_H
 #define WIREGXVERTEXBUFFER_H
 
+#include "WireBuffer.h"
 #include "WireTArray.h"
 
 namespace Wire
@@ -17,6 +18,7 @@ namespace Wire
 
 class PdrDisplayList;
 class Renderer;
+class VertexAttributes;
 class VertexBuffer;
 
 class PdrVertexBuffer
@@ -24,7 +26,7 @@ class PdrVertexBuffer
 public:
 	struct VertexElement
 	{
-		void* Data;
+		UInt Offset;
 		UChar Attr;
 		UChar CompCnt;
 		UChar CompType;
@@ -35,15 +37,25 @@ public:
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
+
+	inline void* Lock(Buffer::LockingMode mode);
+	inline void Unlock();
+
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	inline const TArray<VertexElement>& GetVertexElements() const;
+	inline void SetBuffer(Renderer* pRenderer);
+	inline void SetDeclaration(Renderer* pRenderer);
+
+	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
+	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
+		rAttributes);
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
-	TArray<VertexElement> mElements;
+	TArray<VertexElement> mDeclaration;
 	void* mpData;
+	UInt mDataSize;
 	UChar mVertexSize;
 };
 

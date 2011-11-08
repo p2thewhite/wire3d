@@ -639,7 +639,9 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 	// effects to apply in one frame). If it needs to be larger for your
 	// applications, increase the maximum size.
 	UInt indexStack[MAX_GLOBAL_EFFECTS][2]; // startIndex, finalIndex
-	Int top = -1;							// stack is initially empty
+	UInt top = 0;							// stack is initially empty
+	indexStack[0][0] = 0;
+	indexStack[0][1] = 0;
 
 	const UInt visibleQuantity = pVisibleSet->GetQuantity();
 	VisibleObject* pVisible = pVisibleSet->GetVisible();
@@ -649,6 +651,13 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 		{
 			if (pVisible[i].GlobalEffect)
 			{
+				for (UInt j = indexStack[0][0]; j < indexStack[0][1]; j++)
+				{
+					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].Object));
+					Draw(StaticCast<Geometry>(pVisible[j].Object), false,
+						true);
+				}
+
 				// Begin the scope of a global effect.
 				top++;
 				WIRE_ASSERT(top < static_cast<Int>(MAX_GLOBAL_EFFECTS));
@@ -658,16 +667,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 			else
 			{
 				// Found a leaf Geometry object.
-				if (top == -1)
-				{
-					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
-					Draw(StaticCast<Geometry>(pVisible[i].Object), false,
-						true);
-				}
-				else
-				{
-					indexStack[top][1]++;
-				}
+				indexStack[top][1]++;
 			}
 		}
 		else
@@ -680,11 +680,22 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 			pVisible[min].GlobalEffect->Draw(this, pVisible[min].Object,
 				min+1, max, pVisible, false);
 
-			if (--top >= 0)
+			if (--top > 0)
 			{
 				indexStack[top][1] = max + 1;
 			}
+			else
+			{
+				indexStack[0][0] = max + 2;
+				indexStack[0][1] = max + 2;
+			}
 		}
+	}
+
+	for (UInt j = indexStack[0][0]; j < indexStack[0][1]; j++)
+	{
+		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].Object));
+		Draw(StaticCast<Geometry>(pVisible[j].Object), false, true);
 	}
 
 	ReleaseResources();

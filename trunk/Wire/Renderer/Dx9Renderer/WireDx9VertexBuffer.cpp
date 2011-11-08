@@ -8,10 +8,7 @@
 
 #include "WireDx9VertexBuffer.h"
 
-#include "WireDx9RendererData.h"
-#include "WireRenderer.h"
 #include "WireVertexBuffer.h"
-#include <d3d9.h>
 
 using namespace Wire;
 
@@ -21,6 +18,32 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	:
 	mVertexSize(0)
 {
+	CreateDeclaration(pRenderer, pVertexBuffer->GetAttributes());
+
+	// Create the vertex buffer.
+	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
+	const DWORD usage = PdrRendererData::USAGES[pVertexBuffer->GetUsage()];
+	const D3DPOOL pool = PdrRendererData::POOLS[pVertexBuffer->GetUsage()];
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	HRESULT hr;
+	hr = rDevice->CreateVertexBuffer(vbSize, usage, 0, pool, &mpBuffer, NULL);
+	WIRE_ASSERT(SUCCEEDED(hr));
+
+	// Copy the vertex buffer data from system memory to video memory.
+	Update(pVertexBuffer);
+}
+
+//----------------------------------------------------------------------------
+PdrVertexBuffer::~PdrVertexBuffer()
+{
+	mpBuffer->Release();
+	mpDeclaration->Release();
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::CreateDeclaration(Renderer* pRenderer, const
+	VertexAttributes& rAttributes)
+{
 	TArray<D3DVERTEXELEMENT9> elements(8);
 	D3DVERTEXELEMENT9 element;
 	element.Stream = 0;
@@ -28,11 +51,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 
 	UInt channels = 0;
 
-	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
-
-	if (rIAttr.GetPositionChannels() > 0)
+	if (rAttributes.GetPositionChannels() > 0)
 	{
-		channels = rIAttr.GetPositionChannels();
+		channels = rAttributes.GetPositionChannels();
 		element.Offset = static_cast<WORD>(mVertexSize);
 		mVertexSize += channels * sizeof(Float);
 		element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels - 1);
@@ -41,9 +62,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		elements.Append(element);
 	}
 
-	if (rIAttr.GetNormalChannels() > 0)
+	if (rAttributes.GetNormalChannels() > 0)
 	{
-		channels = rIAttr.GetNormalChannels();
+		channels = rAttributes.GetNormalChannels();
 		element.Offset = static_cast<WORD>(mVertexSize);
 		mVertexSize += channels * sizeof(Float);
 		element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels - 1);
@@ -52,9 +73,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		elements.Append(element);
 	}
 
-	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
+	for (UInt unit = 0; unit < rAttributes.GetColorChannelQuantity(); unit++)
 	{
-		if (rIAttr.GetColorChannels(unit) > 0)
+		if (rAttributes.GetColorChannels(unit) > 0)
 		{
 			element.Offset = static_cast<WORD>(mVertexSize);
 			mVertexSize += sizeof(DWORD);
@@ -65,9 +86,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 		}
 	}
 
-	for (UInt unit = 0; unit < rIAttr.GetTCoordChannelQuantity(); unit++)
+	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
 	{
-		channels = rIAttr.GetTCoordChannels(unit);
+		channels = rAttributes.GetTCoordChannels(unit);
 		if (channels > 0)
 		{
 			element.Offset = static_cast<WORD>(mVertexSize);
@@ -88,34 +109,13 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	HRESULT hr;
 	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
-
-	// Create the vertex buffer.
-	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
-	const DWORD usage = PdrRendererData::USAGES[pVertexBuffer->GetUsage()];
-	const D3DPOOL pool = PdrRendererData::POOLS[pVertexBuffer->GetUsage()];
-	hr = rDevice->CreateVertexBuffer(vbSize, usage, 0, pool, &mpBuffer, NULL);
-	WIRE_ASSERT(SUCCEEDED(hr));
-
-	// Copy the vertex buffer data from system memory to video memory.
-	Update(pVertexBuffer);
-}
-
-//----------------------------------------------------------------------------
-PdrVertexBuffer::~PdrVertexBuffer()
-{
-	mpBuffer->Release();
-	mpDeclaration->Release();
 }
 
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-	HRESULT hr;
-	hr = rDevice->SetStreamSource(0, mpBuffer, 0, mVertexSize);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetVertexDeclaration(mpDeclaration);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	SetBuffer(pRenderer);
+	SetDeclaration(pRenderer);
 }
 
 //----------------------------------------------------------------------------
@@ -130,20 +130,12 @@ void PdrVertexBuffer::Disable(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void* PdrVertexBuffer::Lock(Buffer::LockingMode mode)
 {
-	void* pVideoMemory = 0;
+	void* pBuffer = 0;
 	HRESULT hr;
-	hr = mpBuffer->Lock(0, 0, &pVideoMemory,
+	hr = mpBuffer->Lock(0, 0, &pBuffer,
 		PdrRendererData::BUFFER_LOCKING[mode]);
 	WIRE_ASSERT(SUCCEEDED(hr));
-	return pVideoMemory;
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::Unlock()
-{
-	HRESULT hr;
-	hr = mpBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(hr));
+	return pBuffer;
 }
 
 //----------------------------------------------------------------------------

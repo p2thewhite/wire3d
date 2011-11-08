@@ -155,6 +155,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
+    <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />

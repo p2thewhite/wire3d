@@ -16,6 +16,8 @@
 namespace Wire
 {
 
+class Renderer;
+
 class PdrRendererData
 {
 public:

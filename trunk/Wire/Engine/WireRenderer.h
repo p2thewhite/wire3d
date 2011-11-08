@@ -152,8 +152,7 @@ public:
 	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
 
-	// Release all the smart pointers that the Renderer caches between PreDraw()
-	// and PostDraw() calls.
+	// Disable all the active resources and release their references.
 	void ReleaseResources();
 
 	// Apply camera changes to platform specific renderer.
