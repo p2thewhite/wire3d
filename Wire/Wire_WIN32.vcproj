@@ -282,6 +282,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Foundation\WireApplication.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireBox3.inl"
 					>
 				</File>
@@ -912,6 +916,14 @@
 					</File>
 					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Inline Files"
+					>
+					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.inl"
 						>
 					</File>
 				</Filter>

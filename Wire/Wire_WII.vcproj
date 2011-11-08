@@ -195,6 +195,10 @@
 				Name="Inline Files"
 				>
 				<File
+					RelativePath=".\Foundation\WireApplication.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireBox3.inl"
 					>
 				</File>

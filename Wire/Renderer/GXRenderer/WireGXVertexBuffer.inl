@@ -7,8 +7,47 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline const TArray<PdrVertexBuffer::VertexElement>&
-PdrVertexBuffer::GetVertexElements() const
+inline void* PdrVertexBuffer::Lock(Buffer::LockingMode)
 {
-	return mElements;
+	return mpData;
+}
+
+//----------------------------------------------------------------------------
+inline void PdrVertexBuffer::Unlock()
+{
+	DCStoreRange(mpData, mDataSize);
+	GXInvalidateVtxCache();
+}
+
+//----------------------------------------------------------------------------
+inline void PdrVertexBuffer::SetBuffer(Renderer*)
+{
+	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
+	{
+		void* pArray = reinterpret_cast<void*>((mDeclaration[i].Offset +
+			reinterpret_cast<UInt>(mpData)));
+		GXSetArray(mDeclaration[i].Attr, pArray, mVertexSize);
+	}
+}
+
+//----------------------------------------------------------------------------
+inline void PdrVertexBuffer::SetDeclaration(Renderer*)
+{
+	// setup the vertex descriptor
+	// tells the flipper to expect direct data
+	GXClearVtxDesc();
+
+	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
+	{
+		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
+		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
+			CompCnt, mDeclaration[i].CompType, 0);
+	}
+}
+
+//----------------------------------------------------------------------------
+inline const TArray<PdrVertexBuffer::VertexElement>&
+PdrVertexBuffer::GetDeclaration() const
+{
+	return mDeclaration;
 }

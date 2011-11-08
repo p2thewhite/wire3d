@@ -180,6 +180,7 @@
     <None Include="Engine\WireNodeDLod.inl" />
     <None Include="Engine\WireNodeLight.inl" />
     <None Include="Engine\WireNodeSwitch.inl" />
+    <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />
@@ -228,6 +229,7 @@
     <None Include="Engine\WireVertexBuffer.inl" />
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
+    <None Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.inl" />
     <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
     <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl" />
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />

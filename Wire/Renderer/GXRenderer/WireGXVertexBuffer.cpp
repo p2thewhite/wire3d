@@ -21,70 +21,11 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
-	:
-	mVertexSize(0)
 {
-	VertexElement element;
+	CreateDeclaration(NULL, pVertexBuffer->GetAttributes());
 
-	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
-	UInt channels = rIAttr.GetPositionChannels();
-	if (channels > 0)
-	{
-		element.Data = reinterpret_cast<void*>(mVertexSize);
-		mVertexSize += channels * sizeof(Float);
-		element.Attr = GX_VA_POS;
-		element.CompCnt = GX_POS_XYZ;
-		element.CompType = GX_F32;
-		mElements.Append(element);
-	}
-
-	channels = rIAttr.GetNormalChannels();
-	if (channels > 0)
-	{
-		element.Data = reinterpret_cast<void*>(mVertexSize);
-		mVertexSize += channels * sizeof(Float);
-		element.Attr = GX_VA_NRM;
-		element.CompCnt = GX_NRM_XYZ;
-		element.CompType = GX_F32;
-		mElements.Append(element);
-	}
-
-	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
-	{
-		if (rIAttr.GetColorChannels(unit) > 0)
-		{
-			element.Data = reinterpret_cast<void*>(mVertexSize);
-			mVertexSize += sizeof(UInt);
-			element.Attr = GX_VA_CLR0 + unit;
-			element.CompCnt = GX_CLR_RGBA;
-			element.CompType = GX_RGBA8;
-			mElements.Append(element);
-		}
-	}
-
-	for (UInt unit = 0; unit < rIAttr.GetTCoordChannelQuantity(); unit++)
-	{
-		channels = rIAttr.GetTCoordChannels(unit);
-		if (channels > 0)
-		{
-			element.Data = reinterpret_cast<void*>(mVertexSize);
-			mVertexSize += channels * sizeof(Float);
-			element.Attr = GX_VA_TEX0 + unit;
-			element.CompCnt = GX_TEX_ST;
-			element.CompType = GX_F32;
-			mElements.Append(element);
-		}
-	}
-
-	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
-	mpData = memalign(32, vbSize);
-
-	for (UInt i = 0; i < mElements.GetQuantity(); i++)
-	{
-		UInt offset = reinterpret_cast<UInt>(mElements[i].Data);
-		offset += reinterpret_cast<UInt>(mpData);
-		mElements[i].Data = reinterpret_cast<void*>(offset);
-	}
+	mDataSize = mVertexSize * pVertexBuffer->GetQuantity();
+	mpData = memalign(32, mDataSize);
 
 	Update(pVertexBuffer);
 }
@@ -96,19 +37,67 @@ PdrVertexBuffer::~PdrVertexBuffer()
 }
 
 //----------------------------------------------------------------------------
+void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
+	rAttributes)
+{
+	VertexElement element;
+	mVertexSize = 0;
+
+	UInt channels = rAttributes.GetPositionChannels();
+	if (channels > 0)
+	{
+		element.Offset = mVertexSize;
+		mVertexSize += channels * sizeof(Float);
+		element.Attr = GX_VA_POS;
+		element.CompCnt = GX_POS_XYZ;
+		element.CompType = GX_F32;
+		mDeclaration.Append(element);
+	}
+
+	channels = rAttributes.GetNormalChannels();
+	if (channels > 0)
+	{
+		element.Offset = mVertexSize;
+		mVertexSize += channels * sizeof(Float);
+		element.Attr = GX_VA_NRM;
+		element.CompCnt = GX_NRM_XYZ;
+		element.CompType = GX_F32;
+		mDeclaration.Append(element);
+	}
+
+	for (UInt unit = 0; unit < rAttributes.GetColorChannelQuantity(); unit++)
+	{
+		if (rAttributes.GetColorChannels(unit) > 0)
+		{
+			element.Offset = mVertexSize;
+			mVertexSize += sizeof(UInt);
+			element.Attr = GX_VA_CLR0 + unit;
+			element.CompCnt = GX_CLR_RGBA;
+			element.CompType = GX_RGBA8;
+			mDeclaration.Append(element);
+		}
+	}
+
+	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
+	{
+		channels = rAttributes.GetTCoordChannels(unit);
+		if (channels > 0)
+		{
+			element.Offset = mVertexSize;
+			mVertexSize += channels * sizeof(Float);
+			element.Attr = GX_VA_TEX0 + unit;
+			element.CompCnt = GX_TEX_ST;
+			element.CompType = GX_F32;
+			mDeclaration.Append(element);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-
-	for (UInt i = 0; i < mElements.GetQuantity(); i++)
-	{
-		GXSetVtxDesc(mElements[i].Attr, GX_INDEX16);
-		GXSetVtxAttrFmt(GX_VTXFMT0, mElements[i].Attr, mElements[i].CompCnt,
-			mElements[i].CompType, 0);
-		GXSetArray(mElements[i].Attr, mElements[i].Data, mVertexSize);
-	}
+	SetDeclaration(pRenderer);
+	SetBuffer(pRenderer);
 
 	pRenderer->GetRendererData()->PdrVBuffer = this;
 }
@@ -122,13 +111,13 @@ void PdrVertexBuffer::Disable(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
-	Float* pVBData = static_cast<Float*>(mpData);
+	Float* pVBData = static_cast<Float*>(Lock(Buffer::LM_WRITE_ONLY));
 
-	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
+	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
 	Bool hasVertexColors = false;
-	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
+	for (UInt unit = 0; unit < rAttr.GetColorChannelQuantity(); unit++)
 	{
-		if (rIAttr.GetColorChannels(unit) > 0)
+		if (rAttr.GetColorChannels(unit) > 0)
 		{
 			hasVertexColors = true;
 		}
@@ -140,13 +129,13 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 	}
 	else
 	{
-		UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
-		WIRE_ASSERT(mVertexSize == rIAttr.GetChannelQuantity()*sizeof(Float));
-		System::Memcpy(pVBData, size, pVertexBuffer->GetData(), size);
+		WIRE_ASSERT(mDataSize == mVertexSize * pVertexBuffer->GetQuantity());
+		WIRE_ASSERT(mVertexSize == rAttr.GetChannelQuantity()*sizeof(Float));
+		System::Memcpy(pVBData, mDataSize, pVertexBuffer->GetData(),
+			mDataSize);
 	}
 
-	DCStoreRange(mpData, mVertexSize * pVertexBuffer->GetQuantity());
-	GXInvalidateVtxCache();
+	Unlock();
 }
 
 //----------------------------------------------------------------------------

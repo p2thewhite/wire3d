@@ -256,7 +256,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
-		mpData->DrawWireframe(pPdrVBuffer->GetVertexElements(), rIBuffer,
+		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), rIBuffer,
 			activeIndexCount, indexOffset);
 	}
 	else
@@ -276,7 +276,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		else if ((rIBuffer.GetUsage() == Buffer::UT_STATIC) && isStatic)
 		{
 			pDisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
-				pPdrVBuffer->GetVertexElements());
+				pPdrVBuffer->GetDeclaration());
 			pPdrIBuffer->GetDisplayLists().Insert(key, pDisplayList);
 		}
 
@@ -286,7 +286,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		}
 		else
 		{
-			mpData->Draw(pPdrVBuffer->GetVertexElements(), rIBuffer,
+			mpData->Draw(pPdrVBuffer->GetDeclaration(), rIBuffer,
 				activeIndexCount, indexOffset);
 		}
 	}

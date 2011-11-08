@@ -84,7 +84,6 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 
 	const UInt visibleQuantity = pSource->GetQuantity();
 	VisibleObject* const pVisible = pSource->GetVisible();
-	VisibleObject* const pVisibleDst = pDestination->GetVisible();
 
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{

@@ -78,6 +78,9 @@
     <Filter Include="Renderer\GXRenderer\Inline Files">
       <UniqueIdentifier>{bd39d828-f729-4633-b4f5-8c95223fdaf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\Dx9Renderer\Inline Files">
+      <UniqueIdentifier>{50bc12a8-c208-4d2c-8a2f-a6fb3b60ee60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\WireFoundation.h">
@@ -510,6 +513,12 @@
     </None>
     <None Include="Engine\WireMesh.inl">
       <Filter>Engine\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.inl">
+      <Filter>Renderer\Dx9Renderer\Inline Files</Filter>
+    </None>
+    <None Include="Foundation\WireApplication.inl">
+      <Filter>Foundation\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

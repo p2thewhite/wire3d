@@ -44,7 +44,7 @@ public:
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 
 
-	inline Renderer* GetRenderer() const { return mpRenderer; }
+	inline Renderer* GetRenderer() const;
 
 	// Key identifiers. These are platform-specific, so classes that
 	// implement the Application interface must define these variables.
@@ -71,6 +71,8 @@ protected:
 	Bool mIsFullscreen;
 	Bool mUseVSync;
 };
+
+#include "WireApplication.inl"
 
 }
 
