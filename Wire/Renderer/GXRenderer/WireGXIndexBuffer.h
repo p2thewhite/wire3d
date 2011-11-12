@@ -29,10 +29,15 @@ public:
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
+	inline UInt* GetData();
+	inline const UInt* GetData() const;
+
 	inline TMap<UInt, PdrDisplayList*>& GetDisplayLists();
 
 private:
 	TMap<UInt, PdrDisplayList*> mDisplayLists;
+
+	UInt* mpIndices;
 };
 
 #include "WireGXIndexBuffer.inl"

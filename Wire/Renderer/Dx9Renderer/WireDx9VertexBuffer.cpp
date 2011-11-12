@@ -19,25 +19,63 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	mVertexSize(0)
 {
 	CreateDeclaration(pRenderer, pVertexBuffer->GetAttributes());
-
-	// Create the vertex buffer.
-	UInt vbSize = mVertexSize * pVertexBuffer->GetQuantity();
-	const DWORD usage = PdrRendererData::USAGES[pVertexBuffer->GetUsage()];
-	const D3DPOOL pool = PdrRendererData::POOLS[pVertexBuffer->GetUsage()];
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-	HRESULT hr;
-	hr = rDevice->CreateVertexBuffer(vbSize, usage, 0, pool, &mpBuffer, NULL);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	CreateBuffer(pRenderer, mVertexSize * pVertexBuffer->GetQuantity(),
+		pVertexBuffer->GetUsage());
 
 	// Copy the vertex buffer data from system memory to video memory.
 	Update(pVertexBuffer);
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->VBOCount++;
+	pStatistics->VBOTotalSize += mVBOSize;
+}
+
+//----------------------------------------------------------------------------
+PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
+	Buffer::UsageType usage)
+	:
+	mpDeclaration(NULL),
+	mVertexSize(0)
+{
+	CreateBuffer(pRenderer, size, usage);
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->VBOCount++;
+	pStatistics->VBOTotalSize += mVBOSize;	
 }
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::~PdrVertexBuffer()
 {
 	mpBuffer->Release();
-	mpDeclaration->Release();
+	if (mpDeclaration)
+	{
+		mpDeclaration->Release();
+	}
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->VBOCount--;
+	pStatistics->VBOTotalSize -= mVBOSize;
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
+	Buffer::UsageType usage)
+{
+	mVBOSize = size;
+	const DWORD d3dUsage = PdrRendererData::USAGES[usage];
+	const D3DPOOL pool = PdrRendererData::POOLS[usage];
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	HRESULT hr;
+	hr = rDevice->CreateVertexBuffer(mVBOSize, d3dUsage, 0, pool, &mpBuffer,
+		NULL);
+	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------

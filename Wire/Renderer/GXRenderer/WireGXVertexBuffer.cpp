@@ -24,16 +24,28 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 {
 	CreateDeclaration(NULL, pVertexBuffer->GetAttributes());
 
-	mDataSize = mVertexSize * pVertexBuffer->GetQuantity();
-	mpData = memalign(32, mDataSize);
+	mVBOSize = mVertexSize * pVertexBuffer->GetQuantity();
+	mpData = memalign(32, mVBOSize);
 
 	Update(pVertexBuffer);
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->VBOCount++;
+	pStatistics->VBOTotalSize += mVBOSize;
 }
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::~PdrVertexBuffer()
 {
 	free(mpData);	// allocated using memalign, not using new
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->VBOCount--;
+	pStatistics->VBOTotalSize -= mVBOSize;
 }
 
 //----------------------------------------------------------------------------
@@ -129,10 +141,10 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 	}
 	else
 	{
-		WIRE_ASSERT(mDataSize == mVertexSize * pVertexBuffer->GetQuantity());
+		WIRE_ASSERT(mVBOSize == mVertexSize * pVertexBuffer->GetQuantity());
 		WIRE_ASSERT(mVertexSize == rAttr.GetChannelQuantity()*sizeof(Float));
-		System::Memcpy(pVBData, mDataSize, pVertexBuffer->GetData(),
-			mDataSize);
+		System::Memcpy(pVBData, mVBOSize, pVertexBuffer->GetData(),
+			mVBOSize);
 	}
 
 	Unlock();

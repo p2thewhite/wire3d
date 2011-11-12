@@ -20,7 +20,12 @@ using namespace Wire;
 PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	pIndexBuffer)
 {
-	// Nothing to do.
+	mpIndices = const_cast<UInt*>(pIndexBuffer->GetData());
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->IBOCount++;
 }
 
 //----------------------------------------------------------------------------
@@ -33,6 +38,11 @@ PdrIndexBuffer::~PdrIndexBuffer()
 	{
 		WIRE_DELETE (*pArray)[i].Value;
 	}
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->IBOCount--;
 }
 
 //----------------------------------------------------------------------------

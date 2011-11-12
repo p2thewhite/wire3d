@@ -40,7 +40,15 @@ void Renderer::Initialize(UInt width, UInt height)
 	mWidth = width;
 	mHeight = height;
 	mMaxAnisotropy = 1.0F;
+
 	ResetStatistics();
+	mStatistics.VBOCount = 0;
+	mStatistics.VBOTotalSize = 0;
+	mStatistics.IBOCount = 0;
+	mStatistics.IBOTotalSize = 0;
+	mStatistics.TextureCount = 0;
+	mStatistics.TextureTotalSize = 0;
+
 	s_pRenderer = this;
 }
 

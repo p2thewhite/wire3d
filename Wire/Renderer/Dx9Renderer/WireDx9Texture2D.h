@@ -34,6 +34,7 @@ public:
 
 private:
 	IDirect3DTexture9* mpTexture;
+	UInt mTextureSize;
 };
 
 }

@@ -199,9 +199,15 @@ public:
 	{
 		UInt DrawCalls;
 		UInt Triangles;
+		UInt VBOCount;
+		UInt VBOTotalSize;
+		UInt IBOCount;
+		UInt IBOTotalSize;
+		UInt TextureCount;
+		UInt TextureTotalSize;
 	};
 
-	inline const Statistics& GetStatistics() const;
+	inline static const Statistics* GetStatistics();
 	void ResetStatistics();
 
 	inline PdrRendererData* GetRendererData() const;

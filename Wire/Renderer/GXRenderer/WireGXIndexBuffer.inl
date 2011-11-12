@@ -7,6 +7,18 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline UInt* PdrIndexBuffer::GetData()
+{
+	return mpIndices;
+}
+
+//----------------------------------------------------------------------------
+inline const UInt* PdrIndexBuffer::GetData() const
+{
+	return mpIndices;
+}
+
+//----------------------------------------------------------------------------
 inline TMap<UInt, PdrDisplayList*>& PdrIndexBuffer::GetDisplayLists()
 {
 	return mDisplayLists;

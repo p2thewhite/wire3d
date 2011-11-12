@@ -25,15 +25,25 @@ class PdrIndexBuffer
 {
 public:
 	PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
+	PdrIndexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
+
 	~PdrIndexBuffer();
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
+
 	void* Lock(Buffer::LockingMode mode);
 	void Unlock();
 
+	void Update(const IndexBuffer* pIndexBuffer);
+
 private:
+	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
+		usage);
+
 	IDirect3DIndexBuffer9* mpBuffer;
+	UInt mIndexSize;
+	UInt mIBOSize;
 };
 
 }

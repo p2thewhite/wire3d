@@ -15,7 +15,7 @@ inline void* PdrVertexBuffer::Lock(Buffer::LockingMode)
 //----------------------------------------------------------------------------
 inline void PdrVertexBuffer::Unlock()
 {
-	DCStoreRange(mpData, mDataSize);
+	DCStoreRange(mpData, mVBOSize);
 	GXInvalidateVtxCache();
 }
 
