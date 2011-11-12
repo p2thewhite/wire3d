@@ -31,6 +31,7 @@ public:
 private:
 	void* mpImage;
 	GXTexObj mTexObj;
+	UInt mTextureSize;
 };
 
 }

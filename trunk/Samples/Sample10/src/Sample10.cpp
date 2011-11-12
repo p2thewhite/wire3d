@@ -289,15 +289,19 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	Renderer::Statistics statistics = GetRenderer()->GetStatistics();
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
 
 	UInt fps = static_cast<UInt>(1/elapsed);
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
-	String msg1 = "\2\nDraw Calls: %d, Triangles: %d\nFPS: %d";
+	String msg1 = "\2\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
+		"VBOSize: %d\nIBOs: %d, IBOSize: %d\nTextures: %d, TextureSize: "
+		"%5.2fMB";
 
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1),
-		statistics.DrawCalls, statistics.Triangles, fps);
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
+		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
+		VBOTotalSize, pStats->IBOCount, pStats->IBOTotalSize, pStats->
+		TextureCount, pStats->TextureTotalSize/(1024.0f*1024.0f));
 
 	String msg0 = "\n\n\n\n\n\nSorting: ";
 	String str;

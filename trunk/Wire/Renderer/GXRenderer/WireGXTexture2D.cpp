@@ -49,9 +49,9 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 
 	UInt bpp = pImage->GetBytesPerPixel();
 	bpp = (bpp == 3) ? 4 : bpp;
-	UInt totalMemory = PdrRendererData::GetTotalImageMemory(pImage, bpp);
+	mTextureSize = PdrRendererData::GetTotalImageMemory(pImage, bpp);
 
-	mpImage = memalign(32, totalMemory);
+	mpImage = memalign(32, mTextureSize);
 	UChar* pDst = static_cast<UChar*>(mpImage);
 	WIRE_ASSERT(pDst);
 	Image2D::FormatMode format = pImage->GetFormat();
@@ -95,7 +95,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		pDst += (offset < 32) ? 32 : offset;
 	}
 
-	DCStoreRange(mpImage, totalMemory);
+	DCStoreRange(mpImage, mTextureSize);
 	GXInvalidateTexAll();
 
 	UShort width = pImage->GetBound(0);
@@ -106,12 +106,24 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)],
 		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)],
 		usesMipmaps);
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->TextureCount++;
+	pStatistics->TextureTotalSize += mTextureSize;
 }
 
 //----------------------------------------------------------------------------
 PdrTexture2D::~PdrTexture2D()
 {
 	free(mpImage);	// allocated using memalign, not using new
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->TextureCount--;
+	pStatistics->TextureTotalSize -= mTextureSize;
 }
 
 //----------------------------------------------------------------------------

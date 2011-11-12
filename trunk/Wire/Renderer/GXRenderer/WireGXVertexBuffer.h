@@ -55,7 +55,7 @@ private:
 
 	TArray<VertexElement> mDeclaration;
 	void* mpData;
-	UInt mDataSize;
+	UInt mVBOSize;
 	UChar mVertexSize;
 };
 

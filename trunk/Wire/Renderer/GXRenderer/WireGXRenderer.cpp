@@ -256,8 +256,8 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
-		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), rIBuffer,
-			activeIndexCount, indexOffset);
+		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
+			GetData(), activeIndexCount, indexOffset);
 	}
 	else
 	{
@@ -286,8 +286,8 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		}
 		else
 		{
-			mpData->Draw(pPdrVBuffer->GetDeclaration(), rIBuffer,
-				activeIndexCount, indexOffset);
+			mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
+				GetData(), activeIndexCount, indexOffset);
 		}
 	}
 }
@@ -581,13 +581,13 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 
 //----------------------------------------------------------------------------
 void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
-	rElements, const IndexBuffer& rIBuffer, UInt activeIndexCount,
+	rElements, const UInt* const pIndices, UInt activeIndexCount,
 	UInt indexOffset)
 {
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, activeIndexCount);
 	for (UInt i = indexOffset; i < (indexOffset+activeIndexCount); i++)
 	{
-		UShort index = static_cast<UShort>(rIBuffer[i]);
+		UShort index = static_cast<UShort>(pIndices[i]);
 
 		for (UInt j = 0; j < rElements.GetQuantity(); j++)
 		{
@@ -628,7 +628,7 @@ void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 
 //----------------------------------------------------------------------------
 void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
-	VertexElement>& rElements, const IndexBuffer& rIBuffer,
+	VertexElement>& rElements, const UInt* const pIBuffer,
 	UInt activeIndexCount, UInt indexOffset)
 {
 	UInt indexCount = (activeIndexCount / 3) * 3;
@@ -643,7 +643,7 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
 	{
 		for (UInt k = 0; k < 3; k++)
 		{
-			UShort index = rIBuffer[i + k];
+			UShort index = pIBuffer[i + k];
 			for (UInt j = 0; j < rElements.GetQuantity(); j++)
 			{
 				switch (rElements[j].Attr)
@@ -678,7 +678,7 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
 
 			for (UInt j = 0; j < rElements.GetQuantity(); j++)
 			{
-				index = rIBuffer[i + ((k+1) > 2 ? 0 : k+1)];
+				index = pIBuffer[i + ((k+1) > 2 ? 0 : k+1)];
 				switch (rElements[j].Attr)
 				{
 				case GX_VA_POS:

@@ -151,6 +151,8 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		&mpTexture, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
+	mTextureSize = 0;
+
 	if (pDst)
 	{
 		Buffer::LockingMode lockingMode = pTexture->GetUsage() ==
@@ -165,6 +167,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 				GetBytesPerPixel();
 			System::Memcpy(pData, size, pDst + offset * bpp, size);
 			Unlock(level);
+			mTextureSize += size;
 		}
 	}
 
@@ -172,6 +175,12 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	{
 		WIRE_DELETE[] pDst;
 	}
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->TextureCount++;
+	pStatistics->TextureTotalSize += mTextureSize;
 }
 
 //----------------------------------------------------------------------------
@@ -180,6 +189,12 @@ PdrTexture2D::~PdrTexture2D()
 	HRESULT hr;
 	hr = mpTexture->Release();
 	WIRE_ASSERT(SUCCEEDED(hr));
+
+	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
+		Renderer::GetStatistics());
+	WIRE_ASSERT(pStatistics);
+	pStatistics->TextureCount--;
+	pStatistics->TextureTotalSize -= mTextureSize;
 }
 
 //----------------------------------------------------------------------------

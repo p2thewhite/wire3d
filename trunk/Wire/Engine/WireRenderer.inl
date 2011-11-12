@@ -79,9 +79,9 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 }
 
 //----------------------------------------------------------------------------
-inline const Renderer::Statistics& Renderer::GetStatistics() const
+inline const Renderer::Statistics* Renderer::GetStatistics()
 {
-	return mStatistics;
+	return s_pRenderer ? &s_pRenderer->mStatistics : NULL;
 }
 
 //----------------------------------------------------------------------------

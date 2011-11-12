@@ -24,6 +24,7 @@ class PdrVertexBuffer
 {
 public:
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
+	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
 
 	void Enable(Renderer* pRenderer);
@@ -38,6 +39,8 @@ public:
 	inline void SetDeclaration(Renderer* pRenderer);
 
 private:
+	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
+		usage);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
@@ -45,6 +48,7 @@ private:
 	IDirect3DVertexBuffer9* mpBuffer;
 	IDirect3DVertexDeclaration9* mpDeclaration;
 	UInt mVertexSize;
+	UInt mVBOSize;
 };
 
 #include "WireDx9VertexBuffer.inl"
