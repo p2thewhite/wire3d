@@ -24,12 +24,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 
 	// Copy the vertex buffer data from system memory to video memory.
 	Update(pVertexBuffer);
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->VBOCount++;
-	pStatistics->VBOTotalSize += mVBOSize;
 }
 
 //----------------------------------------------------------------------------
@@ -40,12 +34,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
 	mVertexSize(0)
 {
 	CreateBuffer(pRenderer, size, usage);
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->VBOCount++;
-	pStatistics->VBOTotalSize += mVBOSize;	
 }
 
 //----------------------------------------------------------------------------
@@ -56,25 +44,19 @@ PdrVertexBuffer::~PdrVertexBuffer()
 	{
 		mpDeclaration->Release();
 	}
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->VBOCount--;
-	pStatistics->VBOTotalSize -= mVBOSize;
 }
 
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 	Buffer::UsageType usage)
 {
-	mVBOSize = size;
+	mBufferSize = size;
 	const DWORD d3dUsage = PdrRendererData::USAGES[usage];
 	const D3DPOOL pool = PdrRendererData::POOLS[usage];
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->CreateVertexBuffer(mVBOSize, d3dUsage, 0, pool, &mpBuffer,
-		NULL);
+	hr = rDevice->CreateVertexBuffer(mBufferSize, d3dUsage, 0, pool,
+		&mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -152,7 +134,7 @@ void PdrVertexBuffer::CreateDeclaration(Renderer* pRenderer, const
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
-	SetBuffer(pRenderer);
+	SetBuffer(pRenderer, mVertexSize);
 	SetDeclaration(pRenderer);
 }
 
@@ -179,6 +161,9 @@ void* PdrVertexBuffer::Lock(Buffer::LockingMode mode)
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
+	WIRE_ASSERT(mVertexSize > 0);
+	WIRE_ASSERT((mBufferSize/mVertexSize) == pVertexBuffer->GetQuantity());
+
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY; 
 	Float* pVBData = reinterpret_cast<Float*>(Lock(lockingMode));

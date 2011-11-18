@@ -923,6 +923,10 @@
 					Name="Inline Files"
 					>
 					<File
+						RelativePath=".\Renderer\Dx9Renderer\WireDx9IndexBuffer.inl"
+						>
+					</File>
+					<File
 						RelativePath=".\Renderer\Dx9Renderer\WireDx9VertexBuffer.inl"
 						>
 					</File>

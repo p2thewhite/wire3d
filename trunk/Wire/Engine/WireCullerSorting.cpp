@@ -250,16 +250,16 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	Geometry* pGeometry = StaticCast<Geometry>(pSpatial);
 	UInt key = 0;
 
-	// number of bits we use for the sorting key
+	// number of bits we use for the sorting key (MSB to LSB)
 	enum
 	{
-		MATERIAL = 10,
 		STATESET = 10,
+		MATERIAL = 10,
 		DEPTH = 12
 	};
 	
 	 // The sum of the ranges must fit in the key
-	WIRE_ASSERT((MATERIAL + STATESET + DEPTH) <= sizeof(key) * 8);
+	WIRE_ASSERT((STATESET + MATERIAL + DEPTH) <= sizeof(key) * 8);
 
 	Float z = GetCamera()->GetLocation().Z() - pGeometry->WorldBound->
 		GetCenter().Z();

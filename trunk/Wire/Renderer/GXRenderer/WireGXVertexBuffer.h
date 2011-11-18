@@ -33,6 +33,7 @@ public:
 	};
 
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
+	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
 
 	void Enable(Renderer* pRenderer);
@@ -43,19 +44,23 @@ public:
 
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	inline void SetBuffer(Renderer* pRenderer);
+	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 	inline void SetDeclaration(Renderer* pRenderer);
+
+	inline UInt GetBufferSize() const;
 
 	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
+	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
+		usage);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 	void Convert(const VertexBuffer* pSrc, Float* pDst);
 
 	TArray<VertexElement> mDeclaration;
-	void* mpData;
-	UInt mVBOSize;
+	void* mpBuffer;
+	UInt mBufferSize;
 	UChar mVertexSize;
 };
 

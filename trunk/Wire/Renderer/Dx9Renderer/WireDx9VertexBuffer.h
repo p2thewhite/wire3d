@@ -35,8 +35,10 @@ public:
 
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	inline void SetBuffer(Renderer* pRenderer);
+	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 	inline void SetDeclaration(Renderer* pRenderer);
+
+	inline UInt GetBufferSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
@@ -48,7 +50,7 @@ private:
 	IDirect3DVertexBuffer9* mpBuffer;
 	IDirect3DVertexDeclaration9* mpDeclaration;
 	UInt mVertexSize;
-	UInt mVBOSize;
+	UInt mBufferSize;
 };
 
 #include "WireDx9VertexBuffer.inl"

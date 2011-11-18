@@ -520,6 +520,9 @@
     <None Include="Foundation\WireApplication.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
+    <None Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.inl">
+      <Filter>Renderer\Dx9Renderer\Inline Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\WireApplication.cpp">

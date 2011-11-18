@@ -41,6 +41,8 @@ void Renderer::Initialize(UInt width, UInt height)
 	mHeight = height;
 	mMaxAnisotropy = 1.0F;
 
+	mDynamicBatchingThreshold = 0;
+
 	ResetStatistics();
 	mStatistics.VBOCount = 0;
 	mStatistics.VBOTotalSize = 0;
@@ -61,6 +63,8 @@ void Renderer::Terminate()
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
 	DestroyAll(mTexture2DMap);
+	DestroyBatchingBuffers();
+
 	s_pRenderer = NULL;
 }
 
@@ -191,6 +195,8 @@ PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
 		PdrIndexBuffer* pPdrIndexBuffer = WIRE_NEW PdrIndexBuffer(this,
 			pIndexBuffer);
 		mIndexBufferMap.Insert(pIndexBuffer, pPdrIndexBuffer);
+		mStatistics.IBOCount++;
+		mStatistics.IBOTotalSize += pPdrIndexBuffer->GetBufferSize();
 		return pPdrIndexBuffer;
 	}
 
@@ -204,6 +210,8 @@ void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
 
 	if (pValue)
 	{
+		mStatistics.IBOCount--;
+		mStatistics.IBOTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mIndexBufferMap.Remove(pIndexBuffer);
 	}
@@ -270,6 +278,20 @@ void Renderer::Set(const IndexBuffer* pIndexBuffer)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Update(const IndexBuffer* pIndexBuffer)
+{
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Update(pIndexBuffer);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Index buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
 PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 {
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
@@ -293,6 +315,8 @@ PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
 		PdrVertexBuffer* pPdrVertexBuffer = WIRE_NEW PdrVertexBuffer(this,
 			pVertexBuffer);
 		mVertexBufferMap.Insert(pVertexBuffer, pPdrVertexBuffer);
+		mStatistics.VBOCount++;
+		mStatistics.VBOTotalSize += pPdrVertexBuffer->GetBufferSize();
 		return pPdrVertexBuffer;
 	}
 
@@ -306,6 +330,8 @@ void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 
 	if (pValue)
 	{
+		mStatistics.VBOCount--;
+		mStatistics.VBOTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mVertexBufferMap.Remove(pVertexBuffer);
 	}
@@ -358,20 +384,6 @@ void Renderer::Disable(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Update(const VertexBuffer* pVertexBuffer)
-{
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-	if (pValue)
-	{
-		(*pValue)->Update(pVertexBuffer);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex buffer is not bound
-	}
-}
-
-//----------------------------------------------------------------------------
 void Renderer::Set(const VertexBuffer* pVertexBuffer)
 {
 	if (mspVertexBuffer != pVertexBuffer)
@@ -382,6 +394,20 @@ void Renderer::Set(const VertexBuffer* pVertexBuffer)
 		}
 
 		Enable(pVertexBuffer);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Update(const VertexBuffer* pVertexBuffer)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Update(pVertexBuffer);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Vertex buffer is not bound
 	}
 }
 
@@ -659,12 +685,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 		{
 			if (pVisible[i].GlobalEffect)
 			{
-				for (UInt j = indexStack[0][0]; j < indexStack[0][1]; j++)
-				{
-					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].Object));
-					Draw(StaticCast<Geometry>(pVisible[j].Object), false,
-						true);
-				}
+				Draw(pVisible, indexStack[0][0], indexStack[0][1]);
 
 				// Begin the scope of a global effect.
 				top++;
@@ -700,11 +721,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 		}
 	}
 
-	for (UInt j = indexStack[0][0]; j < indexStack[0][1]; j++)
-	{
-		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].Object));
-		Draw(StaticCast<Geometry>(pVisible[j].Object), false, true);
-	}
+	Draw(pVisible, indexStack[0][0], indexStack[0][1]);
 
 	ReleaseResources();
 }
@@ -715,6 +732,50 @@ void Renderer::DrawScene(TArray<VisibleSet*>& rVisibleSets)
 	for (UInt i = 0; i < rVisibleSets.GetQuantity(); i++)
 	{
 		DrawScene(rVisibleSets[i]);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Draw(VisibleObject* pVisible, UInt min, UInt max)
+{
+	if (min == max)
+	{
+		return;
+	}
+
+	if (mDynamicBatchingThreshold > 0)
+	{
+		UInt i = min;
+		for (; i < max; i++)
+		{
+			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+			Geometry* pA = StaticCast<Geometry>(pVisible[i].Object);
+			Material* pMA = pA->GetMaterial();
+			UInt mA = pMA ? pMA->ID : 0;
+			UInt vA = pA->GetMesh()->GetVertexBuffer()->GetAttributes().
+				GetKey();
+
+			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i+1].Object));
+			Geometry* pB = StaticCast<Geometry>(pVisible[i+1].Object);
+			Material* pMB = pB->GetMaterial();
+			UInt mB = pMB ? pMB->ID : 0;
+			UInt vB = pB->GetMesh()->GetVertexBuffer()->GetAttributes().
+				GetKey();
+
+			if ((mA == mB) && (vA == vB) &&
+				(pA->StateSetID == pB->StateSetID))
+			{
+
+			}
+		}		
+	}
+	else
+	{
+		for (UInt i = min; i < max; i++)
+		{
+			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+			Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
+		}
 	}
 }
 
@@ -932,4 +993,55 @@ void Renderer::ResetStatistics()
 {
 	mStatistics.DrawCalls = 0;
 	mStatistics.Triangles = 0;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::CreateBatchingBuffers(UInt size, UInt count)
+{
+	DestroyBatchingBuffers();
+
+	if ((size == 0) || (count == 0))
+	{
+		return;
+	}
+
+	mBatchedIndexBuffers.SetQuantity(count);
+	for (UInt i = 0; i < count; i++)
+	{
+		mBatchedIndexBuffers[i] = WIRE_NEW PdrIndexBuffer(this, size,
+			Buffer::UT_DYNAMIC_WRITE_ONLY);
+		mStatistics.IBOCount++;
+		mStatistics.IBOTotalSize += mBatchedIndexBuffers[i]->GetBufferSize();
+	}
+
+	mBatchedVertexBuffers.SetQuantity(count);
+	for (UInt i = 0; i < count; i++)
+	{
+		mBatchedVertexBuffers[i] = WIRE_NEW PdrVertexBuffer(this, size,
+			Buffer::UT_DYNAMIC_WRITE_ONLY);
+		mStatistics.VBOCount++;
+		mStatistics.VBOTotalSize += mBatchedVertexBuffers[i]->GetBufferSize();
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DestroyBatchingBuffers()
+{
+	for (UInt i = 0; i < mBatchedIndexBuffers.GetQuantity(); i++)
+	{
+		mStatistics.IBOCount--;
+		mStatistics.IBOTotalSize -= mBatchedIndexBuffers[i]->GetBufferSize();
+		WIRE_DELETE mBatchedIndexBuffers[i];
+	}
+
+	mBatchedIndexBuffers.RemoveAll();
+
+	for (UInt i = 0; i < mBatchedVertexBuffers.GetQuantity(); i++)
+	{
+		mStatistics.VBOCount--;
+		mStatistics.VBOTotalSize += mBatchedVertexBuffers[i]->GetBufferSize();
+		WIRE_DELETE mBatchedVertexBuffers[i];
+	}
+
+	mBatchedVertexBuffers.RemoveAll();
 }

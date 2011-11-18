@@ -558,24 +558,36 @@ void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
 //----------------------------------------------------------------------------
 void PdrRendererData::ResetDevice()
 {
-	Renderer& renderer = *mpRenderer;
+	Renderer& rRenderer = *mpRenderer;
 	TArray<const IndexBuffer*> saveIndexBuffers;
 	TArray<const VertexBuffer*> saveVertexBuffers;
 	TArray<const Texture2D*> saveTexture2Ds;
-	DestroyNonManagedResources(renderer.mIndexBufferMap, saveIndexBuffers);
-	DestroyNonManagedResources(renderer.mVertexBufferMap, saveVertexBuffers);
-	DestroyNonManagedResources(renderer.mTexture2DMap, saveTexture2Ds);
+	DestroyNonManagedResources(rRenderer.mIndexBufferMap, saveIndexBuffers);
+	DestroyNonManagedResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
+	DestroyNonManagedResources(rRenderer.mTexture2DMap, saveTexture2Ds);
+	
+	UInt batchingCount = rRenderer.mBatchedIndexBuffers.GetQuantity();
+	UInt batchingSize = 0;
+	WIRE_ASSERT(batchingCount == rRenderer.mBatchedVertexBuffers.
+		GetQuantity());
+	if (batchingCount > 0)
+	{
+		batchingSize = rRenderer.mBatchedIndexBuffers[0]->GetBufferSize();
+		rRenderer.DestroyBatchingBuffers();
+	}
 
 	HRESULT hr;
 	hr = D3DDevice->Reset(&Present);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	IsDeviceLost = false;
 
-	RecreateResources(&renderer, saveIndexBuffers);
-	RecreateResources(&renderer, saveVertexBuffers);
-	RecreateResources(&renderer, saveTexture2Ds);
+	rRenderer.CreateBatchingBuffers(batchingSize, batchingCount);
 
-	renderer.OnViewportChange();
+	RecreateResources(&rRenderer, saveIndexBuffers);
+	RecreateResources(&rRenderer, saveVertexBuffers);
+	RecreateResources(&rRenderer, saveTexture2Ds);
+
+	rRenderer.OnViewportChange();
 
 	hr = D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -584,11 +596,11 @@ void PdrRendererData::ResetDevice()
 	WIRE_ASSERT(SUCCEEDED(hr));
 	UsesRenormalizeNormals = false;
 
-	for (UInt i = 0; i < renderer.mLights.GetQuantity(); i++)
+	for (UInt i = 0; i < rRenderer.mLights.GetQuantity(); i++)
 	{
 		hr = D3DDevice->LightEnable(i, FALSE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	renderer.Set(renderer.mspStates);
+	rRenderer.Set(rRenderer.mspStates);
 }

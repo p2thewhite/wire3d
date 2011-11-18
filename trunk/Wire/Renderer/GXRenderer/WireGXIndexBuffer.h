@@ -10,6 +10,7 @@
 #ifndef WIREGXINDEXBUFFER_H
 #define WIREGXINDEXBUFFER_H
 
+#include "WireBuffer.h"
 #include "WireTMap.h"
 #include "WireTypes.h"
 
@@ -24,20 +25,27 @@ class PdrIndexBuffer
 {
 public:
 	PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
+	PdrIndexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrIndexBuffer();
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
-	inline UInt* GetData();
-	inline const UInt* GetData() const;
+	void Update(const IndexBuffer* pIndexBuffer);
+
+	inline UInt GetBufferSize() const;
+
+	inline UInt* GetBuffer();
+	inline const UInt* GetBuffer() const;
 
 	inline TMap<UInt, PdrDisplayList*>& GetDisplayLists();
 
 private:
 	TMap<UInt, PdrDisplayList*> mDisplayLists;
 
-	UInt* mpIndices;
+	UInt* mpBuffer;
+	UInt mBufferSize;
+	Bool mHasOwnership;
 };
 
 #include "WireGXIndexBuffer.inl"

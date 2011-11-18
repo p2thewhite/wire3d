@@ -8,10 +8,7 @@
 
 #include "WireDx9IndexBuffer.h"
 
-#include "WireDx9RendererData.h"
-#include "WireRenderer.h"
 #include "WireIndexBuffer.h"
-#include <d3d9.h>
 
 using namespace Wire;
 
@@ -31,12 +28,6 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	CreateBuffer(pRenderer, size, pIndexBuffer->GetUsage());
 
 	Update(pIndexBuffer);
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->IBOCount++;
-	pStatistics->IBOTotalSize += mIBOSize;
 }
 
 //----------------------------------------------------------------------------
@@ -52,40 +43,12 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, UInt size,
 	}
 
 	CreateBuffer(pRenderer, size, usage);
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->IBOCount++;
-	pStatistics->IBOTotalSize += mIBOSize;
 }
 
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
 	mpBuffer->Release();
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->IBOCount--;
-	pStatistics->IBOTotalSize -= mIBOSize;
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Enable(Renderer* pRenderer)
-{
-	HRESULT hr;
-	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpBuffer);
-	WIRE_ASSERT(SUCCEEDED(hr));
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Disable(Renderer* pRenderer)
-{
-	HRESULT hr;
-	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(NULL);
-	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
@@ -110,6 +73,7 @@ void PdrIndexBuffer::Unlock()
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 {
+	WIRE_ASSERT((mBufferSize/mIndexSize) == pIndexBuffer->GetQuantity());
 	Buffer::LockingMode lockingMode = pIndexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
 	const UInt quantity = pIndexBuffer->GetQuantity();
@@ -120,7 +84,7 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 
 	if (mIndexSize == sizeof(UInt))
 	{
-		System::Memcpy(pBuffer, mIBOSize, pIndices, mIBOSize);
+		System::Memcpy(pBuffer, mBufferSize, pIndices, mBufferSize);
 	}
 	else
 	{
@@ -152,7 +116,7 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 void PdrIndexBuffer::CreateBuffer(Renderer* pRenderer, UInt size, 
 	Buffer::UsageType usage)
 {
-	mIBOSize = size;
+	mBufferSize = size;
 	D3DFORMAT format = (mIndexSize == sizeof(UShort)) ? D3DFMT_INDEX16 :
 		D3DFMT_INDEX32;
 
@@ -160,7 +124,7 @@ void PdrIndexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 	const D3DPOOL pool = PdrRendererData::POOLS[usage];
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->CreateIndexBuffer(mIBOSize, d3dUsage, format, pool,
+	hr = rDevice->CreateIndexBuffer(mBufferSize, d3dUsage, format, pool,
 		&mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
