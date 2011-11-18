@@ -9,24 +9,25 @@
 //----------------------------------------------------------------------------
 inline void* PdrVertexBuffer::Lock(Buffer::LockingMode)
 {
-	return mpData;
+	return mpBuffer;
 }
 
 //----------------------------------------------------------------------------
 inline void PdrVertexBuffer::Unlock()
 {
-	DCStoreRange(mpData, mVBOSize);
+	DCStoreRange(mpBuffer, mBufferSize);
 	GXInvalidateVtxCache();
 }
 
 //----------------------------------------------------------------------------
-inline void PdrVertexBuffer::SetBuffer(Renderer*)
+inline void PdrVertexBuffer::SetBuffer(Renderer*, UInt vertexSize)
 {
+	WIRE_ASSERT(vertexSize > 0);
 	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
 	{
 		void* pArray = reinterpret_cast<void*>((mDeclaration[i].Offset +
-			reinterpret_cast<UInt>(mpData)));
-		GXSetArray(mDeclaration[i].Attr, pArray, mVertexSize);
+			reinterpret_cast<UInt>(mpBuffer)));
+		GXSetArray(mDeclaration[i].Attr, pArray, vertexSize);
 	}
 }
 
@@ -50,4 +51,10 @@ inline const TArray<PdrVertexBuffer::VertexElement>&
 PdrVertexBuffer::GetDeclaration() const
 {
 	return mDeclaration;
+}
+
+//----------------------------------------------------------------------------
+inline UInt PdrVertexBuffer::GetBufferSize() const
+{
+	return mBufferSize;
 }

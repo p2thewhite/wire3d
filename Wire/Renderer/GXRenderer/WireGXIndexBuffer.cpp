@@ -19,13 +19,20 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	pIndexBuffer)
+	:
+	mBufferSize(0),
+	mHasOwnership(false)
 {
-	mpIndices = const_cast<UInt*>(pIndexBuffer->GetData());
+	mpBuffer = const_cast<UInt*>(pIndexBuffer->GetData());
+}
 
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->IBOCount++;
+//----------------------------------------------------------------------------
+PdrIndexBuffer::PdrIndexBuffer(Renderer*, UInt size, Buffer::UsageType usage)
+	:
+	mBufferSize(size),
+	mHasOwnership(true)
+{
+	mpBuffer = WIRE_NEW UInt[mBufferSize];
 }
 
 //----------------------------------------------------------------------------
@@ -39,10 +46,10 @@ PdrIndexBuffer::~PdrIndexBuffer()
 		WIRE_DELETE (*pArray)[i].Value;
 	}
 
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->IBOCount--;
+	if (mHasOwnership)
+	{
+		WIRE_DELETE[] mpBuffer;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -57,4 +64,16 @@ void PdrIndexBuffer::Disable(Renderer* pRenderer)
 {
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->PdrIBuffer = NULL;
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
+{
+	if (mHasOwnership)
+	{
+		WIRE_ASSERT((mBufferSize/sizeof(UInt)) == pIndexBuffer->GetQuantity());
+		const UInt* pIndices = pIndexBuffer->GetData();
+
+		System::Memcpy(mpBuffer, mBufferSize, pIndices, mBufferSize);
+	}
 }

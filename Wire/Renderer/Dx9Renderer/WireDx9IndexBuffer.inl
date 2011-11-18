@@ -7,25 +7,23 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+void PdrIndexBuffer::Enable(Renderer* pRenderer)
+{
+	HRESULT hr;
+	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(mpBuffer);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Disable(Renderer* pRenderer)
+{
+	HRESULT hr;
+	hr = pRenderer->GetRendererData()->D3DDevice->SetIndices(NULL);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
 inline UInt PdrIndexBuffer::GetBufferSize() const
 {
 	return mBufferSize;
-}
-
-//----------------------------------------------------------------------------
-inline UInt* PdrIndexBuffer::GetBuffer()
-{
-	return mpBuffer;
-}
-
-//----------------------------------------------------------------------------
-inline const UInt* PdrIndexBuffer::GetBuffer() const
-{
-	return mpBuffer;
-}
-
-//----------------------------------------------------------------------------
-inline TMap<UInt, PdrDisplayList*>& PdrIndexBuffer::GetDisplayLists()
-{
-	return mDisplayLists;
 }

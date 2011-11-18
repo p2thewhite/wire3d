@@ -15,12 +15,14 @@ inline void PdrVertexBuffer::Unlock()
 }
 
 //----------------------------------------------------------------------------
-inline void PdrVertexBuffer::SetBuffer(Renderer* pRenderer)
+inline void PdrVertexBuffer::SetBuffer(Renderer* pRenderer, UInt vertexSize)
 {
+	WIRE_ASSERT(vertexSize > 0);
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->SetStreamSource(0, mpBuffer, 0, mVertexSize);
+	hr = rDevice->SetStreamSource(0, mpBuffer, 0, vertexSize);
 	WIRE_ASSERT(SUCCEEDED(hr));
+
 }
 
 //----------------------------------------------------------------------------
@@ -30,4 +32,10 @@ inline void PdrVertexBuffer::SetDeclaration(Renderer* pRenderer)
 	HRESULT hr;
 	hr = rDevice->SetVertexDeclaration(mpDeclaration);
 	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+inline UInt PdrVertexBuffer::GetBufferSize() const
+{
+	return mBufferSize;
 }

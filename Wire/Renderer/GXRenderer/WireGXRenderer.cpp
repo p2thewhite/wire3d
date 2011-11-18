@@ -257,7 +257,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
 		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-			GetData(), activeIndexCount, indexOffset);
+			GetBuffer(), activeIndexCount, indexOffset);
 	}
 	else
 	{
@@ -287,7 +287,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		else
 		{
 			mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-				GetData(), activeIndexCount, indexOffset);
+				GetBuffer(), activeIndexCount, indexOffset);
 		}
 	}
 }

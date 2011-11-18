@@ -11,7 +11,9 @@
 #define WIREDX9INDEXBUFFER_H
 
 #include "WireBuffer.h"
+#include "WireDx9RendererData.h"
 #include "WireTypes.h"
+#include "WireRenderer.h"
 
 struct IDirect3DIndexBuffer9;
 
@@ -29,22 +31,26 @@ public:
 
 	~PdrIndexBuffer();
 
-	void Enable(Renderer* pRenderer);
-	void Disable(Renderer* pRenderer);
+	inline void Enable(Renderer* pRenderer);
+	inline void Disable(Renderer* pRenderer);
 
 	void* Lock(Buffer::LockingMode mode);
 	void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
 
+	inline UInt GetBufferSize() const;
+
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
 
 	IDirect3DIndexBuffer9* mpBuffer;
+	UInt mBufferSize;
 	UInt mIndexSize;
-	UInt mIBOSize;
 };
+
+#include "WireDx9IndexBuffer.inl"
 
 }
 

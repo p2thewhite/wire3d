@@ -229,6 +229,7 @@
     <None Include="Engine\WireVertexBuffer.inl" />
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
+    <None Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.inl" />
     <None Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.inl" />
     <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
     <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl" />

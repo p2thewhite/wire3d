@@ -37,6 +37,7 @@ class PdrTexture2D;
 class Spatial;
 class Texture2D;
 class VertexBuffer;
+class VisibleObject;
 class VisibleSet;
 
 class Renderer
@@ -56,15 +57,14 @@ public:
 	void Terminate();
 
 	// Object drawing
-	void DrawScene(VisibleSet* rVisibleSet);
 	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
+	void DrawScene(VisibleSet* rVisibleSet);
 	void Draw(Geometry* pGeometry, Bool restoreState = true,
 		Bool useEffect = true);
 
-	// Backbuffer functions
-	inline UInt GetWidth() const;
-	inline UInt GetHeight() const;
-	inline const ColorRGBA& GetClearColor() const;
+	// Batching
+	void CreateBatchingBuffers(UInt size, UInt count = 1);
+	inline void SetDynamicBatchingThreshold(UInt vertexCount);
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
@@ -120,6 +120,7 @@ public:
 	void Enable(const IndexBuffer* pIndexBuffer);
 	void Disable(const IndexBuffer* pIndexBuffer);
 	void Set(const IndexBuffer* pIndexBuffer);
+	void Update(const IndexBuffer* pIndexBuffer);
 	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 
 	// Vertex buffer management
@@ -129,8 +130,8 @@ public:
 	void Enable(const VertexBuffer* pVertexBuffer);
 	void Disable(const VertexBuffer* pVertexBuffer);
 	void Set(const VertexBuffer* pIndexBuffer);
-	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 	void Update(const VertexBuffer* pVertexBuffer);
+	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// 2D texture management
 	PdrTexture2D* Bind(const Texture2D* pTexture);
@@ -145,8 +146,6 @@ public:
 	void Enable(const Material* pMaterial);
 	void Disable(const Material* pMaterial);
 	void Set(const Material* pMaterial);
-
-	// Platform-dependent portion of the Renderer
 
 	// Support for predraw and postdraw semantics.
 	Bool PreDraw(Camera* pCamera = NULL);
@@ -163,7 +162,10 @@ public:
 	// Handle window resize.
 	void Resize(UInt width, UInt height);
 
-	// Support for full-sized window buffer operations.
+	// Backbuffer functions
+	inline UInt GetWidth() const;
+	inline UInt GetHeight() const;
+	inline const ColorRGBA& GetClearColor() const;
 	void SetClearColor(const ColorRGBA& rClearColor);
 	void ClearBuffers();
 	void DisplayBackBuffer();
@@ -195,10 +197,15 @@ public:
 	void Disable(const TArray<Pointer<Light> >& rLights);
 	void Set(const TArray<Pointer<Light> >& rLights);
 
+	// Drawing and Renderer bound memory statistics
 	struct Statistics
 	{
+		// accumulated number of draw calls and triangles drawn since last
+		// ResetStatistics()
 		UInt DrawCalls;
 		UInt Triangles;
+
+		// number of buffers and their total size bound to the Renderer
 		UInt VBOCount;
 		UInt VBOTotalSize;
 		UInt IBOCount;
@@ -223,6 +230,8 @@ private:
 
 	void SetWorldTransformation(Transformation& rWorld);
 
+	void Draw(VisibleObject* pVisible, UInt min, UInt max);
+
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt activeIndexCount, UInt indexOffset);
 
@@ -235,6 +244,8 @@ private:
 	void DestroyAll(IndexBufferMap& rIndexBufferMap);
 	void DestroyAll(VertexBufferMap& rVertexBufferMap);
  	void DestroyAll(Texture2DMap& rTexture2DMap);
+
+	void DestroyBatchingBuffers();
 
 	// Objects currently in use by the Renderer
 	StatePtr mspStates[State::MAX_STATE_TYPE];
@@ -265,6 +276,10 @@ private:
 	IndexBufferMap mIndexBufferMap;
 	VertexBufferMap mVertexBufferMap;
 	Texture2DMap mTexture2DMap;
+
+	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
+	TArray<PdrIndexBuffer*> mBatchedIndexBuffers;
+	UInt mDynamicBatchingThreshold;
 
 	Statistics mStatistics;
 };
