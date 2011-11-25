@@ -59,6 +59,7 @@ void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 	rAttributes)
 {
+	mDeclaration.SetQuantity(0);
 	VertexElement element;
 	mVertexSize = 0;
 
@@ -130,7 +131,7 @@ void PdrVertexBuffer::Disable(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
-	Float* pVBData = static_cast<Float*>(Lock(Buffer::LM_WRITE_ONLY));
+	void* pVBData = Lock(Buffer::LM_WRITE_ONLY);
 
 	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
 	Bool hasVertexColors = false;
@@ -158,8 +159,10 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, Float* pDst)
+void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, void* pVoid)
 {
+	Float* pDst = reinterpret_cast<Float*>(pVoid);
+
 	const VertexAttributes& rIAttr = pSrc->GetAttributes();
 
 	for (UInt i = 0; i < pSrc->GetQuantity(); i++)

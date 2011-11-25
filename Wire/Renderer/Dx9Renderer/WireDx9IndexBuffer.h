@@ -38,8 +38,10 @@ public:
 	void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
+	void Copy(const IndexBuffer* pIndexBuffer, void* pBuffer, UInt offset);
 
 	inline UInt GetBufferSize() const;
+	inline UInt GetIndexSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType

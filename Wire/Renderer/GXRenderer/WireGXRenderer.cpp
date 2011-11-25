@@ -198,7 +198,8 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(Transformation& rWorld)
+void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
+	usesNormals)
 {
 	Matrix34F model;
 	rWorld.GetTransformation(model);
@@ -206,8 +207,7 @@ void Renderer::SetWorldTransformation(Transformation& rWorld)
 	Matrix34F modelView = mpData->ViewMatrix * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
-	WIRE_ASSERT(mspVertexBuffer /* Enable VertexBuffer first */);
-	if (mspVertexBuffer->GetAttributes().HasNormal())
+	if (usesNormals)
 	{
 		Mtx modelViewInverse;
 		MTXInverse(modelView, modelViewInverse);

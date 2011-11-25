@@ -76,15 +76,48 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 	WIRE_ASSERT((mBufferSize/mIndexSize) == pIndexBuffer->GetQuantity());
 	Buffer::LockingMode lockingMode = pIndexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
+
+	void* pBuffer = Lock(lockingMode);
+	Copy(pIndexBuffer, pBuffer, 0);
+
+	Unlock();
+}
+
+//----------------------------------------------------------------------------
+void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
+	UInt offset)
+{
+	const UInt* pIndices = pIndexBuffer->GetData();
 	const UInt quantity = pIndexBuffer->GetQuantity();
 
-	// Copy the index buffer data from system memory to video memory.
-	Char* pBuffer = reinterpret_cast<Char*>(Lock(lockingMode));
-	const UInt* pIndices = pIndexBuffer->GetData();
-
-	if (mIndexSize == sizeof(UInt))
+	if (offset == 0)
 	{
-		System::Memcpy(pBuffer, mBufferSize, pIndices, mBufferSize);
+		if (mIndexSize == sizeof(UInt))
+		{
+			System::Memcpy(pBuffer, mBufferSize, pIndices, mBufferSize);
+		}
+		else
+		{
+			WIRE_ASSERT(mIndexSize == sizeof(UShort));
+			UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
+
+			if ((quantity % 3) == 0)
+			{
+				for (UInt i = 0; i < quantity; i+=3)
+				{
+					pBuffer16[i] = static_cast<UShort>(pIndices[i]);
+					pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1]);
+					pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2]);
+				}
+			}
+			else
+			{
+				for (UInt i = 0; i < quantity; i++)
+				{
+					pBuffer16[i] = static_cast<UShort>(pIndices[i]);
+				}
+			}
+		}
 	}
 	else
 	{
@@ -95,21 +128,19 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 		{
 			for (UInt i = 0; i < quantity; i+=3)
 			{
-				pBuffer16[i] = static_cast<UShort>(pIndices[i]);
-				pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1]);
-				pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2]);
+				pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
+				pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1] + offset);
+				pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2] + offset);
 			}
 		}
 		else
 		{
 			for (UInt i = 0; i < quantity; i++)
 			{
-				pBuffer16[i] = static_cast<UShort>(pIndices[i]);
+				pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
 			}
 		}
 	}
-
-	Unlock();
 }
 
 //----------------------------------------------------------------------------

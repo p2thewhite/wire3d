@@ -289,9 +289,10 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(Transformation& rWorld)
+void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
+	usesNormals)
 {
-	Bool needsRenormalization = true;
+	Bool needsRenormalization = usesNormals ? true : false;
 	if (rWorld.IsUniformScale())
 	{
 		if (rWorld.GetUniformScale() == 1.0F)
@@ -566,13 +567,10 @@ void PdrRendererData::ResetDevice()
 	DestroyNonManagedResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
 	DestroyNonManagedResources(rRenderer.mTexture2DMap, saveTexture2Ds);
 	
-	UInt batchingCount = rRenderer.mBatchedIndexBuffers.GetQuantity();
 	UInt batchingSize = 0;
-	WIRE_ASSERT(batchingCount == rRenderer.mBatchedVertexBuffers.
-		GetQuantity());
-	if (batchingCount > 0)
+	if (rRenderer.mBatchedIndexBuffer)
 	{
-		batchingSize = rRenderer.mBatchedIndexBuffers[0]->GetBufferSize();
+		batchingSize = rRenderer.mBatchedIndexBuffer->GetBufferSize();
 		rRenderer.DestroyBatchingBuffers();
 	}
 
@@ -581,7 +579,7 @@ void PdrRendererData::ResetDevice()
 	WIRE_ASSERT(SUCCEEDED(hr));
 	IsDeviceLost = false;
 
-	rRenderer.CreateBatchingBuffers(batchingSize, batchingCount);
+	rRenderer.CreateBatchingBuffers(batchingSize);
 
 	RecreateResources(&rRenderer, saveIndexBuffers);
 	RecreateResources(&rRenderer, saveVertexBuffers);
