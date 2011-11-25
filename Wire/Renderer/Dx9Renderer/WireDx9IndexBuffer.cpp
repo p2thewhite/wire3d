@@ -94,7 +94,8 @@ void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
 	{
 		if (mIndexSize == sizeof(UInt))
 		{
-			System::Memcpy(pBuffer, mBufferSize, pIndices, mBufferSize);
+			const UInt size = pIndexBuffer->GetQuantity() * sizeof(UInt);
+			System::Memcpy(pBuffer, size, pIndices, size);
 		}
 		else
 		{
@@ -118,27 +119,52 @@ void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
 				}
 			}
 		}
+
+		return;
 	}
-	else
+
+
+	if (mIndexSize == sizeof(UInt))
 	{
-		WIRE_ASSERT(mIndexSize == sizeof(UShort));
-		UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
+		UInt* pBuffer32 = reinterpret_cast<UInt*>(pBuffer);
 
 		if ((quantity % 3) == 0)
 		{
 			for (UInt i = 0; i < quantity; i+=3)
 			{
-				pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
-				pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1] + offset);
-				pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2] + offset);
+				pBuffer32[i] = pIndices[i] + offset;
+				pBuffer32[i+1] = pIndices[i+1] + offset;
+				pBuffer32[i+2] = pIndices[i+2] + offset;
 			}
 		}
 		else
 		{
 			for (UInt i = 0; i < quantity; i++)
 			{
-				pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
+				pBuffer32[i] = pIndices[i] + offset;
 			}
+		}
+
+		return;
+	}
+
+	WIRE_ASSERT(mIndexSize == sizeof(UShort));
+	UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
+
+	if ((quantity % 3) == 0)
+	{
+		for (UInt i = 0; i < quantity; i+=3)
+		{
+			pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
+			pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1] + offset);
+			pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2] + offset);
+		}
+	}
+	else
+	{
+		for (UInt i = 0; i < quantity; i++)
+		{
+			pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
 		}
 	}
 }
