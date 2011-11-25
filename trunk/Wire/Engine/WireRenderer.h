@@ -63,7 +63,7 @@ public:
 		Bool useEffect = true);
 
 	// Batching
-	void CreateBatchingBuffers(UInt size, UInt count = 1);
+	void CreateBatchingBuffers(UInt size);
 	inline void SetDynamicBatchingThreshold(UInt vertexCount);
 
 	// Texture sampler functions
@@ -228,9 +228,10 @@ private:
 	void SetBlendMode(Material::BlendMode blendMode, UInt unit = 0,
 		Bool hasAlpha = true);
 
-	void SetWorldTransformation(Transformation& rWorld);
+	void SetWorldTransformation(Transformation& rWorld, Bool usesNormals);
 
-	void Draw(VisibleObject* pVisible, UInt min, UInt max);
+	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
+	void BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt activeIndexCount, UInt indexOffset);
@@ -277,8 +278,8 @@ private:
 	VertexBufferMap mVertexBufferMap;
 	Texture2DMap mTexture2DMap;
 
-	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
-	TArray<PdrIndexBuffer*> mBatchedIndexBuffers;
+	PdrIndexBuffer* mBatchedIndexBuffer;
+	PdrVertexBuffer* mBatchedVertexBuffer;
 	UInt mDynamicBatchingThreshold;
 
 	Statistics mStatistics;

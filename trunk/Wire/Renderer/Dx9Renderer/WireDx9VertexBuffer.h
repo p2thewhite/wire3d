@@ -34,23 +34,30 @@ public:
 	inline void Unlock();
 
 	void Update(const VertexBuffer* pVertexBuffer);
-
-	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
-	inline void SetDeclaration(Renderer* pRenderer);
+	void Copy(const VertexBuffer* pVertexBuffer, void* pBuffer, const
+		Transformation& rTransformation);
 
 	inline UInt GetBufferSize() const;
+
+	inline void SetDeclaration(Renderer* pRenderer);
+	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
+		rAttributes);
+	inline UInt GetVertexSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
-		rAttributes);
-	void Convert(const VertexBuffer* pSrc, Float* pDst);
+	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
+
+	void Convert(const VertexBuffer* pSrc, void* pDst);
+	void Convert(const VertexBuffer* pSrc, void* pDst, const Transformation&
+		rTransformation);
 
 	IDirect3DVertexBuffer9* mpBuffer;
+	UInt mBufferSize;
+
 	IDirect3DVertexDeclaration9* mpDeclaration;
 	UInt mVertexSize;
-	UInt mBufferSize;
 };
 
 #include "WireDx9VertexBuffer.inl"
