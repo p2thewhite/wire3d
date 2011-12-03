@@ -10,6 +10,7 @@
 
 #include "WireGXRendererInput.h"
 #include "WireRenderer.h"
+#include <fat.h>
 
 using namespace Wire;
 
@@ -35,6 +36,8 @@ GXApplication::~GXApplication()
 //----------------------------------------------------------------------------
 Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 {
+	fatInitDefault();
+
 	// allow work to be done before the renderer is created
 	if (!s_pApplication->OnPrecreate())
 	{
