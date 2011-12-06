@@ -28,10 +28,12 @@ public:
  	void Enable(Renderer* pRenderer, const Texture2D* pTexture, UInt unit);
  	void Disable(Renderer* pRenderer, UInt unit);
 
+	inline UInt GetBufferSize() const { return mBufferSize; }
+
 private:
-	void* mpImage;
+	void* mpBuffer;
 	GXTexObj mTexObj;
-	UInt mTextureSize;
+	UInt mBufferSize;
 };
 
 }

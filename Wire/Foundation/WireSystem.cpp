@@ -172,6 +172,12 @@ Int System::Strcmp(const Char* pStr1, const Char* pStr2)
 }
 
 //----------------------------------------------------------------------------
+Int System::Strncmp(const Char* pStr1, const Char* pStr2, size_t size)
+{
+	return strncmp(pStr1, pStr2, size);
+}
+
+//----------------------------------------------------------------------------
 Int System::Toupper(Int c)
 {
 	return toupper(c);

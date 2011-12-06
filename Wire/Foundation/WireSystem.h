@@ -83,6 +83,7 @@ public:
         size_t srcSize);
 	static UInt Strlen(const Char* pString);
 	static Int Strcmp(const Char* pStr1, const Char* pStr2);
+	static Int Strncmp(const Char* pStr1, const Char* pStr2, size_t size);
 	static Int Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...);
 
 	static Int Toupper(Int c);

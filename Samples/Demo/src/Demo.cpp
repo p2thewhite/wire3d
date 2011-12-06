@@ -17,8 +17,8 @@ Bool Demo::OnInitialize()
 		return false;
 	}
 
-	mpPath = "Data/"; // TODO: init "" when not used
-//	LoadScene("Data/InnsbruckMobile.xml");
+	mpPath = const_cast<Char*>("Data/"); // TODO: init "" when not used
+//	mspRoot = LoadScene("InnsbruckMobile.xml");
 
 	mspCube = CreateCube();
 
@@ -73,7 +73,6 @@ void Demo::OnIdle()
 	mLastTime = time;
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
-	mAngle = 0;
 
 	// If the camera's viewing frustum changed, we need to update the culler
 	// (we know we don't change it, so it's commented out here)
@@ -359,17 +358,15 @@ Texture2D* Demo::CreateTexture()
 	return pTexture;
 }
 
-
-
-
 //----------------------------------------------------------------------------
 Node* Demo::LoadScene(const Char* pFilename)
 {
-	Char* pXml;
 	Int xmlSize;
-	Bool hasSucceeded;
-	hasSucceeded = System::Load(pFilename, pXml, xmlSize);
-	WIRE_ASSERT(hasSucceeded /* Could not load file */);
+	Char* pXml = Load(pFilename, xmlSize);
+	if (!pXml)
+	{
+		return NULL;
+	}
 
 	Char* pXmlNullTerminated = WIRE_NEW Char[xmlSize+1];
 	System::Memcpy(pXmlNullTerminated, xmlSize, pXml, xmlSize);
@@ -377,9 +374,56 @@ Node* Demo::LoadScene(const Char* pFilename)
 
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
-	mspRoot = Traverse(doc.first_node());
+	Node* pNode = DynamicCast<Node>(Traverse(doc.first_node()));
 
-	return NULL;
+	return pNode;
+}
+
+//----------------------------------------------------------------------------
+Image2D* Demo::LoadImage(const Char* pFilename, Bool hasMipmaps)
+{
+	Int pngSize;
+	UChar* pPNG = reinterpret_cast<UChar*>(Load(pFilename, pngSize));
+	if (!pPNG)
+	{
+		return NULL;
+	}
+
+	std::vector<UChar> rawImage;
+	ULong width;
+	ULong height;
+	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
+	WIRE_DELETE[] pPNG;
+
+	bool hasAlpha = (rawImage.size() / (height*width)) == 4;
+	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
+		Image2D::FM_RGB888;
+
+	size_t size = Image2D::GetBytesPerPixel(format) * width*height;
+	UChar* pDst = WIRE_NEW UChar[size];
+	System::Memcpy(pDst, size, rawImage.data(), size);
+
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst,
+		hasMipmaps);
+
+	return pImage;
+}
+
+//----------------------------------------------------------------------------
+Char* Demo::Load(const Char* pFilename, Int& rSize)
+{
+	String path = String(mpPath) + String(pFilename);
+	Char* pBuffer;
+	Bool hasSucceeded;
+	hasSucceeded = System::Load(static_cast<const Char*>(path), pBuffer,
+		rSize);
+	if (!hasSucceeded)
+	{
+		WIRE_ASSERT(false /* Could not load file */);
+		return NULL;
+	}
+
+	return pBuffer;
 }
 
 //----------------------------------------------------------------------------
@@ -416,6 +460,22 @@ Spatial* Demo::Traverse(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
+Char* Demo::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
+{
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (System::Strcmp(pName, attr->name()) == 0)
+		{
+			return attr->value();
+		}
+	}
+
+	WIRE_ASSERT(false /* Xml attribute not found */);
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
 Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
 	Node* pNode = WIRE_NEW Node;
@@ -438,7 +498,7 @@ Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 		}
 		else if (System::Strcmp("Rot", attr->name()) == 0)
 		{
-			// TODO
+			// TODO euler or quaternion
 		}
 		else if (System::Strcmp("Scale", attr->name()) == 0)
 		{
@@ -476,8 +536,8 @@ Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 Geometry* Demo::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 {
-	Mesh* pMesh;
-	Material* pMaterial;
+	Mesh* pMesh = NULL;
+	Material* pMaterial = NULL;
 
 	if (pXmlNode->first_node())
 	{
@@ -495,22 +555,150 @@ Geometry* Demo::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
+	if (!pMesh)
+	{
+		WIRE_ASSERT(false /* Mesh is missing */);
+		return NULL;
+	}
+
+	if (pMesh->GetVertexBuffer()->GetAttributes().HasColor())
+	{
+		if (pMaterial && pMaterial->GetTextureQuantity() > 0)
+		{
+			pMaterial->SetBlendMode(Material::BM_MODULATE);
+		}
+	}
+
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
 
 	// TODO: trafo
 
-	return NULL;
+	return pGeo;
 }
 
 //----------------------------------------------------------------------------
 Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 {
-	return NULL;
+	// TODO: cache Mesh for re-use
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (!pName)
+	{
+		return NULL;
+	}
+
+	Char* pVerticesName = NULL;
+	Char* pIndicesName = NULL;
+	Char* pNormalsName = NULL;
+	Char* pColorsName = NULL;
+	TArray<Char*> uvSetNames(8,8);
+
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
+	{
+		if (!pVerticesName &&
+			System::Strcmp("Vertices", pChild->name()) == 0)
+		{
+			pVerticesName = GetValue(pChild, "Name");
+		}
+		else if (!pIndicesName &&
+			System::Strcmp("Indices", pChild->name()) == 0)
+		{
+			pIndicesName = GetValue(pChild, "Name");
+		}
+		else if (!pNormalsName &&
+			System::Strcmp("Normals", pChild->name()) == 0)
+		{
+			pNormalsName = GetValue(pChild, "Name");
+		}
+		else if (!pColorsName &&
+			System::Strcmp("Colors", pChild->name()) == 0)
+		{
+			pColorsName = GetValue(pChild, "Name");
+		}
+		else if (System::Strncmp("Uv", pChild->name(), 2) == 0)
+		{
+			UInt nr;
+			Int n;
+			n = sscanf(pChild->name(), "Uv%d", &nr);
+			WIRE_ASSERT(n == 1);
+			uvSetNames.Append(GetValue(pChild, "Name"));
+		}
+	}
+
+	if (!pVerticesName || !pIndicesName)
+	{
+		WIRE_ASSERT(false /* Mesh has no vertices or indices */);
+		return NULL;
+	}
+
+	Int indicesSize;
+	Char* pIndices = Load(pIndicesName, indicesSize);
+
+	VertexAttributes va;
+	va.SetPositionChannels(3);
+	Int verticesSize;
+	Char* pVertices = Load(pVerticesName, verticesSize);
+
+	Int normalsSize;
+	Char* pNormals = NULL;
+	if (pNormalsName)
+	{
+		va.SetNormalChannels(3);
+		pNormals = Load(pNormalsName, normalsSize);
+		if (verticesSize != normalsSize)
+		{
+			WIRE_ASSERT(false /* vertices and normals do not match */);
+			return NULL;
+		}
+	}
+
+	Int colorsSize;
+	Char* pColors = NULL;
+	if (pColorsName)
+	{
+		va.SetColorChannels(4);
+		pColors = Load(pColorsName, colorsSize);
+		if (verticesSize/(3*sizeof(Float)) != colorsSize/(4*sizeof(Float)))
+		{
+			WIRE_ASSERT(false /* vertices and colors do not match */);
+			return NULL;
+		}
+	}
+
+	TArray<Char*> uvSets(uvSetNames.GetQuantity());
+	TArray<Int> uvSetSizes(uvSetNames.GetQuantity());
+	for (UInt i = 0; i < uvSetNames.GetQuantity(); i++)
+	{
+		uvSetSizes.Append(0);
+		uvSets.Append(Load(uvSetNames[i], uvSetSizes[i]));
+		va.SetTCoordChannels(2, i);
+		if (verticesSize/(3*sizeof(Float)) != uvSetSizes[i]/(2*sizeof(Float)))
+		{
+			WIRE_ASSERT(false /* vertices and uv sets do not match */);
+			return NULL;
+		}	
+	}
+
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(va, verticesSize/
+		(3*sizeof(Float)));
+
+	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
+	{
+
+	}
+
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(reinterpret_cast<UInt*>(
+		pIndices), indicesSize/sizeof(UInt));
+
+	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
+	return pMesh;
 }
 
 //----------------------------------------------------------------------------
 Material* Demo::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 {
+	// TODO: cache Material for re-use
+
 	Material* pMaterial = WIRE_NEW Material;
 
 	if (pXmlNode->first_node())
@@ -546,8 +734,6 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
 	UInt anisoLevel = 0;
 
-	// TODO: remove width, height, format from xml
-
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
@@ -563,7 +749,6 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 		}
 		else if (System::Strcmp("FilterMode", attr->name()) == 0)
 		{
-			// TODO check if names are correct
 			if (System::Strcmp("Point", attr->value()) == 0)
 			{
 				filter = Texture2D::FT_NEAREST_NEAREST;
@@ -585,7 +770,6 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 		}
 		else if (System::Strcmp("WrapMode", attr->name()) == 0)
 		{
-			// TODO check if names are correct
 			if (System::Strcmp("Repeat", attr->value()) == 0)
 			{
 				warp = Texture2D::WT_REPEAT;
@@ -597,7 +781,20 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
+	if (!pName)
+	{
+		WIRE_ASSERT(false /* No Texture filename found */);
+		return NULL;
+	}
+
+	// TODO: cache Textures for re-use
+
 	Image2D* pImage = LoadImage(pName, (mipmapCount > 1));
+	if (!pImage)
+	{
+		return NULL;
+	}
+
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	pTexture->SetFilterType(filter);
 	pTexture->SetWrapType(0, warp);
@@ -605,38 +802,4 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 	pTexture->SetAnisotropyValue(static_cast<Float>(anisoLevel));
 
 	return pTexture;
-}
-
-//----------------------------------------------------------------------------
-Image2D* Demo::LoadImage(const Char* pFilename, Bool hasMipmaps)
-{
-	String path = String(mpPath) + String(pFilename);
-	UChar* pPNG;
-	Int pngSize;
-	Bool hasSucceeded = System::Load(static_cast<const Char*>(path), pPNG,
-		pngSize);
-	if (!hasSucceeded)
-	{
-		WIRE_ASSERT(false /* Could not load file */);
-		return NULL;
-	}
-
-	std::vector<UChar> rawImage;
-	ULong width;
-	ULong height;
-	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
-	WIRE_DELETE[] pPNG;
-
-	bool hasAlpha = (rawImage.size() / (height*width)) == 4;
-	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
-		Image2D::FM_RGB888;
-
-	size_t size = Image2D::GetBytesPerPixel(format) * width*height;
-	UChar* pDst = WIRE_NEW UChar[size];
-	System::Memcpy(pDst, size, rawImage.data(), size);
-
-	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst,
-		hasMipmaps);
-
-	return pImage;
 }

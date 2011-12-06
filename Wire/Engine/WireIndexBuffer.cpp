@@ -24,6 +24,15 @@ IndexBuffer::IndexBuffer(UInt quantity, UsageType usage)
 }
 
 //----------------------------------------------------------------------------
+IndexBuffer::IndexBuffer(UInt* pIndices, UInt quantity, UsageType usage)
+	:
+	Buffer(usage),
+	mQuantity(quantity),
+	mpIndices(pIndices)
+{
+}
+
+//----------------------------------------------------------------------------
 IndexBuffer::IndexBuffer(const IndexBuffer* pIndexBuffer)
 	:
 	Buffer(pIndexBuffer->GetUsage()),

@@ -148,10 +148,10 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	hr = rDevice->CreateTexture(pImage->GetBound(0), pImage->GetBound(1),
 		mipmapCount, usage, PdrRendererData::IMAGE2D_FORMAT[format], pool,
-		&mpTexture, NULL);
+		&mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	mTextureSize = 0;
+	mBufferSize = 0;
 
 	if (pDst)
 	{
@@ -167,7 +167,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 				GetBytesPerPixel();
 			System::Memcpy(pData, size, pDst + offset * bpp, size);
 			Unlock(level);
-			mTextureSize += size;
+			mBufferSize += size;
 		}
 	}
 
@@ -175,27 +175,14 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	{
 		WIRE_DELETE[] pDst;
 	}
-
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->TextureCount++;
-	pStatistics->TextureTotalSize += mTextureSize;
 }
 
 //----------------------------------------------------------------------------
 PdrTexture2D::~PdrTexture2D()
 {
 	HRESULT hr;
-	hr = mpTexture->Release();
+	hr = mpBuffer->Release();
 	WIRE_ASSERT(SUCCEEDED(hr));
-
-	// TODO
-	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
-		Renderer::GetStatistics());
-	WIRE_ASSERT(pStatistics);
-	pStatistics->TextureCount--;
-	pStatistics->TextureTotalSize -= mTextureSize;
 }
 
 //----------------------------------------------------------------------------
@@ -287,7 +274,7 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	hr = rDevice->SetTexture(unit, mpTexture);
+	hr = rDevice->SetTexture(unit, mpBuffer);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
@@ -308,7 +295,7 @@ void* PdrTexture2D::Lock(Buffer::LockingMode mode, UInt level)
 {
 	D3DLOCKED_RECT rect;
 	HRESULT hr;
-	hr = mpTexture->LockRect(level, &rect, NULL,
+	hr = mpBuffer->LockRect(level, &rect, NULL,
 		PdrRendererData::BUFFER_LOCKING[mode]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	return rect.pBits;
@@ -318,6 +305,6 @@ void* PdrTexture2D::Lock(Buffer::LockingMode mode, UInt level)
 void PdrTexture2D::Unlock(UInt level)
 {
 	HRESULT hr;
-	hr = mpTexture->UnlockRect(level);
+	hr = mpBuffer->UnlockRect(level);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
