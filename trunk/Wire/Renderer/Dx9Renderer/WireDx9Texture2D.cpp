@@ -190,6 +190,7 @@ PdrTexture2D::~PdrTexture2D()
 	hr = mpTexture->Release();
 	WIRE_ASSERT(SUCCEEDED(hr));
 
+	// TODO
 	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
 		Renderer::GetStatistics());
 	WIRE_ASSERT(pStatistics);

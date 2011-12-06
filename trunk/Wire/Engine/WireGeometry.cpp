@@ -43,6 +43,7 @@ Geometry::Geometry(Mesh* pMesh, Material* pMaterial)
 	mspMesh(pMesh),
 	mspMaterial(pMaterial)
 {
+	WIRE_ASSERT(pMesh);
 	Init();
 }
 

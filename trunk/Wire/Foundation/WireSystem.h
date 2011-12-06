@@ -82,7 +82,8 @@ public:
 	static Char* Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
         size_t srcSize);
 	static UInt Strlen(const Char* pString);
-	static Int Sprintf (Char* pDst, size_t dstSize, const Char* pFormat, ...);
+	static Int Strcmp(const Char* pStr1, const Char* pStr2);
+	static Int Sprintf(Char* pDst, size_t dstSize, const Char* pFormat, ...);
 
 	static Int Toupper(Int c);
 	static Int Tolower(Int c);

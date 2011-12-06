@@ -23,10 +23,6 @@ public:
 	virtual void OnIdle();
 
 private:
-	Node* LoadScene(const Char* pFilename);
-	Image2D* LoadImage(const Char* pFilename, Bool hasAlpha, Bool hasMipmaps);
-	void Traverse(rapidxml::xml_node<>* pXmlNode);
-
 	Geometry* CreateCube();
 	Texture2D* CreateTexture();
 
@@ -43,6 +39,22 @@ private:
 
 	Float mAngle;
 	Double mLastTime;
+
+	SpatialPtr mspRoot;
+
+	//-----
+	Node* LoadScene(const Char* pFilename);
+	Spatial* Traverse(rapidxml::xml_node<>* pXmlNode);
+
+	Image2D* LoadImage(const Char* pFilename, Bool hasMipmaps);
+
+	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
+	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
+	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
+	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
+	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
+
+	Char* mpPath;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

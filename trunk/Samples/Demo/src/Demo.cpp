@@ -17,7 +17,8 @@ Bool Demo::OnInitialize()
 		return false;
 	}
 
-//	LoadScene("InnsbruckMobile.xml");
+	mpPath = "Data/"; // TODO: init "" when not used
+//	LoadScene("Data/InnsbruckMobile.xml");
 
 	mspCube = CreateCube();
 
@@ -72,6 +73,7 @@ void Demo::OnIdle()
 	mLastTime = time;
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
+	mAngle = 0;
 
 	// If the camera's viewing frustum changed, we need to update the culler
 	// (we know we don't change it, so it's commented out here)
@@ -341,6 +343,26 @@ Geometry* Demo::CreateCube()
 }
 
 //----------------------------------------------------------------------------
+Texture2D* Demo::CreateTexture()
+{
+	Image2D* pImage = LoadImage("Village.png", true);
+
+	// Create a Texture using this image. Images can be shared amongst
+	// texture objects. So you can use different filter/wrap/anisotropy values
+	// without the need to duplicate images in memory.
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+
+	// Use anisotropic filtering for texturing. Looks better, but lowers
+	// performance.
+	pTexture->SetAnisotropyValue(4.0F);
+
+	return pTexture;
+}
+
+
+
+
+//----------------------------------------------------------------------------
 Node* Demo::LoadScene(const Char* pFilename)
 {
 	Char* pXml;
@@ -355,14 +377,22 @@ Node* Demo::LoadScene(const Char* pFilename)
 
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
-	Traverse(doc.first_node());
+	mspRoot = Traverse(doc.first_node());
 
 	return NULL;
 }
 
 //----------------------------------------------------------------------------
-void Demo::Traverse(rapidxml::xml_node<>* pXmlNode)
+Spatial* Demo::Traverse(rapidxml::xml_node<>* pXmlNode)
 {
+	if (System::Strcmp("Leaf", pXmlNode->name()) == 0)
+	{
+		return ParseLeaf(pXmlNode);	
+	}
+
+	WIRE_ASSERT(System::Strcmp("Node", pXmlNode->name()) == 0);
+	Node* pNode = ParseNode(pXmlNode);
+
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
@@ -376,26 +406,228 @@ void Demo::Traverse(rapidxml::xml_node<>* pXmlNode)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			Traverse(pChild);
+			Spatial* pSpatial = Traverse(pChild);
+			WIRE_ASSERT(pSpatial);
+			pNode->AttachChild(pSpatial);
 		}
 	}
+
+	return pNode;
 }
 
 //----------------------------------------------------------------------------
-Image2D* Demo::LoadImage(const Char* pFilename, Bool hasAlpha,
-	Bool hasMipmaps)
+Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
+	Node* pNode = WIRE_NEW Node;
+	Vector3F t;
+	QuaternionF r;
+	Vector3F s;
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (System::Strcmp("Name", attr->name()) == 0)
+		{
+			continue;
+		}
+		else if (System::Strcmp("Pos", attr->name()) == 0)
+		{
+			Int n;
+			n = sscanf(attr->value(), "%f, %f, %f", &t.X(), &t.Y(), &t.Z());
+			WIRE_ASSERT(n == 3);
+		}
+		else if (System::Strcmp("Rot", attr->name()) == 0)
+		{
+			// TODO
+		}
+		else if (System::Strcmp("Scale", attr->name()) == 0)
+		{
+			Int n;
+			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
+			WIRE_ASSERT(n == 3);
+		}
+		else
+		{
+			WIRE_ASSERT(false);
+		}
+	}
+
+	
+	if ((t.X() != 0) || (t.Y() != 0) || (t.Z() != 0))
+	{
+		pNode->Local.SetTranslate(t);
+	}
+
+	if ((s.X() != 1.0f) || (s.Y() != 1.0f) || (s.Z() != 1.0f))
+	{
+		if ((s.X() == s.Y()) && (s.X() == s.Z()))
+		{
+			pNode->Local.SetUniformScale(s.X());
+		}
+		else
+		{
+			pNode->Local.SetScale(s);
+		}
+	}
+
+	return pNode;
+}
+
+//----------------------------------------------------------------------------
+Geometry* Demo::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
+{
+	Mesh* pMesh;
+	Material* pMaterial;
+
+	if (pXmlNode->first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			if (System::Strcmp("Mesh", pChild->name()) == 0)
+			{
+				pMesh = ParseMesh(pChild);
+			}
+			else if (System::Strcmp("Material", pChild->name()) == 0)
+			{
+				pMaterial = ParseMaterial(pChild);
+			}
+		}
+	}
+
+	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+
+	// TODO: trafo
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
+{
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+Material* Demo::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
+{
+	Material* pMaterial = WIRE_NEW Material;
+
+	if (pXmlNode->first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			if (System::Strcmp("Texture", pChild->name()) == 0)
+			{
+				Texture2D* pTex = ParseTexture(pChild);
+				Material::BlendMode mode = pMaterial->GetTextureQuantity() >
+					0 ? Material::BM_MODULATE : Material::BM_REPLACE;
+				pMaterial->AddTexture(pTex, mode);
+			}
+		}
+	}
+
+	if (pMaterial->GetTextureQuantity() == 0)
+	{
+		WIRE_DELETE pMaterial;
+		return NULL;
+	}
+
+	return pMaterial;
+}
+
+//----------------------------------------------------------------------------
+Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
+{
+	Char* pName = NULL;
+	UInt mipmapCount = 1;
+	Texture2D::FilterType filter = Texture2D::FT_LINEAR_LINEAR;
+	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
+	UInt anisoLevel = 0;
+
+	// TODO: remove width, height, format from xml
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (System::Strcmp("Name", attr->name()) == 0)
+		{
+			pName = attr->value();
+		}
+		else if (System::Strcmp("Mipmaps", attr->name()) == 0)
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &mipmapCount);
+			WIRE_ASSERT(n == 1);	
+		}
+		else if (System::Strcmp("FilterMode", attr->name()) == 0)
+		{
+			// TODO check if names are correct
+			if (System::Strcmp("Point", attr->value()) == 0)
+			{
+				filter = Texture2D::FT_NEAREST_NEAREST;
+			}
+			else if (System::Strcmp("Bilinear", attr->value()) == 0)
+			{
+				filter = Texture2D::FT_LINEAR_NEAREST;
+			}
+			else if (System::Strcmp("Trilinear", attr->value()) == 0)
+			{
+				filter = Texture2D::FT_LINEAR_LINEAR;
+			}
+		}
+		else if (System::Strcmp("AnisoLevel", attr->name()) == 0)
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &anisoLevel);
+			WIRE_ASSERT(n == 1);	
+		}
+		else if (System::Strcmp("WrapMode", attr->name()) == 0)
+		{
+			// TODO check if names are correct
+			if (System::Strcmp("Repeat", attr->value()) == 0)
+			{
+				warp = Texture2D::WT_REPEAT;
+			}
+			else if (System::Strcmp("Clamp", attr->value()) == 0)
+			{
+				warp = Texture2D::WT_CLAMP;
+			}
+		}
+	}
+
+	Image2D* pImage = LoadImage(pName, (mipmapCount > 1));
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetFilterType(filter);
+	pTexture->SetWrapType(0, warp);
+	pTexture->SetWrapType(1, warp);
+	pTexture->SetAnisotropyValue(static_cast<Float>(anisoLevel));
+
+	return pTexture;
+}
+
+//----------------------------------------------------------------------------
+Image2D* Demo::LoadImage(const Char* pFilename, Bool hasMipmaps)
+{
+	String path = String(mpPath) + String(pFilename);
 	UChar* pPNG;
 	Int pngSize;
-	Bool hasSucceeded = System::Load(pFilename, pPNG, pngSize);
-	WIRE_ASSERT(hasSucceeded /* Could not load file */);
+	Bool hasSucceeded = System::Load(static_cast<const Char*>(path), pPNG,
+		pngSize);
+	if (!hasSucceeded)
+	{
+		WIRE_ASSERT(false /* Could not load file */);
+		return NULL;
+	}
 
 	std::vector<UChar> rawImage;
 	ULong width;
 	ULong height;
-	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, hasAlpha);
+	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
 	WIRE_DELETE[] pPNG;
 
+	bool hasAlpha = (rawImage.size() / (height*width)) == 4;
 	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
 		Image2D::FM_RGB888;
 
@@ -407,21 +639,4 @@ Image2D* Demo::LoadImage(const Char* pFilename, Bool hasAlpha,
 		hasMipmaps);
 
 	return pImage;
-}
-
-//----------------------------------------------------------------------------
-Texture2D* Demo::CreateTexture()
-{
-	Image2D* pImage = LoadImage("Data/Village.png", false, true);
-
-	// Create a Texture using this image. Images can be shared amongst
-	// texture objects. So you can use different filter/wrap/anisotropy values
-	// without the need to duplicate images in memory.
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-
-	// Use anisotropic filtering for texturing. Looks better, but lowers
-	// performance.
-	pTexture->SetAnisotropyValue(4.0F);
-
-	return pTexture;
 }

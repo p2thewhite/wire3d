@@ -119,6 +119,7 @@ PdrTexture2D::~PdrTexture2D()
 {
 	free(mpImage);	// allocated using memalign, not using new
 
+	// TODO
 	Renderer::Statistics* pStatistics = const_cast<Renderer::Statistics*>(
 		Renderer::GetStatistics());
 	WIRE_ASSERT(pStatistics);
