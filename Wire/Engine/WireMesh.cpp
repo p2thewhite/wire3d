@@ -23,6 +23,8 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 	mspIndexBuffer(pIndexBuffer),
 	mspModelBound(BoundingVolume::Create())
 {
+	WIRE_ASSERT(mspVertexBuffer);
+	WIRE_ASSERT(mspIndexBuffer);
 	UpdateModelBound();
 }
 

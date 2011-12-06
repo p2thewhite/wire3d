@@ -166,6 +166,12 @@ UInt System::Strlen(const Char* pString)
 }
 
 //----------------------------------------------------------------------------
+Int System::Strcmp(const Char* pStr1, const Char* pStr2)
+{
+	return strcmp(pStr1, pStr2);
+}
+
+//----------------------------------------------------------------------------
 Int System::Toupper(Int c)
 {
 	return toupper(c);
