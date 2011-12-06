@@ -32,9 +32,11 @@ public:
 	void* Lock(Buffer::LockingMode mode, UInt level = 0);
 	void Unlock(UInt level = 0);
 
+	inline UInt GetBufferSize() const { return mBufferSize; }
+
 private:
-	IDirect3DTexture9* mpTexture;
-	UInt mTextureSize;
+	IDirect3DTexture9* mpBuffer;
+	UInt mBufferSize;
 };
 
 }

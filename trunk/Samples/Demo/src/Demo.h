@@ -44,16 +44,16 @@ private:
 
 	//-----
 	Node* LoadScene(const Char* pFilename);
-	Spatial* Traverse(rapidxml::xml_node<>* pXmlNode);
-
 	Image2D* LoadImage(const Char* pFilename, Bool hasMipmaps);
+	Char* Load(const Char* pFilename, Int& rSize);
 
+	Spatial* Traverse(rapidxml::xml_node<>* pXmlNode);
+	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
-
 	Char* mpPath;
 };
 

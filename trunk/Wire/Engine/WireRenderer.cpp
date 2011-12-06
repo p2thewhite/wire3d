@@ -436,6 +436,8 @@ PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
 	{
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pTexture);
 		mTexture2DMap.Insert(pTexture, pPdrTexture);
+		mStatistics.TextureCount++;
+		mStatistics.TextureTotalSize += pPdrTexture->GetBufferSize();
 		return pPdrTexture;
 	}
 
@@ -449,6 +451,8 @@ void Renderer::Unbind(const Texture2D* pTexture)
 
 	if (pValue)
 	{
+		mStatistics.TextureCount--;
+		mStatistics.TextureTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mTexture2DMap.Remove(pTexture);
 	}
@@ -808,7 +812,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
+void Renderer::BatchAndDraw(VisibleObject* const /*pVisible*/, UInt /*min*/, UInt /*max*/)
 {
 // 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 // 	PdrVertexBuffer* const pVBPdr = mBatchedVertexBuffer;
