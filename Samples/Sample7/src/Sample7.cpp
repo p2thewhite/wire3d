@@ -171,12 +171,12 @@ Geometry* Sample7::CreateGeometry()
 			UInt index3 = index0+shapeCount+1;
 
 			(*pIBuffer)[index*6] = index0;
-			(*pIBuffer)[index*6+1] = index1;
-			(*pIBuffer)[index*6+2] = index2;
+			(*pIBuffer)[index*6+1] = index2;
+			(*pIBuffer)[index*6+2] = index1;
 
 			(*pIBuffer)[index*6+3] = index2;
-			(*pIBuffer)[index*6+4] = index1;
-			(*pIBuffer)[index*6+5] = index3;
+			(*pIBuffer)[index*6+4] = index3;
+			(*pIBuffer)[index*6+5] = index1;
 		}
 	}
 
@@ -317,7 +317,7 @@ void Sample7::GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 		Vector3F v2 = pVBuffer->Position3(pIndices[i+2]) -
 			pVBuffer->Position3(pIndices[i+1]);
 
-		Vector3F normal = v1.Cross(v2);
+		Vector3F normal = v2.Cross(v1);
 		normal.Normalize();
 		faceNormals.Append(normal);
 	}

@@ -31,8 +31,8 @@ public:
 	enum CullMode
 	{
 		CM_OFF,		// do not cull any triangles
-		CM_FRONT,	// cull front-facing triangles
 		CM_BACK,	// cull back-facing triangles
+		CM_FRONT,	// cull front-facing triangles
 		CM_QUANTITY
 	};
 

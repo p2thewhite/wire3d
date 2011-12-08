@@ -308,11 +308,11 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 
 	if (usesSorting)
 	{
-		str = msg0 + "\x01\x20\xff\x20\xffON" + text;
+		str = msg0 + String("\x01\x20\xff\x20\xffON") + String(text);
 	}
 	else
 	{
-		str = msg0 + "\x01\xff\x20\x20\xffOFF" + text;
+		str = msg0 + String("\x01\xff\x20\x20\xffOFF") + String(text);
 	}
 
 	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,

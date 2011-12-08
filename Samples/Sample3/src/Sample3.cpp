@@ -277,11 +277,11 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 			UInt index3 = index0+shapeCount+1;
 
 			(*pIBuffer)[index*6] = index0;
-			(*pIBuffer)[index*6+1] = index1;
-			(*pIBuffer)[index*6+2] = index2;
+			(*pIBuffer)[index*6+1] = index2;
+			(*pIBuffer)[index*6+2] = index1;
 
-			(*pIBuffer)[index*6+3] = index2;
-			(*pIBuffer)[index*6+4] = index1;
+			(*pIBuffer)[index*6+3] = index1;
+			(*pIBuffer)[index*6+4] = index2;
 			(*pIBuffer)[index*6+5] = index3;
 		}
 	}
