@@ -25,6 +25,14 @@ const UInt System::MAX_UINT = UINT_MAX;
 const Int System::MAX_INT = INT_MAX;
 
 //----------------------------------------------------------------------------
+Bool System::IsBigEndian()
+{
+	UInt i = 1;
+	Char* pChar = reinterpret_cast<Char*>(&i);
+	return !(*pChar);
+}
+
+//----------------------------------------------------------------------------
 void* System::Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 	size_t srcSize)
 {

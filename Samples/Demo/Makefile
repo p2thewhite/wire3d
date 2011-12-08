@@ -18,7 +18,7 @@ include $(DEVKITPPC)/wii_rules
 WIREDIR			:=  ../../../Wire
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src
-DATA			:=	data  
+DATA			:=	data2  
 INCLUDES		:=
 LIBWIRE_LIB 	:=	$(WIREDIR)/lib
 ifeq ($(WIRE_DEBUG),y)

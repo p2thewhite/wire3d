@@ -28,14 +28,17 @@ public:
 	inline UInt GetLength() const;
 	inline operator const Char* () const;
 
-    // assignment, comparisons, implicit conversion (support for hash tables)
+    // assignment, comparisons
 	String& operator= (const String& rString);
 	String& operator+= (const String& rString);
 	String operator+ (const String& rString) const;
 	Bool operator== (const String& rString) const;
 	Bool operator!= (const String& rString) const;
 
-    // Case-related
+	// implicit conversion (support for hash tables)
+	operator UInt () const;
+
+    // case-related
 	String ToUpper() const;
 	String ToLower() const;
 

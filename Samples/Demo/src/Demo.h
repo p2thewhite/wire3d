@@ -23,22 +23,11 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube();
-	Texture2D* CreateTexture();
-
-	CameraPtr mspCamera;
-	Culler mCuller;
-
-	GeometryPtr mspCube;
-
-	LightPtr mspLight;
-	StateMaterialPtr mspMaterial;
-
-	StateCullPtr mspCull;
-	StateAlphaPtr mspAlpha;
-
 	Float mAngle;
 	Double mLastTime;
+
+	CameraPtr mspCamera;
+	CullerSorting mCuller;
 
 	SpatialPtr mspRoot;
 
@@ -54,7 +43,14 @@ private:
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
-	Char* mpPath;
+	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
+		Spatial* pSpatial);
+
+	StateAlphaPtr mspAlpha;
+	const Char* mpPath;
+	THashTable<String, Material*> mMaterials;
+	THashTable<String, Mesh*> mMeshes;
+	THashTable<String, Texture2D*> mTextures;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);
