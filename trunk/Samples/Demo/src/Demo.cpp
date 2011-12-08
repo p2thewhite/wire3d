@@ -17,46 +17,33 @@ Bool Demo::OnInitialize()
 		return false;
 	}
 
-	mpPath = const_cast<Char*>("Data/"); // TODO: init "" when not used
-//	mspRoot = LoadScene("InnsbruckMobile.xml");
+	mpPath = "Data/"; // TODO: init "" when not used
+	mspRoot = LoadScene("InnsbruckMobile.xml");
 
-	mspCube = CreateCube();
+	// Once we finished creating the scene graph, we update the graph's
+	// render states. This propagates the fog state to all child nodes.
+	// Whenever you change the graph's render state (using Attach-/
+	// DetachState() on any of its children), you must call UpdateRS().
+	mspRoot->UpdateRS();
 
-	// Setup the position and orientation of the camera to look down
-	// the -z axis with y up.
-	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
-	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
+	// setup our camera at the origin, looking down the -z axis with y up
+	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
+	Vector3F viewDirection(1.0F, 0.0F, 0.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
-	// By providing a field of view (FOV) in degrees, aspect ratio,
-	// near and far plane, we define a viewing frustum used for culling.
-	UInt width = GetRenderer()->GetWidth();
-	UInt height = GetRenderer()->GetHeight();
-	Float fieldOfView = 45.0F;
-	Float aspectRatio = static_cast<Float>(width)/static_cast<Float>(height);
-	Float nearPlane = 0.1F;
-	Float farPlane = 300.0F;
-	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
+	// specify FOV, aspect ratio, near and far plane of the frustum
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
+	mspCamera->SetFrustum(60, width / height , 0.1F, 30000.0F);
+
+	// the culler needs to know which camera to use when performing its task
 	mCuller.SetCamera(mspCamera);
 
-	// We render some of the cubes using transparency and front-face culling,
-	// so we create the required render state objects here.
-	mspCull = WIRE_NEW StateCull;
-	mspAlpha = WIRE_NEW StateAlpha;
-
-	// We render the top row of cubes with lighting on, so we create a light
-	// and a material state for the cube, which defines how the light (color)
-	// will be reflected.
-	mspLight = WIRE_NEW Light;
-	mspMaterial = WIRE_NEW StateMaterial;
-
-	// Initialize working variables used in the render loop (i.e. OnIdle()).
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
-
 	return true;
 }
 
@@ -74,288 +61,14 @@ void Demo::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	// If the camera's viewing frustum changed, we need to update the culler
-	// (we know we don't change it, so it's commented out here)
-//	mCuller.SetFrustum(mspCamera->GetFrustum());
+	mspRoot->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspRoot);
 
-	// Clear the framebuffer and the z-buffer.
 	GetRenderer()->ClearBuffers();
-
-	// Tell the Renderer that we want to start drawing.
 	GetRenderer()->PreDraw(mspCamera);
-
-	// We set the render state to backface culling and disable alpha blending.
-	// NOTE: if you are not using the scenegraph to handle render states for
-	// you, it is your responsibility to handle states between draw calls.
-
-	// use back face culling
-	mspCull->CullFace = StateCull::CM_BACK;
-	GetRenderer()->SetState(mspCull);
-
-	// disable alpha blending
-	mspAlpha->BlendEnabled = false;
-	GetRenderer()->SetState(mspAlpha);
-
-	// The light's color is white. We set the material of the cube so it
-	// reduces the red and blue component a bit, resulting in a tint of green.
- 	mspMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.9F, 1.0F);
- 	GetRenderer()->SetState(mspMaterial);
-
-	// modulate the texture with the light
-	mspCube->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
-
-	GetRenderer()->EnableLighting(mspLight->Ambient);
-	GetRenderer()->SetLight(mspLight);
-
-	// Draw the upper row of cubes.
-	const UInt cubeCount = 5;
-	const Float stride = 3.5F;
-	const Float offset = cubeCount * -0.5F * stride + stride * 0.6F;
-	Float z = MathF::Sin(mAngle) * 3.0F;
-
-	for (UInt i = 0; i < cubeCount; i++)
-	{
-		// Rotate the cube around the axis specified by the vector and
-		// the angle given in radians.
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
-
-		// After setting world transformation, we update the world bounding
-		// volume of the cube so we can cull it against the viewing frustum.
-		// That way we only draw objects that are visible on the screen.
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
-	}
-
-	// Draw the lower row of cubes using alpha blending.
-	// For correct transparency order, we draw the backfaces first and then
-	// the transparent frontfaces.
-
-	// To draw the backfaces, cull the frontfaces
-	mspCull->CullFace = StateCull::CM_FRONT;
-	GetRenderer()->SetState(mspCull);
-
-	GetRenderer()->DisableLighting();
-
-	// There is no more light, so the texture blending needs to be reset,
-	// otherwise it will modulate undefined values.
-	mspCube->GetMaterial()->SetBlendMode(Material::BM_REPLACE);
-	
-	z = MathF::Cos(mAngle) * 3.0F;
-	for (UInt i = 0; i < cubeCount; i++)
-	{
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
-	}
-
-	// Cull the backfaces, i.e. draw the front faces using alpha blending
-	mspCull->CullFace = StateCull::CM_BACK;
-	GetRenderer()->SetState(mspCull);
-	mspAlpha->BlendEnabled = true;
-	GetRenderer()->SetState(mspAlpha);
-
-	for (UInt i = 0; i < cubeCount; i++)
-	{
-		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
-		{
-			GetRenderer()->Draw(mspCube);
-		}
-	}
-
-	// Tell the Renderer that we are done with drawing
+	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
-
-	// Present the framebuffer (aka backbuffer) on the screen
 	GetRenderer()->DisplayBackBuffer();
-}
-
-//----------------------------------------------------------------------------
-Geometry* Demo::CreateCube()
-{
-	// Create a cube with unique texture (UV) coordinates for each side.
-	// This means we have to duplicate vertices, since every vertex can only
-	// have one UV coordinate per texture. This results in 24 (4 vertices
-	// times 6 sides of the cube) vertices.
-	const Float extent = 1.0F;
-	const Vector3F vertices[] =
-	{
-		// side 1
-		Vector3F(-extent,  extent,  extent),
-		Vector3F( extent,  extent,  extent),
-		Vector3F( extent, -extent,  extent),
-		Vector3F(-extent, -extent,  extent),
-		// side 2
-		Vector3F( extent,  extent, -extent),
-		Vector3F( extent,  extent,  extent),
-		Vector3F(-extent,  extent,  extent),
-		Vector3F(-extent,  extent, -extent),
-		// side 3
-		Vector3F( extent, -extent,  extent),
-		Vector3F( extent,  extent,  extent),
-		Vector3F( extent,  extent, -extent),
-		Vector3F( extent, -extent, -extent),
-		// side 4
-		Vector3F(-extent,  extent, -extent),
-		Vector3F( extent,  extent, -extent),
-		Vector3F( extent, -extent, -extent),
-		Vector3F(-extent, -extent, -extent),
-		// side 5
-		Vector3F( extent, -extent, -extent),
-		Vector3F( extent, -extent,  extent),
-		Vector3F(-extent, -extent,  extent),
-		Vector3F(-extent, -extent, -extent),
-		// side 6
-		Vector3F(-extent, -extent,  extent),
-		Vector3F(-extent,  extent,  extent),
-		Vector3F(-extent,  extent, -extent),
-		Vector3F(-extent, -extent, -extent)
-	};
-
-	// Texture coordinates
-	const Float extentUv = 1.0F;
-	const Vector2F uvs[] =
-	{
-		// side 1
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv),
-		// side 2
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv),
-		// side 3
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv),
-		// side 4
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv),
-		// side 5
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv),
-		// side 6
-		Vector2F(0.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 0.0F * extentUv),
-		Vector2F(1.0F * extentUv, 1.0F * extentUv),
-		Vector2F(0.0F * extentUv, 1.0F * extentUv)
-	};
-
-	// Indices provide connectivity information and define the triangle mesh.
-	// Every side of the cube consists of 2 triangles.
-	const UInt indices[] =
-	{
-		// side 1
-		0, 2, 1,
-		0, 3, 2,
-		// side 2
-		4, 6, 5,
-		4, 7, 6,
-		// side 3
-		8, 10, 9,
-		8, 11, 10,
-		// side 4
-		12, 13, 14,
-		12, 14, 15,
-		// side 5
-		16, 17, 18,
-		16, 18, 19,
-		// side 6
-		20, 21, 22,
-		20, 22, 23
-	};
-
-	// Before creating the VertexBuffer we need to define its format.
-	// It consists of 3d positions, 2d texture coordinates and 3d normal
-	// vectors. Normals are required for lighting.
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);  // channels: X, Y, Z
-	attributes.SetTCoordChannels(2);	// channels: U, V
-	attributes.SetNormalChannels(3);	// channels: X, Y, Z
-
-	// Now with the attributes being defined, we can create a VertexBuffer
-	// and fill it with data.
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-
-	// If the supplied number of vertices does not match the number of uvs,
-	// the assert fires and halts the application (in debug mode only)
-	WIRE_ASSERT(vertexQuantity == (sizeof(uvs) / sizeof(Vector2F)));
-
-	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes,
-		vertexQuantity);
-
-	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
-	{
-		pVBuffer->Position3(i) = vertices[i];
-		pVBuffer->TCoord2(i) = uvs[i];
-
-		// We don't provide normals here, we generate them later.
-//		pVBuffer->Normal3(i) = normals[i];
-	}
-
-	// Fill the IndexBuffer with data.
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
-	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
-	for	(UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIBuffer)[i] = indices[i];
-	}
-
-	// The cube shall be textured. Therefore we create and attach a material,
-	// where we add textures and define their blending modes.
- 	Material* pMaterial = WIRE_NEW Material;
- 	pMaterial->AddTexture(CreateTexture(), Material::BM_MODULATE);
-
-	// Geometric objects consist of a Vertex-, an IndexBuffer and optionally
-	// a material
-	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
-
-	// Generate normal vectors from the triangles of the geometry.
-	pCube->GetMesh()->GenerateNormals();
-
-	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
-	// smart pointers. Thus, you can share these buffers amongst Geometry 
-	// objects without having to worry about deletion. Same applies to
-	// Materials, Effects, Textures and Images.
-
-	return pCube;
-}
-
-//----------------------------------------------------------------------------
-Texture2D* Demo::CreateTexture()
-{
-	Image2D* pImage = LoadImage("Village.png", true);
-
-	// Create a Texture using this image. Images can be shared amongst
-	// texture objects. So you can use different filter/wrap/anisotropy values
-	// without the need to duplicate images in memory.
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-
-	// Use anisotropic filtering for texturing. Looks better, but lowers
-	// performance.
-	pTexture->SetAnisotropyValue(4.0F);
-
-	return pTexture;
 }
 
 //----------------------------------------------------------------------------
@@ -372,9 +85,16 @@ Node* Demo::LoadScene(const Char* pFilename)
 	System::Memcpy(pXmlNullTerminated, xmlSize, pXml, xmlSize);
 	pXmlNullTerminated[xmlSize] = 0;
 
+	mspAlpha = WIRE_NEW StateAlpha;
+	mspAlpha->BlendEnabled = true;
+
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
 	Node* pNode = DynamicCast<Node>(Traverse(doc.first_node()));
+
+	mMaterials.RemoveAll();
+	mMeshes.RemoveAll();
+	mTextures.RemoveAll();
 
 	return pNode;
 }
@@ -437,14 +157,6 @@ Spatial* Demo::Traverse(rapidxml::xml_node<>* pXmlNode)
 	WIRE_ASSERT(System::Strcmp("Node", pXmlNode->name()) == 0);
 	Node* pNode = ParseNode(pXmlNode);
 
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
-	{
-		String str = String("XmlNode has attribute ") + String(attr->name()) +
-			String(" with value ") + String(attr->value()) + String ("\n");
-		System::Print(str);
-	}
-
 	if (pXmlNode->first_node())
 	{
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
@@ -476,9 +188,9 @@ Char* Demo::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
-Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
+void Demo::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
+	Spatial* pSpatial)
 {
-	Node* pNode = WIRE_NEW Node;
 	Vector3F t;
 	QuaternionF r;
 	Vector3F s;
@@ -486,11 +198,7 @@ Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("Name", attr->name()) == 0)
-		{
-			continue;
-		}
-		else if (System::Strcmp("Pos", attr->name()) == 0)
+		if (System::Strcmp("Pos", attr->name()) == 0)
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f", &t.X(), &t.Y(), &t.Z());
@@ -498,7 +206,10 @@ Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 		}
 		else if (System::Strcmp("Rot", attr->name()) == 0)
 		{
-			// TODO euler or quaternion
+			Int n;
+			n = sscanf(attr->value(), "%f, %f, %f, %f", &r.W(), &r.X(),
+				&r.Y(), &r.Z());
+			WIRE_ASSERT(n == 4);
 		}
 		else if (System::Strcmp("Scale", attr->name()) == 0)
 		{
@@ -506,29 +217,39 @@ Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
 			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
 			WIRE_ASSERT(n == 3);
 		}
-		else
-		{
-			WIRE_ASSERT(false);
-		}
 	}
 
-	
 	if ((t.X() != 0) || (t.Y() != 0) || (t.Z() != 0))
 	{
-		pNode->Local.SetTranslate(t);
+		pSpatial->Local.SetTranslate(t);
+	}
+
+	if ((r.W() != 1) || (r.X() != 0) || (r.Y() != 0) || (r.Z() != 0))
+	{
+		Matrix3F m;
+		r.ToRotationMatrix(m);
+		pSpatial->Local.SetRotate(m);
 	}
 
 	if ((s.X() != 1.0f) || (s.Y() != 1.0f) || (s.Z() != 1.0f))
 	{
 		if ((s.X() == s.Y()) && (s.X() == s.Z()))
 		{
-			pNode->Local.SetUniformScale(s.X());
+			pSpatial->Local.SetUniformScale(s.X());
 		}
 		else
 		{
-			pNode->Local.SetScale(s);
+			pSpatial->Local.SetScale(s);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+Node* Demo::ParseNode(rapidxml::xml_node<>* pXmlNode)
+{
+	Node* pNode = WIRE_NEW Node;
+
+	ParseTransformation(pXmlNode, pNode);
 
 	return pNode;
 }
@@ -569,9 +290,27 @@ Geometry* Demo::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	Bool hasAlpha = false;
+	if (pMaterial)
+	{
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+		{
+			Image2D* pImage2D = pMaterial->GetTexture(i)->GetImage();
+			if (pImage2D->GetFormat() == Image2D::FM_RGBA4444 ||
+				pImage2D->GetFormat() == Image2D::FM_RGBA8888)
+			{
+				hasAlpha = true;
+			}
+		}
+	}
 
-	// TODO: trafo
+	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	if (hasAlpha)
+	{
+		pGeo->AttachState(mspAlpha);
+	}
+
+	ParseTransformation(pXmlNode, pGeo);
 
 	return pGeo;
 }
@@ -579,11 +318,18 @@ Geometry* Demo::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 {
-	// TODO: cache Mesh for re-use
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
 	{
+		WIRE_ASSERT(false /* Mesh has no name */);
 		return NULL;
+	}
+
+	Mesh** pValue = mMeshes.Find(pName);
+	if (pValue)
+	{
+		WIRE_ASSERT(*pValue);
+		return *pValue;
 	}
 
 	Char* pVerticesName = NULL;
@@ -631,20 +377,18 @@ Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	Int indicesSize;
-	Char* pIndices = Load(pIndicesName, indicesSize);
-
 	VertexAttributes va;
 	va.SetPositionChannels(3);
 	Int verticesSize;
-	Char* pVertices = Load(pVerticesName, verticesSize);
+	Float* pVertices = reinterpret_cast<Float*>(Load(pVerticesName,
+		verticesSize));
 
 	Int normalsSize;
-	Char* pNormals = NULL;
+	Float* pNormals = NULL;
 	if (pNormalsName)
 	{
 		va.SetNormalChannels(3);
-		pNormals = Load(pNormalsName, normalsSize);
+		pNormals = reinterpret_cast<Float*>(Load(pNormalsName, normalsSize));
 		if (verticesSize != normalsSize)
 		{
 			WIRE_ASSERT(false /* vertices and normals do not match */);
@@ -653,11 +397,11 @@ Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Int colorsSize;
-	Char* pColors = NULL;
+	Float* pColors = NULL;
 	if (pColorsName)
 	{
 		va.SetColorChannels(4);
-		pColors = Load(pColorsName, colorsSize);
+		pColors = reinterpret_cast<Float*>(Load(pColorsName, colorsSize));
 		if (verticesSize/(3*sizeof(Float)) != colorsSize/(4*sizeof(Float)))
 		{
 			WIRE_ASSERT(false /* vertices and colors do not match */);
@@ -665,12 +409,13 @@ Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	TArray<Char*> uvSets(uvSetNames.GetQuantity());
+	TArray<Float*> uvSets(uvSetNames.GetQuantity());
 	TArray<Int> uvSetSizes(uvSetNames.GetQuantity());
 	for (UInt i = 0; i < uvSetNames.GetQuantity(); i++)
 	{
 		uvSetSizes.Append(0);
-		uvSets.Append(Load(uvSetNames[i], uvSetSizes[i]));
+		uvSets.Append(reinterpret_cast<Float*>(Load(uvSetNames[i],
+			uvSetSizes[i])));
 		va.SetTCoordChannels(2, i);
 		if (verticesSize/(3*sizeof(Float)) != uvSetSizes[i]/(2*sizeof(Float)))
 		{
@@ -684,20 +429,57 @@ Mesh* Demo::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 
 	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
 	{
+		if (pVertices)
+		{
+			Vector3F v(*pVertices++, *pVertices++, *pVertices++);
+			pVertexBuffer->Position3(i) = v;
+		}
 
+		if (pNormals)
+		{
+			Vector3F v(*pNormals++, *pNormals++, *pNormals++);
+			pVertexBuffer->Normal3(i) = v;
+		}
+
+		if (pColors)
+		{
+			ColorRGBA c(*pColors++, *pColors++, *pColors++, *pColors++);
+			pVertexBuffer->Color4(i) = c;
+		}
+
+		for (UInt j = 0; j < uvSets.GetQuantity(); j++)
+		{
+			Vector2F v(uvSets[j][i*2], uvSets[j][i*2+1]);
+			pVertexBuffer->TCoord2(i, j) = v;
+		}
 	}
 
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(reinterpret_cast<UInt*>(
-		pIndices), indicesSize/sizeof(UInt));
+	Int indicesSize;
+	UInt* pIndices = reinterpret_cast<UInt*>(Load(pIndicesName, indicesSize));
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(pIndices,
+		indicesSize/sizeof(UInt));
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
+	mMeshes.Insert(pName, pMesh);
 	return pMesh;
 }
 
 //----------------------------------------------------------------------------
 Material* Demo::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 {
-	// TODO: cache Material for re-use
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (!pName)
+	{
+		WIRE_ASSERT(false /* Material has no name */);
+		return NULL;
+	}
+
+	Material** pValue = mMaterials.Find(pName);
+	if (pValue)
+	{
+		WIRE_ASSERT(*pValue);
+		return *pValue;
+	}
 
 	Material* pMaterial = WIRE_NEW Material;
 
@@ -722,13 +504,27 @@ Material* Demo::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
+	mMaterials.Insert(pName, pMaterial);
 	return pMaterial;
 }
 
 //----------------------------------------------------------------------------
 Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 {
-	Char* pName = NULL;
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (!pName)
+	{
+		WIRE_ASSERT(false /* No Texture filename found */);
+		return NULL;
+	}
+
+	Texture2D** pValue = mTextures.Find(pName);
+	if (pValue)
+	{
+		WIRE_ASSERT(*pValue);
+		return *pValue;
+	}
+
 	UInt mipmapCount = 1;
 	Texture2D::FilterType filter = Texture2D::FT_LINEAR_LINEAR;
 	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
@@ -737,11 +533,7 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("Name", attr->name()) == 0)
-		{
-			pName = attr->value();
-		}
-		else if (System::Strcmp("Mipmaps", attr->name()) == 0)
+		if (System::Strcmp("Mipmaps", attr->name()) == 0)
 		{
 			Int n;
 			n = sscanf(attr->value(), "%d", &mipmapCount);
@@ -781,14 +573,6 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	if (!pName)
-	{
-		WIRE_ASSERT(false /* No Texture filename found */);
-		return NULL;
-	}
-
-	// TODO: cache Textures for re-use
-
 	Image2D* pImage = LoadImage(pName, (mipmapCount > 1));
 	if (!pImage)
 	{
@@ -800,6 +584,8 @@ Texture2D* Demo::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 	pTexture->SetWrapType(0, warp);
 	pTexture->SetWrapType(1, warp);
 	pTexture->SetAnisotropyValue(static_cast<Float>(anisoLevel));
+
+	mTextures.Insert(pName, pTexture);
 
 	return pTexture;
 }

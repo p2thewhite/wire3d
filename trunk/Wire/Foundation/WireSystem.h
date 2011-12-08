@@ -57,6 +57,8 @@ public:
 	static const UInt MAX_UINT;
 	static const Int MAX_INT;
 
+	static Bool IsBigEndian();
+
 	static void* Memcpy(void* pDst, size_t dstSize, const void* pSrc,
 		size_t srcSize);
 	static void Memset(void* pDst, Int value, size_t count);

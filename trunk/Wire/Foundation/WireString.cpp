@@ -142,6 +142,19 @@ Bool String::operator!= (const String& rString) const
 }
 
 //----------------------------------------------------------------------------
+String::operator UInt () const
+{
+	UInt hash = 5381;
+
+	for (UInt i = 0; i < mLength; i++)
+	{
+		hash += (hash << 5) + mpText[i];
+	}
+
+	return hash;
+}
+
+//----------------------------------------------------------------------------
 String String::ToUpper() const
 {
     String copy(*this);
