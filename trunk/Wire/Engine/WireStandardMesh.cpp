@@ -96,8 +96,8 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 		}
 	}
 
-	UInt indices[] = { 0, 2, 1,	0, 3, 2, 0, 1, 5, 0, 5, 4, 0, 4, 7,	0, 7, 3,
-		6, 4, 5, 6, 7, 4, 6, 5, 1, 6, 1, 2,	6, 2, 3, 6, 3, 7, };
+	UInt indices[] = { 0, 1, 2,	0, 2, 3, 0, 5, 1, 0, 4, 5, 0, 7, 4, 0, 3, 7,
+		6, 5, 4, 6, 4, 7, 6, 1, 5, 6, 2, 1, 6, 3, 2, 6, 7, 3 };
 
 	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
@@ -214,12 +214,12 @@ Geometry* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 	for	(UInt i = 0; i < 6; i++)
 	{
 		(*pIBuffer)[0+i*6] = indices[0+i*4];
-		(*pIBuffer)[1+i*6] = indices[1+i*4];
-		(*pIBuffer)[2+i*6] = indices[3+i*4];
+		(*pIBuffer)[1+i*6] = indices[3+i*4];
+		(*pIBuffer)[2+i*6] = indices[1+i*4];
 
 		(*pIBuffer)[3+i*6] = indices[3+i*4];
-		(*pIBuffer)[4+i*6] = indices[1+i*4];
-		(*pIBuffer)[5+i*6] = indices[2+i*4];
+		(*pIBuffer)[4+i*6] = indices[2+i*4];
+		(*pIBuffer)[5+i*6] = indices[1+i*4];
 	}
 
 	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer);
@@ -287,8 +287,8 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 
 	const UInt indices[] =
 	{
-		0, 2, 1, 0, 3, 2, 4, 6, 5, 4, 7, 6,	8, 10, 9, 8, 11, 10, 12, 13, 14,
-		12, 14, 15, 16, 17, 18,	16, 18, 19,	20, 21, 22,	20, 22, 23
+		0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 14, 13,
+		12, 15, 14, 16, 18, 17,	16, 19, 18, 20, 22, 21,	20, 23, 22
 	};
 
 	VertexAttributes attributes;
@@ -439,12 +439,12 @@ Geometry* StandardMesh::CreatePlane(const UInt xTileCount,
 			UInt index3 = index0+xTileCount+2;
 
 			(*pIBuffer)[index*6] = index0;
-			(*pIBuffer)[index*6+1] = index2;
-			(*pIBuffer)[index*6+2] = index1;
+			(*pIBuffer)[index*6+1] = index1;
+			(*pIBuffer)[index*6+2] = index2;
 
 			(*pIBuffer)[index*6+3] = index1;
-			(*pIBuffer)[index*6+4] = index2;
-			(*pIBuffer)[index*6+5] = index3;
+			(*pIBuffer)[index*6+4] = index3;
+			(*pIBuffer)[index*6+5] = index2;
 
 		}
 	}
@@ -473,7 +473,7 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F)
 	};
 
-	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
+	const UInt indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
@@ -760,11 +760,11 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 		for (i = 0; i < radialSampleCount; i++)
 		{
 			pLocalIndex[0] = i0++;
-			pLocalIndex[1] = i1;
-			pLocalIndex[2] = i2;
+			pLocalIndex[1] = i2;
+			pLocalIndex[2] = i1;
 			pLocalIndex[3] = i1++;
-			pLocalIndex[4] = i3++;
-			pLocalIndex[5] = i2++;
+			pLocalIndex[4] = i2++;
+			pLocalIndex[5] = i3++;
 			pLocalIndex += 6;
 		}
 	}
@@ -774,8 +774,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	for (i = 0; i < radialSampleCount; i++)
 	{
 		pLocalIndex[0] = i;
-		pLocalIndex[1] = vQm2;
-		pLocalIndex[2] = i+1;
+		pLocalIndex[1] = i+1;
+		pLocalIndex[2] = vQm2;
 		pLocalIndex += 3;
 	}
 
@@ -785,8 +785,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	for (i = 0; i < radialSampleCount; i++)
 	{
 		pLocalIndex[0] = i+offset;
-		pLocalIndex[1] = i+1+offset;
-		pLocalIndex[2] = vQm1;
+		pLocalIndex[1] = vQm1;
+		pLocalIndex[2] = i+1+offset;
 		pLocalIndex += 3;
 	}
 
@@ -872,7 +872,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 	attributes.SetTCoordChannels(2);
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
-	const UInt indices[] = { 0, 2, 1, 0, 3, 2 };
+	const UInt indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	const Float xStride = 8.0F;
 	const Float yStride = 8.0F;
