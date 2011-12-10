@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>Demo</ProjectName>
-    <ProjectGuid>{4C855CAF-508E-4DEF-B6D5-82D24FDFE64E}</ProjectGuid>
+    <ProjectGuid>{1473F0E0-E3E7-41BA-A094-279965497DE4}</ProjectGuid>
     <RootNamespace>Demo</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>
@@ -74,9 +74,14 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Demo.cpp" />
+    <ClCompile Include="src\Importer.cpp" />
+    <ClCompile Include="src\PicoPNG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Demo.h" />
+    <ClInclude Include="src\Importer.h" />
+    <ClInclude Include="src\PicoPNG.h" />
+    <ClInclude Include="src\rapidxml.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

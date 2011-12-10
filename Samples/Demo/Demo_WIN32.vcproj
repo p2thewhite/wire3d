@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="Demo"
-	ProjectGUID="{91F1F7BC-0641-4FE9-AB07-27203A37FA07}"
+	ProjectGUID="{CC0521C8-3EC5-444B-B070-560E256479D1}"
 	RootNamespace="Demo_WIN32"
 	>
 	<Platforms>
@@ -43,9 +43,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
-				PreprocessorDefinitions="WIRE_WIN;WIRE_DEBUG"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN;WIRE_DEBUG"
 				MinimalRebuild="true"
-				ExceptionHandling="0"
+				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="false"
@@ -126,8 +126,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
-				PreprocessorDefinitions="WIRE_WIN"
-				ExceptionHandling="0"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN"
+				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="false"
 				WarningLevel="3"
@@ -190,6 +190,26 @@
 		</File>
 		<File
 			RelativePath=".\src\Demo.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\Importer.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\Importer.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PicoPNG.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PicoPNG.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\rapidxml.hpp"
 			>
 		</File>
 	</Files>

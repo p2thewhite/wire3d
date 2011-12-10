@@ -1,1 +1,1 @@
-<Project name="Demo"><File path="src\Demo.h"></File><File path="src\Demo.cpp"></File></Project>
+<Project name="Demo"><File path="src\Demo.h"></File><File path="src\Demo.cpp"></File><File path="src\Importer.cpp"></File><File path="src\Importer.h"></File><File path="src\PicoPNG.cpp"></File><File path="src\PicoPNG.h"></File><File path="src\rapidxml.hpp"></File></Project>

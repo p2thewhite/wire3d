@@ -58,6 +58,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample10 - Material Sorting
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Samples\Demo\Demo_WIN32.vcproj", "{CC0521C8-3EC5-444B-B070-560E256479D1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -112,6 +117,10 @@ Global
 		{D46B0F8C-BE11-4926-AE49-92B38846E3A7}.Debug|Win32.Build.0 = Debug|Win32
 		{D46B0F8C-BE11-4926-AE49-92B38846E3A7}.Release|Win32.ActiveCfg = Release|Win32
 		{D46B0F8C-BE11-4926-AE49-92B38846E3A7}.Release|Win32.Build.0 = Release|Win32
+		{CC0521C8-3EC5-444B-B070-560E256479D1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CC0521C8-3EC5-444B-B070-560E256479D1}.Debug|Win32.Build.0 = Debug|Win32
+		{CC0521C8-3EC5-444B-B070-560E256479D1}.Release|Win32.ActiveCfg = Release|Win32
+		{CC0521C8-3EC5-444B-B070-560E256479D1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

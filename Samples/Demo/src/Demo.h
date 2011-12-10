@@ -3,7 +3,6 @@
 #define DEMO_H
 
 #include "WireApplication.h"
-#include "rapidxml.hpp"
 
 using namespace Wire;
 
@@ -30,27 +29,6 @@ private:
 	CullerSorting mCuller;
 
 	SpatialPtr mspRoot;
-
-	//-----
-	Node* LoadScene(const Char* pFilename);
-	Image2D* LoadImage(const Char* pFilename, Bool hasMipmaps);
-	Char* Load(const Char* pFilename, Int& rSize);
-
-	Spatial* Traverse(rapidxml::xml_node<>* pXmlNode);
-	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
-	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
-	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
-	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
-	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
-	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
-	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
-		Spatial* pSpatial);
-
-	StateAlphaPtr mspAlpha;
-	const Char* mpPath;
-	THashTable<String, Material*> mMaterials;
-	THashTable<String, Mesh*> mMeshes;
-	THashTable<String, Texture2D*> mTextures;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);
