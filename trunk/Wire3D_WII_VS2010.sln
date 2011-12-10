@@ -58,6 +58,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample10 - Material Sorting
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Samples\Demo\Demo_WII.vcxproj", "{1473F0E0-E3E7-41BA-A094-279965497DE4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -112,6 +117,10 @@ Global
 		{0673CD71-783F-40E8-A877-BEF7A4EBBFBC}.Debug|Win32.Build.0 = Debug|Win32
 		{0673CD71-783F-40E8-A877-BEF7A4EBBFBC}.Release|Win32.ActiveCfg = Release|Win32
 		{0673CD71-783F-40E8-A877-BEF7A4EBBFBC}.Release|Win32.Build.0 = Release|Win32
+		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Debug|Win32.Build.0 = Debug|Win32
+		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Release|Win32.ActiveCfg = Release|Win32
+		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
