@@ -17,8 +17,11 @@ Importer::Importer(const Char* pPath)
 }
 
 //----------------------------------------------------------------------------
-Node* Importer::LoadSceneFromXml(const Char* pFilename)
+Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
+	pCameras)
 {
+	mpCameras = pCameras;
+
 	Int xmlSize;
 	Char* pXml = Load(pFilename, xmlSize);
 	if (!pXml)
@@ -35,13 +38,15 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename)
 
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
-	Node* pNode = DynamicCast<Node>(Traverse(doc.first_node()));
+	Node* pRoot = WIRE_NEW Node;
+	Traverse(doc.first_node(), pRoot);
 
 	mMaterials.RemoveAll();
+	mMaterialStates.RemoveAll();
 	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
 
-	return pNode;
+	return pRoot;
 }
 
 //----------------------------------------------------------------------------
@@ -92,28 +97,38 @@ Char* Importer::Load(const Char* pFilename, Int& rSize)
 }
 
 //----------------------------------------------------------------------------
-Spatial* Importer::Traverse(rapidxml::xml_node<>* pXmlNode)
+void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
 	if (System::Strcmp("Leaf", pXmlNode->name()) == 0)
 	{
-		return ParseLeaf(pXmlNode);	
+		Spatial* pGeo = ParseLeaf(pXmlNode);
+		if (pGeo)
+		{
+			pParent->AttachChild(pGeo);
+		}
+
+		return;
 	}
 
 	WIRE_ASSERT(System::Strcmp("Node", pXmlNode->name()) == 0);
 	Node* pNode = ParseNode(pXmlNode);
+	pParent->AttachChild(pNode);
 
 	if (pXmlNode->first_node())
 	{
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			Spatial* pSpatial = Traverse(pChild);
-			WIRE_ASSERT(pSpatial);
-			pNode->AttachChild(pSpatial);
+			if (System::Strcmp("Camera", pChild->name()) == 0)
+			{
+				ParseCamera(pChild, pNode);
+			}
+			else
+			{
+				Traverse(pChild, pNode);
+			}
 		}
 	}
-
-	return pNode;
 }
 
 //----------------------------------------------------------------------------
@@ -130,6 +145,68 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 
 	WIRE_ASSERT(false /* Xml attribute not found */);
 	return NULL;
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+{
+	if (mpCameras == NULL)
+	{
+		return;
+	}
+
+	Spatial* pRoot = pSpatial->GetParent();
+	while (pRoot && pRoot->GetParent())
+	{
+		pRoot = pRoot->GetParent();
+	}
+
+	Vector3F cameraLocation(0, 0, 0);
+	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
+	Vector3F up(0.0F, 1.0F, 0.0F);
+
+	if (pRoot)
+	{
+		pRoot->UpdateGS();
+		cameraLocation = pSpatial->World.GetTranslate();
+
+		Matrix34F rot = pSpatial->World.GetMatrix();
+		viewDirection = rot.GetColumn(2);
+		up = rot.GetColumn(1);
+	}
+
+	Char* pFov = GetValue(pXmlNode, "Fov");
+	Float fov = 45;
+	if (pFov)
+	{
+ 		Int n;
+ 		n = sscanf(pFov, "%f", &fov);
+ 		WIRE_ASSERT(n == 1);
+	}
+
+	Char* pNear = GetValue(pXmlNode, "Near");
+	Float near = 45;
+	if (pNear)
+	{
+		Int n;
+		n = sscanf(pNear, "%f", &near);
+		WIRE_ASSERT(n == 1);
+	}
+
+	Char* pFar = GetValue(pXmlNode, "Far");
+	Float far = 45;
+	if (pFar)
+	{
+		Int n;
+		n = sscanf(pFar, "%f", &far);
+		WIRE_ASSERT(n == 1);
+	}
+	
+	Vector3F right = viewDirection.Cross(up);
+	Camera* pCam = WIRE_NEW Camera;
+	pCam->SetFrame(cameraLocation, viewDirection, up, right);
+	pCam->SetFrustum(fov, 640.0f / 480.0f , near, far);
+	mpCameras->Append(pCam);
 }
 
 //----------------------------------------------------------------------------
@@ -235,6 +312,8 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
+	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+
 	Bool hasAlpha = false;
 	if (pMaterial)
 	{
@@ -247,9 +326,14 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 				hasAlpha = true;
 			}
 		}
+
+		StateMaterial** ppState = mMaterialStates.Find(pMaterial);
+		if (ppState && *ppState)
+		{
+			pGeo->AttachState(*ppState);
+		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
 	if (hasAlpha)
 	{
 		pGeo->AttachState(mspAlpha);
@@ -437,6 +521,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Material* pMaterial = WIRE_NEW Material;
+	StateMaterial* pMaterialState = NULL;
 
 	if (pXmlNode->first_node())
 	{
@@ -450,6 +535,28 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 					0 ? Material::BM_MODULATE : Material::BM_REPLACE;
 				pMaterial->AddTexture(pTex, mode);
 			}
+			else if (System::Strcmp("MaterialState", pChild->name()) == 0)
+			{
+				Char* pCol = GetValue(pChild, "Ambient");
+				if (pCol)
+				{
+					Int n;
+					ColorRGBA c;
+					n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
+
+					WIRE_ASSERT(n == 4);
+					if (pMaterialState)
+					{
+						// multiple MaterialStates defined within one Material
+						// we only use the last encountered.
+						WIRE_ASSERT(false);
+						WIRE_DELETE pMaterialState;
+					}
+
+					pMaterialState = WIRE_NEW StateMaterial;
+					pMaterialState->Ambient = c;
+				}
+			}
 		}
 	}
 
@@ -460,6 +567,12 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	mMaterials.Insert(pName, pMaterial);
+
+	if (pMaterialState)
+	{
+		mMaterialStates.Insert(pMaterial, pMaterialState);
+	}
+
 	return pMaterial;
 }
 

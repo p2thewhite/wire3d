@@ -6,12 +6,14 @@
 #include <stdio.h>
 
 #include "rapidxml.hpp"
+#include "WireCamera.h"
 #include "WireGeometry.h"
 #include "WireImage2D.h"
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireNode.h"
 #include "WireStateAlpha.h"
+#include "WireStateMaterial.h"
 #include "WireString.h"
 #include "WireTexture2D.h"
 
@@ -22,13 +24,14 @@ class Importer
 public:
 	Importer(const Char* pPath = "");
 
-	Node* LoadSceneFromXml(const Char* pFilename);
+	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
+		pCameras = NULL);
 	Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
 
 private:
 	Char* Load(const Char* pFilename, Int& rSize);
 
-	Spatial* Traverse(rapidxml::xml_node<>* pXmlNode);
+	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
@@ -38,6 +41,7 @@ private:
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 		Spatial* pSpatial);
+	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
@@ -46,7 +50,10 @@ private:
 
 	StateAlphaPtr mspAlpha;
 	const Char* mpPath;
+	TArray<CameraPtr>* mpCameras;
+
 	THashTable<String, Material*> mMaterials;
+	THashTable<Material*, StateMaterial*> mMaterialStates;
 	THashTable<String, Mesh*> mMeshes;
 	THashTable<String, Texture2D*> mTextures;
 };
