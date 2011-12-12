@@ -22,13 +22,14 @@ public:
 	virtual void OnIdle();
 
 private:
-	Float mAngle;
 	Double mLastTime;
+	Float mAngle;
 
 	CameraPtr mspCamera;
 	CullerSorting mCuller;
 
 	SpatialPtr mspRoot;
+	TArray<CameraPtr> mCameras;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-public class Exporter : EditorWindow
+public class Unity3DExporter : EditorWindow
 {
     private static bool mIsWindowOpen;
+    private bool mExportStateMaterial;
+	private string m2ndTextureName;
 
     private string mPath;
     private List<string> mMeshAssetsProcessed;
@@ -19,7 +21,7 @@ public class Exporter : EditorWindow
         if (!mIsWindowOpen)
         {
             mIsWindowOpen = true;
-            Exporter editor = GetWindow((typeof(Exporter))) as Exporter;
+            Unity3DExporter editor = GetWindow((typeof(Unity3DExporter))) as Unity3DExporter;
             if (editor)
             {
                 editor.autoRepaintOnSceneChange = true;
@@ -36,10 +38,7 @@ public class Exporter : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.LookLikeControls();
-
-        GUILayout.Label("Save to:");
-        mPath = EditorGUILayout.TextField("", mPath ?? string.Empty);
-
+        mPath = EditorGUILayout.TextField("Save to:", mPath ?? string.Empty);
         EditorGUILayout.EndHorizontal();
 
         bool dirExists = Directory.Exists(mPath);
@@ -48,6 +47,10 @@ public class Exporter : EditorWindow
         {
             GUILayout.Label("Specified path '" + mPath + "' does not exist.");
         }
+
+        mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, "Try to export Material State (i.e. Main Color)");
+		GUILayout.Label("Property name of");
+        m2ndTextureName = EditorGUILayout.TextField("2nd Texture:", m2ndTextureName ?? string.Empty);
 
         if (dirExists && !string.IsNullOrEmpty(mPath))
         {
@@ -117,6 +120,8 @@ public class Exporter : EditorWindow
         outfile.WriteLine(indent + "<Node Name=\"" + t.gameObject.name + "_" +
             t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + ">");
 
+        WriteCamera(t.gameObject, outfile, indent);
+
         if (t.GetChildCount() > 0)
         {
             if ((mf != null) && (mr != null))
@@ -144,6 +149,18 @@ public class Exporter : EditorWindow
             "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
     }
 
+    private void WriteCamera(GameObject go, StreamWriter outfile, string indent)
+    {
+        Camera cam = go.GetComponent<Camera>();
+        if (cam == null)
+        {
+            return;
+        }
+
+        outfile.WriteLine(indent + "  " + "<Camera Fov=\"" + cam.fieldOfView + "\" Near=\"" +
+            cam.nearClipPlane + "\" Far=\"" + cam.farClipPlane + "\" />");
+    }
+
     private void WriteLeaf(Transform t, StreamWriter outfile, string indent)
     {
         MeshFilter mf = t.gameObject.GetComponent<MeshFilter>();
@@ -156,6 +173,7 @@ public class Exporter : EditorWindow
         string isStatic = " Static=\"" + (t.gameObject.isStatic ? "1" : "0") + "\"";
         outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "_" +
             t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + isStatic + ">");
+        WriteCamera(t.gameObject, outfile, indent);
         WriteMesh(mf.sharedMesh, outfile, indent + "  ", mr.lightmapTilingOffset);
         WriteMaterial(mr, outfile, indent + "  ");
         outfile.WriteLine(indent + "</Leaf>");       
@@ -180,125 +198,150 @@ public class Exporter : EditorWindow
         Texture2D tex = m.mainTexture as Texture2D;
         WriteTexture(tex, outfile, indent);
 
+        if (!string.IsNullOrEmpty(m2ndTextureName) && m.HasProperty(m2ndTextureName))
+        {
+            Texture2D tex2 = m.GetTexture(m2ndTextureName) as Texture2D;
+            WriteTexture(tex2, outfile, indent);
+        }
+
         if (mr.lightmapIndex != -1 && mr.lightmapIndex != 254)
         {
             Texture2D lightmap = LightmapSettings.lightmaps[mr.lightmapIndex].lightmapFar;
             WriteTexture(lightmap, outfile, indent, true);               
         }
 
+        WriteMaterialState(m, outfile, indent);
+
         outfile.WriteLine(indent + "</Material>");
+    }
+
+    private void WriteMaterialState(Material m, StreamWriter outfile, string indent)
+    {
+        if (mExportStateMaterial == false)
+        {
+            return;
+        }
+
+        if (m.HasProperty("_Color"))
+        {
+            Color c = m.GetColor("_Color");
+            outfile.WriteLine(indent + "  " + "<MaterialState Ambient=\"" +
+                c.r + ", " + c.g + ", " + c.b + ", " + c.a + "\" />");
+        }
     }
 
     private void WriteTexture(Texture2D tex, StreamWriter outfile, string indent, bool isLightmap = false)
     {
-        if (tex)
+        if (tex == null)
         {
-            string assetPath = AssetDatabase.GetAssetPath(tex);
-            TextureImporter ti = AssetImporter.GetAtPath(assetPath) as TextureImporter;
-            if (ti == null)
-            {
-                Debug.Log("Error getting TextureImporter for '" + tex.name + "'");
-                return;
-            }
+            return;
+        }
 
-            bool wasReadable = ti.isReadable;
-            TextureImporterFormat wasFormat = ti.textureFormat;
+        string assetPath = AssetDatabase.GetAssetPath(tex);
+        TextureImporter ti = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+        if (ti == null)
+        {
+            Debug.Log("Error getting TextureImporter for '" + tex.name + "'");
+            return;
+        }
 
-            bool needsReimport = false;
+        bool wasReadable = ti.isReadable;
+        TextureImporterFormat wasFormat = ti.textureFormat;
 
-            if (wasReadable == false)
-            {
-                needsReimport = true;
-                ti.isReadable = true;
-            }
+        bool needsReimport = false;
 
-            if (tex.format == TextureFormat.DXT1)
-            {
-                needsReimport = true;
-                ti.textureFormat = TextureImporterFormat.RGB24;
-            }
+        if (wasReadable == false)
+        {
+            needsReimport = true;
+            ti.isReadable = true;
+        }
 
-            if (tex.format == TextureFormat.DXT5)
-            {
-                needsReimport = true;
-                ti.textureFormat = TextureImporterFormat.ARGB32;
-            }
+        if (tex.format == TextureFormat.DXT1)
+        {
+            needsReimport = true;
+            ti.textureFormat = TextureImporterFormat.RGB24;
+        }
 
-            bool alreadyProcessed = false;
-            if (!mTextureAssetsProcessed.Contains(assetPath))
-            {
-                mTextureAssetsProcessed.Add(assetPath);
+        if (tex.format == TextureFormat.DXT5)
+        {
+            needsReimport = true;
+            ti.textureFormat = TextureImporterFormat.ARGB32;
+        }
 
-                if (needsReimport)
-                {
-                    AssetDatabase.ImportAsset(assetPath);
-                }
-            }
-            else
-            {
-                alreadyProcessed = true;
-            }
-
-            string texName = tex.name + "_" + tex.GetInstanceID().ToString("X8") + ".png";
-            outfile.WriteLine(indent + "  <Texture Name=\"" + texName + 
-                "\" FilterMode=\"" + tex.filterMode + "\" AnisoLevel=\"" + tex.anisoLevel +
-                "\" WrapMode=\"" + tex.wrapMode + "\" Mipmaps=\"" + tex.mipmapCount + "\" />");
-
-            if (!alreadyProcessed)
-            {
-                if (!isLightmap)
-                {
-                    Byte[] bytes = tex.EncodeToPNG();
-                    File.WriteAllBytes(mPath + "/" + texName, bytes);
-                }
-                else
-                {                  
-                    if (tex.format == TextureFormat.ARGB32)
-                    {
-                        Color32[] texSrc = tex.GetPixels32();
-
-                        Texture2D texRGB = new Texture2D(tex.width, tex.height, TextureFormat.RGB24, false);
-                        Color32[] texDst = texRGB.GetPixels32();
-
-                        for (int k = 0; k < texSrc.Length; k++)
-                        {
-                            float[] c = new float[4];
-                            c[0] = texSrc[k].a / 255.0f;
-                            c[1] = (texSrc[k].r / 255.0f) * 8.0f * c[0];
-                            c[2] = (texSrc[k].g / 255.0f) * 8.0f * c[0];
-                            c[3] = (texSrc[k].b / 255.0f) * 8.0f * c[0];
-
-                            c[1] = c[1] > 1.0f ? 1.0f : c[1];
-                            c[2] = c[2] > 1.0f ? 1.0f : c[2];
-                            c[3] = c[3] > 1.0f ? 1.0f : c[3];
-
-                            texDst[k].a = 255;// (byte)(c[0] * 255.0f);
-                            texDst[k].r = (byte)(c[1] * 255.0f);
-                            texDst[k].g = (byte)(c[2] * 255.0f);
-                            texDst[k].b = (byte)(c[3] * 255.0f);
-                        }
-
-                        texRGB.SetPixels32(texDst);
-                        texRGB.Apply();
-
-                        Byte[] bytes = texRGB.EncodeToPNG();
-                        File.WriteAllBytes(mPath + "/" + texName, bytes);
-                    }
-                    else
-                    {
-                        Debug.Log("Lightmap '" + tex.name + "'could not be read as ARGB32.");
-                    }
-                }
-            }
+        bool alreadyProcessed = false;
+        if (!mTextureAssetsProcessed.Contains(assetPath))
+        {
+            mTextureAssetsProcessed.Add(assetPath);
 
             if (needsReimport)
             {
-                ti.isReadable = wasReadable;
-                ti.textureFormat = wasFormat;
-                if (!alreadyProcessed)
+                AssetDatabase.ImportAsset(assetPath);
+            }
+        }
+        else
+        {
+            alreadyProcessed = true;
+        }
+
+        string texName = tex.name + "_" + tex.GetInstanceID().ToString("X8") + ".png";
+        outfile.WriteLine(indent + "  <Texture Name=\"" + texName + 
+            "\" FilterMode=\"" + tex.filterMode + "\" AnisoLevel=\"" + tex.anisoLevel +
+            "\" WrapMode=\"" + tex.wrapMode + "\" Mipmaps=\"" + tex.mipmapCount + "\" />");
+
+        if (!alreadyProcessed)
+        {
+            if (!isLightmap)
+            {
+                Byte[] bytes = tex.EncodeToPNG();
+                File.WriteAllBytes(mPath + "/" + texName, bytes);
+            }
+            else
+            {                  
+                if (tex.format == TextureFormat.ARGB32)
                 {
-                    AssetDatabase.ImportAsset(assetPath);
+                    Color32[] texSrc = tex.GetPixels32();
+
+                    Texture2D texRGB = new Texture2D(tex.width, tex.height, TextureFormat.RGB24, false);
+                    Color32[] texDst = texRGB.GetPixels32();
+
+                    for (int k = 0; k < texSrc.Length; k++)
+                    {
+                        float[] c = new float[4];
+                        c[0] = texSrc[k].a / 255.0f;
+                        c[1] = (texSrc[k].r / 255.0f) * 8.0f * c[0];
+                        c[2] = (texSrc[k].g / 255.0f) * 8.0f * c[0];
+                        c[3] = (texSrc[k].b / 255.0f) * 8.0f * c[0];
+
+                        c[1] = c[1] > 1.0f ? 1.0f : c[1];
+                        c[2] = c[2] > 1.0f ? 1.0f : c[2];
+                        c[3] = c[3] > 1.0f ? 1.0f : c[3];
+
+                        texDst[k].a = 255;// (byte)(c[0] * 255.0f);
+                        texDst[k].r = (byte)(c[1] * 255.0f);
+                        texDst[k].g = (byte)(c[2] * 255.0f);
+                        texDst[k].b = (byte)(c[3] * 255.0f);
+                    }
+
+                    texRGB.SetPixels32(texDst);
+                    texRGB.Apply();
+
+                    Byte[] bytes = texRGB.EncodeToPNG();
+                    File.WriteAllBytes(mPath + "/" + texName, bytes);
                 }
+                else
+                {
+                    Debug.Log("Lightmap '" + tex.name + "'could not be read as ARGB32.");
+                }
+            }
+        }
+
+        if (needsReimport)
+        {
+            ti.isReadable = wasReadable;
+            ti.textureFormat = wasFormat;
+            if (!alreadyProcessed)
+            {
+                AssetDatabase.ImportAsset(assetPath);
             }
         }
     }
