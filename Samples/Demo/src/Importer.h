@@ -30,9 +30,11 @@ public:
 
 private:
 	Char* Load(const Char* pFilename, Int& rSize);
+	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);

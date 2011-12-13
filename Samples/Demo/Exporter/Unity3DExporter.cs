@@ -121,6 +121,7 @@ public class Unity3DExporter : EditorWindow
             t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + ">");
 
         WriteCamera(t.gameObject, outfile, indent);
+        WriteLight(t.gameObject, outfile, indent);
 
         if (t.GetChildCount() > 0)
         {
@@ -144,11 +145,22 @@ public class Unity3DExporter : EditorWindow
         Vector3 pos = t.localPosition;
         Quaternion rot = t.localRotation;
         Vector3 scale = t.localScale;
-        return "Pos=\"" + pos.x + ", " + pos.y + ", " + pos.z + "\" " +
+        return "Pos=\"" + (-pos.x) + ", " + pos.y + ", " + pos.z + "\" " +
             "Rot=\"" + rot.w + ", " + rot.x + ", " + (-rot.y) + ", " + (-rot.z) + "\" " +
             "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
     }
 
+    private void WriteLight(GameObject go, StreamWriter outfile, string indent)
+    {
+        Light light = go.GetComponent<Light>();
+        if (light == null)
+        {
+            return;
+        }
+
+        outfile.WriteLine(indent + "  " + "<Light Type=\"" + light.type + "\" />");
+    }
+    
     private void WriteCamera(GameObject go, StreamWriter outfile, string indent)
     {
         Camera cam = go.GetComponent<Camera>();
@@ -173,7 +185,9 @@ public class Unity3DExporter : EditorWindow
         string isStatic = " Static=\"" + (t.gameObject.isStatic ? "1" : "0") + "\"";
         outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "_" +
             t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + isStatic + ">");
+
         WriteCamera(t.gameObject, outfile, indent);
+        WriteLight(t.gameObject, outfile, indent);
         WriteMesh(mf.sharedMesh, outfile, indent + "  ", mr.lightmapTilingOffset);
         WriteMaterial(mr, outfile, indent + "  ");
         outfile.WriteLine(indent + "</Leaf>");       
