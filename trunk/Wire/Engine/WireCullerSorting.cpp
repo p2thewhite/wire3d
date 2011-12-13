@@ -156,11 +156,12 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	}
 
 	WIRE_ASSERT(top == 0);
-	if (indexStack[0][0] < pDestination->GetQuantity()-1)
+	UInt dstQty = pDestination->GetQuantity();
+	if ((dstQty > 0) && (indexStack[0][0] < dstQty-1))
 	{
 //	QuickSort(mKeys.GetArray(), pDestination->GetVisible(), indexStack[0][0],
 		QuickSort(mKeys, pDestination->GetVisible(), indexStack[0][0],
-			pDestination->GetQuantity()-1);
+			dstQty-1);
 	}
 }
 
