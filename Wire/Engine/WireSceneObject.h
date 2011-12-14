@@ -11,6 +11,7 @@
 #define WIRESCENEOBJECT_H
 
 #include "WireObject.h"
+#include "WireString.h"
 #include "WireTArray.h"
 
 namespace Wire
@@ -25,6 +26,9 @@ class SceneObject : public Object
 public:
 	virtual ~SceneObject();
 
+	void SetName(const String& rName);
+	const String& GetName() const;
+
 	inline UInt GetControllerQuantity() const;
  	inline Controller* GetController(UInt i) const;
  	void AttachController(Controller* pController);
@@ -37,6 +41,7 @@ protected:
 
 private:
 	TArray<Pointer<Controller> > mControllers;
+	String mName;
 };
 
 typedef Pointer<SceneObject> SceneObjectPtr;

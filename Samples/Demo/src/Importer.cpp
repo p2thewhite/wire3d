@@ -128,7 +128,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
 	if (System::Strcmp("Leaf", pXmlNode->name()) == 0)
 	{
-		Spatial* pGeo = ParseLeaf(pXmlNode);
+		Geometry* pGeo = ParseLeaf(pXmlNode);
 		if (pGeo)
 		{
 			pParent->AttachChild(pGeo);
@@ -324,6 +324,12 @@ Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
 	Node* pNode = WIRE_NEW Node;
 
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (pName)
+	{
+		pNode->SetName(pName);
+	}
+
 	ParseTransformation(pXmlNode, pNode);
 
 	return pNode;
@@ -366,6 +372,11 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (pName)
+	{
+		pGeo->SetName(pName);
+	}
 
 	Bool hasAlpha = false;
 	if (pMaterial)

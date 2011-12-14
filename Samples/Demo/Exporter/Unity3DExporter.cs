@@ -9,6 +9,7 @@ public class Unity3DExporter : EditorWindow
 {
     private static bool mIsWindowOpen;
     private bool mExportStateMaterial;
+    private bool mIgnoreUnderscore;
 	private string m2ndTextureName;
 
     private string mPath;
@@ -49,7 +50,9 @@ public class Unity3DExporter : EditorWindow
         }
 
         mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, "Try to export Material State (i.e. Main Color)");
-		GUILayout.Label("Property name of");
+        mIgnoreUnderscore = GUILayout.Toggle(mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
+
+        GUILayout.Label("Property name of");
         m2ndTextureName = EditorGUILayout.TextField("2nd Texture:", m2ndTextureName ?? string.Empty);
 
         if (dirExists && !string.IsNullOrEmpty(mPath))
@@ -107,18 +110,22 @@ public class Unity3DExporter : EditorWindow
 
     private void Traverse(Transform t, StreamWriter outfile, string indent)
     {
+        if (mIgnoreUnderscore && t.gameObject.name.StartsWith("_"))
+        {
+            return;
+        }
+
         GameObject go = t.gameObject;
         MeshFilter mf = go.GetComponent<MeshFilter>();
         MeshRenderer mr = go.GetComponent<MeshRenderer>();
-
+      
         if ((mf != null) && (mr != null) && t.GetChildCount() == 0)
         {
             WriteLeaf(t, outfile, indent);
             return;
         }
 
-        outfile.WriteLine(indent + "<Node Name=\"" + t.gameObject.name + "_" +
-            t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + ">");
+        outfile.WriteLine(indent + "<Node Name=\"" + t.gameObject.name + "\" " + GetTransform(t) + ">");
 
         WriteCamera(t.gameObject, outfile, indent);
         WriteLight(t.gameObject, outfile, indent);
@@ -127,8 +134,7 @@ public class Unity3DExporter : EditorWindow
         {
             if ((mf != null) && (mr != null))
             {
-                WriteLeaf(t, outfile, indent);
-                return;
+                WriteLeaf(t, outfile, indent + "  ");
             }
 
             for (int i = 0; i < t.GetChildCount(); i++)
@@ -183,8 +189,7 @@ public class Unity3DExporter : EditorWindow
         }
 
         string isStatic = " Static=\"" + (t.gameObject.isStatic ? "1" : "0") + "\"";
-        outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "_" +
-            t.gameObject.GetInstanceID().ToString("X8") + "\" " + GetTransform(t) + isStatic + ">");
+        outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "\" " + GetTransform(t) + isStatic + ">");
 
         WriteCamera(t.gameObject, outfile, indent);
         WriteLight(t.gameObject, outfile, indent);
@@ -370,7 +375,8 @@ public class Unity3DExporter : EditorWindow
         string lightmapPostfix = "_" + lightmapTilingOffset.x + "_" + lightmapTilingOffset.y +
             "_" + lightmapTilingOffset.z + "_" + lightmapTilingOffset.w;
 
-        string meshName = m.name + "_" + m.GetInstanceID().ToString("X8") + lightmapPostfix;
+        string prefix = m.name + "_" + m.GetInstanceID().ToString("X8");
+        string meshName = prefix + lightmapPostfix;
         outfile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\">");
 
         bool alreadyProcessed = true;
@@ -382,14 +388,14 @@ public class Unity3DExporter : EditorWindow
 
         char le = BitConverter.IsLittleEndian ? 'y' : 'n';
 
-        string vtxName = m.name + "_" + m.GetInstanceID().ToString("X8") + ".vtx";
+        string vtxName = prefix + ".vtx";
         outfile.WriteLine(indent + "  <Vertices Name=\"" + vtxName + "\" LittleEndian=\"" + le + "\" />");
         if (!alreadyProcessed)
         {
             SaveVector3s(m.vertices, vtxName);
         }
-      
-        string idxName = m.name + "_" + m.GetInstanceID().ToString("X8") + ".idx";
+
+        string idxName = prefix + ".idx";
         outfile.WriteLine(indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"" + le + "\" />");
         if (!alreadyProcessed)
         {
@@ -398,7 +404,7 @@ public class Unity3DExporter : EditorWindow
 
         if (m.normals.Length > 0)
         {
-            string nmName = m.name + "_" + m.GetInstanceID().ToString("X8") + ".nm";
+            string nmName = prefix + ".nm";
             outfile.WriteLine(indent + "  <Normals Name=\"" + nmName + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
@@ -408,7 +414,7 @@ public class Unity3DExporter : EditorWindow
 
         if (m.colors.Length > 0)
         {
-            string colName = m.name + "_" + m.GetInstanceID().ToString("X8") + ".col";
+            string colName = prefix + ".col";
             outfile.WriteLine(indent + "  <Colors Name=\"" + colName + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
@@ -418,7 +424,7 @@ public class Unity3DExporter : EditorWindow
 
         if (m.uv.Length > 0)
         {
-            string uv0Name = m.name + "_" + m.GetInstanceID().ToString("X8") + ".uv0";
+            string uv0Name = prefix + ".uv0";
             outfile.WriteLine(indent + "  <Uv0 Name=\"" + uv0Name + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
@@ -428,7 +434,7 @@ public class Unity3DExporter : EditorWindow
 
         if (m.uv2.Length > 0)
         {
-            string uv1Name = m.name + "_" + m.GetInstanceID().ToString("X8") + lightmapPostfix + ".uv1";
+            string uv1Name = prefix + lightmapPostfix + ".uv1";
             outfile.WriteLine(indent + "  <Uv1 Name=\"" + uv1Name + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {

@@ -18,3 +18,15 @@ inline Controller* SceneObject::GetController(UInt i) const
 	WIRE_ASSERT(i < mControllers.GetQuantity());
 	return mControllers[i];
 }
+
+//----------------------------------------------------------------------------
+inline void SceneObject::SetName(const String& rName)
+{
+	mName = rName;
+}
+
+//----------------------------------------------------------------------------
+inline const String& SceneObject::GetName() const
+{
+	return mName;
+}
