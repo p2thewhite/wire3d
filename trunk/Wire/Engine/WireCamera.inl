@@ -13,6 +13,12 @@ inline Vector3F Camera::GetLocation() const
 }
 
 //----------------------------------------------------------------------------
+inline void Camera::SetLocation(const Vector3F& rLocation)
+{
+	mLocation = rLocation;
+}
+
+//----------------------------------------------------------------------------
 inline Vector3F Camera::GetDVector() const
 {
 	return mDVector;

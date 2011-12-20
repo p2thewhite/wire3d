@@ -14,7 +14,26 @@ Bool Demo::OnInitialize()
 	}
 
 	Importer importer("Data/");
-	mspRoot = importer.LoadSceneFromXml("TheFinalSceneiPhoneControls.xml", &mCameras);
+	mspRoot = importer.LoadSceneFromXml("scene.xml", &mCameras);
+	if (!mspRoot)
+	{
+		return false;
+	}
+
+	Node* pSplineRoot = DynamicCast<Node>(mspRoot->GetChildByName("Spline"));
+	if (!pSplineRoot)
+	{
+		return false;
+	}
+
+	for (UInt i = 0; i < pSplineRoot->GetQuantity(); i++)
+	{
+		Spatial* pChild = pSplineRoot->GetChild(i);
+		if (pChild)
+		{
+			mSplinePoints.Append(&(pChild->Local));
+		}
+	}
 
 	mspRoot->UpdateRS();
 
@@ -53,7 +72,10 @@ Bool Demo::OnInitialize()
 	GetRenderer()->BindAll(mspRoot);
 
 	mLastTime = System::GetTime();
-	mAngle = 0;
+
+	mT = 0;
+	mSplinePointIndex = 1;
+
 	return true;
 }
 
@@ -63,11 +85,20 @@ void Demo::OnIdle()
 	Double time = System::GetTime();
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
-	mAngle += static_cast<Float>(elapsedTime * 0.25F);
-	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Matrix34F model(Vector3F::UNIT_Y, -mAngle);
-	mspRoot->Local.SetRotate(model);
+	Vector3F camPos = GetHermite(mSplinePoints, mSplinePointIndex, mT);
+	mT += static_cast<Float>(elapsedTime*0.25f);
+	if (mT > 1.0f)
+	{
+		mT = 0.0f;
+		mSplinePointIndex++;
+		if (mSplinePointIndex == mSplinePoints.GetQuantity()-3)
+		{
+			mSplinePointIndex = 1;
+		}
+	}
+
+	mspCamera->SetLocation(camPos);
 
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
@@ -77,4 +108,30 @@ void Demo::OnIdle()
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+}
+
+//----------------------------------------------------------------------------
+Vector3F Demo::GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
+	Float t) const
+{
+	WIRE_ASSERT(idx > 0 && idx < rControlPoints.GetQuantity()-3);
+	Float t2 = t * t;
+	Float t3 = t2 * t;
+
+	Vector3F& rP0 = (*(rControlPoints[idx - 1])).GetTranslate();
+	Vector3F& rP1 = (*(rControlPoints[idx])).GetTranslate();
+	Vector3F& rP2 = (*(rControlPoints[idx + 1])).GetTranslate();
+	Vector3F& rP3 = (*(rControlPoints[idx + 2])).GetTranslate();
+
+	const Float tension = 0.5f;	// 0.5 is catmull-rom
+
+	Vector3F v4 = tension * (rP2 - rP0);
+	Vector3F v5 = tension * (rP3 - rP1);
+
+	Float blend1 = 2 * t3 - 3 * t2 + 1;
+	Float blend2 = -2 * t3 + 3 * t2;
+	Float blend3 = t3 - 2 * t2 + t;
+	Float blend4 = t3 - t2;
+
+	return blend1 * rP1 + blend2 * rP2 + blend3 * v4 + blend4 * v5;
 }

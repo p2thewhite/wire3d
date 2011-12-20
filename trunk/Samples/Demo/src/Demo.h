@@ -13,23 +13,25 @@ class Demo : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
-	// OnInitialize() is called by the framework after the Renderer has been
-	// created. User specific initialization code goes here.
 	virtual Bool OnInitialize();
-
-	// OnIdle() is called every frame. Here we update the objects, draw them
-	// and present the result on the screen.
 	virtual void OnIdle();
 
 private:
 	Double mLastTime;
-	Float mAngle;
 
 	CameraPtr mspCamera;
 	CullerSorting mCuller;
 
-	SpatialPtr mspRoot;
+	NodePtr mspRoot;
 	TArray<CameraPtr> mCameras;
+
+	//---
+	TArray<Transformation*> mSplinePoints;
+	Float mT;
+	UInt mSplinePointIndex;
+
+	Vector3F GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
+		Float t) const;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

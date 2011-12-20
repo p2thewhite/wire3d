@@ -272,3 +272,53 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 		rCuller.Insert(NULL, NULL);
 	}
 }
+
+//----------------------------------------------------------------------------
+Spatial* Node::GetChildByName(const String& rName) const
+{
+	Spatial* pFound = NULL;
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		if (mChildren[i])
+		{
+			if (rName == mChildren[i]->GetName())
+			{
+				return mChildren[i];
+			}
+
+			const Node* pNode = DynamicCast<Node>(mChildren[i]);
+			if (pNode)
+			{
+				pFound = pNode->GetChildByName(rName);
+				if (pFound)
+				{
+					return pFound;
+				}
+			}
+		}
+	}
+
+	return pFound;
+}
+
+//----------------------------------------------------------------------------
+void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
+	rChildren) const
+{
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		if (mChildren[i])
+		{
+			if (rName == mChildren[i]->GetName())
+			{
+				rChildren.Append(mChildren[i]);
+			}
+
+			const Node* pNode = DynamicCast<Node>(mChildren[i]);
+			if (pNode)
+			{
+				pNode->GetAllChildrenByName(rName, rChildren);
+			}
+		}
+	}
+}

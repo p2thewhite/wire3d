@@ -60,6 +60,12 @@ public:
 	// function returns null.
  	SpatialPtr GetChild(UInt i);
 
+	// returns the first (top/down, left-to-right) Spatial using that name
+	Spatial* GetChildByName(const String& rName) const;
+
+	void GetAllChildrenByName(const String& rName, TArray<Spatial*>&
+		rChildren) const;
+
 protected:
 	// geometric updates
 	virtual void UpdateWorldData(Double appTime);

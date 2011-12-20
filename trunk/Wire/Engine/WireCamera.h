@@ -47,6 +47,8 @@ public:
 	//   default direction D = (0, 0,-1)
 	//   default up        U = (0, 1, 0)
 	//   default right     R = (1, 0, 0)
+	void SetLocation(const Vector3F& rLocation);
+
 	void SetFrame(const Vector3F& rLocation, const Vector3F& rDVector,
 		const Vector3F& rUVector, const Vector3F& rRVector);
 
