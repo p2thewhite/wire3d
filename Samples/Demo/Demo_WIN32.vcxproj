@@ -129,11 +129,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Demo.cpp" />
+    <ClCompile Include="src\FanRotator.cpp" />
     <ClCompile Include="src\Importer.cpp" />
     <ClCompile Include="src\PicoPNG.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Demo.h" />
+    <ClInclude Include="src\FanRotator.h" />
     <ClInclude Include="src\Importer.h" />
     <ClInclude Include="src\PicoPNG.h" />
     <ClInclude Include="src\rapidxml.hpp" />

@@ -20,6 +20,11 @@ Bool Demo::OnInitialize()
 		return false;
 	}
 
+	mspRoot->UpdateRS();
+	mspRoot->UpdateGS();
+
+
+
 	Node* pSplineRoot = DynamicCast<Node>(mspRoot->GetChildByName("Spline"));
 	if (!pSplineRoot)
 	{
@@ -35,7 +40,10 @@ Bool Demo::OnInitialize()
 		}
 	}
 
-	mspRoot->UpdateRS();
+	Transformation* pTrafo = mSplinePoints[0];
+	mSplinePoints.Insert(0, pTrafo);
+
+
 
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
@@ -87,18 +95,24 @@ void Demo::OnIdle()
 	mLastTime = time;
 
 	Vector3F camPos = GetHermite(mSplinePoints, mSplinePointIndex, mT);
+	QuaternionF camRot = GetSquad(mSplinePoints, mSplinePointIndex, mT);
+	Matrix3F camMat;
+	camRot.ToRotationMatrix(camMat);
+	Matrix3F mat90(Vector3F::UNIT_Y, -MathF::HALF_PI);
+	camMat = camMat * mat90;
+ 	mspCamera->SetFrame(camPos, camMat.GetColumn(0), camMat.GetColumn(1),
+ 		camMat.GetColumn(2));
+
 	mT += static_cast<Float>(elapsedTime*0.25f);
-	if (mT > 1.0f)
+	while (mT >= 1.0f)
 	{
-		mT = 0.0f;
+		mT -= 1.0f;
 		mSplinePointIndex++;
 		if (mSplinePointIndex == mSplinePoints.GetQuantity()-3)
 		{
 			mSplinePointIndex = 1;
 		}
 	}
-
-	mspCamera->SetLocation(camPos);
 
 	mspRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspRoot);
@@ -112,26 +126,41 @@ void Demo::OnIdle()
 
 //----------------------------------------------------------------------------
 Vector3F Demo::GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
-	Float t) const
+	Float t)
 {
 	WIRE_ASSERT(idx > 0 && idx < rControlPoints.GetQuantity()-3);
 	Float t2 = t * t;
 	Float t3 = t2 * t;
 
-	Vector3F& rP0 = (*(rControlPoints[idx - 1])).GetTranslate();
-	Vector3F& rP1 = (*(rControlPoints[idx])).GetTranslate();
-	Vector3F& rP2 = (*(rControlPoints[idx + 1])).GetTranslate();
-	Vector3F& rP3 = (*(rControlPoints[idx + 2])).GetTranslate();
+	Vector3F p0 = (*(rControlPoints[idx - 1])).GetTranslate();
+	Vector3F p1 = (*(rControlPoints[idx])).GetTranslate();
+	Vector3F p2 = (*(rControlPoints[idx + 1])).GetTranslate();
+	Vector3F p3 = (*(rControlPoints[idx + 2])).GetTranslate();
 
 	const Float tension = 0.5f;	// 0.5 is catmull-rom
 
-	Vector3F v4 = tension * (rP2 - rP0);
-	Vector3F v5 = tension * (rP3 - rP1);
+	Vector3F v4 = tension * (p2 - p0);
+	Vector3F v5 = tension * (p3 - p1);
 
 	Float blend1 = 2 * t3 - 3 * t2 + 1;
 	Float blend2 = -2 * t3 + 3 * t2;
 	Float blend3 = t3 - 2 * t2 + t;
 	Float blend4 = t3 - t2;
 
-	return blend1 * rP1 + blend2 * rP2 + blend3 * v4 + blend4 * v5;
+	return blend1 * p1 + blend2 * p2 + blend3 * v4 + blend4 * v5;
+}
+
+//----------------------------------------------------------------------------
+QuaternionF Demo::GetSquad(TArray<Transformation*>& rControlPoints, UInt idx,
+	Float t)
+{
+	QuaternionF q0((*(rControlPoints[idx - 1])).GetRotate());
+	QuaternionF q1((*(rControlPoints[idx])).GetRotate());
+	QuaternionF q2((*(rControlPoints[idx + 1])).GetRotate());
+	QuaternionF q3((*(rControlPoints[idx + 2])).GetRotate());
+
+	QuaternionF t1 = q0.Intermediate(q0, q1, q2);
+	QuaternionF t2 = q3.Intermediate(q1, q2, q3);
+
+	return q0.Squad(t, q1, t1, t2, q2);
 }
