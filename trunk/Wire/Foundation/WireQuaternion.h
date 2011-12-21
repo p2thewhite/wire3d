@@ -94,12 +94,23 @@ public:
 	// spherical linear interpolation
 	Quaternion& Slerp(Real t, const Quaternion& rP, const Quaternion& rQ);
 
+	// Intermediate terms for spherical quadratic interpolation.
+	Quaternion& Intermediate(const Quaternion& rQ0, const Quaternion& rQ1,
+		const Quaternion& rQ2);
+
+	// Spherical quadratic interpolation.
+	Quaternion& Squad(Real t, const Quaternion& rQ0, const Quaternion& rA0,
+		const Quaternion& rA1, const Quaternion& rQ1);
+
 	static const Quaternion IDENTITY;
 	static const Quaternion ZERO;
 
 private:
 	Real mTuple[4];
 };
+
+template <class Real>
+inline Quaternion<Real> operator* (Real scalar, const Quaternion<Real>& rQ);
 
 #include "WireQuaternion.inl"
 

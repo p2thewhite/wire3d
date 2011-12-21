@@ -693,3 +693,36 @@ Quaternion<Real>& Quaternion<Real>::Slerp(Real t, const Quaternion& rP,
 
 	return *this;
 }
+
+//----------------------------------------------------------------------------
+template <typename Real>
+Quaternion<Real>& Quaternion<Real>::Intermediate(const Quaternion& rQ0,
+	const Quaternion& rQ1, const Quaternion& rQ2)
+{
+	// assert:  Q0, Q1, Q2 all unit-length
+	Quaternion q1Inv = rQ1.Conjugate();
+	Quaternion p0 = q1Inv*rQ0;
+	Quaternion p2 = q1Inv*rQ2;
+	Quaternion arg = -((Real)0.25)*(p0.Log() + p2.Log());
+	Quaternion a = rQ1*arg.Exp();
+	*this = a;
+	return *this;
+}
+
+//----------------------------------------------------------------------------
+template <typename Real>
+Quaternion<Real>& Quaternion<Real>::Squad(Real t, const Quaternion& rQ0,
+	const Quaternion& rA0, const Quaternion& rA1, const Quaternion& rQ1)
+{
+	Real slerpT = ((Real)2)*t*((Real)1 - t);
+	Quaternion slerpP = Slerp(t, rQ0, rQ1);
+	Quaternion slerpQ = Slerp(t, rA0, rA1);
+	return Slerp(slerpT, slerpP, slerpQ);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Quaternion<Real> operator* (Real scalar, const Quaternion<Real>& rQ)
+{
+	return rQ*scalar;
+}

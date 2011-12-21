@@ -31,7 +31,9 @@ private:
 	UInt mSplinePointIndex;
 
 	Vector3F GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
-		Float t) const;
+		Float t);
+	QuaternionF GetSquad(TArray<Transformation*>& rControlPoints, UInt idx,
+		Float t);
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

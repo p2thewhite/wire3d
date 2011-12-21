@@ -189,7 +189,7 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 			Char* pValue = attr->value();
 			if (pValue)
 			{
-				if (*pValue = 'y')
+				if (*pValue == 'y')
 				{
 					return false;
 				}

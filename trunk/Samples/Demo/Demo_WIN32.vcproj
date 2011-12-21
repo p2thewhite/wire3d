@@ -193,6 +193,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\FanRotator.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\FanRotator.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\Importer.cpp"
 			>
 		</File>

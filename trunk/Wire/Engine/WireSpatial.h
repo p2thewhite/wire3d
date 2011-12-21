@@ -10,6 +10,8 @@
 #ifndef WIRESPATIAL_H
 #define WIRESPATIAL_H
 
+#include "WireEffect.h"
+#include "WireLight.h"
 #include "WireSceneObject.h"
 #include "WireState.h"
 #include "WireTHashTable.h"
@@ -20,8 +22,6 @@ namespace Wire
 
 class BoundingVolume;
 class Culler;
-class Effect;
-class Light;
 
 class Spatial : public SceneObject
 {
