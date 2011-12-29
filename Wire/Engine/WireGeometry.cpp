@@ -13,7 +13,6 @@
 #include "WireEffect.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
-#include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"

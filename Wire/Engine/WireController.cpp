@@ -18,7 +18,7 @@ WIRE_IMPLEMENT_RTTI(Wire, Controller, Object);
 Controller::Controller()
 {
 	mpObject = NULL;
-	mLastAppTime = 0;
+	mLastAppTime = -MathD::MAX_REAL;
 }
 
 //----------------------------------------------------------------------------
@@ -35,5 +35,11 @@ Bool Controller::Update(Double appTime)
 		return true;
 	}
 
+	return false;
+}
+
+//----------------------------------------------------------------------------
+Bool Controller::RenderUpdate()
+{
 	return false;
 }

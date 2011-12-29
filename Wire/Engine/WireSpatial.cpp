@@ -95,6 +95,7 @@ void Spatial::OnGetVisibleSet(Culler& rCuller, Bool noCull)
 	UInt savePlaneState = rCuller.GetPlaneState();
 	if (noCull || rCuller.IsVisible(WorldBound))
 	{
+		RenderUpdateControllers();
 		GetVisibleSet(rCuller, noCull);
 	}
 

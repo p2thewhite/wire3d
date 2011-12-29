@@ -28,8 +28,11 @@ public:
 	// the controlled object
 	inline SceneObject* GetObject() const;
 
-	// geometric update
+	// geometric update called by UpdateGS()
 	virtual Bool Update(Double appTime);
+
+	// update called by culler only when the controlled object is visible
+	virtual Bool RenderUpdate();
 
 protected:
 	// construction (abstract base class)

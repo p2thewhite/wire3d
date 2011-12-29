@@ -417,7 +417,6 @@ void Renderer::Update(const VertexBuffer* pVertexBuffer)
 PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 {
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
 	if (pValue)
 	{
 		return *pValue;

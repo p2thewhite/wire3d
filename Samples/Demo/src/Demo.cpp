@@ -1,5 +1,9 @@
 #include "Demo.h"
+
+#include "ConveyorBelt.h"
+#include "FanRotator.h"
 #include "Importer.h"
+#include "SplineCamera.h"
 
 using namespace Wire;
 
@@ -13,54 +17,13 @@ Bool Demo::OnInitialize()
 		return false;
 	}
 
-	Importer importer("Data/");
-	mspRoot = importer.LoadSceneFromXml("scene.xml", &mCameras);
-	if (!mspRoot)
+	mspScene1 = LoadAndInitScene1();
+	if (!mspScene1)
 	{
 		return false;
 	}
 
-	mspRoot->UpdateRS();
-	mspRoot->UpdateGS();
-
-
-
-	Node* pSplineRoot = DynamicCast<Node>(mspRoot->GetChildByName("Spline"));
-	if (!pSplineRoot)
-	{
-		return false;
-	}
-
-	for (UInt i = 0; i < pSplineRoot->GetQuantity(); i++)
-	{
-		Spatial* pChild = pSplineRoot->GetChild(i);
-		if (pChild)
-		{
-			mSplinePoints.Append(&(pChild->Local));
-		}
-	}
-
-	Transformation* pTrafo = mSplinePoints[0];
-	mSplinePoints.Insert(0, pTrafo);
-
-
-
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-
-	if (mCameras.GetQuantity() > 0)
-	{
-		Float fov;
-		Float aspect;
-		Float near;
-		Float far;
-		mspCamera = mCameras[0];
-		mspCamera->GetFrustum(fov, aspect, near, far);
-		aspect = width / height;
-		mspCamera->SetFrustum(fov, aspect, near, far);
-		mCuller.SetCamera(mspCamera);
-	}
-	else
+	if (!mspCamera)
 	{
 		// setup our camera at the origin, looking down the -z axis with y up
 		Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
@@ -71,19 +34,15 @@ Bool Demo::OnInitialize()
 		mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
 		// specify FOV, aspect ratio, near and far plane of the frustum
+		Float width = static_cast<Float>(GetRenderer()->GetWidth());
+		Float height = static_cast<Float>(GetRenderer()->GetHeight());
 		mspCamera->SetFrustum(60, width / height , 0.1F, 30000.0F);
 
 		// the culler needs to know which camera to use when performing its task
 		mCuller.SetCamera(mspCamera);
 	}
 
-	GetRenderer()->BindAll(mspRoot);
-
 	mLastTime = System::GetTime();
-
-	mT = 0;
-	mSplinePointIndex = 1;
-
 	return true;
 }
 
@@ -94,28 +53,8 @@ void Demo::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	Vector3F camPos = GetHermite(mSplinePoints, mSplinePointIndex, mT);
-	QuaternionF camRot = GetSquad(mSplinePoints, mSplinePointIndex, mT);
-	Matrix3F camMat;
-	camRot.ToRotationMatrix(camMat);
-	Matrix3F mat90(Vector3F::UNIT_Y, -MathF::HALF_PI);
-	camMat = camMat * mat90;
- 	mspCamera->SetFrame(camPos, camMat.GetColumn(0), camMat.GetColumn(1),
- 		camMat.GetColumn(2));
-
-	mT += static_cast<Float>(elapsedTime*0.25f);
-	while (mT >= 1.0f)
-	{
-		mT -= 1.0f;
-		mSplinePointIndex++;
-		if (mSplinePointIndex == mSplinePoints.GetQuantity()-3)
-		{
-			mSplinePointIndex = 1;
-		}
-	}
-
-	mspRoot->UpdateGS(time);
-	mCuller.ComputeVisibleSet(mspRoot);
+	mspScene1->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspScene1);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -125,42 +64,48 @@ void Demo::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Vector3F Demo::GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
-	Float t)
+Node* Demo::LoadAndInitScene1()
 {
-	WIRE_ASSERT(idx > 0 && idx < rControlPoints.GetQuantity()-3);
-	Float t2 = t * t;
-	Float t3 = t2 * t;
+	Importer importer("Data/");
+	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mCameras);
+	if (!pScene)
+	{
+		return NULL;
+	}
 
-	Vector3F p0 = (*(rControlPoints[idx - 1])).GetTranslate();
-	Vector3F p1 = (*(rControlPoints[idx])).GetTranslate();
-	Vector3F p2 = (*(rControlPoints[idx + 1])).GetTranslate();
-	Vector3F p3 = (*(rControlPoints[idx + 2])).GetTranslate();
+	if (mCameras.GetQuantity() > 0)
+	{
+		Float fov, aspect, near, far;
+		Float width = static_cast<Float>(GetRenderer()->GetWidth());
+		Float height = static_cast<Float>(GetRenderer()->GetHeight());
+		mspCamera = mCameras[0];
+		mspCamera->GetFrustum(fov, aspect, near, far);
+		aspect = width / height;
+		mspCamera->SetFrustum(fov, aspect, near, far);
+		mCuller.SetCamera(mspCamera);
+	}
 
-	const Float tension = 0.5f;	// 0.5 is catmull-rom
+	TArray<Spatial*> fans;
+	pScene->GetAllChildrenByName("ceilingFan", fans);
+	for (UInt i = 0; i < fans.GetQuantity(); i++)
+	{
+		Float f = static_cast<Float>(i+1);
+		fans[i]->AttachController(WIRE_NEW FanRotator(f));
+	}
 
-	Vector3F v4 = tension * (p2 - p0);
-	Vector3F v5 = tension * (p3 - p1);
+	pScene->UpdateRS();
 
-	Float blend1 = 2 * t3 - 3 * t2 + 1;
-	Float blend2 = -2 * t3 + 3 * t2;
-	Float blend3 = t3 - 2 * t2 + t;
-	Float blend4 = t3 - t2;
+	Node* pSplineRoot = DynamicCast<Node>(pScene->GetChildByName("Spline"));
+	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot, mspCamera));
 
-	return blend1 * p1 + blend2 * p2 + blend3 * v4 + blend4 * v5;
-}
+	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName(
+		"polySurface437"));
+	if (pConveyorBelt)
+	{
+		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt,
+			GetRenderer()));
+	}	
 
-//----------------------------------------------------------------------------
-QuaternionF Demo::GetSquad(TArray<Transformation*>& rControlPoints, UInt idx,
-	Float t)
-{
-	QuaternionF q0((*(rControlPoints[idx - 1])).GetRotate());
-	QuaternionF q1((*(rControlPoints[idx])).GetRotate());
-	QuaternionF q2((*(rControlPoints[idx + 1])).GetRotate());
-	QuaternionF q3((*(rControlPoints[idx + 2])).GetRotate());
-
-	QuaternionF t1 = q0.Intermediate(q0, q1, q2);
-	QuaternionF t2 = q3.Intermediate(q1, q2, q3);
-
-	return q0.Squad(t, q1, t1, t2, q2);
+	GetRenderer()->BindAll(pScene);
+	return pScene;
 }
