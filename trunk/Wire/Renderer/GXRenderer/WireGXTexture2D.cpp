@@ -92,7 +92,14 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		}
 
 		UInt offset = width * height * bpp;
-		pDst += (offset < 32) ? 32 : offset;
+		if (bpp == 4)
+		{
+			pDst += (offset < 64) ? 64 : offset;
+		}
+		else
+		{
+			pDst += (offset < 32) ? 32 : offset;
+		}
 	}
 
 	DCStoreRange(mpBuffer, mBufferSize);

@@ -412,6 +412,9 @@ void PdrRendererData::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 	UShort xCount = width;
 	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
 
+	UInt gapX = (4 - xCount) * 2;
+	UInt gapY = ((4 - yCount) * 2) * 4;
+
 	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
 		for (UInt tx = 0; tx < tilesXCount; tx++)
@@ -424,7 +427,11 @@ void PdrRendererData::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 					*pDst++ = *(pSrc + offset*4 + 3);
 					*pDst++ = *(pSrc + offset*4);
 				}
+
+				pDst += gapX;
 			}
+
+			pDst += gapY;
 
 			for (UInt y = 0; y < yCount; y++)
 			{
@@ -435,6 +442,8 @@ void PdrRendererData::ConvertRGBA8888ToTiles(UChar* pSrc, UShort width,
 					*pDst++ = *pSrcTemp++;
 					*pDst++ = *pSrcTemp;
 				}
+
+				pDst += gapX;
 			}
 		}
 	}
@@ -450,6 +459,9 @@ void PdrRendererData::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
 	UShort xCount = width;
 	GetTileCount(tilesYCount, yCount, tilesXCount, xCount);
 
+	UInt gapX = (4 - xCount) * 2;
+	UInt gapY = ((4 - yCount) * 2) * 4;
+
 	for (UInt ty = 0; ty < tilesYCount; ty++)
 	{
 		for (UInt tx = 0; tx < tilesXCount; tx++)
@@ -462,7 +474,11 @@ void PdrRendererData::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
 					*pDst++ = 0xFF;
 					*pDst++ = *(pSrc + offset*3);
 				}
+
+				pDst += gapX;
 			}
+
+			pDst += gapY;
 
 			for (UInt y = 0; y < yCount; y++)
 			{
@@ -474,6 +490,8 @@ void PdrRendererData::ConvertRGB888ToTiles(UChar* pSrc, UShort width,
 					*pDst++ = *pSrcTemp++;
 					*pDst++ = *pSrcTemp;
 				}
+
+				pDst += gapX;
 			}
 		}
 	}
@@ -546,7 +564,15 @@ UInt PdrRendererData::GetTotalImageMemory(const Image2D* pImage, UInt bpp)
 	for (UInt mipLevel = 0; mipLevel < pImage->GetMipmapCount(); mipLevel++)
 	{
 		UInt mipMemoryUsed = pImage->GetQuantity(mipLevel) * bpp;
-		mipMemoryUsed = mipMemoryUsed < 32 ? 32 : mipMemoryUsed;
+		if (bpp == 4)
+		{
+			mipMemoryUsed = mipMemoryUsed < 64 ? 64 : mipMemoryUsed;
+		}
+		else
+		{
+			mipMemoryUsed = mipMemoryUsed < 32 ? 32 : mipMemoryUsed;
+		}
+
 		totalMemory += mipMemoryUsed;
 	}
 
