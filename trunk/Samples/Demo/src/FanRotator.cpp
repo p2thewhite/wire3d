@@ -7,8 +7,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 FanRotator::FanRotator(Float speed)
 	:
-	mSpeed(speed),
-	mAngle(0)
+	mSpeed(speed)
 {
 }
 
@@ -16,16 +15,15 @@ FanRotator::FanRotator(Float speed)
 Bool FanRotator::Update(Double appTime)
 {
 	Spatial* pSpatial = DynamicCast<Spatial>(mpObject);
-	Double deltaTime = appTime - mLastAppTime;
 	
-	if (!pSpatial || !Controller::Update(appTime))
+	if (!pSpatial || (appTime == -MathD::MAX_REAL))
 	{
 		return false;
 	}
 
-	Matrix34F rotate(Vector3F::UNIT_Y, mAngle);
+	Double angle = MathD::FMod(appTime, 1) * MathD::TWO_PI;
+	Matrix34F rotate(Vector3F::UNIT_Y, static_cast<Float>(angle));
 	pSpatial->Local.SetRotate(rotate);
-	
-	mAngle += static_cast<Float>(deltaTime) * mSpeed;
+
 	return true;
 }

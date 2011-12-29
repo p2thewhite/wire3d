@@ -185,6 +185,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\src\ConveyorBelt.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\ConveyorBelt.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\Demo.cpp"
 			>
 		</File>
@@ -218,6 +226,14 @@
 		</File>
 		<File
 			RelativePath=".\src\rapidxml.hpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\SplineCamera.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\SplineCamera.h"
 			>
 		</File>
 	</Files>

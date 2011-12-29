@@ -98,3 +98,19 @@ Bool SceneObject::UpdateControllers(Double appTime)
 
 	return wasUpdated;
 }
+
+//----------------------------------------------------------------------------
+Bool SceneObject::RenderUpdateControllers()
+{
+	Bool wasUpdated = false;
+	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
+	{
+		Controller* pController = mControllers[i];
+		if (pController->RenderUpdate())
+		{
+			wasUpdated = true;
+		}
+	}
+
+	return wasUpdated;
+}

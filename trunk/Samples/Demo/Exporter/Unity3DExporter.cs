@@ -10,6 +10,7 @@ public class Unity3DExporter : EditorWindow
     private static bool mIsWindowOpen;
     private bool mExportStateMaterial;
     private bool mIgnoreUnderscore;
+	private bool mExportXmlOnly;
 	private string m2ndTextureName;
 
     private string mPath;
@@ -51,6 +52,7 @@ public class Unity3DExporter : EditorWindow
 
         mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, "Try to export Material State (i.e. Main Color)");
         mIgnoreUnderscore = GUILayout.Toggle(mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
+        mExportXmlOnly = GUILayout.Toggle(mExportXmlOnly, "Export scene XML only");
 
         GUILayout.Label("Property name of");
         m2ndTextureName = EditorGUILayout.TextField("2nd Texture:", m2ndTextureName ?? string.Empty);
@@ -164,7 +166,11 @@ public class Unity3DExporter : EditorWindow
             return;
         }
 
-        outfile.WriteLine(indent + "  " + "<Light Type=\"" + light.type + "\" />");
+		Color amb = RenderSettings.ambientLight;
+		Color col = light.color * light.intensity; 
+        outfile.WriteLine(indent + "  " + "<Light Type=\"" + light.type +
+			"\" Ambient=\"" + amb.r + ", " + amb.g + ", " + amb.b +
+			"\" Color=\"" +	col.r + ", " + col.g + ", " + col.b + "\" />");
     }
     
     private void WriteCamera(GameObject go, StreamWriter outfile, string indent)
@@ -256,6 +262,16 @@ public class Unity3DExporter : EditorWindow
             return;
         }
 
+        string texName = tex.name + "_" + tex.GetInstanceID().ToString("X8") + ".png";
+        outfile.WriteLine(indent + "  <Texture Name=\"" + texName + 
+            "\" FilterMode=\"" + tex.filterMode + "\" AnisoLevel=\"" + tex.anisoLevel +
+            "\" WrapMode=\"" + tex.wrapMode + "\" Mipmaps=\"" + tex.mipmapCount + "\" />");
+		
+		if (mExportXmlOnly)
+		{
+			return;
+		}
+		
         string assetPath = AssetDatabase.GetAssetPath(tex);
         TextureImporter ti = AssetImporter.GetAtPath(assetPath) as TextureImporter;
         if (ti == null)
@@ -301,11 +317,6 @@ public class Unity3DExporter : EditorWindow
         {
             alreadyProcessed = true;
         }
-
-        string texName = tex.name + "_" + tex.GetInstanceID().ToString("X8") + ".png";
-        outfile.WriteLine(indent + "  <Texture Name=\"" + texName + 
-            "\" FilterMode=\"" + tex.filterMode + "\" AnisoLevel=\"" + tex.anisoLevel +
-            "\" WrapMode=\"" + tex.wrapMode + "\" Mipmaps=\"" + tex.mipmapCount + "\" />");
 
         if (!alreadyProcessed)
         {
@@ -447,6 +458,11 @@ public class Unity3DExporter : EditorWindow
 
     private void SaveVector3s(Vector3[] vectors, string name)
     {
+		if (mExportXmlOnly)
+		{
+			return;
+		}
+		
         FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
         BinaryWriter w = new BinaryWriter(fs);
 
@@ -463,6 +479,11 @@ public class Unity3DExporter : EditorWindow
 
     private void SaveVector2s(Vector2[] vectors, string name, Vector4 lightmapTilingOffset)
     {
+		if (mExportXmlOnly)
+		{
+			return;
+		}
+
         FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
         BinaryWriter w = new BinaryWriter(fs);
 
@@ -482,6 +503,11 @@ public class Unity3DExporter : EditorWindow
 
     private void SaveColors(Color[] colors, string name)
     {
+		if (mExportXmlOnly)
+		{
+			return;
+		}
+
         FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
         BinaryWriter w = new BinaryWriter(fs);
 
@@ -499,6 +525,11 @@ public class Unity3DExporter : EditorWindow
 
     private void SaveIndices(int[] indices, string name)
     {
+		if (mExportXmlOnly)
+		{
+			return;
+		}
+
         FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
         BinaryWriter w = new BinaryWriter(fs);
 

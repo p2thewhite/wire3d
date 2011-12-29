@@ -34,7 +34,9 @@ public:
  	void AttachController(Controller* pController);
  	void DetachController(Controller* pController);
  	void DetachAllControllers();
- 	Bool UpdateControllers(Double appTime);
+
+	Bool UpdateControllers(Double appTime);
+	Bool RenderUpdateControllers();
 
 protected:
 	SceneObject();

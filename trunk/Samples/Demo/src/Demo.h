@@ -17,23 +17,14 @@ public:
 	virtual void OnIdle();
 
 private:
+	Node* LoadAndInitScene1();
 	Double mLastTime;
 
 	CameraPtr mspCamera;
 	CullerSorting mCuller;
 
-	NodePtr mspRoot;
+	NodePtr mspScene1;
 	TArray<CameraPtr> mCameras;
-
-	//---
-	TArray<Transformation*> mSplinePoints;
-	Float mT;
-	UInt mSplinePointIndex;
-
-	Vector3F GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
-		Float t);
-	QuaternionF GetSquad(TArray<Transformation*>& rControlPoints, UInt idx,
-		Float t);
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

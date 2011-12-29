@@ -128,17 +128,21 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ConveyorBelt.cpp" />
     <ClCompile Include="src\Demo.cpp" />
     <ClCompile Include="src\FanRotator.cpp" />
     <ClCompile Include="src\Importer.cpp" />
     <ClCompile Include="src\PicoPNG.cpp" />
+    <ClCompile Include="src\SplineCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ConveyorBelt.h" />
     <ClInclude Include="src\Demo.h" />
     <ClInclude Include="src\FanRotator.h" />
     <ClInclude Include="src\Importer.h" />
     <ClInclude Include="src\PicoPNG.h" />
     <ClInclude Include="src\rapidxml.hpp" />
+    <ClInclude Include="src\SplineCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Wire\Wire_WIN32.vcxproj">
