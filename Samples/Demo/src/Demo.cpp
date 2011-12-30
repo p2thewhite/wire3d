@@ -93,8 +93,6 @@ Node* Demo::LoadAndInitScene1()
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
 	}
 
-	pScene->UpdateRS();
-
 	Node* pSplineRoot = DynamicCast<Node>(pScene->GetChildByName("Spline"));
 	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot, mspCamera));
 

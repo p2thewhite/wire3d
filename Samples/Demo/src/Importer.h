@@ -34,6 +34,8 @@ private:
 
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
@@ -44,6 +46,9 @@ private:
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 		Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+
+	void UpdateGS(Spatial* pSpatial);
 
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
