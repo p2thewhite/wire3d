@@ -6,6 +6,7 @@
 #include "WireLight.h"
 #include "WireQuaternion.h"
 #include "WireVertexBuffer.h"
+#include "WireTStack.h"
 
 using namespace Wire;
 
@@ -45,6 +46,41 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mMaterialStates.RemoveAll();
 	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
+
+	if (pRoot)
+	{
+		pRoot->UpdateRS();
+		TStack<Spatial*> scene(1000);
+		scene.Push(pRoot);
+
+		while (!scene.IsEmpty())
+		{
+			Spatial* pSpatial = NULL;
+			scene.Pop(pSpatial);
+			
+			Geometry* pGeo = DynamicCast<Geometry>(pSpatial);
+			if (pGeo && pGeo->GetMaterial())
+			{
+				if (pGeo->GetMaterial()->GetTextureQuantity() > 0 &&
+					pGeo->Lights.GetQuantity() > 0)
+				{
+					pGeo->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
+				}
+			}
+
+			Node* pNode = DynamicCast<Node>(pSpatial);
+			if (pNode)
+			{
+				for (UInt i = 0; i < pNode->GetQuantity(); i++)
+				{
+					if (pNode->GetChild(i))
+					{
+						scene.Push(pNode->GetChild(i));
+					}
+				}
+			}
+		}
+	}
 
 	return pRoot;
 }
@@ -152,7 +188,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 			}
 			else if (System::Strcmp("Light", pChild->name()) == 0)
 			{
-
+				ParseLight(pChild, pNode);
 			}
 			else
 			{
@@ -201,6 +237,87 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
+Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
+{
+	Char* pFloat = GetValue(pXmlNode, pName);
+	Float f = 0;
+	if (pFloat)
+	{
+		Int n;
+		n = sscanf(pFloat, "%f", &f);
+		WIRE_ASSERT(n == 1);
+	}
+
+	return f;
+}
+
+//----------------------------------------------------------------------------
+ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName)
+{
+	ColorRGB c;
+	Char* pCol = GetValue(pXmlNode, pName);
+	if (pCol)
+	{
+		Int n;
+		n = sscanf(pCol, "%f, %f, %f", &c.R(), &c.G(), &c.B());
+		WIRE_ASSERT(n == 3);
+	}
+
+	return c;
+}
+
+//----------------------------------------------------------------------------
+void Importer::UpdateGS(Spatial* pSpatial)
+{
+	Spatial* pRoot = pSpatial->GetParent();
+	while (pRoot && pRoot->GetParent())
+	{
+		pRoot = pRoot->GetParent();
+	}
+
+	if (pRoot)
+	{
+		pRoot->UpdateGS();
+	}
+	else
+	{
+		pSpatial->UpdateGS();
+	}
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+{
+	UpdateGS(pSpatial);
+
+	Char* pType = GetValue(pXmlNode, "Type");
+	Light* pLight = WIRE_NEW Light;
+	Light::LightType lt = Light::LT_POINT;
+
+	if (System::Strcmp("Point", pType) == 0)
+	{
+		lt = Light::LT_POINT;
+	}
+	else if (System::Strcmp("Directional", pType) == 0)
+	{
+		lt = Light::LT_DIRECTIONAL;
+	}
+	else if (System::Strcmp("Spot", pType) == 0)
+	{
+		lt = Light::LT_SPOT;
+//		Float angleDeg = GetFloat()
+	}
+
+	pLight->Type = lt;
+	pLight->Position = pSpatial->World.GetTranslate();
+	pLight->Ambient = GetColorRGB(pXmlNode, "Ambient");
+	pLight->Color = GetColorRGB(pXmlNode, "Color");
+
+	pSpatial->AttachLight(pLight);
+}
+
+//----------------------------------------------------------------------------
 void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	if (mpCameras == NULL)
@@ -208,52 +325,19 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		return;
 	}
 
-	Spatial* pRoot = pSpatial->GetParent();
-	while (pRoot && pRoot->GetParent())
-	{
-		pRoot = pRoot->GetParent();
-	}
-
 	Vector3F cameraLocation(0, 0, 0);
 	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 
-	if (pRoot)
-	{
-		pRoot->UpdateGS();
-		cameraLocation = pSpatial->World.GetTranslate();
+	UpdateGS(pSpatial);
+	cameraLocation = pSpatial->World.GetTranslate();
+	Matrix34F rot = pSpatial->World.GetMatrix();
+	viewDirection = rot.GetColumn(2);
+	up = rot.GetColumn(1);
 
-		Matrix34F rot = pSpatial->World.GetMatrix();
-		viewDirection = rot.GetColumn(2);
-		up = rot.GetColumn(1);
-	}
-
-	Char* pFov = GetValue(pXmlNode, "Fov");
-	Float fov = 45;
-	if (pFov)
-	{
- 		Int n;
- 		n = sscanf(pFov, "%f", &fov);
- 		WIRE_ASSERT(n == 1);
-	}
-
-	Char* pNear = GetValue(pXmlNode, "Near");
-	Float near = 45;
-	if (pNear)
-	{
-		Int n;
-		n = sscanf(pNear, "%f", &near);
-		WIRE_ASSERT(n == 1);
-	}
-
-	Char* pFar = GetValue(pXmlNode, "Far");
-	Float far = 45;
-	if (pFar)
-	{
-		Int n;
-		n = sscanf(pFar, "%f", &far);
-		WIRE_ASSERT(n == 1);
-	}
+	Float fov = GetFloat(pXmlNode, "Fov");
+	Float near = GetFloat(pXmlNode, "Near");
+	Float far = GetFloat(pXmlNode, "Far");
 	
 	Vector3F right = viewDirection.Cross(up);
 	Camera* pCam = WIRE_NEW Camera;
@@ -404,6 +488,22 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	ParseTransformation(pXmlNode, pGeo);
+
+	if (pXmlNode->first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			if (System::Strcmp("Camera", pChild->name()) == 0)
+			{
+				ParseCamera(pChild, pGeo);
+			}
+			else if (System::Strcmp("Light", pChild->name()) == 0)
+			{
+				ParseLight(pChild, pGeo);
+			}
+		}
+	}
 
 	return pGeo;
 }

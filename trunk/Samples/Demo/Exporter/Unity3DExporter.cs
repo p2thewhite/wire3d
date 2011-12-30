@@ -136,7 +136,7 @@ public class Unity3DExporter : EditorWindow
         {
             if ((mf != null) && (mr != null))
             {
-                WriteLeaf(t, outfile, indent + "  ");
+                WriteLeaf(t, outfile, indent + "  ", false);
             }
 
             for (int i = 0; i < t.GetChildCount(); i++)
@@ -185,7 +185,8 @@ public class Unity3DExporter : EditorWindow
             cam.nearClipPlane + "\" Far=\"" + cam.farClipPlane + "\" />");
     }
 
-    private void WriteLeaf(Transform t, StreamWriter outfile, string indent)
+    private void WriteLeaf(Transform t, StreamWriter outfile, string indent,
+		bool writeComponents = true)
     {
         MeshFilter mf = t.gameObject.GetComponent<MeshFilter>();
         MeshRenderer mr = t.gameObject.GetComponent<MeshRenderer>();
@@ -197,8 +198,12 @@ public class Unity3DExporter : EditorWindow
         string isStatic = " Static=\"" + (t.gameObject.isStatic ? "1" : "0") + "\"";
         outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "\" " + GetTransform(t) + isStatic + ">");
 
-        WriteCamera(t.gameObject, outfile, indent);
-        WriteLight(t.gameObject, outfile, indent);
+		if (writeComponents)
+		{
+			WriteCamera(t.gameObject, outfile, indent);
+			WriteLight(t.gameObject, outfile, indent);
+		}
+		
         WriteMesh(mf.sharedMesh, outfile, indent + "  ", mr.lightmapTilingOffset);
         WriteMaterial(mr, outfile, indent + "  ");
         outfile.WriteLine(indent + "</Leaf>");       

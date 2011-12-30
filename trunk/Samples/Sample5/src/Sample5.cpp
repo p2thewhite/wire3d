@@ -62,7 +62,7 @@ Bool Sample5::OnInitialize()
 	pLitGroup->AttachChild(pCube2);
 
 	// create light nodes. These act the same as normal nodes, except that
-	// the own a light and apply scene graph transformations on that light.
+	// they own a light and apply scene graph transformations on that light.
 	NodeLight* pLightNode1 = WIRE_NEW NodeLight;
 	mspRoot->AttachChild(pLightNode1);
 	pLightNode1->SetLight(pLight1);
