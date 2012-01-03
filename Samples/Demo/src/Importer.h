@@ -42,11 +42,13 @@ private:
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
-	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode);
+	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode,
+		Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 		Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+	void ParseRenderStates(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 
 	void UpdateGS(Spatial* pSpatial);
 
@@ -55,7 +57,6 @@ private:
 		const unsigned char* in_png, size_t in_size,
 		bool convert_to_rgba32 = true);
 
-	StateAlphaPtr mspAlpha;
 	const Char* mpPath;
 	TArray<CameraPtr>* mpCameras;
 

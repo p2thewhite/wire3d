@@ -10,7 +10,7 @@
 	      <Uv0 Name="polySurface76_00003DF2.uv0" LittleEndian="y" />
 	    </Mesh>
 	    <Material Name="warehousefbx-ceilingfanmat">
-	      <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+	      <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" BlendMode="Modulate" />
 	      <MaterialState Ambient="1, 1, 1, 1" />
 	    </Material>
 	  </Leaf>
@@ -24,7 +24,7 @@
 	      <Uv0 Name="polySurface76_00003DF2.uv0" LittleEndian="y" />
 	    </Mesh>
 	    <Material Name="warehousefbx-ceilingfanmat">
-	      <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+	      <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" BlendMode="Modulate" />
 	      <MaterialState Ambient="1, 1, 1, 1" />
 	    </Material>
 	  </Leaf>
@@ -37,7 +37,7 @@
         <Uv0 Name="polySurface1473_0000402C.uv0" LittleEndian="y" />
       </Mesh>
       <Material Name="warehousefbx-ceilingfanmat">
-        <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+        <Texture Name="mostlyBoxesTGA_00000258.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" BlendMode="Modulate" />
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
     </Leaf> 

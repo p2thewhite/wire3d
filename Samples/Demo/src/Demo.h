@@ -17,14 +17,17 @@ public:
 	virtual void OnIdle();
 
 private:
+	Node* LoadAndInitLogo();
 	Node* LoadAndInitScene1();
 	Double mLastTime;
 
-	CameraPtr mspCamera;
-	CullerSorting mCuller;
+	NodePtr mspLogo;
+	TArray<CameraPtr> mLogoCameras;
+	Culler mLogoCuller;
 
 	NodePtr mspScene1;
-	TArray<CameraPtr> mCameras;
+	TArray<CameraPtr> mScene1Cameras;
+	CullerSorting mScene1Culler;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

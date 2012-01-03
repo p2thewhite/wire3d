@@ -181,7 +181,13 @@ public class Unity3DExporter : EditorWindow
             return;
         }
 
-        outfile.WriteLine(indent + "  " + "<Camera Fov=\"" + cam.fieldOfView + "\" Near=\"" +
+        float fov = cam.fieldOfView;
+        if (cam.orthographic)
+        {
+            fov = 0;
+        }
+
+        outfile.WriteLine(indent + "  " + "<Camera Fov=\"" + fov + "\" Near=\"" +
             cam.nearClipPlane + "\" Far=\"" + cam.farClipPlane + "\" />");
     }
 

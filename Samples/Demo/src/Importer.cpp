@@ -34,9 +34,6 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	System::Memcpy(pXmlNullTerminated, xmlSize, pXml, xmlSize);
 	pXmlNullTerminated[xmlSize] = 0;
 
-	mspAlpha = WIRE_NEW StateAlpha;
-	mspAlpha->BlendEnabled = true;
-
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
 	Node* pRoot = WIRE_NEW Node;
@@ -47,40 +44,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
 
-	if (pRoot)
-	{
-		pRoot->UpdateRS();
-		TStack<Spatial*> scene(1000);
-		scene.Push(pRoot);
-
-		while (!scene.IsEmpty())
-		{
-			Spatial* pSpatial = NULL;
-			scene.Pop(pSpatial);
-			
-			Geometry* pGeo = DynamicCast<Geometry>(pSpatial);
-			if (pGeo && pGeo->GetMaterial())
-			{
-				if (pGeo->GetMaterial()->GetTextureQuantity() > 0 &&
-					pGeo->Lights.GetQuantity() > 0)
-				{
-					pGeo->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
-				}
-			}
-
-			Node* pNode = DynamicCast<Node>(pSpatial);
-			if (pNode)
-			{
-				for (UInt i = 0; i < pNode->GetQuantity(); i++)
-				{
-					if (pNode->GetChild(i))
-					{
-						scene.Push(pNode->GetChild(i));
-					}
-				}
-			}
-		}
-	}
+	pRoot->UpdateRS();
 
 	return pRoot;
 }
@@ -182,6 +146,8 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
+//			ParseRenderStates(pChild, pNode);
+
 			if (System::Strcmp("Camera", pChild->name()) == 0)
 			{
 				ParseCamera(pChild, pNode);
@@ -334,13 +300,12 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Matrix34F rot = pSpatial->World.GetMatrix();
 	viewDirection = rot.GetColumn(2);
 	up = rot.GetColumn(1);
+	Vector3F right = viewDirection.Cross(up);
 
 	Float fov = GetFloat(pXmlNode, "Fov");
 	Float near = GetFloat(pXmlNode, "Near");
 	Float far = GetFloat(pXmlNode, "Far");
-	
-	Vector3F right = viewDirection.Cross(up);
-	Camera* pCam = WIRE_NEW Camera;
+	Camera* pCam = WIRE_NEW Camera(fov != 0.0F);
 	pCam->SetFrame(cameraLocation, viewDirection, up, right);
 	pCam->SetFrustum(fov, 640.0f / 480.0f , near, far);
 	mpCameras->Append(pCam);
@@ -494,6 +459,8 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
+//			ParseRenderStates(pChild, pGeo);
+
 			if (System::Strcmp("Camera", pChild->name()) == 0)
 			{
 				ParseCamera(pChild, pGeo);
@@ -506,6 +473,30 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode, Spatial*
+	pSpatial)
+{
+	if (System::Strcmp("MaterialState", pXmlNode->name()) == 0)
+	{
+		Char* pCol = GetValue(pXmlNode, "Ambient");
+		if (pCol)
+		{
+			Int n;
+			ColorRGBA c;
+			n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
+
+			WIRE_ASSERT(n == 4);
+			// multiple MaterialStates per Spatial encountered
+			WIRE_ASSERT(pSpatial->GetState(State::MATERIAL) == NULL);
+
+			StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
+			pMaterialState->Ambient = c;
+			pSpatial->AttachState(pMaterialState);
+		}
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -703,10 +694,16 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		{
 			if (System::Strcmp("Texture", pChild->name()) == 0)
 			{
-				Texture2D* pTex = ParseTexture(pChild);
-				Material::BlendMode mode = pMaterial->GetTextureQuantity() >
-					0 ? Material::BM_MODULATE : Material::BM_REPLACE;
-				pMaterial->AddTexture(pTex, mode);
+				Material::BlendMode bm = Material::BM_QUANTITY;
+				Texture2D* pTex = ParseTexture(pChild, bm);
+
+				if (bm == Material::BM_QUANTITY)
+				{
+					bm = pMaterial->GetTextureQuantity() > 0 ?
+						Material::BM_MODULATE : Material::BM_REPLACE;
+				}
+
+				pMaterial->AddTexture(pTex, bm);
 			}
 			else if (System::Strcmp("MaterialState", pChild->name()) == 0)
 			{
@@ -750,7 +747,8 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode)
+Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
+	Material::BlendMode& blendMode)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
@@ -810,6 +808,29 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode)
 			else if (System::Strcmp("Clamp", attr->value()) == 0)
 			{
 				warp = Texture2D::WT_CLAMP;
+			}
+		}
+		else if (System::Strcmp("BlendMode", attr->name()) == 0)
+		{
+			if (System::Strcmp("Replace", attr->value()) == 0)
+			{
+				blendMode = Material::BM_REPLACE;
+			}
+			else if (System::Strcmp("Modulate", attr->value()) == 0)
+			{
+				blendMode = Material::BM_MODULATE;
+			}
+			else if (System::Strcmp("Pass", attr->value()) == 0)
+			{
+				blendMode = Material::BM_PASS;
+			}
+			else if (System::Strcmp("Blend", attr->value()) == 0)
+			{
+				blendMode = Material::BM_BLEND;
+			}
+			else if (System::Strcmp("Decal", attr->value()) == 0)
+			{
+				blendMode = Material::BM_DECAL;
 			}
 		}
 	}
