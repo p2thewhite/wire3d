@@ -1,0 +1,15 @@
+<Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <Node Name="Main Camera" Pos="0, 1, -10" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Camera Fov="60" Near="0.3" Far="1000" />
+  </Node>
+  <Leaf Name="Wire Logo" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="2, 1, 1" Static="0">
+    <Mesh Name="Quad_0001E0FA_1_1_0_0">
+      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
+      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
+      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
+    </Mesh>
+    <Material Name="LogoMaterial">
+      <Texture Name="logo2_0001E0E4.png" FilterMode="Point" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
+    </Material>
+  </Leaf>
+</Node>
