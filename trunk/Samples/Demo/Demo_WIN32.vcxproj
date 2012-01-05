@@ -128,21 +128,23 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ConveyorBelt.cpp" />
+    <ClCompile Include="src\Controllers\ConveyorBelt.cpp" />
+    <ClCompile Include="src\Controllers\FanRotator.cpp" />
+    <ClCompile Include="src\Controllers\LogoFader.cpp" />
+    <ClCompile Include="src\Controllers\SplineCamera.cpp" />
     <ClCompile Include="src\Demo.cpp" />
-    <ClCompile Include="src\FanRotator.cpp" />
-    <ClCompile Include="src\Importer.cpp" />
-    <ClCompile Include="src\PicoPNG.cpp" />
-    <ClCompile Include="src\SplineCamera.cpp" />
+    <ClCompile Include="src\Importer\Importer.cpp" />
+    <ClCompile Include="src\Importer\PicoPNG.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ConveyorBelt.h" />
+    <ClInclude Include="src\Controllers\ConveyorBelt.h" />
+    <ClInclude Include="src\Controllers\FanRotator.h" />
+    <ClInclude Include="src\Controllers\LogoFader.h" />
+    <ClInclude Include="src\Controllers\SplineCamera.h" />
     <ClInclude Include="src\Demo.h" />
-    <ClInclude Include="src\FanRotator.h" />
-    <ClInclude Include="src\Importer.h" />
-    <ClInclude Include="src\PicoPNG.h" />
-    <ClInclude Include="src\rapidxml.hpp" />
-    <ClInclude Include="src\SplineCamera.h" />
+    <ClInclude Include="src\Importer\Importer.h" />
+    <ClInclude Include="src\Importer\PicoPNG.h" />
+    <ClInclude Include="src\Importer\rapidxml.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Wire\Wire_WIN32.vcxproj">

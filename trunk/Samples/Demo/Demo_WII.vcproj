@@ -61,56 +61,72 @@
 	<References>
 	</References>
 	<Files>
-		<File
-			RelativePath=".\src\ConveyorBelt.cpp"
+		<Filter
+			Name="Controllers"
 			>
-		</File>
-		<File
-			RelativePath=".\src\ConveyorBelt.h"
+			<File
+				RelativePath=".\src\ConveyorBelt.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ConveyorBelt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FanRotator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FanRotator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Controllers\LogoFader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Controllers\LogoFader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SplineCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SplineCamera.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Importer"
 			>
-		</File>
+			<File
+				RelativePath=".\src\Importer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Importer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\PicoPNG.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\PicoPNG.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\rapidxml.hpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\Demo.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\src\Demo.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\FanRotator.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\FanRotator.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Importer.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Importer.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\PicoPNG.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\PicoPNG.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\rapidxml.hpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\SplineCamera.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\SplineCamera.h"
 			>
 		</File>
 	</Files>

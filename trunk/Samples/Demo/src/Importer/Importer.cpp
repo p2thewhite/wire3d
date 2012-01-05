@@ -42,6 +42,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
 	Node* pRoot = WIRE_NEW Node;
+	pRoot->SetName(pFilename);
 	Traverse(doc.first_node(), pRoot);
 
 	mMaterials.RemoveAll();
