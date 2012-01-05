@@ -17,6 +17,8 @@ public:
 	virtual void OnIdle();
 
 private:
+	void DrawFPS(Double elapsed, Bool usesSorting);
+
 	Node* LoadAndInitLogo();
 	Node* LoadAndInitScene1();
 	Double mLastTime;

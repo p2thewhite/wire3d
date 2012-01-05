@@ -12,7 +12,6 @@
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireNode.h"
-#include "WireStateAlpha.h"
 #include "WireStateMaterial.h"
 #include "WireString.h"
 #include "WireTexture2D.h"
@@ -35,6 +34,7 @@ private:
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 
@@ -46,9 +46,10 @@ private:
 		Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 		Spatial* pSpatial);
+	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseRenderStates(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+	State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
 
 	void UpdateGS(Spatial* pSpatial);
 
