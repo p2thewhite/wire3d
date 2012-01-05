@@ -1,9 +1,10 @@
 #include "Demo.h"
 
-#include "ConveyorBelt.h"
-#include "FanRotator.h"
-#include "Importer.h"
-#include "SplineCamera.h"
+#include "Controllers/ConveyorBelt.h"
+#include "Controllers/FanRotator.h"
+#include "Controllers/LogoFader.h"
+#include "Controllers/SplineCamera.h"
+#include "Importer/Importer.h"
 
 using namespace Wire;
 
@@ -81,6 +82,12 @@ Node* Demo::LoadAndInitLogo()
 	}
 
 	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in Logo.xml */);
+
+	Node* pRoot = DynamicCast<Node>(pLogo->GetChildByName("Root"));
+	if (pRoot)
+	{
+		pRoot->AttachController(WIRE_NEW LogoFader);
+	}
 
 	GetRenderer()->BindAll(pLogo);
 	return pLogo;

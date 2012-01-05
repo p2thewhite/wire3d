@@ -17,7 +17,9 @@ include $(DEVKITPPC)/wii_rules
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
 TARGET			:=	$(notdir $(CURDIR))
-SOURCES			:=	src
+SOURCES			:=	src \
+					src/Controllers \
+					src/Importer
 DATA			:=	data2  
 INCLUDES		:=
 LIBWIRE_LIB 	:=	$(WIREDIR)/lib

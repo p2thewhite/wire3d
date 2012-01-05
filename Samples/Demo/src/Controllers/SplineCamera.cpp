@@ -21,24 +21,6 @@ SplineCamera::SplineCamera(Node* pSplineRoot, Camera* pCamera)
 		}
 	}
 
-// 	for (UInt i = 1; i < mSplinePoints.GetQuantity(); i++)
-// 	{
-// 		QuaternionF q0(mSplinePoints[i-1]->GetRotate());
-// 		QuaternionF q1(mSplinePoints[i]->GetRotate());
-// 
-// 		if (q1.Dot(q0) < 0)
-// 		{
-// 			q1.W() = -q1.W();
-// 			q1.X() = -q1.X();
-// 			q1.Y() = -q1.Y();
-// 			q1.Z() = -q1.Z();
-// 
-// 			Matrix3F m;
-// 			q1.ToRotationMatrix(m);
-// 			mSplinePoints[i]->SetRotate(m);
-// 		}
-// 	}
-
 	Transformation* pTrafo = mSplinePoints[0];
 	mSplinePoints.Append(mSplinePoints[0]);
 	mSplinePoints.Append(mSplinePoints[1]);
