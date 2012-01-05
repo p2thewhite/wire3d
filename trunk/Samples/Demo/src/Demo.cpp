@@ -42,9 +42,12 @@ void Demo::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-//	mLogoCameras[0]->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	mLogoCameras[0]->SetFrustum(0, width, 0, height, 0, 1);
+
+	Vector3F centered((width-512)*0.5F, (height-256)*0.5F, 0);
+	mspLogo->Local.SetTranslate(centered);
 	mspLogo->UpdateGS(time);
 	mLogoCuller.SetCamera(mLogoCameras[0]);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
@@ -52,12 +55,16 @@ void Demo::OnIdle()
 	mspScene1->UpdateGS(time);
 	mScene1Culler.ComputeVisibleSet(mspScene1);
 
+	GetRenderer()->ResetStatistics();
+
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mScene1Cameras[0]);
 	GetRenderer()->DrawScene(mScene1Culler.GetVisibleSets());
 
 	GetRenderer()->SetCamera(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
+
+	DrawFPS(elapsedTime, true);
 
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
@@ -74,25 +81,6 @@ Node* Demo::LoadAndInitLogo()
 	}
 
 	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in Logo.xml */);
-
-	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
-	pAlpha->BlendEnabled = true;
-	pLogo->AttachState(pAlpha);
-
-	StateZBuffer* pZBuffer = WIRE_NEW StateZBuffer;
-	pZBuffer->Writable = false;
-	pZBuffer->Enabled = false;
-	pLogo->AttachState(pZBuffer);
-
-	Light* pLight = WIRE_NEW Light();
-	pLight->Ambient = ColorRGB::WHITE;
-	pLogo->AttachLight(pLight);
-
-	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
-	pStateMaterial->Ambient = ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f);
-	pLogo->AttachState(pStateMaterial);
-
-	pLogo->UpdateRS();
 
 	GetRenderer()->BindAll(pLogo);
 	return pLogo;
@@ -139,4 +127,49 @@ Node* Demo::LoadAndInitScene1()
 
 	GetRenderer()->BindAll(pScene);
 	return pScene;
+}
+
+//----------------------------------------------------------------------------
+void Demo::DrawFPS(Double elapsed, Bool usesSorting)
+{
+	// set the frustum for the text camera (screenWidth and screenHeight
+	// could have been changed by the user resizing the window)
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+
+	UInt fps = static_cast<UInt>(1/elapsed);
+	const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
+	String msg1 = "\2\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
+		"VBOSize: %d\nIBOs: %d, IBOSize: %d\nTextures: %d, TextureSize: "
+		"%5.2fMB\n%5.2f";
+
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
+		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
+		VBOTotalSize, pStats->IBOCount, pStats->IBOTotalSize, pStats->
+		TextureCount, pStats->TextureTotalSize/(1024.0f*1024.0f), (float)mLastTime);
+
+	String msg0 = "\n\n\n\n\n\nSorting: ";
+	String str;
+
+	if (usesSorting)
+	{
+		str = msg0 + String("\x01\x20\xff\x20\xffON") + String(text);
+	}
+	else
+	{
+		str = msg0 + String("\x01\xff\x20\x20\xffOFF") + String(text);
+	}
+
+	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
+		screenHeight, ColorRGBA::WHITE);
+	StateAlpha* pTextAlpha = WIRE_NEW StateAlpha();
+	pTextAlpha->BlendEnabled = true;
+	spText->AttachState(pTextAlpha);
+	spText->UpdateRS();
+
+	GetRenderer()->DisableLighting();
+	GetRenderer()->Draw(spText);
 }

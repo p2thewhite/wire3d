@@ -1,8 +1,10 @@
 <Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-  <Node Name="Main Camera" Pos="0, 1, -10" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-    <Camera Fov="60" Near="0.3" Far="1000" />
-  </Node>
-  <Leaf Name="Wire Logo" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="2, 1, 1" Static="0">
+  <MaterialState Ambient="1, 1, 1, 1" />
+  <Camera Fov="0" Near="0.3" Far="1000" />
+  <Light Type="Point" Ambient="1, 1, 1" Color="1, 1, 1" />
+  <Leaf Name="Logo" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="0">
+    <AlphaState Enabled="1" SrcBlendMode="SRC_ALPHA" DstBlendMode="ONE_MINUS_SRC_ALPHA" />
+	<ZBufferState Enabled="0" Writable="0" CmpFunc="LEQUAL" />
     <Mesh Name="Quad_0001E0FA_1_1_0_0">
       <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
       <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />

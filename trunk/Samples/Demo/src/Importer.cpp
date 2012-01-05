@@ -6,6 +6,11 @@
 #include "WireLight.h"
 #include "WireQuaternion.h"
 #include "WireVertexBuffer.h"
+#include "WireStateAlpha.h"
+#include "WireStateCull.h"
+#include "WireStateFog.h"
+#include "WireStateWireframe.h"
+#include "WireStateZBuffer.h"
 #include "WireTStack.h"
 
 using namespace Wire;
@@ -146,17 +151,10 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-//			ParseRenderStates(pChild, pNode);
+			ParseComponents(pChild, pNode);
 
-			if (System::Strcmp("Camera", pChild->name()) == 0)
-			{
-				ParseCamera(pChild, pNode);
-			}
-			else if (System::Strcmp("Light", pChild->name()) == 0)
-			{
-				ParseLight(pChild, pNode);
-			}
-			else
+			if (System::Strcmp("Node", pChild->name()) == 0 ||
+				System::Strcmp("Leaf", pChild->name()) == 0)
 			{
 				Traverse(pChild, pNode);
 			}
@@ -215,6 +213,21 @@ Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 	}
 
 	return f;
+}
+
+//----------------------------------------------------------------------------
+Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
+{
+	Char* pBool = GetValue(pXmlNode, pName);
+	UInt b = 0;
+	if (pBool)
+	{
+		Int n;
+		n = sscanf(pBool, "%d", &b);
+		WIRE_ASSERT(n == 1);
+	}
+
+	return (b != 0);
 }
 
 //----------------------------------------------------------------------------
@@ -306,7 +319,11 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Float near = GetFloat(pXmlNode, "Near");
 	Float far = GetFloat(pXmlNode, "Far");
 	Camera* pCam = WIRE_NEW Camera(fov != 0.0F);
-	pCam->SetFrame(cameraLocation, viewDirection, up, right);
+	if (fov != 0.0F)
+	{
+		pCam->SetFrame(cameraLocation, viewDirection, up, right);
+	}
+
 	pCam->SetFrustum(fov, 640.0f / 480.0f , near, far);
 	mpCameras->Append(pCam);
 }
@@ -459,16 +476,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-//			ParseRenderStates(pChild, pGeo);
-
-			if (System::Strcmp("Camera", pChild->name()) == 0)
-			{
-				ParseCamera(pChild, pGeo);
-			}
-			else if (System::Strcmp("Light", pChild->name()) == 0)
-			{
-				ParseLight(pChild, pGeo);
-			}
+			ParseComponents(pChild, pGeo);
 		}
 	}
 
@@ -476,27 +484,230 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode, Spatial*
+void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 	pSpatial)
+{
+	State* pState = ParseRenderStates(pXmlNode);
+	if (pState)
+	{
+		pSpatial->AttachState(pState);
+	}
+	else if (System::Strcmp("Camera", pXmlNode->name()) == 0)
+	{
+		ParseCamera(pXmlNode, pSpatial);
+	}
+	else if (System::Strcmp("Light", pXmlNode->name()) == 0)
+	{
+		ParseLight(pXmlNode, pSpatial);
+	}
+}
+
+//----------------------------------------------------------------------------
+State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 {
 	if (System::Strcmp("MaterialState", pXmlNode->name()) == 0)
 	{
+		StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
+
 		Char* pCol = GetValue(pXmlNode, "Ambient");
 		if (pCol)
 		{
 			Int n;
 			ColorRGBA c;
 			n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
-
 			WIRE_ASSERT(n == 4);
-			// multiple MaterialStates per Spatial encountered
-			WIRE_ASSERT(pSpatial->GetState(State::MATERIAL) == NULL);
 
-			StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
 			pMaterialState->Ambient = c;
-			pSpatial->AttachState(pMaterialState);
 		}
+
+		return pMaterialState;
 	}
+	else if (System::Strcmp("AlphaState", pXmlNode->name()) == 0)
+	{
+		StateAlpha* pAlphaState = WIRE_NEW StateAlpha;
+		pAlphaState->BlendEnabled = GetBool(pXmlNode, "Enabled");
+
+		Char* pSrcBlend = GetValue(pXmlNode, "SrcBlendMode");
+		if (pSrcBlend)
+		{
+			if (System::Strcmp("ZERO", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_ZERO;
+			}
+			else if (System::Strcmp("ONE", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_ONE;
+			}
+			else if (System::Strcmp("DST_COLOR", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_DST_COLOR;
+			}
+			else if (System::Strcmp("ONE_MINUS_DST_COLOR", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_DST_COLOR;
+			}
+			else if (System::Strcmp("SRC_ALPHA", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_SRC_ALPHA;
+			}
+			else if (System::Strcmp("ONE_MINUS_SRC_ALPHA", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_SRC_ALPHA;
+			}
+			else if (System::Strcmp("DST_ALPHA", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_DST_ALPHA;
+			}
+			else if (System::Strcmp("ONE_MINUS_DST_ALPHA", pSrcBlend) == 0)
+			{
+				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_DST_ALPHA;
+			}
+		}
+
+		Char* pDstBlend = GetValue(pXmlNode, "DstBlendMode");
+		if (pDstBlend)
+		{
+			if (System::Strcmp("ZERO", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_ZERO;
+			}
+			else if (System::Strcmp("ONE", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_ONE;
+			}
+			else if (System::Strcmp("SRC_COLOR", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_SRC_COLOR;
+			}
+			else if (System::Strcmp("ONE_MINUS_SRC_COLOR", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_SRC_COLOR;
+			}
+			else if (System::Strcmp("SRC_ALPHA", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_SRC_ALPHA;
+			}
+			else if (System::Strcmp("ONE_MINUS_SRC_ALPHA", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_SRC_ALPHA;
+			}
+			else if (System::Strcmp("DST_ALPHA", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_DST_ALPHA;
+			}
+			else if (System::Strcmp("ONE_MINUS_DST_ALPHA", pDstBlend) == 0)
+			{
+				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_DST_ALPHA;
+			}
+		}
+
+		return pAlphaState;
+	}
+	else if (System::Strcmp("ZBufferState", pXmlNode->name()) == 0)
+	{
+		StateZBuffer* pZBufferState = WIRE_NEW StateZBuffer;
+		pZBufferState->Enabled = GetBool(pXmlNode, "Enabled");
+		pZBufferState->Writable = GetBool(pXmlNode, "Writable");
+
+		Char* pCmpFunc = GetValue(pXmlNode, "CmpFunc");
+		if (pCmpFunc)
+		{
+			if (System::Strcmp("NEVER", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_NEVER;
+			}
+			else if (System::Strcmp("LESS", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_LESS;
+			}
+			else if (System::Strcmp("EQUAL", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_EQUAL;
+			}
+			else if (System::Strcmp("LEQUAL", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_LEQUAL;
+			}
+			else if (System::Strcmp("GREATER", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_GREATER;
+			}
+			else if (System::Strcmp("NOTEQUAL", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_NOTEQUAL;
+			}
+			else if (System::Strcmp("GEQUAL", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_GEQUAL;
+			}
+			else if (System::Strcmp("ALWAYS", pCmpFunc) == 0)
+			{
+				pZBufferState->Compare = StateZBuffer::CF_ALWAYS;
+			}
+		}
+
+		return pZBufferState;
+	}
+	else if (System::Strcmp("CullState", pXmlNode->name()) == 0)
+	{
+		StateCull* pCullState = WIRE_NEW StateCull;
+		pCullState->Enabled = GetBool(pXmlNode, "Enabled");
+
+		Char* pMode = GetValue(pXmlNode, "Mode");
+		if (pMode)
+		{
+			if (System::Strcmp("OFF", pMode) == 0)
+			{
+				pCullState->CullFace = StateCull::CM_OFF;
+			}
+			else if (System::Strcmp("BACK", pMode) == 0)
+			{
+				pCullState->CullFace = StateCull::CM_BACK;
+			}
+			else if (System::Strcmp("FRONT", pMode) == 0)
+			{
+				pCullState->CullFace = StateCull::CM_FRONT;
+			}
+		}
+
+		return pCullState;
+	}
+	else if (System::Strcmp("WireframeState", pXmlNode->name()) == 0)
+	{
+		StateWireframe* pWireframeState = WIRE_NEW StateWireframe;
+		pWireframeState->Enabled = GetBool(pXmlNode, "Enabled");
+
+		return pWireframeState;
+	}
+	else if (System::Strcmp("FogState", pXmlNode->name()) == 0)
+	{
+		StateFog* pFogState = WIRE_NEW StateFog;
+		pFogState->Enabled = GetBool(pXmlNode, "Enabled");
+		pFogState->Color = GetColorRGB(pXmlNode, "Color");
+		pFogState->Start = GetFloat(pXmlNode, "Start");
+		pFogState->End = GetFloat(pXmlNode, "End");
+
+		Char* pFunc = GetValue(pXmlNode, "Func");
+		if (pFunc)
+		{
+			if (System::Strcmp("LINEAR", pFunc) == 0)
+			{
+				pFogState->DensityFunc = StateFog::DF_LINEAR;
+			}
+			else if (System::Strcmp("EXP", pFunc) == 0)
+			{
+				pFogState->DensityFunc = StateFog::DF_EXP;
+			}
+			else if (System::Strcmp("EXPSQR", pFunc) == 0)
+			{
+				pFogState->DensityFunc = StateFog::DF_EXPSQR;
+			}
+		}
+
+		return pFogState;
+	}
+
+	return NULL;
 }
 
 //----------------------------------------------------------------------------
