@@ -17,19 +17,27 @@ public:
 	virtual void OnIdle();
 
 private:
-	void DrawFPS(Double elapsed, Bool usesSorting);
+	enum AppState
+	{
+		AS_LOADING,
+		AS_RUNNING
+	};
+
+	void StateLoading(Double time);
+	void StateRunning(Double time);
 
 	Node* LoadAndInitLogo();
-	Node* LoadAndInitScene1();
-	Double mLastTime;
-
 	NodePtr mspLogo;
 	TArray<CameraPtr> mLogoCameras;
 	Culler mLogoCuller;
 
+	Node* LoadAndInitScene1();
 	NodePtr mspScene1;
 	TArray<CameraPtr> mScene1Cameras;
 	CullerSorting mScene1Culler;
+
+	Double mLastTime;
+	UInt mAppState;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

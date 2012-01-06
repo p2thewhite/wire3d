@@ -308,7 +308,7 @@ public class Unity3DExporter : EditorWindow
             ti.textureFormat = TextureImporterFormat.RGB24;
         }
 
-        if (tex.format == TextureFormat.DXT5)
+        if (tex.format == TextureFormat.DXT5 || tex.format == TextureFormat.RGBA32)
         {
             needsReimport = true;
             ti.textureFormat = TextureImporterFormat.ARGB32;
