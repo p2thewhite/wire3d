@@ -427,7 +427,7 @@
       </Mesh>
       <Material Name="warehousefbx-brickOfficeLM">
         <Texture Name="brickWall2_0000020C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
-        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface376" Pos="0.6803212, 10.23438, 7.723692" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -439,7 +439,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodceilingOfficeLM">
         <Texture Name="woodenCeiling_00000160.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface427" Pos="-2.237918, 5.243978, 18.83924" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -451,7 +451,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodceilingBOLM">
         <Texture Name="woodenCeiling_00000160.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface428" Pos="-2.348499, 2.621989, 18.92785" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -463,7 +463,7 @@
       </Mesh>
       <Material Name="warehousefbx-brickwallmatBOLM">
         <Texture Name="brickWall2_0000020C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
-        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface429" Pos="-2.237918, 0, 18.83924" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -475,7 +475,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodfloorBOLM">
         <Texture Name="woodFloorTexture_000001B2.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface432" Pos="-2.21392, 4.987281, 18.86276" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -487,7 +487,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodbeamsmatBOLM">
         <Texture Name="woodBeams_0000021C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseBossOffice_00000252.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface437" Pos="-1.067141, -3.897616, -9.209357" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -609,7 +609,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodfloorSOLM">
         <Texture Name="woodFloorTexture_000001B2.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface471" Pos="19.44205, 2.293723, -20.13645" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -621,7 +621,7 @@
       </Mesh>
       <Material Name="warehousefbx-brickwallmatSOLM">
         <Texture Name="brickWall2_0000020C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
-        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface472" Pos="19.44205, 4.587446, -20.13645" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -633,7 +633,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodceilingSOLM">
         <Texture Name="woodenCeiling_00000160.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface475" Pos="19.49638, 4.369996, -20.1338" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -645,7 +645,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodbeamsmatSOLM">
         <Texture Name="woodBeams_0000021C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="8" />
+        <Texture Name="wareHouseSmallOffice_00003DEE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface540" Pos="-1.975665, -2.935205, -15.49145" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -921,7 +921,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodfloorOfficeLM">
         <Texture Name="woodFloorTexture_000001B2.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOffice_0000404C.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface887" Pos="-2.187411, -2.445269, -5.397108" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -933,7 +933,7 @@
       </Mesh>
       <Material Name="warehousefbx-bigbrickmatOGLM">
         <Texture Name="largeBrick_0000020E.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface890" Pos="1.360286, 6.269681, -12.10504" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -945,7 +945,7 @@
       </Mesh>
       <Material Name="warehousefbx-brickframematOGLM">
         <Texture Name="brickFrame_00000278.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="7" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface891" Pos="-6.169724, 6.269678, -12.10504" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -957,7 +957,7 @@
       </Mesh>
       <Material Name="warehousefbx-concreteceilingmatOGLM">
         <Texture Name="concreteCeiling_00004060.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="7" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface915" Pos="31.33634, 0.1411123, -2.727362" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1024,7 +1024,7 @@
       </Mesh>
       <Material Name="warehousefbx-concretefloormat">
         <Texture Name="concreteFloor2_000001C4.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1069" Pos="1.360286, 0, -3.289616" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1036,7 +1036,7 @@
       </Mesh>
       <Material Name="warehousefbx-concretefloormat">
         <Texture Name="concreteFloor2_000001C4.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1135" Pos="21.56117, 2.788502, -3.314651" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1488,7 +1488,7 @@
       </Mesh>
       <Material Name="warehousefbx-bigbrickmat">
         <Texture Name="largeBrick_0000020E.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Clamp" Mipmaps="9" />
+        <Texture Name="wareHouseOutGoing_00000186.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1460" Pos="13.60174, 1.065187, -20.16367" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1621,7 +1621,7 @@
       </Mesh>
       <Material Name="warehousefbx-brickwallmatICLM">
         <Texture Name="brickWall2_0000020C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
-        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1479" Pos="23.94205, 6.312231, -4.287255" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1633,7 +1633,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodceilingICLM">
         <Texture Name="woodenCeiling_00000160.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1480" Pos="23.94205, 7.152557E-07, -4.287255" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1645,7 +1645,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodfloorICLM">
         <Texture Name="woodFloorTexture_000001B2.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="polySurface1518" Pos="24.5, 3.147154, -4.26543" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
@@ -1657,7 +1657,7 @@
       </Mesh>
       <Material Name="warehousefbx-woodbeamsmatICLM">
         <Texture Name="woodBeams_0000021C.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="8" />
-        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="9" />
+        <Texture Name="warehouseIncoming_00000184.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" />
       </Material>
     </Leaf>
     <Leaf Name="pPipe6" Pos="11.79644, 1.485402, 5.010522" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">

@@ -6,8 +6,8 @@
 using namespace Wire;
 
 const Float LogoFader::s_FadeTime = 1.5F;
-const Float LogoFader::s_BeforeOutTime = 3.0F;
-const Float LogoFader::s_BeforeInTime = 24.0F;
+const Float LogoFader::s_BeforeOutTime = 2.5F;
+const Float LogoFader::s_BeforeInTime = 21.0F;
 
 //----------------------------------------------------------------------------
 LogoFader::LogoFader()
@@ -54,7 +54,7 @@ Bool LogoFader::Update(Double appTime)
 			if (pMaterialState->Ambient.A() > 0)
 			{
 				pSpatial->Culling = Spatial::CULL_DYNAMIC;
-				pMaterialState->Ambient.A() -= elapsedTime / s_FadeTime;
+				pMaterialState->Ambient.A() -= elapsedTime * (1/s_FadeTime);
 			}
 			else
 			{
@@ -76,7 +76,7 @@ Bool LogoFader::Update(Double appTime)
 			if (pMaterialState->Ambient.A() < 1.0F)
 			{
 				pSpatial->Culling = Spatial::CULL_DYNAMIC;
-				pMaterialState->Ambient.A() += elapsedTime / s_FadeTime;
+				pMaterialState->Ambient.A() += elapsedTime * (1/s_FadeTime);
 			}
 			else
 			{
