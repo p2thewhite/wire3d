@@ -50,7 +50,7 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * the run time type information (rtti) system
 
 === Sample7 - Dynamic Buffers ===
-This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample7%2Fsrc Source]/[http://www.youtube.com/watch?v=4tlhkP-1uRc Video]) demonstrates how to create and use a dynamic vertex buffer. On creation of the vertex buffer a usage type is passed, indicating how the buffer is going to be used. With this information the framework can make correct assumptions and use the hardware accordingly. In particular it shows creation and/or usage of:
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample7%2Fsrc Source]/[http://www.youtube.com/watch?v=4tlhkP-1uRc Video]) demonstrates how to create and use a dynamic vertex buffer. On creation of the vertex buffer a usage type is passed, indicating how the buffer is going to be accessed. With this information the framework can make correct assumptions and use the hardware accordingly. In particular it shows creation and/or usage of:
   * types of buffer usage
   * updating renderer bound (i.e. hardware) buffers
 
