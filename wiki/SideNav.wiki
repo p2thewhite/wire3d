@@ -1,4 +1,3 @@
-#labels Featured
   * [GettingStarted Getting Started]
   * [Samples Samples]
     * [Samples#Sample0_-_User_Application Sample0 - User Application]
