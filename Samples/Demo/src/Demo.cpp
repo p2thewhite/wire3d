@@ -91,12 +91,10 @@ void Demo::StateLoading(Double elapsedTime)
 			GetState(State::MATERIAL));
 		if (pMaterialState)
 		{
-			if (pMaterialState->Ambient.A() < 1.0F)
-			{
-				pMaterialState->Ambient.A() += static_cast<Float>(
-					elapsedTime) * 0.5F;
-			}
-			else
+			pMaterialState->Ambient.A() += static_cast<Float>(
+				elapsedTime) * 0.5F;
+
+			if (pMaterialState->Ambient.A() > 1.0F)
 			{
 				pMaterialState->Ambient.A() = 1.0F;
 				isFadedIn = true;	
