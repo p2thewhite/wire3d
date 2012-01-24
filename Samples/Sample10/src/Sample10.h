@@ -24,6 +24,7 @@ private:
 
 	NodePtr mspRoot;
 
+	// object A's shared resources
 	MeshPtr mspMeshA;
 	MaterialPtr mspMaterialA;
 	StateAlphaPtr mspAlphaA;
@@ -32,6 +33,7 @@ private:
 	StateZBufferPtr mspZBufferA;
 	VertexBufferPtr mspVertexBufferA;
 
+	// object B's shared resources
 	MeshPtr mspMeshB;
 	MaterialPtr mspMaterialB;
 	StateMaterialPtr mspStateMaterialB;

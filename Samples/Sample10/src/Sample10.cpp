@@ -1,17 +1,18 @@
 // Sample10 - Material Sorting
+// This sample demonstrates sorting materials for minimizing state changes
+// and correct transparency/opaque geometry order.
 
 #include "Sample10.h"
 
 using namespace Wire;
 
-WIRE_APPLICATION(Sample10);		// This macro creates our user application.
+WIRE_APPLICATION(Sample10);
 
 //----------------------------------------------------------------------------
 Sample10::Sample10()
 	:
 	WIREAPPLICATION(
 	ColorRGBA(0.0F, 0.0F, 0.0F, 1.0F),	// background color
-	// The following parameters are PC only:
 	"Sample10 - Material Sorting",	// title of the window,
 	0, 0,		// window position
 	640, 480,	// window size; (use (0,0) for current desktop resolution)
@@ -30,17 +31,12 @@ Bool Sample10::OnInitialize()
 
 	mspRoot = CreateScene();
 
-	// Setup the position and orientation of the camera to look down
-	// the -z axis with y up.
 	Vector3F cameraLocation(0.0F, 0.0F, 5.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
-
-	// By providing a field of view (FOV) in degrees, aspect ratio,
-	// near and far plane, we define a viewing frustum used for culling.
 	UInt width = GetRenderer()->GetWidth();
 	UInt height = GetRenderer()->GetHeight();
 	Float fieldOfView = 45.0F;
@@ -48,6 +44,7 @@ Bool Sample10::OnInitialize()
 	Float nearPlane = 0.1F;
 	Float farPlane = 300.0F;
 	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
+
 	mCuller.SetCamera(mspCamera);
 	mCullerSorting.SetCamera(mspCamera);
 
@@ -71,6 +68,12 @@ void Sample10::OnIdle()
 
 	mspRoot->UpdateGS(time);
 
+	// Every 5 seconds we alternate between using the Culler (to produce
+	// a visible set of objects in the order of the objects in the scene
+	// graph) and the CullerSorting (which produces 2 sets of visible objects:
+	// one set of opaque objects sorted by render state, material and depth
+	// (front to back), and one set of transparent objects sorted likewise
+	// (but back to front for correct visibility)).
 	Bool usesSorting = false;
 	Culler* pCuller = &mCuller;
 	if (MathF::FMod(static_cast<Float>(time), 10) > 5)
@@ -93,6 +96,12 @@ void Sample10::OnIdle()
 //----------------------------------------------------------------------------
 Node* Sample10::CreateScene()
 {
+	// Create a scene consisting of cubes. The cubes consists of 2 different
+	// materials in total and are placed in the scene graph in alternating
+	// order to create a worst-case scenario (the renderer has to switch
+	// materials and render states in every draw call (unless CullerSorting
+	// is used to alter the order of objects being rendered))
+
 	Node* pRoot = WIRE_NEW Node;
 
 	const UInt xCount = 5;
@@ -129,6 +138,11 @@ Spatial* Sample10::CreateGeometryA()
 {
 	Node* pRootA = WIRE_NEW Node;
 
+	// Create the Mesh, Material and associated render States only once and
+	// use them for all instances of GeometryA. This saves memory and enables
+	// the renderer to avoid redundant state and buffer changes when several
+	// instances of GeometryA are rendered in succession. Use CullerSorting
+	// to create such a sequence of instances to minimize changes.
 	if (!mspMeshA)
 	{
 		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
@@ -226,6 +240,7 @@ Spatial* Sample10::CreateGeometryA()
 //----------------------------------------------------------------------------
 Spatial* Sample10::CreateGeometryB()
 {
+	// See CreateGeometryA() for details
 	if (!mspMeshB)
 	{
 		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
