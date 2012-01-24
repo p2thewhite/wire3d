@@ -38,6 +38,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	Char* pXmlNullTerminated = WIRE_NEW Char[xmlSize+1];
 	System::Memcpy(pXmlNullTerminated, xmlSize, pXml, xmlSize);
 	pXmlNullTerminated[xmlSize] = 0;
+	WIRE_DELETE[] pXml;
 
 	rapidxml::xml_document<> doc;    // character type defaults to char
 	doc.parse<0>(pXmlNullTerminated);
