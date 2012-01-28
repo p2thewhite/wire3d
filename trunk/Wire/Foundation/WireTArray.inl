@@ -106,6 +106,21 @@ inline const T& TArray<T>::operator[] (UInt i) const
 
 //----------------------------------------------------------------------------
 template <class T>
+Bool TArray<T>::Contains(const T& rElement)
+{
+	for (UInt i = 0; i < mQuantity; i++)
+	{
+		if (mpArray[i] == rElement)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 void TArray<T>::RemoveAt(UInt i)
 {
 	WIRE_ASSERT(i < mQuantity);

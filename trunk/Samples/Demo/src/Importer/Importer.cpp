@@ -16,9 +16,11 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Importer::Importer(const Char* pPath)
+Importer::Importer(const Char* pPath,
+	Bool materialsWithEqualNamesAreIdentical)
 	:
-	mpPath(pPath)
+	mpPath(pPath),
+	mMaterialsWithEqualNamesAreIdentical(materialsWithEqualNamesAreIdentical)
 {
 }
 
@@ -446,29 +448,16 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		pGeo->SetName(pName);
 	}
 
-	Bool hasAlpha = false;
 	if (pMaterial)
 	{
-		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+		TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+		if (pStateList)
 		{
-			Image2D* pImage2D = pMaterial->GetTexture(i)->GetImage();
-			if (pImage2D->GetFormat() == Image2D::FM_RGBA4444 ||
-				pImage2D->GetFormat() == Image2D::FM_RGBA8888)
+			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
 			{
-				hasAlpha = true;
+				pGeo->AttachState((*pStateList)[i]);
 			}
 		}
-
-		StateMaterial** ppState = mMaterialStates.Find(pMaterial);
-		if (ppState && *ppState)
-		{
-			pGeo->AttachState(*ppState);
-		}
-	}
-
-	if (hasAlpha)
-	{
-//		pGeo->AttachState(mspAlpha);
 	}
 
 	ParseTransformation(pXmlNode, pGeo);
@@ -890,16 +879,17 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	Material** pValue = mMaterials.Find(pName);
-	if (pValue)
+	if (mMaterialsWithEqualNamesAreIdentical)
 	{
-		WIRE_ASSERT(*pValue);
-		return *pValue;
+		Material** pValue = mMaterials.Find(pName);
+		if (pValue)
+		{
+			WIRE_ASSERT(*pValue);
+			return *pValue;
+		}
 	}
 
 	Material* pMaterial = WIRE_NEW Material;
-	StateMaterial* pMaterialState = NULL;
-
 	if (pXmlNode->first_node())
 	{
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
@@ -918,26 +908,31 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 
 				pMaterial->AddTexture(pTex, bm);
 			}
-			else if (System::Strcmp("MaterialState", pChild->name()) == 0)
+			else
 			{
-				Char* pCol = GetValue(pChild, "Ambient");
-				if (pCol)
+				State* pState = ParseRenderStates(pChild);
+				if (pState)
 				{
-					Int n;
-					ColorRGBA c;
-					n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
-
-					WIRE_ASSERT(n == 4);
-					if (pMaterialState)
+					TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+					if (pStateList)
 					{
-						// multiple MaterialStates defined within one Material
-						// we only use the last encountered.
-						WIRE_ASSERT(false);
-						WIRE_DELETE pMaterialState;
-					}
+						for (UInt i = 0; i < pStateList->GetQuantity(); i++)
+						{
+							if ((*pStateList)[i]->GetStateType() == pState->
+								GetStateType())
+							{
+								WIRE_ASSERT(false /* multiple States of the same type encountered */);
+							}
+						}
 
-					pMaterialState = WIRE_NEW StateMaterial;
-					pMaterialState->Ambient = c;
+						pStateList->Append(pState);
+					}
+					else
+					{
+						TArray<State*> stateList;
+						stateList.Append(pState);
+						mMaterialStates.Insert(pMaterial, stateList);
+					}
 				}
 			}
 		}
@@ -945,16 +940,22 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 
 	if (pMaterial->GetTextureQuantity() == 0)
 	{
+		TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+		if (pStateList)
+		{
+			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
+			{
+				WIRE_DELETE (*pStateList)[i];
+			}
+
+			mMaterialStates.Remove(pMaterial);
+		}
+
 		WIRE_DELETE pMaterial;
 		return NULL;
 	}
 
 	mMaterials.Insert(pName, pMaterial);
-
-	if (pMaterialState)
-	{
-		mMaterialStates.Insert(pMaterial, pMaterialState);
-	}
 
 	return pMaterial;
 }

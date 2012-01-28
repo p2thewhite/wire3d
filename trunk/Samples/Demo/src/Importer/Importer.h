@@ -21,7 +21,8 @@ using namespace Wire;
 class Importer
 {
 public:
-	Importer(const Char* pPath = "");
+	Importer(const Char* pPath = "",
+		Bool materialsWithEqualNamesAreIdentical = true);
 
 	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		pCameras = NULL);
@@ -62,9 +63,11 @@ private:
 	TArray<CameraPtr>* mpCameras;
 
 	THashTable<String, Material*> mMaterials;
-	THashTable<Material*, StateMaterial*> mMaterialStates;
+	THashTable<Material*, TArray<State*> > mMaterialStates;
 	THashTable<String, Mesh*> mMeshes;
 	THashTable<String, Texture2D*> mTextures;
+
+	Bool mMaterialsWithEqualNamesAreIdentical;
 };
 
 #endif

@@ -39,6 +39,8 @@ public:
 	void Insert(UInt i, const T& rElement);
 	void SetElement(UInt i, const T& rElement);
 
+	Bool Contains(const T& rElement);
+
 	// Remove the element or at the specified index. The elements occurring
 	// after that one are shifted so that the array remains contiguous. After
 	// the shift, but before the decrement on quantity, array[quantity-1] is
