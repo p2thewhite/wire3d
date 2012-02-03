@@ -35,17 +35,20 @@ public:
 
 	inline UInt GetBufferSize() const;
 
-	inline UInt* GetBuffer();
-	inline const UInt* GetBuffer() const;
+	inline UShort* GetBuffer();
+	inline const UShort* GetBuffer() const;
 
 	inline TMap<UInt, PdrDisplayList*>& GetDisplayLists();
 
 private:
+	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
+		usage);
+	void Copy(const IndexBuffer* pIndexBuffer, void* pBuffer, UInt offset);
+
 	TMap<UInt, PdrDisplayList*> mDisplayLists;
 
-	UInt* mpBuffer;
+	UShort* mpBuffer;
 	UInt mBufferSize;
-	Bool mHasOwnership;
 };
 
 #include "WireGXIndexBuffer.inl"

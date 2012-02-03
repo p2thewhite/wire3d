@@ -13,13 +13,13 @@ inline UInt PdrIndexBuffer::GetBufferSize() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt* PdrIndexBuffer::GetBuffer()
+inline UShort* PdrIndexBuffer::GetBuffer()
 {
 	return mpBuffer;
 }
 
 //----------------------------------------------------------------------------
-inline const UInt* PdrIndexBuffer::GetBuffer() const
+inline const UShort* PdrIndexBuffer::GetBuffer() const
 {
 	return mpBuffer;
 }

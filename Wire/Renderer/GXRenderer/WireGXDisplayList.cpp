@@ -16,20 +16,19 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
-	const IndexBuffer& rIBuffer, const TArray<PdrVertexBuffer::VertexElement>&
-	rElements)
+	const PdrIndexBuffer& rIBuffer, UInt indexCount, 
+	const TArray<PdrVertexBuffer::VertexElement>& rElements)
 {
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe
-	const UInt maxSize = ((8 + rIBuffer.GetQuantity() * rElements.
+	const UInt maxSize = ((8 + indexCount * rElements.
 		GetQuantity()*2) & 0xFFFFFFE0) + 64 ;
 	mpData = memalign(32, maxSize);
 	WIRE_ASSERT(mpData);
 	DCInvalidateRange(mpData, maxSize);
 
 	GXBeginDisplayList(mpData, maxSize);
-	pRendererData->Draw(rElements, rIBuffer.GetData(), rIBuffer.GetQuantity(),
-		0);
+	pRendererData->Draw(rElements, rIBuffer.GetBuffer(), indexCount, 0);
 	mSize = GXEndDisplayList();
 	WIRE_ASSERT(mSize);
 
