@@ -12,6 +12,7 @@
 #include "WireGeometry.h"
 #include "WireEffect.h"
 #include "WireImage2D.h"
+#include "WireIndexBuffer.h"
 #include "WireGXDisplayList.h"
 #include "WireGXIndexBuffer.h"
 #include "WireGXRendererData.h"
@@ -275,8 +276,8 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		}
 		else if ((rIBuffer.GetUsage() == Buffer::UT_STATIC) && isStatic)
 		{
-			pDisplayList = WIRE_NEW PdrDisplayList(mpData, rIBuffer,
-				pPdrVBuffer->GetDeclaration());
+			pDisplayList = WIRE_NEW PdrDisplayList(mpData, *pPdrIBuffer,
+				rIBuffer.GetQuantity(), pPdrVBuffer->GetDeclaration());
 			pPdrIBuffer->GetDisplayLists().Insert(key, pDisplayList);
 		}
 
@@ -607,13 +608,13 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 
 //----------------------------------------------------------------------------
 void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
-	rElements, const UInt* const pIndices, UInt activeIndexCount,
+	rElements, const UShort* const pIndices, UInt activeIndexCount,
 	UInt indexOffset)
 {
 	GXBegin(GX_TRIANGLES, GX_VTXFMT0, activeIndexCount);
 	for (UInt i = indexOffset; i < (indexOffset+activeIndexCount); i++)
 	{
-		UShort index = static_cast<UShort>(pIndices[i]);
+		UShort index = pIndices[i];
 
 		for (UInt j = 0; j < rElements.GetQuantity(); j++)
 		{
@@ -654,7 +655,7 @@ void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 
 //----------------------------------------------------------------------------
 void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
-	VertexElement>& rElements, const UInt* const pIBuffer,
+	VertexElement>& rElements, const UShort* const pIBuffer,
 	UInt activeIndexCount, UInt indexOffset)
 {
 	UInt indexCount = (activeIndexCount / 3) * 3;
