@@ -563,8 +563,8 @@ void PdrRendererData::ResetDevice()
 	TArray<const IndexBuffer*> saveIndexBuffers;
 	TArray<const VertexBuffer*> saveVertexBuffers;
 	TArray<const Texture2D*> saveTexture2Ds;
-	DestroyNonManagedResources(rRenderer.mIndexBufferMap, saveIndexBuffers);
-	DestroyNonManagedResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
+	DestroyResources(rRenderer.mIndexBufferMap, saveIndexBuffers);
+	DestroyResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
 	DestroyNonManagedResources(rRenderer.mTexture2DMap, saveTexture2Ds);
 	
 	UInt batchingSize = 0;

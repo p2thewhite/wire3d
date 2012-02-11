@@ -41,7 +41,7 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture2D(Image2D* pImage, UsageType usage = UT_STATIC);
+	Texture2D(Image2D* pImage);
 	virtual ~Texture2D();
 
 	inline Image2D* GetImage();
