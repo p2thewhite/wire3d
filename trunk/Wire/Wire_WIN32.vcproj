@@ -424,6 +424,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireMemory.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireNoisePerlin.cpp"
 					>
 				</File>

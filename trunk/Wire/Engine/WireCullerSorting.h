@@ -19,8 +19,9 @@ class CullerSorting : public Culler
 {
 
 public:
-	CullerSorting(const Camera* pCamera = NULL, UInt maxQuantity = VisibleSet::
-		VS_DEFAULT_MAX_QUANTITY, UInt growBy = VisibleSet::VS_DEFAULT_GROWBY);
+	CullerSorting(const Camera* pCamera = NULL,
+		UInt maxQuantity = VisibleSet::VS_DEFAULT_MAX_QUANTITY,
+		UInt growBy = VisibleSet::VS_DEFAULT_GROWBY);
 	virtual ~CullerSorting();
 
 	virtual void ComputeVisibleSet(Spatial* pScene);

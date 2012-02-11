@@ -492,7 +492,7 @@
     </Leaf>
     <Leaf Name="polySurface437" Pos="-1.067141, -3.897616, -9.209357" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="polySurface437_00003F64_1_1_0_0">
-        <Vertices Name="polySurface437_00003F64.vtx" LittleEndian="y" />
+        <Vertices Name="polySurface437_00003F64.vtx" LittleEndian="y" Usage="DYNAMIC_WRITE_ONLY" />
         <Indices Name="polySurface437_00003F64.idx" LittleEndian="y" />
         <Colors Name="polySurface437_00003F64.col" LittleEndian="y" />
         <Uv0 Name="polySurface437_00003F64.uv0" LittleEndian="y" />

@@ -31,10 +31,10 @@ private:
 	TArray<CameraPtr> mLogoCameras;
 	Culler mLogoCuller;
 
-	Node* LoadAndInitScene1();
-	NodePtr mspScene1;
-	TArray<CameraPtr> mScene1Cameras;
-	CullerSorting mScene1Culler;
+	Node* LoadAndInitScene();
+	NodePtr mspScene;
+	TArray<CameraPtr> mSceneCameras;
+	CullerSorting mSceneCuller;
 
 	Double mLastTime;
 	UInt mAppState;

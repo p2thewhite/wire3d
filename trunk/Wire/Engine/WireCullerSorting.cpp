@@ -68,12 +68,12 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	// The destination set will have at least the size of the source set.
 	if (pDestination->GetMaxQuantity() < pSource->GetMaxQuantity())
 	{
-		pDestination->SetMaxQuantity(pSource->GetQuantity());
+		pDestination->SetMaxQuantity(pSource->GetMaxQuantity());
 	}
 
 	if (mKeys.GetMaxQuantity() < pSource->GetMaxQuantity())
 	{
-		mKeys.SetMaxQuantity(pSource->GetQuantity());
+		mKeys.SetMaxQuantity(pSource->GetMaxQuantity());
 	}
 
 	UInt indexStack[Renderer::MAX_GLOBAL_EFFECTS][2];

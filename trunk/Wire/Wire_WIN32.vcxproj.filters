@@ -523,6 +523,9 @@
     <None Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.inl">
       <Filter>Renderer\Dx9Renderer\Inline Files</Filter>
     </None>
+    <None Include="Foundation\WireMemory.inl">
+      <Filter>Foundation\Inline Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Foundation\WireApplication.cpp">
@@ -764,6 +767,9 @@
     </ClCompile>
     <ClCompile Include="Engine\WireMesh.cpp">
       <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\WireMemory.cpp">
+      <Filter>Foundation\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,47 +2,47 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Demo.cpp" />
-    <ClCompile Include="src\ConveyorBelt.cpp">
+    <ClCompile Include="src\Controllers\ConveyorBelt.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\FanRotator.cpp">
+    <ClCompile Include="src\Controllers\FanRotator.cpp">
       <Filter>Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SplineCamera.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Importer.cpp">
-      <Filter>Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PicoPNG.cpp">
-      <Filter>Importer</Filter>
     </ClCompile>
     <ClCompile Include="src\Controllers\LogoFader.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Controllers\SplineCamera.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Importer\Importer.cpp">
+      <Filter>Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Importer\PicoPNG.cpp">
+      <Filter>Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Demo.h" />
-    <ClInclude Include="src\ConveyorBelt.h">
+    <ClInclude Include="src\Controllers\ConveyorBelt.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\FanRotator.h">
+    <ClInclude Include="src\Controllers\FanRotator.h">
       <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SplineCamera.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Importer.h">
-      <Filter>Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PicoPNG.h">
-      <Filter>Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rapidxml.hpp">
-      <Filter>Importer</Filter>
     </ClInclude>
     <ClInclude Include="src\Controllers\LogoFader.h">
       <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controllers\SplineCamera.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Importer\Importer.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Importer\PicoPNG.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Importer\rapidxml.hpp">
+      <Filter>Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

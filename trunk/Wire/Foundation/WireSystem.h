@@ -10,14 +10,6 @@
 #ifndef WIRESYSTEM_H
 #define WIRESYSTEM_H
 
-#ifdef WIRE_WIN
-	#ifdef WIRE_WII
-		#undef WIRE_WII
-	#endif /* WIRE_WII */
-#else
-	#define WIRE_WII
-#endif /* WIRE_WIN */
-
 #ifdef WIRE_WII
 	#include <math.h>
 	#include "Wii/WireOgcDefines.h"

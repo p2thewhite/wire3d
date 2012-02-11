@@ -27,14 +27,14 @@ TQueue<T>::~TQueue()
 
 //----------------------------------------------------------------------------
 template <class T>
-inline bool TQueue<T>::IsEmpty() const
+inline Bool TQueue<T>::IsEmpty() const
 {
     return mIsEmpty;
 }
 
 //----------------------------------------------------------------------------
 template <class T>
-inline bool TQueue<T>::IsFull() const
+inline Bool TQueue<T>::IsFull() const
 {
 	if (!mIsEmpty)
 	{
@@ -129,7 +129,7 @@ void TQueue<T>::Clear()
 
 //----------------------------------------------------------------------------
 template <class T>
-inline bool TQueue<T>::GetFront(T& rItem) const
+inline Bool TQueue<T>::GetFront(T& rItem) const
 {
 	if (!mIsEmpty)
     {

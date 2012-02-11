@@ -64,14 +64,14 @@ void Demo::StateRunning(Double time)
 	mspLogo->UpdateGS(time);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
 
-	mspScene1->UpdateGS(time);
-	mScene1Culler.ComputeVisibleSet(mspScene1);
+	mspScene->UpdateGS(time);
+	mSceneCuller.ComputeVisibleSet(mspScene);
 
 	GetRenderer()->ResetStatistics();
 
 	GetRenderer()->ClearBuffers();
-	GetRenderer()->PreDraw(mScene1Cameras[0]);
-	GetRenderer()->DrawScene(mScene1Culler.GetVisibleSets());
+	GetRenderer()->PreDraw(mSceneCameras[0]);
+	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
 
 	GetRenderer()->SetCamera(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
@@ -116,8 +116,8 @@ void Demo::StateLoading(Double elapsedTime)
 		return;
 	}
 
-	mspScene1 = LoadAndInitScene1();
-	if (!mspScene1)
+	mspScene = LoadAndInitScene();
+	if (!mspScene)
 	{
 		WIRE_ASSERT(false /* Could not load Scene.xml */);
 	}
@@ -150,23 +150,34 @@ Node* Demo::LoadAndInitLogo()
 }
 
 //----------------------------------------------------------------------------
-Node* Demo::LoadAndInitScene1()
+Node* Demo::LoadAndInitScene()
 {
 	Importer importer("Data/");
-	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mScene1Cameras);
+	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
 	if (!pScene)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mScene1Cameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
+	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
 	Float fov, aspect, near, far;
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mScene1Cameras[0]->GetFrustum(fov, aspect, near, far);
+	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
 	aspect = width / height;
-	mScene1Cameras[0]->SetFrustum(fov, aspect, near, far);
-	mScene1Culler.SetCamera(mScene1Cameras[0]);
+	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
+	mSceneCuller.SetCamera(mSceneCameras[0]);
+
+	// The maximum number of objects that are going to be culled is the
+	// number of objects we imported. If we don't set the size of the set now,
+	// the culler will dynamically increase it during runtime. This is not
+	// a big deal, however we do not want any memory allocations during the
+	// render loop.
+	UInt geometryCount = importer.GetStatistics()->GeometryCount;
+	for (UInt i = 0; i < mSceneCuller.GetVisibleSets().GetQuantity(); i++)
+	{
+		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(geometryCount);
+	}
 
 	TArray<Spatial*> fans;
 	pScene->GetAllChildrenByName("ceilingFan", fans);
@@ -178,7 +189,7 @@ Node* Demo::LoadAndInitScene1()
 
 	Node* pSplineRoot = DynamicCast<Node>(pScene->GetChildByName("Spline"));
 	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot,
-		mScene1Cameras[0]));
+		mSceneCameras[0]));
 
 	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName(
 		"polySurface437"));
