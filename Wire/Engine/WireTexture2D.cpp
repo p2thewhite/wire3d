@@ -16,9 +16,9 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Texture2D, Buffer);
 
 //----------------------------------------------------------------------------
-Texture2D::Texture2D(Image2D* pImage, UsageType usage)
+Texture2D::Texture2D(Image2D* pImage)
 	:
-	Buffer(usage),
+	Buffer(Buffer::UT_STATIC),
 	mspImage(pImage),
 	mFilterType(FT_LINEAR),
 	mAnisotropy(1.0F)
