@@ -8,7 +8,6 @@
 
 #include "WireSystem.h"
 #include <cctype>
-#include <string.h>
 #include <stdarg.h>
 #include <sys/stat.h>
 

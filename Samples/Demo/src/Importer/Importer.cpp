@@ -28,6 +28,7 @@ Importer::Importer(const Char* pPath,
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pCameras)
 {
+	ResetStatistics();
 	mpCameras = pCameras;
 
 	Int xmlSize;
@@ -74,7 +75,7 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
 	WIRE_DELETE[] pPNG;
 
-	bool hasAlpha = (rawImage.size() / (height*width)) == 4;
+	Bool hasAlpha = (rawImage.size() / (height*width)) == 4;
 	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
 		Image2D::FM_RGB888;
 
@@ -130,6 +131,23 @@ Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 	}
 
 	return pBuffer32;
+}
+
+//----------------------------------------------------------------------------
+const Importer::Statistics* Importer::GetStatistics()
+{
+	return &mStatistics;
+}
+
+//----------------------------------------------------------------------------
+void Importer::ResetStatistics()
+{
+	mStatistics.GeometryCount = 0;
+	mStatistics.NodeCount = 0;
+	mStatistics.TextureCount = 0;
+	mStatistics.MaterialCount = 0;
+	mStatistics.VertexBufferCount = 0;
+	mStatistics.IndexBufferCount = 0;
 }
 
 //----------------------------------------------------------------------------
@@ -202,6 +220,36 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
+{
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (System::Strcmp("Usage", attr->name()) == 0)
+		{
+			Char* pValue = attr->value();
+			if (pValue)
+			{
+				if (System::Strcmp("STATIC", pValue) == 0)
+				{
+					return Buffer::UT_STATIC;
+				}
+				else if (System::Strcmp("DYNAMIC", pValue) == 0)
+				{
+					return Buffer::UT_DYNAMIC;
+				}
+				else if (System::Strcmp("DYNAMIC_WRITE_ONLY", pValue) == 0)
+				{
+					return  Buffer::UT_DYNAMIC_WRITE_ONLY;
+				}
+			}
+		}
+	}
+
+	return Buffer::UT_STATIC;
 }
 
 //----------------------------------------------------------------------------
@@ -393,6 +441,7 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
 	Node* pNode = WIRE_NEW Node;
+	mStatistics.NodeCount++;
 
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
@@ -442,6 +491,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	mStatistics.GeometryCount++;
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
 	{
@@ -728,6 +778,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	Bool nBigEndian = true;
 	Bool cBigEndian = true;
 	TArray<Bool> uvBigEndian(8,8);
+	Buffer::UsageType vUsage = Buffer::UT_STATIC;
+	Buffer::UsageType iUsage = Buffer::UT_STATIC;
 
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())
@@ -737,12 +789,14 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		{
 			pVerticesName = GetValue(pChild, "Name");
 			vBigEndian = IsBigEndian(pChild);
+			vUsage = GetUsageType(pChild);
 		}
 		else if (!pIndicesName &&
 			System::Strcmp("Indices", pChild->name()) == 0)
 		{
 			pIndicesName = GetValue(pChild, "Name");
 			iBigEndian = IsBigEndian(pChild);
+			iUsage = GetUsageType(pChild);
 		}
 		else if (!pNormalsName &&
 			System::Strcmp("Normals", pChild->name()) == 0)
@@ -819,7 +873,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(va, verticesSize/
-		(3*sizeof(Float)));
+		(3*sizeof(Float)), vUsage);
+	mStatistics.VertexBufferCount++;
 
 	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
 	{
@@ -862,7 +917,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName,
 		indicesSize, iBigEndian));
 	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(pIndices,
-		indicesSize/sizeof(UInt));
+		indicesSize/sizeof(UInt), iUsage);
+	mStatistics.IndexBufferCount++;
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mMeshes.Insert(pName, pMesh);
@@ -956,6 +1012,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	mMaterials.Insert(pName, pMaterial);
+	mStatistics.MaterialCount++;
 
 	return pMaterial;
 }
@@ -1056,6 +1113,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	}
 
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	mStatistics.TextureCount++;
 	pTexture->SetFilterType(filter);
 	pTexture->SetWrapType(0, warp);
 	pTexture->SetWrapType(1, warp);

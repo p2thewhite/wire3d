@@ -10,6 +10,8 @@
 #ifndef WIRETYPES_H
 #define WIRETYPES_H
 
+#include <cstring>	// for size_t
+
 typedef bool Bool;
 typedef char Char;
 typedef double Double;

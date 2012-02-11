@@ -35,7 +35,7 @@ endif
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -save-temps -g -O2 -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS	= -save-temps -g -O2 -Wall $(MACHDEP) $(INCLUDE) -DWIRE_WII
 ifeq ($(WIRE_DEBUG),y)
 CFLAGS += -DWIRE_DEBUG
 endif

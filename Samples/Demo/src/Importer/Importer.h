@@ -28,6 +28,18 @@ public:
 		pCameras = NULL);
 	Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
 
+	struct Statistics
+	{
+		UInt GeometryCount;
+		UInt NodeCount;
+		UInt TextureCount;
+		UInt MaterialCount;
+		UInt VertexBufferCount;
+		UInt IndexBufferCount;
+	};
+
+	const Statistics* GetStatistics();
+
 private:
 	Char* Load(const Char* pFilename, Int& rSize);
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
@@ -38,6 +50,7 @@ private:
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
+	Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
@@ -53,6 +66,7 @@ private:
 	State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
 
 	void UpdateGS(Spatial* pSpatial);
+	void ResetStatistics();
 
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
@@ -68,6 +82,7 @@ private:
 	THashTable<String, Texture2D*> mTextures;
 
 	Bool mMaterialsWithEqualNamesAreIdentical;
+	Statistics mStatistics;
 };
 
 #endif

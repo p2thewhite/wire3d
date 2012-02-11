@@ -225,6 +225,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Foundation\WireMatrix3.cpp" />
     <ClCompile Include="Foundation\WireMatrix34.cpp" />
     <ClCompile Include="Foundation\WireMatrix4.cpp" />
+    <ClCompile Include="Foundation\WireMemory.cpp" />
     <ClCompile Include="Foundation\WireNoisePerlin.cpp" />
     <ClCompile Include="Foundation\WireQuaternion.cpp" />
     <ClCompile Include="Foundation\WireRandom.cpp" />

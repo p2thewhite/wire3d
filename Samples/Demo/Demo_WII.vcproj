@@ -65,19 +65,19 @@
 			Name="Controllers"
 			>
 			<File
-				RelativePath=".\src\ConveyorBelt.cpp"
+				RelativePath=".\src\Controllers\ConveyorBelt.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\ConveyorBelt.h"
+				RelativePath=".\src\Controllers\ConveyorBelt.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FanRotator.cpp"
+				RelativePath=".\src\Controllers\FanRotator.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\FanRotator.h"
+				RelativePath=".\src\Controllers\FanRotator.h"
 				>
 			</File>
 			<File
@@ -89,11 +89,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\SplineCamera.cpp"
+				RelativePath=".\src\Controllers\SplineCamera.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\SplineCamera.h"
+				RelativePath=".\src\Controllers\SplineCamera.h"
 				>
 			</File>
 		</Filter>
@@ -101,23 +101,23 @@
 			Name="Importer"
 			>
 			<File
-				RelativePath=".\src\Importer.cpp"
+				RelativePath=".\src\Importer\Importer.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Importer.h"
+				RelativePath=".\src\Importer\Importer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\PicoPNG.cpp"
+				RelativePath=".\src\Importer\PicoPNG.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\PicoPNG.h"
+				RelativePath=".\src\Importer\PicoPNG.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\rapidxml.hpp"
+				RelativePath=".\src\Importer\rapidxml.hpp"
 				>
 			</File>
 		</Filter>

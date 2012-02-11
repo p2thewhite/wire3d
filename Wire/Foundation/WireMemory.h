@@ -10,7 +10,52 @@
 #ifndef WIREMEMORY_H
 #define WIREMEMORY_H
 
+#ifndef WIRE_DEBUG
+
 #define WIRE_NEW new
 #define WIRE_DELETE delete
+
+#else
+
+#include "WireTypes.h"
+
+namespace Wire
+{
+
+class Memory
+{
+public:
+	static void* Allocate(size_t size, Char* pFile, UInt line, Bool isArray);
+	static void Deallocate(void* pAddr, bool isArray);
+};
+
+}
+
+#ifdef WIRE_WII
+#include <new>
+void* operator new (size_t size) throw (std::bad_alloc);
+void* operator new[](size_t size) throw (std::bad_alloc);
+void* operator new (size_t size, Char* pFile, UInt line) throw (std::bad_alloc);
+void* operator new[] (size_t size, Char* pFile, UInt line) throw (std::bad_alloc);
+void operator delete (void* pAddr) throw();
+void operator delete[] (void* pAddr) throw();
+void operator delete (void* pAddr, Char* pFile, UInt line) throw();
+void operator delete[] (void* pAddr, Char* pFile, UInt line) throw();
+#else
+void* operator new (size_t size);
+void* operator new[](size_t size);
+void* operator new (size_t size, Char* pFile, UInt line);
+void* operator new[] (size_t size, Char* pFile, UInt line);
+void operator delete (void* pAddr);
+void operator delete[] (void* pAddr);
+void operator delete (void* pAddr, Char* pFile, UInt line);
+void operator delete[] (void* pAddr, Char* pFile, UInt line);
+#endif
+
+//#define WIRE_NEW new(__FILE__,__LINE__)
+#define WIRE_NEW new
+#define WIRE_DELETE delete
+
+#endif
 
 #endif

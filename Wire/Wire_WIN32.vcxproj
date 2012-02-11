@@ -189,6 +189,7 @@
     <None Include="Foundation\WireMatrix3.inl" />
     <None Include="Foundation\WireMatrix34.inl" />
     <None Include="Foundation\WireMatrix4.inl" />
+    <None Include="Foundation\WireMemory.inl" />
     <None Include="Foundation\WireNoisePerlin.inl" />
     <None Include="Foundation\WirePlane3.inl" />
     <None Include="Foundation\WireQuaternion.inl" />
@@ -260,6 +261,7 @@
     <ClCompile Include="Foundation\WireMatrix3.cpp" />
     <ClCompile Include="Foundation\WireMatrix34.cpp" />
     <ClCompile Include="Foundation\WireMatrix4.cpp" />
+    <ClCompile Include="Foundation\WireMemory.cpp" />
     <ClCompile Include="Foundation\WireNoisePerlin.cpp" />
     <ClCompile Include="Foundation\WireQuaternion.cpp" />
     <ClCompile Include="Foundation\WireRandom.cpp" />

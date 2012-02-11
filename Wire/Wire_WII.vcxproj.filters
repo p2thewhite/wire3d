@@ -679,5 +679,8 @@
     <ClCompile Include="Engine\WireMesh.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Foundation\WireMemory.cpp">
+      <Filter>Foundation\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
