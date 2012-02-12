@@ -261,7 +261,7 @@ Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 	{
 		Int n;
 		n = sscanf(pFloat, "%f", &f);
-		WIRE_ASSERT(n == 1);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 	}
 
 	return f;
@@ -276,7 +276,7 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 	{
 		Int n;
 		n = sscanf(pBool, "%d", &b);
-		WIRE_ASSERT(n == 1);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 	}
 
 	return (b != 0);
@@ -292,7 +292,7 @@ ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
 	{
 		Int n;
 		n = sscanf(pCol, "%f, %f, %f", &c.R(), &c.G(), &c.B());
-		WIRE_ASSERT(n == 3);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
 	}
 
 	return c;
@@ -395,20 +395,20 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f", &t.X(), &t.Y(), &t.Z());
-			WIRE_ASSERT(n == 3);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
 		}
 		else if (System::Strcmp("Rot", attr->name()) == 0)
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f, %f", &r.W(), &r.X(),
 				&r.Y(), &r.Z());
-			WIRE_ASSERT(n == 4);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
 		}
 		else if (System::Strcmp("Scale", attr->name()) == 0)
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
-			WIRE_ASSERT(n == 3);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
 		}
 	}
 
@@ -556,7 +556,7 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 			Int n;
 			ColorRGBA c;
 			n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
-			WIRE_ASSERT(n == 4);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
 
 			pMaterialState->Ambient = c;
 		}
@@ -815,7 +815,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 			UInt nr;
 			Int n;
 			n = sscanf(pChild->name(), "Uv%d", &nr);
-			WIRE_ASSERT(n == 1);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 			uvSetNames.Append(GetValue(pChild, "Name"));
 			uvBigEndian.Append(IsBigEndian(pChild));
 		}
@@ -837,7 +837,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	if (pNormalsName)
 	{
 		va.SetNormalChannels(3);
-		pNormals = Load32(pNormalsName, normalsSize, iBigEndian);
+		pNormals = Load32(pNormalsName, normalsSize, nBigEndian);
 		if (verticesSize != normalsSize)
 		{
 			WIRE_ASSERT(false /* vertices and normals do not match */);
@@ -1047,7 +1047,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		{
 			Int n;
 			n = sscanf(attr->value(), "%d", &mipmapCount);
-			WIRE_ASSERT(n == 1);	
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);	
 		}
 		else if (System::Strcmp("FilterMode", attr->name()) == 0)
 		{
@@ -1068,7 +1068,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		{
 			Int n;
 			n = sscanf(attr->value(), "%d", &anisoLevel);
-			WIRE_ASSERT(n == 1);	
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);	
 		}
 		else if (System::Strcmp("WrapMode", attr->name()) == 0)
 		{

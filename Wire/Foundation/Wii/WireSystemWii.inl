@@ -10,6 +10,7 @@
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
 #include <stdlib.h>
+#include <cstring>
 
 //----------------------------------------------------------------------------
 Double System::GetTime()
