@@ -18,6 +18,7 @@
 #else
 
 #include "WireTypes.h"
+#include <cstring>	// for size_t
 
 namespace Wire
 {

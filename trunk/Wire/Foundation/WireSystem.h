@@ -22,8 +22,11 @@
 #ifdef WIRE_DEBUG
 	#define WIRE_ASSERT(e) \
 	(void)((!!(e)) || (System::Assert(#e, __FILE__, __LINE__), 0))
+	#define WIRE_ASSERT_NO_SIDEEFFECTS(e) \
+	(void)((!!(e)) || (System::Assert(#e, __FILE__, __LINE__), 0))
 #else
 	#define WIRE_ASSERT(expression)
+	#define WIRE_ASSERT_NO_SIDEEFFECTS(expression) ((void)(expression))
 #endif
 
 #include <float.h>
