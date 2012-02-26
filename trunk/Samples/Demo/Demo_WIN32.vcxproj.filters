@@ -11,12 +11,6 @@
     <ClCompile Include="src\Controllers\SplineCamera.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Importer\Importer.cpp">
-      <Filter>Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Importer\PicoPNG.cpp">
-      <Filter>Importer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Controllers\LogoFader.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
@@ -32,15 +26,6 @@
     <ClInclude Include="src\Controllers\SplineCamera.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Importer\Importer.h">
-      <Filter>Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Importer\PicoPNG.h">
-      <Filter>Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Importer\rapidxml.hpp">
-      <Filter>Importer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Controllers\LogoFader.h">
       <Filter>Controllers</Filter>
     </ClInclude>
@@ -48,9 +33,6 @@
   <ItemGroup>
     <Filter Include="Controllers">
       <UniqueIdentifier>{ecd35693-64a5-4990-aacb-6f8aee99f407}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Importer">
-      <UniqueIdentifier>{5aad7869-cb30-44df-852d-774178c12220}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
