@@ -26,6 +26,16 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample10 - Material Sorting", "Samples\Sample10\Sample10_WIN32.vcxproj", "{BED3FA79-78BD-409B-BBE3-EC9E1E1D25B9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Samples\Demo\Demo_WIN32.vcxproj", "{C0AA122C-68CA-428A-942A-F1A43EE702C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647} = {1A1C4391-D9D9-4CB7-90F0-41BAB2585647}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{186E178E-1223-467E-AC65-181D35D01B1F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Importer", "Tools\Importer\Importer_WIN32.vcxproj", "{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,8 +95,15 @@ Global
 		{C0AA122C-68CA-428A-942A-F1A43EE702C1}.Debug|Win32.Build.0 = Debug|Win32
 		{C0AA122C-68CA-428A-942A-F1A43EE702C1}.Release|Win32.ActiveCfg = Release|Win32
 		{C0AA122C-68CA-428A-942A-F1A43EE702C1}.Release|Win32.Build.0 = Release|Win32
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Debug|Win32.Build.0 = Debug|Win32
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Release|Win32.ActiveCfg = Release|Win32
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647} = {186E178E-1223-467E-AC65-181D35D01B1F}
 	EndGlobalSection
 EndGlobal
