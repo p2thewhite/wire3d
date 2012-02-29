@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
+				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Tools\Importer\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN;WIRE_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
@@ -64,9 +64,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Wired.lib"
+				AdditionalDependencies="Wired.lib Importerd.lib"
 				OutputFile="Demod.exe"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\debug"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\debug;..\..\Tools\Importer\lib\debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				TargetMachine="1"
@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
+				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Tools\Importer\src"
 				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -145,9 +145,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Wire.lib"
+				AdditionalDependencies="Wire.lib Importer.lib"
 				OutputFile="Demo.exe"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\release"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\release;..\..\Tools\Importer\lib\release"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				OptimizeReferences="2"
@@ -217,30 +217,6 @@
 			</File>
 			<File
 				RelativePath=".\src\Controllers\SplineCamera.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Importer"
-			>
-			<File
-				RelativePath=".\src\Importer\Importer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Importer\Importer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Importer\PicoPNG.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Importer\PicoPNG.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Importer\rapidxml.hpp"
 				>
 			</File>
 		</Filter>

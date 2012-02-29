@@ -61,7 +61,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Samples\Demo\Demo_WII.vcproj", "{7EAB4BE4-E6BE-4212-AA0D-5630DF1A6142}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17} = {04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Importer", "Tools\Importer\Importer_WII.vcproj", "{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{6A20CAD2-D618-4F10-A232-A19B05FBE1EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,8 +129,15 @@ Global
 		{7EAB4BE4-E6BE-4212-AA0D-5630DF1A6142}.Debug|Win32.Build.0 = Debug|Win32
 		{7EAB4BE4-E6BE-4212-AA0D-5630DF1A6142}.Release|Win32.ActiveCfg = Release|Win32
 		{7EAB4BE4-E6BE-4212-AA0D-5630DF1A6142}.Release|Win32.Build.0 = Release|Win32
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}.Debug|Win32.ActiveCfg = Debug|Win32
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}.Debug|Win32.Build.0 = Debug|Win32
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}.Release|Win32.ActiveCfg = Release|Win32
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17} = {6A20CAD2-D618-4F10-A232-A19B05FBE1EB}
 	EndGlobalSection
 EndGlobal
