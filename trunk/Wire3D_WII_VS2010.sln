@@ -60,6 +60,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample10 - Material Sorting
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Demo", "Samples\Demo\Demo_WII.vcxproj", "{1473F0E0-E3E7-41BA-A094-279965497DE4}"
 	ProjectSection(ProjectDependencies) = postProject
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB} = {DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{82FD657C-67AE-4115-AECC-A59001AAD6B3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Importer", "Tools\Importer\Importer_WII.vcxproj", "{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}"
+	ProjectSection(ProjectDependencies) = postProject
 		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
 	EndProjectSection
 EndProject
@@ -121,8 +129,15 @@ Global
 		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Debug|Win32.Build.0 = Debug|Win32
 		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Release|Win32.ActiveCfg = Release|Win32
 		{1473F0E0-E3E7-41BA-A094-279965497DE4}.Release|Win32.Build.0 = Release|Win32
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}.Debug|Win32.Build.0 = Debug|Win32
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}.Release|Win32.ActiveCfg = Release|Win32
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DBEBC556-ED46-4E9A-BBAE-8730B20E92BB} = {82FD657C-67AE-4115-AECC-A59001AAD6B3}
 	EndGlobalSection
 EndGlobal

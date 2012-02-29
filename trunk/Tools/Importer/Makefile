@@ -16,21 +16,18 @@ include $(DEVKITPPC)/wii_rules
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
-IMPORTERDIR		:=	../../../Tools/Importer
 TARGET			:=	$(notdir $(CURDIR))
-SOURCES			:=	src \
-					src/Controllers
-DATA			:=	data2
+SOURCES			:=	src
+DATA			:=	data  
 INCLUDES		:=
 LIBWIRE_LIB 	:=	$(WIREDIR)/lib
-LIBIMPORTER_LIB	:=	$(IMPORTERDIR)/lib
 ifeq ($(WIRE_DEBUG),y)
 BUILD			:=	build_wii_debug
-LIBWIRE			:=	libWired.a
+LIBIMPORTER		:=	libImporterd.a
 BUILDPOSTFIX	:=	d
 else
 BUILD			:=	build_wii_release
-LIBWIRE			:=	libWire.a
+LIBIMPORTER		:=	libImporter.a
 BUILDPOSTFIX	:=
 endif
 
@@ -49,13 +46,13 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lImporter$(BUILDPOSTFIX) -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
+LIBS	:=	-lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(WIREDIR) $(IMPORTERDIR)
+LIBDIRS	:= $(WIREDIR)
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -64,7 +61,7 @@ LIBDIRS	:= $(WIREDIR) $(IMPORTERDIR)
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)$(BUILDPOSTFIX)
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
@@ -103,30 +100,30 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
-					-I$(WIREDIR)/Renderer/GXRenderer \
-					-I$(IMPORTERDIR)/src
-
+					-I$(WIREDIR)/Renderer/GXRenderer
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR)
+					-L$(LIBOGC_LIB)
 
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean
 
 #---------------------------------------------------------------------------------
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	@cp -p $(BUILD)/$(LIBIMPORTER) lib/$(LIBIMPORTER)
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -f $(BUILD)/*.* $(OUTPUT).elf $(OUTPUT).dol
+	@rm -f $(BUILD)/*.*
+	@rm -f lib/$(LIBIMPORTER)
 #---------------------------------------------------------------------------------
-run:
-	wiiload $(OUTPUT).dol
+lib: $(LIBIMPORTER)
 
 #---------------------------------------------------------------------------------
 else
@@ -136,8 +133,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-$(OUTPUT).dol: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES) $(LIBWIRE_LIB)/$(LIBWIRE) $(IMPORTERLIB)/libImporter$(BUILDPOSTFIX).a
+$(LIBIMPORTER): $(OFILES)
 
 -include $(DEPENDS)
 

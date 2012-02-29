@@ -4,7 +4,7 @@
 #include "Controllers/FanRotator.h"
 #include "Controllers/LogoFader.h"
 #include "Controllers/SplineCamera.h"
-#include "Importer/Importer.h"
+#include "Importer.h"
 
 using namespace Wire;
 
