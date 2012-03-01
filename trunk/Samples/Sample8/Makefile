@@ -16,7 +16,7 @@ include $(DEVKITPPC)/wii_rules
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
-BULLETDIR		:=  ../../../../bullet-2.77-wii
+BULLETDIR		:=  ../../../Tools/bullet-2.77-wii
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src
 DATA			:=	data  
