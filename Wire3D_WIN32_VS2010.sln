@@ -20,6 +20,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample0 - User Application", "Samples\Sample0\Sample0_WIN32.vcxproj", "{4710F372-2A7B-4BCE-B38B-063DF884E17A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample8 - Bullet Physics Integration", "Samples\Sample8\Sample8_WIN32.vcxproj", "{1788AD0D-546B-4412-A7F5-086923EBA2FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1} = {3D373D59-7DAC-42EA-A161-05BEAE169BE1}
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4} = {BB1EC392-AC70-4F04-9108-7FDDC54E31D4}
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D} = {60CF2BBA-43E1-4D88-A5E1-4F935D41207D}
+		{01410FDF-213A-403A-8012-92185FAC02E3} = {01410FDF-213A-403A-8012-92185FAC02E3}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample9 - Custom Main", "Samples\Sample9_WIN32\Sample9_WIN32.vcxproj", "{8483FC51-3EB7-4044-A2B4-A2A65D3F5AD3}"
 EndProject
@@ -36,6 +42,21 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Importer", "Tools\Importer\
 	ProjectSection(ProjectDependencies) = postProject
 		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bullet-2.77", "bullet-2.77", "{9562DF43-952A-46B1-AA31-9201D47B7CB2}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\bullet-2.77\src\btBulletCollisionCommon.h = Tools\bullet-2.77\src\btBulletCollisionCommon.h
+		Tools\bullet-2.77\src\btBulletDynamicsCommon.h = Tools\bullet-2.77\src\btBulletDynamicsCommon.h
+		Tools\bullet-2.77\src\Bullet-C-Api.h = Tools\bullet-2.77\src\Bullet-C-Api.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LinearMath", "Tools\bullet-2.77\msvc2010\LinearMath\LinearMath.vcxproj", "{01410FDF-213A-403A-8012-92185FAC02E3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletCollision", "Tools\bullet-2.77\msvc2010\BulletCollision\BulletCollision.vcxproj", "{3D373D59-7DAC-42EA-A161-05BEAE169BE1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletDynamics", "Tools\bullet-2.77\msvc2010\BulletDynamics\BulletDynamics.vcxproj", "{BB1EC392-AC70-4F04-9108-7FDDC54E31D4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletSoftBody", "Tools\bullet-2.77\msvc2010\BulletSoftBody\BulletSoftBody.vcxproj", "{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,11 +120,32 @@ Global
 		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Debug|Win32.Build.0 = Debug|Win32
 		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Release|Win32.ActiveCfg = Release|Win32
 		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647}.Release|Win32.Build.0 = Release|Win32
+		{01410FDF-213A-403A-8012-92185FAC02E3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01410FDF-213A-403A-8012-92185FAC02E3}.Debug|Win32.Build.0 = Debug|Win32
+		{01410FDF-213A-403A-8012-92185FAC02E3}.Release|Win32.ActiveCfg = Release|Win32
+		{01410FDF-213A-403A-8012-92185FAC02E3}.Release|Win32.Build.0 = Release|Win32
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1}.Debug|Win32.Build.0 = Debug|Win32
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1}.Release|Win32.ActiveCfg = Release|Win32
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1}.Release|Win32.Build.0 = Release|Win32
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4}.Debug|Win32.Build.0 = Debug|Win32
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4}.Release|Win32.ActiveCfg = Release|Win32
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4}.Release|Win32.Build.0 = Release|Win32
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Debug|Win32.Build.0 = Debug|Win32
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Release|Win32.ActiveCfg = Release|Win32
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647} = {186E178E-1223-467E-AC65-181D35D01B1F}
+		{9562DF43-952A-46B1-AA31-9201D47B7CB2} = {186E178E-1223-467E-AC65-181D35D01B1F}
+		{01410FDF-213A-403A-8012-92185FAC02E3} = {9562DF43-952A-46B1-AA31-9201D47B7CB2}
+		{3D373D59-7DAC-42EA-A161-05BEAE169BE1} = {9562DF43-952A-46B1-AA31-9201D47B7CB2}
+		{BB1EC392-AC70-4F04-9108-7FDDC54E31D4} = {9562DF43-952A-46B1-AA31-9201D47B7CB2}
+		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D} = {9562DF43-952A-46B1-AA31-9201D47B7CB2}
 	EndGlobalSection
 EndGlobal
