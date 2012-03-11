@@ -17,7 +17,7 @@
 	#include <stddef.h>
 	#include <assert.h>
 	#include <cmath>
-#endif /* WIRE_WII */
+#endif
 
 #ifdef WIRE_DEBUG
 	#define WIRE_ASSERT(e) \
