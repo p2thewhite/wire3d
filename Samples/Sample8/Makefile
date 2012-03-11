@@ -16,7 +16,7 @@ include $(DEVKITPPC)/wii_rules
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
-BULLETDIR		:=  ../../../Tools/bullet-2.77-wii
+BULLETDIR		:=  ../../../Tools/bullet-2.77
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src
 DATA			:=	data  
@@ -102,7 +102,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
 					-I$(WIREDIR)/Renderer/GXRenderer \
-					-I$(BULLETDIR)/include/bullet
+					-I$(BULLETDIR)/src
 
 #---------------------------------------------------------------------------------
 # build a list of library paths

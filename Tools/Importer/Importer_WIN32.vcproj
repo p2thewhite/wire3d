@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
-				PreprocessorDefinitions="WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG"
+				PreprocessorDefinitions="WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -104,7 +104,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine"
-				PreprocessorDefinitions="WIRE_WIN;WIN32;NDEBUG"
+				PreprocessorDefinitions="WIRE_WIN;WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="false"
 				WarningLevel="4"

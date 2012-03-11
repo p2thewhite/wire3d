@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Tools\Importer\src"
-				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN;WIRE_DEBUG"
+				PreprocessorDefinitions="WIRE_WIN;WIRE_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -126,7 +126,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Tools\Importer\src"
-				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIRE_WIN"
+				PreprocessorDefinitions="WIRE_WIN"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="false"
