@@ -15,7 +15,7 @@ You can build Wire3D for the following target platforms:
     * Mac OSX: use `make`.
     * Linux: use `make`.
 
-*Note*: Use `make WIRE_DEBUG="y"` for debug builds. Some of the samples use the Bullet Physics library, which can be found [http://code.google.com/p/wire3d/downloads/list here].
+*Note*: Use `make WIRE_DEBUG="y"` for debug builds.
       
 <wiki:comment>
 *Note*: If you run a program from Visual Studio, it will use [http://wiibrew.org/wiki/Wiiload Wiiload] (that comes with your DevkitPPC installation) to transfer the program to the Wii via network. Wiiload requires the environment variable `WIILOAD` to be set to `tcp:yourIP`, where _yourIP_ is the IP address of your Wii console.
