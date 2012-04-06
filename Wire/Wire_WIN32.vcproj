@@ -1016,6 +1016,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireNodeSkybox.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNodeSwitch.h"
 					>
 				</File>
@@ -1285,6 +1289,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireNodeLight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeSkybox.cpp"
 					>
 				</File>
 				<File
