@@ -13,10 +13,13 @@
 #include "WireSystem.h"
 #include <cstdlib>
 
+size_t Wire::Memory::AllocatedMemory = 0;
+UInt Wire::Memory::AllocationCount = 0;
+
 //----------------------------------------------------------------------------
 void* Wire::Memory::Allocate(size_t size, Char* pFile, UInt line, Bool isArray)
 {
-	void* pAddr = malloc(size);
+	void* pAddr = malloc(size + sizeof(size_t));
 
 	if (!pAddr)
 	{
@@ -30,7 +33,12 @@ void* Wire::Memory::Allocate(size_t size, Char* pFile, UInt line, Bool isArray)
 		}
 	}
 
-	return pAddr;
+	size_t* pAddrSize = reinterpret_cast<size_t*>(pAddr);
+	*pAddrSize = size;
+	AllocatedMemory += size;
+	AllocationCount++;
+	pAddrSize++;
+	return pAddrSize;
 }
 
 //----------------------------------------------------------------------------
@@ -41,7 +49,12 @@ void Wire::Memory::Deallocate(void* pAddr, Bool)
 		return;
 	}
 
-	free(pAddr);
+	size_t* pAddrSize = reinterpret_cast<size_t*>(pAddr);
+	--pAddrSize;
+	AllocatedMemory -= *pAddrSize;
+	--AllocationCount;
+
+	free(pAddrSize);
 }
 
 #ifdef WIRE_WII

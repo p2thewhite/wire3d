@@ -338,6 +338,9 @@
     <ClInclude Include="Engine\WireMesh.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\WireNodeSkybox.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -770,6 +773,9 @@
     </ClCompile>
     <ClCompile Include="Foundation\WireMemory.cpp">
       <Filter>Foundation\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireNodeSkybox.cpp">
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

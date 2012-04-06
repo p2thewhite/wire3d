@@ -28,6 +28,9 @@ class Memory
 public:
 	static void* Allocate(size_t size, Char* pFile, UInt line, Bool isArray);
 	static void Deallocate(void* pAddr, bool isArray);
+
+	static size_t AllocatedMemory;
+	static UInt AllocationCount;
 };
 
 }
