@@ -52,6 +52,8 @@ Bool Sample10::OnInitialize()
 	mspTextAlpha = WIRE_NEW StateAlpha();
 	mspTextAlpha->BlendEnabled = true;
 
+//   	GetRenderer()->CreateBatchingBuffers(60*1024);
+//   	GetRenderer()->SetDynamicBatchingThreshold(300);
 	return true;
 }
 
@@ -330,13 +332,13 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 		str = msg0 + String("\x01\xff\x20\x20\xffOFF") + String(text);
 	}
 
-#ifdef WIRE_DEBUG
-	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/1024;
-	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f KB, "
-		"Number of "
-		"Allocations: %d", allocatedMemory, Memory::AllocationCount);
-	str = str + String(text);
-#endif
+// #ifdef WIRE_DEBUG
+// 	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/1024;
+// 	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f KB, "
+// 		"Number of "
+// 		"Allocations: %d", allocatedMemory, Memory::AllocationCount);
+// 	str = str + String(text);
+// #endif
 
 	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
 		screenHeight, ColorRGBA::WHITE);
