@@ -27,6 +27,7 @@
 #include "WireNodeBillboard.h"
 #include "WireNodeDLod.h"
 #include "WireNodeLight.h"
+#include "WireNodeSkybox.h"
 #include "WireNodeSwitch.h"
 #include "WireObject.h"
 #include "WireRenderer.h"

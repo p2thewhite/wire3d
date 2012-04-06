@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREBILLBOARDNODE_H
-#define WIREBILLBOARDNODE_H
+#ifndef WIRENODEBILLBOARD_H
+#define WIRENODEBILLBOARD_H
 
 #include "WireNode.h"
 
