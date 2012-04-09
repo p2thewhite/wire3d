@@ -81,27 +81,27 @@ void NodeSkybox::Init(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
 			pPosZ, scale);
 
 	// -Z (back)
-	AddQuad(Vector3F(-1.0F, 1.0F, -1.0F), Vector3F( 1.0F,  1.0F,-1.0F),
-			Vector3F( 1.0F, -1.0F, -1.0F), Vector3F( -1.0F, -1.0F, -1.0F),
+	AddQuad(Vector3F(-1.0F, 1.0F, -1.0F), Vector3F(1.0F, 1.0F,-1.0F),
+			Vector3F(1.0F, -1.0F, -1.0F), Vector3F(-1.0F, -1.0F, -1.0F),
 			pNegZ, scale);
 
 	// +X (left)
-	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(1.0F,  1.0F, 1.0F),
+	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(1.0F, 1.0F, 1.0F),
 			Vector3F(1.0F, -1.0F, 1.0F), Vector3F(1.0F, -1.0F, -1.0F),
 			pPosX, scale);
 
 	// -X (right)
-	AddQuad(Vector3F(-1.0F, 1.0F, 1.0F), Vector3F(-1.0F,  1.0F, -1.0F),
-			Vector3F(-1.0F, -1.0F, -1.0F), Vector3F( -1.0F, -1.0F, 1.0F),
+	AddQuad(Vector3F(-1.0F, 1.0F, 1.0F), Vector3F(-1.0F, 1.0F, -1.0F),
+			Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
 			pNegX, scale);
 
 	// +Y (up)
-	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(-1.0F,  1.0F, -1.0F),
+	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(-1.0F, 1.0F, -1.0F),
 			Vector3F(-1.0F, 1.0F, 1.0F), Vector3F(1.0F, 1.0F, 1.0F),
 			pPosY, scale);
 
 	// -Y (down)
-	AddQuad(Vector3F(1.0F, -1.0F, 1.0F), Vector3F(-1.0F,  -1.0F, 1.0F),
+	AddQuad(Vector3F(1.0F, -1.0F, 1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
 			Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(1.0F, -1.0F, -1.0F),
 			pNegY, scale);
 }

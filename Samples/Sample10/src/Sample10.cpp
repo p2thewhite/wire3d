@@ -160,8 +160,8 @@ Spatial* Sample10::CreateGeometryA()
 		const UInt bpp = Image2D::GetBytesPerPixel(format);
 
 		NoisePerlin<Float> perlin;
-		const Float hf = static_cast<Float>(height) * 0.25F;
-		const Float wf = static_cast<Float>(width) * 0.25F;
+		const Float hf = static_cast<Float>(height) * 0.15F;
+		const Float wf = static_cast<Float>(width) * 0.15F;
 		UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
 
 		for (UInt y = 0; y < height; y++)
@@ -171,8 +171,9 @@ Spatial* Sample10::CreateGeometryA()
 				Float xf = static_cast<Float>(x);
 				Float yf = static_cast<Float>(y);
 
-				UChar t = static_cast<UChar>((perlin.Noise(xf/wf, yf/hf)*0.5F
-					+ 0.5F) * 255.0F);
+				Float n = perlin.Noise(xf/wf, yf/hf)*0.5F
+					+ 0.5F;
+				UChar t = static_cast<UChar>(n * 255.0F);
 				pDst[(y*width + x)*bpp] = t;
 				pDst[(y*width + x)*bpp+1] = t;
 				pDst[(y*width + x)*bpp+2] = t;
@@ -251,33 +252,33 @@ Spatial* Sample10::CreateGeometryB()
 
 	if (!mspMaterialB)
 	{
-		const UInt width = 512;
-		const UInt height = 128;
-
-		Image2D::FormatMode format = Image2D::FM_RGB888;
+		const UInt width = 256;
+		const UInt height = 256;
+		const Image2D::FormatMode format = Image2D::FM_RGBA8888;
 		const UInt bpp = Image2D::GetBytesPerPixel(format);
 
-		UChar* pMap = WIRE_NEW UChar[width * height * bpp];
-		UInt seed = 7;
-		for (UInt x = 0; x < width*bpp; x++)
-		{
-			pMap[x] = seed;
-		}
+		NoisePerlin<Float> perlin;
+		const Float hf = static_cast<Float>(height) * 0.2F;
+		const Float wf = static_cast<Float>(width) * 0.2F;
+		UChar* const pDst = WIRE_NEW UChar[width * height * bpp];
 
-		for (UInt i = width; i < (width * height)-1; i++)
+		for (UInt y = 0; y < height; y++)
 		{
-			seed *= 0x06255;
-			seed = (seed >> 7) | (seed << (32-7));
-			UShort t0 = ((pMap[(i-width)*bpp] + pMap[(i-width+1)*bpp]) >> 1);
-			t0 += (7 & seed) - 1;
-			UChar texel = t0 > 255 ? 255 : t0;
-			for (UInt j = 0; j < bpp; j++)
+			for (UInt x = 0; x < width; x++)
 			{
-				pMap[i*bpp+j] = texel;
+				Float xf = static_cast<Float>(x);
+				Float yf = static_cast<Float>(y);
+
+				Float n = perlin.Noise(xf/wf, yf/hf)*0.5F + 0.5F;
+				UChar t = static_cast<UChar>(n * 255.0F);
+				pDst[(y*width + x)*bpp] = t;
+				pDst[(y*width + x)*bpp+1] = t;
+				pDst[(y*width + x)*bpp+2] = t;
+				pDst[(y*width + x)*bpp+3] = t;
 			}
 		}
 
-		Image2D* pImage = WIRE_NEW Image2D(format, width, height, pMap);
+		Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst);
 		Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 
 		mspMaterialB = WIRE_NEW Material;
@@ -312,13 +313,14 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
 	String msg1 = "\2\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
-		"VBOSize: %d\nIBOs: %d, IBOSize: %d\nTextures: %d, TextureSize: "
-		"%5.2fMB";
+		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, TextureSize: "
+		"%.2f MB";
 
+	Float kb = 1024.0F;
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
 		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
-		VBOTotalSize, pStats->IBOCount, pStats->IBOTotalSize, pStats->
-		TextureCount, pStats->TextureTotalSize/(1024.0f*1024.0f));
+		VBOTotalSize/kb, pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->
+		TextureCount, pStats->TextureTotalSize/(kb*kb));
 
 	String msg0 = "\n\n\n\n\n\nSorting: ";
 	String str;
@@ -331,14 +333,6 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	{
 		str = msg0 + String("\x01\xff\x20\x20\xffOFF") + String(text);
 	}
-
-// #ifdef WIRE_DEBUG
-// 	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/1024;
-// 	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f KB, "
-// 		"Number of "
-// 		"Allocations: %d", allocatedMemory, Memory::AllocationCount);
-// 	str = str + String(text);
-// #endif
 
 	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
 		screenHeight, ColorRGBA::WHITE);

@@ -36,6 +36,8 @@ private:
 	// Entry point to be implemented by the application. The return value is
 	// an exit code, if desired.
 	virtual Int Main(Int argumentQuantity, Char* arguments[]);
+
+	void HandleButtons();
 };
 
 }
