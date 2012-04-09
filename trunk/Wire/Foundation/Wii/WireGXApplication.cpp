@@ -50,12 +50,14 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	s_pApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
 
 	// VIInit must be called before PADInit
-	PADInit();
+	PAD_Init();
+	WPAD_Init();
 	WPAD_ScanPads();
 	if (s_pApplication->OnInitialize())
 	{
 		while (!(WPAD_ButtonsDown(0) & s_pApplication->KEY_TERMINATE))
 		{
+			HandleButtons();
 			s_pApplication->OnIdle();
 			WPAD_ScanPads();
 		}
@@ -86,4 +88,88 @@ void GXApplication::OnTerminate()
 //----------------------------------------------------------------------------
 void GXApplication::OnIdle()
 {
+}
+
+//----------------------------------------------------------------------------
+void GXApplication::HandleButtons()
+{
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_A)
+	{
+		s_pApplication->OnButton(BUTTON_A, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_A)
+	{
+		s_pApplication->OnButton(BUTTON_A, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_B)
+	{
+		s_pApplication->OnButton(BUTTON_B, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_B)
+	{
+		s_pApplication->OnButton(BUTTON_B, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_LEFT)
+	{
+		s_pApplication->OnButton(BUTTON_LEFT, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_LEFT)
+	{
+		s_pApplication->OnButton(BUTTON_LEFT, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_RIGHT)
+	{
+		s_pApplication->OnButton(BUTTON_RIGHT, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_RIGHT)
+	{
+		s_pApplication->OnButton(BUTTON_RIGHT, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_UP)
+	{
+		s_pApplication->OnButton(BUTTON_UP, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_UP)
+	{
+		s_pApplication->OnButton(BUTTON_UP, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_DOWN)
+	{
+		s_pApplication->OnButton(BUTTON_DOWN, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_DOWN)
+	{
+		s_pApplication->OnButton(BUTTON_DOWN, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_1)
+	{
+		s_pApplication->OnButton(BUTTON_1, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_1)
+	{
+		s_pApplication->OnButton(BUTTON_DOWN, BUTTON_RELEASE);
+	}
+
+	if (WPAD_ButtonsDown(0) & WPAD_BUTTON_2)
+	{
+		s_pApplication->OnButton(BUTTON_2, BUTTON_PRESS);
+	}
+
+	if (WPAD_ButtonsUp(0) & WPAD_BUTTON_2)
+	{
+		s_pApplication->OnButton(BUTTON_2, BUTTON_RELEASE);
+	}
 }

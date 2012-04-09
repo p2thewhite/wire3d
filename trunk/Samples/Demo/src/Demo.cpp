@@ -27,6 +27,12 @@ Bool Demo::OnInitialize()
 
 	mAppState = AS_LOADING;
 	mLastTime = System::GetTime();
+	mShowFps = false;
+
+	// frames per second debug text
+	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
+	mspTextAlpha = WIRE_NEW StateAlpha();
+	mspTextAlpha->BlendEnabled = true;
 	return true;
 }
 
@@ -59,6 +65,34 @@ void Demo::OnIdle()
 }
 
 //----------------------------------------------------------------------------
+void Demo::OnButton(UInt /*button*/, UInt state)
+{
+	// Buttons are:     Wii          | PC
+	//   BUTTON_A =     Button 'A'   | left mouse button
+	//   BUTTON_B =     Button 'B'   | right mouse button
+	//   BUTTON_LEFT =  Button left  | cursor key left
+	//   BUTTON_RIGHT = Button right | cursor key right
+	//   BUTTON_UP =    Button up    | cursor key up
+	//   BUTTON_DOWN =  Button down  | cursor key down
+	//   BUTTON_1 =     Button '1'   | key '1'
+	//   BUTTON_2 =     Button '2'   | key '2'
+	//
+	// States are:
+	//   BUTTON_PRESS   = button/key pressed
+	//   BUTTON_RELEASE = button/key released
+
+	// any of the above buttons pressed displays FPS at the top of the screen
+	if (state == Application::BUTTON_PRESS)
+	{
+		mShowFps = true;
+	}
+	else
+	{
+		mShowFps = false;
+	}
+}
+
+//----------------------------------------------------------------------------
 void Demo::StateRunning(Double time)
 {
 	mspLogo->UpdateGS(time);
@@ -76,8 +110,62 @@ void Demo::StateRunning(Double time)
 	GetRenderer()->SetCamera(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
 
+	if (mShowFps)
+	{
+		DrawFPS(time);
+	}
+
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+}
+
+//----------------------------------------------------------------------------
+void Demo::DrawFPS(Double time)
+{
+	static Double lastTime = 0.0f;
+	Double elapsed = time - lastTime;
+	lastTime = time;
+
+	// set the frustum for the text camera (screenWidth and screenHeight
+	// could have been changed by the user resizing the window)
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	GetRenderer()->SetCamera(mspTextCamera);
+
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+
+	UInt fps = static_cast<UInt>(1/elapsed);
+	const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
+	String msg1 = "\n\n\n\n\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
+		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, "
+		"TextureSize: %.2f MB";
+
+	const Float kb = 1024.0f;
+	const Float mb = kb*kb;
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
+		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
+		VBOTotalSize/kb, pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->
+		TextureCount, pStats->TextureTotalSize/mb);
+
+	String str(text);
+
+// #ifdef WIRE_DEBUG
+// 	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/mb;
+// 	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f MB, "
+// 		"Number of Allocations: %d", allocatedMemory,
+// 		Memory::AllocationCount);
+// 	str += String(text);
+// #endif
+
+	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
+		screenHeight, ColorRGBA::WHITE);
+	spText->AttachState(mspTextAlpha);
+	spText->UpdateRS();
+
+	GetRenderer()->DisableLighting();
+	GetRenderer()->Draw(spText);
 }
 
 //----------------------------------------------------------------------------

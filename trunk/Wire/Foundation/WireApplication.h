@@ -39,6 +39,10 @@ public:
 	// Called before terminating the application.
 	virtual void OnTerminate() = 0;
 
+	// Called when a mouse/controller button is pressed/released.
+	virtual void OnButton(UInt button, UInt state);
+
+	// Called when the window is resized.
 	virtual void OnResize(UInt width, UInt height);
 
 	static void SetApplication(Application* pApplication);
@@ -51,6 +55,18 @@ public:
 	// They are not defined by Application.
 	UInt KEY_TERMINATE;  // default KEY_ESCAPE, redefine as desired
 	static const UInt KEY_ESCAPE;
+
+	static const UInt BUTTON_A;
+	static const UInt BUTTON_B;
+	static const UInt BUTTON_LEFT;
+	static const UInt BUTTON_RIGHT;
+	static const UInt BUTTON_UP;
+	static const UInt BUTTON_DOWN;
+	static const UInt BUTTON_1;
+	static const UInt BUTTON_2;
+
+	static const UInt BUTTON_PRESS;
+	static const UInt BUTTON_RELEASE;
 
 protected:
 	Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle,

@@ -245,7 +245,7 @@ void Sample8::CreatePhysicsWorld()
 	// quality and performance
 	btVector3 worldAabbMin(-100, -100, -100);
 	btVector3 worldAabbMax(100, 100, 100);
-	Int	maxProxies = 1024;
+	UShort maxProxies = 1024;
 	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax,
 		maxProxies);
 

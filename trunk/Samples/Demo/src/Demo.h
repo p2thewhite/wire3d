@@ -16,6 +16,8 @@ public:
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
 
+	virtual void OnButton(UInt button, UInt state);
+
 private:
 	enum AppState
 	{
@@ -38,6 +40,12 @@ private:
 
 	Double mLastTime;
 	UInt mAppState;
+
+	// frames per second debug text
+	void DrawFPS(Double time);
+	CameraPtr mspTextCamera;
+	StateAlphaPtr mspTextAlpha;
+	Bool mShowFps;
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

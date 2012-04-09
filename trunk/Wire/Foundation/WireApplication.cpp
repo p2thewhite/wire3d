@@ -13,6 +13,18 @@ using namespace Wire;
 
 Application* Application::s_pApplication = NULL;
 
+const UInt Application::BUTTON_A = 0;
+const UInt Application::BUTTON_B = 1;
+const UInt Application::BUTTON_LEFT = 2;
+const UInt Application::BUTTON_RIGHT = 3;
+const UInt Application::BUTTON_UP = 4;
+const UInt Application::BUTTON_DOWN = 5;
+const UInt Application::BUTTON_1 = 6;
+const UInt Application::BUTTON_2 = 7;
+
+const UInt Application::BUTTON_PRESS = 0;
+const UInt Application::BUTTON_RELEASE = 1;
+
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
@@ -45,6 +57,11 @@ void Application::SetApplication(Application* pApplication)
 Application* Application::GetApplication()
 {
 	return s_pApplication;
+}
+
+//----------------------------------------------------------------------------
+void Application::OnButton(UInt, UInt)
+{
 }
 
 //----------------------------------------------------------------------------
