@@ -166,6 +166,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColor32.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGB.h"
 					>
 				</File>
@@ -290,6 +294,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColor32.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireColorRGB.inl"
 					>
 				</File>
@@ -389,6 +397,10 @@
 				>
 				<File
 					RelativePath=".\Foundation\WireApplication.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireColor32.cpp"
 					>
 				</File>
 				<File

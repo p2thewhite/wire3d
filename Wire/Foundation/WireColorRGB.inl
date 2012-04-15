@@ -7,6 +7,34 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline ColorRGB::operator Color32 ()
+{
+	UChar red = static_cast<UChar>(mTuple[0] * 255.0F);
+	UChar green = static_cast<UChar>(mTuple[1] * 255.0F);
+	UChar blue = static_cast<UChar>(mTuple[2] * 255.0F);
+	return Color32(red, green, blue);
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB::operator const Color32 () const
+{
+	UChar red = static_cast<UChar>(mTuple[0] * 255.0F);
+	UChar green = static_cast<UChar>(mTuple[1] * 255.0F);
+	UChar blue = static_cast<UChar>(mTuple[2] * 255.0F);
+	return Color32(red, green, blue);
+}
+
+//----------------------------------------------------------------------------
+inline ColorRGB& ColorRGB::operator= (const Color32& color32)
+{
+	mTuple[0] = static_cast<Float>(color32.R()) * (1.0F / 255.0F);
+	mTuple[1] = static_cast<Float>(color32.G()) * (1.0F / 255.0F);
+	mTuple[2] = static_cast<Float>(color32.B()) * (1.0F / 255.0F);
+
+	return *this;
+}
+
+//----------------------------------------------------------------------------
 inline ColorRGB::operator Float* ()
 {
 	return mTuple;

@@ -12,6 +12,7 @@
 
 #include "WireApplication.h"
 #include "WireBox3.h"
+#include "WireColor32.h"
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireMain.h"

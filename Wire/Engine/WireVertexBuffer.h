@@ -11,8 +11,7 @@
 #define WIREVERTEXBUFFER_H
 
 #include "WireBuffer.h"
-#include "WireColorRGB.h"
-#include "WireColorRGBA.h"
+#include "WireColor32.h"
 #include "WireVector2.h"
 #include "WireVector3.h"
 #include "WireVertexAttributes.h"
@@ -38,11 +37,11 @@ public:
 	Vector3F& Position3(UInt i);
 	Vector3F Position3(UInt i) const;
 
-	ColorRGB& Color3(UInt i, UInt unit = 0);
-	ColorRGB Color3(UInt i, UInt unit = 0) const;
+	Color32& Color3(UInt i, UInt unit = 0);
+	Color32 Color3(UInt i, UInt unit = 0) const;
 
-	ColorRGBA& Color4(UInt i, UInt unit = 0);
-	ColorRGBA Color4(UInt i, UInt unit = 0) const;
+	Color32& Color4(UInt i, UInt unit = 0);
+	Color32 Color4(UInt i, UInt unit = 0) const;
 
 	Vector3F& Normal3(UInt i);
 	Vector3F Normal3(UInt i) const;

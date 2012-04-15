@@ -66,6 +66,7 @@ void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 	UInt channels = rAttributes.GetPositionChannels();
 	if (channels > 0)
 	{
+		WIRE_ASSERT(channels == 3);
 		element.Offset = mVertexSize;
 		mVertexSize += channels * sizeof(Float);
 		element.Attr = GX_VA_POS;
@@ -77,6 +78,7 @@ void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 	channels = rAttributes.GetNormalChannels();
 	if (channels > 0)
 	{
+		WIRE_ASSERT(channels == 3);
 		element.Offset = mVertexSize;
 		mVertexSize += channels * sizeof(Float);
 		element.Attr = GX_VA_NRM;
@@ -103,6 +105,7 @@ void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 		channels = rAttributes.GetTCoordChannels(unit);
 		if (channels > 0)
 		{
+			WIRE_ASSERT(channels == 2);
 			element.Offset = mVertexSize;
 			mVertexSize += channels * sizeof(Float);
 			element.Attr = GX_VA_TEX0 + unit;
@@ -131,97 +134,11 @@ void PdrVertexBuffer::Disable(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
-	void* pVBData = Lock(Buffer::LM_WRITE_ONLY);
+	WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
+	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+		GetChannelQuantity()*sizeof(Float));
 
-	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
-	Bool hasVertexColors = false;
-	for (UInt unit = 0; unit < rAttr.GetColorChannelQuantity(); unit++)
-	{
-		if (rAttr.GetColorChannels(unit) > 0)
-		{
-			hasVertexColors = true;
-		}
-	}
-
-	if (hasVertexColors)
-	{
-		Convert(pVertexBuffer, pVBData);
-	}
-	else
-	{
-		WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
-		WIRE_ASSERT(mVertexSize == rAttr.GetChannelQuantity()*sizeof(Float));
-		System::Memcpy(pVBData, mBufferSize, pVertexBuffer->GetData(),
-			mBufferSize);
-	}
-
+	void* pData = Lock(Buffer::LM_WRITE_ONLY);
+	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
 	Unlock();
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, void* pVoid)
-{
-	Float* pDst = reinterpret_cast<Float*>(pVoid);
-
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetQuantity(); i++)
-	{
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* const pPosition = pSrc->GetPosition(i);
-			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
-			{
-				*pDst++ = pPosition[k];
-			}
-		}
-
-		if (rIAttr.GetNormalChannels() > 0)
-		{
-			const Float* const pNormal = pSrc->GetNormal(i);
-			for (UInt k = 0; k < rIAttr.GetNormalChannels(); k++)
-			{
-				*pDst++ = pNormal[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* const pColor = pSrc->GetColor(i, unit);
-				UInt color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 3)
-				{
-					color = color << 8;
-					color |= 0xFF;
-				}
-
-				UInt* pColorDst = reinterpret_cast<UInt*>(pDst);
-				*pColorDst++ = color;
-				pDst = reinterpret_cast<Float*>(pColorDst);
-			}
-		}
-
-		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
-		{
-			UInt channels = rIAttr.GetTCoordChannels(unit);
-			if (channels > 0)
-			{
-				const Float* const pTCoords = pSrc->GetTCoord(i, unit);
-				for (UInt k = 0; k < channels; k++)
-				{
-					*pDst++ = pTCoords[k];
-				}
-			}
-		}
-	}
 }

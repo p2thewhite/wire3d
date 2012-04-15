@@ -11,6 +11,7 @@
 #define WIRECOLORRGB_H
 
 #include "WireTypes.h"
+#include "WireColor32.h"
 
 namespace Wire
 {
@@ -20,6 +21,10 @@ class ColorRGB
 public:
 	ColorRGB();  // initial values (0, 0, 0)
 	ColorRGB(Float red, Float green, Float blue);
+
+	inline operator Color32 ();
+	inline operator const Color32 () const;
+	inline ColorRGB& operator= (const Color32& color32);
 
 	inline operator Float* ();
 	inline operator const Float* () const;

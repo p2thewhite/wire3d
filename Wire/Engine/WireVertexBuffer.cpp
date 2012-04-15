@@ -67,35 +67,35 @@ Vector3F VertexBuffer::Position3(UInt i) const
 }
 
 //----------------------------------------------------------------------------
-ColorRGB& VertexBuffer::Color3(UInt i, UInt unit)
+Color32& VertexBuffer::Color3(UInt i, UInt unit)
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 3);
 	Float* pChannel = GetColor(i, unit);
-	return *(reinterpret_cast<ColorRGB*>(pChannel));
+	return *(reinterpret_cast<Color32*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-ColorRGB VertexBuffer::Color3(UInt i, UInt unit) const
+Color32 VertexBuffer::Color3(UInt i, UInt unit) const
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 3);
 	const Float* pChannel = GetColor(i, unit);
-	return *(reinterpret_cast<ColorRGB*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<Color32*>(const_cast<Float*>(pChannel)));
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA& VertexBuffer::Color4(UInt i, UInt unit)
+Color32& VertexBuffer::Color4(UInt i, UInt unit)
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 4);
 	Float* pChannel = GetColor(i, unit);
-	return *(reinterpret_cast<ColorRGBA*>(pChannel));
+	return *(reinterpret_cast<Color32*>(pChannel));
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA VertexBuffer::Color4(UInt i, UInt unit) const
+Color32 VertexBuffer::Color4(UInt i, UInt unit) const
 {
 	WIRE_ASSERT(mAttributes.GetColorChannels(unit) == 4);
 	const Float* pChannel = GetColor(i, unit);
-	return *(reinterpret_cast<ColorRGBA*>(const_cast<Float*>(pChannel)));
+	return *(reinterpret_cast<Color32*>(const_cast<Float*>(pChannel)));
 }
 
 //----------------------------------------------------------------------------

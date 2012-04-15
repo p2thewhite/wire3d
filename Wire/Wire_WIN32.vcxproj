@@ -103,6 +103,7 @@
     <ClInclude Include="Engine\WireStateMaterial.h" />
     <ClInclude Include="Engine\WireStateWireframe.h" />
     <ClInclude Include="Engine\WireStateZBuffer.h" />
+    <ClInclude Include="Foundation\WireColor32.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
     <ClInclude Include="Foundation\WireBox3.h" />
@@ -184,6 +185,7 @@
     <None Include="Engine\WireNodeSwitch.inl" />
     <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
+    <None Include="Foundation\WireColor32.inl" />
     <None Include="Foundation\WireColorRGB.inl" />
     <None Include="Foundation\WireColorRGBA.inl" />
     <None Include="Foundation\WireMath.inl" />
@@ -256,6 +258,7 @@
     <ClCompile Include="Engine\WireStateWireframe.cpp" />
     <ClCompile Include="Engine\WireStateZBuffer.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
+    <ClCompile Include="Foundation\WireColor32.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
     <ClCompile Include="Foundation\WireColorRGBA.cpp" />
     <ClCompile Include="Foundation\WireMain.cpp" />

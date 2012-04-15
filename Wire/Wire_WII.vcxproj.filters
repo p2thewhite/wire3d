@@ -303,6 +303,9 @@
     <ClInclude Include="Engine\WireNodeSkybox.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\WireColor32.h">
+      <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -477,6 +480,9 @@
       <Filter>Engine\Inline Files</Filter>
     </None>
     <None Include="Foundation\WireApplication.inl">
+      <Filter>Foundation\Inline Files</Filter>
+    </None>
+    <None Include="Foundation\WireColor32.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
   </ItemGroup>
@@ -687,6 +693,9 @@
     </ClCompile>
     <ClCompile Include="Engine\WireNodeSkybox.cpp">
       <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\WireColor32.cpp">
+      <Filter>Foundation\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

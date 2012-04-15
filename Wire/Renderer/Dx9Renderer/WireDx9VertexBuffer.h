@@ -49,7 +49,6 @@ private:
 		usage);
 	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 
-	void Convert(const VertexBuffer* pSrc, void* pDst);
 	void Convert(const VertexBuffer* pSrc, void* pDst, const Transformation&
 		rTransformation);
 
