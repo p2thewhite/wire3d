@@ -43,6 +43,7 @@ public:
 private:
 	Char* Load(const Char* pFilename, Int& rSize);
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
+	void Free32(Float* pFloats);
 
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);

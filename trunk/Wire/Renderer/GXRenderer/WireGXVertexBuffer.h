@@ -56,7 +56,6 @@ private:
 		usage);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
-	void Convert(const VertexBuffer* pSrc, void* pDst);
 
 	TArray<VertexElement> mDeclaration;
 	void* mpBuffer;

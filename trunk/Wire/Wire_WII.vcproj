@@ -443,6 +443,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColor32.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireController.h"
 					>
 				</File>
@@ -603,6 +607,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireColor32.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireController.inl"
 					>
 				</File>
@@ -716,6 +724,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireCamera.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireColor32.cpp"
 					>
 				</File>
 				<File

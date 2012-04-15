@@ -49,13 +49,14 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pRoot->SetName(pFilename);
 	Traverse(doc.first_node(), pRoot);
 
+	WIRE_DELETE[] pXmlNullTerminated;
+
 	mMaterials.RemoveAll();
 	mMaterialStates.RemoveAll();
 	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
 
 	pRoot->UpdateRS();
-
 	return pRoot;
 }
 
@@ -131,6 +132,18 @@ Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 	}
 
 	return pBuffer32;
+}
+
+//----------------------------------------------------------------------------
+void Importer::Free32(Float* pFloats)
+{
+	if (!pFloats)
+	{
+		return;
+	}
+
+	UChar* pUChar = reinterpret_cast<UChar*>(pFloats);
+	WIRE_DELETE[] pUChar;
 }
 
 //----------------------------------------------------------------------------
@@ -841,6 +854,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		if (verticesSize != normalsSize)
 		{
 			WIRE_ASSERT(false /* vertices and normals do not match */);
+			Free32(pVertices);
 			return NULL;
 		}
 	}
@@ -854,6 +868,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		if (verticesSize/(3*sizeof(Float)) != colorsSize/(4*sizeof(Float)))
 		{
 			WIRE_ASSERT(false /* vertices and colors do not match */);
+			Free32(pNormals);
+			Free32(pVertices);
 			return NULL;
 		}
 	}
@@ -868,6 +884,9 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		if (verticesSize/(3*sizeof(Float)) != uvSetSizes[i]/(2*sizeof(Float)))
 		{
 			WIRE_ASSERT(false /* vertices and uv sets do not match */);
+			Free32(pColors);
+			Free32(pNormals);
+			Free32(pVertices);
 			return NULL;
 		}	
 	}
@@ -876,33 +895,36 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		(3*sizeof(Float)), vUsage);
 	mStatistics.VertexBufferCount++;
 
+	Float* pTempVertices = pVertices;
+	Float* pTempNormals = pNormals;
+	Float* pTempColors = pColors;
 	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
 	{
 		if (pVertices)
 		{
 			Vector3F v;
-			v.X() = *pVertices++;
-			v.Y() = *pVertices++;
-			v.Z() = *pVertices++;
+			v.X() = *pTempVertices++;
+			v.Y() = *pTempVertices++;
+			v.Z() = *pTempVertices++;
 			pVertexBuffer->Position3(i) = v;
 		}
 
 		if (pNormals)
 		{
 			Vector3F n;
-			n.X() = *pNormals++;
-			n.Y() = *pNormals++;
-			n.Z() = *pNormals++;
+			n.X() = *pTempNormals++;
+			n.Y() = *pTempNormals++;
+			n.Z() = *pTempNormals++;
 			pVertexBuffer->Normal3(i) = n;
 		}
 
 		if (pColors)
 		{
 			ColorRGBA c;
-			c.R() = *pColors++;
-			c.G() = *pColors++;
-			c.B() = *pColors++;
-			c.A() = *pColors++;
+			c.R() = *pTempColors++;
+			c.G() = *pTempColors++;
+			c.B() = *pTempColors++;
+			c.A() = *pTempColors++;
 			pVertexBuffer->Color4(i) = c;
 		}
 
@@ -912,6 +934,15 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 			pVertexBuffer->TCoord2(i, j) = v;
 		}
 	}
+
+	for (UInt i = 0; i < uvSets.GetQuantity(); i++)
+	{
+		Free32(uvSets[i]);
+	}
+
+	Free32(pColors);
+	Free32(pNormals);
+	Free32(pVertices);
 
 	Int indicesSize;
 	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName,

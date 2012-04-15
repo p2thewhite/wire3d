@@ -10,6 +10,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireColorRGB.h"
+#include "WireColorRGBA.h"
 #include "WireEffect.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"

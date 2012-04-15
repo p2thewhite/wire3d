@@ -109,7 +109,7 @@ void VertexAttributes::UpdateOffsets()
 
 	if (mColorChannels.GetQuantity() > 0)
 	{
-		WIRE_ASSERT(mColorChannels.GetQuantity() <= 3);
+		WIRE_ASSERT(mColorChannels.GetQuantity() <= 3); /* 2 bits for key */
 		mKey |= mColorChannels.GetQuantity() << 2;
 
 		for (UInt i = 0; i < mColorChannels.GetQuantity(); i++)
@@ -117,7 +117,10 @@ void VertexAttributes::UpdateOffsets()
 			if (mColorChannels[i] > 0)
 			{
 				mColorOffset.SetElement(i, mChannelQuantity);
-				mChannelQuantity += mColorChannels[i];
+
+				// ignoring float channels, use 1 channel of 32 bits instead
+				WIRE_ASSERT(sizeof(UInt) == sizeof(Float));
+				mChannelQuantity += 1;
 			}
 		}
 	}

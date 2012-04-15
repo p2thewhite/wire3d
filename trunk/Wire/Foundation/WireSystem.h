@@ -11,9 +11,19 @@
 #define WIRESYSTEM_H
 
 #ifdef WIRE_WII
+	#define WIRE_RGBA_R 0
+	#define WIRE_RGBA_G 1
+	#define WIRE_RGBA_B 2
+	#define WIRE_RGBA_A 3
+
 	#include <math.h>
 	#include "Wii/WireOgcDefines.h"
 #else
+	#define WIRE_RGBA_B 0
+	#define WIRE_RGBA_G 1
+	#define WIRE_RGBA_R 2
+	#define WIRE_RGBA_A 3
+
 	#include <stddef.h>
 	#include <assert.h>
 	#include <cmath>

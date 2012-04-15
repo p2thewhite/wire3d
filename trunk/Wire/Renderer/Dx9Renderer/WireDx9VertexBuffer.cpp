@@ -170,33 +170,14 @@ void* PdrVertexBuffer::Lock(Buffer::LockingMode mode)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
 	WIRE_ASSERT(mVertexSize > 0);
-	WIRE_ASSERT((mBufferSize/mVertexSize) == pVertexBuffer->GetQuantity());
+	WIRE_ASSERT(mBufferSize == (mVertexSize * pVertexBuffer->GetQuantity()));
+	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+		GetChannelQuantity()*sizeof(Float));
 
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
-	void* pVBData = Lock(lockingMode);
-
-	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
-	Bool hasVertexColors = false;
-	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
-	{
-		if (rIAttr.GetColorChannels(unit) > 0)
-		{
-			hasVertexColors = true;
-		}
-	}
-
-	if (hasVertexColors)
-	{
-		Convert(pVertexBuffer, pVBData);
-	}
-	else
-	{
-		UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
- 		WIRE_ASSERT(mVertexSize == rIAttr.GetChannelQuantity()*sizeof(Float));
-		System::Memcpy(pVBData, size, pVertexBuffer->GetData(), size);
-	}
-
+	void* pData = Lock(lockingMode);
+	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
 	Unlock();
 }
 
@@ -204,100 +185,17 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Copy(const VertexBuffer* pVertexBuffer, void* pBuffer,
 	const Transformation& rTransformation)
 {
-	const VertexAttributes& rIAttr = pVertexBuffer->GetAttributes();
-	WIRE_ASSERT(mVertexSize == rIAttr.GetChannelQuantity()*sizeof(Float));
-	Bool hasVertexColors = false;
-	for (UInt unit = 0; unit < rIAttr.GetColorChannelQuantity(); unit++)
-	{
-		if (rIAttr.GetColorChannels(unit) > 0)
-		{
-			hasVertexColors = true;
-		}
-	}
+	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+		GetChannelQuantity()*sizeof(Float));
 
 	if (rTransformation.IsIdentity())
 	{
-		if (hasVertexColors)
-		{
-			Convert(pVertexBuffer, pBuffer);
-		}
-		else
-		{
-			UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
-			System::Memcpy(pBuffer, size, pVertexBuffer->GetData(), size);
-		}
+		UInt size =  mVertexSize * pVertexBuffer->GetQuantity();
+		System::Memcpy(pBuffer, size, pVertexBuffer->GetData(), size);
 	}
 	else
 	{
 		Convert(pVertexBuffer, pBuffer, rTransformation);
-	}
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::Convert(const VertexBuffer* pSrc, void* pVoid)
-{
-	Float* pDst = reinterpret_cast<Float*>(pVoid);
-	const VertexAttributes& rIAttr = pSrc->GetAttributes();
-
-	for (UInt i = 0; i < pSrc->GetQuantity(); i++)
-	{
-		if (rIAttr.GetPositionChannels() > 0)
-		{
-			const Float* const pPosition = pSrc->GetPosition(i);
-			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
-			{
-				*pDst++ = pPosition[k];
-			}
-		}
-
-		if (rIAttr.GetNormalChannels() > 0)
-		{
-			const Float* const pNormal = pSrc->GetNormal(i);
-			for (UInt k = 0; k < rIAttr.GetNormalChannels(); k++)
-			{
-				*pDst++ = pNormal[k];
-			}
-		}
-
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
-		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
-		{
-			if (rIAttr.GetColorChannels(unit) > 0)
-			{
-				const Float* const pColor = pSrc->GetColor(i, unit);
-				D3DCOLOR color = 0xFFFFFFFF;
-				for (UInt k = 0; k < rIAttr.GetColorChannels(unit); k++)
-				{
-					color = color << 8;
-					color |= static_cast<UChar>(pColor[k] * 255.0F);
-				}
-
-				if (rIAttr.GetColorChannels(unit) == 4)
-				{
-					UChar alpha = static_cast<UChar>(color);
-					color = color >> 8;
-					color |= alpha << 24;
-				}
-
-				DWORD* pColorDst = reinterpret_cast<DWORD*>(pDst);
-				*pColorDst++ = color;
-				pDst = reinterpret_cast<Float*>(pColorDst);
-			}
-		}
-
-		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
-		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
-		{
-			UInt channels = rIAttr.GetTCoordChannels(unit);
-			if (channels > 0)
-			{
-				const Float* const pTCoords = pSrc->GetTCoord(i, unit);
-				for (UInt k = 0; k < channels; k++)
-				{
-					*pDst++ = pTCoords[k];
-				}
-			}
-		}
 	}
 }
 
