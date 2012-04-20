@@ -22,6 +22,7 @@ VertexBuffer::VertexBuffer(const VertexAttributes& rAttributes,
 	mAttributes(rAttributes),
 	mVertexQuantity(vertexQuantity)
 {
+	WIRE_ASSERT(vertexQuantity < 65536 /* only 16bit indices on Wii */);
 	mpChannel = WIRE_NEW Float[mVertexQuantity * mAttributes.
 		GetChannelQuantity()];
 }

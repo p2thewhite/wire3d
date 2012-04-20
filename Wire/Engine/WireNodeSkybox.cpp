@@ -124,8 +124,8 @@ void NodeSkybox::AddQuad(const Vector3F& v0, const Vector3F& v1, const
 	pVBuffer->Position3(3) = v3 * scale;
 	pVBuffer->TCoord2(3) = Vector2F(0, 1);
 
-	const UInt indices[6] = { 0, 1, 2, 0, 2, 3 };
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	const UShort indices[6] = { 0, 1, 2, 0, 2, 3 };
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{

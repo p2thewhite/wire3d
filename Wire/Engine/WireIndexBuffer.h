@@ -21,24 +21,24 @@ class IndexBuffer : public Buffer
 
 public:
 	IndexBuffer(UInt quantity, UsageType usage = UT_STATIC);
-	IndexBuffer(UInt* pIndices, UInt quantity, UsageType usage = UT_STATIC);
+	IndexBuffer(UShort* pIndices, UInt quantity, UsageType usage = UT_STATIC);
 	IndexBuffer(const IndexBuffer* pIndexBuffer);
 	virtual ~IndexBuffer();
 
 	// Access to indices.
-	inline UInt operator[] (UInt i) const;
-	inline UInt& operator[] (UInt i);
+	inline UShort operator[] (UInt i) const;
+	inline UShort& operator[] (UInt i);
 
 	// Direct access to the index buffer data. The quantity is the number of
 	// UInt elements. The number of bytes for the entire index buffer is
-	// GetQuantity()*sizeof(UInt).
+	// GetQuantity()*sizeof(UShort).
 	inline UInt GetQuantity() const;
-	inline UInt* GetData();
-	inline const UInt* GetData() const;
+	inline UShort* GetData();
+	inline const UShort* GetData() const;
 
 private:
 	UInt mQuantity;
-	UInt* mpIndices;
+	UShort* mpIndices;
 };
 
 typedef Pointer<IndexBuffer> IndexBufferPtr;

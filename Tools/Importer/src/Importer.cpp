@@ -947,9 +947,14 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	Int indicesSize;
 	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName,
 		indicesSize, iBigEndian));
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(pIndices,
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(
 		indicesSize/sizeof(UInt), iUsage);
 	mStatistics.IndexBufferCount++;
+	for (UInt i = 0; i < indicesSize/sizeof(UInt); i++)
+	{
+		WIRE_ASSERT(pIndices[i] < 65536);
+		(*pIndexBuffer)[i] = static_cast<UShort>(pIndices[i]);
+	}
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mMeshes.Insert(pName, pMesh);

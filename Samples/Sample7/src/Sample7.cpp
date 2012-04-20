@@ -186,7 +186,7 @@ Geometry* Sample7::CreateGeometry()
 	GeneratePositions(pVBuffer, MathF::PI * 0.5F);
 
 	// prepare calculation of vertex normals (requires initialized positions)
-	UInt* pIndices = pIBuffer->GetData();
+	UShort* pIndices = pIBuffer->GetData();
 	mBuckets.SetQuantity(pVBuffer->GetQuantity());
 
 	// collect the triangles each vertex is part of
@@ -306,7 +306,7 @@ void Sample7::GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle)
 //----------------------------------------------------------------------------
 void Sample7::GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer)
 {
-	UInt* const pIndices = pIBuffer->GetData();
+	UShort* const pIndices = pIBuffer->GetData();
 
 	// calculate the normals of the individual triangles
 	TArray<Vector3F> faceNormals(pIBuffer->GetQuantity()/3);

@@ -15,16 +15,8 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 	pIndexBuffer)
-	:
-	mIndexSize(sizeof(UInt))
 {
-	PdrRendererData& rData = *(pRenderer->GetRendererData());
-	if (!rData.Supports32BitIndices)
-	{
-		mIndexSize = sizeof(UShort);
-	}
-
-	UInt size = pIndexBuffer->GetQuantity() * mIndexSize;
+	UInt size = pIndexBuffer->GetQuantity() * sizeof(UShort);
 	CreateBuffer(pRenderer, size, pIndexBuffer->GetUsage());
 
 	Update(pIndexBuffer);
@@ -33,15 +25,7 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer*
 //----------------------------------------------------------------------------
 PdrIndexBuffer::PdrIndexBuffer(Renderer* pRenderer, UInt size,
 	Buffer::UsageType usage)
-	:
-	mIndexSize(sizeof(UInt))
 {
-	PdrRendererData& rData = *(pRenderer->GetRendererData());
-	if (!rData.Supports32BitIndices)
-	{
-		mIndexSize = sizeof(UShort);
-	}
-
 	CreateBuffer(pRenderer, size, usage);
 }
 
@@ -73,7 +57,7 @@ void PdrIndexBuffer::Unlock()
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 {
-	WIRE_ASSERT((mBufferSize/mIndexSize) == pIndexBuffer->GetQuantity());
+	WIRE_ASSERT((mBufferSize/sizeof(UShort)) == pIndexBuffer->GetQuantity());
 	Buffer::LockingMode lockingMode = pIndexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
 
@@ -85,86 +69,33 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
-	UInt offset)
+	UShort offset)
 {
-	const UInt* pIndices = pIndexBuffer->GetData();
+	const UShort* pIndices = pIndexBuffer->GetData();
 	const UInt quantity = pIndexBuffer->GetQuantity();
 
 	if (offset == 0)
 	{
-		if (mIndexSize == sizeof(UInt))
-		{
-			const UInt size = pIndexBuffer->GetQuantity() * sizeof(UInt);
-			System::Memcpy(pBuffer, size, pIndices, size);
-		}
-		else
-		{
-			WIRE_ASSERT(mIndexSize == sizeof(UShort));
-			UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
-
-			if ((quantity % 3) == 0)
-			{
-				for (UInt i = 0; i < quantity; i+=3)
-				{
-					pBuffer16[i] = static_cast<UShort>(pIndices[i]);
-					pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1]);
-					pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2]);
-				}
-			}
-			else
-			{
-				for (UInt i = 0; i < quantity; i++)
-				{
-					pBuffer16[i] = static_cast<UShort>(pIndices[i]);
-				}
-			}
-		}
-
+		const UInt size = pIndexBuffer->GetQuantity() * sizeof(UShort);
+		System::Memcpy(pBuffer, size, pIndices, size);
 		return;
 	}
 
-
-	if (mIndexSize == sizeof(UInt))
-	{
-		UInt* pBuffer32 = reinterpret_cast<UInt*>(pBuffer);
-
-		if ((quantity % 3) == 0)
-		{
-			for (UInt i = 0; i < quantity; i+=3)
-			{
-				pBuffer32[i] = pIndices[i] + offset;
-				pBuffer32[i+1] = pIndices[i+1] + offset;
-				pBuffer32[i+2] = pIndices[i+2] + offset;
-			}
-		}
-		else
-		{
-			for (UInt i = 0; i < quantity; i++)
-			{
-				pBuffer32[i] = pIndices[i] + offset;
-			}
-		}
-
-		return;
-	}
-
-	WIRE_ASSERT(mIndexSize == sizeof(UShort));
 	UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
-
 	if ((quantity % 3) == 0)
 	{
 		for (UInt i = 0; i < quantity; i+=3)
 		{
-			pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
-			pBuffer16[i+1] = static_cast<UShort>(pIndices[i+1] + offset);
-			pBuffer16[i+2] = static_cast<UShort>(pIndices[i+2] + offset);
+			pBuffer16[i] = pIndices[i] + offset;
+			pBuffer16[i+1] = pIndices[i+1] + offset;
+			pBuffer16[i+2] = pIndices[i+2] + offset;
 		}
 	}
 	else
 	{
 		for (UInt i = 0; i < quantity; i++)
 		{
-			pBuffer16[i] = static_cast<UShort>(pIndices[i] + offset);
+			pBuffer16[i] = pIndices[i] + offset;
 		}
 	}
 }
@@ -174,14 +105,11 @@ void PdrIndexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 	Buffer::UsageType usage)
 {
 	mBufferSize = size;
-	D3DFORMAT format = (mIndexSize == sizeof(UShort)) ? D3DFMT_INDEX16 :
-		D3DFMT_INDEX32;
-
 	const DWORD d3dUsage = PdrRendererData::USAGES[usage];
 	const D3DPOOL pool = PdrRendererData::POOLS[usage];
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->CreateIndexBuffer(mBufferSize, d3dUsage, format, pool,
-		&mpBuffer, NULL);
+	hr = rDevice->CreateIndexBuffer(mBufferSize, d3dUsage, D3DFMT_INDEX16,
+		pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
