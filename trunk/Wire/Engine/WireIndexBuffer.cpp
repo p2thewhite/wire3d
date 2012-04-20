@@ -20,11 +20,11 @@ IndexBuffer::IndexBuffer(UInt quantity, UsageType usage)
 	Buffer(usage),
 	mQuantity(quantity)
 {
-	mpIndices = WIRE_NEW UInt[mQuantity];
+	mpIndices = WIRE_NEW UShort[mQuantity];
 }
 
 //----------------------------------------------------------------------------
-IndexBuffer::IndexBuffer(UInt* pIndices, UInt quantity, UsageType usage)
+IndexBuffer::IndexBuffer(UShort* pIndices, UInt quantity, UsageType usage)
 	:
 	Buffer(usage),
 	mQuantity(quantity),
@@ -38,8 +38,8 @@ IndexBuffer::IndexBuffer(const IndexBuffer* pIndexBuffer)
 	Buffer(pIndexBuffer->GetUsage()),
 	mQuantity(pIndexBuffer->mQuantity)
 {
-	mpIndices = WIRE_NEW UInt[mQuantity];
-	size_t size = mQuantity*sizeof(UInt);
+	mpIndices = WIRE_NEW UShort[mQuantity];
+	size_t size = mQuantity*sizeof(UShort);
 	System::Memcpy(mpIndices, size, pIndexBuffer->mpIndices, size);
 }
 

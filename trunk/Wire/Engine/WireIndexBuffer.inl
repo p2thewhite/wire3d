@@ -13,25 +13,25 @@ inline UInt IndexBuffer::GetQuantity() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt* IndexBuffer::GetData()
+inline UShort* IndexBuffer::GetData()
 {
 	return mpIndices;
 }
 
 //----------------------------------------------------------------------------
-inline const UInt* IndexBuffer::GetData() const
+inline const UShort* IndexBuffer::GetData() const
 {
 	return mpIndices;
 }
 
 //----------------------------------------------------------------------------
-inline UInt IndexBuffer::operator[] (UInt i) const
+inline UShort IndexBuffer::operator[] (UInt i) const
 {
 	WIRE_ASSERT(i < mQuantity);
 	return mpIndices[i];
 }
 //----------------------------------------------------------------------------
-inline UInt& IndexBuffer::operator[] (UInt i)
+inline UShort& IndexBuffer::operator[] (UInt i)
 {
 	WIRE_ASSERT(i < mQuantity);
 	return mpIndices[i];

@@ -533,13 +533,13 @@ void DestroyResources(THashTable<const Resource*,
 	PdrResource*>& rMap, TArray<const Resource*>& rSave)
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity(), false);
-	const Resource* pKey;
-	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
-
-	for (PdrResource** pValue = it.GetFirst(&pKey); pValue;
-		pValue = it.GetNext(&pKey))
+	while (rMap.GetQuantity() > 0)
 	{
-		WIRE_DELETE *pValue;
+		THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
+		const Resource* pKey;
+		it.GetFirst(&pKey);
+
+		Renderer::UnbindAll(pKey);
 		rSave.Append(pKey);
 	}
 

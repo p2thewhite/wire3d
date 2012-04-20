@@ -27,9 +27,3 @@ inline UInt PdrIndexBuffer::GetBufferSize() const
 {
 	return mBufferSize;
 }
-
-//----------------------------------------------------------------------------
-inline UInt PdrIndexBuffer::GetIndexSize() const
-{
-	return mIndexSize;
-}

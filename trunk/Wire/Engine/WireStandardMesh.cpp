@@ -97,10 +97,10 @@ Geometry* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 		}
 	}
 
-	UInt indices[] = { 0, 1, 2,	0, 2, 3, 0, 5, 1, 0, 4, 5, 0, 7, 4, 0, 3, 7,
-		6, 5, 4, 6, 4, 7, 6, 1, 5, 6, 2, 1, 6, 3, 2, 6, 7, 3 };
+	const UShort indices[] = { 0, 1, 2,	0, 2, 3, 0, 5, 1, 0, 4, 5, 0, 7, 4, 0,
+		3, 7, 6, 5, 4, 6, 4, 7, 6, 1, 5, 6, 2, 1, 6, 3, 2, 6, 7, 3 };
 
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for (UInt i = 0; i < indexQuantity; i++)
 	{
@@ -152,7 +152,7 @@ Geometry* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 		Vector2F(0.50F, 0.75F), Vector2F(0.25F, 0.75F)
 	};
 
-	const UInt indices[] = {
+	const UShort indices[] = {
 		0, 1, 2, 3,	11, 10, 6, 7, 7, 6, 1, 0, 3, 2, 5, 4, 1, 9, 8, 2, 12, 0,
 		3, 13
 	};
@@ -286,7 +286,7 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 		Vector2F(1.0F, 0.0F), Vector2F(1.0F, 1.0F), Vector2F(0.0F, 1.0F)
 	};
 
-	const UInt indices[] =
+	const UShort indices[] =
 	{
 		0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 14, 13,
 		12, 15, 14, 16, 18, 17,	16, 19, 18, 20, 22, 21,	20, 23, 22
@@ -346,7 +346,7 @@ Geometry* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 		}
 	}
 
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
@@ -425,19 +425,21 @@ Geometry* StandardMesh::CreatePlane(const UInt xTileCount,
 		y += yStride;
 	}
 
+	WIRE_ASSERT(xTileCount < 65536);
+	const UShort xTC = static_cast<UShort>(xTileCount);
 	const UInt indexCount = xTileCount * yTileCount * 6;
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexCount);
 
-	for (UInt j = 0; j < yTileCount; j++)
+	for (UShort j = 0; j < yTileCount; j++)
 	{
-		UInt offset = (xTileCount+1)*j;
-		for (UInt i = 0; i < xTileCount; i++)
+		UShort offset = (xTC+1)*j;
+		for (UShort i = 0; i < xTileCount; i++)
 		{
-			UInt index = xTileCount*j+i;
-			UInt index0 = i+offset;
-			UInt index1 = index0+xTileCount+1;
-			UInt index2 = index0+1;
-			UInt index3 = index0+xTileCount+2;
+			UShort index = xTC*j+i;
+			UShort index0 = i+offset;
+			UShort index1 = index0+xTC+1;
+			UShort index2 = index0+1;
+			UShort index3 = index0+xTC+2;
 
 			(*pIBuffer)[index*6] = index0;
 			(*pIBuffer)[index*6+1] = index1;
@@ -474,7 +476,7 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 		ColorRGB(0.0F, 0.0F, 1.0F), ColorRGB(1.0F, 1.0F, 0.0F)
 	};
 
-	const UInt indices[] = { 0, 1, 2, 0, 2, 3 };
+	const UShort indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
@@ -529,7 +531,7 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 		}
 	}
 
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
@@ -748,17 +750,24 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	i++;
 	WIRE_ASSERT(i == vertexQuantity);
 
+	WIRE_ASSERT(radialSampleCount < (32768-1) && (radialSampleCount >= 0));
+	Short rsc = static_cast<Short>(radialSampleCount);
+	WIRE_ASSERT(vertexQuantity < (32768) && (vertexQuantity >= 0));
+	Short vq = static_cast<Short>(vertexQuantity);
+	WIRE_ASSERT(zSampleCount < (32768) && (zSampleCount >= 0));
+	Short zsc = static_cast<Short>(zSampleCount);
+
 	// generate connectivity
-	UInt* pLocalIndex = pIBuffer->GetData();
-	Int iZStart = 0;
+	UShort* pLocalIndex = pIBuffer->GetData();
+	Short iZStart = 0;
 	for (Int iZ = 0; iZ < zSampleCount-3; iZ++)
 	{
-		Int i0 = iZStart;
-		Int i1 = i0 + 1;
-		iZStart += radialSampleCount+1;
-		Int i2 = iZStart;
-		Int i3 = i2 + 1;
-		for (i = 0; i < radialSampleCount; i++)
+		Short i0 = iZStart;
+		Short i1 = i0 + 1;
+		iZStart += rsc+1;
+		Short i2 = iZStart;
+		Short i3 = i2 + 1;
+		for (Int i = 0; i < radialSampleCount; i++)
 		{
 			pLocalIndex[0] = i0++;
 			pLocalIndex[1] = i2;
@@ -771,8 +780,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	}
 
 	// south pole triangles
-	Int vQm2 = vertexQuantity-2;
-	for (i = 0; i < radialSampleCount; i++)
+	Short vQm2 = vq-2;
+	for (Short i = 0; i < rsc; i++)
 	{
 		pLocalIndex[0] = i;
 		pLocalIndex[1] = i+1;
@@ -781,9 +790,9 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	}
 
 	// north pole triangles
-	Int vQm1 = vertexQuantity-1;
-	Int offset = (zSampleCount-3) * (radialSampleCount+1);
-	for (i = 0; i < radialSampleCount; i++)
+	Short vQm1 = vq-1;
+	Short offset = (zsc-3) * (rsc+1);
+	for (Short i = 0; i < rsc; i++)
 	{
 		pLocalIndex[0] = i+offset;
 		pLocalIndex[1] = vQm1;
@@ -873,7 +882,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 	attributes.SetTCoordChannels(2);
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
-	const UInt indices[] = { 0, 1, 2, 0, 2, 3 };
+	const UShort indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	const Float xStride = 8.0F;
 	const Float yStride = 8.0F;
@@ -889,7 +898,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 
 	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
 	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
-	UInt k = 0;
+	UShort k = 0;
 	ColorRGBA color = rColor;
 	for (UInt i = 0; i < textLength; i++)
 	{
@@ -916,7 +925,7 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 				pVBuffer->Color4(k*4+j) = color;
 			}
 
-			for (UInt j = 0; j < (sizeof(indices) / sizeof(UInt)); j++)
+			for (UInt j = 0; j < (sizeof(indices) / sizeof(UShort)); j++)
 			{
 				(*pIBuffer)[k*6+j] = indices[j] + k*4;
 			}

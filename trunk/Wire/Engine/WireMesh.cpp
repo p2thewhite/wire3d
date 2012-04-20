@@ -47,7 +47,7 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 		return;
 	}
 
-	UInt* const pIndices = mspIndexBuffer->GetData();
+	UShort* const pIndices = mspIndexBuffer->GetData();
 
 	// collect the triangles each vertex is part of
 	TArray<TArray<UInt> > buckets(mspVertexBuffer->GetQuantity());

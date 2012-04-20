@@ -38,10 +38,9 @@ public:
 	void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
-	void Copy(const IndexBuffer* pIndexBuffer, void* pBuffer, UInt offset);
+	void Copy(const IndexBuffer* pIndexBuffer, void* pBuffer, UShort offset);
 
 	inline UInt GetBufferSize() const;
-	inline UInt GetIndexSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
@@ -49,7 +48,6 @@ private:
 
 	IDirect3DIndexBuffer9* mpBuffer;
 	UInt mBufferSize;
-	UInt mIndexSize;
 };
 
 #include "WireDx9IndexBuffer.inl"
