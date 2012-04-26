@@ -42,6 +42,10 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
+	// Duplicate the mesh (only if shared), apply World transform to vertices,
+	// set World(Bound) to identity and World(Bound)IsCurrent to true.
+	void MakeStatic();
+
 	// member access
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<Pointer<Light> > Lights;

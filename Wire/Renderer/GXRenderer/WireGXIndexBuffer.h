@@ -43,7 +43,6 @@ public:
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-	void Copy(const IndexBuffer* pIndexBuffer, void* pBuffer, UShort offset);
 
 	TMap<UInt, PdrDisplayList*> mDisplayLists;
 

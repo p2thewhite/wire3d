@@ -62,42 +62,9 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
 
 	void* pBuffer = Lock(lockingMode);
-	Copy(pIndexBuffer, pBuffer, 0);
-
+	size_t size = pIndexBuffer->GetQuantity() * sizeof(UShort);
+	System::Memcpy(pBuffer, size, pIndexBuffer->GetData(), size);
 	Unlock();
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
-	UShort offset)
-{
-	const UShort* pIndices = pIndexBuffer->GetData();
-	const UInt quantity = pIndexBuffer->GetQuantity();
-
-	if (offset == 0)
-	{
-		const UInt size = pIndexBuffer->GetQuantity() * sizeof(UShort);
-		System::Memcpy(pBuffer, size, pIndices, size);
-		return;
-	}
-
-	UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
-	if ((quantity % 3) == 0)
-	{
-		for (UInt i = 0; i < quantity; i+=3)
-		{
-			pBuffer16[i] = pIndices[i] + offset;
-			pBuffer16[i+1] = pIndices[i+1] + offset;
-			pBuffer16[i+2] = pIndices[i+2] + offset;
-		}
-	}
-	else
-	{
-		for (UInt i = 0; i < quantity; i++)
-		{
-			pBuffer16[i] = pIndices[i] + offset;
-		}
-	}
 }
 
 //----------------------------------------------------------------------------

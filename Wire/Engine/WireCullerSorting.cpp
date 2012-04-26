@@ -240,6 +240,11 @@ void CullerSorting::Insert(Spatial* pObject, Effect* pGlobalEffect)
 			GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
 		}
 	}
+	else
+	{
+		WIRE_ASSERT(false/* there's no AlphaState, call UpdateRS() to init*/);
+		GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -291,6 +296,7 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 		key |= pMaterial->ID << DEPTH;
 	}
 
+	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once)
 	WIRE_ASSERT(pGeometry->StateSetID < (1<<STATESET));
 	key |= pGeometry->StateSetID << (MATERIAL + DEPTH);
 

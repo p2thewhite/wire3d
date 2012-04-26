@@ -39,7 +39,7 @@ Bool Controller::Update(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-Bool Controller::RenderUpdate()
+Bool Controller::RenderUpdate(const Camera* /*pCamera*/)
 {
 	return false;
 }

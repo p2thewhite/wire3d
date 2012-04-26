@@ -15,6 +15,7 @@
 namespace Wire
 {
 
+class Camera;
 class SceneObject;
 
 class Controller : public Object
@@ -32,7 +33,7 @@ public:
 	virtual Bool Update(Double appTime);
 
 	// update called by culler only when the controlled object is visible
-	virtual Bool RenderUpdate();
+	virtual Bool RenderUpdate(const Camera* pCamera);
 
 protected:
 	// construction (abstract base class)

@@ -72,38 +72,6 @@ void PdrIndexBuffer::Disable(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 {
-	Copy(pIndexBuffer, mpBuffer, 0);
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Copy(const IndexBuffer* pIndexBuffer, void* pBuffer,
-	UShort offset)
-{
-	const UShort* pIndices = pIndexBuffer->GetData();
-	const UInt quantity = pIndexBuffer->GetQuantity();
-
-	if (offset == 0)
-	{
-		const UInt size = quantity * sizeof(UShort);
-		System::Memcpy(pBuffer, size, pIndices, size);
-		return;
-	}
-
-	UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
-	if ((quantity % 3) == 0)
-	{
-		for (UInt i = 0; i < quantity; i+=3)
-		{
-			pBuffer16[i] = pIndices[i] + offset;
-			pBuffer16[i+1] = pIndices[i+1] + offset;
-			pBuffer16[i+2] = pIndices[i+2] + offset;
-		}
-	}
-	else
-	{
-		for (UInt i = 0; i < quantity; i++)
-		{
-			pBuffer16[i] = pIndices[i] + offset;
-		}
-	}
+	size_t size = pIndexBuffer->GetQuantity() * sizeof(UShort);
+	System::Memcpy(mpBuffer, size, pIndexBuffer->GetData(), size);
 }

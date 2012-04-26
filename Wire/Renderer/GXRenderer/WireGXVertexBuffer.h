@@ -44,16 +44,17 @@ public:
 
 	void Update(const VertexBuffer* pVertexBuffer);
 
-	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
-	inline void SetDeclaration(Renderer* pRenderer);
-
 	inline UInt GetBufferSize() const;
 
+	inline void SetDeclaration(Renderer* pRenderer);
+
 	inline const TArray<VertexElement>& GetDeclaration() const;
+	inline UInt GetVertexSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
+	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 
