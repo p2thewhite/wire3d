@@ -33,6 +33,8 @@ public:
 	inline operator Matrix34F ();
  	inline operator const Matrix34F () const;
 
+	void MakeIdentity();
+
 	void SetRotate(const Matrix3F& rMatrix);
 	Matrix3F GetRotate() const;
 	void SetRotate(const Matrix34F& rMatrix);

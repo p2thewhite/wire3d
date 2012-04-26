@@ -53,3 +53,36 @@ IndexBuffer::~IndexBuffer()
 
 	WIRE_DELETE[] mpIndices;
 }
+
+//----------------------------------------------------------------------------
+void IndexBuffer::Copy(UShort* pDst, UShort offset)
+{
+	if (offset == 0)
+	{
+		if (pDst != GetData())
+		{
+			const UInt size = GetQuantity() * sizeof(UShort);
+			System::Memcpy(pDst, size, GetData(), size);
+		}
+
+		return;
+	}
+
+	UShort* pSrc = GetData();
+	if ((GetQuantity() % 3) == 0)
+	{
+		for (UInt i = 0; i < GetQuantity(); i+=3)
+		{
+			pDst[i] = pSrc[i] + offset;
+			pDst[i+1] = pSrc[i+1] + offset;
+			pDst[i+2] = pSrc[i+2] + offset;
+		}
+	}
+	else
+	{
+		for (UInt i = 0; i < GetQuantity(); i++)
+		{
+			pDst[i] = pSrc[i] + offset;
+		}
+	}
+}

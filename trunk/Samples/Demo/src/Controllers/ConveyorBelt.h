@@ -15,7 +15,7 @@ public:
 	ConveyorBelt(Geometry* pGeometry, Renderer* pRenderer);
 
 	virtual Bool Update(Double appTime);
-	virtual Bool RenderUpdate();
+	virtual Bool RenderUpdate(const Camera* pCamera);
 
 private:
 	VertexBufferPtr mspVertexBufferCopy;

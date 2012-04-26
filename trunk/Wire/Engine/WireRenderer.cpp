@@ -539,8 +539,9 @@ void Renderer::DestroyAll(IndexBufferMap& rIndexBufferMap)
 	while (rIndexBufferMap.GetQuantity() > 0)
 	{
 		IndexBufferMap::Iterator it(&rIndexBufferMap);
-		const IndexBuffer* pKey;
+		const IndexBuffer* pKey = NULL;
 		it.GetFirst(&pKey);
+		WIRE_ASSERT(pKey);
 		Unbind(pKey);
 	}
 
@@ -553,8 +554,9 @@ void Renderer::DestroyAll(VertexBufferMap& rVertexBufferMap)
 	while (rVertexBufferMap.GetQuantity() > 0)
 	{
 		VertexBufferMap::Iterator it(&rVertexBufferMap);
-		const VertexBuffer* pKey;
+		const VertexBuffer* pKey = NULL;
 		it.GetFirst(&pKey);
+		WIRE_ASSERT(pKey);
 		Unbind(pKey);
 	}
 
@@ -567,8 +569,9 @@ void Renderer::DestroyAll(Texture2DMap& rTexture2DMap)
 	while (rTexture2DMap.GetQuantity() > 0)
 	{
 		Texture2DMap::Iterator it(&rTexture2DMap);
-		const Texture2D* pKey;
+		const Texture2D* pKey = NULL;
 		it.GetFirst(&pKey);
+		WIRE_ASSERT(pKey);
 		Unbind(pKey);
 	}
 
@@ -760,25 +763,21 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 			for (; idx < max-1; idx++)
 			{
 				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx].Object));
-				Geometry* pA = StaticCast<Geometry>(pVisible[idx].Object);
-				Material* pMA = pA->GetMaterial();
-				UInt mA = pMA ? pMA->ID : 0;
 				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx+1].Object));
+				Geometry* pA = StaticCast<Geometry>(pVisible[idx].Object);
 				Geometry* pB = StaticCast<Geometry>(pVisible[idx+1].Object);
-				Material* pMB = pB->GetMaterial();
-				UInt mB = pMB ? pMB->ID : 0;
-
-				if (mA != mB)
+				if (pA->GetMaterial() != pB->GetMaterial() ||
+					pA->StateSetID != pB->StateSetID)
 				{
 					break;
 				}
 
+				// TODO: compare lights
 				UInt vA = pA->GetMesh()->GetVertexBuffer()->GetAttributes().
 					GetKey();
 				UInt vB = pB->GetMesh()->GetVertexBuffer()->GetAttributes().
 					GetKey();
-
-				if ((vA != vB) || (pA->StateSetID != pB->StateSetID))
+				if ((vA != vB))
 				{
 					break;
 				}
@@ -788,11 +787,11 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 			{
 //				BatchAndDraw(pVisible, min, idx+1);
 
-				for (UInt i = min; i < idx+1; i++)
-				{
-					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
-					Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
-				}
+ 				for (UInt i = min; i < idx+1; i++)
+ 				{
+ 					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+ 					Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
+ 				}
 			}
 			else
 			{
@@ -814,8 +813,9 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchAndDraw(VisibleObject* const /*pVisible*/, UInt /*min*/, UInt /*max*/)
+void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 {
+	// TODO: take threshold value into account
 // 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 // 	PdrVertexBuffer* const pVBPdr = mBatchedVertexBuffer;
 // 
@@ -826,7 +826,7 @@ void Renderer::BatchAndDraw(VisibleObject* const /*pVisible*/, UInt /*min*/, UIn
 // 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 // 	void* pVBRaw = pVBPdr->Lock(Buffer::LM_WRITE_ONLY);
 // 
-// 	UInt offset = 0;
+// 	UShort offset = 0;
 // 	UInt triangleCount = 0;
 // 
 // 	for (UInt i = min; i < max; i++)
@@ -834,16 +834,17 @@ void Renderer::BatchAndDraw(VisibleObject* const /*pVisible*/, UInt /*min*/, UIn
 // 		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i].Object);
 // 
 // 		VertexBuffer* pVertexBuffer = pGeometry->GetMesh()->GetVertexBuffer();
-// 		pVBPdr->Copy(pVertexBuffer, pVBRaw, pGeometry->World);
+// 		pVertexBuffer->ApplyForward(pGeometry->World, static_cast<Float*>(
+// 			pVBRaw));
 // 		UInt size = pVertexBuffer->GetQuantity() * pVBPdr->GetVertexSize() +
 // 			reinterpret_cast<UInt>(pVBRaw);
 // 		pVBRaw = reinterpret_cast<void*>(size);
 // 
 // 		// TODO: support start and active index
 // 		IndexBuffer* pIndexBuffer = pGeometry->GetMesh()->GetIndexBuffer();
-// 		pIBPdr->Copy(pIndexBuffer, pIBRaw, offset);
-// 		offset += pVertexBuffer->GetQuantity();
-// 		size = pIndexBuffer->GetQuantity() * pIBPdr->GetIndexSize() +
+// 		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), offset);
+// 		offset += static_cast<UShort>(pVertexBuffer->GetQuantity());
+// 		size = pIndexBuffer->GetQuantity() * sizeof(UShort) +
 // 			reinterpret_cast<UInt>(pIBRaw);
 // 		pIBRaw = reinterpret_cast<void*>(size);
 // 

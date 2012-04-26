@@ -57,6 +57,7 @@ void Geometry::Init()
 	ActiveIndexCount = mspMesh->GetIndexBuffer()->GetQuantity();
 	StartIndex = 0;
 	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(State*));
+	StateSetID = System::MAX_UINT;
 }
 
 //----------------------------------------------------------------------------
@@ -178,4 +179,35 @@ UInt Geometry::GetStateSetKey()
 	}
 
 	return key;
+}
+
+//----------------------------------------------------------------------------
+void Geometry::MakeStatic()
+{
+	WorldIsCurrent = true;
+	WorldBoundIsCurrent = true;
+	if (World.IsIdentity())
+	{
+		return;
+	}
+
+	VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer();
+	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
+	if (!rAttr.HasPosition() && !rAttr.HasNormal())
+	{
+		return;
+	}
+
+	// if the vertex buffer is shared, we create our own copy to use
+	if (pVertexBuffer->GetReferences() > 1 || mspMesh->GetReferences() > 1)
+	{
+		pVertexBuffer = WIRE_NEW VertexBuffer(mspMesh->GetVertexBuffer());
+		mspMesh = WIRE_NEW Mesh(pVertexBuffer, mspMesh->GetIndexBuffer());
+	}
+
+	pVertexBuffer->ApplyForward(World, pVertexBuffer->GetData());
+
+	World.MakeIdentity();
+	mspMesh->UpdateModelBound();
+	UpdateWorldBound();
 }

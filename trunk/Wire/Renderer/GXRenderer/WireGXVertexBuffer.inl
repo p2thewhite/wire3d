@@ -58,3 +58,9 @@ inline UInt PdrVertexBuffer::GetBufferSize() const
 {
 	return mBufferSize;
 }
+
+//----------------------------------------------------------------------------
+inline UInt PdrVertexBuffer::GetVertexSize() const
+{
+	return mVertexSize;
+}

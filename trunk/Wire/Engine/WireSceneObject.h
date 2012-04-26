@@ -17,6 +17,7 @@
 namespace Wire
 {
 
+class Camera;
 class Controller;
 
 class SceneObject : public Object
@@ -36,7 +37,7 @@ public:
  	void DetachAllControllers();
 
 	Bool UpdateControllers(Double appTime);
-	Bool RenderUpdateControllers();
+	Bool RenderUpdateControllers(const Camera* pCamera);
 
 protected:
 	SceneObject();

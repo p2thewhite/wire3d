@@ -30,12 +30,10 @@ public:
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
-	void* Lock(Buffer::LockingMode mode);
+	inline void* Lock(Buffer::LockingMode mode);
 	inline void Unlock();
 
 	void Update(const VertexBuffer* pVertexBuffer);
-	void Copy(const VertexBuffer* pVertexBuffer, void* pBuffer, const
-		Transformation& rTransformation);
 
 	inline UInt GetBufferSize() const;
 
@@ -48,9 +46,6 @@ private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
 	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
-
-	void Convert(const VertexBuffer* pSrc, void* pDst, const Transformation&
-		rTransformation);
 
 	IDirect3DVertexBuffer9* mpBuffer;
 	UInt mBufferSize;

@@ -12,6 +12,7 @@
 
 #include "WireBuffer.h"
 #include "WireColor32.h"
+#include "WireTransformation.h"
 #include "WireVector2.h"
 #include "WireVector3.h"
 #include "WireVertexAttributes.h"
@@ -60,6 +61,10 @@ public:
 
 	inline Float* GetTCoord(UInt i = 0, UInt unit = 0);
 	inline const Float* GetTCoord(UInt i = 0, UInt unit = 0) const;
+
+	// Compute Y = M*X+T
+	// User has to take care that pDst is big enough to fit this VertexBuffer
+	void ApplyForward(const Transformation& rTransformation, Float* pDst);
 
 	void GeneratePlatonicNormals();
 
