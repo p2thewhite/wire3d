@@ -58,6 +58,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletDynamics", "Tools\bul
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletSoftBody", "Tools\bullet-2.77\msvc2010\BulletSoftBody\BulletSoftBody.vcxproj", "{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample11 - Input", "Samples\Sample11\Sample11_WIN32.vcxproj", "{A8E6550A-4204-4E72-B3BC-001112672E50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -136,6 +138,10 @@ Global
 		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Debug|Win32.Build.0 = Debug|Win32
 		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Release|Win32.ActiveCfg = Release|Win32
 		{60CF2BBA-43E1-4D88-A5E1-4F935D41207D}.Release|Win32.Build.0 = Release|Win32
+		{A8E6550A-4204-4E72-B3BC-001112672E50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A8E6550A-4204-4E72-B3BC-001112672E50}.Debug|Win32.Build.0 = Debug|Win32
+		{A8E6550A-4204-4E72-B3BC-001112672E50}.Release|Win32.ActiveCfg = Release|Win32
+		{A8E6550A-4204-4E72-B3BC-001112672E50}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

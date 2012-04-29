@@ -70,11 +70,20 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 		return NULL;
 	}
 
+	Image2D* pImage2D = DecodePNG(pPNG, pngSize, hasMipmaps);
+	WIRE_DELETE[] pPNG;
+
+	return pImage2D;
+}
+
+//----------------------------------------------------------------------------
+Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
+	Bool hasMipmaps)
+{
 	std::vector<UChar> rawImage;
 	ULong width;
 	ULong height;
 	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
-	WIRE_DELETE[] pPNG;
 
 	Bool hasAlpha = (rawImage.size() / (height*width)) == 4;
 	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :

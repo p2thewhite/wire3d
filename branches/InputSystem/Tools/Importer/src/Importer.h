@@ -27,6 +27,8 @@ public:
 	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		pCameras = NULL);
 	Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
+	static Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize,
+		Bool hasMipmaps);
 
 	struct Statistics
 	{
