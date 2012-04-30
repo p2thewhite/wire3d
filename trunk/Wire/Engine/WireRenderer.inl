@@ -79,9 +79,15 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetDynamicBatchingThreshold(UInt vertexCount)
+inline void Renderer::SetStaticBatchingThreshold(UInt treshold)
 {
-	mDynamicBatchingThreshold = vertexCount;
+	mDynamicBatchingThreshold = treshold;
+}
+
+//----------------------------------------------------------------------------
+inline void Renderer::SetDynamicBatchingThreshold(UInt treshold)
+{
+	mDynamicBatchingThreshold = treshold;
 }
 
 //----------------------------------------------------------------------------

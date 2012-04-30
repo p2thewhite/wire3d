@@ -7,6 +7,33 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline void PdrVertexBuffer::Enable(Renderer* pRenderer)
+{
+	SetBuffer(pRenderer, mVertexSize);
+	SetDeclaration(pRenderer);
+}
+
+//----------------------------------------------------------------------------
+inline void PdrVertexBuffer::Disable(Renderer* pRenderer)
+{
+	HRESULT hr;
+	hr = pRenderer->GetRendererData()->D3DDevice->SetStreamSource(
+		0, NULL, 0, 0);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void* PdrVertexBuffer::Lock(Buffer::LockingMode mode)
+{
+	void* pBuffer = NULL;
+	HRESULT hr;
+	hr = mpBuffer->Lock(0, 0, &pBuffer,
+		PdrRendererData::BUFFER_LOCKING[mode]);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	return pBuffer;
+}
+
+//----------------------------------------------------------------------------
 inline void PdrVertexBuffer::Unlock()
 {
 	HRESULT hr;

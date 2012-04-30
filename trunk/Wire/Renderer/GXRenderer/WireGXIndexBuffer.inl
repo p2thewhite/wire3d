@@ -7,6 +7,31 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline void PdrIndexBuffer::Enable(Renderer* pRenderer)
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	pData->PdrIBuffer = this;
+}
+
+//----------------------------------------------------------------------------
+inline void PdrIndexBuffer::Disable(Renderer* pRenderer)
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	pData->PdrIBuffer = NULL;
+}
+
+//----------------------------------------------------------------------------
+inline void* PdrIndexBuffer::Lock(Buffer::LockingMode)
+{
+	return mpBuffer;
+}
+
+//----------------------------------------------------------------------------
+inline void PdrIndexBuffer::Unlock()
+{
+}
+
+//----------------------------------------------------------------------------
 inline UInt PdrIndexBuffer::GetBufferSize() const
 {
 	return mBufferSize;

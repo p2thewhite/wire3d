@@ -117,6 +117,18 @@ void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 }
 
 //----------------------------------------------------------------------------
+void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
+{
+	WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
+	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+		GetChannelQuantity()*sizeof(Float));
+
+	void* pData = Lock(Buffer::LM_WRITE_ONLY);
+	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
+	Unlock();
+}
+
+//----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
 	SetDeclaration(pRenderer);
@@ -129,16 +141,4 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer)
 void PdrVertexBuffer::Disable(Renderer* pRenderer)
 {
 	pRenderer->GetRendererData()->PdrVBuffer = NULL;
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
-{
-	WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
-	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
-		GetChannelQuantity()*sizeof(Float));
-
-	void* pData = Lock(Buffer::LM_WRITE_ONLY);
-	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
-	Unlock();
 }

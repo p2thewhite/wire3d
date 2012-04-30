@@ -36,25 +36,6 @@ PdrIndexBuffer::~PdrIndexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void* PdrIndexBuffer::Lock(Buffer::LockingMode mode)
-{
-	void* pVideoMemory = 0;
-	HRESULT hr;
-	hr = mpBuffer->Lock(0, 0, &pVideoMemory,
-		PdrRendererData::BUFFER_LOCKING[mode]);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	return pVideoMemory;
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Unlock()
-{
-	HRESULT hr;
-	hr = mpBuffer->Unlock();
-	WIRE_ASSERT(SUCCEEDED(hr));
-}
-
-//----------------------------------------------------------------------------
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 {
 	WIRE_ASSERT((mBufferSize/sizeof(UShort)) == pIndexBuffer->GetQuantity());

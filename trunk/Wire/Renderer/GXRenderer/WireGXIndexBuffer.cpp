@@ -10,8 +10,6 @@
 
 #include "WireIndexBuffer.h"
 #include "WireGXDisplayList.h"
-#include "WireGXRendererData.h"
-#include "WireRenderer.h"
 #include <malloc.h>
 
 using namespace Wire;
@@ -53,20 +51,6 @@ void PdrIndexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 	mBufferSize = size;
 	mpBuffer = reinterpret_cast<UShort*>(memalign(32, mBufferSize));
 	WIRE_ASSERT(mpBuffer);
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Enable(Renderer* pRenderer)
-{
-	PdrRendererData* pData = pRenderer->GetRendererData();
-	pData->PdrIBuffer = this;
-}
-
-//----------------------------------------------------------------------------
-void PdrIndexBuffer::Disable(Renderer* pRenderer)
-{
-	PdrRendererData* pData = pRenderer->GetRendererData();
-	pData->PdrIBuffer = NULL;
 }
 
 //----------------------------------------------------------------------------

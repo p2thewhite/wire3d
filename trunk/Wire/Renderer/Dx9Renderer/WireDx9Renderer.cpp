@@ -338,6 +338,21 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt startIndex)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::DrawElements(UInt vertexCount, UInt activeIndexCount,
+	UInt startIndex)
+{
+	const UInt triangleCount = activeIndexCount/3;
+	mStatistics.DrawCalls++;
+	mStatistics.Triangles += triangleCount;
+
+	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
+	HRESULT hr;
+	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
+		startIndex, triangleCount);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
 void Renderer::SetCamera(Camera* pCamera)
 {
 	if (!pCamera)

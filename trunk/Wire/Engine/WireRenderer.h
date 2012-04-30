@@ -64,7 +64,8 @@ public:
 
 	// Batching
 	void CreateBatchingBuffers(UInt size);
-	inline void SetDynamicBatchingThreshold(UInt vertexCount);
+	inline void SetStaticBatchingThreshold(UInt treshold);
+	inline void SetDynamicBatchingThreshold(UInt treshold);
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
@@ -235,6 +236,8 @@ private:
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt activeIndexCount, UInt indexOffset);
+	void DrawElements(UInt vertexCount, UInt activeIndexCount,
+		UInt indexOffset);
 
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
@@ -280,6 +283,7 @@ private:
 
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	PdrVertexBuffer* mBatchedVertexBuffer;
+	UInt mStaticBatchingThreshold;
 	UInt mDynamicBatchingThreshold;
 
 	Statistics mStatistics;
