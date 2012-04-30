@@ -43,6 +43,7 @@ void Renderer::Initialize(UInt width, UInt height)
 
 	mBatchedIndexBuffer = NULL;
 	mBatchedVertexBuffer = NULL;
+	mStaticBatchingThreshold = 0;
 	mDynamicBatchingThreshold = 0;
 
 	ResetStatistics();
@@ -755,7 +756,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		return;
 	}
 
-	if (mDynamicBatchingThreshold > 0)
+	if (mStaticBatchingThreshold > 0 || mDynamicBatchingThreshold > 0)
 	{
 		while (min < max)
 		{
@@ -785,13 +786,13 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 
 			if (idx > min)
 			{
-//				BatchAndDraw(pVisible, min, idx+1);
+				BatchAndDraw(pVisible, min, idx+1);
 
- 				for (UInt i = min; i < idx+1; i++)
- 				{
- 					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
- 					Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
- 				}
+//  				for (UInt i = min; i < idx+1; i++)
+//  				{
+//  					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
+//  					Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
+//  				}
 			}
 			else
 			{
@@ -816,80 +817,72 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 {
 	// TODO: take threshold value into account
-// 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
-// 	PdrVertexBuffer* const pVBPdr = mBatchedVertexBuffer;
-// 
-// 	const VertexAttributes& rAttributes = StaticCast<Geometry>(pVisible[min].
-// 		Object)->GetMesh()->GetVertexBuffer()->GetAttributes();
-// 	pVBPdr->CreateDeclaration(this, rAttributes);
-// 
-// 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
-// 	void* pVBRaw = pVBPdr->Lock(Buffer::LM_WRITE_ONLY);
-// 
-// 	UShort offset = 0;
-// 	UInt triangleCount = 0;
-// 
-// 	for (UInt i = min; i < max; i++)
-// 	{
-// 		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i].Object);
-// 
-// 		VertexBuffer* pVertexBuffer = pGeometry->GetMesh()->GetVertexBuffer();
-// 		pVertexBuffer->ApplyForward(pGeometry->World, static_cast<Float*>(
-// 			pVBRaw));
-// 		UInt size = pVertexBuffer->GetQuantity() * pVBPdr->GetVertexSize() +
-// 			reinterpret_cast<UInt>(pVBRaw);
-// 		pVBRaw = reinterpret_cast<void*>(size);
-// 
-// 		// TODO: support start and active index
-// 		IndexBuffer* pIndexBuffer = pGeometry->GetMesh()->GetIndexBuffer();
-// 		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), offset);
-// 		offset += static_cast<UShort>(pVertexBuffer->GetQuantity());
-// 		size = pIndexBuffer->GetQuantity() * sizeof(UShort) +
-// 			reinterpret_cast<UInt>(pIBRaw);
-// 		pIBRaw = reinterpret_cast<void*>(size);
-// 
-// 		triangleCount += pIndexBuffer->GetQuantity();
-// 	}
-// 
-// 	triangleCount = triangleCount / 3;
-// 
-// 	pVBPdr->Unlock();
-// 	pIBPdr->Unlock();
-// 
-// 	Geometry* pGeometry = StaticCast<Geometry>(pVisible[min].Object);
-// 	Set(pGeometry->States);
-// 	Set(pGeometry->Lights);
-// 	if (mspVertexBuffer)
-// 	{
-// 		Disable(mspVertexBuffer);
-// 		mspVertexBuffer = NULL;
-// 	}
-// 
-// 	if (mspIndexBuffer)
-// 	{
-// 		Disable(mspIndexBuffer);
-// 		mspIndexBuffer = NULL;
-// 	}
-// 
-// 	pIBPdr->Enable(this);
-// 	pVBPdr->Enable(this);
-// 
-// 	Set(pGeometry->GetMaterial());
-// 	
-// 	Transformation identity;
-// 	SetWorldTransformation(identity, pGeometry->GetMesh()->
-// 		GetVertexBuffer()->GetAttributes().HasNormal());
-// 
-// //	DrawElements(pGeometry->ActiveIndexCount, pGeometry->StartIndex);
-// 	const UInt vertexCount = offset;
-// 	mStatistics.DrawCalls++;
-// 	mStatistics.Triangles += triangleCount;
-// 
-// 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-// 	HRESULT hr;
-// 	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
-// 		0, triangleCount);
-// 	WIRE_ASSERT(SUCCEEDED(hr));
+	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
+	PdrVertexBuffer* const pVBPdr = mBatchedVertexBuffer;
+
+	const VertexAttributes& rAttributes = StaticCast<Geometry>(pVisible[min].
+		Object)->GetMesh()->GetVertexBuffer()->GetAttributes();
+	pVBPdr->CreateDeclaration(this, rAttributes);
+
+	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
+	void* pVBRaw = pVBPdr->Lock(Buffer::LM_WRITE_ONLY);
+
+	UShort offset = 0;
+	UInt indexCount = 0;
+
+	for (UInt i = min; i < max; i++)
+	{
+		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i].Object);
+
+		VertexBuffer* pVertexBuffer = pGeometry->GetMesh()->GetVertexBuffer();
+		pVertexBuffer->ApplyForward(pGeometry->World, static_cast<Float*>(
+			pVBRaw));
+		UInt size = pVertexBuffer->GetQuantity() * pVBPdr->GetVertexSize() +
+			reinterpret_cast<UInt>(pVBRaw);
+		pVBRaw = reinterpret_cast<void*>(size);
+
+		// TODO: support start and active index
+		IndexBuffer* pIndexBuffer = pGeometry->GetMesh()->GetIndexBuffer();
+		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), offset);
+		offset += static_cast<UShort>(pVertexBuffer->GetQuantity());
+		size = pIndexBuffer->GetQuantity() * sizeof(UShort) +
+			reinterpret_cast<UInt>(pIBRaw);
+		pIBRaw = reinterpret_cast<void*>(size);
+
+		indexCount += pIndexBuffer->GetQuantity();
+	}
+
+	pVBPdr->Unlock();
+	pIBPdr->Unlock();
+
+	Geometry* pGeometry = StaticCast<Geometry>(pVisible[min].Object);
+	Set(pGeometry->States);
+	Set(pGeometry->Lights);
+	if (mspVertexBuffer)
+	{
+		Disable(mspVertexBuffer);
+		mspVertexBuffer = NULL;
+	}
+
+	if (mspIndexBuffer)
+	{
+		Disable(mspIndexBuffer);
+		mspIndexBuffer = NULL;
+	}
+
+	pIBPdr->Enable(this);
+	pVBPdr->Enable(this);
+
+	Set(pGeometry->GetMaterial());
+	
+	Transformation identity;
+	SetWorldTransformation(identity, pGeometry->GetMesh()->GetVertexBuffer()->
+		GetAttributes().HasNormal());
+
+	DrawElements(offset, indexCount, 0);
+
+	pVBPdr->Disable(this);
+	pIBPdr->Disable(this);
 }
 
 //----------------------------------------------------------------------------

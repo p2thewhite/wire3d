@@ -11,6 +11,8 @@
 #define WIREGXINDEXBUFFER_H
 
 #include "WireBuffer.h"
+#include "WireGXRendererData.h"
+#include "WireRenderer.h"
 #include "WireTMap.h"
 #include "WireTypes.h"
 
@@ -28,8 +30,11 @@ public:
 	PdrIndexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrIndexBuffer();
 
-	void Enable(Renderer* pRenderer);
-	void Disable(Renderer* pRenderer);
+	inline void Enable(Renderer* pRenderer);
+	inline void Disable(Renderer* pRenderer);
+
+	inline void* Lock(Buffer::LockingMode mode);
+	inline void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
 

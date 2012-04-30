@@ -268,7 +268,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		PdrDisplayList* pDisplayList = NULL;
 
 		Bool isStatic = ((indexOffset == 0) && 
-			(activeIndexCount == mspIndexBuffer->GetQuantity()));
+			(activeIndexCount == rIBuffer.GetQuantity()));
 
 		if (pEntry)
 		{
@@ -290,6 +290,55 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 			mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
 				GetBuffer(), activeIndexCount, indexOffset);
 		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DrawElements(UInt vertexCount, UInt activeIndexCount,
+	UInt indexOffset)
+{
+	mStatistics.DrawCalls++;
+	mStatistics.Triangles += activeIndexCount/3;
+
+	mpData->IsFrameBufferDirty = true;
+
+	GXSetNumChans(1);
+
+	Bool hasTextures = false;
+	if (mspMaterial)
+	{
+		UInt textureCount = mspMaterial->GetTextureQuantity();
+		if (textureCount > 0)
+		{
+			hasTextures = true;
+			GXSetNumTexGens(textureCount);
+			GXSetNumTevStages(textureCount);
+		}
+	}
+
+	if (!hasTextures)
+	{
+		GXSetNumTexGens(0);
+		GXSetNumTevStages(1);
+		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
+			GX_COLOR0A0);
+		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
+	}
+
+	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
+	WIRE_ASSERT(pPdrVBuffer);
+	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;
+	WIRE_ASSERT(pPdrIBuffer);
+
+	if (GetStateWireframe() && GetStateWireframe()->Enabled)
+	{
+		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
+			GetBuffer(), activeIndexCount, indexOffset);
+	}
+	else
+	{
+		mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->GetBuffer(),
+			activeIndexCount, indexOffset);
 	}
 }
 

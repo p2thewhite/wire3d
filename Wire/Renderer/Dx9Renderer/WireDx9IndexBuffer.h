@@ -28,14 +28,13 @@ class PdrIndexBuffer
 public:
 	PdrIndexBuffer(Renderer* pRenderer, const IndexBuffer* pIndexBuffer);
 	PdrIndexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
-
 	~PdrIndexBuffer();
 
 	inline void Enable(Renderer* pRenderer);
 	inline void Disable(Renderer* pRenderer);
 
-	void* Lock(Buffer::LockingMode mode);
-	void Unlock();
+	inline void* Lock(Buffer::LockingMode mode);
+	inline void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
 
