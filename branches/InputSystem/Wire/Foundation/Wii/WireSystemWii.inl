@@ -9,6 +9,7 @@
 #include "WireApplication.h"
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
+#include "WireInputSystem.h"
 #include <stdlib.h>
 #include <cstring>
 
@@ -64,6 +65,7 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 {
 	Application* pApp = Application::GetApplication();
 	Renderer* pRenderer = pApp->GetRenderer();
+	InputSystem* pInputSystem = pApp->GetInputSystem();
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();
@@ -72,17 +74,24 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile,
 		lineNumber);
 
-	Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
-
-	do
+	if (pInputSystem->GetInputDevicesCount() > 0)
 	{
-		WPAD_ScanPads();
-		if (WPAD_ButtonsDown(0) & Application::KEY_ESCAPE)
+		Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
+	
+		do
 		{
-			exit(0);
-		}
-
-	} while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_A));
+			pInputSystem->Capture();
+			if (pInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
+			{
+				exit(0);
+			}
+	
+		} while (!(pInputSystem->GetInputDevice(0)->GetButton(BUTTON_A)));
+	}
+	else
+	{
+		exit(0);
+	}
 }
 
 //----------------------------------------------------------------------------

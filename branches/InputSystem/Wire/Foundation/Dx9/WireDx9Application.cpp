@@ -30,8 +30,6 @@ using namespace Wire;
 #define PtrToInt(p)  ((INT)(INT_PTR)(p))
 #endif
 
-const UInt Application::KEY_ESCAPE = VK_ESCAPE;
-
 //----------------------------------------------------------------------------
 Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
@@ -93,74 +91,74 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 		UChar key = static_cast<UChar>(wParam);
 
 		// quit application if the KEY_TERMINATE key is pressed
-		if (key == pApp->KEY_TERMINATE)
+		/*if (key == pApp->KEY_TERMINATE)
 		{
 			PostQuitMessage(0);
 			return 0;
-		}
+		}*/
 
 		return 0;
 	}
 
 	case WM_LBUTTONDOWN:
 	{
-		pApp->OnButton(Application::BUTTON_A, Application::BUTTON_PRESS);
+		//pApp->OnButton(Application::BUTTON_A, Application::BUTTON_PRESS);
 		return 0;
 	}
 
 	case WM_LBUTTONUP:
 	{
-		pApp->OnButton(Application::BUTTON_A, Application::BUTTON_RELEASE);
+		//pApp->OnButton(Application::BUTTON_A, Application::BUTTON_RELEASE);
 		return 0;
 	}
 
 	case WM_RBUTTONDOWN:
 	{
-		pApp->OnButton(Application::BUTTON_B, Application::BUTTON_PRESS);
+		//pApp->OnButton(Application::BUTTON_B, Application::BUTTON_PRESS);
 		return 0;
 	}
 
 	case WM_RBUTTONUP:
 	{
-		pApp->OnButton(Application::BUTTON_B, Application::BUTTON_RELEASE);
+		//pApp->OnButton(Application::BUTTON_B, Application::BUTTON_RELEASE);
 		return 0;
 	}
 
 	case WM_KEYDOWN:
 	{
 		Int virtKey = Int(wParam);
-		UInt state = Application::BUTTON_PRESS;
+		//UInt state = Application::BUTTON_PRESS;
 	
 		switch (virtKey)
 		{
 		case VK_LEFT:
 		{
-			pApp->OnButton(Application::BUTTON_LEFT, state);
+			//pApp->OnButton(Application::BUTTON_LEFT, state);
 			return 0;
 		}
 		case VK_RIGHT:
 		{
-			pApp->OnButton(Application::BUTTON_RIGHT, state);
+			//pApp->OnButton(Application::BUTTON_RIGHT, state);
 			return 0;
 		}
 		case VK_UP:
 		{
-			pApp->OnButton(Application::BUTTON_UP, state);
+			//pApp->OnButton(Application::BUTTON_UP, state);
 			return 0;
 		}
 		case VK_DOWN:
 		{
-			pApp->OnButton(Application::BUTTON_DOWN, state);
+			//pApp->OnButton(Application::BUTTON_DOWN, state);
 			return 0;
 		}
 		case '1':
 		{
-			pApp->OnButton(Application::BUTTON_1, state);
+			//pApp->OnButton(Application::BUTTON_1, state);
 			return 0;
 		}
 		case '2':
 		{
-			pApp->OnButton(Application::BUTTON_2, state);
+			//pApp->OnButton(Application::BUTTON_2, state);
 			return 0;
 		}
 		}
@@ -171,38 +169,38 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 	case WM_KEYUP:
 	{
 		Int virtKey = Int(wParam);
-		UInt state = Application::BUTTON_RELEASE;
+		//UInt state = Application::BUTTON_RELEASE;
 
 		switch (virtKey)
 		{
 		case VK_LEFT:
 		{
-			pApp->OnButton(Application::BUTTON_LEFT, state);
+			//pApp->OnButton(Application::BUTTON_LEFT, state);
  			return 0;
 		}
 		case VK_RIGHT:
 		{
-			pApp->OnButton(Application::BUTTON_RIGHT, state);
+			//pApp->OnButton(Application::BUTTON_RIGHT, state);
 			return 0;
 		}
 		case VK_UP:
 		{
-			pApp->OnButton(Application::BUTTON_UP, state);
+			//pApp->OnButton(Application::BUTTON_UP, state);
 			return 0;
 		}
 		case VK_DOWN:
 		{
-			pApp->OnButton(Application::BUTTON_DOWN, state);
+			//pApp->OnButton(Application::BUTTON_DOWN, state);
 			return 0;
 		}
 		case '1':
 		{
-			pApp->OnButton(Application::BUTTON_1, state);
+			//pApp->OnButton(Application::BUTTON_1, state);
 			return 0;
 		}
 		case '2':
 		{
-			pApp->OnButton(Application::BUTTON_2, state);
+			//pApp->OnButton(Application::BUTTON_2, state);
 			return 0;
 		}
 		}

@@ -4,10 +4,19 @@
 
 #include "Importer.h"
 #include "Cursors.h"
+#include "WireInputSystem.h"
+#include "WireInputCapability.h"
+#include <set>
 
 using namespace Wire;
 
-WIRE_APPLICATION(Sample11);
+WIRE_APPLICATION (Sample11);
+
+//----------------------------------------------------------------------------
+Sample11::Sample11() :
+		mInputDevicesStateChanged(false)
+{
+}
 
 //----------------------------------------------------------------------------
 Bool Sample11::OnInitialize()
@@ -17,9 +26,12 @@ Bool Sample11::OnInitialize()
 		return false;
 	}
 
+	GetInputSystem()->GetDevicesDiscoveryStrategy()->AddInputDeviceDiscoveryListener(this);
+
 	InitCursors();
 
-	mspGuiCamera = WIRE_NEW Camera(/* isPerspective */ false);
+	mspGuiCamera = WIRE_NEW
+	Camera(/* isPerspective */false);
 	mCuller.SetCamera(mspGuiCamera);
 	return true;
 }
@@ -50,10 +62,19 @@ void Sample11::OnIdle()
 	// Wire3D uses the OpenGL convention of (0,0) being at the bottom left
 	// corner of the screen.
 	SetCursor(xPos, yPos, CM_POINTING, 0 /* player 0 (generic hand */, zRoll);
-	SetCursor(xPos/2, yPos/2, CM_SECONDARY_BUTTON_PRESSED, /* player no */4);
+	SetCursor(xPos / 2, yPos / 2, CM_SECONDARY_BUTTON_PRESSED, /* player no */
+	4);
 
 	mspCursors->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspCursors);
+
+	if (mInputDevicesStateChanged)
+	{
+		PrintInputDevicesInformation();
+		mInputDevicesStateChanged = false;
+	}
+
+	PrintKeyStates();
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspGuiCamera);
@@ -63,8 +84,13 @@ void Sample11::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo,
-	Float zRollInRadian)
+void Sample11::Update()
+{
+	mInputDevicesStateChanged = true;
+}
+
+//----------------------------------------------------------------------------
+void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo, Float zRollInRadian)
 {
 	if (playerNo >= mspCursors->GetQuantity())
 	{
@@ -72,14 +98,14 @@ void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo,
 		return;
 	}
 
-	Node* pCursors = DynamicCast<Node>(mspCursors->GetChild(playerNo));
+	Node* pCursors = DynamicCast < Node > (mspCursors->GetChild(playerNo));
 	WIRE_ASSERT(pCursors);
 	WIRE_ASSERT(pCursors->GetQuantity() == 3);
 	for (UInt i = 0; i < pCursors->GetQuantity(); i++)
 	{
-		pCursors->GetChild(i)->Culling = Spatial::CULL_ALWAYS;		
+		pCursors->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
 	}
-	
+
 	switch (mode)
 	{
 	case CM_OFF:
@@ -112,45 +138,54 @@ void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo,
 //----------------------------------------------------------------------------
 void Sample11::InitCursors()
 {
-	mspCursors = WIRE_NEW Node;
-	mspCursorsAlpha = WIRE_NEW StateAlpha();
+	mspCursors = WIRE_NEW
+	Node;
+	mspCursorsAlpha = WIRE_NEW
+	StateAlpha();
 	mspCursorsAlpha->BlendEnabled = true;
 	mspCursors->AttachState(mspCursorsAlpha);
 
 	Image2D* pImage = Importer::DecodePNG(Cursors::PNG, Cursors::SIZE, false);
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
-	mspMaterial = WIRE_NEW Material();
+	Texture2D * pTexture = WIRE_NEW
+	Texture2D(pImage);
+	mspMaterial = WIRE_NEW
+	Material();
 	mspMaterial->AddTexture(pTexture, Material::BM_REPLACE);
 
-	Node* pPlayer0 = WIRE_NEW Node;
+	Node * pPlayer0 = WIRE_NEW
+	Node;
 	mspCursors->AttachChild(pPlayer0);
 	pPlayer0->AttachChild(CreateCursor(0.25F, 0.75F));
 	pPlayer0->AttachChild(CreateCursor(0, 0.75F));
 	pPlayer0->AttachChild(CreateCursor(0.5F, 0.75F));
 
-	Node* pPlayer1 = WIRE_NEW Node;
+	Node * pPlayer1 = WIRE_NEW
+	Node;
 	mspCursors->AttachChild(pPlayer1);
- 	pPlayer1->AttachChild(CreateCursor(0, 0.25F));
+	pPlayer1->AttachChild(CreateCursor(0, 0.25F));
 	pPlayer1->AttachChild(CreateCursor(0, 0));
- 	pPlayer1->AttachChild(CreateCursor(0, 0.5F));
+	pPlayer1->AttachChild(CreateCursor(0, 0.5F));
 
-	Node* pPlayer2 = WIRE_NEW Node;
+	Node * pPlayer2 = WIRE_NEW
+	Node;
 	mspCursors->AttachChild(pPlayer2);
- 	pPlayer2->AttachChild(CreateCursor(0.25F, 0.25F));
+	pPlayer2->AttachChild(CreateCursor(0.25F, 0.25F));
 	pPlayer2->AttachChild(CreateCursor(0.25F, 0));
- 	pPlayer2->AttachChild(CreateCursor(0.25F, 0.5F));
+	pPlayer2->AttachChild(CreateCursor(0.25F, 0.5F));
 
-	Node* pPlayer3 = WIRE_NEW Node;
+	Node * pPlayer3 = WIRE_NEW
+	Node;
 	mspCursors->AttachChild(pPlayer3);
- 	pPlayer3->AttachChild(CreateCursor(0.5F, 0.25F));
+	pPlayer3->AttachChild(CreateCursor(0.5F, 0.25F));
 	pPlayer3->AttachChild(CreateCursor(0.5F, 0));
- 	pPlayer3->AttachChild(CreateCursor(0.5F, 0.5F));
+	pPlayer3->AttachChild(CreateCursor(0.5F, 0.5F));
 
-	Node* pPlayer4 = WIRE_NEW Node;
+	Node * pPlayer4 = WIRE_NEW
+	Node;
 	mspCursors->AttachChild(pPlayer4);
- 	pPlayer4->AttachChild(CreateCursor(0.75F, 0.25F));
+	pPlayer4->AttachChild(CreateCursor(0.75F, 0.25F));
 	pPlayer4->AttachChild(CreateCursor(0.75F, 0));
- 	pPlayer4->AttachChild(CreateCursor(0.75F, 0.5F));
+	pPlayer4->AttachChild(CreateCursor(0.75F, 0.5F));
 
 	mspCursors->UpdateRS();
 }
@@ -160,11 +195,7 @@ Geometry* Sample11::CreateCursor(Float uOffset, Float vOffset)
 {
 	Geometry* pCursor = StandardMesh::CreateQuad(0, 1, false, 32.0f);
 	const Vector2F uvs[] =
-	{
-		Vector2F(0+uOffset, 0+vOffset), Vector2F(0.25f+uOffset, 0+vOffset),
-		Vector2F(0.25f+uOffset, 0.25f+vOffset), Vector2F(0+uOffset, 0.25f+
-		vOffset)
-	};
+	{ Vector2F(0 + uOffset, 0 + vOffset), Vector2F(0.25f + uOffset, 0 + vOffset), Vector2F(0.25f + uOffset, 0.25f + vOffset), Vector2F(0 + uOffset, 0.25f + vOffset) };
 
 	VertexBuffer* pVBuffer = pCursor->GetMesh()->GetVertexBuffer();
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
@@ -178,4 +209,86 @@ Geometry* Sample11::CreateCursor(Float uOffset, Float vOffset)
 	pCursor->SetMaterial(mspMaterial);
 
 	return pCursor;
+}
+
+//----------------------------------------------------------------------------
+void Sample11::PrintAndClear(stringstream& message)
+{
+	System::Print(message.str().c_str());
+	message.str("");
+	message.clear();
+}
+
+//----------------------------------------------------------------------------
+void Sample11::PrintInputDevicesInformation()
+{
+	stringstream message;
+
+	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount();
+	PrintAndClear(message);
+
+	for (UInt i = 0; i < mpInputSystem->GetInputDevicesCount(); i++)
+	{
+		const VirtualInputDevice* pVirtualInputDevice = mpInputSystem->GetInputDevice(i);
+
+		message << "Input Device " << i;
+		PrintAndClear(message);
+
+		message << "- Name " << pVirtualInputDevice->GetName();
+		PrintAndClear(message);
+
+		System::Print("- Capabilities: ");
+
+		const set<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
+		set<InputCapability>::iterator iterator = capabilities.begin();
+		while (iterator != capabilities.end())
+		{
+			System::Print(GetInputCapabilityName(*iterator));
+			iterator++;
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Sample11::PrintKeyStates()
+{
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_A))
+	{
+		System::Print("Button 'A' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_B))
+	{
+		System::Print("Button 'B' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_1))
+	{
+		System::Print("Button '1' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_2))
+	{
+		System::Print("Button '2' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_MINUS))
+	{
+		System::Print("Button 'MINUS' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_PLUS))
+	{
+		System::Print("Button 'PLUS' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_Z))
+	{
+		System::Print("Button 'Z' Pressed");
+	}
+
+	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_C))
+	{
+		System::Print("Button 'C' Pressed");
+	}
 }

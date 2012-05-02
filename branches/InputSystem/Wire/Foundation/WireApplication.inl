@@ -11,3 +11,9 @@ inline Renderer* Application::GetRenderer() const
 {
 	return mpRenderer;
 }
+
+//----------------------------------------------------------------------------
+inline InputSystem* Application::GetInputSystem() const
+{
+	return mpInputSystem;
+}

@@ -103,6 +103,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
 					-I$(WIREDIR)/Renderer/GXRenderer \
+					-I$(WIREDIR)/InputSystem \
 					-I$(IMPORTERDIR)/src
 
 #---------------------------------------------------------------------------------

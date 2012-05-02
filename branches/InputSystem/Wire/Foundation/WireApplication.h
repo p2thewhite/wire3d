@@ -17,6 +17,7 @@ namespace Wire
 {
 
 class Renderer;
+class InputSystem;
 
 class Application
 {
@@ -40,7 +41,7 @@ public:
 	virtual void OnTerminate() = 0;
 
 	// Called when a mouse/controller button is pressed/released.
-	virtual void OnButton(UInt button, UInt state);
+	//virtual void OnButton(UInt button, UInt state);
 
 	// Called when the window is resized.
 	virtual void OnResize(UInt width, UInt height);
@@ -49,24 +50,7 @@ public:
 	static Application* GetApplication(); 
 
 	inline Renderer* GetRenderer() const;
-
-	// Key identifiers. These are platform-specific, so classes that
-	// implement the Application interface must define these variables.
-	// They are not defined by Application.
-	UInt KEY_TERMINATE;  // default KEY_ESCAPE, redefine as desired
-	static const UInt KEY_ESCAPE;
-
-	static const UInt BUTTON_A;
-	static const UInt BUTTON_B;
-	static const UInt BUTTON_LEFT;
-	static const UInt BUTTON_RIGHT;
-	static const UInt BUTTON_UP;
-	static const UInt BUTTON_DOWN;
-	static const UInt BUTTON_1;
-	static const UInt BUTTON_2;
-
-	static const UInt BUTTON_PRESS;
-	static const UInt BUTTON_RELEASE;
+	inline InputSystem* GetInputSystem() const;
 
 protected:
 	Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle,
@@ -77,6 +61,7 @@ protected:
 	static Application* s_pApplication;
 
 	Renderer* mpRenderer;
+	InputSystem* mpInputSystem;
 
 	ColorRGBA mBackgroundColor;
 	const Char* mpWindowTitle;
