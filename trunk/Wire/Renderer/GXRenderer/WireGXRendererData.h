@@ -71,6 +71,7 @@ public:
 
 	UChar LightsMask;
 
+	static const UInt DEFAULT_FIFO_SIZE = 256*1024;
 	static const UChar ALPHA_SRC_BLEND[];
 	static const UChar ALPHA_DST_BLEND[];
 	static const UChar CULL_TYPE[];

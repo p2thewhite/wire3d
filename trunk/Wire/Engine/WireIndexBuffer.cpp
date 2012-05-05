@@ -55,34 +55,37 @@ IndexBuffer::~IndexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void IndexBuffer::Copy(UShort* pDst, UShort offset)
+void IndexBuffer::Copy(UShort* pDst, UShort offset, UInt activeIndexCount,
+	UInt startIndex)
 {
+	WIRE_ASSERT(startIndex+activeIndexCount <= mQuantity);
+
 	if (offset == 0)
 	{
 		if (pDst != GetData())
 		{
-			const UInt size = GetQuantity() * sizeof(UShort);
-			System::Memcpy(pDst, size, GetData(), size);
+			const UInt size = activeIndexCount * sizeof(UShort);
+			System::Memcpy(pDst, size, GetData()+startIndex, size);
 		}
 
 		return;
 	}
 
-	UShort* pSrc = GetData();
-	if ((GetQuantity() % 3) == 0)
+	UShort* pSrc = GetData() + startIndex;
+	if ((activeIndexCount % 3) == 0)
 	{
-		for (UInt i = 0; i < GetQuantity(); i+=3)
+		for (UInt i = 0; i < activeIndexCount; i+=3)
 		{
-			pDst[i] = pSrc[i] + offset;
-			pDst[i+1] = pSrc[i+1] + offset;
-			pDst[i+2] = pSrc[i+2] + offset;
+			*pDst++ = *pSrc++ + offset;
+			*pDst++ = *pSrc++ + offset;
+			*pDst++ = *pSrc++ + offset;
 		}
 	}
 	else
 	{
-		for (UInt i = 0; i < GetQuantity(); i++)
+		for (UInt i = 0; i < activeIndexCount; i++)
 		{
-			pDst[i] = pSrc[i] + offset;
+			*pDst++ = *pSrc++ + offset;
 		}
 	}
 }
