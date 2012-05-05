@@ -483,6 +483,18 @@ void Renderer::Resize(UInt width, UInt height)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::SetStaticBatchingThreshold(UInt threshold)
+{
+	mStaticBatchingThreshold = threshold;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetDynamicBatchingThreshold(UInt threshold)
+{
+	mDynamicBatchingThreshold = threshold;
+}
+
+//----------------------------------------------------------------------------
 const DWORD PdrRendererData::BUFFER_LOCKING[Buffer::LM_QUANTITY] = 
 {
 	D3DLOCK_READONLY,           // Buffer::LM_READ_ONLY
@@ -617,3 +629,4 @@ void PdrRendererData::ResetDevice()
 
 	rRenderer.Set(rRenderer.mspStates);
 }
+

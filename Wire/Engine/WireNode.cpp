@@ -10,7 +10,9 @@
 
 #include "WireCuller.h"
 #include "WireEffect.h"
+#include "WireGeometry.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 
 using namespace Wire;
 
@@ -318,6 +320,28 @@ void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 			if (pNode)
 			{
 				pNode->GetAllChildrenByName(rName, rChildren);
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Node::MakeStatic()
+{
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Spatial* pChild = GetChild(i);
+		Node* pNode = DynamicCast<Node>(pChild);
+		if (pNode)
+		{
+			pNode->MakeStatic();
+		}
+		else
+		{
+			Geometry* pGeometry = DynamicCast<Geometry>(pChild);
+			if (pGeometry)
+			{
+				pGeometry->MakeStatic();
 			}
 		}
 	}

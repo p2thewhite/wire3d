@@ -79,15 +79,15 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetStaticBatchingThreshold(UInt treshold)
+inline UInt Renderer::GetStaticBatchingThreshold() const
 {
-	mDynamicBatchingThreshold = treshold;
+	return mStaticBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetDynamicBatchingThreshold(UInt treshold)
+inline UInt Renderer::GetDynamicBatchingThreshold() const
 {
-	mDynamicBatchingThreshold = treshold;
+	return mDynamicBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------

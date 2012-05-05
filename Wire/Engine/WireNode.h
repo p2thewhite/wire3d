@@ -66,6 +66,10 @@ public:
 	void GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
+	// Make the World transformation of the whole subtree static by
+	// setting World(Bound)IsCurrent to true and calling MakeStatic on leaves.
+	void MakeStatic();
+
 protected:
 	// geometric updates
 	virtual void UpdateWorldData(Double appTime);

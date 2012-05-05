@@ -64,8 +64,10 @@ public:
 
 	// Batching
 	void CreateBatchingBuffers(UInt size);
-	inline void SetStaticBatchingThreshold(UInt treshold);
-	inline void SetDynamicBatchingThreshold(UInt treshold);
+	void SetStaticBatchingThreshold(UInt threshold);
+	inline UInt GetStaticBatchingThreshold() const;
+	void SetDynamicBatchingThreshold(UInt threshold);
+	inline UInt GetDynamicBatchingThreshold() const;
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
@@ -204,6 +206,7 @@ public:
 		// accumulated number of draw calls and triangles drawn since last
 		// ResetStatistics()
 		UInt DrawCalls;
+		UInt Batched;
 		UInt Triangles;
 
 		// number of buffers and their total size bound to the Renderer
@@ -231,8 +234,10 @@ private:
 
 	void SetWorldTransformation(Transformation& rWorld, Bool usesNormals);
 
-	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
 	void BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
+	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
+	void Draw(Geometry* pUseStateFrom, PdrIndexBuffer* const pIBPdr,
+		PdrVertexBuffer* const pVBPdr, UShort vertexCount, UInt indexCount);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt activeIndexCount, UInt indexOffset);

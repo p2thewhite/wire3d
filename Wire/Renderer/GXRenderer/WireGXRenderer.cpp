@@ -27,8 +27,6 @@
 
 using namespace Wire;
 
-#define DEFAULT_FIFO_SIZE	(256*1024)
-
 //----------------------------------------------------------------------------
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool, Bool useVSync)
@@ -63,10 +61,10 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	// ConfigureMem
 	void*& rFifoBuffer = mpData->FifoBuffer;
-	rFifoBuffer = memalign(32, DEFAULT_FIFO_SIZE);
-	memset(rFifoBuffer, 0 ,DEFAULT_FIFO_SIZE);
+	rFifoBuffer = memalign(32, PdrRendererData::DEFAULT_FIFO_SIZE);
+	memset(rFifoBuffer, 0 , PdrRendererData::DEFAULT_FIFO_SIZE);
 
-	GXInit(rFifoBuffer, DEFAULT_FIFO_SIZE);
+	GXInit(rFifoBuffer, PdrRendererData::DEFAULT_FIFO_SIZE);
 
 	// clears the bg to color and clears the z buffer
 	SetClearColor(rInput.BackgroundColor);
@@ -429,6 +427,16 @@ void Renderer::OnViewportChange()
 	}
 
 	GXSetScissor(originX, originY, width, height);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetStaticBatchingThreshold(UInt threshold)
+{
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetDynamicBatchingThreshold(UInt threshold)
+{
 }
 
 //----------------------------------------------------------------------------
