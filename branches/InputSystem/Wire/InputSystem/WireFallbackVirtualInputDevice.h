@@ -2,9 +2,7 @@
 #define WIREFALLBACKVIRTUALINPUTDEVICE_H_
 
 #include "WireVirtualInputDevice.h"
-#include <set>
-
-using namespace std;
+#include "WireTHashSet.h"
 
 namespace Wire
 {
@@ -22,9 +20,10 @@ public:
 	virtual Float GetDigitalAxis(DigitalAxis axis) const;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 	virtual Bool HasCapability(InputCapability capability) const;
-	virtual const set<InputCapability>& GetCapabilities() const;
+	virtual const THashSet<InputCapability>& GetCapabilities() const;
 private:
-	set<InputCapability> mCapabilities;
+	// An always empty set of capabilities.
+	THashSet<InputCapability> mCapabilities;
 };
 
 }

@@ -13,9 +13,9 @@ const char* GetIRAxisName(IRAxis axis)
 		return "IR_Y";
 	case IR_Z:
 		return "IR_Z";
+	default:
+		return "INVALID_IR";
 	}
-
-	return 0;
 }
 
 const char* GetDigitalAxisName(DigitalAxis axis)
@@ -30,9 +30,9 @@ const char* GetDigitalAxisName(DigitalAxis axis)
 		return "DIGITAL_UP";
 	case DIGITAL_DOWN:
 		return "DIGITAL_DOWN";
+	default:
+		return "INVALID_DIGITAL";
 	}
-
-	return 0;
 }
 
 const char* GetAnalogAxisName(AnalogAxis axis)
@@ -43,9 +43,9 @@ const char* GetAnalogAxisName(AnalogAxis axis)
 		return "ANALOG_X";
 	case ANALOG_Y:
 		return "ANALOG_Y";
+	default:
+		return "INVALID_ANALOG";
 	}
-
-	return 0;
 }
 
 }

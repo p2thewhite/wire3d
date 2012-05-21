@@ -4,10 +4,8 @@
 #include "WireTypes.h"
 #include "WireVirtualInputDevice.h"
 #include "WireInputDeviceDiscoveryListener.h"
-#include <vector>
-#include <list>
-
-using namespace std;
+#include "WireMemory.h"
+#include "WireTArray.h"
 
 namespace Wire
 {
@@ -20,15 +18,13 @@ public:
 	virtual ~VirtualInputDeviceDiscoveryStrategy();
 
 	virtual void DiscoverVirtualInputDevices() = 0;
-	inline const virtual vector<VirtualInputDevice*>& GetFoundVirtualInputDevices() const;
-	inline void AddInputDeviceDiscoveryListener(
-			InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener);
-	inline void RemoveInputDeviceDiscoveryListener(
-			InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener);
+	inline const virtual TArray<VirtualInputDevice*>& GetFoundVirtualInputDevices() const;
+	inline void AddInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener);
+	inline void RemoveInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener);
 protected:
 	InputSystem* mpInputSystem;
-	vector<VirtualInputDevice*> mVirtualInputDevices;
-	list<InputDeviceDiscoveryListener*> mInputDeviceDiscoveryListeners;
+	TArray<VirtualInputDevice*> mVirtualInputDevices;
+	TArray<InputDeviceDiscoveryListener*> mInputDeviceDiscoveryListeners;
 
 	VirtualInputDeviceDiscoveryStrategy(InputSystem* pInputSystem);
 

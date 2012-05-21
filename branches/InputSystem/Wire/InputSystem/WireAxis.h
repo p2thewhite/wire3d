@@ -6,17 +6,26 @@ namespace Wire
 
 enum IRAxis
 {
-	IR_X, IR_Y, IR_Z
+	IR_X,
+	IR_Y,
+	IR_Z,
+	INVALID_IR
 };
 
 enum DigitalAxis
 {
-	DIGITAL_LEFT, DIGITAL_RIGHT, DIGITAL_UP, DIGITAL_DOWN
+	DIGITAL_LEFT,
+	DIGITAL_RIGHT,
+	DIGITAL_UP,
+	DIGITAL_DOWN,
+	INVALID_DIGITAL
 };
 
 enum AnalogAxis
 {
-	ANALOG_X, ANALOG_Y
+	ANALOG_X,
+	ANALOG_Y,
+	INVALID_ANALOG
 };
 
 const char* GetIRAxisName(IRAxis axis);

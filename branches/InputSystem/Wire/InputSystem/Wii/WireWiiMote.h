@@ -12,9 +12,7 @@ namespace Wire
 
 class WiiMote: public InputDevice
 {
-WIRE_DECLARE_RTTI
-	;
-
+	WIRE_DECLARE_RTTI;
 public:
 	WiiMote(const PlatformKeyMapper* pPlatformKeyMapper);
 	virtual ~WiiMote();
@@ -27,7 +25,6 @@ public:
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 private:
 	WPADData* mpData;
-
 };
 
 }

@@ -1,6 +1,5 @@
 #include "WireWiiMote.h"
 #include "WireInputCapability.h"
-#include "WireUnsupportedInputCapabilityException.h"
 #include "WireButton.h"
 #include "WireAxis.h"
 #include "WireSystem.h"
@@ -14,9 +13,9 @@ WIRE_IMPLEMENT_RTTI(Wire, WiiMote, InputDevice);
 WiiMote::WiiMote(const PlatformKeyMapper* pPlatformKeyMapper) :
 		InputDevice(pPlatformKeyMapper)
 {
-	mCapabilities.insert(BUTTONS);
-	mCapabilities.insert(DIGITAL_AXIS);
-	mCapabilities.insert(IR_AXIS);
+	mCapabilities.Insert(BUTTONS);
+	mCapabilities.Insert(DIGITAL_AXIS);
+	mCapabilities.Insert(IR_AXIS);
 }
 
 WiiMote::~WiiMote()
@@ -79,7 +78,7 @@ Float WiiMote::GetIRAxis(IRAxis axis) const
 		break;
 	default:
 		System::Assert("Unknown IR axis.", "WireWiiMote.cpp", 81);
-		return 0;
+		return -1;
 	}
 }
 
@@ -91,7 +90,7 @@ Bool WiiMote::GetDigitalAxis(DigitalAxis axis) const
 
 Float WiiMote::GetAnalogAxis(AnalogAxis axis) const
 {
-	throw new UnsupportedInputCapabilityException(ANALOG_AXIS);
+	return 0;
 }
 
 }

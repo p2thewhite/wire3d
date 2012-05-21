@@ -14,9 +14,7 @@ namespace Wire
 
 class Nunchuk: public WiiExtension
 {
-WIRE_DECLARE_RTTI
-	;
-
+	WIRE_DECLARE_RTTI;
 public:
 	Nunchuk(const PlatformKeyMapper* pPlatformKeyMapper);
 	virtual ~Nunchuk();

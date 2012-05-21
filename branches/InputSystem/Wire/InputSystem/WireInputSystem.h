@@ -5,9 +5,7 @@
 #include "WireVirtualInputDevice.h"
 #include "WirePlatformKeyMapper.h"
 #include "WireTypes.h"
-#include <vector>
-
-using namespace std;
+#include "WireTArray.h"
 
 namespace Wire
 {

@@ -89,6 +89,13 @@ TKEY* THashSet<TKEY>::Get(const TKEY& rtKey) const
 
 //----------------------------------------------------------------------------
 template <class TKEY>
+inline Bool THashSet<TKEY>::Contains(const TKEY& rKey) const
+{
+	return Get(rKey) != NULL;
+}
+
+//----------------------------------------------------------------------------
+template <class TKEY>
 Bool THashSet<TKEY>::Remove(const TKEY& rKey)
 {
     // find hash table entry for given key
@@ -172,7 +179,7 @@ UInt THashSet<TKEY>::HashFunction(const TKEY& rKey) const
 
 //----------------------------------------------------------------------------
 template <class TKEY>
-THashSet<TKEY>::Iterator::Iterator(THashSet* pHashSet)
+THashSet<TKEY>::Iterator::Iterator(const THashSet* pHashSet)
 	:
 	mpHashSet(pHashSet),
 	mIndex(0),
@@ -211,7 +218,7 @@ TKEY* THashSet<TKEY>::Iterator::GetNext() const
         {
             return &mpItem->mKey;
         }
-        
+
         for (mIndex++; mIndex < mpHashSet->mTableSize; mIndex++)
         {
             if (mpHashSet->mpTable[mIndex])

@@ -1,7 +1,4 @@
 #include "WireFallbackVirtualInputDevice.h"
-#include <set>
-
-using namespace std;
 
 namespace Wire
 {
@@ -49,7 +46,7 @@ Bool FallbackVirtualInputDevice::HasCapability(InputCapability capability) const
 	return false;
 }
 
-const set<InputCapability>& FallbackVirtualInputDevice::GetCapabilities() const
+const THashSet<InputCapability>& FallbackVirtualInputDevice::GetCapabilities() const
 {
 	return mCapabilities;
 }

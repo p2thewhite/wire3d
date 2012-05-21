@@ -19,9 +19,9 @@ const char* BaseVirtualInputDevice::GetName() const
 {
 	string name("[");
 
-	if (mInputDevices.size() > 0)
+	if (!mInputDevices.IsEmpty())
 	{
-		for (UInt i = 0; i < mInputDevices.size(); i++)
+		for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 		{
 			InputDevice* pInputDevice = mInputDevices[i];
 			name += pInputDevice->GetName();
@@ -38,7 +38,7 @@ const char* BaseVirtualInputDevice::GetName() const
 
 Bool BaseVirtualInputDevice::GetButton(Button button) const
 {
-	for (UInt i = 0; i < mInputDevices.size(); i++)
+	for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 	{
 		InputDevice* pInputDevice = mInputDevices[i];
 		if (pInputDevice->HasCapability(BUTTONS))
@@ -55,7 +55,7 @@ Bool BaseVirtualInputDevice::GetButton(Button button) const
 
 Float BaseVirtualInputDevice::GetIRAxis(IRAxis axis) const
 {
-	for (UInt i = 0; i < mInputDevices.size(); i++)
+	for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 	{
 		InputDevice* pInputDevice = mInputDevices[i];
 		if (pInputDevice->HasCapability(IR_AXIS))
@@ -73,7 +73,7 @@ Float BaseVirtualInputDevice::GetIRAxis(IRAxis axis) const
 
 Float BaseVirtualInputDevice::GetDigitalAxis(DigitalAxis axis) const
 {
-	for (UInt i = 0; i < mInputDevices.size(); i++)
+	for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 	{
 		InputDevice* pInputDevice = mInputDevices[i];
 		if (pInputDevice->HasCapability(DIGITAL_AXIS))
@@ -91,7 +91,7 @@ Float BaseVirtualInputDevice::GetDigitalAxis(DigitalAxis axis) const
 
 Float BaseVirtualInputDevice::GetAnalogAxis(AnalogAxis axis) const
 {
-	for (UInt i = 0; i < mInputDevices.size(); i++)
+	for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 	{
 		InputDevice* pInputDevice = mInputDevices[i];
 		if (pInputDevice->HasCapability(ANALOG_AXIS))
@@ -109,35 +109,31 @@ Float BaseVirtualInputDevice::GetAnalogAxis(AnalogAxis axis) const
 
 void BaseVirtualInputDevice::AddInputDevice(InputDevice* pInputDevice)
 {
-	mInputDevices.push_back(pInputDevice);
+	mInputDevices.Append(pInputDevice);
 
 	UpdateCapabilities();
 }
 
-void BaseVirtualInputDevice::AddInputDevice(InputDevice* pInputDevice,
-		UInt index)
+void BaseVirtualInputDevice::AddInputDevice(InputDevice* pInputDevice, UInt index)
 {
-	mInputDevices.insert(mInputDevices.begin() + index, pInputDevice);
+	mInputDevices.Insert(index, pInputDevice);
 
 	UpdateCapabilities();
 }
 
 void BaseVirtualInputDevice::UpdateCapabilities()
 {
-	mCapabilities.clear();
+	mCapabilities.RemoveAll();
 
-	for (UInt i = 0; i < mInputDevices.size(); i++)
+	for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
 	{
 		InputDevice* pInputDevice = mInputDevices[i];
-		const set<InputCapability> &mInputDeviceCapabilities =
-				pInputDevice->GetCapabilities();
-		set<InputCapability>::const_iterator iterator =
-				mInputDeviceCapabilities.begin();
-		while (iterator != mInputDeviceCapabilities.end())
+		THashSet<InputCapability>::Iterator iterator(&pInputDevice->GetCapabilities());
+
+		InputCapability* pCapability;
+		while ((pCapability = iterator.GetNext()) != NULL)
 		{
-			InputCapability capability = (*iterator);
-			mCapabilities.insert(capability);
-			iterator++;
+			mCapabilities.Insert(*pCapability);
 		}
 	}
 }

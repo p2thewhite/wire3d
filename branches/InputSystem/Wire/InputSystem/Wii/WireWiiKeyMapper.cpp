@@ -1,6 +1,4 @@
 #include "WireWiiKeyMapper.h"
-#include "WireUnmappedPlatformKeyException.h"
-#include "WireUnmappedVirtualKeyException.h"
 #include "WireSystem.h"
 #include <wiiuse/wpad.h>
 
@@ -39,7 +37,7 @@ UInt WiiKeyMapper::GetPlatformKeyForButton(Button button) const
 		return WPAD_NUNCHUK_BUTTON_C;
 	default:
 		System::Assert("Unknown key.", "WiiPlatformKeyMapper.cpp", 34);
-		throw new UnmappedVirtualKeyException(button);
+		return WPAD_INVALID_BUTTON;
 	}
 }
 
@@ -62,13 +60,13 @@ UInt WiiKeyMapper::GetPlatformKeyForDigitalAxis(DigitalAxis axis) const
 		return WPAD_BUTTON_DOWN;
 	default:
 		System::Assert("Unknown digital axis.", "WiiPlatformKeyMapper.cpp", 60);
-		throw new UnmappedVirtualKeyException(axis);
+		return WPAD_INVALID_BUTTON;
 	}
 }
 
 UInt WiiKeyMapper::GetPlatformKeyForAnalogAxis(AnalogAxis axis) const
 {
-	throw new UnmappedVirtualKeyException(axis);
+	return 0;
 }
 
 Button WiiKeyMapper::GetButtonForPlatformKey(UInt key) const
@@ -91,24 +89,36 @@ Button WiiKeyMapper::GetButtonForPlatformKey(UInt key) const
 		return BUTTON_HOME;
 	default:
 		System::Assert("Unknown platform key.", "WiiPlatformKeyMapper.cpp", 58);
-		// TODO: Invalid key.
-		return BUTTON_HOME;
+		return INVALID_BUTTON;
 	}
 }
 
 IRAxis WiiKeyMapper::GetIRAxisForPlatformKey(UInt key) const
 {
-	throw new UnmappedPlatformKeyException(key);
+	return INVALID_IR;
 }
 
 DigitalAxis WiiKeyMapper::GetDigitalAxisForPlatformKey(UInt key) const
 {
-	return DIGITAL_LEFT;
+	switch (key)
+	{
+	case WPAD_BUTTON_LEFT:
+		return DIGITAL_LEFT;
+	case WPAD_BUTTON_RIGHT:
+		return DIGITAL_RIGHT;
+	case WPAD_BUTTON_UP:
+		return DIGITAL_UP;
+	case WPAD_BUTTON_DOWN:
+		return DIGITAL_DOWN;
+	default:
+		System::Assert("Unknown platform key.", "WiiPlatformKeyMapper.cpp", 58);
+		return INVALID_DIGITAL;
+	}
 }
 
 AnalogAxis WiiKeyMapper::GetAnalogAxisForPlatformKey(UInt key) const
 {
-	throw new UnmappedPlatformKeyException(key);
+	return INVALID_ANALOG;
 }
 
 }

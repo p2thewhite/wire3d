@@ -7,20 +7,15 @@
 #include "WireAxis.h"
 #include "WireInputCapability.h"
 #include "WirePlatformKeyMapper.h"
-#include <vector>
-#include <set>
-#include <algorithm>
-
-using namespace std;
+#include "WireTArray.h"
+#include "WireTHashSet.h"
 
 namespace Wire
 {
 
 class InputDevice: public Object
 {
-WIRE_DECLARE_RTTI
-	;
-
+	WIRE_DECLARE_RTTI;
 public:
 	virtual ~InputDevice();
 
@@ -30,12 +25,12 @@ public:
 	virtual Bool GetDigitalAxis(DigitalAxis axis) const = 0;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const = 0;
 
-	inline const set<InputCapability>& GetCapabilities() const;
+	inline const THashSet<InputCapability>& GetCapabilities() const;
 	inline Bool HasCapability(InputCapability capability) const;
 protected:
 	InputDevice(const PlatformKeyMapper* pPlatformKeyMapper);
 
-	set<InputCapability> mCapabilities;
+	THashSet<InputCapability> mCapabilities;
 	const PlatformKeyMapper* mpPlatformKeyMapper;
 };
 

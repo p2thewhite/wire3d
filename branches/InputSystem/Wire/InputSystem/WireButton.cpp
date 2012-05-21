@@ -25,9 +25,9 @@ const char* GetButtonName(Button button)
 		return "BUTTON_MINUS";
 	case BUTTON_HOME:
 		return "BUTTON_HOME";
+	default:
+		return "INVALID_BUTTON";
 	}
-
-	return "UNKNOWN";
 }
 
 }

@@ -3,8 +3,6 @@
 #include "WireMemory.h"
 #include "WireFallbackVirtualInputDevice.h"
 
-using namespace std;
-
 namespace Wire
 {
 
@@ -43,10 +41,9 @@ void InputSystem::AfterInputDevicesDiscovery()
 
 void InputSystem::Capture()
 {
-	const vector<VirtualInputDevice*>& virtualInputDevices =
-			mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
+	const TArray<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
 
-	for (UInt i = 0; i < virtualInputDevices.size(); i++)
+	for (UInt i = 0; i < virtualInputDevices.GetQuantity(); i++)
 	{
 		VirtualInputDevice* pVirtualInputDevice = virtualInputDevices[i];
 		pVirtualInputDevice->Capture();

@@ -23,8 +23,7 @@ private:
 	Float mScreenWidth;
 	Float mScreenHeight;
 
-	static void ReadWPADPendingEventsCallback(int channel,
-			const WPADData* data);
+	static void ReadWPADPendingEventsCallback(int channel, const WPADData* data);
 };
 
 }

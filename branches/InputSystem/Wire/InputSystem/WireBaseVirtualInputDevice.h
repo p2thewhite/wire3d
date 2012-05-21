@@ -6,10 +6,8 @@
 #include "WireButton.h"
 #include "WireAxis.h"
 #include "WireInputDevice.h"
-#include <vector>
-#include <set>
-
-using namespace std;
+#include "WireTArray.h"
+#include "WireTHashSet.h"
 
 namespace Wire
 {
@@ -29,7 +27,7 @@ public:
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 
 	inline virtual Bool HasCapability(InputCapability capability) const;
-	inline virtual const set<InputCapability>& GetCapabilities() const;
+	inline virtual const THashSet<InputCapability>& GetCapabilities() const;
 
 	friend class InputSystem;
 	friend class InputDevice;
@@ -40,8 +38,8 @@ protected:
 	void AddInputDevice(InputDevice* pInputDevice, UInt index);
 	inline InputDevice* GetInputDevice(UInt index);
 private:
-	vector<InputDevice*> mInputDevices;
-	set<InputCapability> mCapabilities;
+	TArray<InputDevice*> mInputDevices;
+	THashSet<InputCapability> mCapabilities;
 
 	void UpdateCapabilities();
 };

@@ -14,7 +14,8 @@ enum Button
 	BUTTON_C,
 	BUTTON_HOME,
 	BUTTON_MINUS,
-	BUTTON_PLUS
+	BUTTON_PLUS,
+	INVALID_BUTTON
 };
 
 const char* GetButtonName(Button button);

@@ -15,9 +15,9 @@ const char* GetInputCapabilityName(InputCapability inputCapability)
 		return "DIGITAL_AXIS";
 	case ANALOG_AXIS:
 		return "ANALOG_AXIS";
+	default:
+		return "UKNOWN_CAPABILITY";
 	}
-
-	return 0;
 }
 
 }

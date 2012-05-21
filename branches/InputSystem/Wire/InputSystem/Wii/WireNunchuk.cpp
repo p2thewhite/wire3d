@@ -1,5 +1,4 @@
 #include "WireNunchuk.h"
-#include "WireUnsupportedInputCapabilityException.h"
 
 namespace Wire
 {
@@ -9,8 +8,8 @@ WIRE_IMPLEMENT_RTTI(Wire, Nunchuk, InputDevice);
 Nunchuk::Nunchuk(const PlatformKeyMapper* pPlatformKeyMapper) :
 		WiiExtension(pPlatformKeyMapper)
 {
-	mCapabilities.insert(BUTTONS);
-	mCapabilities.insert(ANALOG_AXIS);
+	mCapabilities.Insert(BUTTONS);
+	mCapabilities.Insert(ANALOG_AXIS);
 }
 
 Nunchuk::~Nunchuk()
@@ -54,12 +53,12 @@ Bool Nunchuk::GetButton(Button button) const
 
 Float Nunchuk::GetIRAxis(IRAxis axis) const
 {
-	throw new UnsupportedInputCapabilityException(IR_AXIS);
+	return 0;
 }
 
 Bool Nunchuk::GetDigitalAxis(DigitalAxis axis) const
 {
-	throw new UnsupportedInputCapabilityException(DIGITAL_AXIS);
+	return 0;
 }
 
 Float Nunchuk::GetAnalogAxis(AnalogAxis axis) const

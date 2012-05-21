@@ -23,6 +23,8 @@
 // happen.
 
 #include "WireTypes.h"
+#include "WireMath.h"
+#include "WireMemory.h"
 
 namespace Wire
 {
@@ -47,6 +49,7 @@ public:
 	// This allows a subset of TKEY members to be used in key comparison,
 	// but gives the caller a chance to modify other TKEY members.
 	TKEY* Get(const TKEY& rKey) const;
+	inline Bool Contains(const TKEY& rKey) const;
 
 	Bool Remove(const TKEY& rKey);
 	void RemoveAll();
@@ -61,16 +64,17 @@ public:
 	};
 
 	// linear traversal of table
+	// NOTE: in comparison to a SDL iterator, it's similar to a const iterator.
 	class Iterator
 	{
 	public:
-		Iterator(THashSet* pHashSet);
+		Iterator(const THashSet* pHashSet);
 
 		TKEY* GetFirst() const;
 		TKEY* GetNext() const;
 
 	private:
-		THashSet* mpHashSet;
+		const THashSet* mpHashSet;
 		mutable UInt mIndex;
 		mutable HashItem* mpItem;
 	};

@@ -5,9 +5,7 @@
 #include "WireButton.h"
 #include "WireAxis.h"
 #include "WireInputCapability.h"
-#include <set>
-
-using namespace std;
+#include "WireTHashSet.h"
 
 namespace Wire
 {
@@ -24,7 +22,7 @@ public:
 	virtual Float GetDigitalAxis(DigitalAxis axis) const = 0;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const = 0;
 	virtual Bool HasCapability(InputCapability capability) const = 0;
-	virtual const set<InputCapability>& GetCapabilities() const = 0;
+	virtual const THashSet<InputCapability>& GetCapabilities() const = 0;
 protected:
 	VirtualInputDevice();
 };

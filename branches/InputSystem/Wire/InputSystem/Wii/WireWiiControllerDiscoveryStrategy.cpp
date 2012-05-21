@@ -13,10 +13,10 @@ namespace Wire
 const Int WiiControllerDiscoveryStrategy::FIRST_CHANNEL = 0;
 const Int WiiControllerDiscoveryStrategy::LAST_CHANNEL = 3;
 
-WiiControllerDiscoveryStrategy::WiiControllerDiscoveryStrategy(
-		InputSystem* pInputSystem) :
-		VirtualInputDeviceDiscoveryStrategy(pInputSystem), mLastDiscoveredChannel(
-				-1), mChanged(false)
+WiiControllerDiscoveryStrategy::WiiControllerDiscoveryStrategy(InputSystem* pInputSystem) :
+		VirtualInputDeviceDiscoveryStrategy(pInputSystem),
+		mLastDiscoveredChannel(-1),
+		mChanged(false)
 {
 }
 
@@ -27,11 +27,9 @@ WiiControllerDiscoveryStrategy::~WiiControllerDiscoveryStrategy()
 void WiiControllerDiscoveryStrategy::UpdateCurrentlyConnectedChannels()
 {
 	// Updating currently connected channels.
-	for (Int channel = FIRST_CHANNEL; channel <= mLastDiscoveredChannel;
-			channel++)
+	for (Int channel = FIRST_CHANNEL; channel <= mLastDiscoveredChannel; channel++)
 	{
-		WiiController* pWiiController =
-				static_cast<WiiController*>(mVirtualInputDevices[channel]);
+		WiiController* pWiiController =	static_cast<WiiController*>(mVirtualInputDevices[channel]);
 
 		if (pWiiController->HasWiiExtension())
 		{
@@ -45,8 +43,7 @@ void WiiControllerDiscoveryStrategy::UpdateCurrentlyConnectedChannels()
 void WiiControllerDiscoveryStrategy::ProbePreviouslyConnectedChannels()
 {
 	// Probing previously disconnected channels.
-	for (Int channel = mLastDiscoveredChannel + 1; channel <= LAST_CHANNEL;
-			channel++)
+	for (Int channel = mLastDiscoveredChannel + 1; channel <= LAST_CHANNEL;	channel++)
 	{
 		if (!IsWiiMoteConnectedToChannel(channel))
 		{
@@ -54,10 +51,9 @@ void WiiControllerDiscoveryStrategy::ProbePreviouslyConnectedChannels()
 		}
 
 		WiiController * pWiiController = WIRE_NEW WiiController(channel);
-		mVirtualInputDevices.push_back(pWiiController);
+		mVirtualInputDevices.Append(pWiiController);
 
-		pWiiController->SetWiiMote(
-				WIRE_NEW WiiMote(mpInputSystem->GetPlatformKeyMapper()));
+		pWiiController->SetWiiMote(WIRE_NEW WiiMote(mpInputSystem->GetPlatformKeyMapper()));
 
 		DiscoverExtensions(channel, pWiiController);
 
@@ -83,24 +79,23 @@ void WiiControllerDiscoveryStrategy::DiscoverVirtualInputDevices()
 	NotifyListenersIfChanged();
 }
 
-void WiiControllerDiscoveryStrategy::DiscoverExtensions(Int channel,
-		WiiController* pWiiController)
+void WiiControllerDiscoveryStrategy::DiscoverExtensions(Int channel, WiiController* pWiiController)
 {
 	expansion_t data;
 	WPAD_Expansion(channel, &data);
 
 	if (data.type == WPAD_EXP_NONE)
+	{
 		return;
+	}
 
 	switch (data.type)
 	{
 	case WPAD_EXP_NUNCHUK:
-		pWiiController->SetWiiExtension(
-				WIRE_NEW Nunchuk(mpInputSystem->GetPlatformKeyMapper()));
+		pWiiController->SetWiiExtension(WIRE_NEW Nunchuk(mpInputSystem->GetPlatformKeyMapper()));
 		break;
 	default:
-		System::Assert("Unknown wii extension found.",
-				"WireWiiControllerDiscoveryStrategy.cpp", 82);
+		System::Assert("Unknown wii extension found.", "WireWiiControllerDiscoveryStrategy.cpp", 82);
 		return;
 	}
 

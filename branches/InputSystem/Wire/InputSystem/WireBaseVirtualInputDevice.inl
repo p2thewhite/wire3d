@@ -1,19 +1,16 @@
-inline Bool BaseVirtualInputDevice::HasCapability(
-		InputCapability capability) const
+inline Bool BaseVirtualInputDevice::HasCapability(InputCapability capability) const
 {
-	set<InputCapability>::iterator iterator = find(mCapabilities.begin(),
-			mCapabilities.end(), capability);
-	return iterator != mCapabilities.end();
+	return mCapabilities.Contains(capability);
 }
 
-inline const set<InputCapability>& BaseVirtualInputDevice::GetCapabilities() const
+inline const THashSet<InputCapability>& BaseVirtualInputDevice::GetCapabilities() const
 {
 	return mCapabilities;
 }
 
 inline InputDevice* BaseVirtualInputDevice::GetInputDevice(UInt index)
 {
-	if (index >= mInputDevices.size())
+	if (index >= mInputDevices.GetQuantity())
 	{
 		return NULL;
 	}

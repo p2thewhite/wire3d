@@ -1,13 +1,13 @@
 inline UInt InputSystem::GetInputDevicesCount() const
 {
-	return mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices().size();
+	return mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices().GetQuantity();
 }
 
 inline const VirtualInputDevice* InputSystem::GetInputDevice(UInt index) const
 {
-	const vector<VirtualInputDevice*> & virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
+	const TArray<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
 
-	if (index >= virtualInputDevices.size()) 
+	if (index >= virtualInputDevices.GetQuantity())
 	{
 		return mpFallbackVirtualInputDevice;
 	}

@@ -3,6 +3,8 @@
 
 #include "WirePlatformKeyMapper.h"
 
+#define WPAD_INVALID_BUTTON	(0x8000<<16)
+
 namespace Wire
 {
 

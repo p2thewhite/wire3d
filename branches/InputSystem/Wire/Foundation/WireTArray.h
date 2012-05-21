@@ -11,6 +11,7 @@
 #define WIRETARRAY_H
 
 #include "WireSystem.h"
+#include "WireMemory.h"
 
 namespace Wire
 {
@@ -29,6 +30,7 @@ public:
 
 	// element access, index i must be in range
 	inline UInt GetQuantity() const;
+	inline Bool IsEmpty() const;
 	inline T* GetArray();
 	inline const T* GetArray() const;
 	inline T& operator[] (UInt i);

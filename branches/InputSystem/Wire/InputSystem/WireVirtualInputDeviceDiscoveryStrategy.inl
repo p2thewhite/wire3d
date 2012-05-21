@@ -1,27 +1,22 @@
-inline const vector<VirtualInputDevice*>& VirtualInputDeviceDiscoveryStrategy::GetFoundVirtualInputDevices() const
+inline const TArray<VirtualInputDevice*>& VirtualInputDeviceDiscoveryStrategy::GetFoundVirtualInputDevices() const
 {
 	return mVirtualInputDevices;
 }
 
-inline void VirtualInputDeviceDiscoveryStrategy::AddInputDeviceDiscoveryListener(
-		InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener)
+inline void VirtualInputDeviceDiscoveryStrategy::AddInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener)
 {
-	mInputDeviceDiscoveryListeners.push_back(pInputDeviceDiscoveryListener);
+	mInputDeviceDiscoveryListeners.Append(pInputDeviceDiscoveryListener);
 }
 
-inline void VirtualInputDeviceDiscoveryStrategy::RemoveInputDeviceDiscoveryListener(
-		InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener)
+inline void VirtualInputDeviceDiscoveryStrategy::RemoveInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pInputDeviceDiscoveryListener)
 {
-	mInputDeviceDiscoveryListeners.remove(pInputDeviceDiscoveryListener);
+	mInputDeviceDiscoveryListeners.Remove(pInputDeviceDiscoveryListener);
 }
 
 inline void VirtualInputDeviceDiscoveryStrategy::UpdateListeners() const
 {
-	list<InputDeviceDiscoveryListener*>::const_iterator iterator =
-			mInputDeviceDiscoveryListeners.begin();
-	while (iterator != mInputDeviceDiscoveryListeners.end())
+	for (UInt i = 0; i < mInputDeviceDiscoveryListeners.GetQuantity(); i++)
 	{
-		(*iterator)->Update();
-		iterator++;
+		mInputDeviceDiscoveryListeners[i]->Update();
 	}
 }

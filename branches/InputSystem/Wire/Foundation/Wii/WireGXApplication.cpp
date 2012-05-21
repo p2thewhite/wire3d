@@ -21,8 +21,7 @@ GXApplication::GXApplication(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
-	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
-		height, true, useVSync)
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, true, useVSync)
 {
 }
 

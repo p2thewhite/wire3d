@@ -8,7 +8,8 @@ const UInt WiiController::WIIMOTE_INDEX = 0;
 const UInt WiiController::WIIEXTENSION_INDEX = 1;
 
 WiiController::WiiController(UInt channel) :
-		BaseVirtualInputDevice(), mChannel(channel)
+		BaseVirtualInputDevice(),
+		mChannel(channel)
 {
 	// Register expected data format on WPAD lib.
 	WPAD_SetDataFormat(mChannel, WPAD_FMT_BTNS_ACC_IR);
@@ -31,8 +32,7 @@ void WiiController::Capture()
 	}
 }
 
-void WiiController::SetIRCaptureArea(Float x, Float y, Float width,
-		Float height)
+void WiiController::SetIRCaptureArea(Float x, Float y, Float width, Float height)
 {
 	// TODO: What about the x and y offsets?
 	WPAD_SetVRes(mChannel, width, height);

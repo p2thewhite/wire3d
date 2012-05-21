@@ -12,7 +12,9 @@ namespace Wire
 UInt WiiInputSystem::mEventCounter = 0;
 
 WiiInputSystem::WiiInputSystem(Float screenWidth, Float screenHeight) :
-		InputSystem(), mScreenWidth(screenWidth), mScreenHeight(screenHeight)
+		InputSystem(),
+		mScreenWidth(screenWidth),
+		mScreenHeight(screenHeight)
 {
 	mpDevicesDiscoveryStrategy = WIRE_NEW WiiControllerDiscoveryStrategy(this);
 	mpPlatformKeyMapper = WIRE_NEW WiiKeyMapper();
@@ -28,27 +30,23 @@ WiiInputSystem::~WiiInputSystem()
 
 void WiiInputSystem::AfterInputDevicesDiscovery()
 {
-	const vector<VirtualInputDevice*>& virtualInputDevices =
-			mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
+	const TArray<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
 
-	for (UInt i = 0; i < virtualInputDevices.size(); i++)
+	for (UInt i = 0; i < virtualInputDevices.GetQuantity(); i++)
 	{
-		WiiController* pWiiController =
-				dynamic_cast<WiiController*>(virtualInputDevices[i]);
+		WiiController* pWiiController = dynamic_cast<WiiController*>(virtualInputDevices[i]);
 		pWiiController->SetIRCaptureArea(0, 0, mScreenWidth, mScreenHeight);
 	}
 }
 
 void WiiInputSystem::Capture()
 {
-	WPAD_ReadPending(WPAD_CHAN_ALL,
-			&WiiInputSystem::ReadWPADPendingEventsCallback);
+	WPAD_ReadPending(WPAD_CHAN_ALL,	&WiiInputSystem::ReadWPADPendingEventsCallback);
 
 	InputSystem::Capture();
 }
 
-void WiiInputSystem::ReadWPADPendingEventsCallback(int channel,
-		const WPADData* data)
+void WiiInputSystem::ReadWPADPendingEventsCallback(int channel, const WPADData* data)
 {
 	WiiInputSystem::mEventCounter++;
 }
