@@ -30,9 +30,11 @@ WiiInputSystem::~WiiInputSystem()
 
 void WiiInputSystem::AfterInputDevicesDiscovery()
 {
-	const TArray<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
+	//const TArray<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
+	const vector<VirtualInputDevice*>& virtualInputDevices = mpDevicesDiscoveryStrategy->GetFoundVirtualInputDevices();
 
-	for (UInt i = 0; i < virtualInputDevices.GetQuantity(); i++)
+	//for (UInt i = 0; i < virtualInputDevices.GetQuantity(); i++)
+	for (UInt i = 0; i < virtualInputDevices.size(); i++)
 	{
 		WiiController* pWiiController = dynamic_cast<WiiController*>(virtualInputDevices[i]);
 		pWiiController->SetIRCaptureArea(0, 0, mScreenWidth, mScreenHeight);

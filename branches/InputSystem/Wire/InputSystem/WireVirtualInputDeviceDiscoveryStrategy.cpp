@@ -3,8 +3,7 @@
 namespace Wire
 {
 
-VirtualInputDeviceDiscoveryStrategy::VirtualInputDeviceDiscoveryStrategy(
-		InputSystem* pInputSystem) :
+VirtualInputDeviceDiscoveryStrategy::VirtualInputDeviceDiscoveryStrategy(InputSystem* pInputSystem) :
 		mpInputSystem(pInputSystem)
 {
 }

@@ -51,7 +51,8 @@ void WiiControllerDiscoveryStrategy::ProbePreviouslyConnectedChannels()
 		}
 
 		WiiController * pWiiController = WIRE_NEW WiiController(channel);
-		mVirtualInputDevices.Append(pWiiController);
+		//mVirtualInputDevices.Append(pWiiController);
+		mVirtualInputDevices.push_back(pWiiController);
 
 		pWiiController->SetWiiMote(WIRE_NEW WiiMote(mpInputSystem->GetPlatformKeyMapper()));
 

@@ -6,9 +6,11 @@
 #include "Cursors.h"
 #include "WireInputSystem.h"
 #include "WireInputCapability.h"
-#include "WireTHashSet.h"
+//#include "WireTHashSet.h"
+#include <set>
 
 using namespace Wire;
+using namespace std;
 
 WIRE_APPLICATION (Sample11);
 
@@ -228,12 +230,19 @@ void Sample11::PrintInputDevicesInformation()
 
 		System::Print("- Capabilities: ");
 
-		const THashSet<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
+		/*const THashSet<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
 		THashSet<InputCapability>::Iterator iterator(&capabilities);
 		InputCapability* pCapability;
 		while ((pCapability = iterator.GetNext()) != NULL)
 		{
 			System::Print(GetInputCapabilityName(*pCapability));
+		}*/
+		const set<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
+		set<InputCapability>::iterator iterator = capabilities.begin();
+		while (iterator != capabilities.end())
+		{
+			System::Print(GetInputCapabilityName(*iterator));
+			iterator++;
 		}
 	}
 }

@@ -13,9 +13,12 @@ WIRE_IMPLEMENT_RTTI(Wire, WiiMote, InputDevice);
 WiiMote::WiiMote(const PlatformKeyMapper* pPlatformKeyMapper) :
 		InputDevice(pPlatformKeyMapper)
 {
-	mCapabilities.Insert(BUTTONS);
-	mCapabilities.Insert(DIGITAL_AXIS);
-	mCapabilities.Insert(IR_AXIS);
+	//mCapabilities.Insert(BUTTONS);
+	//mCapabilities.Insert(DIGITAL_AXIS);
+	//mCapabilities.Insert(IR_AXIS);
+	mCapabilities.insert(BUTTONS);
+	mCapabilities.insert(DIGITAL_AXIS);
+	mCapabilities.insert(IR_AXIS);
 }
 
 WiiMote::~WiiMote()

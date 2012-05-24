@@ -5,7 +5,10 @@
 #include "WireVirtualInputDevice.h"
 #include "WirePlatformKeyMapper.h"
 #include "WireTypes.h"
-#include "WireTArray.h"
+//#include "WireTArray.h"
+#include <vector>
+
+using namespace std;
 
 namespace Wire
 {
@@ -16,7 +19,6 @@ public:
 	virtual ~InputSystem();
 
 	virtual void Capture();
-
 	Bool DiscoverInputDevices();
 	inline UInt GetInputDevicesCount() const;
 	inline const VirtualInputDevice* GetInputDevice(UInt index) const;
@@ -28,7 +30,6 @@ protected:
 	VirtualInputDevice* mpFallbackVirtualInputDevice;
 
 	InputSystem();
-
 	virtual void BeforeInputDevicesDiscovery();
 	virtual void AfterInputDevicesDiscovery();
 };

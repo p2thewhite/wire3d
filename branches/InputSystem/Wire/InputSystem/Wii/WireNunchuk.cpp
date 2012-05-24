@@ -8,8 +8,10 @@ WIRE_IMPLEMENT_RTTI(Wire, Nunchuk, InputDevice);
 Nunchuk::Nunchuk(const PlatformKeyMapper* pPlatformKeyMapper) :
 		WiiExtension(pPlatformKeyMapper)
 {
-	mCapabilities.Insert(BUTTONS);
-	mCapabilities.Insert(ANALOG_AXIS);
+	//mCapabilities.Insert(BUTTONS);
+	//mCapabilities.Insert(ANALOG_AXIS);
+	mCapabilities.insert(BUTTONS);
+	mCapabilities.insert(ANALOG_AXIS);
 }
 
 Nunchuk::~Nunchuk()
