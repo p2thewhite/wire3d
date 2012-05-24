@@ -26,7 +26,9 @@ public:
 
 	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		pCameras = NULL);
-	Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
+
+	static Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
+	static Bool LoadFont(const Char* pFilename, UInt width,	UInt height);
 
 	struct Statistics
 	{
@@ -41,7 +43,7 @@ public:
 	const Statistics* GetStatistics();
 
 private:
-	Char* Load(const Char* pFilename, Int& rSize);
+	static Char* Load(const Char* pFilename, Int& rSize);
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	void Free32(Float* pFloats);
 

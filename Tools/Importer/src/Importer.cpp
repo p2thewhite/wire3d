@@ -1,6 +1,9 @@
 #include "Importer.h"
 #include "PicoPNG.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include "WireEffect.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
@@ -31,8 +34,9 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	ResetStatistics();
 	mpCameras = pCameras;
 
+	String path = String(mpPath) + String(pFilename);
 	Int xmlSize;
-	Char* pXml = Load(pFilename, xmlSize);
+	Char* pXml = Load(static_cast<const Char*>(path), xmlSize);
 	if (!pXml)
 	{
 		return NULL;
@@ -91,13 +95,99 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
+Bool Importer::LoadFont(const Char* pFilename, UInt width, UInt height)
+{
+	Int fileSize;
+	UChar* pMemFile = reinterpret_cast<UChar*>(Load(pFilename, fileSize));
+	if (!pMemFile)
+	{
+		return false;
+	}
+
+	FT_Library library;
+	
+	FT_Error error = FT_Init_FreeType(&library);
+	if (error != 0)
+	{
+		WIRE_ASSERT(false /* Could not initialize freetype lib */);
+		WIRE_DELETE[] pMemFile;
+		return false;
+	}
+
+	FT_Face face;
+	error = FT_New_Memory_Face(library, pMemFile, fileSize, 0, &face);
+	if (error)
+	{
+		if (error == FT_Err_Unknown_File_Format)
+		{
+			WIRE_ASSERT(false /* Font format is not supported */);
+		}
+		else
+		{
+			WIRE_ASSERT(false /* Could not create face from memory */);
+		}
+
+		FT_Done_FreeType(library);
+		WIRE_DELETE[] pMemFile;
+		return false;
+	}
+
+	error = FT_Set_Pixel_Sizes(face, width, height);
+	if (error)
+	{
+		// Usually, an error occurs with a fixed-size font format (like FNT or
+		// PCF) when trying to set the pixel size to a value that is
+		// not listed in the face->fixed_sizes array
+		WIRE_ASSERT(false /* Could not set pixel size */);
+		FT_Done_Face(face);
+		FT_Done_FreeType(library);
+		WIRE_DELETE[] pMemFile;
+		return false;
+	}
+
+	Bool hasKerning = FT_HAS_KERNING(face);
+
+	wchar_t wc = L'A';
+	FT_UInt previousGlyph = 0;
+	FT_GlyphSlot slot = face->glyph;
+	Int penX = 0;
+
+	for (UInt i = 0; i < 1; i++)
+	{
+		FT_UInt glyphIndex = FT_Get_Char_Index(face, wc);
+
+		if (hasKerning && previousGlyph && glyphIndex)
+		{
+			FT_Vector delta;
+// 			FT_Get_Kerning(face, previousGlyph, glyphIndex,
+// 				T_KERNING_DEFAULT, &delta);
+			penX += delta.x >> 6;
+		}
+
+		if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
+		{
+			continue;
+		}
+
+//		DrawBitmap(&slot->bitmap, penX + slot->bitmap_left + x, penY - slot->bitmap_top + y, cR, cG, cB);
+
+		penX += slot->advance.x >> 6;
+		previousGlyph = glyphIndex;
+	}
+
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(library);
+	WIRE_DELETE[] pMemFile;
+	return true;
+}
+
+//----------------------------------------------------------------------------
 Char* Importer::Load(const Char* pFilename, Int& rSize)
 {
-	String path = String(mpPath) + String(pFilename);
 	Char* pBuffer;
 	Bool hasSucceeded;
-	hasSucceeded = System::Load(static_cast<const Char*>(path), pBuffer,
-		rSize);
+	hasSucceeded = System::Load(pFilename, pBuffer, rSize);
 	if (!hasSucceeded)
 	{
 		WIRE_ASSERT(false /* Could not load file */);
@@ -110,7 +200,8 @@ Char* Importer::Load(const Char* pFilename, Int& rSize)
 //----------------------------------------------------------------------------
 Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 {
-	Char* pBuffer = Load(pFilename, rSize);
+	String path = String(mpPath) + String(pFilename);
+	Char* pBuffer = Load(static_cast<const Char*>(path), rSize);
 	Float* pBuffer32 = reinterpret_cast<Float*>(pBuffer);
 	if (System::IsBigEndian() != isBigEndian)
 	{
@@ -1142,7 +1233,9 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		}
 	}
 
-	Image2D* pImage = LoadPNG(pName, (mipmapCount > 1));
+	String path = String(mpPath) + String(pName);
+	Image2D* pImage = LoadPNG(static_cast<const Char*>(path),
+		(mipmapCount > 1));
 	if (!pImage)
 	{
 		return NULL;
