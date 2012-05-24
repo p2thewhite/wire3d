@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -63,8 +63,8 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
-      <AdditionalDependencies>Wired.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Wire\lib\Debug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wired.lib;freetype249_D.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Wire\lib\Debug\;..\freetype\objs\win32\vc2010</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -85,8 +85,8 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-      <AdditionalDependencies>Wire.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Wire\lib\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wire.lib;freetype249.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Wire\lib\Release\;..\freetype\objs\win32\vc2010</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
