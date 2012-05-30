@@ -8,18 +8,19 @@
 #include "rapidxml.hpp"
 #include "WireCamera.h"
 #include "WireGeometry.h"
-#include "WireImage2D.h"
-#include "WireMaterial.h"
-#include "WireMesh.h"
 #include "WireNode.h"
-#include "WireStateMaterial.h"
 #include "WireString.h"
-#include "WireTexture2D.h"
+#include "WireText.h"
+
+#include "WireVector2.h"
 
 using namespace Wire;
 
+struct FT_FaceRec_;
+
 class Importer
 {
+
 public:
 	Importer(const Char* pPath = "",
 		Bool materialsWithEqualNamesAreIdentical = true);
@@ -28,7 +29,7 @@ public:
 		pCameras = NULL);
 
 	static Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
-	static Bool LoadFont(const Char* pFilename, UInt width,	UInt height);
+	static Text* CreateText(const Char* pFilename, UInt width, UInt height);
 
 	struct Statistics
 	{
@@ -70,6 +71,9 @@ private:
 
 	void UpdateGS(Spatial* pSpatial);
 	void ResetStatistics();
+
+	static bool CalculateFontTextureSize(FT_FaceRec_* face, UInt& rWidth,
+		UInt& rHeight);
 
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
