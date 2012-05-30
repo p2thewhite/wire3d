@@ -1,17 +1,20 @@
 #include "Importer.h"
-#include "PicoPNG.h"
 
+#include "PicoPNG.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 #include "WireEffect.h"
+#include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireQuaternion.h"
 #include "WireVertexBuffer.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
 #include "WireStateFog.h"
+#include "WireStateMaterial.h"
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 #include "WireTStack.h"
@@ -95,13 +98,48 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
-Bool Importer::LoadFont(const Char* pFilename, UInt width, UInt height)
+Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 {
+	// Calculate the required font texture size from the font size
+	const UInt totalCharCount = 128;
+	UInt texWidth = 1;
+	UInt texHeight = 1;
+	for (UInt i = 1; i < 24; i++)
+	{
+		if (texWidth > 4096 || texHeight > 4096)
+		{
+			return NULL;
+		}
+		
+		UInt wCount = texWidth/width;
+		UInt hCount = texHeight/height;
+		if (wCount != 0 && !hCount == 0)
+		{
+			if (texWidth*texHeight >= wCount*width*hCount*height)
+			{
+				if (wCount*hCount >= totalCharCount)
+				{
+					break;
+				}
+			}
+		}
+
+		if (texWidth > texHeight)
+		{
+			texHeight = texHeight << 1;
+		}
+		else
+		{
+			texWidth = texWidth << 1;
+		}
+	}
+
+	// Init FreeType lib and font
 	Int fileSize;
 	UChar* pMemFile = reinterpret_cast<UChar*>(Load(pFilename, fileSize));
 	if (!pMemFile)
 	{
-		return false;
+		return NULL;
 	}
 
 	FT_Library library;
@@ -111,7 +149,7 @@ Bool Importer::LoadFont(const Char* pFilename, UInt width, UInt height)
 	{
 		WIRE_ASSERT(false /* Could not initialize freetype lib */);
 		WIRE_DELETE[] pMemFile;
-		return false;
+		return NULL;
 	}
 
 	FT_Face face;
@@ -129,7 +167,7 @@ Bool Importer::LoadFont(const Char* pFilename, UInt width, UInt height)
 
 		FT_Done_FreeType(library);
 		WIRE_DELETE[] pMemFile;
-		return false;
+		return NULL;
 	}
 
 	error = FT_Set_Pixel_Sizes(face, width, height);
@@ -142,45 +180,92 @@ Bool Importer::LoadFont(const Char* pFilename, UInt width, UInt height)
 		FT_Done_Face(face);
 		FT_Done_FreeType(library);
 		WIRE_DELETE[] pMemFile;
-		return false;
+		return NULL;
 	}
 
-	Bool hasKerning = FT_HAS_KERNING(face);
+	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
+//	System::Memset(pDst, 0, texWidth * texHeight * 4);
+	TArray<Vector2F> uvs(totalCharCount*4);
+	TArray<Vector2F> charSizes(totalCharCount);
 
-	wchar_t wc = L'A';
-	FT_UInt previousGlyph = 0;
 	FT_GlyphSlot slot = face->glyph;
-	Int penX = 0;
-
-	for (UInt i = 0; i < 1; i++)
+	UInt wc = 0;
+	Int penY = height;
+	for (UInt wy = 0; wy < texHeight/height; wy++)
 	{
-		FT_UInt glyphIndex = FT_Get_Char_Index(face, wc);
-
-		if (hasKerning && previousGlyph && glyphIndex)
+		Int penX = 0;
+		for (UInt wx = 0; wx < texWidth/width; wx++)
 		{
-			FT_Vector delta;
-// 			FT_Get_Kerning(face, previousGlyph, glyphIndex,
-// 				T_KERNING_DEFAULT, &delta);
-			penX += delta.x >> 6;
+			if (wc > totalCharCount)
+			{
+				break;
+			}
+
+			FT_UInt glyphIndex = FT_Get_Char_Index(face, wc++);
+			if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
+			{
+				continue;
+			}
+
+			Int offset = penX + slot->bitmap_left;
+			Int top = penY - slot->bitmap_top;
+			FT_Bitmap& rBitmap = slot->bitmap;
+
+			Float u0 = static_cast<Float>(offset)/texWidth;
+			Float v0 = static_cast<Float>(top)/texHeight;
+			Float u1 = static_cast<Float>(offset+rBitmap.width)/texWidth;
+			Float v1 = static_cast<Float>(top+rBitmap.rows)/texHeight;
+			uvs.Append(Vector2F(u0, v0));
+			uvs.Append(Vector2F(u1, v0));
+			uvs.Append(Vector2F(u1, v1));
+			uvs.Append(Vector2F(u0, v1));
+
+			Float charWidth = static_cast<Float>(rBitmap.width);
+			Float charHeight = static_cast<Float>(rBitmap.rows);
+			charSizes.Append(Vector2F(charWidth, charHeight));
+
+			Int q = 0;
+			for (Int j = top; j < (top + rBitmap.rows); j++, q++)
+			{
+				Int p = 0;
+				for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
+				{
+					UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
+					pDst[(j*texWidth + i)*4] = 0xFF;
+					pDst[(j*texWidth + i)*4+1] = 0xFF;
+					pDst[(j*texWidth + i)*4+2] = 0xFF;
+					pDst[(j*texWidth + i)*4+3] = pixel;
+				}
+			}
+
+			penX += slot->advance.x >> 6;
+//			previousGlyph = glyphIndex;
+			WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
 		}
 
-		if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
-		{
-			continue;
-		}
-
-//		DrawBitmap(&slot->bitmap, penX + slot->bitmap_left + x, penY - slot->bitmap_top + y, cR, cG, cB);
-
-		penX += slot->advance.x >> 6;
-		previousGlyph = glyphIndex;
+		penY += height;
 	}
 
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
+		texHeight, pDst, false);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetFilterType(Texture2D::FT_NEAREST);
+	Text* pText = WIRE_NEW Text(totalCharCount, height, pTexture, uvs,
+		charSizes);
 
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 	WIRE_DELETE[] pMemFile;
+	return pText;
+}
+
+//----------------------------------------------------------------------------
+bool Importer::CalculateFontTextureSize(FT_Face face, UInt& rWidth,
+	UInt& rHeight)
+{
 	return true;
 }
+
 
 //----------------------------------------------------------------------------
 Char* Importer::Load(const Char* pFilename, Int& rSize)

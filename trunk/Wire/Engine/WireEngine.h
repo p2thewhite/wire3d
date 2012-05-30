@@ -44,6 +44,7 @@
 #include "WireStateMaterial.h"
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
+#include "WireText.h"
 #include "WireTexture2D.h"
 #include "WireTransformation.h"
 #include "WireVertexAttributes.h"

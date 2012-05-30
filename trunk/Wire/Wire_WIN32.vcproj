@@ -1096,6 +1096,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireText.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTexture2D.h"
 					>
 				</File>
@@ -1365,6 +1369,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireStateZBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireText.cpp"
 					>
 				</File>
 				<File
