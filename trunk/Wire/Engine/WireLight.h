@@ -12,6 +12,7 @@
 
 #include "WireColorRGB.h"
 #include "WireObject.h"
+#include "WireTInstanceID.h"
 #include "WireVector3.h"
 
 namespace Wire
@@ -32,6 +33,8 @@ public:
 
 	Light(LightType type = LT_DIRECTIONAL);
 	virtual ~Light();
+
+	TInstanceID<Light> ID;
 
 	LightType Type;
 

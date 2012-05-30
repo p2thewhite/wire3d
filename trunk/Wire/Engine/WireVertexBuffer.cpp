@@ -215,8 +215,8 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 		{
 			if (rIAttr.GetColorChannels(unit) > 0)
 			{
-				const Float* const pColor = GetColor(i, unit);
-				*pDst++ = *pColor;
+				UInt* pColor = reinterpret_cast<UInt*>(GetColor(i, unit));
+				*(reinterpret_cast<UInt*>(pDst++)) = *pColor;
 			}
 		}
 

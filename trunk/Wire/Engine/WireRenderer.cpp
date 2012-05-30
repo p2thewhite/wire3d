@@ -773,7 +773,6 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 					break;
 				}
 
-				// TODO: compare lights
 				UInt vA = pA->GetMesh()->GetVertexBuffer()->GetAttributes().
 					GetKey();
 				UInt vB = pB->GetMesh()->GetVertexBuffer()->GetAttributes().
@@ -835,6 +834,8 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 				Draw(pGeometry, false, true);
 				continue;
 			}
+
+			mStatistics.BatchedStatic++;
 		}
 		else
 		{
@@ -843,6 +844,8 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 				Draw(pGeometry, false, true);
 				continue;
 			}
+
+			mStatistics.BatchedDynamic++;
 		}
 
 		UInt vertexSize = pVBPdr->GetVertexSize();
@@ -877,7 +880,6 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 
 		vertexCount += static_cast<UShort>(pVertexBuffer->GetQuantity());
 		indexCount += pIndexBuffer->GetQuantity();
-		mStatistics.Batched++;
 	}
 
 	pVBPdr->Unlock();
@@ -1137,7 +1139,8 @@ void Renderer::ResetStatistics()
 {
 	mStatistics.DrawCalls = 0;
 	mStatistics.Triangles = 0;
-	mStatistics.Batched = 0;
+	mStatistics.BatchedStatic = 0;
+	mStatistics.BatchedDynamic = 0;
 }
 
 //----------------------------------------------------------------------------

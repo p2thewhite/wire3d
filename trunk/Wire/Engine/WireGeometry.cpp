@@ -47,6 +47,11 @@ Geometry::Geometry(Mesh* pMesh, Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
+Geometry::Geometry()
+{
+}
+
+//----------------------------------------------------------------------------
 Geometry::~Geometry()
 {
 }
@@ -77,6 +82,14 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
   		States[i] = rState[rState.GetQuantity()-1];
 	}
 
+	// update light state
+	Lights.RemoveAll();
+	Lights.SetQuantity(pLightStack->GetQuantity());
+	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
+	{
+		Lights[i] = (*pLightStack)[i];
+	}
+
 	// check if other Geometry objects share the same states
 	UInt key = GetStateSetKey();
 	UInt* pStateSetID = pStateKeys->Find(key);
@@ -90,14 +103,6 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 		pStateKeys->Insert(key, id);
 		StateSetID = id;
 	}
-
-	// update light state
-	Lights.RemoveAll();
-	Lights.SetQuantity(pLightStack->GetQuantity());
-	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
-	{
-		Lights[i] = (*pLightStack)[i];
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -110,75 +115,168 @@ void Geometry::GetVisibleSet(Culler& rCuller, Bool)
 UInt Geometry::GetStateSetKey()
 {
 	UInt key = 0;
+	UInt offset = 0;
 
-	// number of bits we use for each state's ID
-	enum
-	{
-		ALPHA = 7,		// 2^7-1 = 127 Alpha states can be handled
-		CULL = 2,		// 2^2-1 = 3
-		FOG = 4,		// 2^4-1 = 15
-		MATERIAL = 12,	// 2^12-1 = 4095
-		WIREFRAME = 2,	// 2^2-1 = 3
-		ZBUFFER = 5		// 2^5-1 = 31
-	};
-
-	WIRE_ASSERT((ALPHA + CULL + FOG + MATERIAL + WIREFRAME + ZBUFFER) <=
-		sizeof(key) * 8); // The sum of the ranges must fit in the key
-
-	// The following asserts let you know when you have created more states
-	// than the key can handle. This is only important if you need the
-	// StateSetID to be unique (e.g. the CullerSorting class uses it to
-	// sort its objects by state), otherwise you can ignore the asserts.
-	// If you need unique IDs, change the layout of the bits in the key to
-	// match your needs, or try to reuse or get rid of redundant states.
-	// E.g. you do not need more than 3 cull states, as a cull state can only
-	// be 'front', 'back' or 'off'.
 	if (States[State::ALPHA])
 	{
 		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);
-		WIRE_ASSERT(pState->ID < (1<<ALPHA));
-		key |= pState->ID;
+		key = pState->ID;
 	}
 
+	offset = TInstanceID<StateAlpha>::GetMaxID()+1;
 	if (States[State::CULL])
 	{
 		StateCull* pState = StaticCast<StateCull>(States[State::CULL]);
-		WIRE_ASSERT(pState->ID < (1<<CULL));
-		key |= pState->ID << ALPHA;
+		key += pState->ID * offset;
 	}
 
+	offset *= TInstanceID<StateCull>::GetMaxID()+1;
 	if (States[State::FOG])
 	{
 		StateFog* pState = StaticCast<StateFog>(States[State::FOG]);
-		WIRE_ASSERT(pState->ID < (1<<FOG));
-		key |= pState->ID << (ALPHA+CULL);
+		key += pState->ID * offset;
 	}
 
+	offset *= TInstanceID<StateFog>::GetMaxID()+1;
 	if (States[State::MATERIAL])
 	{
 		StateMaterial* pState = StaticCast<StateMaterial>(
 			States[State::MATERIAL]);
-		WIRE_ASSERT(pState->ID < (1<<MATERIAL));
-		key |= pState->ID << (ALPHA+CULL+FOG);
+		key += pState->ID * offset;
 	}
 
+	offset *= TInstanceID<StateMaterial>::GetMaxID()+1;
 	if (States[State::WIREFRAME])
 	{
-		StateWireframe* pState = StaticCast<StateWireframe>(
-			States[State::WIREFRAME]);
-		WIRE_ASSERT(pState->ID < (1<<WIREFRAME));
-		key |= pState->ID << (ALPHA+CULL+FOG+MATERIAL);
+		StateWireframe* pState = StaticCast<StateWireframe>(States[
+			State::WIREFRAME]);
+		key += pState->ID * offset;
+	}
+
+	offset *= TInstanceID<StateWireframe>::GetMaxID()+1;
+	if (States[State::ZBUFFER])
+	{
+		StateZBuffer* pState = StaticCast<StateZBuffer>(States[
+			State::ZBUFFER]);
+		key += pState->ID * offset;
+	}
+
+	for (UInt i = 0; i < Lights.GetQuantity(); i++)
+	{
+		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
+			TInstanceID<Light>::GetMaxID()+1;
+		key += Lights[i]->ID * offset;
+	}
+
+	WIRE_ASSERT(VerifyKey(key, offset));
+
+	return key;
+}
+
+//----------------------------------------------------------------------------
+Bool Geometry::VerifyKey(UInt key, UInt offset)
+{
+	for (Int i = (Lights.GetQuantity()-1); i >= 0 ; i--)
+	{
+		UInt id = key / offset;
+		if (id != Lights[i]->ID)
+		{
+			WIRE_ASSERT(false /* Light state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+		offset /= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
+			TInstanceID<Light>::GetMaxID()+1;
 	}
 
 	if (States[State::ZBUFFER])
 	{
-		StateZBuffer* pState = StaticCast<StateZBuffer>(
-			States[State::ZBUFFER]);
-		WIRE_ASSERT(pState->ID < (1<<ZBUFFER));
-		key |= pState->ID << (ALPHA+CULL+FOG+MATERIAL+WIREFRAME);
+		StateZBuffer* pState = StaticCast<StateZBuffer>(States[
+			State::ZBUFFER]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* ZBuffer state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
 	}
 
-	return key;
+	offset /= TInstanceID<StateWireframe>::GetMaxID()+1;
+	if (States[State::WIREFRAME])
+	{
+		StateWireframe* pState = StaticCast<StateWireframe>(States[
+			State::WIREFRAME]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Wireframe state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateMaterial>::GetMaxID()+1;
+	if (States[State::MATERIAL])
+	{
+		StateMaterial* pState = StaticCast<StateMaterial>(States[
+			State::MATERIAL]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Material state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateFog>::GetMaxID()+1;
+	if (States[State::FOG])
+	{
+		StateFog* pState = StaticCast<StateFog>(States[State::FOG]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Fog state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateCull>::GetMaxID()+1;
+	if (States[State::CULL])
+	{
+		StateCull* pState = StaticCast<StateCull>(States[State::CULL]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Cull state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateAlpha>::GetMaxID()+1;
+	if (States[State::ALPHA])
+	{
+		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Alpha state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	return true;
 }
 
 //----------------------------------------------------------------------------
@@ -198,7 +296,8 @@ void Geometry::MakeStatic()
 		return;
 	}
 
-	// if the vertex buffer is shared, we create our own copy to use
+	// if the vertex buffer is shared, we duplicate it to apply the World
+	// transformation
 	if (pVertexBuffer->GetReferences() > 1 || mspMesh->GetReferences() > 1)
 	{
 		pVertexBuffer = WIRE_NEW VertexBuffer(mspMesh->GetVertexBuffer());
