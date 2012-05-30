@@ -28,7 +28,8 @@ public:
 	TInstanceID();
 	~TInstanceID();
 
-	operator UInt () const;
+	inline operator UInt () const;
+	inline static UInt GetMaxID();
 
 private:
 	void SiftUp(UInt nodeIndex);

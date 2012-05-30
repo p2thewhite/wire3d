@@ -56,10 +56,14 @@ public:
 	UInt StartIndex;		// default: 0
 
 	// Identical IDs among different Geometry objects mean that all their
-	// States[] are identical. This is used for sorting Geometry by state.
+	// States[] and Lights are identical. This is used for sorting Geometry
+	// by render state.
 	UInt StateSetID;
 
 protected:
+	Geometry();
+	void Init();
+
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,
 		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
@@ -69,10 +73,12 @@ protected:
 
 private:
 	UInt GetStateSetKey();
-	void Init();
 
 	Pointer<Mesh> mspMesh;
 	Pointer<Material> mspMaterial;
+
+	// TODO: remove
+	Bool VerifyKey(UInt key, UInt offset);
 };
 
 typedef Pointer<Geometry> GeometryPtr;

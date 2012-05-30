@@ -206,7 +206,8 @@ public:
 		// accumulated number of draw calls and triangles drawn since last
 		// ResetStatistics()
 		UInt DrawCalls;
-		UInt Batched;
+		UInt BatchedStatic;
+		UInt BatchedDynamic;
 		UInt Triangles;
 
 		// number of buffers and their total size bound to the Renderer
