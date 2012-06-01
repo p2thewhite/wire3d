@@ -29,7 +29,8 @@ public:
 		pCameras = NULL);
 
 	static Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
-	static Text* CreateText(const Char* pFilename, UInt width, UInt height);
+	static Text* CreateText(const Char* pFilename, UInt width, UInt height,
+		UInt maxLength = 4000);
 
 	struct Statistics
 	{
@@ -71,9 +72,6 @@ private:
 
 	void UpdateGS(Spatial* pSpatial);
 	void ResetStatistics();
-
-	static bool CalculateFontTextureSize(FT_FaceRec_* face, UInt& rWidth,
-		UInt& rHeight);
 
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
