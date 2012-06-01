@@ -98,7 +98,8 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
-Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
+Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
+	UInt maxLength)
 {
 	// Calculate the required font texture size from the font size
 	const UInt totalCharCount = 128;
@@ -133,6 +134,8 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 			texWidth = texWidth << 1;
 		}
 	}
+
+//	texWidth = texWidth * 2; // TODO: fix!
 
 	// Init FreeType lib and font
 	Int fileSize;
@@ -186,7 +189,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
 //	System::Memset(pDst, 0, texWidth * texHeight * 4);
 	TArray<Vector2F> uvs(totalCharCount*4);
-	TArray<Vector2F> charSizes(totalCharCount);
+	TArray<Vector4F> charSizes(totalCharCount);
 
 	FT_GlyphSlot slot = face->glyph;
 	UInt wc = 0;
@@ -196,7 +199,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 		Int penX = 0;
 		for (UInt wx = 0; wx < texWidth/width; wx++)
 		{
-			if (wc > totalCharCount)
+			if (wc >= totalCharCount)
 			{
 				break;
 			}
@@ -220,9 +223,12 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 			uvs.Append(Vector2F(u1, v1));
 			uvs.Append(Vector2F(u0, v1));
 
-			Float charWidth = static_cast<Float>(rBitmap.width);
-			Float charHeight = static_cast<Float>(rBitmap.rows);
-			charSizes.Append(Vector2F(charWidth, charHeight));
+			Float cWidth = static_cast<Float>(rBitmap.width);
+			Float cHeight = static_cast<Float>(rBitmap.rows);
+			Float cStride = static_cast<Float>(slot->advance.x >> 6);
+			Float cOffsetY = static_cast<Float>(slot->bitmap.rows - 
+				slot->bitmap_top);
+			charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
 
 			Int q = 0;
 			for (Int j = top; j < (top + rBitmap.rows); j++, q++)
@@ -238,8 +244,9 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 				}
 			}
 
-			penX += slot->advance.x >> 6;
-//			previousGlyph = glyphIndex;
+			int advance = slot->advance.x >> 6;
+			penX += advance > rBitmap.width ? advance : rBitmap.width;
+			penX++;
 			WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
 		}
 
@@ -250,22 +257,13 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height)
 		texHeight, pDst, false);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	pTexture->SetFilterType(Texture2D::FT_NEAREST);
-	Text* pText = WIRE_NEW Text(totalCharCount, height, pTexture, uvs,
-		charSizes);
+ 	Text* pText = WIRE_NEW Text(height, pTexture, uvs, charSizes, maxLength);
 
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 	WIRE_DELETE[] pMemFile;
 	return pText;
 }
-
-//----------------------------------------------------------------------------
-bool Importer::CalculateFontTextureSize(FT_Face face, UInt& rWidth,
-	UInt& rHeight)
-{
-	return true;
-}
-
 
 //----------------------------------------------------------------------------
 Char* Importer::Load(const Char* pFilename, Int& rSize)

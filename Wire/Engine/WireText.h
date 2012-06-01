@@ -16,22 +16,27 @@
 namespace Wire
 {
 
+class Renderer;
+
 class Text : public Geometry
 {
 	WIRE_DECLARE_RTTI
 
 public:
-	Text(UInt maxChars, UInt fontHeight, Texture2D* pFontTexture,
-		TArray<Vector2F>& rUvs,	TArray<Vector2F>& rCharSizes);
+	Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
+		TArray<Vector4F>& rCharSizes, UInt maxLength);
 	virtual ~Text();
 
+	void Clear();
 	Bool Set(const Char* pText, Float x = 0.0F, Float y = 0.0F);
 	Bool Add(const Char* pText, Float x = 0.0F, Float y = 0.0F);
+	void Update(Renderer* pRenderer);
 
 private:
-	TArray<Vector2F> mUvs;
-	TArray<Vector2F> mCharSizes;
+	TArray<Vector2F> mUvs;			// 4 per font character
+	TArray<Vector4F> mCharSizes;	// 1 (width, height, stride x, offset y)
 	UInt mFontHeight;
+	Bool mIsPdrBufferOutOfDate;
 };
 
 typedef Pointer<Text> TextPtr;
