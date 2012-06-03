@@ -31,8 +31,8 @@ Bool Demo::OnInitialize()
 
 	// frames per second debug text
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
-	mspTextAlpha = WIRE_NEW StateAlpha();
-	mspTextAlpha->BlendEnabled = true;
+	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
+	WIRE_ASSERT(mspText);
 	return true;
 }
 
@@ -138,7 +138,7 @@ void Demo::DrawFPS(Double time)
 	UInt fps = static_cast<UInt>(1/elapsed);
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
-	String msg1 = "\n\n\n\n\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
+	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
 		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, "
 		"TextureSize: %.2f MB";
 
@@ -161,11 +161,14 @@ void Demo::DrawFPS(Double time)
 
 	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
 		screenHeight, ColorRGBA::WHITE);
-	spText->AttachState(mspTextAlpha);
-	spText->UpdateRS();
+	// set to screen width (might change any time in window mode)
+	mspText->SetLineWidth(screenWidth);
+	// Text uses OpenGL convention of (0,0) being left bottom of window
+	mspText->Set(str, 0.0F, screenHeight-mspText->GetFontHeight());
+	mspText->Update(GetRenderer());
 
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(spText);
+	GetRenderer()->Draw(mspText);
 }
 
 //----------------------------------------------------------------------------
