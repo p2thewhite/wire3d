@@ -28,7 +28,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	WIRE_ASSERT(rUvs.GetQuantity() == rCharSizes.GetQuantity()*4);
 	WIRE_ASSERT(maxLength < (0x10000/4));
 
-	mFontHeight = fontHeight;
+	mFontHeight = static_cast<Float>(fontHeight);
 	mUvs = rUvs;
 	mCharSizes = rCharSizes;
 
@@ -46,9 +46,11 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 
 	Init();
 	Clear();
+	mWhitespaceWidth = mCharSizes[' '].Z();
+	mLineWidth = MathF::MAX_REAL;
 
 	Material* pMaterial = WIRE_NEW Material();
-	pMaterial->AddTexture(pFontTexture);
+	pMaterial->AddTexture(pFontTexture, Material::BM_REPLACE);
 	SetMaterial(pMaterial);
 
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
@@ -67,17 +69,32 @@ void Text::Clear()
 {
 	Culling = CULL_ALWAYS;
 	ActiveIndexCount = 0;
+	mPenX = 0.0F;
+	mPenY = 0.0F;
+}
+
+//----------------------------------------------------------------------------
+void Text::SetPen(Float x, Float y)
+{
+	mPenX = x;
+	mPenY = y;
 }
 
 //----------------------------------------------------------------------------
 Bool Text::Set(const Char* pText, Float x, Float y)
 {
 	Clear();
-	return Add(pText, x, y);
+	return Append(pText, x, y);
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Add(const Char* pText, Float x, Float y)
+Bool Text::Append(const Char* pText)
+{
+	return Append(pText, mPenX, mPenY);
+}
+
+//----------------------------------------------------------------------------
+Bool Text::Append(const Char* pText, Float x, Float y)
 {
 	if (!pText)
 	{
@@ -98,10 +115,10 @@ Bool Text::Add(const Char* pText, Float x, Float y)
 	}
 
 	const UInt maxLength = pVertexBuffer->GetQuantity() / 4;
-	UInt j = 0;
-	for (; pText[j]; j++)
+	UInt indexCount = 0;
+	for (UInt j = 0; pText[j]; j++)
 	{
-		if ((offset+j) >= maxLength)
+		if ((offset+indexCount) >= maxLength)
 		{
 			break;
 		}
@@ -109,7 +126,7 @@ Bool Text::Add(const Char* pText, Float x, Float y)
 		UInt c = static_cast<UInt>(pText[j]);
 		if (c == ' ')
 		{
-			x+= 8;
+			x+= mWhitespaceWidth;
 			continue;
 		}
 
@@ -118,10 +135,21 @@ Bool Text::Add(const Char* pText, Float x, Float y)
 			return false;
 		}
 
-		UInt i = (j + offset) * 4;
+		UInt i = (indexCount + offset) * 4;
 		Float cWidth = mCharSizes[c].X();
 		Float cHeight = mCharSizes[c].Y();
 		Float cStride = mCharSizes[c].Z();
+		if ((x+cStride) >= mLineWidth || c == '\n')
+		{
+			x = 0.0F;
+			y -= mFontHeight;
+
+			if (c == '\n')
+			{
+				continue;
+			}
+		}
+
 		Float cy = y - mCharSizes[c].W();
 		pVertexBuffer->Position3(i) = Vector3F(x, cy+cHeight, 0);
 		pVertexBuffer->Position3(i+1) = Vector3F(x+cWidth, cy+cHeight, 0);
@@ -134,8 +162,8 @@ Bool Text::Add(const Char* pText, Float x, Float y)
 		pVertexBuffer->TCoord2(i+2) = mUvs[c4+2];
 		pVertexBuffer->TCoord2(i+3) = mUvs[c4+3];
 
-		UInt k = (j + offset) * 6;
-		UShort l = static_cast<UShort>(j + offset)*4;
+		UInt k = (indexCount + offset) * 6;
+		UShort l = static_cast<UShort>(indexCount + offset)*4;
 		(*pIndexBuffer)[k] = 0 + l;
 		(*pIndexBuffer)[k+1] = 1 + l;
 		(*pIndexBuffer)[k+2] = 2 + l;
@@ -144,11 +172,23 @@ Bool Text::Add(const Char* pText, Float x, Float y)
 		(*pIndexBuffer)[k+5] = 3 + l;
 
 		x+= cStride;
+		indexCount++;
+
 		Culling = CULL_NEVER;
 	}
 
-	ActiveIndexCount += j*6;
+	ActiveIndexCount += indexCount*6;
 	mIsPdrBufferOutOfDate = true;
+
+	// DirectX9 oddity, pixel's center is at (0.5,0.5)
+	if (System::GetPlatform() == System::PF_DX9)
+	{
+		x -= 0.5F;
+		y -= 0.5F;
+	}
+
+	mPenX = x;
+	mPenY = y;
 
 	return true;
 }
@@ -174,4 +214,28 @@ void Text::Update(Renderer* pRenderer)
 	}
 
 	mIsPdrBufferOutOfDate = false;
+}
+
+//----------------------------------------------------------------------------
+Float Text::GetFontHeight()
+{
+	return mFontHeight;
+}
+
+//----------------------------------------------------------------------------
+void Text::SetLineWidth(Float lineWidth)
+{
+	mLineWidth = lineWidth;
+}
+
+//----------------------------------------------------------------------------
+void Text::SetLineWidth(UInt lineWidth)
+{
+	mLineWidth = static_cast<Float>(lineWidth);
+}
+
+//----------------------------------------------------------------------------
+void Text::SetWhitespaceWidth(Float whitespaceWidth)
+{
+	mWhitespaceWidth = whitespaceWidth;
 }

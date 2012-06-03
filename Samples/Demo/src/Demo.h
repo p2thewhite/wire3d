@@ -44,7 +44,7 @@ private:
 	// frames per second debug text
 	void DrawFPS(Double time);
 	CameraPtr mspTextCamera;
-	StateAlphaPtr mspTextAlpha;
+	TextPtr mspText;
 	Bool mShowFps;
 };
 
