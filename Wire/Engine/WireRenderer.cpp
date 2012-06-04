@@ -878,7 +878,8 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
 			pIBRaw));
 
-		vertexCount += static_cast<UShort>(pVertexBuffer->GetQuantity());
+		vertexCount = vertexCount + static_cast<UShort>(pVertexBuffer->
+			GetQuantity());
 		indexCount += pIndexBuffer->GetQuantity();
 	}
 
