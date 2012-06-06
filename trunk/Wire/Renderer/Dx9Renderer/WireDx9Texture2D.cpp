@@ -144,11 +144,14 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	const UInt mipmapCount = pImage->GetMipmapCount();
 	const DWORD usage = 0;
 
+	const UInt width = pImage->GetBound(0);
+	WIRE_ASSERT(width <= pRenderer->GetMaxTextureWidth());
+	const UInt height = pImage->GetBound(1);
+	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
 	HRESULT hr;
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-	hr = rDevice->CreateTexture(pImage->GetBound(0), pImage->GetBound(1),
-		mipmapCount, usage, PdrRendererData::IMAGE2D_FORMAT[format], pool,
-		&mpBuffer, NULL);
+	hr = rDevice->CreateTexture(width, height, mipmapCount, usage,
+		PdrRendererData::IMAGE2D_FORMAT[format], pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	mBufferSize = 0;

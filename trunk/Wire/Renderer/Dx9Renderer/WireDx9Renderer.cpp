@@ -27,6 +27,7 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool isFullscreen, Bool useVSync)
 	:
+	mMaxAnisotropy(1.0F),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mTexture2DMap(256)
@@ -89,6 +90,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mpData->Supports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
 		true : false;
 
+	mMaxTextureWidth = deviceCaps.MaxTextureWidth;
+	mMaxTextureHeight = deviceCaps.MaxTextureHeight;
 	mTexture2Ds.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	UInt maxLights = deviceCaps.MaxActiveLights;
 	mLights.SetQuantity(maxLights <= 0 ? 8 : maxLights);

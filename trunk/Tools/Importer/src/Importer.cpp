@@ -101,42 +101,6 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 	UInt maxLength)
 {
-	// Calculate the required font texture size from the font size
-	const UInt totalCharCount = 128;
-	UInt texWidth = 1;
-	UInt texHeight = 1;
-	for (UInt i = 1; i < 24; i++)
-	{
-		if (texWidth > 4096 || texHeight > 4096)
-		{
-			return NULL;
-		}
-		
-		UInt wCount = texWidth/width;
-		UInt hCount = texHeight/height;
-		if (wCount != 0 && !hCount == 0)
-		{
-			if (texWidth*texHeight >= wCount*width*hCount*height)
-			{
-				if (wCount*hCount >= totalCharCount)
-				{
-					break;
-				}
-			}
-		}
-
-		if (texWidth > texHeight)
-		{
-			texHeight = texHeight << 1;
-		}
-		else
-		{
-			texWidth = texWidth << 1;
-		}
-	}
-
-//	texWidth = texWidth * 2; // TODO: fix!
-
 	// Init FreeType lib and font
 	Int fileSize;
 	UChar* pMemFile = reinterpret_cast<UChar*>(Load(pFilename, fileSize));
@@ -186,12 +150,64 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 		return NULL;
 	}
 
+	// Calculate the required font texture size from the font size
+	const UInt totalCharCount = 128;
+	UInt texWidth = 32;
+	UInt texHeight = 32;
+	FT_GlyphSlot slot = face->glyph;
+
+	Bool fitsInTexture = false;
+	while (!fitsInTexture)
+	{
+		if (texWidth > 1024 || texHeight > 1024)
+		{
+			return NULL;
+		}
+
+		UInt wc = 0;
+		Int penX = 0;
+		Int penY = 0;
+		fitsInTexture = true;
+
+		for (UInt i = 0; i < totalCharCount; i++)
+		{
+			FT_UInt glyphIndex = FT_Get_Char_Index(face, wc++);
+			if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
+			{
+				continue;
+			}
+
+			Int advance = slot->advance.x >> 6;
+			advance = advance > slot->bitmap.width ? advance : slot->bitmap.width;
+			if (penX+advance >= static_cast<Int>(texWidth))
+			{
+				penX = 0;
+				penY += height;
+				if (penY+height >= texHeight)
+				{
+					if (texWidth > texHeight)
+					{
+						texHeight = texHeight << 1;
+					}
+					else
+					{
+						texWidth = texWidth << 1;
+					}
+
+					fitsInTexture = false;
+					break;
+				}
+			}
+
+			penX += advance;
+		}
+	}
+
 	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
-//	System::Memset(pDst, 0, texWidth * texHeight * 4);
+	System::Memset(pDst, 0, texWidth * texHeight * 4);
 	TArray<Vector2F> uvs(totalCharCount*4);
 	TArray<Vector4F> charSizes(totalCharCount);
 
-	FT_GlyphSlot slot = face->glyph;
 	UInt wc = 0;
 	Int penY = height;
 	for (UInt wy = 0; wy < texHeight/height; wy++)
@@ -207,6 +223,13 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 			FT_UInt glyphIndex = FT_Get_Char_Index(face, wc++);
 			if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
 			{
+				uvs.Append(Vector2F(0, 0));
+				uvs.Append(Vector2F(1, 0));
+				uvs.Append(Vector2F(1, 1));
+				uvs.Append(Vector2F(0, 1));
+				Float fWidth = static_cast<Float>(width);
+				Float fHeight = static_cast<Float>(height);
+				charSizes.Append(Vector4F(fWidth, fHeight, fWidth, 0));
 				continue;
 			}
 
@@ -244,7 +267,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 				}
 			}
 
-			int advance = slot->advance.x >> 6;
+			Int advance = slot->advance.x >> 6;
 			penX += advance > rBitmap.width ? advance : rBitmap.width;
 			penX++;
 			WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));

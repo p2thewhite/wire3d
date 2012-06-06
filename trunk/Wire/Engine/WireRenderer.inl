@@ -31,6 +31,18 @@ inline UInt Renderer::GetMaxTextureStages() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxTextureWidth() const
+{
+	return mMaxTextureWidth;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxTextureHeight() const
+{
+	return mMaxTextureHeight;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetMaxLights() const
 {
 	return mLights.GetQuantity();

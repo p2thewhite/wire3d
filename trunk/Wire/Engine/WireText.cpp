@@ -141,7 +141,7 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 		Float cStride = mCharSizes[c].Z();
 		if ((x+cStride) >= mLineWidth || c == '\n')
 		{
-			x = 0.0F;
+			x = System::GetPlatform() == System::PF_DX9 ? 0.5F : 0.0F;
 			y -= mFontHeight;
 
 			if (c == '\n')

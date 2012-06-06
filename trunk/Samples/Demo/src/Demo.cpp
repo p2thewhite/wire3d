@@ -33,6 +33,8 @@ Bool Demo::OnInitialize()
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
 	WIRE_ASSERT(mspText);
+	GetRenderer()->BindAll(mspText);
+
 	return true;
 }
 
@@ -159,8 +161,6 @@ void Demo::DrawFPS(Double time)
 // 	str += String(text);
 // #endif
 
-	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
-		screenHeight, ColorRGBA::WHITE);
 	// set to screen width (might change any time in window mode)
 	mspText->SetLineWidth(screenWidth);
 	// Text uses OpenGL convention of (0,0) being left bottom of window

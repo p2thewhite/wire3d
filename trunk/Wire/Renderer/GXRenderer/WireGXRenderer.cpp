@@ -34,6 +34,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mTexture2Ds(8, 0),
 	mLights(PdrRendererData::MAXLIGHTS, 0),
 	mMaxAnisotropy(4.0F),
+	mMaxTextureWidth(1024),
+	mMaxTextureHeight(1024),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mTexture2DMap(256)
