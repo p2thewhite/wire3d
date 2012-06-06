@@ -48,14 +48,6 @@ public:
 		Bool isFullscreen, Bool useVSync);
 	~Renderer();
 
-	// The platform-dependent constructor must call this function first before
-	// doing any of its own work.
-	void Initialize(UInt width, UInt height);
-
-	// The platform-dependent destructor must call this function after doing
-	// any of its own work.
-	void Terminate();
-
 	// Object drawing
 	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
 	void DrawScene(VisibleSet* rVisibleSet);
@@ -72,6 +64,8 @@ public:
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
 	inline UInt GetMaxTextureStages() const;
+	inline UInt GetMaxTextureWidth() const;
+	inline UInt GetMaxTextureHeight() const;
 
 	inline UInt GetMaxLights() const;
 
@@ -222,6 +216,14 @@ public:
 	inline static const Statistics* GetStatistics();
 	void ResetStatistics();
 
+	// The platform-dependent constructor must call this function first before
+	// doing any of its own work.
+	void Initialize(UInt width, UInt height);
+
+	// The platform-dependent destructor must call this function after doing
+	// any of its own work.
+	void Terminate();
+
 	inline PdrRendererData* GetRendererData() const;
 
 	enum
@@ -277,6 +279,8 @@ private:
 
 	// Maximum anisotropy value supported for texture filtering by the device
 	Float mMaxAnisotropy;
+	UInt mMaxTextureWidth;
+	UInt mMaxTextureHeight;
 
 	static Renderer* s_pRenderer;
 

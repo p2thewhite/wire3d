@@ -105,9 +105,11 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	DCStoreRange(mpBuffer, mBufferSize);
 	GXInvalidateTexAll();
 
-	UShort width = pImage->GetBound(0);
-	UShort height = pImage->GetBound(1);
-	UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
+	const UShort width = pImage->GetBound(0);
+	WIRE_ASSERT(width <= pRenderer->GetMaxTextureWidth());
+	const UShort height = pImage->GetBound(1);
+	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
+	const UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
 	GXInitTexObj(&mTexObj, mpBuffer, width, height,
 		PdrRendererData::IMAGE2D_FORMAT[format],
 		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)],

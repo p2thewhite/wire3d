@@ -39,7 +39,6 @@ void Renderer::Initialize(UInt width, UInt height)
 {
 	mWidth = width;
 	mHeight = height;
-	mMaxAnisotropy = 1.0F;
 
 	mBatchedIndexBuffer = NULL;
 	mBatchedVertexBuffer = NULL;
