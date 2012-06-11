@@ -28,7 +28,7 @@ public:
 		CM_OFF
 	};
 
-	void SetCursor(Int x, Int y, CursorMode mode = CM_POINTING,
+	void SetCursor(Float x, Float y, CursorMode mode = CM_POINTING,
 		UInt playerNo = 0, Float zRollInRadian = 0);
 
 	virtual void Update();

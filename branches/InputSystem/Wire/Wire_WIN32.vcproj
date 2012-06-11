@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="Wire"
 	ProjectGUID="{B0895837-1F40-4F57-8F36-1DF861114254}"
 	RootNamespace="Wire_WIN32"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer/Dx9Renderer"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer/Dx9Renderer;InputSystem/Win32InputSystem"
 				PreprocessorDefinitions="WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -565,298 +566,6 @@
 			Name="Renderer"
 			>
 			<Filter
-				Name="GXRenderer"
-				>
-				<Filter
-					Name="Header Files"
-					>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRendererData.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRendererInput.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.h"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Source Files"
-					>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXBlendMode.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXLight.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXRenderer.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXStateAlpha.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXStateCull.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXStateFog.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXStateMaterial.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXStateZBuffer.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXTexture2D.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.cpp"
-						>
-						<FileConfiguration
-							Name="Debug|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-						<FileConfiguration
-							Name="Release|Win32"
-							ExcludedFromBuild="true"
-							>
-							<Tool
-								Name="VCCLCompilerTool"
-							/>
-						</FileConfiguration>
-					</File>
-				</Filter>
-				<Filter
-					Name="Inline Files"
-					>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXDisplayList.inl"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXIndexBuffer.inl"
-						>
-					</File>
-					<File
-						RelativePath=".\Renderer\GXRenderer\WireGXVertexBuffer.inl"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
 				Name="Dx9Renderer"
 				>
 				<Filter
@@ -960,11 +669,23 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\Engine\WireAxis.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireBaseVirtualInputDevice.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBoundingVolume.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Engine\WireBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireButton.h"
 					>
 				</File>
 				<File
@@ -988,6 +709,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireFallbackVirtualInputDevice.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.h"
 					>
 				</File>
@@ -997,6 +722,18 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputCapability.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputDevice.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputSystem.h"
 					>
 				</File>
 				<File
@@ -1037,6 +774,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WirePlatformKeyMapper.h"
 					>
 				</File>
 				<File
@@ -1112,6 +853,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireVirtualInputDevice.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireVirtualInputDeviceDiscoveryStrategy.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireVisibleObject.h"
 					>
 				</File>
@@ -1123,6 +872,10 @@
 			<Filter
 				Name="Inline Files"
 				>
+				<File
+					RelativePath=".\Engine\WireBaseVirtualInputDevice.inl"
+					>
+				</File>
 				<File
 					RelativePath=".\Engine\WireBuffer.inl"
 					>
@@ -1149,6 +902,14 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputDevice.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputSystem.inl"
 					>
 				</File>
 				<File
@@ -1224,6 +985,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireVirtualInputDeviceDiscoveryStrategy.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireVisibleObject.inl"
 					>
 				</File>
@@ -1236,11 +1001,23 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath=".\Engine\WireAxis.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireBaseVirtualInputDevice.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireBoundingVolume.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Engine\WireBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireButton.cpp"
 					>
 				</File>
 				<File
@@ -1264,6 +1041,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireFallbackVirtualInputDevice.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireGeometry.cpp"
 					>
 				</File>
@@ -1273,6 +1054,18 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireIndexBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputCapability.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputDevice.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireInputSystem.cpp"
 					>
 				</File>
 				<File
@@ -1313,6 +1106,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WirePlatformKeyMapper.cpp"
 					>
 				</File>
 				<File
@@ -1384,9 +1181,69 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireVirtualInputDeviceDiscoveryStrategy.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireVisibleSet.cpp"
 					>
 				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="InputSystem"
+			>
+			<Filter
+				Name="Win32InputSystem"
+				>
+				<Filter
+					Name="Header Files"
+					>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireInputStateBuffer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireInputSystemMessageBroker.h"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireKeyboardAndMouse.h"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireKeyboardAndMouseDiscoveryStrategy.h"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireWin32InputSystem.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Source Files"
+					>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireInputStateBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireInputSystemMessageBroker.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireKeyboardAndMouse.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireKeyboardAndMouseDiscoveryStrategy.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\InputSystem\Win32InputSystem\WireWin32InputSystem.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

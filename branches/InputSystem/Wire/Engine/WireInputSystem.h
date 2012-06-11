@@ -38,11 +38,4 @@ protected:
 
 }
 
-//----------------------------------------------------------------------------
-#ifdef WIRE_WIN
-#include "Dx9/WireWindowsInputSystem.h"
-#else
-#include "Wii/WireWiiInputSystem.h"
-#endif
-
 #endif

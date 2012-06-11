@@ -7,6 +7,6 @@ inline const set<InputCapability>& InputDevice::GetCapabilities() const
 inline Bool InputDevice::HasCapability(InputCapability capability) const
 {
 	//return mCapabilities.Contains(capability);
-	set<InputCapability>::iterator iterator = find(mCapabilities.begin(), mCapabilities.end(), capability);
+	set<InputCapability>::const_iterator iterator = find(mCapabilities.begin(), mCapabilities.end(), capability);
 	return iterator != mCapabilities.end();
 }

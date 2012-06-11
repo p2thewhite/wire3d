@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireGXApplication.h"
-
 #include "WireGXRendererInput.h"
 #include "WireRenderer.h"
 #include "WireGXRendererData.h"

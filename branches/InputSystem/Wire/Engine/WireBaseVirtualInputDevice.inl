@@ -1,7 +1,7 @@
 inline Bool BaseVirtualInputDevice::HasCapability(InputCapability capability) const
 {
 	//return mCapabilities.Contains(capability);
-	set<InputCapability>::iterator iterator = find(mCapabilities.begin(), mCapabilities.end(), capability);
+	set<InputCapability>::const_iterator iterator = find(mCapabilities.begin(), mCapabilities.end(), capability);
 	return iterator != mCapabilities.end();
 }
 

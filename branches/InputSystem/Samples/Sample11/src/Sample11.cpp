@@ -5,9 +5,11 @@
 #include "Importer.h"
 #include "Cursors.h"
 #include "WireInputSystem.h"
+#include "WireVirtualInputDevice.h"
 #include "WireInputCapability.h"
 //#include "WireTHashSet.h"
 #include <set>
+#include <algorithm>
 
 using namespace Wire;
 using namespace std;
@@ -48,22 +50,28 @@ void Sample11::OnIdle()
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
 	mspGuiCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 
-	// working vars for demonstration only, make the cursor position pop
-	// once one of them reaches the screen border
-	static Int xPos = 0;
-	static Int yPos = 0;
-	static Float zRoll = 0;
-	xPos++;
-	yPos++;
-	zRoll += 0.02F;
-	xPos = xPos > screenWidth ? 0 : xPos;
-	yPos = yPos > screenHeight ? 0 : yPos;
-	zRoll = zRoll > MathF::TWO_PI ? 0 : zRoll;
+	// TODO: MAGIC NUMBER = Maximum number of players!
+	UInt playerCount = min<UInt>(GetInputSystem()->GetInputDevicesCount(), 4);
+	for (UInt playerNo = 0; playerNo < playerCount; playerNo++) 
+	{
+		const VirtualInputDevice* pVirtualInputDevice = GetInputSystem()->GetInputDevice(playerNo);
 
-	// Wire3D uses the OpenGL convention of (0,0) being at the bottom left
-	// corner of the screen.
-	SetCursor(xPos, yPos, CM_POINTING, 0 /* player 0 (generic hand */, zRoll);
-	SetCursor(xPos / 2, yPos / 2, CM_SECONDARY_BUTTON_PRESSED, /* player no */ 4);
+		// Wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, that's why
+		// we make a vertical correction here!
+		Float x = pVirtualInputDevice->GetIRAxis(IR_X);
+		Float y = screenHeight - pVirtualInputDevice->GetIRAxis(IR_Y);
+
+		CursorMode mode;
+		if (pVirtualInputDevice->GetButton(BUTTON_A)) {
+			mode = CM_PRIMARY_BUTTON_PRESSED;
+		} else if (pVirtualInputDevice->GetButton(BUTTON_B)) {
+			mode = CM_SECONDARY_BUTTON_PRESSED;
+		} else {
+			mode = CM_POINTING;
+		}
+
+		SetCursor(x, y, mode, playerNo, 0);
+	}
 
 	mspCursors->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspCursors);
@@ -90,7 +98,7 @@ void Sample11::Update()
 }
 
 //----------------------------------------------------------------------------
-void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo, Float zRollInRadian)
+void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo, Float zRollInRadian)
 {
 	if (playerNo >= mspCursors->GetQuantity())
 	{
@@ -127,9 +135,7 @@ void Sample11::SetCursor(Int x, Int y, CursorMode mode, UInt playerNo, Float zRo
 		WIRE_ASSERT(false);
 	}
 
-	Float xf = static_cast<Float>(x);
-	Float yf = static_cast<Float>(y);
-	Vector3F pos(xf, yf, 0);
+	Vector3F pos(x, y, 0);
 	pCursors->Local.SetTranslate(pos);
 	Matrix3F roll(Vector3F::UNIT_Z, zRollInRadian);
 	pCursors->Local.SetRotate(roll);
@@ -215,20 +221,20 @@ void Sample11::PrintInputDevicesInformation()
 {
 	stringstream message;
 
-	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount();
+	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount() << "\n";
 	PrintAndClear(message);
 
 	for (UInt i = 0; i < mpInputSystem->GetInputDevicesCount(); i++)
 	{
 		const VirtualInputDevice* pVirtualInputDevice = mpInputSystem->GetInputDevice(i);
 
-		message << "Input Device " << i;
+		message << "Input Device " << i << "\n";
 		PrintAndClear(message);
 
-		message << "- Name " << pVirtualInputDevice->GetName();
+		message << "- Name " << pVirtualInputDevice->GetName() << "\n";
 		PrintAndClear(message);
 
-		System::Print("- Capabilities: ");
+		System::Print("- Capabilities:\n");
 
 		/*const THashSet<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
 		THashSet<InputCapability>::Iterator iterator(&capabilities);
@@ -238,10 +244,11 @@ void Sample11::PrintInputDevicesInformation()
 			System::Print(GetInputCapabilityName(*pCapability));
 		}*/
 		const set<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
-		set<InputCapability>::iterator iterator = capabilities.begin();
+		set<InputCapability>::const_iterator iterator = capabilities.begin();
 		while (iterator != capabilities.end())
 		{
-			System::Print(GetInputCapabilityName(*iterator));
+			message << GetInputCapabilityName(*iterator) << "\n";
+			PrintAndClear(message);
 			iterator++;
 		}
 	}
@@ -252,41 +259,41 @@ void Sample11::PrintKeyStates()
 {
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_A))
 	{
-		System::Print("Button 'A' Pressed");
+		System::Print("Button 'A' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_B))
 	{
-		System::Print("Button 'B' Pressed");
+		System::Print("Button 'B' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_1))
 	{
-		System::Print("Button '1' Pressed");
+		System::Print("Button '1' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_2))
 	{
-		System::Print("Button '2' Pressed");
+		System::Print("Button '2' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_MINUS))
 	{
-		System::Print("Button 'MINUS' Pressed");
+		System::Print("Button 'MINUS' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_PLUS))
 	{
-		System::Print("Button 'PLUS' Pressed");
+		System::Print("Button 'PLUS' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_Z))
 	{
-		System::Print("Button 'Z' Pressed");
+		System::Print("Button 'Z' Pressed\n");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_C))
 	{
-		System::Print("Button 'C' Pressed");
+		System::Print("Button 'C' Pressed\n");
 	}
 }

@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>Sample11 - Input</ProjectName>
-    <ProjectGuid>{535A54C5-0304-4361-A168-A8EC5BE41313}</ProjectGuid>
+    <ProjectGuid>{1A21949F-EF98-4ABD-A91C-39182829F15D}</ProjectGuid>
     <RootNamespace>Sample11 - Input</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>
@@ -61,7 +61,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
     <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer\GXRenderer;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer\GXRenderer;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer\GXRenderer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,9 +75,11 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cursors.cpp" />
     <ClCompile Include="src\Sample11.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Cursors.h" />
     <ClInclude Include="src\Sample11.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

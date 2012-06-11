@@ -21,14 +21,12 @@ SOURCES		:=	Foundation \
 				Foundation/Wii \
 				Engine \
 				Renderer/GXRenderer \
-				InputSystem \
-				InputSystem/Wii
+				InputSystem/WiiInputSystem
 DATA		:=	data  
 INCLUDES	:=	Foundation \
 				Engine \
 				Renderer/GXRenderer \
-				InputSystem \
-				InputSystem/Wii
+				InputSystem/WiiInputSystem
 ifeq ($(WIRE_DEBUG),y)
 BUILD		:=	build_wii_debug
 LIBWIRE		:=	libWired.a
