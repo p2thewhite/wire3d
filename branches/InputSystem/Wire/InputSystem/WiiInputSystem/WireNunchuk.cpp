@@ -31,6 +31,8 @@ const char* Nunchuk::GetName() const
 
 Bool Nunchuk::GetButton(Button button) const
 {
+	if (mpData == NULL) return false;
+
 	UInt key;
 
 	switch (button)
@@ -65,6 +67,8 @@ Bool Nunchuk::GetDigitalAxis(DigitalAxis axis) const
 
 Float Nunchuk::GetAnalogAxis(AnalogAxis axis) const
 {
+	if (mpData == NULL) return 0;
+
 	switch (axis)
 	{
 	case ANALOG_X:

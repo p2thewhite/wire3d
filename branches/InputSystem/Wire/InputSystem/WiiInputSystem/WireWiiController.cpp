@@ -1,4 +1,5 @@
 #include "WireWiiController.h"
+#include "WireSystem.h"
 #include <wiiuse/wpad.h>
 
 namespace Wire

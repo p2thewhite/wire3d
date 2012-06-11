@@ -39,7 +39,7 @@ void WiiInputSystem::AfterInputDevicesDiscovery()
 	//for (UInt i = 0; i < virtualInputDevices.GetQuantity(); i++)
 	for (UInt i = 0; i < virtualInputDevices.size(); i++)
 	{
-		WiiController* pWiiController = dynamic_cast<WiiController*>(virtualInputDevices[i]);
+		WiiController* pWiiController = static_cast<WiiController*>(virtualInputDevices[i]);
 		pWiiController->SetIRCaptureArea(0, 0, mScreenWidth, mScreenHeight);
 	}
 }

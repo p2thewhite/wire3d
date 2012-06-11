@@ -78,11 +78,11 @@ void Sample11::OnIdle()
 
 	if (mInputDevicesStateChanged)
 	{
-		PrintInputDevicesInformation();
+		//PrintInputDevicesInformation();
 		mInputDevicesStateChanged = false;
 	}
 
-	PrintKeyStates();
+	//PrintKeyStates();
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspGuiCamera);
@@ -221,20 +221,20 @@ void Sample11::PrintInputDevicesInformation()
 {
 	stringstream message;
 
-	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount() << "\n";
+	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount();
 	PrintAndClear(message);
 
 	for (UInt i = 0; i < mpInputSystem->GetInputDevicesCount(); i++)
 	{
 		const VirtualInputDevice* pVirtualInputDevice = mpInputSystem->GetInputDevice(i);
 
-		message << "Input Device " << i << "\n";
+		message << "Input Device " << i;
 		PrintAndClear(message);
 
-		message << "- Name " << pVirtualInputDevice->GetName() << "\n";
+		message << "- Name " << pVirtualInputDevice->GetName();
 		PrintAndClear(message);
 
-		System::Print("- Capabilities:\n");
+		System::Print("- Capabilities:");
 
 		/*const THashSet<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
 		THashSet<InputCapability>::Iterator iterator(&capabilities);
@@ -247,7 +247,7 @@ void Sample11::PrintInputDevicesInformation()
 		set<InputCapability>::const_iterator iterator = capabilities.begin();
 		while (iterator != capabilities.end())
 		{
-			message << GetInputCapabilityName(*iterator) << "\n";
+			message << GetInputCapabilityName(*iterator);
 			PrintAndClear(message);
 			iterator++;
 		}
@@ -259,41 +259,41 @@ void Sample11::PrintKeyStates()
 {
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_A))
 	{
-		System::Print("Button 'A' Pressed\n");
+		System::Print("Button 'A' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_B))
 	{
-		System::Print("Button 'B' Pressed\n");
+		System::Print("Button 'B' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_1))
 	{
-		System::Print("Button '1' Pressed\n");
+		System::Print("Button '1' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_2))
 	{
-		System::Print("Button '2' Pressed\n");
+		System::Print("Button '2' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_MINUS))
 	{
-		System::Print("Button 'MINUS' Pressed\n");
+		System::Print("Button 'MINUS' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_PLUS))
 	{
-		System::Print("Button 'PLUS' Pressed\n");
+		System::Print("Button 'PLUS' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_Z))
 	{
-		System::Print("Button 'Z' Pressed\n");
+		System::Print("Button 'Z' Pressed");
 	}
 
 	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_C))
 	{
-		System::Print("Button 'C' Pressed\n");
+		System::Print("Button 'C' Pressed");
 	}
 }

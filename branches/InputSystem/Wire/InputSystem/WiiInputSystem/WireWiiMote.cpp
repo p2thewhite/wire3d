@@ -38,6 +38,8 @@ const char* WiiMote::GetName() const
 
 Bool WiiMote::GetButton(Button button) const
 {
+	if (mpData == NULL) return false;
+
 	UInt key;
 
 	switch (button)
@@ -62,10 +64,11 @@ Bool WiiMote::GetButton(Button button) const
 
 Float WiiMote::GetIRAxis(IRAxis axis) const
 {
+	if (mpData == NULL) return 0;
+
 	if (!mpData->ir.valid)
 	{
-		//System::Assert("mpData->ir.valid == false", "WireWiiMote.cpp", 65);
-		return -1;
+		return 0;
 	}
 
 	switch (axis)
@@ -81,12 +84,14 @@ Float WiiMote::GetIRAxis(IRAxis axis) const
 		break;
 	default:
 		System::Assert("Unknown IR axis.", "WireWiiMote.cpp", 83);
-		return -1;
+		return 0;
 	}
 }
 
 Bool WiiMote::GetDigitalAxis(DigitalAxis axis) const
 {
+	if (mpData == NULL) return false;
+
 	UInt key = mpPlatformKeyMapper->GetPlatformKeyForDigitalAxis(axis);
 	return (mpData->btns_h & key) != 0;
 }
