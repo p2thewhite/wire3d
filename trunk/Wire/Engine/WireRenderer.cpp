@@ -294,6 +294,21 @@ void Renderer::Update(const IndexBuffer* pIndexBuffer)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Update(const IndexBuffer* pIndexBuffer, UInt count,
+	UInt offset)
+{
+	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Update(pIndexBuffer, count, offset);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Index buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
 PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 {
 	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
@@ -406,6 +421,21 @@ void Renderer::Update(const VertexBuffer* pVertexBuffer)
 	if (pValue)
 	{
 		(*pValue)->Update(pVertexBuffer);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // Vertex buffer is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Update(const VertexBuffer* pVertexBuffer, UInt count,
+	UInt offset)
+{
+	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+	if (pValue)
+	{
+		(*pValue)->Update(pVertexBuffer, count, offset);
 	}
 	else
 	{

@@ -208,72 +208,81 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 	TArray<Vector2F> uvs(totalCharCount*4);
 	TArray<Vector4F> charSizes(totalCharCount);
 
-	UInt wc = 0;
 	Int penY = height;
-	for (UInt wy = 0; wy < texHeight/height; wy++)
+	Int penX = 0;
+	for (UInt wc = 0; wc < totalCharCount; wc++)
 	{
-		Int penX = 0;
-		for (UInt wx = 0; wx < texWidth/width; wx++)
+		FT_UInt glyphIndex = FT_Get_Char_Index(face, wc);
+		if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
 		{
-			if (wc >= totalCharCount)
-			{
-				break;
-			}
-
-			FT_UInt glyphIndex = FT_Get_Char_Index(face, wc++);
-			if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
-			{
-				uvs.Append(Vector2F(0, 0));
-				uvs.Append(Vector2F(1, 0));
-				uvs.Append(Vector2F(1, 1));
-				uvs.Append(Vector2F(0, 1));
-				Float fWidth = static_cast<Float>(width);
-				Float fHeight = static_cast<Float>(height);
-				charSizes.Append(Vector4F(fWidth, fHeight, fWidth, 0));
-				continue;
-			}
-
-			Int offset = penX + slot->bitmap_left;
-			Int top = penY - slot->bitmap_top;
-			FT_Bitmap& rBitmap = slot->bitmap;
-
-			Float u0 = static_cast<Float>(offset)/texWidth;
-			Float v0 = static_cast<Float>(top)/texHeight;
-			Float u1 = static_cast<Float>(offset+rBitmap.width)/texWidth;
-			Float v1 = static_cast<Float>(top+rBitmap.rows)/texHeight;
-			uvs.Append(Vector2F(u0, v0));
-			uvs.Append(Vector2F(u1, v0));
-			uvs.Append(Vector2F(u1, v1));
-			uvs.Append(Vector2F(u0, v1));
-
-			Float cWidth = static_cast<Float>(rBitmap.width);
-			Float cHeight = static_cast<Float>(rBitmap.rows);
-			Float cStride = static_cast<Float>(slot->advance.x >> 6);
-			Float cOffsetY = static_cast<Float>(slot->bitmap.rows - 
-				slot->bitmap_top);
-			charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
-
-			Int q = 0;
-			for (Int j = top; j < (top + rBitmap.rows); j++, q++)
-			{
-				Int p = 0;
-				for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
-				{
-					UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
-					pDst[(j*texWidth + i)*4] = 0xFF;
-					pDst[(j*texWidth + i)*4+1] = 0xFF;
-					pDst[(j*texWidth + i)*4+2] = 0xFF;
-					pDst[(j*texWidth + i)*4+3] = pixel;
-				}
-			}
-
-			Int advance = slot->advance.x >> 6;
-			penX += advance > rBitmap.width ? advance : rBitmap.width;
-			penX++;
-			WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
+			uvs.Append(Vector2F(0, 0));
+			uvs.Append(Vector2F(1, 0));
+			uvs.Append(Vector2F(1, 1));
+			uvs.Append(Vector2F(0, 1));
+			Float fWidth = static_cast<Float>(width);
+			Float fHeight = static_cast<Float>(height);
+			charSizes.Append(Vector4F(fWidth, fHeight, fWidth, 0));
+			continue;
 		}
 
-		penY += height;
+		Int advance = slot->advance.x >> 6;
+		advance = advance > slot->bitmap.width ? advance : slot->bitmap.width;
+		if (penX+advance >= static_cast<Int>(texWidth))
+		{
+			penX = 0;
+			penY += height;
+			if (penY+height >= texHeight)
+			{
+				if (texWidth > texHeight)
+				{
+					texHeight = texHeight << 1;
+				}
+				else
+				{
+					texWidth = texWidth << 1;
+				}
+
+				fitsInTexture = false;
+				break;
+			}
+		}
+
+		Int offset = penX + slot->bitmap_left;
+		Int top = penY - slot->bitmap_top;
+		FT_Bitmap& rBitmap = slot->bitmap;
+
+		Float u0 = static_cast<Float>(offset)/texWidth;
+		Float v0 = static_cast<Float>(top)/texHeight;
+		Float u1 = static_cast<Float>(offset+rBitmap.width)/texWidth;
+		Float v1 = static_cast<Float>(top+rBitmap.rows)/texHeight;
+		uvs.Append(Vector2F(u0, v0));
+		uvs.Append(Vector2F(u1, v0));
+		uvs.Append(Vector2F(u1, v1));
+		uvs.Append(Vector2F(u0, v1));
+
+		Float cWidth = static_cast<Float>(rBitmap.width);
+		Float cHeight = static_cast<Float>(rBitmap.rows);
+		Float cStride = static_cast<Float>(slot->advance.x >> 6);
+		Float cOffsetY = static_cast<Float>(slot->bitmap.rows - slot->
+			bitmap_top);
+		charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
+
+		Int q = 0;
+		for (Int j = top; j < (top + rBitmap.rows); j++, q++)
+		{
+			Int p = 0;
+			for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
+			{
+				UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
+				pDst[(j*texWidth + i)*4] = 0xFF;
+				pDst[(j*texWidth + i)*4+1] = 0xFF;
+				pDst[(j*texWidth + i)*4+2] = 0xFF;
+				pDst[(j*texWidth + i)*4+3] = pixel;
+			}
+		}
+
+		penX += advance;
+		WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
 	}
 
 	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,

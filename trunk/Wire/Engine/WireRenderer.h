@@ -118,6 +118,7 @@ public:
 	void Disable(const IndexBuffer* pIndexBuffer);
 	void Set(const IndexBuffer* pIndexBuffer);
 	void Update(const IndexBuffer* pIndexBuffer);
+	void Update(const IndexBuffer* pIndexBuffer, UInt count, UInt offset = 0);
 	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 
 	// Vertex buffer management
@@ -128,6 +129,8 @@ public:
 	void Disable(const VertexBuffer* pVertexBuffer);
 	void Set(const VertexBuffer* pIndexBuffer);
 	void Update(const VertexBuffer* pVertexBuffer);
+	void Update(const VertexBuffer* pVertexBuffer, UInt count,
+		UInt offset = 0);
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// 2D texture management

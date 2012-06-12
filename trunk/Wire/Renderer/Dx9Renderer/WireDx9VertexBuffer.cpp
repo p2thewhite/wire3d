@@ -142,6 +142,13 @@ void PdrVertexBuffer::CreateDeclaration(Renderer* pRenderer, const
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
+	Update(pVertexBuffer, pVertexBuffer->GetQuantity());
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
+	UInt offset)
+{
 	WIRE_ASSERT(mVertexSize > 0);
 	WIRE_ASSERT(mBufferSize == (mVertexSize * pVertexBuffer->GetQuantity()));
 	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
@@ -149,7 +156,13 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
-	void* pData = Lock(lockingMode);
-	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
+	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(lockingMode)) +
+		offset * mVertexSize;
+
+	size_t size = count * mVertexSize;
+	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
+		GetData()) + offset * mVertexSize;
+	System::Memcpy(pBuffer, size, pDst, size);
+
 	Unlock();
 }

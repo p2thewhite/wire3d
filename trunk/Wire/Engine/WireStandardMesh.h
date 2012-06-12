@@ -19,6 +19,7 @@ namespace Wire
 
 class ColorRGBA;
 class Geometry;
+class Text;
 
 class StandardMesh
 {
@@ -67,6 +68,8 @@ public:
 	// "\2" use supplied rColor
 	static Geometry* CreateText(const Char* pText, const Float screenWidth,
 		const Float screenHeight, const ColorRGBA& rColor);
+
+	static Text* CreateText(UInt maxLength = 4000);
 
 private:
 	static Texture2DPtr s_spFontTexture;
