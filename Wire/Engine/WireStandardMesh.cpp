@@ -12,6 +12,7 @@
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireEffect.h"
+
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireGeometry.h"
@@ -19,6 +20,7 @@
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireStateAlpha.h"
+#include "WireText.h"
 #include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
 
@@ -813,6 +815,93 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	pMesh->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
 	pMesh->GetMesh()->GetModelBound()->SetRadius(radius);
 	return pMesh;
+}
+
+//----------------------------------------------------------------------------
+Text* StandardMesh::CreateText(UInt maxLength)
+{
+	if (!s_spFontTexture)
+	{
+		const UInt texWidth = 128;
+		const UInt texHeight = 64;
+		UChar* const pRaw = WIRE_NEW UChar[texWidth * texHeight * 4];
+		UChar* pDst = pRaw;
+		UChar* pSrc = const_cast<UChar*>(s_Font);
+
+		for (UInt j = 0; j < 16*48; j++)
+		{
+			for (UInt i = 0; i < 8; i++)
+			{
+				if (*pSrc & (0x80 >> i))
+				{
+					*pDst++ = 0xFF;
+					*pDst++ = 0xFF;
+					*pDst++ = 0xFF;
+					*pDst++ = 0xFF;
+				}
+				else
+				{
+					*pDst++ = 0;
+					*pDst++ = 0;
+					*pDst++ = 0;
+					*pDst++ = 0;
+				}
+			}
+
+			pSrc++;
+		}
+
+		Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
+			texHeight, pRaw, false);
+		s_spFontTexture = WIRE_NEW Texture2D(pImage);
+		s_spFontTexture->SetFilterType(Texture2D::FT_NEAREST);
+	}
+
+	const UInt totalCharCount = 128;
+	TArray<Vector2F> uvs(totalCharCount*4);
+	TArray<Vector4F> charSizes(totalCharCount);
+
+	UInt texWidth = s_spFontTexture->GetImage()->GetBound(0);
+	UInt texHeight = s_spFontTexture->GetImage()->GetBound(1);
+
+	for (UInt i = 0; i < 32; i++)
+	{
+		Vector2F pos(120.0F, 40.0F);
+		Float u0 = pos.X()/texWidth;
+		Float v0 = pos.Y()/texHeight;
+		Float u1 = (pos.X()+8.0F)/texWidth;
+		Float v1 = (pos.Y()+8.0F)/texHeight;
+		uvs.Append(Vector2F(u0, v0));
+		uvs.Append(Vector2F(u1, v0));
+		uvs.Append(Vector2F(u1, v1));
+		uvs.Append(Vector2F(u0, v1));
+		charSizes.Append(Vector4F(8, 8, 8, 0));
+	}
+
+	Vector2F pos(0, 0);
+	for (UInt y = 0; y < 6; y++)
+	{
+		pos.X() = 0;
+		for (UInt x = 0; x < 16; x++)
+		{	
+			Float u0 = pos.X()/texWidth;
+			Float v0 = pos.Y()/texHeight;
+			Float u1 = (pos.X()+8.0F)/texWidth;
+			Float v1 = (pos.Y()+8.0F)/texHeight;
+			uvs.Append(Vector2F(u0, v0));
+			uvs.Append(Vector2F(u1, v0));
+			uvs.Append(Vector2F(u1, v1));
+			uvs.Append(Vector2F(u0, v1));
+			charSizes.Append(Vector4F(8, 8, 8, 0));
+			pos.X() += 8.0F;
+		}
+
+		pos.Y() += 8.0F;
+	}
+
+	Text* pText = WIRE_NEW Text(8, s_spFontTexture, uvs, charSizes,
+		maxLength);
+	return pText;
 }
 
 //----------------------------------------------------------------------------

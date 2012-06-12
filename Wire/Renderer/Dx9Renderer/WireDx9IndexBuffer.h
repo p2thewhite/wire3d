@@ -37,6 +37,7 @@ public:
 	inline void Unlock();
 
 	void Update(const IndexBuffer* pIndexBuffer);
+	void Update(const IndexBuffer* pIndexBuffer, UInt count, UInt offset = 0);
 
 	inline UInt GetBufferSize() const;
 

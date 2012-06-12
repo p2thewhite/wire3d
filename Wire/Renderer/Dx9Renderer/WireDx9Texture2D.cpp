@@ -200,24 +200,18 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 
 	// Anisotropic filtering value.
 	Float anisotropy = pTexture->GetAnisotropyValue();
-	if (1.0F < anisotropy && anisotropy <= pRenderer->GetMaxAnisotropy())
+	if (anisotropy > pRenderer->GetMaxAnisotropy())
 	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
-			static_cast<DWORD>(anisotropy));
-		WIRE_ASSERT(SUCCEEDED(hr));
+		anisotropy = pRenderer->GetMaxAnisotropy();
 	}
-	else if (1.0F < anisotropy)
+	else if (anisotropy < 1.0F)
 	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
-			static_cast<DWORD>(pRenderer->GetMaxAnisotropy()));
-		WIRE_ASSERT(SUCCEEDED(hr));
+		anisotropy = 1.0F;
 	}
-	else
-	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
-			static_cast<DWORD>(1.0F));
-		WIRE_ASSERT(SUCCEEDED(hr));
-	}
+
+	hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
+		static_cast<DWORD>(anisotropy));
+	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Set the filter mode.
 	Texture2D::FilterType filterType = pTexture->GetFilterType();

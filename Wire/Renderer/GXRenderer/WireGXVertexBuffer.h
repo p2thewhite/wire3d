@@ -43,6 +43,8 @@ public:
 	inline void Unlock();
 
 	void Update(const VertexBuffer* pVertexBuffer);
+	void Update(const VertexBuffer* pVertexBuffer, UInt count,
+		UInt offset = 0);
 
 	inline UInt GetBufferSize() const;
 

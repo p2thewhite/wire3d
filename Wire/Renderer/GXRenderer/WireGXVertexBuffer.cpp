@@ -119,12 +119,23 @@ void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 {
+	Update(pVertexBuffer, pVertexBuffer->GetQuantity());
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
+	UInt offset)
+{
 	WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
 	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
 		GetChannelQuantity()*sizeof(Float));
 
-	void* pData = Lock(Buffer::LM_WRITE_ONLY);
-	System::Memcpy(pData, mBufferSize, pVertexBuffer->GetData(), mBufferSize);
+	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(Buffer::LM_WRITE_ONLY)) +
+		offset * mVertexSize;
+	size_t size = count * mVertexSize;
+	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
+		GetData()) + offset * mVertexSize;
+	System::Memcpy(pBuffer, size, pDst, size);
 	Unlock();
 }
 
