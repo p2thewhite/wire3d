@@ -42,9 +42,10 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
-	// Duplicate the mesh (only if shared), apply World transform to vertices,
-	// set World(Bound) to identity and World(Bound)IsCurrent to true.
-	void MakeStatic();
+	// If World(Bound)IsCurrent (or forceStatic) is true, duplicate the mesh
+	// (only if shared), apply World transform to vertices and set 
+	// World(Bound) to identity.
+	void MakeStatic(Bool forceStatic = false);
 
 	// member access
 	StatePtr States[State::MAX_STATE_TYPE];

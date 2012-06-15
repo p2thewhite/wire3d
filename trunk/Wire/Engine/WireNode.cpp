@@ -326,7 +326,7 @@ void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 }
 
 //----------------------------------------------------------------------------
-void Node::MakeStatic()
+void Node::MakeStatic(Bool forceStatic)
 {
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
@@ -334,14 +334,14 @@ void Node::MakeStatic()
 		Node* pNode = DynamicCast<Node>(pChild);
 		if (pNode)
 		{
-			pNode->MakeStatic();
+			pNode->MakeStatic(forceStatic);
 		}
 		else
 		{
 			Geometry* pGeometry = DynamicCast<Geometry>(pChild);
 			if (pGeometry)
 			{
-				pGeometry->MakeStatic();
+				pGeometry->MakeStatic(forceStatic);
 			}
 		}
 	}

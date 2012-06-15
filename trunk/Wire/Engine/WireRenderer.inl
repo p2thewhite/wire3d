@@ -91,15 +91,33 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 }
 
 //----------------------------------------------------------------------------
+inline Bool Renderer::UsesBatching() const
+{
+	return mStaticBatchingThreshold > 0 || mDynamicBatchingThreshold > 0;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetStaticBatchingThreshold() const
 {
 	return mStaticBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
+inline Bool Renderer::UsesStaticBatching() const
+{
+	return mStaticBatchingThreshold > 0;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetDynamicBatchingThreshold() const
 {
 	return mDynamicBatchingThreshold;
+}
+
+//----------------------------------------------------------------------------
+inline Bool Renderer::UsesDynamicBatching() const
+{
+	return mDynamicBatchingThreshold > 0;
 }
 
 //----------------------------------------------------------------------------

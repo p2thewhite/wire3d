@@ -23,6 +23,7 @@ WIRE_IMPLEMENT_RTTI(Wire, Text, Geometry);
 Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	TArray<Vector4F>& rCharSizes, UInt maxLength)
 	:
+	mColor(Color32::WHITE),
 	mIsPdrBufferOutOfDate(true)
 {
 	WIRE_ASSERT(rUvs.GetQuantity() == rCharSizes.GetQuantity()*4);
@@ -35,6 +36,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	VertexAttributes attr;
 	attr.SetPositionChannels(3);
 	attr.SetTCoordChannels(2);
+	attr.SetColorChannels(4);
 	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attr, maxLength*4,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
 
@@ -50,7 +52,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	mLineWidth = MathF::MAX_REAL;
 
 	Material* pMaterial = WIRE_NEW Material();
-	pMaterial->AddTexture(pFontTexture, Material::BM_REPLACE);
+	pMaterial->AddTexture(pFontTexture);
 	SetMaterial(pMaterial);
 
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
@@ -74,10 +76,23 @@ void Text::Clear()
 }
 
 //----------------------------------------------------------------------------
+void Text::Clear(const Color32& rColor)
+{
+	mColor = rColor;
+	Clear();
+}
+
+//----------------------------------------------------------------------------
 void Text::SetPen(Float x, Float y)
 {
 	mPenX = x;
 	mPenY = y;
+}
+
+//----------------------------------------------------------------------------
+void Text::SetColor(const Color32& rColor)
+{
+	mColor = rColor;
 }
 
 //----------------------------------------------------------------------------
@@ -88,9 +103,23 @@ Bool Text::Set(const Char* pText, Float x, Float y)
 }
 
 //----------------------------------------------------------------------------
+Bool Text::Set(const Char* pText, const Color32& rColor, Float x, Float y)
+{
+	mColor = rColor;
+	return Set(pText, x, y);
+}
+
+//----------------------------------------------------------------------------
 Bool Text::Append(const Char* pText)
 {
 	return Append(pText, mPenX, mPenY);
+}
+
+//----------------------------------------------------------------------------
+Bool Text::Append(const Char* pText, const Color32& rColor)
+{
+	mColor = rColor;
+	return Append(pText);
 }
 
 //----------------------------------------------------------------------------
@@ -152,9 +181,13 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 
 		Float cy = y - mCharSizes[c].W();
 		pVertexBuffer->Position3(i) = Vector3F(x, cy+cHeight, 0);
+		pVertexBuffer->Color4(i) = mColor;
 		pVertexBuffer->Position3(i+1) = Vector3F(x+cWidth, cy+cHeight, 0);
+		pVertexBuffer->Color4(i+1) = mColor;
 		pVertexBuffer->Position3(i+2) = Vector3F(x+cWidth, cy, 0);
+		pVertexBuffer->Color4(i+2) = mColor;
 		pVertexBuffer->Position3(i+3) = Vector3F(x, cy, 0);
+		pVertexBuffer->Color4(i+3) = mColor;
 
 		UInt c4 = c*4;
 		pVertexBuffer->TCoord2(i) = mUvs[c4];
@@ -191,6 +224,13 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 	mPenY = y;
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool Text::Append(const Char* pText, const Color32& rColor, Float x, Float y)
+{
+	mColor = rColor;
+	return Append(pText, x, y);
 }
 
 //----------------------------------------------------------------------------

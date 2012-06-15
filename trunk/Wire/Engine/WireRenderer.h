@@ -56,10 +56,13 @@ public:
 
 	// Batching
 	void CreateBatchingBuffers(UInt size);
+	inline Bool UsesBatching() const;
 	void SetStaticBatchingThreshold(UInt threshold);
 	inline UInt GetStaticBatchingThreshold() const;
+	inline Bool UsesStaticBatching() const;
 	void SetDynamicBatchingThreshold(UInt threshold);
 	inline UInt GetDynamicBatchingThreshold() const;
+	inline Bool UsesDynamicBatching() const;
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;

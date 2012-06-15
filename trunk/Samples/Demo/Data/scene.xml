@@ -2,7 +2,7 @@
   <Node Name="outGoingLight" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Light Type="Point" Ambient="0.1975806, 0.1975806, 0.1975806" Color="0, 0, 0" />
 	<Node Name="ceilingFanPivot" Pos="6.690254, 5.736781, 7.542114" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-	  <Leaf Name="ceilingFan" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+	  <Leaf Name="ceilingFan" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
 	    <Mesh Name="polySurface76_00003DF2_1_1_0_0">
 	      <Vertices Name="polySurface76_00003DF2.vtx" LittleEndian="y" />
 	      <Indices Name="polySurface76_00003DF2.idx" LittleEndian="y" />
@@ -16,7 +16,7 @@
 	  </Leaf>
 	</Node>
 	<Node Name="ceilingFanPivot" Pos="-5.316956, 5.736781, 7.542114" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-	  <Leaf Name="ceilingFan" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+	  <Leaf Name="ceilingFan" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
 	    <Mesh Name="polySurface76_00003DF2_1_1_0_0">
 	      <Vertices Name="polySurface76_00003DF2.vtx" LittleEndian="y" />
 	      <Indices Name="polySurface76_00003DF2.idx" LittleEndian="y" />

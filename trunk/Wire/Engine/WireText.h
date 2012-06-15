@@ -28,14 +28,20 @@ public:
 	virtual ~Text();
 
 	void Clear();
+	void Clear(const Color32& rColor);
 
 	// Wire::Text coordinates use the OpenGL convention of (0,0) being the
 	// bottom left corner with ascending Y going towards the top. Same as
 	// orthogonal projection of Wire::Camera
 	void SetPen(Float x, Float y);
+	void SetColor(const Color32& rColor);
 	Bool Set(const Char* pText, Float x = 0.0F, Float y = 0.0F);
+	Bool Set(const Char* pText, const Color32& rColor, Float x = 0.0F,
+		Float y = 0.0F);
 	Bool Append(const Char* pText);
+	Bool Append(const Char* pText, const Color32& rColor);
 	Bool Append(const Char* pText, Float x, Float y);
+	Bool Append(const Char* pText, const Color32& rColor, Float x, Float y);
 
 	Float GetFontHeight();
 
@@ -52,6 +58,7 @@ public:
 private:
 	TArray<Vector2F> mUvs;			// 4 per font character
 	TArray<Vector4F> mCharSizes;	// 1 (width, height, stride x, offset y)
+	Color32 mColor;
 	Float mFontHeight;
 	Float mLineWidth;
 	Float mPenX;

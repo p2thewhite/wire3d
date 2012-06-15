@@ -35,6 +35,10 @@ Bool Demo::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->BindAll(mspText);
 
+ 	GetRenderer()->CreateBatchingBuffers(60*1024);
+ 	GetRenderer()->SetDynamicBatchingThreshold(300);
+ 	GetRenderer()->SetStaticBatchingThreshold(10000);
+
 	return true;
 }
 
@@ -135,38 +139,29 @@ void Demo::DrawFPS(Double time)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	const Renderer::Statistics* pStats = Renderer::GetStatistics();
-
-	UInt fps = static_cast<UInt>(1/elapsed);
-	const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
-	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
-		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, "
-		"TextureSize: %.2f MB";
-
-	const Float kb = 1024.0f;
-	const Float mb = kb*kb;
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
-		VBOTotalSize/kb, pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->
-		TextureCount, pStats->TextureTotalSize/mb);
-
-	String str(text);
-
-// #ifdef WIRE_DEBUG
-// 	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/mb;
-// 	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f MB, "
-// 		"Number of Allocations: %d", allocatedMemory,
-// 		Memory::AllocationCount);
-// 	str += String(text);
-// #endif
-
 	// set to screen width (might change any time in window mode)
 	mspText->SetLineWidth(screenWidth);
+	mspText->Clear(Color32::WHITE);
 	// Text uses OpenGL convention of (0,0) being left bottom of window
-	mspText->Set(str, 0.0F, screenHeight-mspText->GetFontHeight());
-	mspText->Update(GetRenderer());
+	mspText->SetPen(0, screenHeight-mspText->GetFontHeight()-32.0F);
 
+	const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
+	UInt fps = static_cast<UInt>(1/elapsed);
+	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
+		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
+		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+	Float kb = 1024.0F;
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
+		pStats->DrawCalls, pStats->Triangles, pStats->BatchedStatic,
+		pStats->BatchedDynamic, pStats->VBOCount, pStats->VBOTotalSize/kb,
+		pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->TextureCount,
+		pStats->TextureTotalSize/(kb*kb));
+	mspText->SetColor(Color32::WHITE);
+	mspText->Append(text);
+
+	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
 	GetRenderer()->Draw(mspText);
 }
