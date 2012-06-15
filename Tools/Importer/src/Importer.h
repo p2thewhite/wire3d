@@ -23,7 +23,8 @@ class Importer
 
 public:
 	Importer(const Char* pPath = "",
-		Bool materialsWithEqualNamesAreIdentical = true);
+		Bool materialsWithEqualNamesAreIdentical = true,
+		Bool prepareForStaticBatching = true);
 
 	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		pCameras = NULL);
@@ -51,11 +52,13 @@ private:
 
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	Bool HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 	Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
+	Bool Is(const Char*, const Char*);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
@@ -73,6 +76,9 @@ private:
 	void UpdateGS(Spatial* pSpatial);
 	void ResetStatistics();
 
+	static void InitStaticSpatials(TArray<Spatial*>& rSpatials,
+		Bool prepareForStaticBatching);
+
 	int decodePNG(std::vector<unsigned char>& out_image,
 		unsigned long& image_width, unsigned long& image_height,
 		const unsigned char* in_png, size_t in_size,
@@ -85,8 +91,10 @@ private:
 	THashTable<Material*, TArray<State*> > mMaterialStates;
 	THashTable<String, Mesh*> mMeshes;
 	THashTable<String, Texture2D*> mTextures;
+	TArray<Spatial*> mStaticSpatials;
 
 	Bool mMaterialsWithEqualNamesAreIdentical;
+	Bool mPrepareForStaticBatching;
 	Statistics mStatistics;
 };
 

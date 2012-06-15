@@ -280,11 +280,15 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 }
 
 //----------------------------------------------------------------------------
-void Geometry::MakeStatic()
+void Geometry::MakeStatic(Bool forceStatic)
 {
-	WorldIsCurrent = true;
-	WorldBoundIsCurrent = true;
-	if (World.IsIdentity())
+	if (forceStatic)
+	{
+		WorldIsCurrent = true;
+		WorldBoundIsCurrent = true;
+	}
+
+	if ((!(WorldIsCurrent && WorldBoundIsCurrent) || World.IsIdentity()))
 	{
 		return;
 	}
