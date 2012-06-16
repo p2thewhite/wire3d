@@ -5,6 +5,7 @@
 #include "WireTypes.h"
 #include "WireButton.h"
 #include "WireAxis.h"
+#include "WireEulerAngle.h"
 #include <wiiuse/wpad.h>
 
 namespace Wire
@@ -21,6 +22,7 @@ public:
 	virtual void SetData(WPADData* pData);
 	virtual Bool GetButton(Button button) const;
 	virtual Float GetIRAxis(IRAxis axis) const;
+	virtual Float GetIRAxisRotation(EulerAngle eulerAngle) const;
 	virtual Bool GetDigitalAxis(DigitalAxis axis) const;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 private:

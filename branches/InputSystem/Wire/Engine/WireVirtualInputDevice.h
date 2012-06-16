@@ -4,6 +4,7 @@
 #include "WireTypes.h"
 #include "WireButton.h"
 #include "WireAxis.h"
+#include "WireEulerAngle.h"
 #include "WireInputCapability.h"
 //#include "WireTHashSet.h"
 #include <set>
@@ -22,6 +23,7 @@ public:
 	virtual const char* GetName() const = 0;
 	virtual Bool GetButton(Button button) const = 0;
 	virtual Float GetIRAxis(IRAxis axis) const = 0;
+	virtual Float GetIRAxisRotation(EulerAngle axis) const = 0;
 	virtual Float GetDigitalAxis(DigitalAxis axis) const = 0;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const = 0;
 	virtual Bool HasCapability(InputCapability capability) const = 0;

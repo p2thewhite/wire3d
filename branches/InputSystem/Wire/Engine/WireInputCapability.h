@@ -9,6 +9,7 @@ enum InputCapability {
 	IR_AXIS,
 	DIGITAL_AXIS,
 	ANALOG_AXIS,
+	IR_AXIS_ROTATION,
 	UNKNOWN_CAPABILITY
 };
 

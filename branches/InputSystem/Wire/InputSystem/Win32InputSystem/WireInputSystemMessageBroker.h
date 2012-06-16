@@ -20,6 +20,7 @@ public:
 private:
 	InputSystemMessageBroker();
 
+	// Singleton.
 	static InputSystemMessageBroker* s_pInstance;
 
 	InputStateBuffer* mpFrontBuffer;

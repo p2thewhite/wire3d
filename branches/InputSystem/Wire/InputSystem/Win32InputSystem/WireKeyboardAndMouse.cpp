@@ -1,6 +1,8 @@
 #include "WireKeyboardAndMouse.h"
 #include "WireSystem.h"
 #include <algorithm>
+#include <Windows.h>
+#include <WinUser.h>
 
 using namespace std;
 
@@ -12,6 +14,7 @@ KeyboardAndMouse::KeyboardAndMouse(const PlatformKeyMapper* pPlatformKeyMapper) 
 {
 	mCapabilities.insert(BUTTONS);
 	mCapabilities.insert(IR_AXIS);
+	mCapabilities.insert(IR_AXIS_ROTATION);
 	mCapabilities.insert(DIGITAL_AXIS);
 }
 
@@ -34,27 +37,20 @@ const char* KeyboardAndMouse::GetName() const
 Bool KeyboardAndMouse::GetButton(Button button) const
 {
 	if (mpCurrentInputStateBuffer == NULL)
+	{
 		return false;
+	}
 
-	if (button == BUTTON_A) 
-	{
-		return mpCurrentInputStateBuffer->GetRightMouseButtonDown();
-	}
-	else if (button == BUTTON_B) 
-	{
-		return mpCurrentInputStateBuffer->GetLeftMouseButtonDown();
-	}
-	else 
-	{
-		UInt key = mpPlatformKeyMapper->GetPlatformKeyForButton(button);
-		return mpCurrentInputStateBuffer->GetKeyDown(key);
-	}
+	UInt key = mpPlatformKeyMapper->GetPlatformKeyForButton(button);
+	return mpCurrentInputStateBuffer->GetKeyDown(key);
 }
 
 Float KeyboardAndMouse::GetIRAxis(IRAxis axis) const
 {
 	if (mpCurrentInputStateBuffer == NULL)
+	{
 		return 0;
+	}
 
 	switch (axis)
 	{
@@ -63,7 +59,26 @@ Float KeyboardAndMouse::GetIRAxis(IRAxis axis) const
 	case ANALOG_Y:
 		return (Float)mpCurrentInputStateBuffer->GetMouseY();
 	default:
-		System::Assert("Unknown IR axis.", "WireKeyboardAndMouse.cpp", 87);
+		System::Assert("Unknown IR axis.", "WireKeyboardAndMouse.cpp", 60);
+		return 0;
+	}
+}
+
+Float KeyboardAndMouse::GetIRAxisRotation(EulerAngle eulerAngle) const
+{
+	if (mpCurrentInputStateBuffer == NULL)
+	{
+		return 0;
+	}
+
+	UInt key = mpPlatformKeyMapper->GetPlatformKeyForIRAxisRotation(eulerAngle);
+	// TODO: Choose a better approach than decoding the sinal to 0 or 180.
+	if (mpCurrentInputStateBuffer->GetKeyDown(key))
+	{
+		return 180;
+	}
+	else
+	{
 		return 0;
 	}
 }
@@ -71,7 +86,9 @@ Float KeyboardAndMouse::GetIRAxis(IRAxis axis) const
 Float KeyboardAndMouse::GetDigitalAxis(DigitalAxis axis) const
 {
 	if (mpCurrentInputStateBuffer == NULL)
+	{
 		return 0;
+	}
 
 	UInt key = mpPlatformKeyMapper->GetPlatformKeyForDigitalAxis(axis);
 	if (mpCurrentInputStateBuffer->GetKeyDown(key))

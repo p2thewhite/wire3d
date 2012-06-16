@@ -19,6 +19,7 @@ WiiMote::WiiMote(const PlatformKeyMapper* pPlatformKeyMapper) :
 	mCapabilities.insert(BUTTONS);
 	mCapabilities.insert(DIGITAL_AXIS);
 	mCapabilities.insert(IR_AXIS);
+	mCapabilities.insert(IR_AXIS_ROTATION);
 }
 
 WiiMote::~WiiMote()
@@ -38,7 +39,10 @@ const char* WiiMote::GetName() const
 
 Bool WiiMote::GetButton(Button button) const
 {
-	if (mpData == NULL) return false;
+	if (mpData == NULL) 
+	{
+		return false;
+	}
 
 	UInt key;
 
@@ -57,14 +61,17 @@ Bool WiiMote::GetButton(Button button) const
 	case BUTTON_C:
 		return false;
 	default:
-		System::Assert("Unknown button.", "WireWiiMote.cpp", 58);
+		System::Assert("Unknown button.", "WireWiiMote.cpp", 63);
 		return false;
 	}
 }
 
 Float WiiMote::GetIRAxis(IRAxis axis) const
 {
-	if (mpData == NULL) return 0;
+	if (mpData == NULL) 
+	{
+		return 0;
+	}
 
 	if (!mpData->ir.valid)
 	{
@@ -75,22 +82,48 @@ Float WiiMote::GetIRAxis(IRAxis axis) const
 	{
 	case IR_X:
 		return mpData->ir.x;
-		break;
 	case IR_Y:
 		return mpData->ir.y;
-		break;
 	case IR_Z:
 		return mpData->ir.z;
-		break;
 	default:
-		System::Assert("Unknown IR axis.", "WireWiiMote.cpp", 83);
+		System::Assert("Unknown IR axis.", "WireWiiMote.cpp", 89);
+		return 0;
+	}
+}
+
+Float WiiMote::GetIRAxisRotation(EulerAngle eulerAngle) const
+{
+	if (mpData == NULL) 
+	{
+		return 0;
+	}
+
+	if (!mpData->ir.valid)
+	{
+		return 0;
+	}
+
+	switch (eulerAngle)
+	{
+	case YAW:
+		return mpData->orient.yaw;
+	case PITCH:
+		return mpData->orient.pitch;
+	case ROLL:
+		return mpData->orient.roll;
+	default:
+		System::Assert("Unknown euler angle.", "WireWiiMote.cpp", 115);
 		return 0;
 	}
 }
 
 Bool WiiMote::GetDigitalAxis(DigitalAxis axis) const
 {
-	if (mpData == NULL) return false;
+	if (mpData == NULL) 
+	{
+		return false;
+	}
 
 	UInt key = mpPlatformKeyMapper->GetPlatformKeyForDigitalAxis(axis);
 	return (mpData->btns_h & key) != 0;

@@ -28,17 +28,22 @@ Bool FallbackVirtualInputDevice::GetButton(Button button) const
 
 Float FallbackVirtualInputDevice::GetIRAxis(IRAxis axis) const
 {
-	return false;
+	return 0;
+}
+
+Float FallbackVirtualInputDevice::GetIRAxisRotation(EulerAngle eulerAngle) const
+{
+	return 0;
 }
 
 Float FallbackVirtualInputDevice::GetDigitalAxis(DigitalAxis axis) const
 {
-	return false;
+	return 0;
 }
 
 Float FallbackVirtualInputDevice::GetAnalogAxis(AnalogAxis axis) const
 {
-	return false;
+	return 0;
 }
 
 Bool FallbackVirtualInputDevice::HasCapability(InputCapability capability) const

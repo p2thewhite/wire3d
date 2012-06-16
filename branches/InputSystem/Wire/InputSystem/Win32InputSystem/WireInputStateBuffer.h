@@ -9,32 +9,28 @@ namespace Wire
 class InputStateBuffer
 {
 public:
-	InputStateBuffer(UInt keyBufferSize);
+	InputStateBuffer();
 	virtual ~InputStateBuffer();
 
 	void SetMouseX(Int mouseX);
 	void SetMouseY(Int mouseY);
-	void SetLeftMouseButtonUp();
-	void SetLeftMouseButtonDown();
-	void SetRightMouseButtonUp();
-	void SetRightMouseButtonDown();
+	void IncrementMouseWheelByDelta(Int delta);
 	void SetKeyDown(UInt key);
 	void SetKeyUp(UInt key);
 
 	Int GetMouseX() const;
 	Int GetMouseY() const;
-	Bool GetLeftMouseButtonDown() const;
-	Bool GetRightMouseButtonDown() const;
+	Int GetMouseWheel() const;
 	Bool GetKeyDown(UInt key) const;
 
 	void CopyFrom(const InputStateBuffer* other);
 private:
+	static const UInt NUMBER_OF_VIRTUAL_KEYS;
+
 	Int mMouseX;
 	Int mMouseY;
-	Bool mLeftMouseButton;
-	Bool mRightMouseButton;
+	Int mMouseWheel;
 	Bool* mpKeyBuffer;
-	UInt mkeyBufferSize;
 };
 
 }

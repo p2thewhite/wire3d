@@ -75,6 +75,25 @@ Float BaseVirtualInputDevice::GetIRAxis(IRAxis axis) const
 	return 0;
 }
 
+Float BaseVirtualInputDevice::GetIRAxisRotation(EulerAngle eulerAngle) const
+{
+	//for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)
+	for (UInt i = 0; i < mInputDevices.size(); i++)
+	{
+		InputDevice* pInputDevice = mInputDevices[i];
+		if (pInputDevice->HasCapability(IR_AXIS_ROTATION))
+		{
+			Float axisValue = pInputDevice->GetIRAxisRotation(eulerAngle);
+			if (axisValue != 0)
+			{
+				return axisValue;
+			}
+		}
+	}
+
+	return 0;
+}
+
 Float BaseVirtualInputDevice::GetDigitalAxis(DigitalAxis axis) const
 {
 	//for (UInt i = 0; i < mInputDevices.GetQuantity(); i++)

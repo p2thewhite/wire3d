@@ -36,12 +36,17 @@ UInt WiiKeyMapper::GetPlatformKeyForButton(Button button) const
 	case BUTTON_C:
 		return WPAD_NUNCHUK_BUTTON_C;
 	default:
-		System::Assert("Unknown key.", "WiiKeyMapper.cpp", 39);
+		System::Assert("Unknown button.", "WiiKeyMapper.cpp", 39);
 		return WPAD_INVALID_BUTTON;
 	}
 }
 
 UInt WiiKeyMapper::GetPlatformKeyForIRAxis(IRAxis axis) const
+{
+	return 0;
+}
+
+UInt WiiKeyMapper::GetPlatformKeyForIRAxisRotation(EulerAngle eulerAngle) const
 {
 	return 0;
 }
@@ -96,6 +101,11 @@ Button WiiKeyMapper::GetButtonForPlatformKey(UInt key) const
 IRAxis WiiKeyMapper::GetIRAxisForPlatformKey(UInt key) const
 {
 	return INVALID_IR;
+}
+
+EulerAngle WiiKeyMapper::GetIRAxisRotationForPlatformKey(UInt key) const
+{
+	return INVALID_EULER_ANGLE;
 }
 
 DigitalAxis WiiKeyMapper::GetDigitalAxisForPlatformKey(UInt key) const

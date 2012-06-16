@@ -10,9 +10,8 @@ InputSystemMessageBroker* InputSystemMessageBroker::s_pInstance = NULL;
 
 InputSystemMessageBroker::InputSystemMessageBroker()
 {
-	// TODO: MAGIC NUMBERS: Should be something like MAX_WIN_32_VIRTUAL_KEY...
-	mpFrontBuffer = WIRE_NEW InputStateBuffer(255);
-	mpBackBuffer = WIRE_NEW InputStateBuffer(255);
+	mpFrontBuffer = WIRE_NEW InputStateBuffer();
+	mpBackBuffer = WIRE_NEW InputStateBuffer();
 }
 
 InputSystemMessageBroker::~InputSystemMessageBroker()
@@ -34,20 +33,31 @@ Bool InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordParame
 {
 	Int x; 
 	Int y;
+	Int mouseWheelDelta;
 
 	switch (messageType)
 	{
+	case WM_MBUTTONDOWN:
+		mpBackBuffer->SetKeyDown(VK_MBUTTON);
+		return true;
+	case WM_MBUTTONUP:
+		mpBackBuffer->SetKeyUp(VK_MBUTTON);
+		return true;
 	case WM_RBUTTONDOWN:
-		mpBackBuffer->SetRightMouseButtonDown();
+		mpBackBuffer->SetKeyDown(VK_RBUTTON);
 		return true;
 	case WM_RBUTTONUP:
-		mpBackBuffer->SetRightMouseButtonUp();
+		mpBackBuffer->SetKeyUp(VK_RBUTTON);
 		return true;
 	case WM_LBUTTONDOWN:
-		mpBackBuffer->SetLeftMouseButtonDown();
+		mpBackBuffer->SetKeyDown(VK_LBUTTON);
 		return true;
 	case WM_LBUTTONUP:
-		mpBackBuffer->SetLeftMouseButtonUp();
+		mpBackBuffer->SetKeyUp(VK_LBUTTON);
+		return true;
+	case WM_MOUSEWHEEL:
+		mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wordParameter);
+		mpBackBuffer->IncrementMouseWheelByDelta(mouseWheelDelta);
 		return true;
 	case WM_MOUSEMOVE:
 		x = GET_X_LPARAM(longParameter); 

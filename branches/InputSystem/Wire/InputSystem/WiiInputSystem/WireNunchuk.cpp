@@ -60,6 +60,11 @@ Float Nunchuk::GetIRAxis(IRAxis axis) const
 	return 0;
 }
 
+Float Nunchuk::GetIRAxisRotation(EulerAngle eulerAngle) const
+{
+	return 0;
+}
+
 Bool Nunchuk::GetDigitalAxis(DigitalAxis axis) const
 {
 	return 0;

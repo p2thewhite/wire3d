@@ -6,6 +6,7 @@
 #include "WireInputStateBuffer.h"
 #include "WirePlatformKeyMapper.h"
 #include "WireAxis.h"
+#include "WireEulerAngle.h"
 #include "WireButton.h"
 #include "WireInputCapability.h"
 #include <set>
@@ -25,6 +26,7 @@ public:
 	virtual const char* GetName() const;
 	virtual Bool GetButton(Button button) const;
 	virtual Float GetIRAxis(IRAxis axis) const;
+	virtual Float GetIRAxisRotation(EulerAngle eulerAngle) const;
 	virtual Float GetDigitalAxis(DigitalAxis axis) const;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 	virtual Bool HasCapability(InputCapability capability) const;

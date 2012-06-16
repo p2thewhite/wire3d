@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIREINPUTSYSTEM_H_
 #define WIREINPUTSYSTEM_H_
 
@@ -5,7 +6,6 @@
 #include "WireVirtualInputDevice.h"
 #include "WirePlatformKeyMapper.h"
 #include "WireTypes.h"
-//#include "WireTArray.h"
 #include <vector>
 
 using namespace std;

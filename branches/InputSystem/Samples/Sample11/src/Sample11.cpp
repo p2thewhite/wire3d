@@ -7,12 +7,18 @@
 #include "WireInputSystem.h"
 #include "WireVirtualInputDevice.h"
 #include "WireInputCapability.h"
+#include "WireAxis.h"
+#include "WireButton.h"
+#include "WireTypes.h"
+#include "WireEulerAngle.h"
 //#include "WireTHashSet.h"
 #include <set>
 #include <algorithm>
 
 using namespace Wire;
 using namespace std;
+
+#define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
 
 WIRE_APPLICATION (Sample11);
 
@@ -70,7 +76,7 @@ void Sample11::OnIdle()
 			mode = CM_POINTING;
 		}
 
-		SetCursor(x, y, mode, playerNo, 0);
+		SetCursor(x, y, mode, playerNo, DEGREES_TO_RADIANS(pVirtualInputDevice->GetIRAxisRotation(ROLL)));
 	}
 
 	mspCursors->UpdateGS(time);

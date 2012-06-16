@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIREBASEVIRTUALINPUTDEVICE_H_
 #define WIREBASEVIRTUALINPUTDEVICE_H_
 
@@ -5,9 +6,8 @@
 #include "WireTypes.h"
 #include "WireButton.h"
 #include "WireAxis.h"
+#include "WireEulerAngle.h"
 #include "WireInputDevice.h"
-//#include "WireTArray.h"
-//#include "WireTHashSet.h"
 #include <vector>
 #include <set>
 #include <algorithm>
@@ -28,11 +28,10 @@ public:
 	virtual const char* GetName() const;
 	virtual Bool GetButton(Button button) const;
 	virtual Float GetIRAxis(IRAxis axis) const;
+	virtual Float GetIRAxisRotation(EulerAngle eulerAngle) const;
 	virtual Float GetDigitalAxis(DigitalAxis axis) const;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
-
 	inline virtual Bool HasCapability(InputCapability capability) const;
-	//inline virtual const THashSet<InputCapability>& GetCapabilities() const;
 	inline virtual const set<InputCapability>& GetCapabilities() const;
 
 	friend class InputSystem;
@@ -44,8 +43,6 @@ protected:
 	void AddInputDevice(InputDevice* pInputDevice, UInt index);
 	inline InputDevice* GetInputDevice(UInt index);
 private:
-	//TArray<InputDevice*> mInputDevices;
-	//THashSet<InputCapability> mCapabilities;
 	vector<InputDevice*> mInputDevices;
 	set<InputCapability> mCapabilities;
 
