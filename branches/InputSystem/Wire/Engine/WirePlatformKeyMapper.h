@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIREPLATFORMKEYMAPPER_H_
 #define WIREPLATFORMKEYMAPPER_H_
 

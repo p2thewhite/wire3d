@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIREVIRTUALINPUTDEVICE_H_
 #define WIREVIRTUALINPUTDEVICE_H_
 
@@ -6,7 +7,6 @@
 #include "WireAxis.h"
 #include "WireEulerAngle.h"
 #include "WireInputCapability.h"
-//#include "WireTHashSet.h"
 #include <set>
 
 using namespace std;
@@ -27,7 +27,6 @@ public:
 	virtual Float GetDigitalAxis(DigitalAxis axis) const = 0;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const = 0;
 	virtual Bool HasCapability(InputCapability capability) const = 0;
-	//virtual const THashSet<InputCapability>& GetCapabilities() const = 0;
 	virtual const set<InputCapability>& GetCapabilities() const = 0;
 protected:
 	VirtualInputDevice();

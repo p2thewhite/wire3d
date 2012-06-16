@@ -1,3 +1,4 @@
+#pragma once
 #ifndef WIREINPUTDEVICE_H_
 #define WIREINPUTDEVICE_H_
 
@@ -8,8 +9,6 @@
 #include "WireEulerAngle.h"
 #include "WireInputCapability.h"
 #include "WirePlatformKeyMapper.h"
-//#include "WireTArray.h"
-//#include "WireTHashSet.h"
 #include <set>
 #include <algorithm>
 
@@ -30,14 +29,11 @@ public:
 	virtual Float GetIRAxisRotation(EulerAngle eulerAngle) const = 0;
 	virtual Bool GetDigitalAxis(DigitalAxis axis) const = 0;
 	virtual Float GetAnalogAxis(AnalogAxis axis) const = 0;
-
-	//inline const THashSet<InputCapability>& GetCapabilities() const;
 	inline const set<InputCapability>& GetCapabilities() const;
 	inline Bool HasCapability(InputCapability capability) const;
 protected:
 	InputDevice(const PlatformKeyMapper* pPlatformKeyMapper);
 
-	//THashSet<InputCapability> mCapabilities;
 	set<InputCapability> mCapabilities;
 	const PlatformKeyMapper* mpPlatformKeyMapper;
 };

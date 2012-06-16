@@ -32,12 +32,14 @@ public:
 	virtual Bool HasCapability(InputCapability capability) const;
 	virtual const set<InputCapability>& GetCapabilities() const;
 
-	void SetCurrentInputStateBuffer(const InputStateBuffer* pCurrentInputStateBuffer);
+	inline void SetCurrentInputStateBuffer(const InputStateBuffer* pCurrentInputStateBuffer);
 private:
 	const PlatformKeyMapper* mpPlatformKeyMapper;
 	const InputStateBuffer* mpCurrentInputStateBuffer;
 	set<InputCapability> mCapabilities;
 };
+
+#include "WireKeyboardAndMouse.inl"
 
 }
 

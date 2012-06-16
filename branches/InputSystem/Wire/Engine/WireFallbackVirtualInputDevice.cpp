@@ -51,7 +51,6 @@ Bool FallbackVirtualInputDevice::HasCapability(InputCapability capability) const
 	return false;
 }
 
-//const THashSet<InputCapability>& FallbackVirtualInputDevice::GetCapabilities() const
 const set<InputCapability>& FallbackVirtualInputDevice::GetCapabilities() const
 {
 	return mCapabilities;

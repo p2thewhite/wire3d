@@ -26,6 +26,9 @@ public:
 
 	virtual void Capture() = 0;
 	virtual const char* GetName() const;
+	void AddInputDevice(InputDevice* pInputDevice);
+	void AddInputDevice(InputDevice* pInputDevice, UInt index);
+	inline InputDevice* GetInputDevice(UInt index);
 	virtual Bool GetButton(Button button) const;
 	virtual Float GetIRAxis(IRAxis axis) const;
 	virtual Float GetIRAxisRotation(EulerAngle eulerAngle) const;
@@ -33,15 +36,8 @@ public:
 	virtual Float GetAnalogAxis(AnalogAxis axis) const;
 	inline virtual Bool HasCapability(InputCapability capability) const;
 	inline virtual const set<InputCapability>& GetCapabilities() const;
-
-	friend class InputSystem;
-	friend class InputDevice;
 protected:
 	BaseVirtualInputDevice();
-
-	void AddInputDevice(InputDevice* pInputDevice);
-	void AddInputDevice(InputDevice* pInputDevice, UInt index);
-	inline InputDevice* GetInputDevice(UInt index);
 private:
 	vector<InputDevice*> mInputDevices;
 	set<InputCapability> mCapabilities;

@@ -12,16 +12,15 @@ public:
 	InputStateBuffer();
 	virtual ~InputStateBuffer();
 
-	void SetMouseX(Int mouseX);
-	void SetMouseY(Int mouseY);
-	void IncrementMouseWheelByDelta(Int delta);
-	void SetKeyDown(UInt key);
-	void SetKeyUp(UInt key);
-
-	Int GetMouseX() const;
-	Int GetMouseY() const;
-	Int GetMouseWheel() const;
-	Bool GetKeyDown(UInt key) const;
+	inline void SetMouseX(Int mouseX);
+	inline void SetMouseY(Int mouseY);
+	inline void IncrementMouseWheelByDelta(Int delta);
+	inline void SetKeyDown(UInt key);
+	inline void SetKeyUp(UInt key);
+	inline Int GetMouseX() const;
+	inline Int GetMouseY() const;
+	inline Int GetMouseWheel() const;
+	inline Bool GetKeyDown(UInt key) const;
 
 	void CopyFrom(const InputStateBuffer* other);
 private:
@@ -32,6 +31,8 @@ private:
 	Int mMouseWheel;
 	Bool* mpKeyBuffer;
 };
+
+#include "WireInputStateBuffer.inl"
 
 }
 

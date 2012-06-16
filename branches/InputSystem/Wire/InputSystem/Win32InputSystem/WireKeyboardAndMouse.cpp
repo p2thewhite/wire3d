@@ -106,11 +106,6 @@ Float KeyboardAndMouse::GetAnalogAxis(AnalogAxis axis) const
 	return 0;
 }
 
-void KeyboardAndMouse::SetCurrentInputStateBuffer(const InputStateBuffer* pCurrentKeyStateBuffer)
-{
-	mpCurrentInputStateBuffer = pCurrentKeyStateBuffer;
-}
-
 Bool KeyboardAndMouse::HasCapability(InputCapability capability) const
 {
 	set<InputCapability>::const_iterator iterator = find(mCapabilities.begin(), mCapabilities.end(), capability);
