@@ -10,6 +10,6 @@
     * [Samples#Sample7_-_Dynamic_Buffers Sample7 - Dynamic Buffers]
     * [Samples#Sample8_-_Bullet_Physics_Integration Sample8 - Bullet Physics Integration]
     * [Samples#Sample9_-_Custom_Main Sample9 - Custom Main]
-    * [Samples#Sample10_-_Material_Sorting Sample10 - Material Sorting]
-  * [Demo Demo]
+    * [Samples#Sample10_-_Material_Sorting Sample10 - Material Sorting & Batching]
+  * [Demo Showcase]
   * [FAQ Frequently Asked Questions]
