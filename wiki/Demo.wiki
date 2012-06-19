@@ -1,6 +1,8 @@
 #summary Wire3D in action.
 #labels Featured
 
+=== Demo ===
+
 The demo application ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FDemo%2Fsrc Source]) loads a scene using an Importer class and attaches a few controllers manipulating the scene. If you are familiar with the rest of the [http://code.google.com/p/wire3d/wiki/Samples samples], it should be fairly easy to understand.
 
 <wiki:video url="http://www.youtube.com/watch?v=ec_3FjXzKoo" width="640" height="360" />
