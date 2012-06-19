@@ -66,8 +66,9 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
   * initialization of the Wire framework
   * Wire renderer
 
-=== Sample10 - Material Sorting ===
-This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample10%2Fsrc Source]) demonstrates sorting materials for minimizing state changes and correct transparency/opaque geometry order. In particular the sample shows creation and/or usage of:
+=== Sample10 - Material Sorting & Batching ===
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample10%2Fsrc Source]) demonstrates drawcall batching of static and dynamic geometry as well as sorting materials for minimizing state changes and correct transparency/opaque geometry order. In particular the sample shows creation and/or usage of:
   * shared materials and render states
   * visible set sorting
+  * drawcall batching
   * render statistics
