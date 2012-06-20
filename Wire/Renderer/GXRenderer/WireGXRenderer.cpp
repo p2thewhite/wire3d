@@ -38,12 +38,15 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxTextureHeight(1024),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
-	mTexture2DMap(256)
+	mTexture2DMap(256),
+	mSupportsStaticBatching(false),
+	mSupportsDynamicBatching(false)
 {
 	Initialize(width, height);
 
 	mpData = WIRE_NEW PdrRendererData();
 	WIRE_ASSERT(mpData);
+
 	mpData->UseVSync = useVSync;
 
 	VIInit();
@@ -429,16 +432,6 @@ void Renderer::OnViewportChange()
 	}
 
 	GXSetScissor(originX, originY, width, height);
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetStaticBatchingThreshold(UInt threshold)
-{
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetDynamicBatchingThreshold(UInt threshold)
-{
 }
 
 //----------------------------------------------------------------------------

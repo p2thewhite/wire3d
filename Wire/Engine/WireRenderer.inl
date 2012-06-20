@@ -97,9 +97,9 @@ inline Bool Renderer::UsesBatching() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Renderer::GetStaticBatchingThreshold() const
+inline Bool Renderer::SupportsStaticBatching() const
 {
-	return mStaticBatchingThreshold;
+	return mSupportsStaticBatching;
 }
 
 //----------------------------------------------------------------------------
@@ -109,15 +109,45 @@ inline Bool Renderer::UsesStaticBatching() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Renderer::GetDynamicBatchingThreshold() const
+inline UInt Renderer::GetStaticBatchingThreshold() const
 {
-	return mDynamicBatchingThreshold;
+	return mStaticBatchingThreshold;
+}
+
+//----------------------------------------------------------------------------
+inline void Renderer::SetStaticBatchingThreshold(UInt threshold)
+{
+	if (mSupportsStaticBatching)
+	{
+		mStaticBatchingThreshold = threshold;
+	}
+}
+
+//----------------------------------------------------------------------------
+inline Bool Renderer::SupportsDynamicBatching() const
+{
+	return mSupportsDynamicBatching;
 }
 
 //----------------------------------------------------------------------------
 inline Bool Renderer::UsesDynamicBatching() const
 {
 	return mDynamicBatchingThreshold > 0;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Renderer::GetDynamicBatchingThreshold() const
+{
+	return mDynamicBatchingThreshold;
+}
+
+//----------------------------------------------------------------------------
+inline void Renderer::SetDynamicBatchingThreshold(UInt threshold)
+{
+	if (mSupportsDynamicBatching)
+	{
+		mDynamicBatchingThreshold = threshold;
+	}
 }
 
 //----------------------------------------------------------------------------

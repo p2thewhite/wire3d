@@ -1,6 +1,10 @@
-// Sample10 - Material Sorting
+// Sample10 - Material Sorting & Batching
 // This sample demonstrates sorting materials for minimizing state changes
-// and correct transparency/opaque geometry order.
+// and correct transparency/opaque geometry order, as well as draw call
+// batching of static and dynamic objects.
+// Note: Batching is disabled on the Wii by default. It does not suffer
+// from operating system and driver overhead issues like the PC, thus
+// batching does not improve performance on the Wii.
 
 #include "Sample10.h"
 
@@ -30,8 +34,16 @@ Bool Sample10::OnInitialize()
 	}
 
 	mspRoot = CreateScene();
+
+	// Apply Local to World transformation
 	mspRoot->UpdateGS();
-	mspRoot->MakeStatic(true); // remove this line to use dynamic batching
+
+	// Prepare for static batching by applying World transformation to
+	// actual vertices (duplicating vertex buffers if they are shared).
+	// If forceStatic is false, only objects which have WorldIsCurrent &&
+	// WorldBoundIsCurrent set to true will be processed.
+	Bool forceStatic = true;
+	mspRoot->MakeStatic(forceStatic); // remove this line for dynamic batching
 
 	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
@@ -53,6 +65,8 @@ Bool Sample10::OnInitialize()
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = StandardMesh::CreateText();
 
+	// Create a buffer for batching draw calls. Maximum size of the buffer
+	// is 64k due to 16-bit index buffers.
    	GetRenderer()->CreateBatchingBuffers(60*1024);
 	return true;
 }
@@ -64,14 +78,19 @@ void Sample10::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	// Every 5 seconds we alternate between using the Culler (to produce
-	// a visible set of objects in the order of the objects in the scene
-	// graph) and the CullerSorting (which produces 2 sets of visible objects:
-	// one set of opaque objects sorted by render state, material and depth
-	// (front to back), and one set of transparent objects sorted likewise
-	// (but back to front for correct visibility)).
+	// disable batching by setting threshold to 0
 	GetRenderer()->SetDynamicBatchingThreshold(0);
 	GetRenderer()->SetStaticBatchingThreshold(0);
+
+	// Every 5 seconds we alternate between one of the following 3 states:
+	// Culler with no batching (to produce a visible set of objects in the
+	//   order of the objects in the scene graph)
+	// CullerSorting with no batching (which produces 2 sets of visible
+	//   objects: one set of opaque objects sorted by render state, material
+	//   and depth (front to back), and one set of transparent objects sorted
+	//   likewise (but back to front for correct visibility)).
+	// CullerSorting with batching (after sorting the renderer tries to
+	//   batch as many objects with the same properties together as possible)
 	 
 	Bool usesSorting = false;
 	Culler* pCuller = &mCuller;
@@ -82,7 +101,16 @@ void Sample10::OnIdle()
 
 		if (MathF::FMod(static_cast<Float>(time), 15) > 10)
 		{
+			// Activate batching of dynamic objects with <= 200 vertices.
+			// Dynamic batching involves manual transformation of vertices
+			// and copying vertices and indices. Manual transformation is
+			// CPU intensive, thus the threshold should be very low.
+			// Otherwise we might waste more time than we gain.
 			GetRenderer()->SetDynamicBatchingThreshold(200);
+
+			// Activate batching of static objects with <= 2000 vertices.
+			// Static batching involves copying vertices and indices, no
+			// manual transformation required.
 			GetRenderer()->SetStaticBatchingThreshold(2000);
 		}
 	}

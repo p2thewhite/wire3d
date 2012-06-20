@@ -29,7 +29,7 @@ Bool Demo::OnInitialize()
 	mLastTime = System::GetTime();
 	mShowFps = false;
 
-	// frames per second debug text
+	// frames per second and render statistics debug text
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
 	WIRE_ASSERT(mspText);
