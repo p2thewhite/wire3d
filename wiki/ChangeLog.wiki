@@ -1,16 +1,37 @@
 #summary ChangeLog of released versions.
 
+== v1.0.2 (`rxxx`) ==
+  * Wire
+    * draw call batching of static and dynamic geometry
+    * text rendering
+    * skybox node
+    * `VertexBuffer` uses 32bit color (instead of 4 floats) now, so no more conversion at Bind() time. *Note*: Although interface changed, there are no changes for the user due to implicit conversion operators to/from ColorRGB(A).
+    * `IndexBuffer` only uses 16bit indices, as Wii does not support 32bit indices anyways. *Note*: Interface only changed on `IndexBuffer::GetData()`, if you are accessing index buffers via operator[] there are no changes necessary.
+    * (PC) fixed renderer statistics bug when `ResetDevice()`/`DestroyAll()` was issued.
+    * (PC) fixed NVIDIA PerfHUD getting stalled when pressing a key.
+    * (Wii) fixed anisotropic texture filtering
+
+  * Tools:
+    * [http://www.freetype.org/freetype2/index.html freetype2] font engine added
+
+  * Importer
+    * leaking vertex data fixed
+    * support for "Static" flagged transformations
+    * fixed missing Spotlight parameters
+
 == v1.0.1 (`r407`) ==
   * Wire
     * debug build uses custom operator new/delete
     * unified handling of platform dependent index buffers
     * fixed `ResetDevice` issue when `D3DPOOL_DEFAULT` objects are used 
+
   * Importer
     * turned importer into lib
     * handle render states that are defined per material (additionally to per node/leaf defined render states)
     * handle vertex and index buffer access usage types
     * keep record of number of imported materials, textures, nodes, geometries, vertex buffers, index buffers
-    * fixed memory leak 
+    * fixed memory leak
+
   * Tools
     * added Bullet Physics lib to solution for wii and win32
     * added Unity3D exporter
