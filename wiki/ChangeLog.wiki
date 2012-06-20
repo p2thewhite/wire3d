@@ -11,13 +11,13 @@
     * (PC) fixed NVIDIA PerfHUD getting stalled when pressing a key.
     * (Wii) fixed anisotropic texture filtering
 
-  * Tools:
-    * [http://www.freetype.org/freetype2/index.html freetype2] font engine added
-
   * Importer
     * leaking vertex data fixed
     * support for "Static" flagged transformations
     * fixed missing Spotlight parameters
+
+  * Tools
+    * [http://www.freetype.org/freetype2/index.html freetype2] font engine added
 
 == v1.0.1 (`r407`) ==
   * Wire
