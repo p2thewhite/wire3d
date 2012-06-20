@@ -12,4 +12,5 @@
     * [Samples#Sample9_-_Custom_Main Sample9 - Custom Main]
     * [Samples#Sample10_-_Material_Sorting Sample10 - Material Sorting & Batching]
   * [Demo Showcase]
+  * [ChangeLog ChangeLog]
   * [FAQ Frequently Asked Questions]
