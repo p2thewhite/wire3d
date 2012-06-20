@@ -1,10 +1,10 @@
 #summary ChangeLog of released versions.
 
-== v1.0.1 (r407) ==
+== v1.0.1 (`r407`) ==
   * Wire
     * debug build uses custom operator new/delete
     * unified handling of platform dependent index buffers
-    * fixed ResetDevice issue when D3DPOOL_DEFAULT objects are used 
+    * fixed `ResetDevice` issue when `D3DPOOL_DEFAULT` objects are used 
   * Importer
     * turned importer into lib
     * handle render states that are defined per material (additionally to per node/leaf defined render states)
@@ -16,5 +16,5 @@
     * added Unity3D exporter
     * fixed 3rd party lib gcc warnings 
 
-== v1.0 (r391) ==
+== v1.0 (`r391`) ==
   * Initial release
