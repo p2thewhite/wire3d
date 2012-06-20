@@ -57,12 +57,16 @@ public:
 	// Batching
 	void CreateBatchingBuffers(UInt size);
 	inline Bool UsesBatching() const;
-	void SetStaticBatchingThreshold(UInt threshold);
-	inline UInt GetStaticBatchingThreshold() const;
+
+	inline Bool SupportsStaticBatching() const;
 	inline Bool UsesStaticBatching() const;
-	void SetDynamicBatchingThreshold(UInt threshold);
-	inline UInt GetDynamicBatchingThreshold() const;
+	inline UInt GetStaticBatchingThreshold() const;
+	inline void SetStaticBatchingThreshold(UInt threshold);
+
+	inline Bool SupportsDynamicBatching() const;
 	inline Bool UsesDynamicBatching() const;
+	inline UInt GetDynamicBatchingThreshold() const;
+	inline void SetDynamicBatchingThreshold(UInt threshold);
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
@@ -301,6 +305,8 @@ private:
 	PdrVertexBuffer* mBatchedVertexBuffer;
 	UInt mStaticBatchingThreshold;
 	UInt mDynamicBatchingThreshold;
+	Bool mSupportsStaticBatching;
+	Bool mSupportsDynamicBatching;
 
 	Statistics mStatistics;
 };

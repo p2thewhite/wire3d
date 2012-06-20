@@ -30,7 +30,9 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxAnisotropy(1.0F),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
-	mTexture2DMap(256)
+	mTexture2DMap(256),
+	mSupportsStaticBatching(true),
+	mSupportsDynamicBatching(true)
 {
 	Initialize(width, height);
 
@@ -483,18 +485,6 @@ void Renderer::Resize(UInt width, UInt height)
 	mpData->Present.BackBufferHeight = height;
 
 	mpData->ResetDevice();
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetStaticBatchingThreshold(UInt threshold)
-{
-	mStaticBatchingThreshold = threshold;
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetDynamicBatchingThreshold(UInt threshold)
-{
-	mDynamicBatchingThreshold = threshold;
 }
 
 //----------------------------------------------------------------------------
