@@ -1,6 +1,6 @@
 #summary ChangeLog of released versions.
 
-== v1.0.2 (`rxxx`) ==
+== v1.0.2 (`r464`) ==
   * Wire
     * draw call batching of static and dynamic geometry
     * text rendering
@@ -18,6 +18,9 @@
 
   * Tools
     * [http://www.freetype.org/freetype2/index.html freetype2] font engine added
+
+  * Samples
+    * updated Sample3, Sample10 and Demo to showcase new features
 
 == v1.0.1 (`r407`) ==
   * Wire
