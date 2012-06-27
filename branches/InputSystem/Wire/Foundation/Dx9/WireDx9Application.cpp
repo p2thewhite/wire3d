@@ -9,8 +9,8 @@
 #include "WireDx9Application.h"
 #include "WireRenderer.h"
 #include "WireDx9RendererInput.h"
-#include "WireWin32InputSystem.h"
-#include "WireInputSystemMessageBroker.h"
+//#include "WireWin32InputSystem.h"
+//#include "WireInputSystemMessageBroker.h"
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
@@ -64,12 +64,12 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam, LP
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	InputSystemMessageBroker* pInputSystemMessageBroker = InputSystemMessageBroker::GetInstance();
+	/*InputSystemMessageBroker* pInputSystemMessageBroker = InputSystemMessageBroker::GetInstance();
 
 	if (pInputSystemMessageBroker->OnSystemMessage(msg, wParam, lParam))
 	{
 		return 0;
-	}
+	}*/
 
 	switch (msg)
 	{
@@ -168,7 +168,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen, mUseVSync);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
-	mpInputSystem = WIRE_NEW Win32InputSystem();
+	//mpInputSystem = WIRE_NEW Win32InputSystem();
 
 	if (s_pApplication->OnInitialize())
 	{
@@ -176,7 +176,7 @@ Int Dx9Application::Main(Int, Char*[])
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 
-		mpInputSystem->DiscoverInputDevices();
+		//mpInputSystem->DiscoverInputDevices();
 
 		// start the message pump
 		Bool isApplicationRunning = true;
@@ -200,16 +200,16 @@ Int Dx9Application::Main(Int, Char*[])
 			}
 			else
 			{
-				if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
+				/*if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
 				{
 					isApplicationRunning = false;
 					break;
-				}
+				}*/
 
 				s_pApplication->OnIdle();
-				mpInputSystem->Capture();
+				//mpInputSystem->Capture();
 
-				mpInputSystem->DiscoverInputDevices();
+				//mpInputSystem->DiscoverInputDevices();
 			}
 		}
 	}

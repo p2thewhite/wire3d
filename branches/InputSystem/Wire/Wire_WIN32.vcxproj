@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>Foundation;Engine;Renderer/Dx9Renderer;InputSystem/Win32InputSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Foundation;Engine;Renderer/Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -87,15 +87,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\WireAxis.h" />
-    <ClInclude Include="Engine\WireBaseVirtualInputDevice.h" />
-    <ClInclude Include="Engine\WireButton.h" />
     <ClInclude Include="Engine\WireCullerSorting.h" />
-    <ClInclude Include="Engine\WireFallbackVirtualInputDevice.h" />
-    <ClInclude Include="Engine\WireInputCapability.h" />
-    <ClInclude Include="Engine\WireInputDevice.h" />
-    <ClInclude Include="Engine\WireInputDeviceDiscoveryListener.h" />
-    <ClInclude Include="Engine\WireInputSystem.h" />
     <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeBillboard.h" />
@@ -103,7 +95,6 @@
     <ClInclude Include="Engine\WireNodeLight.h" />
     <ClInclude Include="Engine\WireNodeSkybox.h" />
     <ClInclude Include="Engine\WireNodeSwitch.h" />
-    <ClInclude Include="Engine\WirePlatformKeyMapper.h" />
     <ClInclude Include="Engine\WireStandardMesh.h" />
     <ClInclude Include="Engine\WireState.h" />
     <ClInclude Include="Engine\WireStateAlpha.h" />
@@ -112,8 +103,6 @@
     <ClInclude Include="Engine\WireStateMaterial.h" />
     <ClInclude Include="Engine\WireStateWireframe.h" />
     <ClInclude Include="Engine\WireStateZBuffer.h" />
-    <ClInclude Include="Engine\WireVirtualInputDevice.h" />
-    <ClInclude Include="Engine\WireVirtualInputDeviceDiscoveryStrategy.h" />
     <ClInclude Include="Foundation\WireColor32.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
@@ -149,19 +138,6 @@
     <ClInclude Include="Foundation\Wii\WireGXApplication.h" />
     <ClInclude Include="Foundation\Wii\WireOgcDefines.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireNunchuk.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiController.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiControllerDiscoveryStrategy.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiExtension.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiInputSystem.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiKeyMapper.h" />
-    <ClInclude Include="InputSystem\WiiInputSystem\WireWiiMote.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireInputStateBuffer.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireInputSystemMessageBroker.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireKeyboardAndMouse.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireKeyboardAndMouseDiscoveryStrategy.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireWin32InputSystem.h" />
-    <ClInclude Include="InputSystem\Win32InputSystem\WireWin32KeyMapper.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXIndexBuffer.h" />
     <ClInclude Include="Renderer\GXRenderer\WireGXRendererData.h" />
@@ -200,17 +176,13 @@
     <ClInclude Include="Engine\WireVisibleSet.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\WireBaseVirtualInputDevice.inl" />
     <None Include="Engine\WireGeometry.inl" />
-    <None Include="Engine\WireInputDevice.inl" />
-    <None Include="Engine\WireInputSystem.inl" />
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
     <None Include="Engine\WireNodeBillboard.inl" />
     <None Include="Engine\WireNodeDLod.inl" />
     <None Include="Engine\WireNodeLight.inl" />
     <None Include="Engine\WireNodeSwitch.inl" />
-    <None Include="Engine\WireVirtualInputDeviceDiscoveryStrategy.inl" />
     <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColor32.inl" />
@@ -262,8 +234,6 @@
     <None Include="Engine\WireVertexBuffer.inl" />
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
-    <None Include="InputSystem\WiiInputSystem\WireWiiController.inl" />
-    <None Include="InputSystem\WiiInputSystem\WireWiiInputDevice.inl" />
     <None Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.inl" />
     <None Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.inl" />
     <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
@@ -271,15 +241,7 @@
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\WireAxis.cpp" />
-    <ClCompile Include="Engine\WireBaseVirtualInputDevice.cpp" />
-    <ClCompile Include="Engine\WireButton.cpp" />
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
-    <ClCompile Include="Engine\WireFallbackVirtualInputDevice.cpp" />
-    <ClCompile Include="Engine\WireInputCapability.cpp" />
-    <ClCompile Include="Engine\WireInputDevice.cpp" />
-    <ClCompile Include="Engine\WireInputDeviceDiscoveryListener.cpp" />
-    <ClCompile Include="Engine\WireInputSystem.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />
@@ -287,7 +249,6 @@
     <ClCompile Include="Engine\WireNodeLight.cpp" />
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
-    <ClCompile Include="Engine\WirePlatformKeyMapper.cpp" />
     <ClCompile Include="Engine\WireStandardMesh.cpp" />
     <ClCompile Include="Engine\WireState.cpp" />
     <ClCompile Include="Engine\WireStateAlpha.cpp" />
@@ -296,8 +257,6 @@
     <ClCompile Include="Engine\WireStateMaterial.cpp" />
     <ClCompile Include="Engine\WireStateWireframe.cpp" />
     <ClCompile Include="Engine\WireStateZBuffer.cpp" />
-    <ClCompile Include="Engine\WireVirtualInputDevice.cpp" />
-    <ClCompile Include="Engine\WireVirtualInputDeviceDiscoveryStrategy.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColor32.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
@@ -322,33 +281,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp" />
-    <ClCompile Include="InputSystem\WiiInputSystem\WireNunchuk.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiController.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiControllerDiscoveryStrategy.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiExtension.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiInputSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiKeyMapper.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WiiInputSystem\WireWiiMote.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\Win32InputSystem\WireInputStateBuffer.cpp" />
-    <ClCompile Include="InputSystem\Win32InputSystem\WireInputSystemMessageBroker.cpp" />
-    <ClCompile Include="InputSystem\Win32InputSystem\WireKeyboardAndMouse.cpp" />
-    <ClCompile Include="InputSystem\Win32InputSystem\WireKeyboardAndMouseDiscoveryStrategy.cpp" />
-    <ClCompile Include="InputSystem\Win32InputSystem\WireWin32InputSystem.cpp" />
-    <ClCompile Include="InputSystem\Win32InputSystem\WireWin32KeyMapper.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9BlendMode.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateAlpha.cpp" />
     <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateCull.cpp" />
