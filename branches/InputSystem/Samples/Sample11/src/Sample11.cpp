@@ -5,14 +5,14 @@
 #include "Importer.h"
 #include "Cursors.h"
 #include "WireInputSystem.h"
-#include "WireVirtualInputDevice.h"
+#include "WireInputDevice.h"
+#include "WireMainInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireAxis.h"
+#include "WireIR.h"
+#include "WireButtons.h"
 #include "WireButton.h"
 #include "WireTypes.h"
-#include "WireEulerAngle.h"
-//#include "WireTHashSet.h"
-#include <set>
+#include <vector>
 #include <algorithm>
 
 using namespace Wire;
@@ -36,7 +36,7 @@ Bool Sample11::OnInitialize()
 		return false;
 	}
 
-	GetInputSystem()->GetDevicesDiscoveryStrategy()->AddInputDeviceDiscoveryListener(this);
+	GetInputSystem()->AddInputDeviceDiscoveryListener(this);
 
 	InitCursors();
 
@@ -56,29 +56,6 @@ void Sample11::OnIdle()
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
 	mspGuiCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 
-	// TODO: MAGIC NUMBER = Maximum number of players!
-	UInt playerCount = min<UInt>(GetInputSystem()->GetInputDevicesCount(), 4);
-	for (UInt playerNo = 0; playerNo < playerCount; playerNo++) 
-	{
-		const VirtualInputDevice* pVirtualInputDevice = GetInputSystem()->GetInputDevice(playerNo);
-
-		// Wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, that's why
-		// we make a vertical correction here!
-		Float x = pVirtualInputDevice->GetIRAxis(IR_X);
-		Float y = screenHeight - pVirtualInputDevice->GetIRAxis(IR_Y);
-
-		CursorMode mode;
-		if (pVirtualInputDevice->GetButton(BUTTON_A)) {
-			mode = CM_PRIMARY_BUTTON_PRESSED;
-		} else if (pVirtualInputDevice->GetButton(BUTTON_B)) {
-			mode = CM_SECONDARY_BUTTON_PRESSED;
-		} else {
-			mode = CM_POINTING;
-		}
-
-		SetCursor(x, y, mode, playerNo, DEGREES_TO_RADIANS(pVirtualInputDevice->GetIRAxisRotation(ROLL)));
-	}
-
 	mspCursors->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspCursors);
 
@@ -95,6 +72,51 @@ void Sample11::OnIdle()
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+}
+
+void Sample11::OnInputCapture()
+{
+	// TODO: MAGIC NUMBER = Maximum number of players!
+	UInt playerCount = min<UInt>(GetInputSystem()->GetMainInputDevicesCount(), 4);
+
+	if (playerCount == 0) 
+	{
+		return;
+	}
+
+	// closes the application if the home button is pressed
+	if (static_cast<const Buttons*>(GetInputSystem()->GetMainInputDevice(0)->GetCapability(Buttons::TYPE, false))->GetButton(BUTTON_HOME))
+	{
+		Close();
+		return;
+	}
+
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+
+	for (UInt player = 0; player < playerCount; player++) 
+	{
+		const MainInputDevice* pInputDevice = GetInputSystem()->GetMainInputDevice(player);
+
+		const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
+		const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+
+		// Wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, that's why
+		// we make a vertical correction here!
+		Float x = pIR->GetRight();
+		Float y = screenHeight - pIR->GetUp();
+
+		CursorMode mode;
+		if (pButtons->GetButton(BUTTON_A)) {
+			mode = CM_PRIMARY_BUTTON_PRESSED;
+		} else if (pButtons->GetButton(BUTTON_B)) {
+			mode = CM_SECONDARY_BUTTON_PRESSED;
+		} else {
+			mode = CM_POINTING;
+		}
+
+		SetCursor(x, y, mode, player, 0); //DEGREES_TO_RADIANS(pInputDevice->GetIRAxisRotation(ROLL)));
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -232,74 +254,24 @@ void Sample11::PrintInputDevicesInformation()
 
 	for (UInt i = 0; i < mpInputSystem->GetInputDevicesCount(); i++)
 	{
-		const VirtualInputDevice* pVirtualInputDevice = mpInputSystem->GetInputDevice(i);
+		const InputDevice* pInputDevice = mpInputSystem->GetInputDevice(i);
 
-		message << "Input Device " << i;
+		message << "Input Device no. " << i;
 		PrintAndClear(message);
 
-		message << "- Name " << pVirtualInputDevice->GetName();
+		message << "- Name: " << pInputDevice->GetType().GetName();
 		PrintAndClear(message);
 
 		System::Print("- Capabilities:");
 
-		/*const THashSet<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
-		THashSet<InputCapability>::Iterator iterator(&capabilities);
-		InputCapability* pCapability;
-		while ((pCapability = iterator.GetNext()) != NULL)
+		const vector<const InputCapability*>& inputCapabilities = pInputDevice->GetCapabilities();
+		vector<const InputCapability*>::const_iterator j = inputCapabilities.begin();
+		while (j != inputCapabilities.end())
 		{
-			System::Print(GetInputCapabilityName(*pCapability));
-		}*/
-		const set<InputCapability>& capabilities = pVirtualInputDevice->GetCapabilities();
-		set<InputCapability>::const_iterator iterator = capabilities.begin();
-		while (iterator != capabilities.end())
-		{
-			message << GetInputCapabilityName(*iterator);
+			message << (*j)->GetType().GetName();
 			PrintAndClear(message);
-			iterator++;
+			j++;
 		}
 	}
 }
 
-//----------------------------------------------------------------------------
-void Sample11::PrintKeyStates()
-{
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_A))
-	{
-		System::Print("Button 'A' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_B))
-	{
-		System::Print("Button 'B' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_1))
-	{
-		System::Print("Button '1' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_2))
-	{
-		System::Print("Button '2' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_MINUS))
-	{
-		System::Print("Button 'MINUS' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_PLUS))
-	{
-		System::Print("Button 'PLUS' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_Z))
-	{
-		System::Print("Button 'Z' Pressed");
-	}
-
-	if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_C))
-	{
-		System::Print("Button 'C' Pressed");
-	}
-}

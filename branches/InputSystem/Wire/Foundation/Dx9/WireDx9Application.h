@@ -30,6 +30,8 @@ public:
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();
+	virtual void OnInputCapture();
+	virtual void Close();
 
 	Int GetWindowID() const;
 
@@ -40,6 +42,7 @@ private:
 
 	// An identifier for the window (representation is platform-specific).
 	Int mWindowID;
+	Bool mIsRunning;
 };
 
 }

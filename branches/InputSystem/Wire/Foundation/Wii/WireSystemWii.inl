@@ -10,6 +10,7 @@
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
 #include "WireInputSystem.h"
+#include "WireButtons.h"
 #include <stdlib.h>
 #include <cstring>
 
@@ -65,7 +66,6 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 {
 	Application* pApp = Application::GetApplication();
 	Renderer* pRenderer = pApp->GetRenderer();
-	InputSystem* pInputSystem = pApp->GetInputSystem();
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();
@@ -74,19 +74,22 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile,
 		lineNumber);
 
-	if (pInputSystem->GetInputDevicesCount() > 0)
+	InputSystem* pInputSystem = pApp->GetInputSystem();
+	if (pInputSystem->GetMainInputDevicesCount() > 0 
+		&& pInputSystem->GetMainInputDevice(0)->HasCapability(Buttons::TYPE))
 	{
 		Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
 	
+		Buttons* pButtons = static_cast<Buttons*>(pInputSystem->GetMainInputDevice(0)->GetCapability(Buttons::TYPE));
 		do
 		{
 			pInputSystem->Capture();
-			if (pInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
+			if (pButtons->GetButton(BUTTON_HOME))
 			{
 				exit(0);
 			}
 	
-		} while (!(pInputSystem->GetInputDevice(0)->GetButton(BUTTON_A)));
+		} while (!(pButtons->GetButton(BUTTON_A)));
 	}
 	else
 	{

@@ -19,6 +19,7 @@ public:
 	Sample11();
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
+	virtual void OnInputCapture();
 
 	enum CursorMode
 	{
@@ -38,7 +39,6 @@ private:
 	Geometry* CreateCursor(Float uOffset, Float vOffset);
 	void PrintAndClear(stringstream& message);
 	void PrintInputDevicesInformation();
-	void PrintKeyStates();
 
 	Bool mInputDevicesStateChanged;
 

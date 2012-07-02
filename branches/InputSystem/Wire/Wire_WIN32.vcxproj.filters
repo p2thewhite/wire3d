@@ -84,6 +84,33 @@
     <Filter Include="InputSystem">
       <UniqueIdentifier>{271fb124-7e51-4bb4-af41-2fe75b1f7436}</UniqueIdentifier>
     </Filter>
+    <Filter Include="InputSystem\Header Files">
+      <UniqueIdentifier>{1eb5407d-ec47-4a2e-98f8-3ad8247ba214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Source Files">
+      <UniqueIdentifier>{ddd7ac31-737f-4b9d-84ab-1ec8cae9cebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms">
+      <UniqueIdentifier>{f70d0195-5ece-4284-8a2f-7f18008f4d14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Win32">
+      <UniqueIdentifier>{439aac4e-94c5-4f3d-81aa-62e531c03e6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Wii">
+      <UniqueIdentifier>{0bf550a7-268b-4622-b139-4e23d6c8f1e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Wii\Header Files">
+      <UniqueIdentifier>{ade90cb9-7a01-4227-a0cb-ef4267f80dc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Wii\Source Files">
+      <UniqueIdentifier>{9205aa21-cb0b-4592-8283-a57fbc0c93cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Win32\Header Files">
+      <UniqueIdentifier>{5695aef9-8b0c-42a3-922f-3ecbccdcc5b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputSystem\Platforms\Win32\Source Files">
+      <UniqueIdentifier>{e7ca5626-c929-42ef-b07b-3267e2e89d3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Foundation\WireFoundation.h">
@@ -346,6 +373,138 @@
     </ClInclude>
     <ClInclude Include="Foundation\WireColor32.h">
       <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedNunchuk.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiControllersDiscovery.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiMote.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32InputSystem.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedButtons.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedIR.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedShake.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedSwing.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedTilt.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiControllersDiscovery.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiInputSystem.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMote.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteButtons.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteDigitalPad.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteIR.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteShake.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteSwing.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteTilt.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireAnalogPad.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireButtons.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireDigitalPad.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputCapability.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputDevice.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputDeviceDiscoveryListener.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputDeviceDiscoveryStrategy.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputDeviceExtension.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputSystem.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireIR.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireMainInputDevice.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireShake.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireSwing.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireTilt.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchuk.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchukButtons.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchukShake.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchukSwing.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireButton.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputDataBuffer.h">
+      <Filter>InputSystem\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h">
+      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -788,6 +947,135 @@
     </ClCompile>
     <ClCompile Include="Foundation\WireColor32.cpp">
       <Filter>Foundation\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedNunchuk.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiControllersDiscovery.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiMote.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32InputSystem.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedButtons.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedIR.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedShake.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedSwing.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedTilt.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiControllersDiscovery.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiInputSystem.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMote.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteButtons.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteDigitalPad.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteIR.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteShake.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteSwing.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteTilt.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchuk.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchukAnalogPad.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchukButtons.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchukShake.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchukSwing.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireNunchukTilt.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputDeviceDiscoveryListener.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputDeviceDiscoveryStrategy.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputSystem.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputDeviceExtension.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputDevice.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireMainInputDevice.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputCapability.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireSwing.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireTilt.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireShake.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireIR.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireDigitalPad.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireButtons.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireAnalogPad.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32InputDataBuffer.cpp">
+      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputDataBuffer.cpp">
+      <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

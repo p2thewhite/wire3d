@@ -40,11 +40,13 @@ public:
 	// Called before terminating the application.
 	virtual void OnTerminate() = 0;
 
-	// Called when a mouse/controller button is pressed/released.
-	//virtual void OnButton(UInt button, UInt state);
-
 	// Called when the window is resized.
 	virtual void OnResize(UInt width, UInt height);
+
+	// Called bu the main loop just before the input capturing.
+	virtual void OnInputCapture() = 0;
+
+	virtual void Close() = 0;
 
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 

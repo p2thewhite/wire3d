@@ -9,8 +9,9 @@
 #include "WireDx9Application.h"
 #include "WireRenderer.h"
 #include "WireDx9RendererInput.h"
-//#include "WireWin32InputSystem.h"
-//#include "WireInputSystemMessageBroker.h"
+#include "WireButton.h"
+#include "WireWin32InputSystem.h"
+#include "WireWin32InputSystemMessageBroker.h"
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
@@ -64,12 +65,11 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam, LP
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	/*InputSystemMessageBroker* pInputSystemMessageBroker = InputSystemMessageBroker::GetInstance();
-
-	if (pInputSystemMessageBroker->OnSystemMessage(msg, wParam, lParam))
+	// It this call returns true it means that the given system message was handled by the broker.
+	if (Win32InputSystemMessageBroker::GetInstance()->OnSystemMessage(msg, wParam, lParam))
 	{
 		return 0;
-	}*/
+	}
 
 	switch (msg)
 	{
@@ -168,7 +168,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen, mUseVSync);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
-	//mpInputSystem = WIRE_NEW Win32InputSystem();
+	mpInputSystem = WIRE_NEW Win32InputSystem();
 
 	if (s_pApplication->OnInitialize())
 	{
@@ -176,18 +176,19 @@ Int Dx9Application::Main(Int, Char*[])
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 
-		//mpInputSystem->DiscoverInputDevices();
+		// first input device discovery attempt
+		mpInputSystem->DiscoverInputDevices();
 
 		// start the message pump
-		Bool isApplicationRunning = true;
-		while (isApplicationRunning)
+		mIsRunning = true;
+		while (mIsRunning)
 		{
 			MSG msg;
 			if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
 				{
-					isApplicationRunning = false;
+					mIsRunning = false;
 					continue;
 				}
 
@@ -200,16 +201,12 @@ Int Dx9Application::Main(Int, Char*[])
 			}
 			else
 			{
-				/*if (mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
-				{
-					isApplicationRunning = false;
-					break;
-				}*/
-
+				mpInputSystem->Capture();
+				s_pApplication->OnInputCapture();
 				s_pApplication->OnIdle();
-				//mpInputSystem->Capture();
 
-				//mpInputSystem->DiscoverInputDevices();
+				// new attempt to discover input devices
+				mpInputSystem->DiscoverInputDevices();
 			}
 		}
 	}
@@ -240,3 +237,15 @@ void Dx9Application::OnTerminate()
 void Dx9Application::OnIdle()
 {
 }
+
+//----------------------------------------------------------------------------
+void Dx9Application::OnInputCapture()
+{
+}
+
+//----------------------------------------------------------------------------
+void Dx9Application::Close()
+{
+	mIsRunning = false;
+}
+
