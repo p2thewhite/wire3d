@@ -7,6 +7,7 @@
 
 #include "rapidxml.hpp"
 #include "WireCamera.h"
+#include "WireColorRGBA.h"
 #include "WireGeometry.h"
 #include "WireNode.h"
 #include "WireString.h"
@@ -55,13 +56,17 @@ private:
 	Bool HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
-	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName,
+		Bool& rHasValue);
+	ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char* pName,
+		Bool& rHasValue);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 	Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
 
 	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
+	Text* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode,
@@ -72,6 +77,8 @@ private:
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
+	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
+		Spatial* pSpatial);
 
 	void UpdateGS(Spatial* pSpatial);
 	void ResetStatistics();

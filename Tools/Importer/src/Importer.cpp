@@ -10,7 +10,7 @@
 #include "WireLight.h"
 #include "WireMesh.h"
 #include "WireQuaternion.h"
-#include "WireVertexBuffer.h"
+#include "WireStandardMesh.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
 #include "WireStateFog.h"
@@ -18,6 +18,7 @@
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 #include "WireTStack.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
@@ -176,7 +177,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 
 		UInt wc = 0;
 		Int penX = 0;
-		Int penY = 0;
+		Int penY = height;
 		fitsInTexture = true;
 
 		for (UInt i = 0; i < totalCharCount; i++)
@@ -284,6 +285,8 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 			for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
 			{
 				UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
+				WIRE_ASSERT(((j*texWidth + i) < (texWidth * texHeight)) &&
+					((j*texWidth + i) >= 0));
 				pDst[(j*texWidth + i)*4] = 0xFF;
 				pDst[(j*texWidth + i)*4+1] = 0xFF;
 				pDst[(j*texWidth + i)*4+2] = 0xFF;
@@ -325,6 +328,12 @@ Char* Importer::Load(const Char* pFilename, Int& rSize)
 //----------------------------------------------------------------------------
 Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 {
+	WIRE_ASSERT(pFilename);
+	if (!pFilename)
+	{
+		return NULL;
+	}
+
 	String path = String(mpPath) + String(pFilename);
 	Char* pBuffer = Load(static_cast<const Char*>(path), rSize);
 	Float* pBuffer32 = reinterpret_cast<Float*>(pBuffer);
@@ -382,6 +391,17 @@ void Importer::ResetStatistics()
 //----------------------------------------------------------------------------
 void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
+	if (Is("Text", pXmlNode->name()))
+	{
+		Text* pText = ParseText(pXmlNode);
+		if (pText)
+		{
+			pParent->AttachChild(pText);
+		}
+
+		return;
+	}
+
 	if (Is("Leaf", pXmlNode->name()))
 	{
 		Geometry* pGeo = ParseLeaf(pXmlNode);
@@ -404,7 +424,8 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		{
 			ParseComponents(pChild, pNode);
 
-			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()))
+			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()) ||
+				Is("Text", pChild->name()))
 			{
 				Traverse(pChild, pNode);
 			}
@@ -424,7 +445,6 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 		}
 	}
 
-	WIRE_ASSERT(false /* Xml attribute not found */);
 	return NULL;
 }
 
@@ -527,15 +547,35 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 
 //----------------------------------------------------------------------------
 ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
-	pName)
+	pName, Bool& rHasValue)
 {
 	ColorRGB c = ColorRGB::WHITE;
+	rHasValue = false;
 	Char* pCol = GetValue(pXmlNode, pName);
 	if (pCol)
 	{
 		Int n;
 		n = sscanf(pCol, "%f, %f, %f", &c.R(), &c.G(), &c.B());
 		WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+		rHasValue = true;
+	}
+
+	return c;
+}
+
+//----------------------------------------------------------------------------
+ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName, Bool& rHasValue)
+{
+	ColorRGBA c = ColorRGBA::WHITE;
+	rHasValue = false;
+	Char* pCol = GetValue(pXmlNode, pName);
+	if (pCol)
+	{
+		Int n;
+		n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(), &c.A());
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
+		rHasValue = true;
 	}
 
 	return c;
@@ -566,6 +606,7 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	UpdateGS(pSpatial);
 
 	Char* pType = GetValue(pXmlNode, "Type");
+	WIRE_ASSERT(pType);
 	Light* pLight = WIRE_NEW Light;
 	Light::LightType lt = Light::LT_POINT;
 
@@ -593,8 +634,18 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 	pLight->Type = lt;
 	pLight->Position = pSpatial->World.GetTranslate();
-	pLight->Ambient = GetColorRGB(pXmlNode, "Ambient");
-	pLight->Color = GetColorRGB(pXmlNode, "Color");
+	Bool hasValue;
+	ColorRGB ambient = GetColorRGB(pXmlNode, "Ambient", hasValue); 
+	if (hasValue)
+	{
+		pLight->Ambient = ambient; 
+	}
+
+	ColorRGB color = GetColorRGB(pXmlNode, "Color", hasValue);
+	if (hasValue)
+	{
+		pLight->Color = color;
+	}
 
 	pSpatial->AttachLight(pLight);
 }
@@ -635,9 +686,9 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 	Spatial* pSpatial)
 {
-	Vector3F t;
-	QuaternionF r;
-	Vector3F s;
+	Vector3F t = Vector3F::ZERO;
+	QuaternionF r = QuaternionF::IDENTITY;
+	Vector3F s = Vector3F::ONE;
 	
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
@@ -753,6 +804,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	WIRE_ASSERT(pGeo);
 	mStatistics.GeometryCount++;
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
@@ -772,18 +824,88 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	ParseTransformation(pXmlNode, pGeo);
+	ParseTransformationAndComponents(pXmlNode, pGeo);
 
-	if (pXmlNode->first_node())
+	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
+{
+	Int width = 8;
+	Int height = 8;
+	Int maxLength = -1;
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
+		if (Is("Width", attr->name()))
 		{
-			ParseComponents(pChild, pGeo);
+			Int n;
+			n = sscanf(attr->value(), "%d", &width);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+		}
+		else if (Is("Height", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &height);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+		}
+		else if (Is("MaxLength", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &maxLength);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 		}
 	}
 
-	return pGeo;
+	Char* pString = GetValue(pXmlNode, "String");
+	if (maxLength < 0)
+	{
+		maxLength = System::Strlen(pString);
+	}
+
+	Text* pText = NULL;
+	Char* pFontName = GetValue(pXmlNode, "Font");
+	if (pFontName)
+	{
+		String path = String(mpPath) + String(pFontName);
+		pText = CreateText(path, width, height, maxLength);
+	}
+	else
+	{
+		pText = StandardMesh::CreateText(maxLength);
+	}
+
+	if (!pText)
+	{
+		WIRE_ASSERT(false);
+		return NULL;
+	}
+
+	Bool hasValue;
+	ColorRGBA color = GetColorRGBA(pXmlNode, "Color", hasValue);
+	if (hasValue)
+	{
+		pText->SetColor(color);
+	}
+
+	if (pString)
+	{
+		Bool isOk = pText->Set(pString);
+		WIRE_ASSERT(isOk /* Wire::Text::Set() failed */);
+	}
+
+	mStatistics.GeometryCount++;
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (pName)
+	{
+		pText->SetName(pName);
+	}
+
+	ParseTransformationAndComponents(pXmlNode, pText);
+
+	return pText;
 }
 
 //----------------------------------------------------------------------------
@@ -806,21 +928,32 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 }
 
 //----------------------------------------------------------------------------
+void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>*
+	pXmlNode, Spatial* pSpatial)
+{
+	ParseTransformation(pXmlNode, pSpatial);
+
+	if (pXmlNode->first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			ParseComponents(pChild, pSpatial);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 {
 	if (Is("MaterialState", pXmlNode->name()))
 	{
 		StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
-
-		Char* pCol = GetValue(pXmlNode, "Ambient");
-		if (pCol)
+		Bool hasValue;	
+		ColorRGBA ambient = GetColorRGBA(pXmlNode, "Ambient", hasValue);
+		if (hasValue)
 		{
-			Int n;
-			ColorRGBA c;
-			n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
-			WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
-
-			pMaterialState->Ambient = c;
+			pMaterialState->Ambient = ambient;
 		}
 
 		return pMaterialState;
@@ -986,7 +1119,13 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 	{
 		StateFog* pFogState = WIRE_NEW StateFog;
 		pFogState->Enabled = GetBool(pXmlNode, "Enabled");
-		pFogState->Color = GetColorRGB(pXmlNode, "Color");
+		Bool hasValue;
+		ColorRGB color = GetColorRGB(pXmlNode, "Color", hasValue);
+		if (hasValue)
+		{
+			pFogState->Color = color;
+		}
+
 		pFogState->Start = GetFloat(pXmlNode, "Start");
 		pFogState->End = GetFloat(pXmlNode, "End");
 
