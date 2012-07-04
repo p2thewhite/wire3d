@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer/Dx9Renderer"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer;Renderer/Dx9Renderer"
 				PreprocessorDefinitions="WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG"
 				MinimalRebuild="true"
 				ExceptionHandling="0"
@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer/Dx9Renderer"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;Foundation;Engine;Renderer;Renderer/Dx9Renderer"
 				PreprocessorDefinitions="WIRE_WIN;WIN32;NDEBUG"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
@@ -564,6 +564,18 @@
 		<Filter
 			Name="Renderer"
 			>
+			<File
+				RelativePath=".\Renderer\WireRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\WireRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\WireRenderer.inl"
+				>
+			</File>
 			<Filter
 				Name="GXRenderer"
 				>
@@ -1040,10 +1052,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireRenderer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireRtti.h"
 					>
 				</File>
@@ -1188,10 +1196,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireRenderer.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireRtti.inl"
 					>
 				</File>
@@ -1317,10 +1321,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireRenderer.cpp"
 					>
 				</File>
 				<File
