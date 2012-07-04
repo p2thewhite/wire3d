@@ -30,7 +30,6 @@
 #include "WireNodeSkybox.h"
 #include "WireNodeSwitch.h"
 #include "WireObject.h"
-#include "WireRenderer.h"
 #include "WireRtti.h"
 #include "WireSceneObject.h"
 #include "WireSmartPointer.h"

@@ -207,9 +207,6 @@
     <ClInclude Include="Engine\WireObject.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireRenderer.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WireRtti.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -308,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="Engine\WireText.h">
       <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\WireRenderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +425,6 @@
     <None Include="Engine\WireObject.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
-    <None Include="Engine\WireRenderer.inl">
-      <Filter>Engine\Inline Files</Filter>
-    </None>
     <None Include="Engine\WireRtti.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
@@ -487,6 +484,9 @@
     </None>
     <None Include="Foundation\WireColor32.inl">
       <Filter>Foundation\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\WireRenderer.inl">
+      <Filter>Renderer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -590,9 +590,6 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireObject.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\WireRenderer.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireRtti.cpp">
@@ -702,6 +699,9 @@
     </ClCompile>
     <ClCompile Include="Engine\WireText.cpp">
       <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\WireRenderer.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

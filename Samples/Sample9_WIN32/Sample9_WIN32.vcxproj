@@ -60,7 +60,7 @@
     </CustomBuildStep>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer\Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIRE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>
@@ -98,7 +98,7 @@
       <Outputs>%(Outputs)</Outputs>
     </CustomBuildStep>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer\Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
