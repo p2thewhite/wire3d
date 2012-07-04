@@ -12,6 +12,7 @@
 
 #include "WireEngine.h"
 #include "WireFoundation.h"
+#include "WireRenderer.h"
 
 namespace Wire
 {

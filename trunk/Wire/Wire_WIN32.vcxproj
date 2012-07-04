@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>Foundation;Engine;Renderer/Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Foundation;Engine;Renderer;Renderer/Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
@@ -70,7 +70,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>Foundation;Engine;Renderer/Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Foundation;Engine;Renderer;Renderer/Dx9Renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -163,7 +163,6 @@
     <ClInclude Include="Engine\WireLight.h" />
     <ClInclude Include="Engine\WireNode.h" />
     <ClInclude Include="Engine\WireObject.h" />
-    <ClInclude Include="Engine\WireRenderer.h" />
     <ClInclude Include="Engine\WireRtti.h" />
     <ClInclude Include="Engine\WireSceneObject.h" />
     <ClInclude Include="Engine\WireSmartPointer.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="Engine\WireVertexBuffer.h" />
     <ClInclude Include="Engine\WireVisibleObject.h" />
     <ClInclude Include="Engine\WireVisibleSet.h" />
+    <ClInclude Include="Renderer\WireRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\WireGeometry.inl" />
@@ -223,7 +223,6 @@
     <None Include="Engine\WireIndexBuffer.inl" />
     <None Include="Engine\WireNode.inl" />
     <None Include="Engine\WireObject.inl" />
-    <None Include="Engine\WireRenderer.inl" />
     <None Include="Engine\WireRtti.inl" />
     <None Include="Engine\WireSceneObject.inl" />
     <None Include="Engine\WireSmartPointer.inl" />
@@ -240,6 +239,7 @@
     <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
     <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl" />
     <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
+    <None Include="Renderer\WireRenderer.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
@@ -355,7 +355,6 @@
     <ClCompile Include="Engine\WireLight.cpp" />
     <ClCompile Include="Engine\WireNode.cpp" />
     <ClCompile Include="Engine\WireObject.cpp" />
-    <ClCompile Include="Engine\WireRenderer.cpp" />
     <ClCompile Include="Engine\WireRtti.cpp" />
     <ClCompile Include="Engine\WireSceneObject.cpp" />
     <ClCompile Include="Engine\WireSpatial.cpp" />
@@ -365,6 +364,7 @@
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
+    <ClCompile Include="Renderer\WireRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

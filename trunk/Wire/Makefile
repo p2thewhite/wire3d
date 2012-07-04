@@ -20,10 +20,12 @@ BUILD		:=	build
 SOURCES		:=	Foundation \
 				Foundation/Wii \
 				Engine \
+				Renderer \
 				Renderer/GXRenderer
 DATA		:=	data  
 INCLUDES	:=	Foundation \
 				Engine \
+				Renderer \
 				Renderer/GXRenderer
 ifeq ($(WIRE_DEBUG),y)
 BUILD		:=	build_wii_debug

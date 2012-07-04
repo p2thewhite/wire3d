@@ -893,7 +893,7 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 	if (pString)
 	{
 		Bool isOk = pText->Set(pString);
-		WIRE_ASSERT(isOk /* Wire::Text::Set() failed */);
+		WIRE_ASSERT_NO_SIDEEFFECTS(isOk /* Wire::Text::Set() failed */);
 	}
 
 	mStatistics.GeometryCount++;
