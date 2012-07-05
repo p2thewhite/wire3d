@@ -1,11 +1,14 @@
 #include "WireWiiMoteDigitalPad.h"
-
-WIRE_IMPLEMENT_RTTI(Wire, WiiMoteDigitalPad, DigitalPad);
+#include "WireWiiMote.h"
+#include "WireWiiInputDataBuffer.h"
 
 namespace Wire
 {
 
-WiiMoteDigitalPad::WiiMoteDigitalPad()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteDigitalPad, DigitalPad);
+
+WiiMoteDigitalPad::WiiMoteDigitalPad(const InputDevice* pParent)
+	: DigitalPad(pParent)
 {
 }
 
@@ -15,22 +18,50 @@ WiiMoteDigitalPad::~WiiMoteDigitalPad()
 
 Bool WiiMoteDigitalPad::GetDown() const
 {
-	return false;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return false;
+	}
+
+	return (pData->btns_h & WPAD_BUTTON_DOWN) != 0;
 }
 
 Bool WiiMoteDigitalPad::GetLeft() const
 {
-	return false;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return false;
+	}
+
+	return (pData->btns_h & WPAD_BUTTON_LEFT) != 0;
 }
 
 Bool WiiMoteDigitalPad::GetRight() const
 {
-	return false;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return false;
+	}
+
+	return (pData->btns_h & WPAD_BUTTON_RIGHT) != 0;
 }
 
 Bool WiiMoteDigitalPad::GetUp() const
 {
-	return false;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return false;
+	}
+
+	return (pData->btns_h & WPAD_BUTTON_UP) != 0;
 }
 
 }

@@ -2,7 +2,10 @@
 #define WIIMOTETILT_H_
 
 #include "WireTilt.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
+#include <wiiuse/wpad.h>
 
 namespace Wire
 {
@@ -12,7 +15,7 @@ class WiiMoteTilt : public Tilt
 	WIRE_DECLARE_RTTI;
 
 public:
-	WiiMoteTilt();
+	WiiMoteTilt(const InputDevice* pParent);
 	virtual ~WiiMoteTilt();
 
 	virtual Float GetBackward() const;

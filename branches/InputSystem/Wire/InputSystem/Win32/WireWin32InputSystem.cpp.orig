@@ -1,7 +1,6 @@
 #include "WireWin32InputSystem.h"
 #include "WireWin32InputSystemMessageBroker.h"
-#include "WireWin32EmulatedWiiMote.h"
-#include "WireWin32EmulatedNunchuk.h"
+#include "WireWin32EmulatedWiiControllersDiscovery.h"
 #include "WireMemory.h"
 #include <vector>
 
@@ -21,17 +20,17 @@ void Win32InputSystem::Capture()
 	// swap input data buffers
 	Win32InputSystemMessageBroker::GetInstance()->SwapBuffers();
 	// update the current data buffer on each input device
-
-	for (UInt i = 0; i < mDevices.size(); i++)
+	const std::vector<InputDevice*>& inputDevices = mpInputDeviceDiscoveryStrategy->GetInputDevices();
+	
+	for (UInt i = 0; i < inputDevices.size(); i++)
 	{
-		mDevices[i]->SetDataBuffer(Win32InputSystemMessageBroker::GetInstance()->GetCurrentInputDataBuffer());
+		inputDevices[i]->SetDataBuffer(Win32InputSystemMessageBroker::GetInstance()->GetCurrentInputDataBuffer());
 	}
 }
 
 void Win32InputSystem::DoDevicesDiscovery()
 {
-	// FIXME: since there's no way to know how many keyboards and mouses are connected using Win32 api, 
-	// assume there will always be 1 main device (emulated wiimote)
+	// FIXME: since there's no way to know how many keyboards and mouses are connected using Win32, assume there'll be always 1 emulated controller ever!
 	if (GetMainDevicesCount() == 1)
 	{
 		return;
@@ -41,8 +40,10 @@ void Win32InputSystem::DoDevicesDiscovery()
 	AddDevice(pEmulatedWiiMote);
 	Win32EmulatedNunchuk* pEmulatedNunchuk = WIRE_NEW Win32EmulatedNunchuk(pEmulatedWiiMote);
 	AddDevice(pEmulatedNunchuk);
+
 	pEmulatedWiiMote->SetUp();
 	pEmulatedNunchuk->SetUp();
+
 	NotifyDevicesChange();
 }
 

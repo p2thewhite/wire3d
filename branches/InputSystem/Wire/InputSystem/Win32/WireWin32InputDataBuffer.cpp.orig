@@ -5,8 +5,8 @@
 namespace Wire
 {
 
-Win32InputDataBuffer::Win32InputDataBuffer()
-	: mMouseX(0), mMouseY(0), mMouseWheel(0)
+Win32InputDataBuffer::Win32InputDataBuffer() 
+	: mMouseX(0), mMouseY(0)
 {
 	mpKeys = WIRE_NEW Bool[256];
 	System::Memset(mpKeys, 0, 256);
@@ -30,11 +30,6 @@ Float Win32InputDataBuffer::GetMouseX() const
 Float Win32InputDataBuffer::GetMouseY() const
 {
 	return mMouseY;
-}
-
-Float Win32InputDataBuffer::GetMouseWheel() const
-{
-	return mMouseWheel;
 }
 
 void Win32InputDataBuffer::SetKeyDown(UInt key)
@@ -61,13 +56,13 @@ void Win32InputDataBuffer::CopyFrom(const Win32InputDataBuffer* pOther)
 {
 	mMouseX = pOther->mMouseX;
 	mMouseY = pOther->mMouseY;
-	mMouseWheel = pOther->mMouseWheel;
+
 	System::Memcpy(mpKeys, 256, pOther->mpKeys, 256);
 }
 
-void Win32InputDataBuffer::IncrementMouseWheel(Float delta)
+void Win32InputDataBuffer::IncrementMouseWheelByDelta( Int delta )
 {
-	mMouseWheel += delta;
+	
 }
 
 }

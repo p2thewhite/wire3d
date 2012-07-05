@@ -1,11 +1,12 @@
 #include "WireNunchukSwing.h"
 
-WIRE_IMPLEMENT_RTTI(Wire, NunchukSwing, Swing);
-
 namespace Wire
 {
 
-NunchukSwing::NunchukSwing()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukSwing, Swing);
+
+NunchukSwing::NunchukSwing(const InputDevice* pParent)
+	: Swing(pParent)
 {
 }
 

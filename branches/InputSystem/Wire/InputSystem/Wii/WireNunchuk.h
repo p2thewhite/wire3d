@@ -2,18 +2,20 @@
 #define NUNCHUK_H_
 
 #include "WireInputDeviceExtension.h"
+#include "WireMainInputDevice.h"
+#include "WireRtti.h"
 
 namespace Wire
 {
 
 class Nunchuk : public InputDeviceExtension
 {
+	WIRE_DECLARE_RTTI;
 
 public:
-	Nunchuk();
+	Nunchuk(const MainInputDevice* pMainInputDevice);
 	virtual ~Nunchuk();
 
-protected:
 	virtual void SetUp();
 
 };

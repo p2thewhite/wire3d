@@ -30,12 +30,12 @@ Float Win32KeyMappedTilt::GetForward() const
 
 Float Win32KeyMappedTilt::GetLeft() const
 {
-	return 0;
+	return -static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseWheel();
 }
 
 Float Win32KeyMappedTilt::GetRight() const
 {
-	return 0;
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseWheel();
 }
 
 }

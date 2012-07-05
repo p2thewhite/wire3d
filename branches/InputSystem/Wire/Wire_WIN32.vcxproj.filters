@@ -377,9 +377,6 @@
     <ClInclude Include="InputSystem\Win32\WireWin32EmulatedNunchuk.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiControllersDiscovery.h">
-      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiMote.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
@@ -409,9 +406,6 @@
     </ClInclude>
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedTilt.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem\Wii\WireWiiControllersDiscovery.h">
-      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem\Wii\WireWiiInputSystem.h">
       <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
@@ -450,12 +444,6 @@
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem\WireInputDevice.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem\WireInputDeviceDiscoveryListener.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem\WireInputDeviceDiscoveryStrategy.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputSystem\WireInputDeviceExtension.h">
@@ -505,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireInputSystemListener.h">
+      <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -951,9 +942,6 @@
     <ClCompile Include="InputSystem\Win32\WireWin32EmulatedNunchuk.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiControllersDiscovery.cpp">
-      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiMote.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
@@ -983,9 +971,6 @@
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedTilt.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem\Wii\WireWiiControllersDiscovery.cpp">
-      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem\Wii\WireWiiInputSystem.cpp">
       <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
@@ -1029,12 +1014,6 @@
     <ClCompile Include="InputSystem\Wii\WireNunchukTilt.cpp">
       <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputSystem\WireInputDeviceDiscoveryListener.cpp">
-      <Filter>InputSystem\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WireInputDeviceDiscoveryStrategy.cpp">
-      <Filter>InputSystem\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputSystem\WireInputSystem.cpp">
       <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
@@ -1075,6 +1054,9 @@
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem\WireInputDataBuffer.cpp">
+      <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireInputSystemListener.cpp">
       <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

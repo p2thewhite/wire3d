@@ -1,11 +1,15 @@
 #include "WireWiiMoteTilt.h"
-
-WIRE_IMPLEMENT_RTTI(Wire, WiiMoteTilt, Tilt);
+#include "WireWiiMoteButtons.h"
+#include "WireWiiMote.h"
+#include "WireWiiInputDataBuffer.h"
 
 namespace Wire
 {
+
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteTilt, Tilt);
 	
-WiiMoteTilt::WiiMoteTilt()
+WiiMoteTilt::WiiMoteTilt(const InputDevice* pParent)
+	: Tilt(pParent)
 {
 }
 
@@ -15,22 +19,50 @@ WiiMoteTilt::~WiiMoteTilt()
 
 Float WiiMoteTilt::GetBackward() const
 {
-	return 0;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return 0;
+	}
+
+	return pData->orient.pitch;
 }
 
 Float WiiMoteTilt::GetForward() const
 {
-	return 0;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return 0;
+	}
+
+	return -pData->orient.pitch;
 }
 
 Float WiiMoteTilt::GetLeft() const
 {
-	return 0;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return 0;
+	}
+
+	return pData->orient.roll;
 }
 
 Float WiiMoteTilt::GetRight() const
 {
-	return 0;
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+
+	if (pData == NULL)
+	{
+		return 0;
+	}
+
+	return -pData->orient.roll;
 }
 
 }

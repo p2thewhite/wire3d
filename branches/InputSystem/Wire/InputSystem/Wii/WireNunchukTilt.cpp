@@ -1,11 +1,12 @@
 #include "WireNunchukTilt.h"
 
-WIRE_IMPLEMENT_RTTI(Wire, NunchukTilt, Tilt);
-
 namespace Wire
 {
 
-NunchukTilt::NunchukTilt()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukTilt, Tilt);
+
+NunchukTilt::NunchukTilt(const InputDevice* pParent)
+	: Tilt(pParent)
 {
 }
 

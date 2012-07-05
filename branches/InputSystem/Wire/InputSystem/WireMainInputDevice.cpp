@@ -14,11 +14,12 @@ MainInputDevice::~MainInputDevice()
 {
 }
 
-void MainInputDevice::AddExtension(InputDevice* pInputDevice)
+void MainInputDevice::AddExtension(InputDeviceExtension* pInputDeviceExtension)
 {
+	mExtensions.push_back(pInputDeviceExtension);
 }
 
-const InputDevice* MainInputDevice::GetExtension(UInt index) const
+const InputDeviceExtension* MainInputDevice::GetExtension(UInt index) const
 {
 	return mExtensions[index];
 }

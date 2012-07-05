@@ -1,11 +1,11 @@
 #ifndef INPUTSYSTEM_H_
 #define INPUTSYSTEM_H_
 
-#include "WireInputDeviceDiscoveryStrategy.h"
-#include "WireInputDeviceDiscoveryListener.h"
+#include "WireInputSystemListener.h"
 #include "WireMainInputDevice.h"
 #include "WireInputDeviceExtension.h"
 #include "WireTypes.h"
+#include <vector>
 
 namespace Wire
 {
@@ -18,21 +18,27 @@ public:
 	virtual ~InputSystem();
 
 	virtual void Capture() = 0;
-	void DiscoverInputDevices();
-	const InputDeviceExtension* GetInputDeviceExtension(UInt index) const;
-	UInt GetInputDeviceExtensionsCount() const;
-	const MainInputDevice* GetMainInputDevice(UInt index) const;
-	UInt GetMainInputDevicesCount() const;
-	const InputDevice* GetInputDevice(UInt index) const;
-	UInt GetInputDevicesCount() const;
-	void AddInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pListener);
-	void RemoveInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pListener);
+	void DiscoverDevices();
+	const InputDeviceExtension* GetDeviceExtension(UInt index) const;
+	UInt GetDeviceExtensionsCount() const;
+	const MainInputDevice* GetMainDevice(UInt index) const;
+	UInt GetMainDevicesCount() const;
+	const InputDevice* GetDevice(UInt index) const;
+	UInt GetDevicesCount() const;
+	void AddListener(InputSystemListener* pListener);
+	void RemoveListener(InputSystemListener* pListener);
 
 protected:
-	InputDeviceDiscoveryStrategy* mpInputDeviceDiscoveryStrategy;
+	std::vector<InputDevice*> mDevices;
+	std::vector<MainInputDevice*> mMainDevices;
+	std::vector<InputDeviceExtension*> mDeviceExtensions;
+	std::vector<InputSystemListener*> mListeners;
 
-	virtual void AfterInputDeviceDiscovery();
-	virtual void BeforeInputDeviceDiscovery();
+	virtual void BeforeDevicesDiscovery();
+	virtual void DoDevicesDiscovery() = 0;
+	virtual void AfterDevicesDiscovery();
+	void AddDevice(InputDevice* pInputDevice);
+	void NotifyDevicesChange();
 
 };
 

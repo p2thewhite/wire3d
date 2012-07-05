@@ -1,11 +1,15 @@
 #include "WireWiiMoteSwing.h"
-
-WIRE_IMPLEMENT_RTTI(Wire, WiiMoteSwing, Swing);
+#include "WireWiiMoteButtons.h"
+#include "WireWiiMote.h"
+#include "WireWiiInputDataBuffer.h"
 
 namespace Wire
 {
+
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteSwing, Swing);
 	
-WiiMoteSwing::WiiMoteSwing()
+WiiMoteSwing::WiiMoteSwing(const InputDevice* pParent)
+	: Swing(pParent)
 {
 }
 

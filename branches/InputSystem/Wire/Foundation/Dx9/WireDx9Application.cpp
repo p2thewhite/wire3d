@@ -33,7 +33,7 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height, Bool isFullscreen, Bool useVSync) :
-		Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, isFullscreen, useVSync), mWindowID(0)
+		Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, isFullscreen, useVSync), mWindowID(0), mIsRunning(false)
 {
 	_set_error_mode (_OUT_TO_MSGBOX);
 
@@ -176,11 +176,11 @@ Int Dx9Application::Main(Int, Char*[])
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 
-		// first input device discovery attempt
-		mpInputSystem->DiscoverInputDevices();
+		// first attempt to discover input devices
+		mpInputSystem->DiscoverDevices();
 
-		// start the message pump
 		mIsRunning = true;
+		// start the message pump
 		while (mIsRunning)
 		{
 			MSG msg;
@@ -203,10 +203,11 @@ Int Dx9Application::Main(Int, Char*[])
 			{
 				mpInputSystem->Capture();
 				s_pApplication->OnInputCapture();
+
 				s_pApplication->OnIdle();
 
 				// new attempt to discover input devices
-				mpInputSystem->DiscoverInputDevices();
+				mpInputSystem->DiscoverDevices();
 			}
 		}
 	}

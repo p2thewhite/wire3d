@@ -17,18 +17,16 @@ public:
 	Bool GetKey(UInt key) const;
 	Float GetMouseX() const;
 	Float GetMouseY() const;
-	Float GetMouseWheel() const;
 	void SetKeyDown(UInt key);
 	void SetKeyUp(UInt key);
 	void SetMouseX(Float mouseX);
 	void SetMouseY(Float mouseY);
 	void CopyFrom(const Win32InputDataBuffer* pOther);
-	void IncrementMouseWheel(Float delta);
+	void IncrementMouseWheelByDelta(Int delta);
 private:
 	Float mMouseX;
 	Float mMouseY;
-	Float mMouseWheel;
-	Bool* mpKeys;
+	Bool * mpKeys;
 
 };
 

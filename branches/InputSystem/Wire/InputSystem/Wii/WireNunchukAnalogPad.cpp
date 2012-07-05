@@ -1,11 +1,12 @@
 #include "WireNunchukAnalogPad.h"
 
-WIRE_IMPLEMENT_RTTI(Wire, NunchukAnalogPad, AnalogPad);
-
 namespace Wire
 {
+
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukAnalogPad, AnalogPad);
 	
-NunchukAnalogPad::NunchukAnalogPad()
+NunchukAnalogPad::NunchukAnalogPad(const InputDevice* pParent)
+	: AnalogPad(pParent)
 {
 }
 

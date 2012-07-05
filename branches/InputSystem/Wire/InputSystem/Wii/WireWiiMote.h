@@ -2,21 +2,21 @@
 #define WIIMOTE_H_
 
 #include "WireMainInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
 
 namespace Wire
 {
 
-class WiiMote : public MainInputDevice<WPADData>
+class WiiMote : public MainInputDevice
 {
+	WIRE_DECLARE_RTTI;
 
 public:
-	WiiMote();
+	WiiMote(Int channel);
 	virtual ~WiiMote();
 
 	UInt GetChannel() const;
-
-protected:
 	virtual void SetUp();
 
 private:

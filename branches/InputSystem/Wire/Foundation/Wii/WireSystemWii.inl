@@ -67,34 +67,39 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Application* pApp = Application::GetApplication();
 	Renderer* pRenderer = pApp->GetRenderer();
 	PdrRendererData* pData = pRenderer->GetRendererData();
+
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();
 
 	Print("\x1b[4;0H");
-	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile,
-		lineNumber);
+	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile, lineNumber);
 
 	InputSystem* pInputSystem = pApp->GetInputSystem();
-	if (pInputSystem->GetMainInputDevicesCount() > 0 
-		&& pInputSystem->GetMainInputDevice(0)->HasCapability(Buttons::TYPE))
-	{
-		Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
-	
-		Buttons* pButtons = static_cast<Buttons*>(pInputSystem->GetMainInputDevice(0)->GetCapability(Buttons::TYPE));
-		do
-		{
-			pInputSystem->Capture();
-			if (pButtons->GetButton(BUTTON_HOME))
-			{
-				exit(0);
-			}
-	
-		} while (!(pButtons->GetButton(BUTTON_A)));
-	}
-	else
+
+	// if there's no controller, exit
+	if (pInputSystem->GetMainDevicesCount() == 0) 
 	{
 		exit(0);
 	}
+
+	// if the controller has no button, exit
+	if (pInputSystem->GetMainDevice(0)->HasCapability(Buttons::TYPE, false)) 
+	{
+		exit(0);
+	}
+
+	Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
+	
+	const Buttons* pButtons = static_cast<const Buttons*>(pInputSystem->GetMainDevice(0)->GetCapability(Buttons::TYPE, false));
+	do
+	{
+		pInputSystem->Capture();
+		if (pButtons->GetButton(BUTTON_HOME))
+		{
+			exit(0);
+		}
+	
+	} while (!(pButtons->GetButton(BUTTON_A)));
 }
 
 //----------------------------------------------------------------------------

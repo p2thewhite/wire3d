@@ -2,7 +2,10 @@
 #define WIIMOTEDIGITALPAD_H_
 
 #include "WireDigitalPad.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
+#include <wiiuse/wpad.h>
 
 namespace Wire
 {
@@ -12,7 +15,7 @@ class WiiMoteDigitalPad : public DigitalPad
 	WIRE_DECLARE_RTTI;
 
 public:
-	WiiMoteDigitalPad();
+	WiiMoteDigitalPad(const InputDevice* pParent);
 	virtual ~WiiMoteDigitalPad();
 
 	virtual Bool GetDown() const;

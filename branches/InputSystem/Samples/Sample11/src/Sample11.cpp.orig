@@ -10,7 +10,6 @@
 #include "WireInputCapability.h"
 #include "WireIR.h"
 #include "WireButtons.h"
-#include "WireTilt.h"
 #include "WireButton.h"
 #include "WireTypes.h"
 #include <vector>
@@ -37,7 +36,7 @@ Bool Sample11::OnInitialize()
 		return false;
 	}
 
-	GetInputSystem()->AddListener(this);
+	GetInputSystem()->GetInputDeviceDiscoveryStrategy()->AddListener(this);
 
 	InitCursors();
 
@@ -62,7 +61,7 @@ void Sample11::OnIdle()
 
 	if (mInputDevicesStateChanged)
 	{
-		//PrintInputDevicesInformations();
+		//PrintInputDevicesInformation();
 		mInputDevicesStateChanged = false;
 	}
 
@@ -77,23 +76,16 @@ void Sample11::OnIdle()
 
 void Sample11::OnInputCapture()
 {
-	// TODO: MAGIC NUMBER = maximum number of players!
-	UInt playerCount = min<UInt>(GetInputSystem()->GetMainDevicesCount(), 4);
+	// TODO: MAGIC NUMBER = Maximum number of players!
+	UInt playerCount = min<UInt>(GetInputSystem()->GetMainInputDevicesCount(), 4);
 
-	// if there's no controller yet, exit
 	if (playerCount == 0) 
 	{
 		return;
 	}
 
-	// if there's no button capability, exit
-	if (!GetInputSystem()->GetMainDevice(0)->HasCapability(Buttons::TYPE, false))
-	{
-		return;
-	}
-
 	// closes the application if the home button is pressed
-	if (static_cast<const Buttons*>(GetInputSystem()->GetMainDevice(0)->GetCapability(Buttons::TYPE, false))->GetButton(BUTTON_HOME))
+	if (static_cast<const Buttons*>(GetInputSystem()->GetMainInputDevice(0)->GetCapability(Buttons::TYPE, false))->GetButton(BUTTON_HOME))
 	{
 		Close();
 		return;
@@ -102,62 +94,43 @@ void Sample11::OnInputCapture()
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
 
-	for (UInt playerIndex = 0; playerIndex < playerCount; playerIndex++) 
+	for (UInt player = 0; player < playerCount; player++) 
 	{
-		const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(playerIndex);
+		const MainInputDevice* pInputDevice = GetInputSystem()->GetMainInputDevice(player);
 
 		Float x;
 		Float y;
-
 		if (pInputDevice->HasCapability(IR::TYPE, false))
 		{
 			const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
 
-			// wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, 
-			// but we want the upper left corner so make a vertical correction here
+			// wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, that's why we make a vertical correction here
 			x = pIR->GetRight();
 			y = screenHeight - pIR->GetUp();
-		} 
-		else {
-			// if there's no IR, position the pointer at the center of the screen
+		} else {
+			// if there's no IR, position the pointer at the screen center
 			x = screenWidth / 2;
 			y = screenHeight / 2;
 		}
 		
+		if ()
+		const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+
 		CursorMode mode;
-		if (pInputDevice->HasCapability(Buttons::TYPE, false))
-		{
-			const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
-			
-			// check the buttons and change the cursor mode properly
-			if (pButtons->GetButton(BUTTON_A)) {
-				mode = CM_PRIMARY_BUTTON_PRESSED;
-			} else if (pButtons->GetButton(BUTTON_B)) {
-				mode = CM_SECONDARY_BUTTON_PRESSED;
-			} else {
-				mode = CM_POINTING;
-			}
+		if (pButtons->GetButton(BUTTON_A)) {
+			mode = CM_PRIMARY_BUTTON_PRESSED;
+		} else if (pButtons->GetButton(BUTTON_B)) {
+			mode = CM_SECONDARY_BUTTON_PRESSED;
 		} else {
 			mode = CM_POINTING;
 		}
-		
-		Float tilt;
-		if (pInputDevice->HasCapability(Tilt::TYPE, false))
-		{
-			const Tilt* pTilt = static_cast<const Tilt*>(pInputDevice->GetCapability(Tilt::TYPE, false));
-			tilt = DEGREES_TO_RADIANS(pTilt->GetRight());
-		}
-		else
-		{
-			tilt = 0;
-		}
 
-		SetCursor(x, y, mode, playerIndex, tilt);
+		SetCursor(x, y, mode, player, 0); //DEGREES_TO_RADIANS(pInputDevice->GetIRAxisRotation(ROLL)));
 	}
 }
 
 //----------------------------------------------------------------------------
-void Sample11::OnDevicesChange()
+void Sample11::Update()
 {
 	mInputDevicesStateChanged = true;
 }
@@ -167,7 +140,7 @@ void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo, Float
 {
 	if (playerNo >= mspCursors->GetQuantity())
 	{
-		WIRE_ASSERT(false /* playerIndex number is out of bounds */);
+		WIRE_ASSERT(false /* player number is out of bounds */);
 		return;
 	}
 
@@ -282,21 +255,21 @@ void Sample11::PrintAndClear(stringstream& message)
 }
 
 //----------------------------------------------------------------------------
-void Sample11::PrintInputDevicesInformations()
+void Sample11::PrintInputDevicesInformation()
 {
 	stringstream message;
 
-	message << "No. of Input Devices: " << mpInputSystem->GetDevicesCount() << endl;
+	message << "No. of Input Devices: " << mpInputSystem->GetInputDevicesCount();
 	PrintAndClear(message);
 
-	for (UInt i = 0; i < mpInputSystem->GetDevicesCount(); i++)
+	for (UInt i = 0; i < mpInputSystem->GetInputDevicesCount(); i++)
 	{
-		const InputDevice* pInputDevice = mpInputSystem->GetDevice(i);
+		const InputDevice* pInputDevice = mpInputSystem->GetInputDevice(i);
 
-		message << "Input Device no. " << i << endl;
+		message << "Input Device no. " << i;
 		PrintAndClear(message);
 
-		message << "- Name: " << pInputDevice->GetType().GetName() << endl;
+		message << "- Name: " << pInputDevice->GetType().GetName();
 		PrintAndClear(message);
 
 		System::Print("- Capabilities:");
@@ -305,7 +278,7 @@ void Sample11::PrintInputDevicesInformations()
 		vector<const InputCapability*>::const_iterator j = inputCapabilities.begin();
 		while (j != inputCapabilities.end())
 		{
-			message << (*j)->GetType().GetName() << endl;
+			message << (*j)->GetType().GetName();
 			PrintAndClear(message);
 			j++;
 		}

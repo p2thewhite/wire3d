@@ -2,6 +2,8 @@
 #define NUNCHUKSHAKE_H_
 
 #include "WireShake.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -12,7 +14,7 @@ class NunchukShake : public Shake
 	WIRE_DECLARE_RTTI;
 
 public:
-	NunchukShake();
+	NunchukShake(const InputDevice* pParent);
 	virtual ~NunchukShake();
 
 	virtual Float GetX() const;

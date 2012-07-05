@@ -2,7 +2,10 @@
 #define WIIMOTEIR_H_
 
 #include "WireIR.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
+#include <wiiuse/wpad.h>
 
 namespace Wire
 {
@@ -12,7 +15,7 @@ class WiiMoteIR : public IR
 	WIRE_DECLARE_RTTI;
 
 public:
-	WiiMoteIR();
+	WiiMoteIR(const InputDevice* pParent);
 	virtual ~WiiMoteIR();
 
 	virtual Float GetBackward() const;
@@ -21,6 +24,9 @@ public:
 	virtual Float GetLeft() const;
 	virtual Float GetRight() const;
 	virtual Float GetUp() const;
+
+private:
+	Bool IsValid(const WPADData* pData) const;
 
 };
 

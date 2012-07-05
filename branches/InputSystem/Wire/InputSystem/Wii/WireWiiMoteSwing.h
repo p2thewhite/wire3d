@@ -2,7 +2,10 @@
 #define WIIMOTESWING_H_
 
 #include "WireSwing.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
+#include <wiiuse/wpad.h>
 
 namespace Wire
 {
@@ -12,7 +15,7 @@ class WiiMoteSwing : public Swing
 	WIRE_DECLARE_RTTI;
 
 public:
-	WiiMoteSwing();
+	WiiMoteSwing(const InputDevice* pParent);
 	virtual ~WiiMoteSwing();
 
 	virtual Float GetBackward() const;

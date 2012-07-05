@@ -2,6 +2,8 @@
 #define NUNCHUKANALOGPAD_H_
 
 #include "WireAnalogPad.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -12,7 +14,7 @@ class NunchukAnalogPad : public AnalogPad
 	WIRE_DECLARE_RTTI;
 
 public:
-	NunchukAnalogPad();
+	NunchukAnalogPad(const InputDevice* pParent);
 	virtual ~NunchukAnalogPad();
 
 	virtual Float GetDown() const;

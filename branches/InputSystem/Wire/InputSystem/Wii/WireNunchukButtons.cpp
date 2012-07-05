@@ -1,11 +1,12 @@
 #include "WireNunchukButtons.h"
 
-WIRE_IMPLEMENT_RTTI(Wire, NunchukButtons, Buttons);
-
 namespace Wire
 {
 
-NunchukButtons::NunchukButtons()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukButtons, Buttons);
+
+NunchukButtons::NunchukButtons(const InputDevice* pParent)
+	: Buttons(pParent)
 {
 }
 

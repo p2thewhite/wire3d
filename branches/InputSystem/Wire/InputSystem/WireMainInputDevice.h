@@ -19,8 +19,8 @@ public:
 	MainInputDevice();
 	virtual ~MainInputDevice();
 
-	void AddExtension(InputDevice* pInputDevice);
-	const InputDevice* GetExtension(UInt index) const;
+	void AddExtension(InputDeviceExtension* pInputDevice);
+	const InputDeviceExtension* GetExtension(UInt index) const;
 	UInt GetExtensionsCount() const;
 	Bool HasCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const;
 	const InputCapability* GetCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const;

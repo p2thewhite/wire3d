@@ -20,7 +20,7 @@ GXApplication::GXApplication(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
-	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, true, useVSync)
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, true, useVSync), mIsRunning(false)
 {
 }
 
@@ -48,23 +48,23 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	input.BackgroundColor = mBackgroundColor;
 	mpRenderer = WIRE_NEW Renderer(input, 0, 0, mIsFullscreen, mUseVSync);
 
-	PdrRendererData* pRendererData = mpRenderer->GetRendererData();
-	GXRenderModeObj* pRMode = pRendererData->RMode;
-
-	mpInputSystem = WIRE_NEW WiiInputSystem(pRMode->fbWidth, pRMode->xfbHeight);
+	mpInputSystem = WIRE_NEW WiiInputSystem();
 
 	if (s_pApplication->OnInitialize())
 	{
-		mpInputSystem->DiscoverInputDevices();
-		mpInputSystem->Capture();
+		// first attempt to discover input devices
+		mpInputSystem->DiscoverDevices();
 
-		while (!mpInputSystem->GetInputDevice(0)->GetButton(BUTTON_HOME))
+		mIsRunning = true;
+		while (mIsRunning) 
 		{
-			s_pApplication->OnIdle();
 			mpInputSystem->Capture();
+			OnInputCapture();
 
-			// Try to discover new input devices.
-			mpInputSystem->DiscoverInputDevices();
+			s_pApplication->OnIdle();
+
+			// new attempt to discover input devices
+			mpInputSystem->DiscoverDevices();
 		}
 	}
 
@@ -93,4 +93,15 @@ void GXApplication::OnTerminate()
 //----------------------------------------------------------------------------
 void GXApplication::OnIdle()
 {
+}
+
+//----------------------------------------------------------------------------
+void GXApplication::OnInputCapture()
+{
+}
+
+//----------------------------------------------------------------------------
+void GXApplication::Close()
+{
+	mIsRunning = false;
 }

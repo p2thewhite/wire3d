@@ -14,6 +14,8 @@ public:
 	virtual ~Win32InputSystem();
 
 	virtual void Capture();
+protected:
+	virtual void DoDevicesDiscovery();
 
 };
 

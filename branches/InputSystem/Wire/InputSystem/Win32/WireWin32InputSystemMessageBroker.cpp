@@ -76,7 +76,7 @@ Bool Win32InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordP
 		return true;
 	case WM_MOUSEWHEEL:
 		mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wordParameter);
-		//mpBackBuffer->IncrementMouseWheelByDelta(mouseWheelDelta);
+		mpBackBuffer->IncrementMouseWheel(mouseWheelDelta / WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
 		x = GET_X_LPARAM(longParameter); 

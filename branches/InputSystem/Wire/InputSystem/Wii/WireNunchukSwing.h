@@ -2,6 +2,8 @@
 #define NUNCHUKSWING_H_
 
 #include "WireSwing.h"
+#include "WireInputDevice.h"
+#include "WireRtti.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -12,7 +14,7 @@ class NunchukSwing : public Swing
 	WIRE_DECLARE_RTTI;
 
 public:
-	NunchukSwing();
+	NunchukSwing(const InputDevice* pParent);
 	virtual ~NunchukSwing();
 
 	virtual Float GetBackward() const;

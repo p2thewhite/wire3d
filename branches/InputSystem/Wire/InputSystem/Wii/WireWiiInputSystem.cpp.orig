@@ -29,12 +29,15 @@ WiiInputSystem::~WiiInputSystem()
 void WiiInputSystem::AfterDevicesDiscovery()
 {
 	Renderer* pRenderer = Application::GetApplication()->GetRenderer();
+	Float screenWidth = pRenderer->GetWidth();
+	Float screenHeight = pRenderer->GetHeight();
 
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
 		WiiMote* pWiiMote = static_cast<WiiMote*>(mMainDevices[i]);
+		Int channel = pWiiMote->GetChannel();
 		// TODO: what about the x and y offsets?
-		WPAD_SetVRes(pWiiMote->GetChannel(), pRenderer->GetWidth(), pRenderer->GetHeight());
+		WPAD_SetVRes(channel, screenWidth, screenHeight);
 	}
 }
 
@@ -86,10 +89,6 @@ void WiiInputSystem::ProbePreviouslyDisconnectedChannels()
 			continue;
 		}
 
-		// register wiimote's expected data format
-		WPAD_SetDataFormat(channel, WPAD_FMT_BTNS_ACC_IR);
-
-		// create and add the wiimote
 		WiiMote* pWiiMote = WIRE_NEW WiiMote(channel);
 		pWiiMote->SetUp();
 		AddDevice(pWiiMote);
@@ -126,7 +125,6 @@ void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 	}
 
 	InputDeviceExtension* pWiiMoteExpansion;
-
 	switch (data.type)
 	{
 	case WPAD_EXP_NUNCHUK:
@@ -136,7 +134,7 @@ void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 		break;
 
 	default:
-		System::Assert("Unsupported wiimote expansion found.", "WireWiiInputSystem.cpp", 138);
+		System::Assert("Unknown WiiMote expansion.", "WireWiiInputSystem.cpp", 135);
 		return;
 	}
 

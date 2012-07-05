@@ -29,6 +29,7 @@ public:
 
 protected:
 	std::map<const Rtti*, InputCapability*> mCapabilitiesByType;
+	std::vector<const InputCapability*> mReadOnlyCapabilities;
 
 	void RegisterCapability(InputCapability* pInputCapability);
 

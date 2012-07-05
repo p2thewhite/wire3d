@@ -1,11 +1,15 @@
 #include "WireWiiMoteShake.h"
-
-WIRE_IMPLEMENT_RTTI(Wire, WiiMoteShake, Shake);
+#include "WireWiiMoteButtons.h"
+#include "WireWiiMote.h"
+#include "WireWiiInputDataBuffer.h"
 
 namespace Wire
 {
 
-WiiMoteShake::WiiMoteShake()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteShake, Shake);
+
+WiiMoteShake::WiiMoteShake(const InputDevice* pParent)
+	: Shake(pParent)
 {
 }
 

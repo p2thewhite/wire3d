@@ -3,13 +3,13 @@
 #define SAMPLE11_H
 
 #include "WireApplication.h"
-#include "WireInputDeviceDiscoveryListener.h"
+#include "WireInputSystemListener.h"
 #include <sstream>
 
 using namespace std;
 using namespace Wire;
 
-class Sample11 : public WIREAPPLICATION, public InputDeviceDiscoveryListener
+class Sample11 : public WIREAPPLICATION, public InputSystemListener
 {
 	WIRE_DECLARE_INITIALIZE;
 
@@ -32,13 +32,17 @@ public:
 	void SetCursor(Float x, Float y, CursorMode mode = CM_POINTING,
 		UInt playerNo = 0, Float zRollInRadian = 0);
 
-	virtual void Update();
+	virtual void OnDevicesChange();
 
 private:
 	void InitCursors();
 	Geometry* CreateCursor(Float uOffset, Float vOffset);
+
+	// utilitarian
 	void PrintAndClear(stringstream& message);
-	void PrintInputDevicesInformation();
+
+	// debug output
+	void PrintInputDevicesInformations();
 
 	Bool mInputDevicesStateChanged;
 

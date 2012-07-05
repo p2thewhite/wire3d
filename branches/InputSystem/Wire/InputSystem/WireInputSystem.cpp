@@ -11,61 +11,89 @@ InputSystem::~InputSystem()
 {
 }
 
-void InputSystem::AfterInputDeviceDiscovery()
+void InputSystem::AfterDevicesDiscovery()
 {
 }
 
-void InputSystem::BeforeInputDeviceDiscovery()
+void InputSystem::BeforeDevicesDiscovery()
 {
 }
 
-void InputSystem::DiscoverInputDevices()
+/************************************************************************/
+/*                       Template method                                */
+/************************************************************************/
+void InputSystem::DiscoverDevices()
 {
-	BeforeInputDeviceDiscovery();
-
-	mpInputDeviceDiscoveryStrategy->Discover();
-
-	AfterInputDeviceDiscovery();
+	BeforeDevicesDiscovery();
+	DoDevicesDiscovery();
+	AfterDevicesDiscovery();
 }
 
-const InputDeviceExtension* InputSystem::GetInputDeviceExtension(UInt index) const
+const InputDeviceExtension* InputSystem::GetDeviceExtension(UInt index) const
 {
-	return mpInputDeviceDiscoveryStrategy->GetInputDeviceExtensions()[index];
+	return mDeviceExtensions[index];
 }
 
-UInt InputSystem::GetInputDeviceExtensionsCount() const
+UInt InputSystem::GetDeviceExtensionsCount() const
 {
-	return mpInputDeviceDiscoveryStrategy->GetInputDeviceExtensions().size();
+	return mDeviceExtensions.size();
 }
 
-const MainInputDevice* InputSystem::GetMainInputDevice(UInt index) const
+const MainInputDevice* InputSystem::GetMainDevice(UInt index) const
 {
-	return mpInputDeviceDiscoveryStrategy->GetMainInputDevices()[index];
+	return mMainDevices[index];
 }
 
-UInt InputSystem::GetMainInputDevicesCount() const
+UInt InputSystem::GetMainDevicesCount() const
 {
-	return mpInputDeviceDiscoveryStrategy->GetMainInputDevices().size();
+	return mMainDevices.size();
 }
 
-const InputDevice* InputSystem::GetInputDevice(UInt index) const
+const InputDevice* InputSystem::GetDevice(UInt index) const
 {
-	return mpInputDeviceDiscoveryStrategy->GetInputDevices()[index];
+	return mDevices[index];
 }
 
-UInt InputSystem::GetInputDevicesCount() const
+UInt InputSystem::GetDevicesCount() const
 {
-	return mpInputDeviceDiscoveryStrategy->GetInputDevices().size();
+	return mDevices.size();
 }
 
-void InputSystem::AddInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pListener)
+void InputSystem::AddDevice(InputDevice* pDevice)
 {
-	mpInputDeviceDiscoveryStrategy->AddListener(pListener);
+	mDevices.push_back(pDevice);
+
+	if (pDevice->IsDerived(MainInputDevice::TYPE))
+	{
+		mMainDevices.push_back(static_cast<MainInputDevice*>(pDevice));
+	}
+
+	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
+	{
+		mDeviceExtensions.push_back(static_cast<InputDeviceExtension*>(pDevice));
+	}
 }
 
-void InputSystem::RemoveInputDeviceDiscoveryListener(InputDeviceDiscoveryListener* pListener)
+void InputSystem::AddListener(InputSystemListener* pListener)
 {
-	mpInputDeviceDiscoveryStrategy->RemoveListener(pListener);
+	mListeners.push_back(pListener);
+}
+
+void InputSystem::NotifyDevicesChange()
+{
+	std::vector<InputSystemListener*>::const_iterator i = mListeners.begin();
+
+	while (i != mListeners.end())
+	{
+		(*i)->OnDevicesChange();
+		i++;
+	}
+}
+
+
+void InputSystem::RemoveListener(InputSystemListener* pListener)
+{
+	// TODO:
 }
 
 }

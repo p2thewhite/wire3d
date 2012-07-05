@@ -1,11 +1,12 @@
 #include "WireNunchukShake.h"
 
-WIRE_IMPLEMENT_RTTI(Wire, NunchukShake, Shake);
-
 namespace Wire
 {
 
-NunchukShake::NunchukShake()
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukShake, Shake);
+
+NunchukShake::NunchukShake(const InputDevice* pParent)
+	: Shake(pParent)
 {
 }
 
