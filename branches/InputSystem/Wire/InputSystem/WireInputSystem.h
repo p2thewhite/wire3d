@@ -38,6 +38,7 @@ protected:
 	virtual void DoDevicesDiscovery() = 0;
 	virtual void AfterDevicesDiscovery();
 	void AddDevice(InputDevice* pInputDevice);
+	void RemoveDevice(InputDevice* pInputDevice);
 	void NotifyDevicesChange();
 
 };

@@ -66,8 +66,6 @@ void Sample11::OnIdle()
 		mInputDevicesStateChanged = false;
 	}
 
-	//PrintKeyStates();
-
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspGuiCamera);
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
@@ -124,7 +122,8 @@ void Sample11::OnInputCapture()
 			y = screenHeight / 2;
 		}
 		
-		CursorMode mode;
+		CursorMode mode = CM_POINTING;
+
 		if (pInputDevice->HasCapability(Buttons::TYPE, false))
 		{
 			const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
@@ -132,16 +131,24 @@ void Sample11::OnInputCapture()
 			// check the buttons and change the cursor mode properly
 			if (pButtons->GetButton(BUTTON_A)) {
 				mode = CM_PRIMARY_BUTTON_PRESSED;
-			} else if (pButtons->GetButton(BUTTON_B)) {
-				mode = CM_SECONDARY_BUTTON_PRESSED;
-			} else {
-				mode = CM_POINTING;
 			}
-		} else {
-			mode = CM_POINTING;
+		}
+
+		if (pInputDevice->GetExtensionsCount() > 0)
+		{
+			if (pInputDevice->GetExtension(0)->HasCapability(Buttons::TYPE))
+			{
+				const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
+
+				// check the buttons and change the cursor mode properly
+				if (pButtons->GetButton(BUTTON_Z)) {
+					mode = CM_SECONDARY_BUTTON_PRESSED;
+				}
+			}
 		}
 		
 		Float tilt;
+
 		if (pInputDevice->HasCapability(Tilt::TYPE, false))
 		{
 			const Tilt* pTilt = static_cast<const Tilt*>(pInputDevice->GetCapability(Tilt::TYPE, false));

@@ -1,4 +1,5 @@
 #include "WireInputSystem.h"
+#include <algorithm>
 
 namespace Wire
 {
@@ -65,12 +66,37 @@ void InputSystem::AddDevice(InputDevice* pDevice)
 
 	if (pDevice->IsDerived(MainInputDevice::TYPE))
 	{
-		mMainDevices.push_back(static_cast<MainInputDevice*>(pDevice));
+		MainInputDevice* pMainDevice = static_cast<MainInputDevice*>(pDevice);
+		mMainDevices.push_back(pMainDevice);
+		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
+		{
+			AddDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
+		}
 	}
 
 	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
 	{
 		mDeviceExtensions.push_back(static_cast<InputDeviceExtension*>(pDevice));
+	}
+}
+
+void InputSystem::RemoveDevice(InputDevice* pDevice)
+{
+	mDevices.erase(std::find(mDevices.begin(), mDevices.end(), pDevice));
+
+	if (pDevice->IsDerived(MainInputDevice::TYPE))
+	{
+		MainInputDevice* pMainDevice = static_cast<MainInputDevice*>(pDevice);
+		mMainDevices.erase(std::find(mMainDevices.begin(), mMainDevices.end(), pMainDevice));
+		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
+		{
+			RemoveDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
+		}
+	}
+
+	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
+	{
+		mDeviceExtensions.erase(std::find(mDeviceExtensions.begin(), mDeviceExtensions.end(), static_cast<InputDeviceExtension*>(pDevice)));
 	}
 }
 

@@ -61,6 +61,13 @@ void WiiInputSystem::Capture()
 		WiiInputDataBuffer* pChannelDataBuffer = GetChannelDataBuffer(pWiiMote->GetChannel());
 		pChannelDataBuffer->SetData(WPAD_Data(channel));
 		pWiiMote->SetDataBuffer(pChannelDataBuffer);
+
+		// FIXME: shouldn't it be at WiiMote::SetDataBuffer(..)?
+		for (UInt j = 0; j < pWiiMote->GetExtensionsCount(); j++)
+		{
+			InputDeviceExtension* pExtension = const_cast<InputDeviceExtension*>(pWiiMote->GetExtension(j));
+			pExtension->SetDataBuffer(pChannelDataBuffer);
+		}
 	}
 }
 
@@ -69,6 +76,13 @@ void WiiInputSystem::UpdateCurrentlyConnectedChannels()
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
 		WiiMote* pWiiMote =	static_cast<WiiMote*>(mMainDevices[i]);
+
+		// if it's not connected anymore, remove it
+		if (!IsWiiMoteConnectedToChannel(pWiiMote->GetChannel()))
+		{
+			RemoveDevice(pWiiMote);
+			continue;
+		}
 
 		if (pWiiMote->GetExtensionsCount() == 0)
 		{
