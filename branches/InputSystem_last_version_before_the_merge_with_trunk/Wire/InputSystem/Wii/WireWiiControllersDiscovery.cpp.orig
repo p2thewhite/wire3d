@@ -1,0 +1,40 @@
+#include "WireWiiControllersDiscovery.h"
+
+namespace Wire
+{
+
+const Int WiiControllersDiscovery::FIRST_CHANNEL = 0;
+const Int WiiControllersDiscovery::LAST_CHANNEL = 3;
+
+	
+WiiControllersDiscovery::WiiControllersDiscovery() :
+	mLastDiscoveredChannel(-1),
+	mChanged(false)
+{
+}
+
+WiiControllersDiscovery::~WiiControllersDiscovery()
+{
+}
+
+void WiiControllersDiscovery::UpdateCurrentlyConnectedChannels()
+{
+	// updating currently connected channels
+	for (Int channel = FIRST_CHANNEL; channel <= mLastDiscoveredChannel; channel++)
+	{
+		WiiController* pWiiController =	static_cast<WiiController*>(mVirtualInputDevices[channel]);
+
+		if (pWiiController->HasWiiExtension())
+		{
+			continue;
+		}
+
+		DiscoverExtensions(channel, pWiiController);
+	}
+}
+
+void WiiControllersDiscovery::Discover()
+{
+}
+
+}
