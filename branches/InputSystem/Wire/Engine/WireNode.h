@@ -66,6 +66,9 @@ public:
 	void GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
+	// Traverse the child objects and call their MakeStatic()
+	void MakeStatic(Bool forceStatic = false);
+
 protected:
 	// geometric updates
 	virtual void UpdateWorldData(Double appTime);

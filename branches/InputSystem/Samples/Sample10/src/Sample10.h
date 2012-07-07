@@ -23,6 +23,7 @@ private:
 	Spatial* CreateGeometryB();
 
 	NodePtr mspRoot;
+	LightPtr mspLight;
 
 	// object A's shared resources
 	MeshPtr mspMeshA;
@@ -45,7 +46,7 @@ private:
 	// frames per second text
 	void DrawFPS(Double elapsed, Bool usesSorting);
 	CameraPtr mspTextCamera;
-	StateAlphaPtr mspTextAlpha;
+	TextPtr mspText;
 	Double mLastTime;
 };
 

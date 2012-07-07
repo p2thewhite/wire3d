@@ -100,13 +100,13 @@ Bool SceneObject::UpdateControllers(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-Bool SceneObject::RenderUpdateControllers()
+Bool SceneObject::RenderUpdateControllers(const Camera* pCamera)
 {
 	Bool wasUpdated = false;
 	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
 	{
 		Controller* pController = mControllers[i];
-		if (pController->RenderUpdate())
+		if (pController->RenderUpdate(pCamera))
 		{
 			wasUpdated = true;
 		}

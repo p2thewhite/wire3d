@@ -42,6 +42,11 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
+	// If World(Bound)IsCurrent (or forceStatic) is true, duplicate the mesh
+	// (only if shared), apply World transform to vertices and set 
+	// World(Bound) to identity.
+	void MakeStatic(Bool forceStatic = false);
+
 	// member access
 	StatePtr States[State::MAX_STATE_TYPE];
 	TArray<Pointer<Light> > Lights;
@@ -52,10 +57,14 @@ public:
 	UInt StartIndex;		// default: 0
 
 	// Identical IDs among different Geometry objects mean that all their
-	// States[] are identical. This is used for sorting Geometry by state.
+	// States[] and Lights are identical. This is used for sorting Geometry
+	// by render state.
 	UInt StateSetID;
 
 protected:
+	Geometry();
+	void Init();
+
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,
 		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
@@ -65,10 +74,12 @@ protected:
 
 private:
 	UInt GetStateSetKey();
-	void Init();
 
 	Pointer<Mesh> mspMesh;
 	Pointer<Material> mspMaterial;
+
+	// TODO: remove
+	Bool VerifyKey(UInt key, UInt offset);
 };
 
 typedef Pointer<Geometry> GeometryPtr;

@@ -515,10 +515,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireRenderer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireRtti.h"
 					>
 				</File>
@@ -568,6 +564,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireStateZBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireText.h"
 					>
 				</File>
 				<File
@@ -660,10 +660,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.inl"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireRenderer.inl"
 					>
 				</File>
 				<File
@@ -799,10 +795,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireRenderer.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireRtti.cpp"
 					>
 				</File>
@@ -851,6 +843,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireText.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireTexture2D.cpp"
 					>
 				</File>
@@ -875,6 +871,18 @@
 		<Filter
 			Name="Renderer"
 			>
+			<File
+				RelativePath=".\Renderer\WireRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\WireRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer\WireRenderer.inl"
+				>
+			</File>
 			<Filter
 				Name="GXRenderer"
 				>

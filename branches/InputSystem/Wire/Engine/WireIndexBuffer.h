@@ -36,6 +36,9 @@ public:
 	inline UShort* GetData();
 	inline const UShort* GetData() const;
 
+	void Copy(UShort* pDst, UShort offset, UInt activeIndexCount,
+		UInt startIndex);
+
 private:
 	UInt mQuantity;
 	UShort* mpIndices;

@@ -1,26 +1,35 @@
 #include "Importer.h"
+
 #include "PicoPNG.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "WireEffect.h"
+#include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
+#include "WireMesh.h"
 #include "WireQuaternion.h"
-#include "WireVertexBuffer.h"
+#include "WireStandardMesh.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
 #include "WireStateFog.h"
+#include "WireStateMaterial.h"
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 #include "WireTStack.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
 Importer::Importer(const Char* pPath,
-	Bool materialsWithEqualNamesAreIdentical)
+	Bool materialsWithEqualNamesAreIdentical, Bool prepareForStaticBatching)
 	:
 	mpPath(pPath),
-	mMaterialsWithEqualNamesAreIdentical(materialsWithEqualNamesAreIdentical)
+	mStaticSpatials(0, 100),
+	mMaterialsWithEqualNamesAreIdentical(materialsWithEqualNamesAreIdentical),
+	mPrepareForStaticBatching(prepareForStaticBatching)
 {
 }
 
@@ -31,8 +40,9 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	ResetStatistics();
 	mpCameras = pCameras;
 
+	String path = String(mpPath) + String(pFilename);
 	Int xmlSize;
-	Char* pXml = Load(pFilename, xmlSize);
+	Char* pXml = Load(static_cast<const Char*>(path), xmlSize);
 	if (!pXml)
 	{
 		return NULL;
@@ -57,6 +67,14 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mTextures.RemoveAll();
 
 	pRoot->UpdateRS();
+
+	if (mStaticSpatials.GetQuantity() > 0)
+	{
+		pRoot->UpdateGS();
+		InitStaticSpatials(mStaticSpatials, mPrepareForStaticBatching);
+		mStaticSpatials.RemoveAll();
+	}
+
 	return pRoot;
 }
 
@@ -100,13 +118,213 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
 }
 
 //----------------------------------------------------------------------------
+Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
+	UInt maxLength)
+{
+	// Init FreeType lib and font
+	Int fileSize;
+	UChar* pMemFile = reinterpret_cast<UChar*>(Load(pFilename, fileSize));
+	if (!pMemFile)
+	{
+		return NULL;
+	}
+
+	FT_Library library;
+	
+	FT_Error error = FT_Init_FreeType(&library);
+	if (error != 0)
+	{
+		WIRE_ASSERT(false /* Could not initialize freetype lib */);
+		WIRE_DELETE[] pMemFile;
+		return NULL;
+	}
+
+	FT_Face face;
+	error = FT_New_Memory_Face(library, pMemFile, fileSize, 0, &face);
+	if (error)
+	{
+		if (error == FT_Err_Unknown_File_Format)
+		{
+			WIRE_ASSERT(false /* Font format is not supported */);
+		}
+		else
+		{
+			WIRE_ASSERT(false /* Could not create face from memory */);
+		}
+
+		FT_Done_FreeType(library);
+		WIRE_DELETE[] pMemFile;
+		return NULL;
+	}
+
+	error = FT_Set_Pixel_Sizes(face, width, height);
+	if (error)
+	{
+		// Usually, an error occurs with a fixed-size font format (like FNT or
+		// PCF) when trying to set the pixel size to a value that is
+		// not listed in the face->fixed_sizes array
+		WIRE_ASSERT(false /* Could not set pixel size */);
+		FT_Done_Face(face);
+		FT_Done_FreeType(library);
+		WIRE_DELETE[] pMemFile;
+		return NULL;
+	}
+
+	// Calculate the required font texture size from the font size
+	const UInt totalCharCount = 128;
+	UInt texWidth = 32;
+	UInt texHeight = 32;
+	FT_GlyphSlot slot = face->glyph;
+
+	Bool fitsInTexture = false;
+	while (!fitsInTexture)
+	{
+		if (texWidth > 1024 || texHeight > 1024)
+		{
+			return NULL;
+		}
+
+		UInt wc = 0;
+		Int penX = 0;
+		Int penY = height;
+		fitsInTexture = true;
+
+		for (UInt i = 0; i < totalCharCount; i++)
+		{
+			FT_UInt glyphIndex = FT_Get_Char_Index(face, wc++);
+			if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
+			{
+				continue;
+			}
+
+			Int advance = slot->advance.x >> 6;
+			advance = advance > slot->bitmap.width ? advance : slot->bitmap.width;
+			if (penX+advance >= static_cast<Int>(texWidth))
+			{
+				penX = 0;
+				penY += height;
+				if (penY+height >= texHeight)
+				{
+					if (texWidth > texHeight)
+					{
+						texHeight = texHeight << 1;
+					}
+					else
+					{
+						texWidth = texWidth << 1;
+					}
+
+					fitsInTexture = false;
+					break;
+				}
+			}
+
+			penX += advance;
+		}
+	}
+
+	UChar* const pDst = WIRE_NEW UChar[texWidth * texHeight * 4];
+	System::Memset(pDst, 0, texWidth * texHeight * 4);
+	TArray<Vector2F> uvs(totalCharCount*4);
+	TArray<Vector4F> charSizes(totalCharCount);
+
+	Int penY = height;
+	Int penX = 0;
+	for (UInt wc = 0; wc < totalCharCount; wc++)
+	{
+		FT_UInt glyphIndex = FT_Get_Char_Index(face, wc);
+		if (FT_Load_Glyph(face, glyphIndex, FT_LOAD_RENDER))
+		{
+			uvs.Append(Vector2F(0, 0));
+			uvs.Append(Vector2F(1, 0));
+			uvs.Append(Vector2F(1, 1));
+			uvs.Append(Vector2F(0, 1));
+			Float fWidth = static_cast<Float>(width);
+			Float fHeight = static_cast<Float>(height);
+			charSizes.Append(Vector4F(fWidth, fHeight, fWidth, 0));
+			continue;
+		}
+
+		Int advance = slot->advance.x >> 6;
+		advance = advance > slot->bitmap.width ? advance : slot->bitmap.width;
+		if (penX+advance >= static_cast<Int>(texWidth))
+		{
+			penX = 0;
+			penY += height;
+			if (penY+height >= texHeight)
+			{
+				if (texWidth > texHeight)
+				{
+					texHeight = texHeight << 1;
+				}
+				else
+				{
+					texWidth = texWidth << 1;
+				}
+
+				fitsInTexture = false;
+				break;
+			}
+		}
+
+		Int offset = penX + slot->bitmap_left;
+		Int top = penY - slot->bitmap_top;
+		FT_Bitmap& rBitmap = slot->bitmap;
+
+		Float u0 = static_cast<Float>(offset)/texWidth;
+		Float v0 = static_cast<Float>(top)/texHeight;
+		Float u1 = static_cast<Float>(offset+rBitmap.width)/texWidth;
+		Float v1 = static_cast<Float>(top+rBitmap.rows)/texHeight;
+		uvs.Append(Vector2F(u0, v0));
+		uvs.Append(Vector2F(u1, v0));
+		uvs.Append(Vector2F(u1, v1));
+		uvs.Append(Vector2F(u0, v1));
+
+		Float cWidth = static_cast<Float>(rBitmap.width);
+		Float cHeight = static_cast<Float>(rBitmap.rows);
+		Float cStride = static_cast<Float>(slot->advance.x >> 6);
+		Float cOffsetY = static_cast<Float>(slot->bitmap.rows - slot->
+			bitmap_top);
+		charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
+
+		Int q = 0;
+		for (Int j = top; j < (top + rBitmap.rows); j++, q++)
+		{
+			Int p = 0;
+			for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
+			{
+				UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
+				WIRE_ASSERT(((j*texWidth + i) < (texWidth * texHeight)) &&
+					((j*texWidth + i) >= 0));
+				pDst[(j*texWidth + i)*4] = 0xFF;
+				pDst[(j*texWidth + i)*4+1] = 0xFF;
+				pDst[(j*texWidth + i)*4+2] = 0xFF;
+				pDst[(j*texWidth + i)*4+3] = pixel;
+			}
+		}
+
+		penX += advance;
+		WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
+	}
+
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
+		texHeight, pDst, false);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetFilterType(Texture2D::FT_NEAREST);
+ 	Text* pText = WIRE_NEW Text(height, pTexture, uvs, charSizes, maxLength);
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(library);
+	WIRE_DELETE[] pMemFile;
+	return pText;
+}
+
+//----------------------------------------------------------------------------
 Char* Importer::Load(const Char* pFilename, Int& rSize)
 {
-	String path = String(mpPath) + String(pFilename);
 	Char* pBuffer;
 	Bool hasSucceeded;
-	hasSucceeded = System::Load(static_cast<const Char*>(path), pBuffer,
-		rSize);
+	hasSucceeded = System::Load(pFilename, pBuffer, rSize);
 	if (!hasSucceeded)
 	{
 		WIRE_ASSERT(false /* Could not load file */);
@@ -119,7 +337,14 @@ Char* Importer::Load(const Char* pFilename, Int& rSize)
 //----------------------------------------------------------------------------
 Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 {
-	Char* pBuffer = Load(pFilename, rSize);
+	WIRE_ASSERT(pFilename);
+	if (!pFilename)
+	{
+		return NULL;
+	}
+
+	String path = String(mpPath) + String(pFilename);
+	Char* pBuffer = Load(static_cast<const Char*>(path), rSize);
 	Float* pBuffer32 = reinterpret_cast<Float*>(pBuffer);
 	if (System::IsBigEndian() != isBigEndian)
 	{
@@ -175,7 +400,18 @@ void Importer::ResetStatistics()
 //----------------------------------------------------------------------------
 void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
-	if (System::Strcmp("Leaf", pXmlNode->name()) == 0)
+	if (Is("Text", pXmlNode->name()))
+	{
+		Text* pText = ParseText(pXmlNode);
+		if (pText)
+		{
+			pParent->AttachChild(pText);
+		}
+
+		return;
+	}
+
+	if (Is("Leaf", pXmlNode->name()))
 	{
 		Geometry* pGeo = ParseLeaf(pXmlNode);
 		if (pGeo)
@@ -186,7 +422,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		return;
 	}
 
-	WIRE_ASSERT(System::Strcmp("Node", pXmlNode->name()) == 0);
+	WIRE_ASSERT(Is("Node", pXmlNode->name()));
 	Node* pNode = ParseNode(pXmlNode);
 	pParent->AttachChild(pNode);
 
@@ -197,8 +433,8 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		{
 			ParseComponents(pChild, pNode);
 
-			if (System::Strcmp("Node", pChild->name()) == 0 ||
-				System::Strcmp("Leaf", pChild->name()) == 0)
+			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()) ||
+				Is("Text", pChild->name()))
 			{
 				Traverse(pChild, pNode);
 			}
@@ -212,14 +448,28 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp(pName, attr->name()) == 0)
+		if (Is(pName, attr->name()))
 		{
 			return attr->value();
 		}
 	}
 
-	WIRE_ASSERT(false /* Xml attribute not found */);
 	return NULL;
+}
+
+//----------------------------------------------------------------------------
+Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
+{
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (Is(pName, attr->name()))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //----------------------------------------------------------------------------
@@ -228,7 +478,7 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("LittleEndian", attr->name()) == 0)
+		if (Is("LittleEndian", attr->name()))
 		{
 			Char* pValue = attr->value();
 			if (pValue)
@@ -250,20 +500,20 @@ Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("Usage", attr->name()) == 0)
+		if (Is("Usage", attr->name()))
 		{
 			Char* pValue = attr->value();
 			if (pValue)
 			{
-				if (System::Strcmp("STATIC", pValue) == 0)
+				if (Is("STATIC", pValue))
 				{
 					return Buffer::UT_STATIC;
 				}
-				else if (System::Strcmp("DYNAMIC", pValue) == 0)
+				else if (Is("DYNAMIC", pValue))
 				{
 					return Buffer::UT_DYNAMIC;
 				}
-				else if (System::Strcmp("DYNAMIC_WRITE_ONLY", pValue) == 0)
+				else if (Is("DYNAMIC_WRITE_ONLY", pValue))
 				{
 					return  Buffer::UT_DYNAMIC_WRITE_ONLY;
 				}
@@ -306,15 +556,35 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 
 //----------------------------------------------------------------------------
 ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
-	pName)
+	pName, Bool& rHasValue)
 {
-	ColorRGB c;
+	ColorRGB c = ColorRGB::WHITE;
+	rHasValue = false;
 	Char* pCol = GetValue(pXmlNode, pName);
 	if (pCol)
 	{
 		Int n;
 		n = sscanf(pCol, "%f, %f, %f", &c.R(), &c.G(), &c.B());
 		WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+		rHasValue = true;
+	}
+
+	return c;
+}
+
+//----------------------------------------------------------------------------
+ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName, Bool& rHasValue)
+{
+	ColorRGBA c = ColorRGBA::WHITE;
+	rHasValue = false;
+	Char* pCol = GetValue(pXmlNode, pName);
+	if (pCol)
+	{
+		Int n;
+		n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(), &c.A());
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
+		rHasValue = true;
 	}
 
 	return c;
@@ -345,27 +615,46 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	UpdateGS(pSpatial);
 
 	Char* pType = GetValue(pXmlNode, "Type");
+	WIRE_ASSERT(pType);
 	Light* pLight = WIRE_NEW Light;
 	Light::LightType lt = Light::LT_POINT;
 
-	if (System::Strcmp("Point", pType) == 0)
+	if (Is("Point", pType))
 	{
 		lt = Light::LT_POINT;
 	}
-	else if (System::Strcmp("Directional", pType) == 0)
+	else if (Is("Directional", pType))
 	{
 		lt = Light::LT_DIRECTIONAL;
 	}
-	else if (System::Strcmp("Spot", pType) == 0)
+	else if (Is("Spot", pType))
 	{
 		lt = Light::LT_SPOT;
-//		Float angleDeg = GetFloat()
+		if (HasValue(pXmlNode, "Angle"))
+		{
+			pLight->Angle = GetFloat(pXmlNode, "Angle");
+	}
+
+		if (HasValue(pXmlNode, "Exp"))
+		{
+			pLight->Exponent = GetFloat(pXmlNode, "Exp");
+		}
 	}
 
 	pLight->Type = lt;
 	pLight->Position = pSpatial->World.GetTranslate();
-	pLight->Ambient = GetColorRGB(pXmlNode, "Ambient");
-	pLight->Color = GetColorRGB(pXmlNode, "Color");
+	Bool hasValue;
+	ColorRGB ambient = GetColorRGB(pXmlNode, "Ambient", hasValue); 
+	if (hasValue)
+	{
+		pLight->Ambient = ambient; 
+	}
+
+	ColorRGB color = GetColorRGB(pXmlNode, "Color", hasValue);
+	if (hasValue)
+	{
+		pLight->Color = color;
+	}
 
 	pSpatial->AttachLight(pLight);
 }
@@ -406,31 +695,42 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 	Spatial* pSpatial)
 {
-	Vector3F t;
-	QuaternionF r;
-	Vector3F s;
-
+	Vector3F t = Vector3F::ZERO;
+	QuaternionF r = QuaternionF::IDENTITY;
+	Vector3F s = Vector3F::ONE;
+	
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("Pos", attr->name()) == 0)
+		if (Is("Pos", attr->name()))
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f", &t.X(), &t.Y(), &t.Z());
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
 		}
-		else if (System::Strcmp("Rot", attr->name()) == 0)
+		else if (Is("Rot", attr->name()))
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f, %f", &r.W(), &r.X(),
 				&r.Y(), &r.Z());
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
 		}
-		else if (System::Strcmp("Scale", attr->name()) == 0)
+		else if (Is("Scale", attr->name()))
 		{
 			Int n;
 			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+		}
+		else if (Is("Static", attr->name()))
+		{
+			Int n;
+			Int st;
+			n = sscanf(attr->value(), "%d", &st);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+			if (st != 0)
+			{
+				mStaticSpatials.Append(pSpatial);
+	}
 		}
 	}
 
@@ -487,11 +787,11 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			if (System::Strcmp("Mesh", pChild->name()) == 0)
+			if (Is("Mesh", pChild->name()))
 			{
 				pMesh = ParseMesh(pChild);
 			}
-			else if (System::Strcmp("Material", pChild->name()) == 0)
+			else if (Is("Material", pChild->name()))
 			{
 				pMaterial = ParseMaterial(pChild);
 			}
@@ -513,6 +813,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
+	WIRE_ASSERT(pGeo);
 	mStatistics.GeometryCount++;
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
@@ -532,18 +833,88 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	ParseTransformation(pXmlNode, pGeo);
+	ParseTransformationAndComponents(pXmlNode, pGeo);
 
-	if (pXmlNode->first_node())
+	return pGeo;
+}
+
+//----------------------------------------------------------------------------
+Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
+{
+	Int width = 8;
+	Int height = 8;
+	Int maxLength = -1;
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
+		if (Is("Width", attr->name()))
 		{
-			ParseComponents(pChild, pGeo);
+			Int n;
+			n = sscanf(attr->value(), "%d", &width);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+		}
+		else if (Is("Height", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &height);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+	}
+		else if (Is("MaxLength", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%d", &maxLength);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 		}
 	}
 
-	return pGeo;
+	Char* pString = GetValue(pXmlNode, "String");
+	if (maxLength < 0)
+	{
+		maxLength = System::Strlen(pString);
+	}
+
+	Text* pText = NULL;
+	Char* pFontName = GetValue(pXmlNode, "Font");
+	if (pFontName)
+	{
+		String path = String(mpPath) + String(pFontName);
+		pText = CreateText(path, width, height, maxLength);
+	}
+	else
+	{
+		pText = StandardMesh::CreateText(maxLength);
+	}
+
+	if (!pText)
+	{
+		WIRE_ASSERT(false);
+		return NULL;
+	}
+
+	Bool hasValue;
+	ColorRGBA color = GetColorRGBA(pXmlNode, "Color", hasValue);
+	if (hasValue)
+	{
+		pText->SetColor(color);
+	}
+
+	if (pString)
+	{
+		Bool isOk = pText->Set(pString);
+		WIRE_ASSERT_NO_SIDEEFFECTS(isOk /* Wire::Text::Set() failed */);
+	}
+
+	mStatistics.GeometryCount++;
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (pName)
+	{
+		pText->SetName(pName);
+	}
+
+	ParseTransformationAndComponents(pXmlNode, pText);
+
+	return pText;
 }
 
 //----------------------------------------------------------------------------
@@ -555,37 +926,48 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 	{
 		pSpatial->AttachState(pState);
 	}
-	else if (System::Strcmp("Camera", pXmlNode->name()) == 0)
+	else if (Is("Camera", pXmlNode->name()))
 	{
 		ParseCamera(pXmlNode, pSpatial);
 	}
-	else if (System::Strcmp("Light", pXmlNode->name()) == 0)
+	else if (Is("Light", pXmlNode->name()))
 	{
 		ParseLight(pXmlNode, pSpatial);
 	}
 }
 
 //----------------------------------------------------------------------------
+void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>*
+	pXmlNode, Spatial* pSpatial)
+{
+	ParseTransformation(pXmlNode, pSpatial);
+
+	if (pXmlNode->first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			ParseComponents(pChild, pSpatial);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 {
-	if (System::Strcmp("MaterialState", pXmlNode->name()) == 0)
+	if (Is("MaterialState", pXmlNode->name()))
 	{
 		StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
-
-		Char* pCol = GetValue(pXmlNode, "Ambient");
-		if (pCol)
+		Bool hasValue;	
+		ColorRGBA ambient = GetColorRGBA(pXmlNode, "Ambient", hasValue);
+		if (hasValue)
 		{
-			Int n;
-			ColorRGBA c;
-			n = sscanf(pCol, "%f, %f, %f, %f", &c.R(), &c.G(), &c.B(),&c.A());
-			WIRE_ASSERT_NO_SIDEEFFECTS(n == 4);
-
-			pMaterialState->Ambient = c;
+			pMaterialState->Ambient = ambient;
 		}
 
 		return pMaterialState;
 	}
-	else if (System::Strcmp("AlphaState", pXmlNode->name()) == 0)
+	else if (Is("AlphaState", pXmlNode->name()))
 	{
 		StateAlpha* pAlphaState = WIRE_NEW StateAlpha;
 		pAlphaState->BlendEnabled = GetBool(pXmlNode, "Enabled");
@@ -593,35 +975,35 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 		Char* pSrcBlend = GetValue(pXmlNode, "SrcBlendMode");
 		if (pSrcBlend)
 		{
-			if (System::Strcmp("ZERO", pSrcBlend) == 0)
+			if (Is("ZERO", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_ZERO;
 			}
-			else if (System::Strcmp("ONE", pSrcBlend) == 0)
+			else if (Is("ONE", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_ONE;
 			}
-			else if (System::Strcmp("DST_COLOR", pSrcBlend) == 0)
+			else if (Is("DST_COLOR", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_DST_COLOR;
 			}
-			else if (System::Strcmp("ONE_MINUS_DST_COLOR", pSrcBlend) == 0)
+			else if (Is("ONE_MINUS_DST_COLOR", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_DST_COLOR;
 			}
-			else if (System::Strcmp("SRC_ALPHA", pSrcBlend) == 0)
+			else if (Is("SRC_ALPHA", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_SRC_ALPHA;
 			}
-			else if (System::Strcmp("ONE_MINUS_SRC_ALPHA", pSrcBlend) == 0)
+			else if (Is("ONE_MINUS_SRC_ALPHA", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_SRC_ALPHA;
 			}
-			else if (System::Strcmp("DST_ALPHA", pSrcBlend) == 0)
+			else if (Is("DST_ALPHA", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_DST_ALPHA;
 			}
-			else if (System::Strcmp("ONE_MINUS_DST_ALPHA", pSrcBlend) == 0)
+			else if (Is("ONE_MINUS_DST_ALPHA", pSrcBlend))
 			{
 				pAlphaState->SrcBlend = StateAlpha::SBM_ONE_MINUS_DST_ALPHA;
 			}
@@ -630,35 +1012,35 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 		Char* pDstBlend = GetValue(pXmlNode, "DstBlendMode");
 		if (pDstBlend)
 		{
-			if (System::Strcmp("ZERO", pDstBlend) == 0)
+			if (Is("ZERO", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_ZERO;
 			}
-			else if (System::Strcmp("ONE", pDstBlend) == 0)
+			else if (Is("ONE", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_ONE;
 			}
-			else if (System::Strcmp("SRC_COLOR", pDstBlend) == 0)
+			else if (Is("SRC_COLOR", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_SRC_COLOR;
 			}
-			else if (System::Strcmp("ONE_MINUS_SRC_COLOR", pDstBlend) == 0)
+			else if (Is("ONE_MINUS_SRC_COLOR", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_SRC_COLOR;
 			}
-			else if (System::Strcmp("SRC_ALPHA", pDstBlend) == 0)
+			else if (Is("SRC_ALPHA", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_SRC_ALPHA;
 			}
-			else if (System::Strcmp("ONE_MINUS_SRC_ALPHA", pDstBlend) == 0)
+			else if (Is("ONE_MINUS_SRC_ALPHA", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_SRC_ALPHA;
 			}
-			else if (System::Strcmp("DST_ALPHA", pDstBlend) == 0)
+			else if (Is("DST_ALPHA", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_DST_ALPHA;
 			}
-			else if (System::Strcmp("ONE_MINUS_DST_ALPHA", pDstBlend) == 0)
+			else if (Is("ONE_MINUS_DST_ALPHA", pDstBlend))
 			{
 				pAlphaState->DstBlend = StateAlpha::DBM_ONE_MINUS_DST_ALPHA;
 			}
@@ -666,7 +1048,7 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 
 		return pAlphaState;
 	}
-	else if (System::Strcmp("ZBufferState", pXmlNode->name()) == 0)
+	else if (Is("ZBufferState", pXmlNode->name()))
 	{
 		StateZBuffer* pZBufferState = WIRE_NEW StateZBuffer;
 		pZBufferState->Enabled = GetBool(pXmlNode, "Enabled");
@@ -675,35 +1057,35 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 		Char* pCmpFunc = GetValue(pXmlNode, "CmpFunc");
 		if (pCmpFunc)
 		{
-			if (System::Strcmp("NEVER", pCmpFunc) == 0)
+			if (Is("NEVER", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_NEVER;
 			}
-			else if (System::Strcmp("LESS", pCmpFunc) == 0)
+			else if (Is("LESS", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_LESS;
 			}
-			else if (System::Strcmp("EQUAL", pCmpFunc) == 0)
+			else if (Is("EQUAL", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_EQUAL;
 			}
-			else if (System::Strcmp("LEQUAL", pCmpFunc) == 0)
+			else if (Is("LEQUAL", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_LEQUAL;
 			}
-			else if (System::Strcmp("GREATER", pCmpFunc) == 0)
+			else if (Is("GREATER", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_GREATER;
 			}
-			else if (System::Strcmp("NOTEQUAL", pCmpFunc) == 0)
+			else if (Is("NOTEQUAL", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_NOTEQUAL;
 			}
-			else if (System::Strcmp("GEQUAL", pCmpFunc) == 0)
+			else if (Is("GEQUAL", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_GEQUAL;
 			}
-			else if (System::Strcmp("ALWAYS", pCmpFunc) == 0)
+			else if (Is("ALWAYS", pCmpFunc))
 			{
 				pZBufferState->Compare = StateZBuffer::CF_ALWAYS;
 			}
@@ -711,7 +1093,7 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 
 		return pZBufferState;
 	}
-	else if (System::Strcmp("CullState", pXmlNode->name()) == 0)
+	else if (Is("CullState", pXmlNode->name()))
 	{
 		StateCull* pCullState = WIRE_NEW StateCull;
 		pCullState->Enabled = GetBool(pXmlNode, "Enabled");
@@ -719,15 +1101,15 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 		Char* pMode = GetValue(pXmlNode, "Mode");
 		if (pMode)
 		{
-			if (System::Strcmp("OFF", pMode) == 0)
+			if (Is("OFF", pMode))
 			{
 				pCullState->CullFace = StateCull::CM_OFF;
 			}
-			else if (System::Strcmp("BACK", pMode) == 0)
+			else if (Is("BACK", pMode))
 			{
 				pCullState->CullFace = StateCull::CM_BACK;
 			}
-			else if (System::Strcmp("FRONT", pMode) == 0)
+			else if (Is("FRONT", pMode))
 			{
 				pCullState->CullFace = StateCull::CM_FRONT;
 			}
@@ -735,33 +1117,39 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 
 		return pCullState;
 	}
-	else if (System::Strcmp("WireframeState", pXmlNode->name()) == 0)
+	else if (Is("WireframeState", pXmlNode->name()))
 	{
 		StateWireframe* pWireframeState = WIRE_NEW StateWireframe;
 		pWireframeState->Enabled = GetBool(pXmlNode, "Enabled");
 
 		return pWireframeState;
 	}
-	else if (System::Strcmp("FogState", pXmlNode->name()) == 0)
+	else if (Is("FogState", pXmlNode->name()))
 	{
 		StateFog* pFogState = WIRE_NEW StateFog;
 		pFogState->Enabled = GetBool(pXmlNode, "Enabled");
-		pFogState->Color = GetColorRGB(pXmlNode, "Color");
+		Bool hasValue;
+		ColorRGB color = GetColorRGB(pXmlNode, "Color", hasValue);
+		if (hasValue)
+		{
+			pFogState->Color = color;
+		}
+
 		pFogState->Start = GetFloat(pXmlNode, "Start");
 		pFogState->End = GetFloat(pXmlNode, "End");
 
 		Char* pFunc = GetValue(pXmlNode, "Func");
 		if (pFunc)
 		{
-			if (System::Strcmp("LINEAR", pFunc) == 0)
+			if (Is("LINEAR", pFunc))
 			{
 				pFogState->DensityFunc = StateFog::DF_LINEAR;
 			}
-			else if (System::Strcmp("EXP", pFunc) == 0)
+			else if (Is("EXP", pFunc))
 			{
 				pFogState->DensityFunc = StateFog::DF_EXP;
 			}
-			else if (System::Strcmp("EXPSQR", pFunc) == 0)
+			else if (Is("EXPSQR", pFunc))
 			{
 				pFogState->DensityFunc = StateFog::DF_EXPSQR;
 			}
@@ -806,28 +1194,24 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())
 	{
-		if (!pVerticesName &&
-			System::Strcmp("Vertices", pChild->name()) == 0)
+		if (!pVerticesName && Is("Vertices", pChild->name()))
 		{
 			pVerticesName = GetValue(pChild, "Name");
 			vBigEndian = IsBigEndian(pChild);
 			vUsage = GetUsageType(pChild);
 		}
-		else if (!pIndicesName &&
-			System::Strcmp("Indices", pChild->name()) == 0)
+		else if (!pIndicesName && Is("Indices", pChild->name()))
 		{
 			pIndicesName = GetValue(pChild, "Name");
 			iBigEndian = IsBigEndian(pChild);
 			iUsage = GetUsageType(pChild);
 		}
-		else if (!pNormalsName &&
-			System::Strcmp("Normals", pChild->name()) == 0)
+		else if (!pNormalsName && Is("Normals", pChild->name()))
 		{
 			pNormalsName = GetValue(pChild, "Name");
 			nBigEndian = IsBigEndian(pChild);
 		}
-		else if (!pColorsName &&
-			System::Strcmp("Colors", pChild->name()) == 0)
+		else if (!pColorsName && Is("Colors", pChild->name()))
 		{
 			pColorsName = GetValue(pChild, "Name");
 			cBigEndian = IsBigEndian(pChild);
@@ -996,7 +1380,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			if (System::Strcmp("Texture", pChild->name()) == 0)
+			if (Is("Texture", pChild->name()))
 			{
 				Material::BlendMode bm = Material::BM_QUANTITY;
 				Texture2D* pTex = ParseTexture(pChild, bm);
@@ -1088,70 +1472,72 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (System::Strcmp("Mipmaps", attr->name()) == 0)
+		if (Is("Mipmaps", attr->name()))
 		{
 			Int n;
 			n = sscanf(attr->value(), "%d", &mipmapCount);
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);	
 		}
-		else if (System::Strcmp("FilterMode", attr->name()) == 0)
+		else if (Is("FilterMode", attr->name()))
 		{
-			if (System::Strcmp("Point", attr->value()) == 0)
+			if (Is("Point", attr->value()))
 			{
 				filter = Texture2D::FT_NEAREST_NEAREST;
 			}
-			else if (System::Strcmp("Bilinear", attr->value()) == 0)
+			else if (Is("Bilinear", attr->value()))
 			{
 				filter = Texture2D::FT_LINEAR_NEAREST;
 			}
-			else if (System::Strcmp("Trilinear", attr->value()) == 0)
+			else if (Is("Trilinear", attr->value()))
 			{
 				filter = Texture2D::FT_LINEAR_LINEAR;
 			}
 		}
-		else if (System::Strcmp("AnisoLevel", attr->name()) == 0)
+		else if (Is("AnisoLevel", attr->name()))
 		{
 			Int n;
 			n = sscanf(attr->value(), "%d", &anisoLevel);
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);	
 		}
-		else if (System::Strcmp("WrapMode", attr->name()) == 0)
+		else if (Is("WrapMode", attr->name()))
 		{
-			if (System::Strcmp("Repeat", attr->value()) == 0)
+			if (Is("Repeat", attr->value()))
 			{
 				warp = Texture2D::WT_REPEAT;
 			}
-			else if (System::Strcmp("Clamp", attr->value()) == 0)
+			else if (Is("Clamp", attr->value()))
 			{
 				warp = Texture2D::WT_CLAMP;
 			}
 		}
-		else if (System::Strcmp("BlendMode", attr->name()) == 0)
+		else if (Is("BlendMode", attr->name()))
 		{
-			if (System::Strcmp("Replace", attr->value()) == 0)
+			if (Is("Replace", attr->value()))
 			{
 				blendMode = Material::BM_REPLACE;
 			}
-			else if (System::Strcmp("Modulate", attr->value()) == 0)
+			else if (Is("Modulate", attr->value()))
 			{
 				blendMode = Material::BM_MODULATE;
 			}
-			else if (System::Strcmp("Pass", attr->value()) == 0)
+			else if (Is("Pass", attr->value()))
 			{
 				blendMode = Material::BM_PASS;
 			}
-			else if (System::Strcmp("Blend", attr->value()) == 0)
+			else if (Is("Blend", attr->value()))
 			{
 				blendMode = Material::BM_BLEND;
 			}
-			else if (System::Strcmp("Decal", attr->value()) == 0)
+			else if (Is("Decal", attr->value()))
 			{
 				blendMode = Material::BM_DECAL;
 			}
 		}
 	}
 
-	Image2D* pImage = LoadPNG(pName, (mipmapCount > 1));
+	String path = String(mpPath) + String(pName);
+	Image2D* pImage = LoadPNG(static_cast<const Char*>(path),
+		(mipmapCount > 1));
 	if (!pImage)
 	{
 		return NULL;
@@ -1167,4 +1553,30 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	mTextures.Insert(pName, pTexture);
 
 	return pTexture;
+}
+
+//----------------------------------------------------------------------------
+void Importer::InitStaticSpatials(TArray<Spatial*>& rSpatials,
+	Bool prepareForStaticBatching)
+{
+	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
+	{
+		WIRE_ASSERT(rSpatials[i]);
+		rSpatials[i]->WorldIsCurrent = true;
+		rSpatials[i]->WorldBoundIsCurrent = true;
+		if (prepareForStaticBatching)
+		{
+			Geometry* pGeo = DynamicCast<Geometry>(rSpatials[i]);
+			if (pGeo)
+			{
+				pGeo->MakeStatic();
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+Bool Importer::Is(const Char* pSrc, const Char* pDst)
+{
+	return (System::Strcmp(pSrc, pDst) == 0);
 }

@@ -19,6 +19,7 @@
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireStateAlpha.h"
+#include "WireText.h"
 #include "WireTexture2D.h"
 #include "WireVertexBuffer.h"
 
@@ -816,29 +817,8 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
-	const Float screenHeight, const ColorRGBA& rColor)
+Text* StandardMesh::CreateText(UInt maxLength)
 {
-	if (!pText)
-	{
-		return NULL;
-	}
-
-	UInt textLength = System::Strlen(pText);
-	UInt meshChars = 0;
-	for (UInt i = 0; i < textLength; i++)
-	{
-		if (pText[i] > 32)
-		{
-			meshChars++;
-		}
-	}
-
-	if (meshChars == 0)
-	{
-		return NULL;
-	}
-
 	if (!s_spFontTexture)
 	{
 		const UInt texWidth = 128;
@@ -876,93 +856,51 @@ Geometry* StandardMesh::CreateText(const Char* pText, const Float screenWidth,
 		s_spFontTexture->SetFilterType(Texture2D::FT_NEAREST);
 	}
 
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(4);
-	attributes.SetTCoordChannels(2);
-	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, meshChars*4);
-	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(meshChars*6);
-	const UShort indices[] = { 0, 1, 2, 0, 2, 3 };
+	const UInt totalCharCount = 128;
+	TArray<Vector2F> uvs(totalCharCount*4);
+	TArray<Vector4F> charSizes(totalCharCount);
 
-	const Float xStride = 8.0F;
-	const Float yStride = 8.0F;
-	Float x = 0;
-	Float y = screenHeight - yStride;
+	UInt texWidth = s_spFontTexture->GetImage()->GetBound(0);
+	UInt texHeight = s_spFontTexture->GetImage()->GetBound(1);
 
-	// DirectX9 oddity, pixel's center is at (0.5,0.5)
-	if (System::GetPlatform() == System::PF_DX9)
+	for (UInt i = 0; i < 32; i++)
 	{
-		x += 0.5F;
-		y += 0.5F;
+		Vector2F pos(120.0F, 40.0F);
+		Float u0 = pos.X()/texWidth;
+		Float v0 = pos.Y()/texHeight;
+		Float u1 = (pos.X()+8.0F)/texWidth;
+		Float v1 = (pos.Y()+8.0F)/texHeight;
+		uvs.Append(Vector2F(u0, v0));
+		uvs.Append(Vector2F(u1, v0));
+		uvs.Append(Vector2F(u1, v1));
+		uvs.Append(Vector2F(u0, v1));
+		charSizes.Append(Vector4F(8, 8, 8, 0));
 	}
 
-	const Float cw = 8.0F / s_spFontTexture->GetImage()->GetBound(0);
-	const Float ch = 8.0F / s_spFontTexture->GetImage()->GetBound(1);
-	UShort k = 0;
-	ColorRGBA color = rColor;
-	for (UInt i = 0; i < textLength; i++)
+	Vector2F pos(0, 0);
+	for (UInt y = 0; y < 6; y++)
 	{
-		if (pText[i] > 32)
-		{
-			UInt offset = static_cast<UInt>(pText[i] - 32);
-			UInt offsetY = offset / 16;
-			UInt offsetX = offset % 16;
-			Float u = offsetX * cw;
-			Float v = offsetY * ch;
-
-			pVBuffer->Position3(k*4+1) = Vector3F(x+xStride, y+yStride, 0);
-			pVBuffer->Position3(k*4) = Vector3F(x, y+yStride, 0);
-			pVBuffer->Position3(k*4+3) = Vector3F(x, y, 0);
-			pVBuffer->Position3(k*4+2) = Vector3F(x+xStride, y, 0);
-		
-			pVBuffer->TCoord2(k*4) = Vector2F(u, v);
- 			pVBuffer->TCoord2(k*4+1) = Vector2F(u+cw, v);
- 			pVBuffer->TCoord2(k*4+2) = Vector2F(u+cw, v+ch);
- 			pVBuffer->TCoord2(k*4+3) = Vector2F(u, v+ch);
-
-			for (UInt j = 0; j < 4; j++)
-			{
-				pVBuffer->Color4(k*4+j) = color;
-			}
-
-			for (UInt j = 0; j < (sizeof(indices) / sizeof(UShort)); j++)
-			{
-				(*pIBuffer)[k*6+j] = indices[j] + k*4;
-			}
-
-			x += xStride;
-			k++;
-		}
-		else if (pText[i] == 32)
-		{
-			x += xStride;
-		}
-		else if (pText[i] == 1)
-		{
-			const Float f = 1.0f/255.0f;
-			i++;
-			Float r = static_cast<Float>(static_cast<UChar>(pText[i++]));
-			Float g = static_cast<Float>(static_cast<UChar>(pText[i++]));
-			Float b = static_cast<Float>(static_cast<UChar>(pText[i++]));
-			Float a = static_cast<Float>(static_cast<UChar>(pText[i]));
-			color = ColorRGBA(r*f, g*f, b*f, a*f);
-		}
-		else if (pText[i] == 2)
-		{
-			i++;
-			color = rColor;
+		pos.X() = 0;
+		for (UInt x = 0; x < 16; x++)
+		{	
+			Float u0 = pos.X()/texWidth;
+			Float v0 = pos.Y()/texHeight;
+			Float u1 = (pos.X()+8.0F)/texWidth;
+			Float v1 = (pos.Y()+8.0F)/texHeight;
+			uvs.Append(Vector2F(u0, v0));
+			uvs.Append(Vector2F(u1, v0));
+			uvs.Append(Vector2F(u1, v1));
+			uvs.Append(Vector2F(u0, v1));
+			charSizes.Append(Vector4F(8, 8, 8, 0));
+			pos.X() += 8.0F;
 		}
 
-		if (pText[i] == '\n' || x > (screenWidth-xStride))
-		{
-			x = 0;
-			y -= yStride;
-		}
+		pos.Y() += 8.0F;
 	}
 
-	Material* pMaterial = WIRE_NEW Material;
-	pMaterial->AddTexture(s_spFontTexture, Material::BM_MODULATE);
-	return WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
+	Text* pText = WIRE_NEW Text(8, s_spFontTexture, uvs, charSizes,
+		maxLength);
+	return pText;
 }
 
 const UChar StandardMesh::s_Font[] = 

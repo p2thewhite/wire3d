@@ -132,6 +132,111 @@ Vector2F VertexBuffer::TCoord2(UInt i, UInt unit) const
 }
 
 //----------------------------------------------------------------------------
+void VertexBuffer::ApplyForward(const Transformation& rTransformation,
+	Float* pDst)
+{
+	const UInt quantity = GetQuantity();
+	const UInt channelQuantity = mAttributes.GetChannelQuantity();
+	Bool needsTrafo = mAttributes.HasPosition() || mAttributes.HasNormal();
+	if (rTransformation.IsIdentity() || !needsTrafo)
+	{
+		if (GetData() != pDst)
+		{
+			size_t size = quantity * channelQuantity * sizeof(Float);
+			System::Memcpy(pDst, size, GetData(), size);
+			return;
+		}
+	}
+
+	// TODO: optimize for dynamic runtime batching
+	const VertexAttributes& rIAttr = mAttributes;
+	const Vector3F& translate = rTransformation.GetTranslate();
+	const Matrix34F& rotate = rTransformation.GetMatrix();
+
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		if (rIAttr.GetPositionChannels() == 3)
+		{
+			const Float* const pPosition = GetPosition(i);
+			Vector3F v(pPosition[0], pPosition[1], pPosition[2]);
+
+			if (rTransformation.IsRSMatrix())
+			{
+				const Vector3F& scale = rTransformation.GetScale();
+				v = Vector3F(scale.X() * v.X(), scale.Y() * v.Y(),
+					scale.Z() * v.Z());
+			}
+
+			v = rotate * v + translate;
+
+			*pDst++ = v.X();
+			*pDst++ = v.Y();
+			*pDst++ = v.Z();
+		}
+		else
+		{
+			WIRE_ASSERT(false /* implement transform for non 3d pos? */);
+			const Float* const pPosition = GetPosition(i);
+			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
+			{
+				*pDst++ = pPosition[k];
+			}
+		}
+
+		if (rIAttr.GetNormalChannels() == 3)
+		{
+			const Float* const pNormal = GetNormal(i);
+			Vector3F n(pNormal[0], pNormal[1], pNormal[2]);
+
+			if (rTransformation.IsRSMatrix())
+			{
+				const Vector3F& scale = rTransformation.GetScale();
+				n = Vector3F(scale.X() * n.X(), scale.Y() * n.Y(),
+					scale.Z() * n.Z());
+			}
+
+			n = rotate * n;
+
+			*pDst++ = n.X();
+			*pDst++ = n.Y();
+			*pDst++ = n.Z();
+		}
+		else if (rIAttr.GetNormalChannels() > 0)
+		{
+			const Float* const pNormal = GetNormal(i);
+			for (UInt k = 0; k < rIAttr.GetNormalChannels(); k++)
+			{
+				*pDst++ = pNormal[k];
+			}
+		}
+
+		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
+		{
+			if (rIAttr.GetColorChannels(unit) > 0)
+			{
+				UInt* pColor = reinterpret_cast<UInt*>(GetColor(i, unit));
+				*(reinterpret_cast<UInt*>(pDst++)) = *pColor;
+			}
+		}
+
+		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
+		{
+			UInt channels = rIAttr.GetTCoordChannels(unit);
+			if (channels > 0)
+			{
+				const Float* const pTCoords = GetTCoord(i, unit);
+				for (UInt k = 0; k < channels; k++)
+				{
+					*pDst++ = pTCoords[k];
+				}
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 void VertexBuffer::GeneratePlatonicNormals()
 {
 	const VertexAttributes& rAttr = mAttributes;

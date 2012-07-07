@@ -27,6 +27,16 @@ Transformation::~Transformation()
 }
 
 //----------------------------------------------------------------------------
+void Transformation::MakeIdentity()
+{
+	mMatrix.MakeIdentity();
+	mScale = Vector3F::ONE;
+	mIsIdentity = true;
+	mIsRSMatrix = true;
+	mIsUniformScale = true;
+}
+
+//----------------------------------------------------------------------------
 void Transformation::SetRotate(const Matrix3F& rMatrix)
 {
 	mMatrix.SetMatrix3(rMatrix);

@@ -29,10 +29,16 @@ Bool Demo::OnInitialize()
 	mLastTime = System::GetTime();
 	mShowFps = false;
 
-	// frames per second debug text
+	// frames per second and render statistics debug text
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
-	mspTextAlpha = WIRE_NEW StateAlpha();
-	mspTextAlpha->BlendEnabled = true;
+	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
+	WIRE_ASSERT(mspText);
+	GetRenderer()->BindAll(mspText);
+
+ 	GetRenderer()->CreateBatchingBuffers(60*1024);
+ 	GetRenderer()->SetDynamicBatchingThreshold(300);
+ 	GetRenderer()->SetStaticBatchingThreshold(10000);
+
 	return true;
 }
 
@@ -82,14 +88,14 @@ void Demo::OnButton(UInt /*button*/, UInt state)
 	//   BUTTON_RELEASE = button/key released
 
 	// any of the above buttons pressed displays FPS at the top of the screen
-	if (state == Application::BUTTON_PRESS)
+	/*if (state == Application::BUTTON_PRESS)
 	{
 		mShowFps = true;
 	}
 	else
 	{
 		mShowFps = false;
-	}
+	}*/
 }
 
 //----------------------------------------------------------------------------
@@ -133,39 +139,31 @@ void Demo::DrawFPS(Double time)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+	// set to screen width (might change any time in window mode)
+	mspText->SetLineWidth(screenWidth);
+	mspText->Clear(Color32::WHITE);
+	// Text uses OpenGL convention of (0,0) being left bottom of window
+	mspText->SetPen(0, screenHeight-mspText->GetFontHeight()-32.0F);
 
-	UInt fps = static_cast<UInt>(1/elapsed);
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
-	String msg1 = "\n\n\n\n\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
-		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, "
-		"TextureSize: %.2f MB";
-
-	const Float kb = 1024.0f;
-	const Float mb = kb*kb;
+	UInt fps = static_cast<UInt>(1/elapsed);
+	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
+		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
+		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+	Float kb = 1024.0F;
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
-		VBOTotalSize/kb, pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->
-		TextureCount, pStats->TextureTotalSize/mb);
+		pStats->DrawCalls, pStats->Triangles, pStats->BatchedStatic,
+		pStats->BatchedDynamic, pStats->VBOCount, pStats->VBOTotalSize/kb,
+		pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->TextureCount,
+		pStats->TextureTotalSize/(kb*kb));
+	mspText->SetColor(Color32::WHITE);
+	mspText->Append(text);
 
-	String str(text);
-
-// #ifdef WIRE_DEBUG
-// 	Float allocatedMemory = static_cast<Float>(Memory::AllocatedMemory)/mb;
-// 	System::Sprintf(text, TextArraySize, "\nAllocated Memory: %.2f MB, "
-// 		"Number of Allocations: %d", allocatedMemory,
-// 		Memory::AllocationCount);
-// 	str += String(text);
-// #endif
-
-	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
-		screenHeight, ColorRGBA::WHITE);
-	spText->AttachState(mspTextAlpha);
-	spText->UpdateRS();
-
+	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(spText);
+	GetRenderer()->Draw(mspText);
 }
 
 //----------------------------------------------------------------------------

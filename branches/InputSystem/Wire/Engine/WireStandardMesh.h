@@ -17,8 +17,8 @@
 namespace Wire
 {
 
-class ColorRGBA;
 class Geometry;
+class Text;
 
 class StandardMesh
 {
@@ -61,12 +61,8 @@ public:
 		Float radius, const UInt uvQuantity = 0,
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
-	// text mesh using the following control characters:
-	// "\n" newline
-	// "\1\R\G\B\A" use color RGBA (within value range [1,255])
-	// "\2" use supplied rColor
-	static Geometry* CreateText(const Char* pText, const Float screenWidth,
-		const Float screenHeight, const ColorRGBA& rColor);
+	// text using the built-in font
+	static Text* CreateText(UInt maxLength = 4000);
 
 private:
 	static Texture2DPtr s_spFontTexture;

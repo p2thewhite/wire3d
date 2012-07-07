@@ -17,6 +17,7 @@ include $(DEVKITPPC)/wii_rules
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
 IMPORTERDIR		:=	../../../Tools/Importer
+FREETYPEDIR		:=	../../../Tools/freetype
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src \
 					src/Controllers
@@ -49,7 +50,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lImporter$(BUILDPOSTFIX) -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
+LIBS	:=	-lImporter$(BUILDPOSTFIX) -lfreetype -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -103,7 +104,8 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
-					-I$(WIREDIR)/Renderer/GXRenderer \
+					-I$(WIREDIR)/Renderer \
+					-I$(WIREDIR)/Renderer/GX \
 					-I$(IMPORTERDIR)/src
 
 
@@ -111,7 +113,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR)
+					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR) -L$(FREETYPEDIR)
 
 .PHONY: $(BUILD) clean
 
@@ -137,7 +139,7 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 $(OUTPUT).dol: $(OUTPUT).elf
-$(OUTPUT).elf: $(OFILES) $(LIBWIRE_LIB)/$(LIBWIRE) $(IMPORTERLIB)/libImporter$(BUILDPOSTFIX).a
+$(OUTPUT).elf: $(OFILES) $(LIBWIRE_LIB)/$(LIBWIRE) $(LIBIMPORTER_LIB)/libImporter$(BUILDPOSTFIX).a
 
 -include $(DEPENDS)
 

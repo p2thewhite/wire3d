@@ -1,6 +1,10 @@
-// Sample10 - Material Sorting
+// Sample10 - Material Sorting & Batching
 // This sample demonstrates sorting materials for minimizing state changes
-// and correct transparency/opaque geometry order.
+// and correct transparency/opaque geometry order, as well as draw call
+// batching of static and dynamic objects.
+// Note: Batching is disabled on the Wii by default. It does not suffer
+// from operating system and driver overhead issues like the PC, thus
+// batching does not improve performance on the Wii.
 
 #include "Sample10.h"
 
@@ -31,7 +35,17 @@ Bool Sample10::OnInitialize()
 
 	mspRoot = CreateScene();
 
-	Vector3F cameraLocation(0.0F, 0.0F, 5.0F);
+	// Apply Local to World transformation
+	mspRoot->UpdateGS();
+
+	// Prepare for static batching by applying World transformation to
+	// actual vertices (duplicating vertex buffers if they are shared).
+	// If forceStatic is false, only objects which have WorldIsCurrent &&
+	// WorldBoundIsCurrent set to true will be processed.
+	Bool forceStatic = true;
+	mspRoot->MakeStatic(forceStatic); // remove this line for dynamic batching
+
+	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 	Vector3F right = viewDirection.Cross(up);
@@ -49,11 +63,11 @@ Bool Sample10::OnInitialize()
 	mCullerSorting.SetCamera(mspCamera);
 
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
-	mspTextAlpha = WIRE_NEW StateAlpha();
-	mspTextAlpha->BlendEnabled = true;
+	mspText = StandardMesh::CreateText();
 
-//   	GetRenderer()->CreateBatchingBuffers(60*1024);
-//   	GetRenderer()->SetDynamicBatchingThreshold(300);
+	// Create a buffer for batching draw calls. Maximum size of the buffer
+	// is 64k due to 16-bit index buffers.
+   	GetRenderer()->CreateBatchingBuffers(60*1024);
 	return true;
 }
 
@@ -64,25 +78,50 @@ void Sample10::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F),
-		MathF::FMod(static_cast<Float>(time), MathF::TWO_PI));
-	mspRoot->Local.SetRotate(rotate);
+	// disable batching by setting threshold to 0
+	GetRenderer()->SetDynamicBatchingThreshold(0);
+	GetRenderer()->SetStaticBatchingThreshold(0);
 
-	mspRoot->UpdateGS(time);
-
-	// Every 5 seconds we alternate between using the Culler (to produce
-	// a visible set of objects in the order of the objects in the scene
-	// graph) and the CullerSorting (which produces 2 sets of visible objects:
-	// one set of opaque objects sorted by render state, material and depth
-	// (front to back), and one set of transparent objects sorted likewise
-	// (but back to front for correct visibility)).
+	// Every 5 seconds we alternate between one of the following 3 states:
+	// Culler with no batching (to produce a visible set of objects in the
+	//   order of the objects in the scene graph)
+	// CullerSorting with no batching (which produces 2 sets of visible
+	//   objects: one set of opaque objects sorted by render state, material
+	//   and depth (front to back), and one set of transparent objects sorted
+	//   likewise (but back to front for correct visibility)).
+	// CullerSorting with batching (after sorting the renderer tries to
+	//   batch as many objects with the same properties together as possible)
+	 
 	Bool usesSorting = false;
 	Culler* pCuller = &mCuller;
-	if (MathF::FMod(static_cast<Float>(time), 10) > 5)
+	if (MathF::FMod(static_cast<Float>(time), 15) > 5)
 	{
 		pCuller = &mCullerSorting;
 		usesSorting = true;
+
+		if (MathF::FMod(static_cast<Float>(time), 15) > 10)
+		{
+			// Activate batching of dynamic objects with <= 200 vertices.
+			// Dynamic batching involves manual transformation of vertices
+			// and copying vertices and indices. Manual transformation is
+			// CPU intensive, thus the threshold should be very low.
+			// Otherwise we might waste more time than we gain.
+			GetRenderer()->SetDynamicBatchingThreshold(200);
+
+			// Activate batching of static objects with <= 2000 vertices.
+			// Static batching involves copying vertices and indices, no
+			// manual transformation required.
+			GetRenderer()->SetStaticBatchingThreshold(2000);
+		}
 	}
+
+	Float angle = static_cast<Float>(MathD::FMod(time, MathD::TWO_PI));
+	Float sinus = MathF::Sin(angle); 
+	Float d = 5.0F + 1.0F * sinus;
+	Vector3F camPos(sinus*d, sinus*d, MathF::Cos(angle)*d);
+	mspCamera->LookAt(camPos, Vector3F::ZERO, Vector3F::UNIT_Y);
+	mCuller.SetCamera(mspCamera);
+	mspLight->Direction = -camPos;
 
 	pCuller->ComputeVisibleSet(mspRoot);
 
@@ -128,8 +167,8 @@ Node* Sample10::CreateScene()
 		}
 	}
 
-	Light* pLight = WIRE_NEW Light;
-	pRoot->AttachLight(pLight);
+	mspLight = WIRE_NEW Light;
+	pRoot->AttachLight(mspLight);
 
 	pRoot->UpdateRS();
 	return pRoot;
@@ -223,19 +262,17 @@ Spatial* Sample10::CreateGeometryA()
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(mspMeshA, mspMaterialA);
-	pGeo->AttachState(mspStateMaterialA);
+	Geometry* pGeoFront = WIRE_NEW Geometry(mspMeshA, mspMaterialA);
+	pGeoFront->AttachState(mspAlphaA);
+	pGeoFront->AttachState(mspZBufferA);
 
-	Geometry* pGeo2 = WIRE_NEW Geometry(mspVertexBufferA, mspMeshA->
+	Geometry* pGeoBack = WIRE_NEW Geometry(mspVertexBufferA, mspMeshA->
 		GetIndexBuffer(), mspMaterialA);
-	pGeo2->AttachState(mspStateMaterialA);
-	pGeo2->AttachState(mspCullA);
+	pGeoBack->AttachState(mspCullA);
 
-	pRootA->AttachChild(pGeo);
-	pRootA->AttachChild(pGeo2);
-
-	pRootA->AttachState(mspAlphaA);
-	pRootA->AttachState(mspZBufferA);
+	pRootA->AttachChild(pGeoBack);
+	pRootA->AttachChild(pGeoFront);
+	pRootA->AttachState(mspStateMaterialA);
 
 	return pRootA;
 }
@@ -307,38 +344,48 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	const Renderer::Statistics* pStats = Renderer::GetStatistics();
-
-	UInt fps = static_cast<UInt>(1/elapsed);
-	const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
-	String msg1 = "\2\nFPS: %d\nDraw Calls: %d, Triangles: %d\nVBOs: %d, "
-		"VBOSize: %.2f KB\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, TextureSize: "
-		"%.2f MB";
-
-	Float kb = 1024.0F;
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->DrawCalls, pStats->Triangles, pStats->VBOCount, pStats->
-		VBOTotalSize/kb, pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->
-		TextureCount, pStats->TextureTotalSize/(kb*kb));
-
-	String msg0 = "\n\n\n\n\n\nSorting: ";
-	String str;
+	// set to screen width (might change any time in window mode)
+	mspText->SetLineWidth(screenWidth);
+	mspText->SetColor(Color32::WHITE);
+	// Text uses OpenGL convention of (0,0) being left bottom of window
+	mspText->Set("Sorting: ", 0, screenHeight-mspText->GetFontHeight()-32.0F);
 
 	if (usesSorting)
 	{
-		str = msg0 + String("\x01\x20\xff\x20\xffON") + String(text);
+		mspText->Append("ON", Color32::GREEN);
 	}
 	else
 	{
-		str = msg0 + String("\x01\xff\x20\x20\xffOFF") + String(text);
+		mspText->Append("OFF", Color32::RED);
 	}
 
-	GeometryPtr spText = StandardMesh::CreateText(str, screenWidth,
-		screenHeight, ColorRGBA::WHITE);
-	spText->AttachState(mspTextAlpha);
-	spText->UpdateRS();
+	mspText->Append(", Batching: ", Color32::WHITE);
+	if (GetRenderer()->UsesBatching())
+	{
+		mspText->Append("ON", Color32::GREEN);
+	}
+	else
+	{
+		mspText->Append("OFF", Color32::RED);
+	}
 
+	const UInt TextArraySize = 1000;
+	Char text[TextArraySize];
+	UInt fps = static_cast<UInt>(1/elapsed);
+	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
+		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
+		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+	Float kb = 1024.0F;
+	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
+		pStats->DrawCalls, pStats->Triangles, pStats->BatchedStatic,
+		pStats->BatchedDynamic, pStats->VBOCount, pStats->VBOTotalSize/kb,
+		pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->TextureCount,
+		pStats->TextureTotalSize/(kb*kb));
+	mspText->SetColor(Color32::WHITE);
+	mspText->Append(text);
+
+	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(spText);
+	GetRenderer()->Draw(mspText);
 }

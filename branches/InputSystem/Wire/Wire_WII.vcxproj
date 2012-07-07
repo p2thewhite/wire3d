@@ -60,8 +60,8 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
     <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Foundation;Engine;Renderer\GXRenderer;InputSystem\WiiInputSystem;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Foundation;Engine;Renderer\GXRenderer;InputSystem;InputSystem\Wii;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Foundation;Engine;Renderer;Renderer\GXRenderer;InputSystem;InputSystem\Wii;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Foundation;Engine;Renderer;Renderer\GX;InputSystem;InputSystem\Wii;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <BuildLog>
@@ -74,11 +74,11 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\WireAxis.h" />
     <ClInclude Include="Engine\WireCullerSorting.h" />
     <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeSkybox.h" />
+    <ClInclude Include="Engine\WireText.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
     <ClInclude Include="Foundation\WireColor32.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
@@ -131,7 +131,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireNodeLight.h" />
     <ClInclude Include="Engine\WireNodeSwitch.h" />
     <ClInclude Include="Engine\WireObject.h" />
-    <ClInclude Include="Engine\WireRenderer.h" />
     <ClInclude Include="Engine\WireRtti.h" />
     <ClInclude Include="Engine\WireSceneObject.h" />
     <ClInclude Include="Engine\WireSmartPointer.h" />
@@ -193,12 +192,18 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="InputSystem\WireShake.h" />
     <ClInclude Include="InputSystem\WireSwing.h" />
     <ClInclude Include="InputSystem\WireTilt.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXIndexBuffer.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererData.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererInput.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXTexture2D.h" />
-    <ClInclude Include="Renderer\GXRenderer\WireGXVertexBuffer.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9IndexBuffer.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererData.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererInput.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9Texture2D.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9VertexBuffer.h" />
+    <ClInclude Include="Renderer\GX\WireGXDisplayList.h" />
+    <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h" />
+    <ClInclude Include="Renderer\GX\WireGXRendererData.h" />
+    <ClInclude Include="Renderer\GX\WireGXRendererInput.h" />
+    <ClInclude Include="Renderer\GX\WireGXTexture2D.h" />
+    <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h" />
+    <ClInclude Include="Renderer\WireRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
@@ -248,7 +253,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Engine\WireNodeLight.inl" />
     <None Include="Engine\WireNodeSwitch.inl" />
     <None Include="Engine\WireObject.inl" />
-    <None Include="Engine\WireRenderer.inl" />
     <None Include="Engine\WireRtti.inl" />
     <None Include="Engine\WireSceneObject.inl" />
     <None Include="Engine\WireSmartPointer.inl" />
@@ -260,16 +264,19 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Engine\WireVertexBuffer.inl" />
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
-    <None Include="Renderer\GXRenderer\WireGXDisplayList.inl" />
-    <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl" />
-    <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl" />
+    <None Include="Renderer\Dx9\WireDx9IndexBuffer.inl" />
+    <None Include="Renderer\Dx9\WireDx9VertexBuffer.inl" />
+    <None Include="Renderer\GX\WireGXDisplayList.inl" />
+    <None Include="Renderer\GX\WireGXIndexBuffer.inl" />
+    <None Include="Renderer\GX\WireGXVertexBuffer.inl" />
+    <None Include="Renderer\WireRenderer.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\WireAxis.cpp" />
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />
+    <ClCompile Include="Engine\WireText.cpp" />
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -309,7 +316,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Engine\WireNodeLight.cpp" />
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
     <ClCompile Include="Engine\WireObject.cpp" />
-    <ClCompile Include="Engine\WireRenderer.cpp" />
     <ClCompile Include="Engine\WireRtti.cpp" />
     <ClCompile Include="Engine\WireSceneObject.cpp" />
     <ClCompile Include="Engine\WireSpatial.cpp" />
@@ -392,18 +398,31 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="InputSystem\WireShake.cpp" />
     <ClCompile Include="InputSystem\WireSwing.cpp" />
     <ClCompile Include="InputSystem\WireTilt.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXLight.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXRenderer.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateAlpha.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateCull.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateFog.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateMaterial.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateZBuffer.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXTexture2D.cpp" />
-    <ClCompile Include="Renderer\GXRenderer\WireGXVertexBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9BlendMode.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Light.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Renderer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateAlpha.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateCull.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateFog.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateMaterial.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateWireframe.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateZBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXDisplayList.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXIndexBuffer.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXLight.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXRenderer.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXStateAlpha.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXStateCull.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXStateFog.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXStateMaterial.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXStateZBuffer.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXTexture2D.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp" />
+    <ClCompile Include="Renderer\WireRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -60,6 +60,7 @@ Bool Sample3::OnInitialize()
 	mCuller.SetCamera(mspCamera);
 
 	mspOrthographic = WIRE_NEW Camera(/* isPerspective */ false);
+	mspText = StandardMesh::CreateText();
 
 	GetRenderer()->SetClearColor(ColorRGBA::WHITE);
 
@@ -129,27 +130,17 @@ void Sample3::DrawLodTextLabel()
 
 	const UInt textArraySize = 100;
 	Char text[textArraySize];
-	System::Sprintf(text, textArraySize, "\n\n\n\n\n\nLOD %d, %d Triangles",
+	System::Sprintf(text, textArraySize, "LOD %d, %d Triangles",
 		activeLod, pGeo->GetMesh()->GetIndexBuffer()->GetQuantity() / 3);
+	mspText->Set(text, Color32::BLACK);
+	mspText->Update(GetRenderer());
 
-	// The text mesh will be created and destroyed every frame (incl. Vertex-,
-	// Indexbuffers, Material, attached Render State, etc.). Therefore this
-	// function is only meant for debugging purposes.
-	GeometryPtr spText = StandardMesh::CreateText(text, screenWidth,
-		screenHeight, ColorRGBA::BLACK);
-	Int offset = static_cast<Int>((screenWidth - 21.0F*8.0F) * 0.5F);
-	spText->Local.SetTranslate(Vector3F(static_cast<Float>(offset), 0, 0));
-	spText->UpdateGS();
+	// center text (window resizing can happen any time)
+	Float offsetX = (screenWidth - 21.0F*8.0F) * 0.5F;
+	Float offsetY = screenHeight - 6.0F * 8.0F;
+	mspText->World.SetTranslate(Vector3F(offsetX, offsetY, 0));
 
-	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
-	pAlpha->BlendEnabled = true;
-	spText->AttachState(pAlpha);
-
-	// Push the default render states onto the text mesh, otherwise current
-	// render states (wireframe in this particular case) will stay active.
-	spText->UpdateRS();
-
-	GetRenderer()->Draw(spText);
+	GetRenderer()->Draw(mspText);
 }
 
 //----------------------------------------------------------------------------

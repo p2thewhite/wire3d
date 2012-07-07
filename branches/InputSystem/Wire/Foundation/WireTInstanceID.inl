@@ -7,7 +7,7 @@
 // that agreement.
 
 template<class T> TArray<UInt> TInstanceID<T>::s_FreeIDs(0, 10);
-template<class T> UInt TInstanceID<T>::s_MaxID = 1;
+template<class T> UInt TInstanceID<T>::s_MaxID = 0;
 
 //----------------------------------------------------------------------------
 template <class T>
@@ -26,7 +26,7 @@ TInstanceID<T>::TInstanceID()
 		return;
 	}
 
-	mID = s_MaxID++;
+	mID = ++s_MaxID;
 }
 
 //----------------------------------------------------------------------------
@@ -39,9 +39,16 @@ TInstanceID<T>::~TInstanceID()
 
 //----------------------------------------------------------------------------
 template <class T>
-TInstanceID<T>::operator UInt () const
+inline TInstanceID<T>::operator UInt () const
 {
 	return mID;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+inline UInt TInstanceID<T>::GetMaxID()
+{
+	return s_MaxID;
 }
 
 //----------------------------------------------------------------------------
