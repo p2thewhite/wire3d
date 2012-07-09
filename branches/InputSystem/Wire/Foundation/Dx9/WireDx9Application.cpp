@@ -202,7 +202,7 @@ Int Dx9Application::Main(Int, Char*[])
 			else
 			{
 				mpInputSystem->Capture();
-				s_pApplication->OnInputCapture();
+				s_pApplication->OnInput();
 
 				s_pApplication->OnIdle();
 
@@ -240,7 +240,7 @@ void Dx9Application::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void Dx9Application::OnInputCapture()
+void Dx9Application::OnInput()
 {
 }
 

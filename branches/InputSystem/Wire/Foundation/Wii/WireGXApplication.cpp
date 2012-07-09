@@ -59,7 +59,7 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 		while (mIsRunning) 
 		{
 			mpInputSystem->Capture();
-			OnInputCapture();
+			OnInput();
 
 			s_pApplication->OnIdle();
 
@@ -96,7 +96,7 @@ void GXApplication::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void GXApplication::OnInputCapture()
+void GXApplication::OnInput()
 {
 }
 

@@ -19,7 +19,7 @@ public:
 	Sample11();
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
-	virtual void OnInputCapture();
+	virtual void OnInput();
 
 	enum CursorMode
 	{

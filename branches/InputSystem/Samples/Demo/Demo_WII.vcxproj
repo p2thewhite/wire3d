@@ -77,6 +77,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <ClCompile Include="src\Controllers\ConveyorBelt.cpp" />
     <ClCompile Include="src\Controllers\FanRotator.cpp" />
+    <ClCompile Include="src\Controllers\FirstPersonController.cpp" />
     <ClCompile Include="src\Controllers\LogoFader.cpp" />
     <ClCompile Include="src\Controllers\SplineCamera.cpp" />
     <ClCompile Include="src\Demo.cpp" />
@@ -84,6 +85,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <ClInclude Include="src\Controllers\ConveyorBelt.h" />
     <ClInclude Include="src\Controllers\FanRotator.h" />
+    <ClInclude Include="src\Controllers\FirstPersonController.h" />
     <ClInclude Include="src\Controllers\LogoFader.h" />
     <ClInclude Include="src\Controllers\SplineCamera.h" />
     <ClInclude Include="src\Demo.h" />

@@ -94,12 +94,12 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	do
 	{
 		pInputSystem->Capture();
-		if (pButtons->GetButton(BUTTON_HOME))
+		if (pButtons->GetButton(Buttons::BUTTON_HOME))
 		{
 			exit(0);
 		}
 	
-	} while (!(pButtons->GetButton(BUTTON_A)));
+	} while (!(pButtons->GetButton(Buttons::BUTTON_A)));
 }
 
 //----------------------------------------------------------------------------

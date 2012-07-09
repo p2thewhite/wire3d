@@ -3,12 +3,21 @@
 #include "Controllers/ConveyorBelt.h"
 #include "Controllers/FanRotator.h"
 #include "Controllers/LogoFader.h"
-#include "Controllers/SplineCamera.h"
 #include "Importer.h"
+#include "WireInputSystem.h"
+#include "WireDigitalPad.h"
+#include "WireIR.h"
+#include "WireButtons.h"
 
 using namespace Wire;
 
 WIRE_APPLICATION(Demo);
+
+//----------------------------------------------------------------------------
+Demo::Demo() :
+	mpFirstPersonController(NULL)
+{
+}
 
 //----------------------------------------------------------------------------
 Bool Demo::OnInitialize()
@@ -21,7 +30,7 @@ Bool Demo::OnInitialize()
 	mspLogo = LoadAndInitLogo();
 	if (!mspLogo)
 	{
-		WIRE_ASSERT(false /* Could not load Logo.xml */);
+		WIRE_ASSERT(false /* Could not load logo.xml */);
 		return false;
 	}
 
@@ -49,11 +58,8 @@ void Demo::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	mLogoCameras[0]->SetFrustum(0, width, 0, height, 0, 1);
-	Vector3F centered((width-512)*0.5F, (height-256)*0.5F, 0);
-	mspLogo->Local.SetTranslate(centered);
+	UpdateCameraFrustumAccordingToScreenDimensions(mLogoCameras[0]);
+	AlignNodeToCenter(mspLogo);
 
 	switch (mAppState)
 	{
@@ -71,38 +77,97 @@ void Demo::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void Demo::OnButton(UInt /*button*/, UInt state)
+void Demo::OnInput()
 {
-	// Buttons are:     Wii          | PC
-	//   BUTTON_A =     Button 'A'   | left mouse button
-	//   BUTTON_B =     Button 'B'   | right mouse button
-	//   BUTTON_LEFT =  Button left  | cursor key left
-	//   BUTTON_RIGHT = Button right | cursor key right
-	//   BUTTON_UP =    Button up    | cursor key up
-	//   BUTTON_DOWN =  Button down  | cursor key down
-	//   BUTTON_1 =     Button '1'   | key '1'
-	//   BUTTON_2 =     Button '2'   | key '2'
-	//
-	// States are:
-	//   BUTTON_PRESS   = button/key pressed
-	//   BUTTON_RELEASE = button/key released
-
-	// any of the above buttons pressed displays FPS at the top of the screen
-	/*if (state == Application::BUTTON_PRESS)
+	if (mpFirstPersonController == NULL)
 	{
-		mShowFps = true;
+		return;
 	}
-	else
+
+	if (GetInputSystem()->GetMainDevicesCount() == 0)
 	{
-		mShowFps = false;
-	}*/
+		return;
+	}
+
+	const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(0);
+	// checking for minimum capabilities
+	if (!pInputDevice->HasCapability(DigitalPad::TYPE, true))
+	{
+		return;
+	}
+
+	if (!pInputDevice->HasCapability(IR::TYPE, true))
+	{
+		return;
+	}
+
+	if (!pInputDevice->HasCapability(Buttons::TYPE, true))
+	{
+		return;
+	}
+
+	// ---
+	const DigitalPad* pDigitalPad = static_cast<const DigitalPad*>(pInputDevice->GetCapability(DigitalPad::TYPE, false));
+	if (pDigitalPad->GetUp())
+	{
+		mpFirstPersonController->MoveForward();
+	} 
+	else if (pDigitalPad->GetDown())
+	{
+		mpFirstPersonController->MoveBackward();
+	}
+	else if (pDigitalPad->GetLeft())
+	{
+		mpFirstPersonController->StrafeLeft();
+	}
+	else if (pDigitalPad->GetRight())
+	{
+		mpFirstPersonController->StrafeRight();
+	}
+
+	// ---
+	const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+
+	MoveCrosshairTo(Vector2F(pIR->GetRight(), screenHeight - pIR->GetUp()));
+
+	// converting from (top, left) to (horizontal screen center, vertical screen center) 
+	// coordinate system
+	Float x = pIR->GetRight() - (screenWidth / 2);
+	Float y = pIR->GetUp() - (screenHeight / 2);
+
+	mpFirstPersonController->LookUp(Vector2F(x, y));
+
+	// ---
+	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+	if (pButtons->GetButton(Buttons::BUTTON_HOME))
+	{
+		Close();
+		return;
+	}
+
+	if (pButtons->GetButton(Buttons::BUTTON_A))
+	{
+		mpFirstPersonController->SetMoveSpeed(5.0f);
+	}
+	else 
+	{
+		mpFirstPersonController->SetMoveSpeed(2.5f);
+	}
 }
 
 //----------------------------------------------------------------------------
 void Demo::StateRunning(Double time)
 {
+	UpdateCameraFrustumAccordingToScreenDimensions(mGUICameras[0]);
+	AlignNodeToCenter(mspGUI);
+
 	mspLogo->UpdateGS(time);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
+
+	mspGUI->UpdateGS(time);
+	mGUICuller.ComputeVisibleSet(mspGUI);
 
 	mspScene->UpdateGS(time);
 	mSceneCuller.ComputeVisibleSet(mspScene);
@@ -112,6 +177,9 @@ void Demo::StateRunning(Double time)
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mSceneCameras[0]);
 	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
+
+	GetRenderer()->SetCamera(mGUICameras[0]);
+	GetRenderer()->DrawScene(mGUICuller.GetVisibleSets());
 
 	GetRenderer()->SetCamera(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
@@ -205,7 +273,13 @@ void Demo::StateLoading(Double elapsedTime)
 	mspScene = LoadAndInitScene();
 	if (!mspScene)
 	{
-		WIRE_ASSERT(false /* Could not load Scene.xml */);
+		WIRE_ASSERT(false /* Could not load scene.xml */);
+	}
+
+	mspGUI = LoadAndInitGUI();
+	if (!mspGUI)
+	{
+		WIRE_ASSERT(false /* Could not load GUI.xml */);
 	}
 
 	mAppState = AS_RUNNING;
@@ -222,7 +296,7 @@ Node* Demo::LoadAndInitLogo()
 		return NULL;
 	}
 
-	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in Logo.xml */);
+	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in logo.xml */);
 	mLogoCuller.SetCamera(mLogoCameras[0]);
 
 	Spatial* pLogo = pRoot->GetChildByName("Logo");
@@ -231,6 +305,23 @@ Node* Demo::LoadAndInitLogo()
 		pLogo->AttachController(WIRE_NEW LogoFader);
 	}
 
+	GetRenderer()->BindAll(pRoot);
+	return pRoot;
+}
+
+//----------------------------------------------------------------------------
+Node* Demo::LoadAndInitGUI()
+{
+	Importer importer("Data/GUI/");
+	Node* pRoot = importer.LoadSceneFromXml("GUI.xml", &mGUICameras);
+	if (!pRoot)
+	{
+		return NULL;
+	}
+
+	WIRE_ASSERT(mGUICameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
+	mGUICuller.SetCamera(mGUICameras[0]);
+	
 	GetRenderer()->BindAll(pRoot);
 	return pRoot;
 }
@@ -245,7 +336,7 @@ Node* Demo::LoadAndInitScene()
 		return NULL;
 	}
 
-	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
+	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
 	Float fov, aspect, near, far;
 	Float width = static_cast<Float>(GetRenderer()->GetWidth());
 	Float height = static_cast<Float>(GetRenderer()->GetHeight());
@@ -273,9 +364,12 @@ Node* Demo::LoadAndInitScene()
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
 	}
 
-	Node* pSplineRoot = DynamicCast<Node>(pScene->GetChildByName("Spline"));
-	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot,
-		mSceneCameras[0]));
+	mpFirstPersonController = WIRE_NEW FirstPersonController(Vector3F(13.0f, 1.7f, -21.0f), 
+		mSceneCameras[0]);
+
+	mpFirstPersonController->SetLookUpDeadZone(Vector2F(50, 50));
+
+	pScene->AttachController(mpFirstPersonController);
 
 	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName(
 		"polySurface437"));
@@ -287,4 +381,26 @@ Node* Demo::LoadAndInitScene()
 
 	GetRenderer()->BindAll(pScene);
 	return pScene;
+}
+
+//----------------------------------------------------------------------------
+void Demo::UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera)
+{
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	pCamera->SetFrustum(0, width, 0, height, 0, 1);
+}
+
+//----------------------------------------------------------------------------
+void Demo::AlignNodeToCenter(Node* pNode)
+{
+	Float height = static_cast<Float>(GetRenderer()->GetHeight());
+	Float width = static_cast<Float>(GetRenderer()->GetWidth());
+	Vector3F centered((width-512)*0.5F, (height-256)*0.5F, 0);
+	pNode->Local.SetTranslate(centered);
+}
+
+//----------------------------------------------------------------------------
+void Demo::MoveCrosshairTo(const Vector2F& rScreenPosition)
+{
 }

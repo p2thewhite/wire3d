@@ -45,7 +45,7 @@ public:
 	virtual void OnResize(UInt width, UInt height);
 
 	// Called bu the main loop just before the input capturing.
-	virtual void OnInputCapture() = 0;
+	virtual void OnInput() = 0;
 
 	virtual void Close() = 0;
 

@@ -14,6 +14,9 @@
     <ClCompile Include="src\Controllers\SplineCamera.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Controllers\FirstPersonController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Demo.h" />
@@ -27,6 +30,9 @@
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\Controllers\SplineCamera.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controllers\FirstPersonController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
   </ItemGroup>

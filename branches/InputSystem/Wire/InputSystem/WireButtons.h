@@ -14,6 +14,19 @@ class Buttons : public InputCapability
 	WIRE_DECLARE_RTTI;
 
 public:
+	enum Button
+	{
+		BUTTON_A,
+		BUTTON_B,
+		BUTTON_C,
+		BUTTON_Z,
+		BUTTON_1,
+		BUTTON_2,
+		BUTTON_HOME,
+		BUTTON_PLUS,
+		BUTTON_MINUS
+	};
+
 	Buttons(const InputDevice* pParent);
 	virtual ~Buttons();
 

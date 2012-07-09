@@ -11,7 +11,6 @@
 #include "WireIR.h"
 #include "WireButtons.h"
 #include "WireTilt.h"
-#include "WireButton.h"
 #include "WireTypes.h"
 #include <vector>
 #include <algorithm>
@@ -73,7 +72,7 @@ void Sample11::OnIdle()
 	GetRenderer()->DisplayBackBuffer();
 }
 
-void Sample11::OnInputCapture()
+void Sample11::OnInput()
 {
 	// TODO: MAGIC NUMBER = maximum number of players!
 	UInt playerCount = min<UInt>(GetInputSystem()->GetMainDevicesCount(), 4);
@@ -91,7 +90,7 @@ void Sample11::OnInputCapture()
 	}
 
 	// closes the application if the home button is pressed
-	if (static_cast<const Buttons*>(GetInputSystem()->GetMainDevice(0)->GetCapability(Buttons::TYPE, false))->GetButton(BUTTON_HOME))
+	if (static_cast<const Buttons*>(GetInputSystem()->GetMainDevice(0)->GetCapability(Buttons::TYPE, false))->GetButton(Buttons::BUTTON_HOME))
 	{
 		Close();
 		return;
@@ -129,7 +128,7 @@ void Sample11::OnInputCapture()
 			const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
 			
 			// check the buttons and change the cursor mode properly
-			if (pButtons->GetButton(BUTTON_A)) {
+			if (pButtons->GetButton(Buttons::BUTTON_A)) {
 				mode = CM_PRIMARY_BUTTON_PRESSED;
 			}
 		}
@@ -141,7 +140,7 @@ void Sample11::OnInputCapture()
 				const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
 
 				// check the buttons and change the cursor mode properly
-				if (pButtons->GetButton(BUTTON_Z)) {
+				if (pButtons->GetButton(Buttons::BUTTON_Z)) {
 					mode = CM_SECONDARY_BUTTON_PRESSED;
 				}
 			}

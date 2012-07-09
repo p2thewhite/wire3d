@@ -31,40 +31,40 @@ UInt MainInputDevice::GetExtensionsCount() const
 
 Bool MainInputDevice::HasCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const
 {
-	if (!lookupExtensions)
-	{
-		return InputDevice::HasCapability(pCapabilityType);
-	}
+	Bool hasCapability = InputDevice::HasCapability(pCapabilityType);
 
-	for (UInt i = 0; i < mExtensions.size(); i++)
+	if (lookupExtensions && !hasCapability)
 	{
-		if (mExtensions[i]->HasCapability(pCapabilityType))
+		for (UInt i = 0; i < mExtensions.size(); i++)
 		{
-			return true;
+			if (mExtensions[i]->HasCapability(pCapabilityType))
+			{
+				return true;
+			}
 		}
-	}
+	} 
 
-	return false;
+	return hasCapability;
 }
 
 const InputCapability* MainInputDevice::GetCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const
 {
-	if (!lookupExtensions)
-	{
-		return InputDevice::GetCapability(pCapabilityType);
-	}
+	const InputCapability* pInputCapability = InputDevice::GetCapability(pCapabilityType);
 
-	for (UInt i = 0; i < mExtensions.size(); i++)
+	if (lookupExtensions && pInputCapability == NULL)
 	{
-		const InputCapability* pInputCapability = mExtensions[i]->GetCapability(pCapabilityType);
-
-		if (pInputCapability != NULL)
+		for (UInt i = 0; i < mExtensions.size(); i++)
 		{
-			return pInputCapability;
+			pInputCapability = mExtensions[i]->GetCapability(pCapabilityType);
+
+			if (pInputCapability != NULL)
+			{
+				return pInputCapability;
+			}
 		}
 	}
 
-	return NULL;
+	return pInputCapability;
 }
 
 }

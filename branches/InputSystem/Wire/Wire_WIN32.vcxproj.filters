@@ -464,9 +464,6 @@
     <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h">
       <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\WireButton.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\WireInputDataBuffer.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>

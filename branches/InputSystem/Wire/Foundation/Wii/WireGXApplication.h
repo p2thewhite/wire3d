@@ -31,7 +31,7 @@ public:
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();
-	virtual void OnInputCapture();
+	virtual void OnInput();
 	virtual void Close();
 
 private:

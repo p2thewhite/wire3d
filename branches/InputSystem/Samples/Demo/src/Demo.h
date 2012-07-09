@@ -3,6 +3,7 @@
 #define DEMO_H
 
 #include "WireApplication.h"
+#include "Controllers/FirstPersonController.h"
 
 using namespace Wire;
 
@@ -13,10 +14,11 @@ class Demo : public WIREAPPLICATION
 	typedef WIREAPPLICATION Parent;
 
 public:
+	Demo();
+
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
-
-	virtual void OnButton(UInt button, UInt state);
+	virtual void OnInput();
 
 private:
 	enum AppState
@@ -38,14 +40,25 @@ private:
 	TArray<CameraPtr> mSceneCameras;
 	CullerSorting mSceneCuller;
 
+	Node* LoadAndInitGUI();
+	NodePtr mspGUI;
+	TArray<CameraPtr> mGUICameras;
+	Culler mGUICuller;
+
 	Double mLastTime;
 	UInt mAppState;
+	FirstPersonController* mpFirstPersonController;
 
 	// frames per second debug text
 	void DrawFPS(Double time);
 	CameraPtr mspTextCamera;
 	TextPtr mspText;
 	Bool mShowFps;
+
+	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
+	void AlignNodeToCenter(Node* pNode);
+
+	void MoveCrosshairTo(const Vector2F& rScreenPoint);
 };
 
 WIRE_REGISTER_INITIALIZE(Demo);

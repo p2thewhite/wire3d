@@ -146,7 +146,6 @@
     <ClInclude Include="InputSystem\Wii\WireNunchukSwing.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h" />
     <ClInclude Include="InputSystem\WireAnalogPad.h" />
-    <ClInclude Include="InputSystem\WireButton.h" />
     <ClInclude Include="InputSystem\WireButtons.h" />
     <ClInclude Include="InputSystem\WireDigitalPad.h" />
     <ClInclude Include="InputSystem\WireInputCapability.h" />

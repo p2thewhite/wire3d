@@ -1,0 +1,32 @@
+<Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <AlphaState Enabled="1" SrcBlendMode="SRC_ALPHA" DstBlendMode="ONE_MINUS_SRC_ALPHA" />
+  <ZBufferState Enabled="0" Writable="0" CmpFunc="LEQUAL" />
+  <Camera Fov="0" Near="0.3" Far="1000" />
+  <Light Type="Point" Ambient="1, 1, 1" Color="1, 1, 1" />
+  <Leaf Name="Crosshair" Pos="0, 0, 1" Rot="1, 0, 0, 0" Scale="32, 32, 1" Static="0">
+    <Mesh Name="Cube_0000008A_1_1_0_0">
+      <Vertices Name="Cube_0000008A.vtx" LittleEndian="y" />
+      <Indices Name="Cube_0000008A.idx" LittleEndian="y" />
+      <Normals Name="Cube_0000008A.nm" LittleEndian="y" />
+      <Uv0 Name="Cube_0000008A.uv0" LittleEndian="y" />
+      <Uv1 Name="Cube_0000008A_1_1_0_0.uv1" LittleEndian="y" />
+    </Mesh>
+    <Material Name="CrosshairMaterial">
+      <Texture Name="crosshair_0000137A.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="6" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+  </Leaf>
+  <Leaf Name="MainInputDevice" Pos="400, 140, 1" Rot="1, 0, 0, 0" Scale="128, 128, 1" Static="0">
+    <Mesh Name="Cube_0000008A_1_1_0_0">
+      <Vertices Name="Cube_0000008A.vtx" LittleEndian="y" />
+      <Indices Name="Cube_0000008A.idx" LittleEndian="y" />
+      <Normals Name="Cube_0000008A.nm" LittleEndian="y" />
+      <Uv0 Name="Cube_0000008A.uv0" LittleEndian="y" />
+      <Uv1 Name="Cube_0000008A_1_1_0_0.uv1" LittleEndian="y" />
+    </Mesh>
+    <Material Name="InputDeviceExtensionMaterial">
+      <Texture Name="mouseIcon_00001248.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="8" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+  </Leaf>
+</Node>
