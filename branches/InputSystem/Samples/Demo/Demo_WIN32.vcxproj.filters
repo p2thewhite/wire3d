@@ -8,9 +8,6 @@
     <ClCompile Include="src\Controllers\FanRotator.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Controllers\SplineCamera.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="src\Controllers\LogoFader.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
@@ -24,9 +21,6 @@
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\Controllers\FanRotator.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Controllers\SplineCamera.h">
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\Controllers\LogoFader.h">

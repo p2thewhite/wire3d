@@ -59,7 +59,6 @@ void Demo::OnIdle()
 	mLastTime = time;
 
 	UpdateCameraFrustumAccordingToScreenDimensions(mLogoCameras[0]);
-	AlignNodeToCenter(mspLogo);
 
 	switch (mAppState)
 	{
@@ -129,25 +128,30 @@ void Demo::OnInput()
 	const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float x = pIR->GetRight();
+	Float y = screenHeight - pIR->GetUp();
 
-	MoveCrosshairTo(Vector2F(pIR->GetRight(), screenHeight - pIR->GetUp()));
+	MoveCrosshairTo(Vector2F(x, y));
 
 	// converting from (top, left) to (horizontal screen center, vertical screen center) 
 	// coordinate system
-	Float x = pIR->GetRight() - (screenWidth / 2);
-	Float y = pIR->GetUp() - (screenHeight / 2);
+	x -= screenWidth * 0.5F;
+	y -= screenHeight * 0.5F;
 
 	mpFirstPersonController->LookUp(Vector2F(x, y));
 
 	// ---
 	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+
+	// when home is pressed, exit the game
 	if (pButtons->GetButton(Buttons::BUTTON_HOME))
 	{
 		Close();
 		return;
 	}
 
-	if (pButtons->GetButton(Buttons::BUTTON_A))
+	// b button makes the player run faster
+	if (pButtons->GetButton(Buttons::BUTTON_B))
 	{
 		mpFirstPersonController->SetMoveSpeed(5.0f);
 	}
@@ -161,7 +165,6 @@ void Demo::OnInput()
 void Demo::StateRunning(Double time)
 {
 	UpdateCameraFrustumAccordingToScreenDimensions(mGUICameras[0]);
-	AlignNodeToCenter(mspGUI);
 
 	mspLogo->UpdateGS(time);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
@@ -207,7 +210,7 @@ void Demo::DrawFPS(Double time)
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	// set to screen width (might change any time in window mode)
+	// set to screen screenWidth (might change any time in window mode)
 	mspText->SetLineWidth(screenWidth);
 	mspText->Clear(Color32::WHITE);
 	// Text uses OpenGL convention of (0,0) being left bottom of window
@@ -241,7 +244,7 @@ void Demo::StateLoading(Double elapsedTime)
 	Bool isFadedIn = false;
 	if (pLoading)
 	{
-		StateMaterial* pMaterialState = DynamicCast<StateMaterial>(pLoading->
+		StateMaterial* pMaterialState = static_cast<StateMaterial*>(pLoading->
 			GetState(State::MATERIAL));
 		if (pMaterialState)
 		{
@@ -300,10 +303,16 @@ Node* Demo::LoadAndInitLogo()
 	mLogoCuller.SetCamera(mLogoCameras[0]);
 
 	Spatial* pLogo = pRoot->GetChildByName("Logo");
+	WIRE_ASSERT(pLogo != NULL);
+
 	if (pLogo)
 	{
 		pLogo->AttachController(WIRE_NEW LogoFader);
 	}
+
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	pRoot->Local.SetTranslate(Vector3F((screenWidth - 512) * 0.5F, (screenHeight  -256)  *0.5F, 0));
 
 	GetRenderer()->BindAll(pRoot);
 	return pRoot;
@@ -321,7 +330,36 @@ Node* Demo::LoadAndInitGUI()
 
 	WIRE_ASSERT(mGUICameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
 	mGUICuller.SetCamera(mGUICameras[0]);
+
+	mspCrosshair = pRoot->GetChildByName("Crosshair");
+	WIRE_ASSERT(mspCrosshair != NULL);
+
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+
+	Geometry* pMainInputDeviceIcon = static_cast<Geometry*>(pRoot->GetChildByName("MainInputDeviceIcon"));
+	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
+
+	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, screenHeight - 64, 0));
+
+	// loading the main input device icon dynamically according to the platform
+#ifdef WIRE_WII
+	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/wiiMoteIcon.png", false)));
+#else
+	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/keyboardIcon.png", false)));
+#endif
 	
+	Geometry* pInputDeviceExtensionIcon = static_cast<Geometry*>(pRoot->GetChildByName("InputDeviceExtensionIcon"));
+	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
+
+	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, screenHeight - 64, 0));
+
+	// loading the input device extension icon dynamically according to the platform
+#ifdef WIRE_WII
+	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/nunchukIcon.png", false)));
+#else
+	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/mouseIcon.png", false)));
+#endif
+
 	GetRenderer()->BindAll(pRoot);
 	return pRoot;
 }
@@ -337,11 +375,12 @@ Node* Demo::LoadAndInitScene()
 	}
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
+
 	Float fov, aspect, near, far;
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
-	aspect = width / height;
+	aspect = screenWidth / screenHeight;
 	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
@@ -386,21 +425,24 @@ Node* Demo::LoadAndInitScene()
 //----------------------------------------------------------------------------
 void Demo::UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera)
 {
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	pCamera->SetFrustum(0, width, 0, height, 0, 1);
+	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+	pCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 }
 
 //----------------------------------------------------------------------------
-void Demo::AlignNodeToCenter(Node* pNode)
+Texture2D* Demo::CreateTexture(Image2D* pImage)
 {
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Vector3F centered((width-512)*0.5F, (height-256)*0.5F, 0);
-	pNode->Local.SetTranslate(centered);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	pTexture->SetFilterType(Texture2D::FT_LINEAR_NEAREST);
+	pTexture->SetWrapType(0, Texture2D::WT_CLAMP);
+	pTexture->SetWrapType(1, Texture2D::WT_CLAMP);
+	pTexture->SetAnisotropyValue(1);
+	return pTexture;
 }
 
 //----------------------------------------------------------------------------
 void Demo::MoveCrosshairTo(const Vector2F& rScreenPosition)
 {
+	mspCrosshair->Local.SetTranslate(Vector3F(rScreenPosition.X() - 16, rScreenPosition.Y() - 16, 0));
 }

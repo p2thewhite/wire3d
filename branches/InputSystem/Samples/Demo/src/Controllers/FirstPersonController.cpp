@@ -19,26 +19,24 @@ FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* 
 //----------------------------------------------------------------------------
 Bool FirstPersonController::Update(Double appTime)
 {
-	// calculate the elapsed time
 	Float deltaTime = static_cast<Float>(mLastAppTime - appTime);
 
+	// applying accumulators
 	mMove *= deltaTime;
-	mAngleX += mAngleXIncrement * deltaTime;
-	mAngleX = MathF::Min(MathF::Max(mAngleX, -mMaxVerticalAngle), mMaxVerticalAngle);
-
 	mAngleY += (mAngleYIncrement * deltaTime);
+	mAngleX += mAngleXIncrement * deltaTime;
+	mAngleX = MathF::Min(MathF::Max(mAngleX, -mMaxVerticalAngle), mMaxVerticalAngle); // clamping the value
 
-	Vector3F position = mspCamera->GetLocation() + mMove;
+	mspCamera->SetFrame(mspCamera->GetLocation() + mMove, GetDirection(), Vector3F::UNIT_Y, GetLeft());
 
-	mspCamera->SetFrame(position, GetDirection(), Vector3F::UNIT_Y, GetLeft());
-
-	// clearing accumulator
+	// clearing accumulators
 	mMove = Vector3F::ZERO;
 	mAngleXIncrement = 0;
 	mAngleYIncrement = 0;
 
 	// update last application time
 	mLastAppTime = appTime;
+
 	return true;
 }
 
@@ -52,7 +50,7 @@ Vector3F FirstPersonController::GetDirection()
 }
 
 //----------------------------------------------------------------------------
-Vector3F FirstPersonController::GetForward()
+Vector3F FirstPersonController::GetBackward()
 {
 	Matrix34F rotateY;
 	rotateY.FromAxisAngle(Vector3F::UNIT_Y, mAngleY);
@@ -64,7 +62,7 @@ Vector3F FirstPersonController::GetLeft()
 {
 	Matrix34F rotateY;
 	rotateY.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
-	return rotateY * GetForward();
+	return rotateY * GetBackward();
 }
 
 //----------------------------------------------------------------------------
@@ -94,13 +92,13 @@ void FirstPersonController::SetMaxVerticalAngle(Float maxVerticalAngle)
 //----------------------------------------------------------------------------
 void FirstPersonController::MoveForward()
 {
-	mMove -= GetForward() * mMoveSpeed;
+	mMove -= GetBackward() * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
 void FirstPersonController::MoveBackward()
 {
-	mMove += GetForward() * mMoveSpeed;
+	mMove += GetBackward() * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
@@ -130,11 +128,11 @@ void FirstPersonController::LookUp(const Vector2F& rLookUp)
 
 	if (rLookUp.Y() > mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement -= mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
+		mAngleXIncrement += mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
 	}
 
 	else if (rLookUp.Y() < -mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement -= mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
+		mAngleXIncrement += mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
 	}
 }

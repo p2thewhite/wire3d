@@ -39,7 +39,7 @@ private:
 	CameraPtr mspCamera;
 
 	Vector3F GetDirection();
-	Vector3F GetForward();
+	Vector3F GetBackward();
 	Vector3F GetLeft();
 	
 };

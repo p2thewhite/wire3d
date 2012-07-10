@@ -42,6 +42,7 @@ private:
 
 	Node* LoadAndInitGUI();
 	NodePtr mspGUI;
+	SpatialPtr mspCrosshair;
 	TArray<CameraPtr> mGUICameras;
 	Culler mGUICuller;
 
@@ -56,8 +57,7 @@ private:
 	Bool mShowFps;
 
 	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
-	void AlignNodeToCenter(Node* pNode);
-
+	Texture2D* CreateTexture(Image2D* pImage);
 	void MoveCrosshairTo(const Vector2F& rScreenPoint);
 };
 
