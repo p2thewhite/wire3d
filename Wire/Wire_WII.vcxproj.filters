@@ -46,20 +46,20 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{eb0276a3-df48-4d1d-875f-7840f37f113c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer">
+    <Filter Include="Renderer\Dx9">
+      <UniqueIdentifier>{9829e348-cc32-4cb3-b915-7cfc34b43a4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\GX">
       <UniqueIdentifier>{3ce97f91-61ac-41bb-a9f6-6e083247e733}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer\Header Files">
+    <Filter Include="Renderer\GX\Header Files">
       <UniqueIdentifier>{cc747bca-17b5-4453-9949-6b2944951226}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer\Source Files">
+    <Filter Include="Renderer\GX\Source Files">
       <UniqueIdentifier>{9e3a7c8b-4717-4798-8355-bbae83aaa38e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer\Inline Files">
+    <Filter Include="Renderer\GX\Inline Files">
       <UniqueIdentifier>{e5788ed3-cb56-479f-a265-fa13c121f40b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Dx9Renderer">
-      <UniqueIdentifier>{9829e348-cc32-4cb3-b915-7cfc34b43a4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -264,24 +264,6 @@
     <ClInclude Include="Engine\WireVisibleSet.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXIndexBuffer.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererData.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererInput.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXTexture2D.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXVertexBuffer.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\WireTQueue.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
@@ -308,6 +290,24 @@
     </ClInclude>
     <ClInclude Include="Renderer\WireRenderer.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXDisplayList.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXRendererData.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXRendererInput.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXTexture2D.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h">
+      <Filter>Renderer\GX\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -458,15 +458,6 @@
     <None Include="Engine\WireVisibleSet.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
-    <None Include="Renderer\GXRenderer\WireGXDisplayList.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
-    <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
-    <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
     <None Include="Foundation\WireTQueue.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
@@ -487,6 +478,15 @@
     </None>
     <None Include="Renderer\WireRenderer.inl">
       <Filter>Renderer</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXDisplayList.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXIndexBuffer.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXVertexBuffer.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -643,42 +643,6 @@
     <ClCompile Include="Engine\WireVisibleSet.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXLight.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXRenderer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateAlpha.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateCull.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateFog.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateMaterial.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateZBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXTexture2D.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXVertexBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\WireMaterial.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
@@ -702,6 +666,42 @@
     </ClCompile>
     <ClCompile Include="Renderer\WireRenderer.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXDisplayList.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXIndexBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXLight.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXRenderer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateAlpha.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateCull.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateFog.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateMaterial.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateZBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXTexture2D.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

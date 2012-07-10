@@ -45,24 +45,6 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{9513509b-486b-48a2-92d9-d949f05948ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer">
-      <UniqueIdentifier>{5e15c62a-54cf-4144-a573-f811e7b6831e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\GXRenderer\Header Files">
-      <UniqueIdentifier>{e58a7985-243a-4d96-a973-b1e76fe4caed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\GXRenderer\Source Files">
-      <UniqueIdentifier>{c4875be8-2f8f-4d71-90d5-ce6192a8197a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Dx9Renderer">
-      <UniqueIdentifier>{904a53f5-3a30-4b92-b264-500f13c966fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Dx9Renderer\Header Files">
-      <UniqueIdentifier>{008b56ea-722b-406e-aef4-514d0ce1a970}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderer\Dx9Renderer\Source Files">
-      <UniqueIdentifier>{def17d82-7eca-471b-a789-f58cbe804ccd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{540dcd6b-426c-4568-b790-5f76e2266d9f}</UniqueIdentifier>
     </Filter>
@@ -75,11 +57,29 @@
     <Filter Include="Engine\Source Files">
       <UniqueIdentifier>{d8fd3029-0b4b-4846-89b0-1258ba25e210}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\GXRenderer\Inline Files">
-      <UniqueIdentifier>{bd39d828-f729-4633-b4f5-8c95223fdaf5}</UniqueIdentifier>
+    <Filter Include="Renderer\Dx9">
+      <UniqueIdentifier>{904a53f5-3a30-4b92-b264-500f13c966fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderer\Dx9Renderer\Inline Files">
+    <Filter Include="Renderer\Dx9\Header Files">
+      <UniqueIdentifier>{008b56ea-722b-406e-aef4-514d0ce1a970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Dx9\Source Files">
+      <UniqueIdentifier>{def17d82-7eca-471b-a789-f58cbe804ccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Dx9\Inline Files">
       <UniqueIdentifier>{50bc12a8-c208-4d2c-8a2f-a6fb3b60ee60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\GX">
+      <UniqueIdentifier>{5e15c62a-54cf-4144-a573-f811e7b6831e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\GX\Header Files">
+      <UniqueIdentifier>{e58a7985-243a-4d96-a973-b1e76fe4caed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\GX\Source Files">
+      <UniqueIdentifier>{c4875be8-2f8f-4d71-90d5-ce6192a8197a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\GX\Inline Files">
+      <UniqueIdentifier>{bd39d828-f729-4633-b4f5-8c95223fdaf5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -175,36 +175,6 @@
     </ClInclude>
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h">
       <Filter>Foundation\Platforms\Dx9\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXIndexBuffer.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererData.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXRendererInput.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXTexture2D.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXVertexBuffer.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.h">
-      <Filter>Renderer\Dx9Renderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Dx9Renderer\WireDx9RendererData.h">
-      <Filter>Renderer\Dx9Renderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Dx9Renderer\WireDx9RendererInput.h">
-      <Filter>Renderer\Dx9Renderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Dx9Renderer\WireDx9Texture2D.h">
-      <Filter>Renderer\Dx9Renderer\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.h">
-      <Filter>Renderer\Dx9Renderer\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\WireEngine.h">
       <Filter>Engine</Filter>
@@ -317,9 +287,6 @@
     <ClInclude Include="Foundation\WireNoisePerlin.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\GXRenderer\WireGXDisplayList.h">
-      <Filter>Renderer\GXRenderer\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\WireTQueue.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
@@ -346,6 +313,39 @@
     </ClInclude>
     <ClInclude Include="Renderer\WireRenderer.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9IndexBuffer.h">
+      <Filter>Renderer\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererData.h">
+      <Filter>Renderer\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererInput.h">
+      <Filter>Renderer\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9Texture2D.h">
+      <Filter>Renderer\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9VertexBuffer.h">
+      <Filter>Renderer\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXDisplayList.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXRendererData.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXRendererInput.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXTexture2D.h">
+      <Filter>Renderer\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h">
+      <Filter>Renderer\GX\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -499,15 +499,6 @@
     <None Include="Foundation\WireNoisePerlin.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
-    <None Include="Renderer\GXRenderer\WireGXDisplayList.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
-    <None Include="Renderer\GXRenderer\WireGXVertexBuffer.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
-    <None Include="Renderer\GXRenderer\WireGXIndexBuffer.inl">
-      <Filter>Renderer\GXRenderer\Inline Files</Filter>
-    </None>
     <None Include="Foundation\WireTQueue.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
@@ -520,14 +511,8 @@
     <None Include="Engine\WireMesh.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
-    <None Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.inl">
-      <Filter>Renderer\Dx9Renderer\Inline Files</Filter>
-    </None>
     <None Include="Foundation\WireApplication.inl">
       <Filter>Foundation\Inline Files</Filter>
-    </None>
-    <None Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.inl">
-      <Filter>Renderer\Dx9Renderer\Inline Files</Filter>
     </None>
     <None Include="Foundation\WireMemory.inl">
       <Filter>Foundation\Inline Files</Filter>
@@ -537,6 +522,21 @@
     </None>
     <None Include="Renderer\WireRenderer.inl">
       <Filter>Renderer</Filter>
+    </None>
+    <None Include="Renderer\Dx9\WireDx9IndexBuffer.inl">
+      <Filter>Renderer\Dx9\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\Dx9\WireDx9VertexBuffer.inl">
+      <Filter>Renderer\Dx9\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXDisplayList.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXIndexBuffer.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXVertexBuffer.inl">
+      <Filter>Renderer\GX\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -593,36 +593,6 @@
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp">
       <Filter>Foundation\Platforms\Dx9\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXIndexBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXLight.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXRenderer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXTexture2D.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXVertexBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9IndexBuffer.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9Light.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9Renderer.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9Texture2D.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9VertexBuffer.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireBoundingVolume.cpp">
       <Filter>Engine\Source Files</Filter>
@@ -687,39 +657,6 @@
     <ClCompile Include="Engine\WireVisibleSet.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateAlpha.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateCull.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateFog.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateMaterial.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateWireframe.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9StateZBuffer.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateAlpha.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateCull.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateFog.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateMaterial.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXStateZBuffer.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\WireStateAlpha.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
@@ -759,17 +696,8 @@
     <ClCompile Include="Foundation\WireNoisePerlin.cpp">
       <Filter>Foundation\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXDisplayList.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\WireMaterial.cpp">
       <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Dx9Renderer\WireDx9BlendMode.cpp">
-      <Filter>Renderer\Dx9Renderer\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\GXRenderer\WireGXBlendMode.cpp">
-      <Filter>Renderer\GXRenderer\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireCullerSorting.cpp">
       <Filter>Engine\Source Files</Filter>
@@ -791,6 +719,78 @@
     </ClCompile>
     <ClCompile Include="Renderer\WireRenderer.cpp">
       <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9BlendMode.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9Light.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9Renderer.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateAlpha.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateCull.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateFog.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateMaterial.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateWireframe.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9StateZBuffer.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp">
+      <Filter>Renderer\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXDisplayList.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXIndexBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXLight.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXRenderer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateAlpha.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateCull.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateFog.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateMaterial.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXStateZBuffer.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXTexture2D.cpp">
+      <Filter>Renderer\GX\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
