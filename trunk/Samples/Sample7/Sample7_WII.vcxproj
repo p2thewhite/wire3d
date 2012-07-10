@@ -61,8 +61,8 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
     <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\GXRenderer;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\GXRenderer;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <BuildLog>
