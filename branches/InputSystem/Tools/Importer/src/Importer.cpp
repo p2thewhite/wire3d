@@ -633,7 +633,7 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		if (HasValue(pXmlNode, "Angle"))
 		{
 			pLight->Angle = GetFloat(pXmlNode, "Angle");
-	}
+		}
 
 		if (HasValue(pXmlNode, "Exp"))
 		{
@@ -730,7 +730,7 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
 			if (st != 0)
 			{
 				mStaticSpatials.Append(pSpatial);
-	}
+			}
 		}
 	}
 
@@ -859,7 +859,7 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 			Int n;
 			n = sscanf(attr->value(), "%d", &height);
 			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
-	}
+		}
 		else if (Is("MaxLength", attr->name()))
 		{
 			Int n;
