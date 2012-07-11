@@ -1,11 +1,18 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireNunchukButtons.h"
 #include "WireWiiInputDataBuffer.h"
 #include <wiiuse/wpad.h>
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(NunchukButtons, Buttons);
+WIRE_IMPLEMENT_RTTI(Wire, NunchukButtons, Buttons);
 
 NunchukButtons::NunchukButtons(const InputDevice* pParent)
 	: Buttons(pParent)
@@ -51,6 +58,4 @@ Bool NunchukButtons::GetButton(Button button) const
 		System::Assert("Unknown button.", "WireNunchukButtons.cpp", 46);
 		return false;
 	}
-}
-
 }

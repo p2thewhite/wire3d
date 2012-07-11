@@ -1,11 +1,18 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWiiMoteDigitalPad.h"
 #include "WireWiiMote.h"
 #include "WireWiiInputDataBuffer.h"
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteDigitalPad, DigitalPad);
+WIRE_IMPLEMENT_RTTI(Wire, WiiMoteDigitalPad, DigitalPad);
 
 WiiMoteDigitalPad::WiiMoteDigitalPad(const InputDevice* pParent)
 	: DigitalPad(pParent)
@@ -62,6 +69,4 @@ Bool WiiMoteDigitalPad::GetUp() const
 	}
 
 	return (pData->btns_h & WPAD_BUTTON_UP) != 0;
-}
-
 }

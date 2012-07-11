@@ -1,13 +1,20 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWin32KeyMappedShake.h"
 #include "WireWin32InputDataBuffer.h"
 #include "WireButton.h"
 #include <Windows.h>
 #include <WinUser.h>
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Win32KeyMappedShake, Shake);
+WIRE_IMPLEMENT_RTTI(Wire, Win32KeyMappedShake, Shake);
 
 Win32KeyMappedShake::Win32KeyMappedShake(const InputDevice* pParent)
 	: Shake(pParent)
@@ -31,6 +38,4 @@ Float Win32KeyMappedShake::GetY() const
 Float Win32KeyMappedShake::GetZ() const
 {
 	return 0;
-}
-
 }

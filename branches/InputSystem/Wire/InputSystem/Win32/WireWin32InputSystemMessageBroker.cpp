@@ -1,11 +1,18 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWin32InputSystemMessageBroker.h"
 #include "WireMemory.h"
 #include <Windows.h>
 #include <WinUser.h>
 #include <Windowsx.h>
 
-namespace Wire
-{
+using namespace Wire;
 
 Win32InputSystemMessageBroker* Win32InputSystemMessageBroker::s_pInstance = NULL;
 
@@ -95,6 +102,4 @@ Bool Win32InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordP
 	}
 
 	return false;
-}
-
 }

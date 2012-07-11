@@ -1,13 +1,20 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWin32KeyMappedSwing.h"
 #include "WireWin32InputDataBuffer.h"
 #include "WireButton.h"
 #include <Windows.h>
 #include <WinUser.h>
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Win32KeyMappedSwing, Swing);
+WIRE_IMPLEMENT_RTTI(Wire, Win32KeyMappedSwing, Swing);
 
 Win32KeyMappedSwing::Win32KeyMappedSwing(const InputDevice* pParent)
 	: Swing(pParent)
@@ -46,6 +53,4 @@ Float Win32KeyMappedSwing::GetRight() const
 Float Win32KeyMappedSwing::GetUp() const
 {
 	return 0;
-}
-
 }

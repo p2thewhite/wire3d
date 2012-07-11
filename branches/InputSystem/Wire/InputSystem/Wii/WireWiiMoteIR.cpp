@@ -1,12 +1,19 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWiiMoteIR.h"
 #include "WireWiiMoteButtons.h"
 #include "WireWiiMote.h"
 #include "WireWiiInputDataBuffer.h"
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteIR, IR);
+WIRE_IMPLEMENT_RTTI(Wire, WiiMoteIR, IR);
 	
 WiiMoteIR::WiiMoteIR(const InputDevice* pParent)
 	: IR(pParent)
@@ -123,6 +130,4 @@ Bool WiiMoteIR::IsValid(const WPADData* pData) const
 {
 	if (pData == NULL) return false;
 	else return pData->ir.valid;
-}
-
 }

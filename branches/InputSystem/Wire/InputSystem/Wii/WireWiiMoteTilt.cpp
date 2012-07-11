@@ -1,12 +1,19 @@
+// Wire3D by Pedro Boechat (pboechat@gmail.com)
+// http://wire3d.googlecode.com
+// Copyright(c) 2009-2012. All rights reserved.
+// 
+// The Wire3D source code is supplied under the terms of the LGPL and
+// may not be copied or disclosed except in accordance with the terms of
+// that agreement.
+
 #include "WireWiiMoteTilt.h"
 #include "WireWiiMoteButtons.h"
 #include "WireWiiMote.h"
 #include "WireWiiInputDataBuffer.h"
 
-namespace Wire
-{
+using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(WiiMoteTilt, Tilt);
+WIRE_IMPLEMENT_RTTI(Wire, WiiMoteTilt, Tilt);
 	
 WiiMoteTilt::WiiMoteTilt(const InputDevice* pParent)
 	: Tilt(pParent)
@@ -83,6 +90,4 @@ Float WiiMoteTilt::GetRight() const
 	}
 
 	return -pData->orient.roll;
-}
-
 }
