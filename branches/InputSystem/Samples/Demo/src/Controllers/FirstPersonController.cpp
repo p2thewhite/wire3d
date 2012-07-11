@@ -3,8 +3,17 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera) :	mLastAppTime(0),
-	mMove(Vector3F::ZERO), mMoveSpeed(2.5f), mRotateSpeed(MathF::PI / 9), mMaxVerticalAngle(MathF::PI / 4), mAngleX(0), mAngleY(0), mAngleXIncrement(0), mAngleYIncrement(0)
+FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera)
+	:
+	mLastAppTime(0),
+	mAngleX(0),
+	mAngleY(0),
+	mAngleXIncrement(0),
+	mAngleYIncrement(0),
+	mMove(Vector3F::ZERO),
+	mMaxVerticalAngle(MathF::PI / 4),
+	mMoveSpeed(2.5f),
+	mRotateSpeed(MathF::PI / 9)
 {
 	if (!pCamera)
 	{

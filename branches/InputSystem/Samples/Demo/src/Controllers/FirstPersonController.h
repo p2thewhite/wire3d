@@ -27,10 +27,10 @@ public:
 
 private:
 	Double mLastAppTime;
-	Float mAngleY;
 	Float mAngleX;
-	Float mAngleYIncrement;
+	Float mAngleY;
 	Float mAngleXIncrement;
+	Float mAngleYIncrement;
 	Vector3F mMove;
 	Vector2F mLookUpDeadZone;
 	Float mMaxVerticalAngle;
