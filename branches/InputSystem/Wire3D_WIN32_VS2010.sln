@@ -62,6 +62,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "Tools\freetype\builds\win32\vc2010\freetype.vcxproj", "{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample11 - Input", "Samples\Sample11\Sample11_WIN32.vcxproj", "{A8E6550A-4204-4E72-B3BC-001112672E50}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1A1C4391-D9D9-4CB7-90F0-41BAB2585647} = {1A1C4391-D9D9-4CB7-90F0-41BAB2585647}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,9 +148,10 @@ Global
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Debug|Win32.Build.0 = Debug|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release|Win32.ActiveCfg = Release|Win32
 		{78B079BD-9FC7-4B9E-B4A6-96DA0F00248B}.Release|Win32.Build.0 = Release|Win32		{A8E6550A-4204-4E72-B3BC-001112672E50}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A8E6550A-4204-4E72-B3BC-001112672E50}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A8E6550A-4204-4E72-B3BC-001112672E50}.Debug|Win32.Build.0 = Debug|Win32
 		{A8E6550A-4204-4E72-B3BC-001112672E50}.Release|Win32.ActiveCfg = Release|Win32
-		{A8E6550A-4204-4E72-B3BC-001112672E50}.Release|Win32.Build.0 = Release|Win32	EndGlobalSection
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
