@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDIR_H
 
 #include "WireIR.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

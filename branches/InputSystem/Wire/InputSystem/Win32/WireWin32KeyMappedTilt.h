@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDTILT_H
 
 #include "WireTilt.h"
-#include "WireTypes.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

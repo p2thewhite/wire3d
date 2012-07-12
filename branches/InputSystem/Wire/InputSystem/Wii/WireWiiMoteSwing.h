@@ -11,10 +11,6 @@
 #define WIREWIIMOTESWING_H
 
 #include "WireSwing.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
-#include <wiiuse/wpad.h>
 
 namespace Wire
 {

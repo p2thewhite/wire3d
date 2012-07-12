@@ -10,9 +10,7 @@
 #ifndef WIREDIGITALPAD_H
 #define WIREDIGITALPAD_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

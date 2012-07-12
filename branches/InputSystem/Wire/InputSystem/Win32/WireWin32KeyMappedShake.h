@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDSHAKE_H
 
 #include "WireShake.h"
-#include "WireTypes.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

@@ -11,7 +11,6 @@
 #define WIREINPUTDEVICEEXTENSION_H
 
 #include "WireInputDevice.h"
-#include "WireRtti.h"
 #include "WireMainInputDevice.h"
 
 namespace Wire
@@ -27,6 +26,7 @@ public:
 
 protected:
 	const MainInputDevice* GetMainInputDevice() const;
+
 private:
 	const MainInputDevice* mpMainInputDevice;
 

@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDANALOGPAD_H
 
 #include "WireAnalogPad.h"
-#include "WireTypes.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

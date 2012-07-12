@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDDIGITALPAD_H
 
 #include "WireDigitalPad.h"
-#include "WireTypes.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

@@ -10,9 +10,7 @@
 #ifndef WIRESHAKE_H
 #define WIRESHAKE_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

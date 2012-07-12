@@ -10,9 +10,7 @@
 #ifndef WIRESWING_H
 #define WIRESWING_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

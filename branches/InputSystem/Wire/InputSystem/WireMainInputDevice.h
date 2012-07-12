@@ -11,8 +11,6 @@
 #define WIREMAININPUTDEVICE_H
 
 #include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 #include <vector>
 
 namespace Wire

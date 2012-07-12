@@ -11,9 +11,6 @@
 #define WIRENUNCHUKSWING_H
 
 #include "WireSwing.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

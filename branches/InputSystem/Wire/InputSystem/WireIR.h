@@ -10,9 +10,7 @@
 #ifndef WIREIR_H
 #define WIREIR_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

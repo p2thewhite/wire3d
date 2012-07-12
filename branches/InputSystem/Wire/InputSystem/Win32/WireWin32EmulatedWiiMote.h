@@ -11,7 +11,6 @@
 #define WIREWIN32EMULATEDWIIMOTE_H
 
 #include "WireMainInputDevice.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

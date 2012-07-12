@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDBUTTONS_H
 
 #include "WireButtons.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

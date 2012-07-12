@@ -11,9 +11,6 @@
 #define WIRENUNCHUKTILT_H
 
 #include "WireTilt.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

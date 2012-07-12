@@ -11,8 +11,6 @@
 #define WIREWIN32KEYMAPPEDSWING_H
 
 #include "WireSwing.h"
-#include "WireTypes.h"
-#include "WireRtti.h"
 
 namespace Wire
 {

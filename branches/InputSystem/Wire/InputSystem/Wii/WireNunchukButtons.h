@@ -11,9 +11,6 @@
 #define WIRENUNCHUKBUTTONS_H
 
 #include "WireButtons.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

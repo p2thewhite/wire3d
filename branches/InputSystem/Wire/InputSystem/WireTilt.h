@@ -10,9 +10,7 @@
 #ifndef WIRETILT_H
 #define WIRETILT_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

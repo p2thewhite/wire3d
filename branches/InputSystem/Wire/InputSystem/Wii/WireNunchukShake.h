@@ -11,9 +11,6 @@
 #define WIRENUNCHUKSHAKE_H
 
 #include "WireShake.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

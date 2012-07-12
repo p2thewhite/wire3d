@@ -11,10 +11,6 @@
 #define WIREWIIMOTEBUTTONS_H
 
 #include "WireButtons.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
-#include <wiiuse/wpad.h>
 
 namespace Wire
 {

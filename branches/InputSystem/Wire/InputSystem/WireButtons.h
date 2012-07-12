@@ -10,10 +10,8 @@
 #ifndef WIREBUTTONS_H
 #define WIREBUTTONS_H
 
-#include "WireInputDevice.h"
 #include "WireInputCapability.h"
 #include "WireButton.h"
-#include "WireTypes.h"
 
 namespace Wire
 {

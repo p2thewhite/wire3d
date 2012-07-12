@@ -11,7 +11,6 @@
 #define WIREINPUTDEVICE_H
 
 #include "WireObject.h"
-#include "WireRtti.h"
 #include "WireInputDataBuffer.h"
 #include <vector>
 #include <map>

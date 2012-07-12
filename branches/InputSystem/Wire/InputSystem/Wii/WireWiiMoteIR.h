@@ -11,10 +11,6 @@
 #define WIREWIIMOTEIR_H
 
 #include "WireIR.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
-#include <wiiuse/wpad.h>
 
 namespace Wire
 {
@@ -38,7 +34,6 @@ private:
 	Bool IsValid(const WPADData* pData) const;
 
 };
-
 
 }
 

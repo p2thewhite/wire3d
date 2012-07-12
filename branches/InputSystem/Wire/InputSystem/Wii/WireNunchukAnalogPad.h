@@ -11,9 +11,6 @@
 #define WIRENUNCHUKANALOGPAD_H
 
 #include "WireAnalogPad.h"
-#include "WireInputDevice.h"
-#include "WireRtti.h"
-#include "WireTypes.h"
 
 namespace Wire
 {
