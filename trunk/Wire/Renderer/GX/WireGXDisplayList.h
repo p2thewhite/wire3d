@@ -19,7 +19,7 @@ namespace Wire
 
 class PdrRendererData;
 
-class PdrDisplayList : public Object
+class PdrDisplayList
 {
 public:
 	PdrDisplayList(PdrRendererData* pRendererData, const PdrIndexBuffer&
@@ -33,8 +33,6 @@ private:
 	void* mpData;
 	UInt mSize;
 };
-
-typedef Pointer<PdrDisplayList> PdrDisplayListPtr;
 
 #include "WireGXDisplayList.inl"
 
