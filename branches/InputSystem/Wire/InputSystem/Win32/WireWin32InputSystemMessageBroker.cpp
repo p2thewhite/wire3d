@@ -83,14 +83,15 @@ Bool Win32InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordP
 		return true;
 	case WM_MOUSEWHEEL:
 		mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wordParameter);
-		mpBackBuffer->IncrementMouseWheel(mouseWheelDelta / WHEEL_DELTA);
+		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/
+			WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
 		x = GET_X_LPARAM(longParameter); 
 		y = GET_Y_LPARAM(longParameter);
 
-		mpBackBuffer->SetMouseX(x);
-		mpBackBuffer->SetMouseY(y);
+		mpBackBuffer->SetMouseX(static_cast<Float>(x));
+		mpBackBuffer->SetMouseY(static_cast<Float>(y));
 
 		return true;
 	case WM_KEYDOWN:

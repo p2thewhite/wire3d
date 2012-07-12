@@ -157,7 +157,7 @@ void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 		break;
 
 	default:
-		System::Assert("Unsupported wiimote expansion found.", "WireWiiInputSystem.cpp", 138);
+		WIRE_ASSERT(false /* Unsupported wiimote expansion found */);
 		return;
 	}
 

@@ -65,7 +65,7 @@ Bool WiiMoteButtons::GetButton(Button button) const
 		return false;
 
 	default:
-		System::Assert("Unknown button.", "WireWiiMoteButtons.cpp", 48);
+		WIRE_ASSERT(false /* Unknown button */);
 		return false;
 	}
 }

@@ -55,7 +55,7 @@ Bool NunchukButtons::GetButton(Button button) const
 		return (pData->btns_h & WPAD_NUNCHUK_BUTTON_C) != 0;
 
 	default:
-		System::Assert("Unknown button.", "WireNunchukButtons.cpp", 46);
+		WIRE_ASSERT(false /* Unknown button */);
 		return false;
 	}
 }

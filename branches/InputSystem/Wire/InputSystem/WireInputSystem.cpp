@@ -124,7 +124,7 @@ void InputSystem::NotifyDevicesChange()
 }
 
 
-void InputSystem::RemoveListener(InputSystemListener* pListener)
+void InputSystem::RemoveListener(InputSystemListener*)
 {
 	// TODO:
 }
