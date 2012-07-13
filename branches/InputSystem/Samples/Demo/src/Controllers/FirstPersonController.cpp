@@ -30,15 +30,28 @@ Bool FirstPersonController::Update(Double appTime)
 {
 	Float deltaTime = static_cast<Float>(mLastAppTime - appTime);
 
-	// applying accumulators
+	// apply accumulators
 	mMove *= deltaTime;
 	mAngleY += (mAngleYIncrement * deltaTime);
 	mAngleX += mAngleXIncrement * deltaTime;
 	mAngleX = MathF::Min(MathF::Max(mAngleX, -mMaxVerticalAngle), mMaxVerticalAngle); // clamping the value
 
-	mspCamera->SetFrame(mspCamera->GetLocation() + mMove, GetDirection(), Vector3F::UNIT_Y, GetLeft());
+	// calculate rotation matrices
+	Matrix34F rotationX, rotationY;
+	rotationX.FromAxisAngle(Vector3F::UNIT_X, mAngleX);
+	rotationY.FromAxisAngle(Vector3F::UNIT_Y, mAngleY);
 
-	// clearing accumulators
+	mLookAt = rotationY * rotationX * Vector3F::UNIT_Z;
+	mUp = rotationY * rotationX * Vector3F::UNIT_Y;
+	mBack = rotationY * Vector3F::UNIT_Z;
+
+	rotationY.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
+	mLeft = rotationY * mBack;
+
+	// actually rotate the camera
+	mspCamera->SetFrame(mspCamera->GetLocation() + mMove, mLookAt, mUp, mLeft);
+
+	// reset accumulators
 	mMove = Vector3F::ZERO;
 	mAngleXIncrement = 0;
 	mAngleYIncrement = 0;
@@ -47,31 +60,6 @@ Bool FirstPersonController::Update(Double appTime)
 	mLastAppTime = appTime;
 
 	return true;
-}
-
-//----------------------------------------------------------------------------
-Vector3F FirstPersonController::GetDirection()
-{
-	Matrix34F rotateX, rotateY;
-	rotateY.FromAxisAngle(Vector3F::UNIT_Y, mAngleY);
-	rotateX.FromAxisAngle(Vector3F::UNIT_X, mAngleX);
-	return rotateY * rotateX * Vector3F::UNIT_Z;
-}
-
-//----------------------------------------------------------------------------
-Vector3F FirstPersonController::GetBackward()
-{
-	Matrix34F rotateY;
-	rotateY.FromAxisAngle(Vector3F::UNIT_Y, mAngleY);
-	return rotateY * Vector3F::UNIT_Z;
-}
-
-//----------------------------------------------------------------------------
-Vector3F FirstPersonController::GetLeft()
-{
-	Matrix34F rotateY;
-	rotateY.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
-	return rotateY * GetBackward();
 }
 
 //----------------------------------------------------------------------------
@@ -101,47 +89,47 @@ void FirstPersonController::SetMaxVerticalAngle(Float maxVerticalAngle)
 //----------------------------------------------------------------------------
 void FirstPersonController::MoveForward()
 {
-	mMove -= GetBackward() * mMoveSpeed;
+	mMove -= mBack * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
 void FirstPersonController::MoveBackward()
 {
-	mMove += GetBackward() * mMoveSpeed;
+	mMove += mBack * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
 void FirstPersonController::StrafeLeft()
 {
-	mMove += GetLeft() * mMoveSpeed;
+	mMove += mLeft * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
 void FirstPersonController::StrafeRight()
 {
-	mMove -= GetLeft() * mMoveSpeed;
+	mMove -= mLeft * mMoveSpeed;
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonController::LookUp(const Vector2F& rLookUp)
+void FirstPersonController::LookAt(const Vector2F& rLookAt)
 {
-	if (rLookUp.X() > mLookUpDeadZone.X())
+	if (rLookAt.X() > mLookUpDeadZone.X())
 	{
-		mAngleYIncrement += mRotateSpeed * (rLookUp.X() / mLookUpDeadZone.X());
+		mAngleYIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
 	}
 
-	else if (rLookUp.X() < -mLookUpDeadZone.X())
+	else if (rLookAt.X() < -mLookUpDeadZone.X())
 	{
-		mAngleYIncrement += mRotateSpeed * (rLookUp.X() / mLookUpDeadZone.X());
+		mAngleYIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
 	}
 
-	if (rLookUp.Y() > mLookUpDeadZone.Y())
+	if (rLookAt.Y() > mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement += mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
+		mAngleXIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
 	}
 
-	else if (rLookUp.Y() < -mLookUpDeadZone.Y())
+	else if (rLookAt.Y() < -mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement += mRotateSpeed * (rLookUp.Y() / mLookUpDeadZone.Y());
+		mAngleXIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
 	}
 }

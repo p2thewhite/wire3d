@@ -138,7 +138,7 @@ void Demo::OnInput()
 	x -= screenWidth * 0.5F;
 	y -= screenHeight * 0.5F;
 
-	mpFirstPersonController->LookUp(Vector2F(x, y));
+	mpFirstPersonController->LookAt(Vector2F(x, y));
 
 	// ---
 	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));

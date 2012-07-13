@@ -23,7 +23,7 @@ public:
 	void MoveBackward();
 	void StrafeLeft();
 	void StrafeRight();
-	void LookUp(const Vector2F& rLookUp);
+	void LookAt(const Vector2F& rLookAt);
 
 private:
 	Double mLastAppTime;
@@ -31,16 +31,16 @@ private:
 	Float mAngleY;
 	Float mAngleXIncrement;
 	Float mAngleYIncrement;
+	Vector3F mLookAt;
+	Vector3F mUp;
+	Vector3F mBack;
+	Vector3F mLeft;
 	Vector3F mMove;
 	Vector2F mLookUpDeadZone;
 	Float mMaxVerticalAngle;
 	Float mMoveSpeed;
 	Float mRotateSpeed;
 	CameraPtr mspCamera;
-
-	Vector3F GetDirection();
-	Vector3F GetBackward();
-	Vector3F GetLeft();
 	
 };
 
