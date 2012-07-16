@@ -101,7 +101,8 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
 					-I$(WIREDIR)/Renderer \
-					-I$(WIREDIR)/Renderer/GX
+					-I$(WIREDIR)/Renderer/GX \
+					-I$(WIREDIR)/InputSystem
 
 #---------------------------------------------------------------------------------
 # build a list of library paths

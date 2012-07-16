@@ -10,10 +10,17 @@
 #ifndef WIREINPUTSYSTEM_H
 #define WIREINPUTSYSTEM_H
 
-#include "WireInputSystemListener.h"
-#include "WireMainInputDevice.h"
+#include "WireAnalogPad.h"
+#include "WireButtons.h"
+#include "WireDigitalPad.h"
 #include "WireInputDeviceExtension.h"
-#include "WireTypes.h"
+#include "WireInputSystemListener.h"
+#include "WireIR.h"
+#include "WireMainInputDevice.h"
+#include "WireShake.h"
+#include "WireSwing.h"
+#include "WireTilt.h"
+
 #include <vector>
 
 namespace Wire

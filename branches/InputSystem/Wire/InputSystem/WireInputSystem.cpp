@@ -71,9 +71,10 @@ void InputSystem::AddDevice(InputDevice* pDevice)
 {
 	mDevices.push_back(pDevice);
 
-	if (pDevice->IsDerived(MainInputDevice::TYPE))
+	
+	MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
+	if (pMainDevice)
 	{
-		MainInputDevice* pMainDevice = static_cast<MainInputDevice*>(pDevice);
 		mMainDevices.push_back(pMainDevice);
 		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
 		{
@@ -81,9 +82,10 @@ void InputSystem::AddDevice(InputDevice* pDevice)
 		}
 	}
 
-	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
+	InputDeviceExtension* pInputDeviceExtension = DynamicCast<InputDeviceExtension>(pDevice);
+	if (pInputDeviceExtension)
 	{
-		mDeviceExtensions.push_back(static_cast<InputDeviceExtension*>(pDevice));
+		mDeviceExtensions.push_back(pInputDeviceExtension);
 	}
 }
 

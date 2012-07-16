@@ -11,14 +11,12 @@
 #define WIREAPPLICATION_H
 
 #include "WireEngine.h"
+#include "WireInputSystem.h"
 #include "WireFoundation.h"
 #include "WireRenderer.h"
 
 namespace Wire
 {
-
-class Renderer;
-class InputSystem;
 
 class Application
 {

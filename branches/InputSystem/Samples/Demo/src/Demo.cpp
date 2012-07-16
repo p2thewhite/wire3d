@@ -5,8 +5,6 @@
 #include "Controllers/LogoFader.h"
 #include "Controllers/SplineCamera.h"
 #include "Importer.h"
-#include "WireInputSystem.h"
-#include "WireButtons.h"
 
 using namespace Wire;
 
@@ -88,8 +86,9 @@ void Demo::OnInput()
 		return;
 	}
 
-	// ---
-	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+	const Buttons* pButtons = DynamicCast<Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
 
 	// when home is pressed, exit the game
 	if (pButtons->GetButton(Buttons::BUTTON_HOME))
@@ -97,6 +96,8 @@ void Demo::OnInput()
 		Close();
 		return;
 	}
+
+	mShowFps = pButtons->GetButton(Buttons::BUTTON_B);
 }
 
 //----------------------------------------------------------------------------

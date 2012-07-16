@@ -39,7 +39,13 @@ void WiiInputSystem::AfterDevicesDiscovery()
 
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
-		WiiMote* pWiiMote = static_cast<WiiMote*>(mMainDevices[i]);
+		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
+		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
+		if (!pWiiMote)
+		{
+			continue;
+		}
+
 		// TODO: what about the x and y offsets?
 		WPAD_SetVRes(pWiiMote->GetChannel(), pRenderer->GetWidth(), pRenderer->GetHeight());
 	}
@@ -63,7 +69,13 @@ void WiiInputSystem::Capture()
 
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
-		WiiMote* pWiiMote = static_cast<WiiMote*>(mMainDevices[i]);
+		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
+		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
+		if (!pWiiMote)
+		{
+			continue;
+		}
+
 		UInt channel = pWiiMote->GetChannel();
 		WiiInputDataBuffer* pChannelDataBuffer = GetChannelDataBuffer(pWiiMote->GetChannel());
 		pChannelDataBuffer->SetData(WPAD_Data(channel));
@@ -82,7 +94,12 @@ void WiiInputSystem::UpdateCurrentlyConnectedChannels()
 {
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
-		WiiMote* pWiiMote =	static_cast<WiiMote*>(mMainDevices[i]);
+		WiiMote* pWiiMote =	DynamicCast<WiiMote>(mMainDevices[i]);
+		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
+		if (!pWiiMote)
+		{
+			continue;
+		}
 
 		// if it's not connected anymore, remove it
 		if (!IsWiiMoteConnectedToChannel(pWiiMote->GetChannel()))
