@@ -23,7 +23,7 @@ MainInputDevice::~MainInputDevice()
 
 void MainInputDevice::AddExtension(InputDeviceExtension* pInputDeviceExtension)
 {
-	mExtensions.push_back(pInputDeviceExtension);
+	mExtensions.Append(pInputDeviceExtension);
 }
 
 const InputDeviceExtension* MainInputDevice::GetExtension(UInt index) const
@@ -33,7 +33,7 @@ const InputDeviceExtension* MainInputDevice::GetExtension(UInt index) const
 
 UInt MainInputDevice::GetExtensionsCount() const
 {
-	return mExtensions.size();
+	return mExtensions.GetQuantity();
 }
 
 Bool MainInputDevice::HasCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const
@@ -42,7 +42,7 @@ Bool MainInputDevice::HasCapability(const Rtti& pCapabilityType, Bool lookupExte
 
 	if (lookupExtensions && !hasCapability)
 	{
-		for (UInt i = 0; i < mExtensions.size(); i++)
+		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 		{
 			if (mExtensions[i]->HasCapability(pCapabilityType))
 			{
@@ -60,7 +60,7 @@ const InputCapability* MainInputDevice::GetCapability(const Rtti& pCapabilityTyp
 
 	if (lookupExtensions && pInputCapability == NULL)
 	{
-		for (UInt i = 0; i < mExtensions.size(); i++)
+		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 		{
 			pInputCapability = mExtensions[i]->GetCapability(pCapabilityType);
 

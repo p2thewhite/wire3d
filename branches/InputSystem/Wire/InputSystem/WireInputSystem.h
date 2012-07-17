@@ -21,8 +21,6 @@
 #include "WireSwing.h"
 #include "WireTilt.h"
 
-#include <vector>
-
 namespace Wire
 {
 
@@ -45,10 +43,10 @@ public:
 	void RemoveListener(InputSystemListener* pListener);
 
 protected:
-	std::vector<InputDevice*> mDevices;
-	std::vector<MainInputDevice*> mMainDevices;
-	std::vector<InputDeviceExtension*> mDeviceExtensions;
-	std::vector<InputSystemListener*> mListeners;
+	TArray<InputDevice*> mDevices;
+	TArray<MainInputDevice*> mMainDevices;
+	TArray<InputDeviceExtension*> mDeviceExtensions;
+	TArray<InputSystemListener*> mListeners;
 
 	virtual void BeforeDevicesDiscovery();
 	virtual void DoDevicesDiscovery() = 0;

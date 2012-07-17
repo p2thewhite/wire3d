@@ -11,7 +11,7 @@
 #define WIREMAININPUTDEVICE_H
 
 #include "WireInputDevice.h"
-#include <vector>
+#include "WireTArray.h"
 
 namespace Wire
 {
@@ -33,7 +33,7 @@ public:
 	const InputCapability* GetCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const;
 
 private:
-	std::vector<const InputDeviceExtension*> mExtensions;
+	TArray<const InputDeviceExtension*> mExtensions;
 
 };
 

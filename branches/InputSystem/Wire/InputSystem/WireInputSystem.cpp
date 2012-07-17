@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireInputSystem.h"
-#include <algorithm>
 
 using namespace Wire;
 
@@ -44,7 +43,7 @@ const InputDeviceExtension* InputSystem::GetDeviceExtension(UInt index) const
 
 UInt InputSystem::GetDeviceExtensionsCount() const
 {
-	return mDeviceExtensions.size();
+	return mDeviceExtensions.GetQuantity();
 }
 
 const MainInputDevice* InputSystem::GetMainDevice(UInt index) const
@@ -54,7 +53,7 @@ const MainInputDevice* InputSystem::GetMainDevice(UInt index) const
 
 UInt InputSystem::GetMainDevicesCount() const
 {
-	return mMainDevices.size();
+	return mMainDevices.GetQuantity();
 }
 
 const InputDevice* InputSystem::GetDevice(UInt index) const
@@ -64,18 +63,17 @@ const InputDevice* InputSystem::GetDevice(UInt index) const
 
 UInt InputSystem::GetDevicesCount() const
 {
-	return mDevices.size();
+	return mDevices.GetQuantity();
 }
 
 void InputSystem::AddDevice(InputDevice* pDevice)
 {
-	mDevices.push_back(pDevice);
-
+	mDevices.Append(pDevice);
 	
 	MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
 	if (pMainDevice)
 	{
-		mMainDevices.push_back(pMainDevice);
+		mMainDevices.Append(pMainDevice);
 		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
 		{
 			AddDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
@@ -85,18 +83,18 @@ void InputSystem::AddDevice(InputDevice* pDevice)
 	InputDeviceExtension* pInputDeviceExtension = DynamicCast<InputDeviceExtension>(pDevice);
 	if (pInputDeviceExtension)
 	{
-		mDeviceExtensions.push_back(pInputDeviceExtension);
+		mDeviceExtensions.Append(pInputDeviceExtension);
 	}
 }
 
 void InputSystem::RemoveDevice(InputDevice* pDevice)
 {
-	mDevices.erase(std::find(mDevices.begin(), mDevices.end(), pDevice));
+	mDevices.Remove(pDevice);
 
 	if (pDevice->IsDerived(MainInputDevice::TYPE))
 	{
 		MainInputDevice* pMainDevice = static_cast<MainInputDevice*>(pDevice);
-		mMainDevices.erase(std::find(mMainDevices.begin(), mMainDevices.end(), pMainDevice));
+		mMainDevices.Remove(pMainDevice);
 		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
 		{
 			RemoveDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
@@ -105,26 +103,23 @@ void InputSystem::RemoveDevice(InputDevice* pDevice)
 
 	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
 	{
-		mDeviceExtensions.erase(std::find(mDeviceExtensions.begin(), mDeviceExtensions.end(), static_cast<InputDeviceExtension*>(pDevice)));
+		mDeviceExtensions.Remove(static_cast<InputDeviceExtension*>(pDevice));
 	}
 }
 
 void InputSystem::AddListener(InputSystemListener* pListener)
 {
-	mListeners.push_back(pListener);
+	mListeners.Append(pListener);
 }
 
 void InputSystem::NotifyDevicesChange()
 {
-	std::vector<InputSystemListener*>::const_iterator i = mListeners.begin();
-
-	while (i != mListeners.end())
+	for (UInt i = 0; i < mListeners.GetQuantity(); i++)
 	{
-		(*i)->OnDevicesChange();
-		i++;
+		WIRE_ASSERT(mListeners[i]);
+		mListeners[i]->OnDevicesChange();
 	}
 }
-
 
 void InputSystem::RemoveListener(InputSystemListener*)
 {

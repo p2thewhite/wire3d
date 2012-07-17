@@ -51,7 +51,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:= -lBulletDynamics -lBulletCollision -lLinearMath	-lImporter$(BUILDPOSTFIX) -lfreetype -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
+LIBS	:= -lImporter$(BUILDPOSTFIX) -lBulletDynamics -lBulletCollision -lLinearMath -lfreetype -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -115,7 +115,8 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR) -L$(FREETYPEDIR) -L$(BULLETDIR)/lib/wii
+					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR) -L$(FREETYPEDIR) \
+					-L$(BULLETDIR)/lib/wii
 
 .PHONY: $(BUILD) clean
 

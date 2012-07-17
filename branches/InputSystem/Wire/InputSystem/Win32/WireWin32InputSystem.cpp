@@ -10,8 +10,6 @@
 #include "WireWin32InputSystemMessageBroker.h"
 #include "WireWin32EmulatedWiiMote.h"
 #include "WireWin32EmulatedNunchuk.h"
-#include "WireMemory.h"
-#include <vector>
 
 using namespace Wire;
 
@@ -29,7 +27,7 @@ void Win32InputSystem::Capture()
 	Win32InputSystemMessageBroker::GetInstance()->SwapBuffers();
 	// update the current data buffer on each input device
 
-	for (UInt i = 0; i < mDevices.size(); i++)
+	for (UInt i = 0; i < mDevices.GetQuantity(); i++)
 	{
 		mDevices[i]->SetDataBuffer(Win32InputSystemMessageBroker::GetInstance()->GetCurrentInputDataBuffer());
 	}
