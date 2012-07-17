@@ -494,7 +494,7 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
-	Spatial* pStartingPosition = pScene->GetChildByName("startingPosition");
+	Spatial* pStartingPosition = pScene->GetChildByName("StartingPosition");
 	WIRE_ASSERT(pStartingPosition);
 
 	mStartingPosition = pStartingPosition->World.GetTranslate();
@@ -512,14 +512,14 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 	}
 
 	// create the fans rotation controllers
-	TArray<Spatial*> fans;
+	/*TArray<Spatial*> fans;
 	pScene->GetAllChildrenByName("ceilingFan", fans);
 
 	for (UInt i = 0; i < fans.GetQuantity(); i++)
 	{
 		Float f = static_cast<Float>(i + 1);
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
-	}
+	}*/
 
 	// create the character controller
 	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPosition, mSceneCameras[0]);
@@ -534,11 +534,11 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 	pScene->AttachController(mpCharacterController);
 
 	// create the conveyor belt animation controller
-	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName("polySurface437"));
+	/*Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName("polySurface437"));
 	if (pConveyorBelt)
 	{
 		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt, GetRenderer()));
-	}
+	}*/
 
 	GetRenderer()->BindAll(pScene);
 
