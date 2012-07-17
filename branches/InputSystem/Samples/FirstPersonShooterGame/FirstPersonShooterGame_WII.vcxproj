@@ -33,6 +33,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <OutDir>build/$(Configuration)\</OutDir>
+    <IntDir>build/$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
@@ -51,14 +53,25 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeOutput>FirstPersonShooterGame.exe</NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeOutput>
+    </NMakeOutput>
+    <NMakePreprocessorDefinitions>WIRE_WII;NDEBUG;WIRE_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
+    <NMakeBuildCommandLine>make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>make WIRE_DEBUG=y clean
+make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’
+</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>make WIRE_DEBUG=y clean</NMakeCleanCommandLine>
+    <NMakeIncludeSearchPath>$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeForcedIncludes>$(NMakeForcedIncludes)</NMakeForcedIncludes>
+    <NMakeAssemblySearchPath>$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
+    <NMakeForcedUsingAssemblies>$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIRE_WII;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\GX;..\..\Tools\Importer\src;..\..\Tools\bullet-2.77\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make clean
 make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeReBuildCommandLine>

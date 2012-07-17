@@ -3,7 +3,6 @@
 #define SAMPLE11_H
 
 #include "WireApplication.h"
-#include "WireInputSystemListener.h"
 #include <sstream>
 
 using namespace std;

@@ -4,14 +4,6 @@
 
 #include "Importer.h"
 #include "Cursors.h"
-#include "WireInputSystem.h"
-#include "WireInputDevice.h"
-#include "WireMainInputDevice.h"
-#include "WireInputCapability.h"
-#include "WireIR.h"
-#include "WireButtons.h"
-#include "WireTilt.h"
-#include "WireTypes.h"
 #include <vector>
 #include <algorithm>
 
