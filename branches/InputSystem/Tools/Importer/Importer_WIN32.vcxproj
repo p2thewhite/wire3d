@@ -52,7 +52,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Wire\Foundation;..\..\Wire\Engine;..\freetype\include;..\bullet-2.77\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -63,8 +63,8 @@
     </Link>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName)d.lib</OutputFile>
-      <AdditionalDependencies>Wired.lib;freetype249_D.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\Wire\lib\Debug\;..\freetype\objs\win32\vc2010</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wired.lib;freetype249_D.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Wire\lib\Debug\;..\freetype\objs\win32\vc2010;..\bullet-2.77\lib\Debug</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -90,10 +90,14 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BulletUtils.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Importer.cpp" />
     <ClCompile Include="src\PicoPNG.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BulletUtils.h" />
+    <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\Importer.h" />
     <ClInclude Include="src\PicoPNG.h" />
     <ClInclude Include="src\rapidxml.hpp" />

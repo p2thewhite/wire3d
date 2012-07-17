@@ -15,14 +15,14 @@
     <ClInclude Include="src\FirstPersonShooterGame.h" />
     <ClInclude Include="src\FanRotator.h" />
     <ClInclude Include="src\FirstPersonController.h" />
-    <ClInclude Include="src\LogoFader.h" />
+    <ClInclude Include="src\MaterialFader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ConveyorBelt.cpp" />
     <ClCompile Include="src\FirstPersonShooterGame.cpp" />
     <ClCompile Include="src\FanRotator.cpp" />
     <ClCompile Include="src\FirstPersonController.cpp" />
-    <ClCompile Include="src\LogoFader.cpp" />
+    <ClCompile Include="src\MaterialFader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{30A5849F-209A-4716-8F8D-C5912D9D6EE8}</ProjectGuid>
@@ -58,7 +58,7 @@
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIRE_WII;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\GX;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\Renderer\GX;..\..\Tools\Importer\src;..\..\Tools\bullet-2.77\src;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make clean
 make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeReBuildCommandLine>

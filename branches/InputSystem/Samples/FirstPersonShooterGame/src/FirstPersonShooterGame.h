@@ -3,7 +3,11 @@
 #define FIRSTPERSONSHOOTERGAME_H_
 
 #include "WireApplication.h"
+#include "Importer.h"
 #include "FirstPersonController.h"
+
+#include "Collider.h"
+#include "btBulletDynamicsCommon.h"
 
 using namespace Wire;
 
@@ -17,6 +21,7 @@ public:
 	FirstPersonShooterGame();
 
 	virtual Bool OnInitialize();
+	virtual void OnTerminate();
 	virtual void OnIdle();
 	virtual void OnInput();
 
@@ -27,38 +32,43 @@ private:
 		AS_RUNNING
 	};
 
-	void StateLoading(Double time);
-	void StateRunning(Double time);
-
-	Node* LoadAndInitLogo();
-	NodePtr mspLogo;
-	TArray<CameraPtr> mLogoCameras;
-	Culler mLogoCuller;
-
-	Node* LoadAndInitScene();
-	NodePtr mspScene;
-	TArray<CameraPtr> mSceneCameras;
-	CullerSorting mSceneCuller;
-
-	Node* LoadAndInitGUI();
-	NodePtr mspGUI;
-	SpatialPtr mspCrosshair;
-	TArray<CameraPtr> mGUICameras;
-	Culler mGUICuller;
-
 	Double mLastTime;
 	UInt mAppState;
-	FirstPersonController* mpFirstPersonController;
-
-	// frames per second debug text
-	void DrawFPS(Double time);
+	Bool mShowFps;
+	Vector3F mStartingPosition;
+	FirstPersonController* mpCharacterController;
+	NodePtr mspLogo;
+	NodePtr mspScene;
+	NodePtr mspGUI;
+	TArray<CameraPtr> mLogoCameras;
+	TArray<CameraPtr> mSceneCameras;
+	TArray<CameraPtr> mGUICameras;
+	Culler mLogoCuller;
+	CullerSorting mSceneCuller;
+	Culler mGUICuller;
+	SpatialPtr mspCrosshair;
 	CameraPtr mspTextCamera;
 	TextPtr mspText;
-	Bool mShowFps;
+	btDefaultCollisionConfiguration* mpCollisionConfiguration;
+	btCollisionDispatcher* mpDispatcher;
+	btBroadphaseInterface* mpOverlappingPairCache;
+	btSequentialImpulseConstraintSolver* mpConstraintSolver;
+	btDiscreteDynamicsWorld* mpPhysicsWorld;
 
+	void StateLoading(Double time);
+	void StateRunning(Double time);
+	Node* LoadAndInitLogo();
+	Node* LoadAndInitScene();
+	Node* LoadAndInitGUI();
 	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
-	Texture2D* CreateTexture(Image2D* pImage);
+	Texture2D* LoadTexture(Importer& rImporter, Char* pFileName);
 	void MoveCrosshairTo(const Vector2F& rScreenPoint);
+	void InitializePhysics();
+	void RegisterStaticCollider(const Collider* pCollider);
+	void UpdatePhysics(Float deltaTime);
+	void TerminatePhysics();
+	void DrawFPS(Double time);
+
 };
 
 WIRE_REGISTER_INITIALIZE(FirstPersonShooterGame);

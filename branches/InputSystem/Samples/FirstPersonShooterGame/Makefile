@@ -18,6 +18,7 @@ include $(DEVKITPPC)/wii_rules
 WIREDIR			:=  ../../../Wire
 IMPORTERDIR		:=	../../../Tools/Importer
 FREETYPEDIR		:=	../../../Tools/freetype
+BULLETDIR		:=  ../../../Tools/bullet-2.77
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src \
 					src/Controllers
@@ -50,7 +51,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lImporter$(BUILDPOSTFIX) -lfreetype -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
+LIBS	:= -lBulletDynamics -lBulletCollision -lLinearMath	-lImporter$(BUILDPOSTFIX) -lfreetype -lWire$(BUILDPOSTFIX) -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -106,14 +107,15 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Renderer \
 					-I$(WIREDIR)/InputSystem \
 					-I$(WIREDIR)/InputSystem/Wii \
-					-I$(IMPORTERDIR)/src
+					-I$(IMPORTERDIR)/src \
+					-I$(BULLETDIR)/src
 
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR) -L$(FREETYPEDIR)
+					-L$(LIBOGC_LIB) -L$(WIREDIR) -L$(IMPORTERDIR) -L$(FREETYPEDIR) -L$(BULLETDIR)/lib/wii
 
 .PHONY: $(BUILD) clean
 

@@ -24,7 +24,7 @@
     <ClInclude Include="src\FirstPersonShooterGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\LogoFader.h">
+    <ClInclude Include="src\MaterialFader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClCompile Include="src\FirstPersonShooterGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LogoFader.cpp">
+    <ClCompile Include="src\MaterialFader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

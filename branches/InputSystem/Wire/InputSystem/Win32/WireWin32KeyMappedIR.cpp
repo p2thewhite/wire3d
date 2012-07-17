@@ -32,7 +32,7 @@ Float Win32KeyMappedIR::GetBackward() const
 
 Float Win32KeyMappedIR::GetDown() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseY();
+	return -static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseY();
 }
 
 Float Win32KeyMappedIR::GetForward() const
@@ -42,7 +42,7 @@ Float Win32KeyMappedIR::GetForward() const
 
 Float Win32KeyMappedIR::GetLeft() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseX();
+	return -static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseX();
 }
 
 Float Win32KeyMappedIR::GetRight() const

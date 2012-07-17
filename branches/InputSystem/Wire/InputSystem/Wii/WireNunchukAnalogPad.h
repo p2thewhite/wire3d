@@ -28,6 +28,10 @@ public:
 	virtual Float GetRight() const;
 	virtual Float GetUp() const;
 
+private:
+
+	Float GetX() const;
+	Float GetY() const;
 };
 
 }

@@ -2,9 +2,9 @@
 
 #include "ConveyorBelt.h"
 #include "FanRotator.h"
-#include "LogoFader.h"
-#include "Importer.h"
+#include "MaterialFader.h"
 #include "WireInputSystem.h"
+#include "WireAnalogPad.h"
 #include "WireDigitalPad.h"
 #include "WireIR.h"
 #include "WireButtons.h"
@@ -15,7 +15,7 @@ WIRE_APPLICATION(FirstPersonShooterGame);
 
 //----------------------------------------------------------------------------
 FirstPersonShooterGame::FirstPersonShooterGame() :
-	mpFirstPersonController(NULL)
+	mpCharacterController(NULL)
 {
 }
 
@@ -27,6 +27,7 @@ Bool FirstPersonShooterGame::OnInitialize()
 		return false;
 	}
 
+	InitializePhysics();
 	mspLogo = LoadAndInitLogo();
 
 	if (!mspLogo)
@@ -38,15 +39,24 @@ Bool FirstPersonShooterGame::OnInitialize()
 	mAppState = AS_LOADING;
 	mLastTime = System::GetTime();
 	mShowFps = false;
+
 	// frames per second and render statistics debug text
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
 	WIRE_ASSERT(mspText);
+
 	GetRenderer()->BindAll(mspText);
 	GetRenderer()->CreateBatchingBuffers(60 * 1024);
 	GetRenderer()->SetDynamicBatchingThreshold(300);
 	GetRenderer()->SetStaticBatchingThreshold(10000);
+
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonShooterGame::OnTerminate()
+{
+	TerminatePhysics();
 }
 
 //----------------------------------------------------------------------------
@@ -75,7 +85,10 @@ void FirstPersonShooterGame::OnIdle()
 //----------------------------------------------------------------------------
 void FirstPersonShooterGame::OnInput()
 {
-	if (mpFirstPersonController == NULL)
+	static Float oldX = 0;
+	static Float oldY = 0;
+
+	if (mpCharacterController == NULL)
 	{
 		return;
 	}
@@ -104,65 +117,141 @@ void FirstPersonShooterGame::OnInput()
 	}
 
 	// ---
-	const DigitalPad* pDigitalPad = static_cast<const DigitalPad*>(pInputDevice->GetCapability(DigitalPad::TYPE, false));
+	// processing the digital pad
 
-	if (pDigitalPad->GetUp())
+	if (pInputDevice->HasCapability(AnalogPad::TYPE, true))
 	{
-		mpFirstPersonController->MoveForward();
+		const AnalogPad* pAnalogPad = static_cast<const AnalogPad*>(pInputDevice->GetCapability(AnalogPad::TYPE, true));
+
+		if (pAnalogPad->GetUp() > 0)
+		{
+			mpCharacterController->MoveForward();
+		}
+		else if (pAnalogPad->GetUp() < 0)
+		{
+			mpCharacterController->MoveBackward();
+		}
+
+		if (pAnalogPad->GetRight() > 0)
+		{
+			mpCharacterController->StrafeRight();
+		}
+		else if (pAnalogPad->GetRight() < 0)
+		{
+			mpCharacterController->StrafeLeft();
+		}
 	}
+	else {
+		const DigitalPad* pDigitalPad = static_cast<const DigitalPad*>(pInputDevice->GetCapability(DigitalPad::TYPE, false));
 
-	else if (pDigitalPad->GetDown())
-	{
-		mpFirstPersonController->MoveBackward();
-	}
+		if (pDigitalPad->GetUp())
+		{
+			mpCharacterController->MoveForward();
+		}
 
-	else if (pDigitalPad->GetLeft())
-	{
-		mpFirstPersonController->StrafeLeft();
-	}
+		else if (pDigitalPad->GetDown())
+		{
+			mpCharacterController->MoveBackward();
+		}
 
-	else if (pDigitalPad->GetRight())
-	{
-		mpFirstPersonController->StrafeRight();
+		if (pDigitalPad->GetLeft())
+		{
+			mpCharacterController->StrafeLeft();
+		}
+
+		else if (pDigitalPad->GetRight())
+		{
+			mpCharacterController->StrafeRight();
+		}
 	}
 
 	// ---
+	// processing the ir
+
 	const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
+
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+
 	Float x = pIR->GetRight();
-	Float y = screenHeight - pIR->GetUp();
+	Float y = pIR->GetUp();
+
+	// if the ir is pointing outside of the capture area, set the lookAt vector to the previous captured position
+	if (x == MathF::MAX_REAL || y == MathF::MAX_REAL)
+	{
+		x = oldX;
+		y = oldY;
+	}
+	else
+	{
+		// correcting height
+		y = screenHeight - y;
+	}
+
+	oldX = x;
+	oldY = y;
+
 	MoveCrosshairTo(Vector2F(x, y));
+
 	// converting from (top, left) to (horizontal screen center, vertical screen center)
 	// coordinate system
 	x -= screenWidth * 0.5F;
 	y -= screenHeight * 0.5F;
-	mpFirstPersonController->LookAt(Vector2F(x, y));
+
+	mpCharacterController->LookAt(Vector2F(x, y));
+
 	// ---
+	// processing the buttons
+
 	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
 
-	// when home is pressed, exit the game
+	// 'home' button exit the game
 	if (pButtons->GetButton(Buttons::BUTTON_HOME))
 	{
 		Close();
 		return;
 	}
 
-	// b button makes the player run faster
+	// '+' button displays renderer statistics
+	if (pButtons->GetButton(Buttons::BUTTON_PLUS))
+	{
+		mShowFps = true;
+	}
+	else if (pButtons->GetButton(Buttons::BUTTON_MINUS))
+	{
+		mShowFps = false;
+	}
+
+	// 'b' button makes the player jump
 	if (pButtons->GetButton(Buttons::BUTTON_B))
 	{
-		mpFirstPersonController->SetMoveSpeed(5.0f);
+		mpCharacterController->Jump();
+	}
+
+	// if there's an extension, read its buttons instead
+	if (pInputDevice->GetExtensionsCount() > 0)
+	{
+		pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
+	}
+
+	// 'z' button toggles the debug flag
+	if (pButtons->GetButton(Buttons::BUTTON_Z))
+	{
+		mpCharacterController->SetMoveSpeed(5.0f);
 	}
 
 	else
 	{
-		mpFirstPersonController->SetMoveSpeed(2.5f);
+		mpCharacterController->SetMoveSpeed(2.5f);
 	}
 }
 
 //----------------------------------------------------------------------------
 void FirstPersonShooterGame::StateRunning(Double time)
 {
+	static Double lastTime = 0.0f;
+	Float deltaTime = static_cast<Float>(time - lastTime);
+
 	UpdateCameraFrustumAccordingToScreenDimensions(mGUICameras[0]);
 	mspLogo->UpdateGS(time);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
@@ -170,6 +259,10 @@ void FirstPersonShooterGame::StateRunning(Double time)
 	mGUICuller.ComputeVisibleSet(mspGUI);
 	mspScene->UpdateGS(time);
 	mSceneCuller.ComputeVisibleSet(mspScene);
+
+	UpdatePhysics(deltaTime);
+	lastTime = time;
+
 	GetRenderer()->ResetStatistics();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mSceneCameras[0]);
@@ -194,52 +287,69 @@ void FirstPersonShooterGame::DrawFPS(Double time)
 	static Double lastTime = 0.0f;
 	Double elapsed = time - lastTime;
 	lastTime = time;
+
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+
 	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+
 	GetRenderer()->SetCamera(mspTextCamera);
+
 	// set to screen screenWidth (might change any time in window mode)
 	mspText->SetLineWidth(screenWidth);
 	mspText->Clear(Color32::WHITE);
+
 	// Text uses OpenGL convention of (0,0) being left bottom of window
 	mspText->SetPen(0, screenHeight - mspText->GetFontHeight() - 32.0F);
-	const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
+
+	const UInt textArraySize = 1000;
+	Char text[textArraySize];
 	UInt fps = static_cast<UInt>(1 / elapsed);
 	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
 				  "%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
 				  "IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+
 	Float kb = 1024.0F;
-	const Renderer::Statistics* pStats = Renderer::GetStatistics();
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-					pStats->DrawCalls, pStats->Triangles, pStats->BatchedStatic,
-					pStats->BatchedDynamic, pStats->VBOCount, pStats->VBOTotalSize / kb,
-					pStats->IBOCount, pStats->IBOTotalSize / kb, pStats->TextureCount,
-					pStats->TextureTotalSize / (kb * kb));
+
+	const Renderer::Statistics* pStatistics = Renderer::GetStatistics();
+	System::Sprintf(text, 
+					textArraySize, 
+					static_cast<const Char*>(msg1), 
+					fps,
+					pStatistics->DrawCalls, 
+					pStatistics->Triangles, 
+					pStatistics->BatchedStatic,
+					pStatistics->BatchedDynamic, 
+					pStatistics->VBOCount, 
+					pStatistics->VBOTotalSize / kb,
+					pStatistics->IBOCount, 
+					pStatistics->IBOTotalSize / kb, 
+					pStatistics->TextureCount,
+					pStatistics->TextureTotalSize / (kb * kb));
+
 	mspText->SetColor(Color32::WHITE);
 	mspText->Append(text);
 	mspText->Update(GetRenderer());
+
 	GetRenderer()->DisableLighting();
 	GetRenderer()->Draw(mspText);
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::StateLoading(Double elapsedTime)
+void FirstPersonShooterGame::StateLoading(Double deltaTime)
 {
 	Spatial* pLoading = mspLogo->GetChildByName("Loading");
 	Bool isFadedIn = false;
 
 	if (pLoading)
 	{
-		StateMaterial* pMaterialState = static_cast<StateMaterial*>(pLoading->
-										GetState(State::MATERIAL));
+		StateMaterial* pMaterialState = static_cast<StateMaterial*>(pLoading->GetState(State::MATERIAL));
 
 		if (pMaterialState)
 		{
-			pMaterialState->Ambient.A() += static_cast<Float>(
-											   elapsedTime) * 0.5F;
+			pMaterialState->Ambient.A() += static_cast<Float>(deltaTime) * 0.5F;
 
 			if (pMaterialState->Ambient.A() > 1.0F)
 			{
@@ -251,6 +361,7 @@ void FirstPersonShooterGame::StateLoading(Double elapsedTime)
 
 	mspLogo->UpdateGS();
 	mLogoCuller.ComputeVisibleSet(mspLogo);
+
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
@@ -292,19 +403,24 @@ Node* FirstPersonShooterGame::LoadAndInitLogo()
 	}
 
 	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in logo.xml */);
+
 	mLogoCuller.SetCamera(mLogoCameras[0]);
+
 	Spatial* pLogo = pRoot->GetChildByName("Logo");
 	WIRE_ASSERT(pLogo != NULL);
 
 	if (pLogo)
 	{
-		pLogo->AttachController(WIRE_NEW LogoFader);
+		pLogo->AttachController(WIRE_NEW MaterialFader(2.5f));
 	}
 
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+
 	pRoot->Local.SetTranslate(Vector3F((screenWidth - 512) * 0.5F, (screenHeight  - 256)  * 0.5F, 0));
+
 	GetRenderer()->BindAll(pRoot);
+
 	return pRoot;
 }
 
@@ -320,29 +436,39 @@ Node* FirstPersonShooterGame::LoadAndInitGUI()
 	}
 
 	WIRE_ASSERT(mGUICameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
+
 	mGUICuller.SetCamera(mGUICameras[0]);
 	mspCrosshair = pRoot->GetChildByName("Crosshair");
+
 	WIRE_ASSERT(mspCrosshair != NULL);
+
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Geometry* pMainInputDeviceIcon = static_cast<Geometry*>(pRoot->GetChildByName("MainInputDeviceIcon"));
+
 	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
+
 	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, screenHeight - 64, 0));
+
 	// loading the main input device icon dynamically according to the platform
 #ifdef WIRE_WII
-	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/wiiMoteIcon.png", false)));
+	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/wiiMoteIcon.png"));
 #else
-	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/keyboardIcon.png", false)));
+	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/keyboardIcon.png"));
 #endif
+
 	Geometry* pInputDeviceExtensionIcon = static_cast<Geometry*>(pRoot->GetChildByName("InputDeviceExtensionIcon"));
 	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
 	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, screenHeight - 64, 0));
+
 	// loading the input device extension icon dynamically according to the platform
 #ifdef WIRE_WII
-	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/nunchukIcon.png", false)));
+	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/nunchukIcon.png"));
 #else
-	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, CreateTexture(importer.LoadPNG("Data/GUI/mouseIcon.png", false)));
+	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/mouseIcon.png"));
 #endif
+
 	GetRenderer()->BindAll(pRoot);
+
 	return pRoot;
 }
 
@@ -350,7 +476,7 @@ Node* FirstPersonShooterGame::LoadAndInitGUI()
 Node* FirstPersonShooterGame::LoadAndInitScene()
 {
 	Importer importer("Data/");
-	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
+	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras, mpPhysicsWorld);
 
 	if (!pScene)
 	{
@@ -358,14 +484,22 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 	}
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
+
 	Float fov, aspect, near, far;
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+
 	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
 	aspect = screenWidth / screenHeight;
 	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
-	// The maximum number of objects that are going to be culled is the
+
+	Spatial* pStartingPosition = pScene->GetChildByName("startingPosition");
+	WIRE_ASSERT(pStartingPosition);
+
+	mStartingPosition = pStartingPosition->World.GetTranslate();
+
+	// the maximum number of objects that are going to be culled is the
 	// number of objects we imported. If we don't set the size of the set now,
 	// the culler will dynamically increase it during runtime. This is not
 	// a big deal, however we do not want any memory allocations during the
@@ -377,6 +511,7 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(geometryCount);
 	}
 
+	// create the fans rotation controllers
 	TArray<Spatial*> fans;
 	pScene->GetAllChildrenByName("ceilingFan", fans);
 
@@ -386,20 +521,27 @@ Node* FirstPersonShooterGame::LoadAndInitScene()
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
 	}
 
-	mpFirstPersonController = WIRE_NEW FirstPersonController(Vector3F(13.0f, 1.7f, -21.0f),
-							  mSceneCameras[0]);
-	mpFirstPersonController->SetLookUpDeadZone(Vector2F(50, 50));
-	pScene->AttachController(mpFirstPersonController);
-	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName(
-								  "polySurface437"));
+	// create the character controller
+	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPosition, mSceneCameras[0]);
+	mpCharacterController->SetLookUpDeadZone(Vector2F(50, 50));
+	mpCharacterController->SetHeadHeight(0.5f);
+	mpCharacterController->SetCharacterHeight(1.5f);
+	mpCharacterController->SetCharacterWidth(0.75f);
+	mpCharacterController->SetStepHeight(0.35f);
+	mpCharacterController->SetMaximumVerticalAngle(45);
+	mpCharacterController->Register(mpPhysicsWorld);
 
+	pScene->AttachController(mpCharacterController);
+
+	// create the conveyor belt animation controller
+	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName("polySurface437"));
 	if (pConveyorBelt)
 	{
-		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt,
-										GetRenderer()));
+		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt, GetRenderer()));
 	}
 
 	GetRenderer()->BindAll(pScene);
+
 	return pScene;
 }
 
@@ -408,17 +550,20 @@ void FirstPersonShooterGame::UpdateCameraFrustumAccordingToScreenDimensions(Came
 {
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
+
 	pCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 }
 
 //----------------------------------------------------------------------------
-Texture2D* FirstPersonShooterGame::CreateTexture(Image2D* pImage)
+Texture2D* FirstPersonShooterGame::LoadTexture(Importer& rImporter, Char* pFileName)
 {
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	Texture2D* pTexture = WIRE_NEW Texture2D(rImporter.LoadPNG(pFileName, false));
+
 	pTexture->SetFilterType(Texture2D::FT_LINEAR_NEAREST);
 	pTexture->SetWrapType(0, Texture2D::WT_CLAMP);
 	pTexture->SetWrapType(1, Texture2D::WT_CLAMP);
 	pTexture->SetAnisotropyValue(1);
+
 	return pTexture;
 }
 
@@ -426,4 +571,51 @@ Texture2D* FirstPersonShooterGame::CreateTexture(Image2D* pImage)
 void FirstPersonShooterGame::MoveCrosshairTo(const Vector2F& rScreenPosition)
 {
 	mspCrosshair->Local.SetTranslate(Vector3F(rScreenPosition.X() - 16, rScreenPosition.Y() - 16, 0));
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonShooterGame::InitializePhysics()
+{
+	mpCollisionConfiguration = WIRE_NEW btDefaultCollisionConfiguration();
+
+	mpDispatcher = WIRE_NEW btCollisionDispatcher(mpCollisionConfiguration);
+
+	btVector3 worldAabbMin(-1000, -1000, -1000);
+	btVector3 worldAabbMax(1000, 1000, 1000);
+	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax);
+
+	mpConstraintSolver = WIRE_NEW btSequentialImpulseConstraintSolver();
+	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher, mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
+
+	mpPhysicsWorld->setGravity(btVector3(0, -9.8f, 0));
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonShooterGame::UpdatePhysics(Float deltaTime)
+{
+	mpPhysicsWorld->stepSimulation(deltaTime, 10);
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonShooterGame::TerminatePhysics()
+{
+	for (Int i = mpPhysicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	{
+		btCollisionObject* pCollisionObject = mpPhysicsWorld->getCollisionObjectArray()[i];
+		btRigidBody* pRigidBody = btRigidBody::upcast(pCollisionObject);
+
+		if (pRigidBody && pRigidBody->getMotionState())
+		{
+			WIRE_DELETE pRigidBody->getMotionState();
+		}
+
+		mpPhysicsWorld->removeCollisionObject(pCollisionObject);
+		WIRE_DELETE pCollisionObject;
+	}
+
+	WIRE_DELETE mpPhysicsWorld;
+	WIRE_DELETE mpConstraintSolver;
+	WIRE_DELETE mpOverlappingPairCache;
+	WIRE_DELETE mpDispatcher;
+	WIRE_DELETE mpCollisionConfiguration;
 }

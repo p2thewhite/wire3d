@@ -35,13 +35,13 @@ Bool LogoFader::Update(Double appTime)
 		return false;
 	}
 
-	Float elapsedTime = static_cast<Float>(appTime - mLastAppTime);
-	if (mLastAppTime == -MathD::MAX_REAL)
+	Float elapsedTime = static_cast<Float>(appTime - mLastApplicationTime);
+	if (mLastApplicationTime == -MathD::MAX_REAL)
 	{
 		elapsedTime = 0.0F;
 	}
 
-	mLastAppTime = appTime;
+	mLastApplicationTime = appTime;
 
 	if (mIsFadeOut)
 	{

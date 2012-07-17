@@ -24,12 +24,15 @@ public:
 	virtual ~Win32InputSystemMessageBroker();
 	const Win32InputDataBuffer* GetCurrentInputDataBuffer() const;
 	static Win32InputSystemMessageBroker* GetInstance();
+	void CheckMouseStagnation();
 	void SwapBuffers();
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
 private:
 	static Win32InputSystemMessageBroker* s_pInstance;
+	static Double s_MouseStagnationTolerance;
 
+	Double mLastMouseMoveTime;
 	Win32InputDataBuffer* mpFrontBuffer;
 	Win32InputDataBuffer* mpBackBuffer;
 };

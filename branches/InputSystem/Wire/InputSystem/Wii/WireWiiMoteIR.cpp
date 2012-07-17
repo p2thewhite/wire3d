@@ -10,6 +10,7 @@
 #include "WireWiiMoteButtons.h"
 #include "WireWiiMote.h"
 #include "WireWiiInputDataBuffer.h"
+#include "WireMath.h"
 #include <wiiuse/wpad.h>
 
 using namespace Wire;
@@ -36,7 +37,7 @@ Float WiiMoteIR::GetBackward() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return -MathF::MAX_REAL;
 	}
 
 	return -pData->ir.z;
@@ -53,7 +54,7 @@ Float WiiMoteIR::GetDown() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return -MathF::MAX_REAL;
 	}
 
 	return -pData->ir.y;
@@ -70,7 +71,7 @@ Float WiiMoteIR::GetForward() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return MathF::MAX_REAL;
 	}
 
 	return pData->ir.z;
@@ -87,7 +88,7 @@ Float WiiMoteIR::GetLeft() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return -MathF::MAX_REAL;
 	}
 
 	return -pData->ir.x;
@@ -104,7 +105,7 @@ Float WiiMoteIR::GetRight() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return MathF::MAX_REAL;
 	}
 
 	return pData->ir.x;
@@ -121,7 +122,7 @@ Float WiiMoteIR::GetUp() const
 
 	if (!IsValid(pData)) 
 	{
-		return 0;
+		return MathF::MAX_REAL;
 	}
 
 	return pData->ir.y;

@@ -20,22 +20,21 @@
 #include "WireTStack.h"
 #include "WireVertexBuffer.h"
 
+#include "BulletUtils.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Importer::Importer(const Char* pPath,
-	Bool materialsWithEqualNamesAreIdentical, Bool prepareForStaticBatching)
-	:
-	mpPath(pPath),
-	mStaticSpatials(0, 100),
+Importer::Importer(const Char* pPath, Bool materialsWithEqualNamesAreIdentical, 
+	Bool prepareForStaticBatching) : mpPath(pPath), mStaticSpatials(0, 100), 
 	mMaterialsWithEqualNamesAreIdentical(materialsWithEqualNamesAreIdentical),
 	mPrepareForStaticBatching(prepareForStaticBatching)
 {
 }
 
 //----------------------------------------------------------------------------
-Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
-	pCameras)
+Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCameras, 
+	btDynamicsWorld* pPhysicsWorld)
 {
 	ResetStatistics();
 	mpCameras = pCameras;
@@ -71,8 +70,14 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	if (mStaticSpatials.GetQuantity() > 0)
 	{
 		pRoot->UpdateGS();
-		InitStaticSpatials(mStaticSpatials, mPrepareForStaticBatching);
+		InitializeStaticSpatials(mStaticSpatials, mPrepareForStaticBatching);
 		mStaticSpatials.RemoveAll();
+	}
+
+	if (pPhysicsWorld != NULL)
+	{
+		RegisterColliders(mColliders, pPhysicsWorld);
+		mColliders.RemoveAll();
 	}
 
 	return pRoot;
@@ -95,8 +100,7 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
-Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
-	Bool hasMipmaps)
+Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize, Bool hasMipmaps)
 {
 	std::vector<UChar> rawImage;
 	ULong width;
@@ -118,8 +122,7 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
 }
 
 //----------------------------------------------------------------------------
-Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
-	UInt maxLength)
+Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height, UInt maxLength)
 {
 	// Init FreeType lib and font
 	Int fileSize;
@@ -395,6 +398,7 @@ void Importer::ResetStatistics()
 	mStatistics.MaterialCount = 0;
 	mStatistics.VertexBufferCount = 0;
 	mStatistics.IndexBufferCount = 0;
+	mStatistics.ColliderCount = 0;
 }
 
 //----------------------------------------------------------------------------
@@ -610,6 +614,44 @@ void Importer::UpdateGS(Spatial* pSpatial)
 }
 
 //----------------------------------------------------------------------------
+void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+{
+	UpdateGS(pSpatial);
+
+	Char* pShape = GetValue(pXmlNode, "Shape");
+	WIRE_ASSERT(pShape);
+
+	// only box colliders supported for now
+	WIRE_ASSERT (Is("Box", pShape));
+	
+	Vector3F c = Vector3F::ZERO;
+	Vector3F s = Vector3F::ONE;
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	{
+		if (Is("Center", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%f, %f, %f", &c.X(), &c.Y(), &c.Z());
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+		}
+		else if (Is("Size", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+		}
+	}
+
+	Collider* pCollider = WIRE_NEW Collider(WIRE_NEW btBoxShape(BulletUtils::Convert(s * 0.5f)));
+
+	pSpatial->AttachController(pCollider);
+	mColliders.Append(pCollider);
+
+	mStatistics.ColliderCount++;
+}
+
+//----------------------------------------------------------------------------
 void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	UpdateGS(pSpatial);
@@ -771,7 +813,7 @@ Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 		pNode->SetName(pName);
 	}
 
-	ParseTransformation(pXmlNode, pNode);
+	ParseTransformationAndComponents(pXmlNode, pNode);
 
 	return pNode;
 }
@@ -933,6 +975,10 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 	else if (Is("Light", pXmlNode->name()))
 	{
 		ParseLight(pXmlNode, pSpatial);
+	}
+	else if (Is("Collider", pXmlNode->name()))
+	{
+		ParseCollider(pXmlNode, pSpatial);
 	}
 }
 
@@ -1284,8 +1330,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		}	
 	}
 
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(va, verticesSize/
-		(3*sizeof(Float)), vUsage);
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(va, verticesSize/ (3*sizeof(Float)), vUsage);
 	mStatistics.VertexBufferCount++;
 
 	Float* pTempVertices = pVertices;
@@ -1338,10 +1383,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	Free32(pVertices);
 
 	Int indicesSize;
-	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName,
-		indicesSize, iBigEndian));
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(
-		indicesSize/sizeof(UInt), iUsage);
+	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName, indicesSize, iBigEndian));
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize / sizeof(UInt), iUsage);
 	mStatistics.IndexBufferCount++;
 	for (UInt i = 0; i < indicesSize/sizeof(UInt); i++)
 	{
@@ -1351,6 +1394,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mMeshes.Insert(pName, pMesh);
+
 	return pMesh;
 }
 
@@ -1556,8 +1600,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 }
 
 //----------------------------------------------------------------------------
-void Importer::InitStaticSpatials(TArray<Spatial*>& rSpatials,
-	Bool prepareForStaticBatching)
+void Importer::InitializeStaticSpatials(TArray<Spatial*>& rSpatials, Bool prepareForStaticBatching)
 {
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
 	{
@@ -1572,6 +1615,17 @@ void Importer::InitStaticSpatials(TArray<Spatial*>& rSpatials,
 				pGeo->MakeStatic();
 			}
 		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Importer::RegisterColliders(TArray<Collider*>& rColliders, btDynamicsWorld* pPhysicsWorld)
+{
+	for (UInt i = 0; i < rColliders.GetQuantity(); i++)
+	{
+		WIRE_ASSERT(rColliders[i]);
+
+		rColliders[i]->Register(pPhysicsWorld);
 	}
 }
 

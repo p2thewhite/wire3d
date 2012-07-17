@@ -1,17 +1,21 @@
 #include "FirstPersonController.h"
+#include "BulletUtils.h"
 
 using namespace Wire;
 
+#define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
+
 //----------------------------------------------------------------------------
-FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera)
-	:
-	mLastAppTime(0),
-	mAngleX(0),
-	mAngleY(0),
-	mAngleXIncrement(0),
-	mAngleYIncrement(0),
+FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera) :
+	mPitch(0),
+	mYaw(0),
+	mPitchIncrement(0),
+	mYawIncrement(0),
 	mMove(Vector3F::ZERO),
-	mMaxVerticalAngle(MathF::PI / 4),
+	mJump(false),
+	mMaxPitch(MathF::PI / 4),
+	mCharacterHeight(1),
+	mCharacterWidth(1),
 	mMoveSpeed(2.5f),
 	mRotateSpeed(MathF::PI / 9)
 {
@@ -21,25 +25,28 @@ FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* 
 	}
 
 	// ---
+
 	mspCamera = pCamera;
-	mspCamera->SetFrame(rPosition, Vector3F(0, 0, 1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
+	mspCamera->SetFrame(rPosition, Vector3F(0, 0, -1), Vector3F(0, 1, 0), Vector3F(1, 0, 0));
 }
 
 //----------------------------------------------------------------------------
 Bool FirstPersonController::Update(Double appTime)
 {
-	Float deltaTime = static_cast<Float>(mLastAppTime - appTime);
+	static Double lastApplicationTime = 0;
+	Float deltaTime = static_cast<Float>(lastApplicationTime - appTime);
+	lastApplicationTime = appTime;
 
 	// apply accumulators
 	mMove *= deltaTime;
-	mAngleY += (mAngleYIncrement * deltaTime);
-	mAngleX += mAngleXIncrement * deltaTime;
-	mAngleX = MathF::Min(MathF::Max(mAngleX, -mMaxVerticalAngle), mMaxVerticalAngle); // clamping the value
+	mYaw += (mYawIncrement * deltaTime);
+	mPitch += (mPitchIncrement * deltaTime);
+	mPitch = MathF::Clamp(-mMaxPitch, mPitch, mMaxPitch);
 
 	// calculate rotation matrices
 	Matrix34F rotationX, rotationY;
-	rotationX.FromAxisAngle(Vector3F::UNIT_X, mAngleX);
-	rotationY.FromAxisAngle(Vector3F::UNIT_Y, mAngleY);
+	rotationX.FromAxisAngle(Vector3F::UNIT_X, mPitch);
+	rotationY.FromAxisAngle(Vector3F::UNIT_Y, mYaw);
 
 	mLookAt = rotationY * rotationX * Vector3F::UNIT_Z;
 	mUp = rotationY * rotationX * Vector3F::UNIT_Y;
@@ -48,18 +55,70 @@ Bool FirstPersonController::Update(Double appTime)
 	rotationY.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
 	mLeft = rotationY * mBack;
 
-	// actually rotate the camera
-	mspCamera->SetFrame(mspCamera->GetLocation() + mMove, mLookAt, mUp, mLeft);
+	UpdateCamera();
+	MoveCharacterController();
 
 	// reset accumulators
 	mMove = Vector3F::ZERO;
-	mAngleXIncrement = 0;
-	mAngleYIncrement = 0;
-
-	// update last application time
-	mLastAppTime = appTime;
+	mPitchIncrement = 0;
+	mYawIncrement = 0;
+	mJump = false;
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::Register(btDynamicsWorld* pPhysicsWorld)
+{
+	WIRE_ASSERT(pPhysicsWorld);
+
+	// set physics world reference
+	mpPhysicsWorld = pPhysicsWorld;
+
+	btTransform transform;
+	transform.setIdentity ();
+
+	// set position
+	transform.setOrigin(BulletUtils::Convert(mspCamera->GetLocation()));
+
+	mpGhostObject = new btPairCachingGhostObject();
+	mpGhostObject->setWorldTransform(transform);
+
+	pPhysicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
+	btConvexShape* capsuleShape = new btCapsuleShape(mCharacterWidth, mCharacterHeight);
+	mpGhostObject->setCollisionShape (capsuleShape);
+	mpGhostObject->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
+
+	mpPhysicsCharacterController = new btKinematicCharacterController (mpGhostObject, capsuleShape, mStepHeight);
+
+	// collide only with static objects (for now)
+	mpPhysicsWorld->addCollisionObject(mpGhostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+	mpPhysicsWorld->addAction(mpPhysicsCharacterController);
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::SetHeadHeight(Float headHeight)
+{
+	mHeadHeight = headHeight;
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::SetCharacterWidth(Float characterWidth)
+{
+	mCharacterWidth = characterWidth;
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::SetCharacterHeight(Float characterHeight)
+{
+	mCharacterHeight = characterHeight;
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::SetStepHeight(Float stepHeight)
+{
+	mStepHeight = stepHeight;
 }
 
 //----------------------------------------------------------------------------
@@ -81,9 +140,9 @@ void FirstPersonController::SetLookUpDeadZone(const Vector2F& rLookUpDeadZone)
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonController::SetMaxVerticalAngle(Float maxVerticalAngle)
+void FirstPersonController::SetMaximumVerticalAngle(Float maximumVerticalAngle)
 {
-	mMaxVerticalAngle = maxVerticalAngle;
+	mMaxPitch = DEGREES_TO_RADIANS(maximumVerticalAngle);
 }
 
 //----------------------------------------------------------------------------
@@ -111,25 +170,49 @@ void FirstPersonController::StrafeRight()
 }
 
 //----------------------------------------------------------------------------
+void FirstPersonController::Jump()
+{
+	mJump = true;
+}
+
+//----------------------------------------------------------------------------
 void FirstPersonController::LookAt(const Vector2F& rLookAt)
 {
 	if (rLookAt.X() > mLookUpDeadZone.X())
 	{
-		mAngleYIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
+		mYawIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
 	}
 
 	else if (rLookAt.X() < -mLookUpDeadZone.X())
 	{
-		mAngleYIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
+		mYawIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
 	}
 
 	if (rLookAt.Y() > mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
+		mPitchIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
 	}
 
 	else if (rLookAt.Y() < -mLookUpDeadZone.Y())
 	{
-		mAngleXIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
+		mPitchIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
 	}
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::UpdateCamera()
+{
+	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
+	mspCamera->SetFrame(Vector3F(origin.x(), origin.y() + mHeadHeight, origin.z()), mLookAt, mUp, mLeft);
+}
+
+//----------------------------------------------------------------------------
+void FirstPersonController::MoveCharacterController()
+{
+	if (mJump)
+	{
+		mpPhysicsCharacterController->jump();
+	}
+
+	mpPhysicsCharacterController->setWalkDirection(BulletUtils::Convert(mMove));
 }

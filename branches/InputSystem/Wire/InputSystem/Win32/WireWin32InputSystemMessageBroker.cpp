@@ -8,6 +8,8 @@
 
 #include "WireWin32InputSystemMessageBroker.h"
 #include "WireMemory.h"
+#include "WireMath.h"
+#include "WireSystem.h"
 #include <Windows.h>
 #include <WinUser.h>
 #include <Windowsx.h>
@@ -15,8 +17,10 @@
 using namespace Wire;
 
 Win32InputSystemMessageBroker* Win32InputSystemMessageBroker::s_pInstance = NULL;
+Double Win32InputSystemMessageBroker::s_MouseStagnationTolerance = 5; // 5 seconds
 
-Win32InputSystemMessageBroker::Win32InputSystemMessageBroker()
+Win32InputSystemMessageBroker::Win32InputSystemMessageBroker() :
+	mLastMouseMoveTime(0)
 {
 	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer();
 	mpBackBuffer = WIRE_NEW Win32InputDataBuffer();
@@ -48,6 +52,8 @@ Win32InputSystemMessageBroker* Win32InputSystemMessageBroker::GetInstance()
  */
 void Win32InputSystemMessageBroker::SwapBuffers()
 {
+	CheckMouseStagnation();
+
 	Win32InputDataBuffer* pOldFrontBuffer = mpFrontBuffer;
 	mpFrontBuffer = mpBackBuffer;
 	mpBackBuffer = pOldFrontBuffer;
@@ -83,10 +89,11 @@ Bool Win32InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordP
 		return true;
 	case WM_MOUSEWHEEL:
 		mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wordParameter);
-		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/
-			WHEEL_DELTA);
+		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
+		mLastMouseMoveTime = System::GetTime();
+
 		x = GET_X_LPARAM(longParameter); 
 		y = GET_Y_LPARAM(longParameter);
 
@@ -104,3 +111,16 @@ Bool Win32InputSystemMessageBroker::OnSystemMessage(UInt messageType, UInt wordP
 
 	return false;
 }
+
+void Win32InputSystemMessageBroker::CheckMouseStagnation()
+{
+	Double time = System::GetTime();
+	Double lastMouseMoveElapsedTime = time - mLastMouseMoveTime;
+
+	if (lastMouseMoveElapsedTime > s_MouseStagnationTolerance)
+	{
+		mpBackBuffer->SetMouseX(MathF::MAX_REAL);
+		mpBackBuffer->SetMouseY(MathF::MAX_REAL);
+	}
+}
+

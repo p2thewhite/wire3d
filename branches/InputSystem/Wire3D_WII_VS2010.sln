@@ -310,6 +310,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "Tools\freetype\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample11 - Input", "Samples\Sample11\Sample11_WII.vcxproj", "{1A21949F-EF98-4ABD-A91C-39182829F15D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "First Person Shooter Game", "Samples\FirstPersonShooterGame\FirstPersonShooterGame_WII.vcxproj", "{30A5849F-209A-4716-8F8D-C5912D9D6EE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -380,6 +382,10 @@ Global
 		{1A21949F-EF98-4ABD-A91C-39182829F15D}.Debug|Win32.Build.0 = Debug|Win32
 		{1A21949F-EF98-4ABD-A91C-39182829F15D}.Release|Win32.ActiveCfg = Release|Win32
 		{1A21949F-EF98-4ABD-A91C-39182829F15D}.Release|Win32.Build.0 = Release|Win32
+		{30A5849F-209A-4716-8F8D-C5912D9D6EE8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{30A5849F-209A-4716-8F8D-C5912D9D6EE8}.Debug|Win32.Build.0 = Debug|Win32
+		{30A5849F-209A-4716-8F8D-C5912D9D6EE8}.Release|Win32.ActiveCfg = Release|Win32
+		{30A5849F-209A-4716-8F8D-C5912D9D6EE8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

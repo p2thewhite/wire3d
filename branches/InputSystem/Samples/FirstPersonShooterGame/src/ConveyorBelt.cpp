@@ -23,13 +23,13 @@ ConveyorBelt::ConveyorBelt(Geometry* pGeometry, Renderer* pRenderer)
 //----------------------------------------------------------------------------
 Bool ConveyorBelt::Update(Double appTime)
 {
-	Double elapsedTime = appTime - mLastAppTime;
-	if (mLastAppTime == -MathD::MAX_REAL)
+	Double elapsedTime = appTime - mLastApplicationTime;
+	if (mLastApplicationTime == -MathD::MAX_REAL)
 	{
 		elapsedTime = 0;
 	}
 
-	mLastAppTime = appTime;
+	mLastApplicationTime = appTime;
 
 	mOffset -= static_cast<Float>(elapsedTime);
 	if (mOffset < -1.0f)
