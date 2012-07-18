@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="8.00"
 	Name="LinearMath"
 	ProjectGUID="{01410FDF-213A-403A-8012-92185FAC02E3}"
-	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
-	>
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
@@ -21,83 +16,54 @@
 			IntermediateDirectory="LinearMath.dir\Debug"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000 /fp:fast"
+				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
+				BasicRuntimeChecks="3"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				EnableEnhancedInstructionSet="1"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="0"
+				Optimization="0"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_DEBUG,_DEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="..\..\lib\Debug/LinearMath.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
+				PreprocessorDefinitions="WIN32,_DEBUG,_DEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Debug\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,_DEBUG,_DEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000 /fp:fast"
-				Optimization="0"
-				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
-				PreprocessorDefinitions="WIN32,_DEBUG,_DEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				ExceptionHandling="1"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				EnableEnhancedInstructionSet="1"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="Debug"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="..\..\lib\Debug/LinearMath.pdb"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,_DEBUG,_DEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\lib\Debug\LinearMath.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="..\..\lib\Debug\LinearMath.lib"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -105,204 +71,145 @@
 			IntermediateDirectory="LinearMath.dir\Release"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000 /fp:fast"
+				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
+				CompileAs="2"
+				EnableEnhancedInstructionSet="1"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="2"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,NDEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="..\..\lib\Release/LinearMath.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
+				PreprocessorDefinitions="WIN32,NDEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Release\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,NDEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Release\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000 /fp:fast"
-				Optimization="2"
-				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
-				PreprocessorDefinitions="WIN32,NDEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Release\&quot;"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				EnableEnhancedInstructionSet="1"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="Release"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="..\..\lib\Release/LinearMath.pdb"
-				WarningLevel="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,NDEBUG,USE_GRAPHICAL_BENCHMARK,_IRR_STATIC_LIB_,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,CMAKE_INTDIR=\&quot;Release\&quot;"
-				AdditionalIncludeDirectories="..\..\..\..\Glut;..\..\src;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\lib\Release\LinearMath.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="..\..\lib\Release\LinearMath.lib"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\src\LinearMath\btAlignedAllocator.cpp"
-				>
+				RelativePath="..\..\src\LinearMath\btAlignedAllocator.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btConvexHull.cpp"
-				>
+				RelativePath="..\..\src\LinearMath\btConvexHull.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btGeometryUtil.cpp"
-				>
+				RelativePath="..\..\src\LinearMath\btGeometryUtil.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btQuickprof.cpp"
-				>
+				RelativePath="..\..\src\LinearMath\btQuickprof.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btSerializer.cpp"
-				>
+				RelativePath="..\..\src\LinearMath\btSerializer.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			>
+			Filter="">
 			<File
-				RelativePath="..\..\src\LinearMath\btAabbUtil2.h"
-				>
+				RelativePath="..\..\src\LinearMath\btAabbUtil2.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btAlignedAllocator.h"
-				>
+				RelativePath="..\..\src\LinearMath\btAlignedAllocator.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btAlignedObjectArray.h"
-				>
+				RelativePath="..\..\src\LinearMath\btAlignedObjectArray.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btConvexHull.h"
-				>
+				RelativePath="..\..\src\LinearMath\btConvexHull.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btDefaultMotionState.h"
-				>
+				RelativePath="..\..\src\LinearMath\btDefaultMotionState.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btGeometryUtil.h"
-				>
+				RelativePath="..\..\src\LinearMath\btGeometryUtil.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btHashMap.h"
-				>
+				RelativePath="..\..\src\LinearMath\btHashMap.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btIDebugDraw.h"
-				>
+				RelativePath="..\..\src\LinearMath\btIDebugDraw.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btList.h"
-				>
+				RelativePath="..\..\src\LinearMath\btList.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btMatrix3x3.h"
-				>
+				RelativePath="..\..\src\LinearMath\btMatrix3x3.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btMinMax.h"
-				>
+				RelativePath="..\..\src\LinearMath\btMinMax.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btMotionState.h"
-				>
+				RelativePath="..\..\src\LinearMath\btMotionState.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btPoolAllocator.h"
-				>
+				RelativePath="..\..\src\LinearMath\btPoolAllocator.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btQuadWord.h"
-				>
+				RelativePath="..\..\src\LinearMath\btQuadWord.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btQuaternion.h"
-				>
+				RelativePath="..\..\src\LinearMath\btQuaternion.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btQuickprof.h"
-				>
+				RelativePath="..\..\src\LinearMath\btQuickprof.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btRandom.h"
-				>
+				RelativePath="..\..\src\LinearMath\btRandom.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btScalar.h"
-				>
+				RelativePath="..\..\src\LinearMath\btScalar.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btSerializer.h"
-				>
+				RelativePath="..\..\src\LinearMath\btSerializer.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btStackAlloc.h"
-				>
+				RelativePath="..\..\src\LinearMath\btStackAlloc.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btTransform.h"
-				>
+				RelativePath="..\..\src\LinearMath\btTransform.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btTransformUtil.h"
-				>
+				RelativePath="..\..\src\LinearMath\btTransformUtil.h">
 			</File>
 			<File
-				RelativePath="..\..\src\LinearMath\btVector3.h"
-				>
+				RelativePath="..\..\src\LinearMath\btVector3.h">
 			</File>
 		</Filter>
 	</Files>

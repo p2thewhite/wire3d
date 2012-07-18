@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="Sample11 - Input"
-	ProjectGUID="{535A54C5-0304-4361-A168-A8EC5BE41313}"
+	ProjectGUID="{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}"
 	RootNamespace="Sample11 - Input"
 	Keyword="MakeFileProj"
 	>
@@ -61,6 +61,14 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath=".\src\Cursors.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\Cursors.h"
+			>
+		</File>
 		<File
 			RelativePath=".\src\Sample11.cpp"
 			>
