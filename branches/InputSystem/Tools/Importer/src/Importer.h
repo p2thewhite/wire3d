@@ -13,6 +13,8 @@
 #include "WireString.h"
 #include "WireText.h"
 #include "WireVector2.h"
+#include "WireVertexBuffer.h"
+#include "WireIndexBuffer.h"
 
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
@@ -78,6 +80,8 @@ private:
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
 	Text* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
+	IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage);
+	VertexBuffer* LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian, Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian, Char* pColorsName, Bool isColorsBigEndian, TArray<Char*> &uvSetNames, TArray<Bool> uvBigEndian);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);

@@ -15,6 +15,11 @@ public:
 	Collider(btCollisionShape* pShape);
 	~Collider();
 
+	inline btCollisionShape* GetShape()
+	{
+		return mpShape;
+	}
+
 	virtual void Register(btDynamicsWorld* pPhysicsWorld);
 	virtual Bool Update(Double appTime);
 

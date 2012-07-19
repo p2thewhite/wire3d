@@ -6,7 +6,6 @@
 
 #include "WireEffect.h"
 #include "WireImage2D.h"
-#include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMesh.h"
 #include "WireQuaternion.h"
@@ -18,7 +17,7 @@
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 #include "WireTStack.h"
-#include "WireVertexBuffer.h"
+#include "WireVertexAttributes.h"
 
 #include "BulletUtils.h"
 
@@ -108,15 +107,13 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize, Bool hasMipmaps)
 	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
 
 	Bool hasAlpha = (rawImage.size() / (height*width)) == 4;
-	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
-		Image2D::FM_RGB888;
+	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 : Image2D::FM_RGB888;
 
 	size_t size = Image2D::GetBytesPerPixel(format) * width*height;
 	UChar* pDst = WIRE_NEW UChar[size];
 	System::Memcpy(pDst, size, &(rawImage[0]), size);
 
-	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst,
-		hasMipmaps);
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst, hasMipmaps);
 
 	return pImage;
 }
@@ -286,8 +283,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height, UInt 
 		Float cWidth = static_cast<Float>(rBitmap.width);
 		Float cHeight = static_cast<Float>(rBitmap.rows);
 		Float cStride = static_cast<Float>(slot->advance.x >> 6);
-		Float cOffsetY = static_cast<Float>(slot->bitmap.rows - slot->
-			bitmap_top);
+		Float cOffsetY = static_cast<Float>(slot->bitmap.rows - slot->bitmap_top);
 		charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
 
 		Int q = 0;
@@ -297,8 +293,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height, UInt 
 			for (Int i = offset; i < (offset + rBitmap.width); i++, p++)
 			{
 				UChar pixel = rBitmap.buffer[q*rBitmap.width + p];
-				WIRE_ASSERT(((j*texWidth + i) < (texWidth * texHeight)) &&
-					((j*texWidth + i) >= 0));
+				WIRE_ASSERT(((j*texWidth + i) < (texWidth * texHeight)) && ((j*texWidth + i) >= 0));
 				pDst[(j*texWidth + i)*4] = 0xFF;
 				pDst[(j*texWidth + i)*4+1] = 0xFF;
 				pDst[(j*texWidth + i)*4+2] = 0xFF;
@@ -310,8 +305,7 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height, UInt 
 		WIRE_ASSERT((slot->advance.y >> 6) <= static_cast<Int>(height));
 	}
 
-	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
-		texHeight, pDst, false);
+	Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth, texHeight, pDst, false);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	pTexture->SetFilterType(Texture2D::FT_NEAREST);
  	Text* pText = WIRE_NEW Text(height, pTexture, uvs, charSizes, maxLength);
@@ -432,8 +426,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
 		{
 			ParseComponents(pChild, pNode);
 
@@ -449,8 +442,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 //----------------------------------------------------------------------------
 Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 	{
 		if (Is(pName, attr->name()))
 		{
@@ -464,8 +456,7 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 	{
 		if (Is(pName, attr->name()))
 		{
@@ -479,8 +470,7 @@ Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 	{
 		if (Is("LittleEndian", attr->name()))
 		{
@@ -501,8 +491,7 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 	{
 		if (Is("Usage", attr->name()))
 		{
@@ -559,8 +548,7 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
-ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
-	pName, Bool& rHasValue)
+ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue)
 {
 	ColorRGB c = ColorRGB::WHITE;
 	rHasValue = false;
@@ -577,8 +565,7 @@ ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
-	pName, Bool& rHasValue)
+ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue)
 {
 	ColorRGBA c = ColorRGBA::WHITE;
 	rHasValue = false;
@@ -618,32 +605,54 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	UpdateGS(pSpatial);
 
-	Char* pShape = GetValue(pXmlNode, "Shape");
-	WIRE_ASSERT_NO_SIDEEFFECTS(pShape);
+	Char* pShapeName = GetValue(pXmlNode, "Shape");
+	WIRE_ASSERT_NO_SIDEEFFECTS(pShapeName);
 
-	// only box colliders supported for now
-	WIRE_ASSERT_NO_SIDEEFFECTS(Is("Box", pShape));
-	
-	Vector3F c = Vector3F::ZERO;
-	Vector3F s = Vector3F::ONE;
+	Collider* pCollider;
+	btCollisionShape* pCollisionShape;
 
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	if (Is("Box", pShapeName))
 	{
-		if (Is("Center", attr->name()))
+		// FIXME: center is not being used!
+		Vector3F center = Vector3F::ZERO;
+		Vector3F size = Vector3F::ONE;
+
+		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 		{
-			Int n;
-			n = sscanf(attr->value(), "%f, %f, %f", &c.X(), &c.Y(), &c.Z());
-			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+			if (Is("Center", attr->name()))
+			{
+				Int n;
+				n = sscanf(attr->value(), "%f, %f, %f", &center.X(), &center.Y(), &center.Z());
+				WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+			}
+			else if (Is("Size", attr->name()))
+			{
+				Int n;
+				n = sscanf(attr->value(), "%f, %f, %f", &size.X(), &size.Y(), &size.Z());
+				WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+			}
 		}
-		else if (Is("Size", attr->name()))
-		{
-			Int n;
-			n = sscanf(attr->value(), "%f, %f, %f", &s.X(), &s.Y(), &s.Z());
-			WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
-		}
+
+		pCollisionShape = WIRE_NEW btBoxShape(BulletUtils::Convert(size * 0.5f));
+	}
+	else if (Is("Mesh", pShapeName))
+	{
+		rapidxml::xml_node<>* pFirstChild = pXmlNode->first_node();
+
+		WIRE_ASSERT_NO_SIDEEFFECTS(pFirstChild /* Mesh collider has no child */);
+		WIRE_ASSERT_NO_SIDEEFFECTS(Is("Mesh", pFirstChild->name()) /* First child of mesh collider is not a mesh */);
+		
+		Mesh* pMesh = ParseMesh(pFirstChild);
+		btTriangleIndexVertexArray* pTriangleIndexVertexArray = BulletUtils::Convert(pMesh);
+
+		pCollisionShape = WIRE_NEW btBvhTriangleMeshShape(pTriangleIndexVertexArray, false);
+	}
+	else 
+	{
+		WIRE_ASSERT_NO_SIDEEFFECTS(false /* Collider shape not supported yet! */);
 	}
 
-	Collider* pCollider = WIRE_NEW Collider(WIRE_NEW btBoxShape(BulletUtils::Convert(s * 0.5f)));
+	pCollider = WIRE_NEW Collider(pCollisionShape);
 
 	pSpatial->AttachController(pCollider);
 	mColliders.Append(pCollider);
@@ -734,8 +743,7 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode,
-	Spatial* pSpatial)
+void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	Vector3F t = Vector3F::ZERO;
 	QuaternionF r = QuaternionF::IDENTITY;
@@ -826,8 +834,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild; pChild = pChild->next_sibling())
 		{
 			if (Is("Mesh", pChild->name()))
 			{
@@ -960,8 +967,7 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
-	pSpatial)
+void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	State* pState = ParseRenderStates(pXmlNode);
 	if (pState)
@@ -983,15 +989,13 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>*
-	pXmlNode, Spatial* pSpatial)
+void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 	ParseTransformation(pXmlNode, pSpatial);
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
 		{
 			ParseComponents(pChild, pSpatial);
 		}
@@ -1224,43 +1228,42 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		return *pValue;
 	}
 
-	Char* pVerticesName = NULL;
-	Char* pIndicesName = NULL;
-	Char* pNormalsName = NULL;
-	Char* pColorsName = NULL;
+	Char* pVerticesFileName = NULL;
+	Char* pIndicesFileName = NULL;
+	Char* pNormalsFileName = NULL;
+	Char* pColorsFileName = NULL;
 	TArray<Char*> uvSetNames(8,8);
-	Bool vBigEndian = true;
-	Bool iBigEndian = true;
-	Bool nBigEndian = true;
-	Bool cBigEndian = true;
+	Bool isVertexBufferBigEndian = true;
+	Bool isIndexBufferBigEndian = true;
+	Bool isNormalsBigEndian = true;
+	Bool isColorsBigEndian = true;
 	TArray<Bool> uvBigEndian(8,8);
-	Buffer::UsageType vUsage = Buffer::UT_STATIC;
-	Buffer::UsageType iUsage = Buffer::UT_STATIC;
+	Buffer::UsageType vertexBufferUsage = Buffer::UT_STATIC;
+	Buffer::UsageType indexBufferUsage = Buffer::UT_STATIC;
 
-	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-		pChild = pChild->next_sibling())
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
 	{
-		if (!pVerticesName && Is("Vertices", pChild->name()))
+		if (!pVerticesFileName && Is("Vertices", pChild->name()))
 		{
-			pVerticesName = GetValue(pChild, "Name");
-			vBigEndian = IsBigEndian(pChild);
-			vUsage = GetUsageType(pChild);
+			pVerticesFileName = GetValue(pChild, "Name");
+			isVertexBufferBigEndian = IsBigEndian(pChild);
+			vertexBufferUsage = GetUsageType(pChild);
 		}
-		else if (!pIndicesName && Is("Indices", pChild->name()))
+		else if (!pIndicesFileName && Is("Indices", pChild->name()))
 		{
-			pIndicesName = GetValue(pChild, "Name");
-			iBigEndian = IsBigEndian(pChild);
-			iUsage = GetUsageType(pChild);
+			pIndicesFileName = GetValue(pChild, "Name");
+			isIndexBufferBigEndian = IsBigEndian(pChild);
+			indexBufferUsage = GetUsageType(pChild);
 		}
-		else if (!pNormalsName && Is("Normals", pChild->name()))
+		else if (!pNormalsFileName && Is("Normals", pChild->name()))
 		{
-			pNormalsName = GetValue(pChild, "Name");
-			nBigEndian = IsBigEndian(pChild);
+			pNormalsFileName = GetValue(pChild, "Name");
+			isNormalsBigEndian = IsBigEndian(pChild);
 		}
-		else if (!pColorsName && Is("Colors", pChild->name()))
+		else if (!pColorsFileName && Is("Colors", pChild->name()))
 		{
-			pColorsName = GetValue(pChild, "Name");
-			cBigEndian = IsBigEndian(pChild);
+			pColorsFileName = GetValue(pChild, "Name");
+			isColorsBigEndian = IsBigEndian(pChild);
 		}
 		else if (System::Strncmp("Uv", pChild->name(), 2) == 0)
 		{
@@ -1273,124 +1276,18 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	if (!pVerticesName || !pIndicesName)
+	if (!pVerticesFileName || !pIndicesFileName)
 	{
-		WIRE_ASSERT(false /* Mesh has no vertices or indices */);
+		WIRE_ASSERT(false /* Mesh has no vertices or indices files */);
 		return NULL;
 	}
 
-	VertexAttributes va;
-	va.SetPositionChannels(3);
-	Int verticesSize;
-	Float* pVertices = Load32(pVerticesName, verticesSize, vBigEndian);
+	VertexBuffer* pVertexBuffer = LoadVertexBufferFromFiles(pVerticesFileName, isVertexBufferBigEndian, vertexBufferUsage, 
+		pNormalsFileName, isNormalsBigEndian, 
+		pColorsFileName, isColorsBigEndian, 
+		uvSetNames, uvBigEndian);
 
-	Int normalsSize;
-	Float* pNormals = NULL;
-	if (pNormalsName)
-	{
-		va.SetNormalChannels(3);
-		pNormals = Load32(pNormalsName, normalsSize, nBigEndian);
-		if (verticesSize != normalsSize)
-		{
-			WIRE_ASSERT(false /* vertices and normals do not match */);
-			Free32(pVertices);
-			return NULL;
-		}
-	}
-
-	Int colorsSize;
-	Float* pColors = NULL;
-	if (pColorsName)
-	{
-		va.SetColorChannels(4);
-		pColors = Load32(pColorsName, colorsSize, cBigEndian);
-		if (verticesSize/(3*sizeof(Float)) != colorsSize/(4*sizeof(Float)))
-		{
-			WIRE_ASSERT(false /* vertices and colors do not match */);
-			Free32(pNormals);
-			Free32(pVertices);
-			return NULL;
-		}
-	}
-
-	TArray<Float*> uvSets(uvSetNames.GetQuantity());
-	TArray<Int> uvSetSizes(uvSetNames.GetQuantity());
-	for (UInt i = 0; i < uvSetNames.GetQuantity(); i++)
-	{
-		uvSetSizes.Append(0);
-		uvSets.Append(Load32(uvSetNames[i], uvSetSizes[i], uvBigEndian[i]));
-		va.SetTCoordChannels(2, i);
-		if (verticesSize/(3*sizeof(Float)) != uvSetSizes[i]/(2*sizeof(Float)))
-		{
-			WIRE_ASSERT(false /* vertices and uv sets do not match */);
-			Free32(pColors);
-			Free32(pNormals);
-			Free32(pVertices);
-			return NULL;
-		}	
-	}
-
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(va, verticesSize/ (3*sizeof(Float)), vUsage);
-	mStatistics.VertexBufferCount++;
-
-	Float* pTempVertices = pVertices;
-	Float* pTempNormals = pNormals;
-	Float* pTempColors = pColors;
-	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
-	{
-		if (pVertices)
-		{
-			Vector3F v;
-			v.X() = *pTempVertices++;
-			v.Y() = *pTempVertices++;
-			v.Z() = *pTempVertices++;
-			pVertexBuffer->Position3(i) = v;
-		}
-
-		if (pNormals)
-		{
-			Vector3F n;
-			n.X() = *pTempNormals++;
-			n.Y() = *pTempNormals++;
-			n.Z() = *pTempNormals++;
-			pVertexBuffer->Normal3(i) = n;
-		}
-
-		if (pColors)
-		{
-			ColorRGBA c;
-			c.R() = *pTempColors++;
-			c.G() = *pTempColors++;
-			c.B() = *pTempColors++;
-			c.A() = *pTempColors++;
-			pVertexBuffer->Color4(i) = c;
-		}
-
-		for (UInt j = 0; j < uvSets.GetQuantity(); j++)
-		{
-			Vector2F v(uvSets[j][i*2], uvSets[j][i*2+1]);
-			pVertexBuffer->TCoord2(i, j) = v;
-		}
-	}
-
-	for (UInt i = 0; i < uvSets.GetQuantity(); i++)
-	{
-		Free32(uvSets[i]);
-	}
-
-	Free32(pColors);
-	Free32(pNormals);
-	Free32(pVertices);
-
-	Int indicesSize;
-	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pIndicesName, indicesSize, iBigEndian));
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize / sizeof(UInt), iUsage);
-	mStatistics.IndexBufferCount++;
-	for (UInt i = 0; i < indicesSize/sizeof(UInt); i++)
-	{
-		WIRE_ASSERT(pIndices[i] < 65536);
-		(*pIndexBuffer)[i] = static_cast<UShort>(pIndices[i]);
-	}
+	IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(pIndicesFileName, isIndexBufferBigEndian, indexBufferUsage);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mMeshes.Insert(pName, pMesh);
@@ -1491,8 +1388,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
-	Material::BlendMode& blendMode)
+Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
@@ -1513,8 +1409,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
 	UInt anisoLevel = 0;
 
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
 	{
 		if (Is("Mipmaps", attr->name()))
 		{
@@ -1633,4 +1528,132 @@ void Importer::RegisterColliders(TArray<Collider*>& rColliders, btDynamicsWorld*
 Bool Importer::Is(const Char* pSrc, const Char* pDst)
 {
 	return (System::Strcmp(pSrc, pDst) == 0);
+}
+
+//----------------------------------------------------------------------------
+VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian, Buffer::UsageType vertexBufferUsage, 
+	Char* pNormalsName, Bool isNormalsBigEndian, 
+	Char* pColorsName, Bool isColorsBigEndian, 
+	TArray<Char*> &uvSetNames, TArray<Bool> uvBigEndian)
+{
+	VertexAttributes vertexAttributes;
+	vertexAttributes.SetPositionChannels(3);
+	Int verticesSize;
+	Float* pVertices = Load32(pFileName, verticesSize, isVertexBufferBigEndian);
+
+	Int normalsSize;
+	Float* pNormals = NULL;
+	if (pNormalsName)
+	{
+		vertexAttributes.SetNormalChannels(3);
+		pNormals = Load32(pNormalsName, normalsSize, isNormalsBigEndian);
+		if (verticesSize != normalsSize)
+		{
+			WIRE_ASSERT(false /* Vertices and normals do not match */);
+			Free32(pVertices);
+			return NULL;
+		}
+	}
+
+	Int colorsSize;
+	Float* pColors = NULL;
+	if (pColorsName)
+	{
+		vertexAttributes.SetColorChannels(4);
+		pColors = Load32(pColorsName, colorsSize, isColorsBigEndian);
+		if (verticesSize / (3 * sizeof(Float)) != colorsSize / (4 * sizeof(Float)))
+		{
+			WIRE_ASSERT(false /* Vertices and colors do not match */);
+			Free32(pNormals);
+			Free32(pVertices);
+			return NULL;
+		}
+	}
+
+	TArray<Float*> uvSets(uvSetNames.GetQuantity());
+	TArray<Int> uvSetSizes(uvSetNames.GetQuantity());
+	for (UInt i = 0; i < uvSetNames.GetQuantity(); i++)
+	{
+		uvSetSizes.Append(0);
+		uvSets.Append(Load32(uvSetNames[i], uvSetSizes[i], uvBigEndian[i]));
+		vertexAttributes.SetTCoordChannels(2, i);
+		if (verticesSize / (3 * sizeof(Float)) != uvSetSizes[i] / (2 * sizeof(Float)))
+		{
+			WIRE_ASSERT(false /* vertices and uv sets do not match */);
+			Free32(pColors);
+			Free32(pNormals);
+			Free32(pVertices);
+			return NULL;
+		}	
+	}
+
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(vertexAttributes, verticesSize / (3 * sizeof(Float)), vertexBufferUsage);
+	mStatistics.VertexBufferCount++;
+
+	Float* pTempVertices = pVertices;
+	Float* pTempNormals = pNormals;
+	Float* pTempColors = pColors;
+	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
+	{
+		if (pVertices)
+		{
+			Vector3F v;
+			v.X() = *pTempVertices++;
+			v.Y() = *pTempVertices++;
+			v.Z() = *pTempVertices++;
+			pVertexBuffer->Position3(i) = v;
+		}
+
+		if (pNormals)
+		{
+			Vector3F n;
+			n.X() = *pTempNormals++;
+			n.Y() = *pTempNormals++;
+			n.Z() = *pTempNormals++;
+			pVertexBuffer->Normal3(i) = n;
+		}
+
+		if (pColors)
+		{
+			ColorRGBA c;
+			c.R() = *pTempColors++;
+			c.G() = *pTempColors++;
+			c.B() = *pTempColors++;
+			c.A() = *pTempColors++;
+			pVertexBuffer->Color4(i) = c;
+		}
+
+		for (UInt j = 0; j < uvSets.GetQuantity(); j++)
+		{
+			Vector2F v(uvSets[j][i*2], uvSets[j][i*2+1]);
+			pVertexBuffer->TCoord2(i, j) = v;
+		}
+	}
+
+	for (UInt i = 0; i < uvSets.GetQuantity(); i++)
+	{
+		Free32(uvSets[i]);
+	}
+
+	Free32(pColors);
+	Free32(pNormals);
+	Free32(pVertices);
+
+	return pVertexBuffer;
+}
+
+//----------------------------------------------------------------------------
+IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage)
+{
+	Int indicesSize;
+	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pFileName, indicesSize, isIndexBufferBigEndian));
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize / sizeof(UInt), indexBufferUsage);
+	mStatistics.IndexBufferCount++;
+	for (UInt i = 0; i < indicesSize/sizeof(UInt); i++)
+	{
+		WIRE_ASSERT(pIndices[i] < 65536);
+		(*pIndexBuffer)[i] = static_cast<UShort>(pIndices[i]);
+	}
+
+	return pIndexBuffer;
 }
