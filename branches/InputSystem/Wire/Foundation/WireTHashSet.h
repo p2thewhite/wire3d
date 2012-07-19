@@ -64,7 +64,6 @@ public:
 	};
 
 	// linear traversal of table
-	// NOTE: in comparison to a SDL iterator, it's similar to a const iterator.
 	class Iterator
 	{
 	public:

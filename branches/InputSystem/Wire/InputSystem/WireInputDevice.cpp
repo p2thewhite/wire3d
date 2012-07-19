@@ -14,6 +14,8 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, InputDevice, Object);
 
 InputDevice::InputDevice()
+	:
+	mCapabilitiesByType(16)
 {
 }
 
@@ -21,14 +23,14 @@ InputDevice::~InputDevice()
 {
 }
 
-const std::vector<const InputCapability*>& InputDevice::GetCapabilities() const
+const TArray<const InputCapability*>& InputDevice::GetCapabilities() const
 {
 	return mReadOnlyCapabilities;
 }
 
-Bool InputDevice::HasCapability(const Rtti& pCapabilityType) const
+Bool InputDevice::HasCapability(const Rtti& rCapabilityType) const
 {
-	return GetCapability(pCapabilityType) != NULL;
+	return GetCapability(rCapabilityType) != NULL;
 }
 
 const InputDataBuffer* InputDevice::GetDataBuffer() const
@@ -41,18 +43,16 @@ void InputDevice::SetDataBuffer(const InputDataBuffer* pDataBuffer)
 	mpDataBuffer = pDataBuffer;
 }
 
-const InputCapability* InputDevice::GetCapability(const Rtti& pCapabilityType) const
+const InputCapability* InputDevice::GetCapability(const Rtti& rCapabilityType) const
 {
-	std::map<const Rtti*, InputCapability*>::const_iterator i = mCapabilitiesByType.begin();
-
-	while (i != mCapabilitiesByType.end())
+	THashTable<const Rtti*, InputCapability*>::Iterator it(&mCapabilitiesByType);
+	const Rtti* pKey = NULL;
+	for (InputCapability** pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
 	{
-		if (i->first->IsDerived(pCapabilityType))
+		if (pKey->IsDerived(rCapabilityType))
 		{
-			return i->second;
+			return *pValue;
 		}
-
-		i++;
 	}
 
 	return NULL;
@@ -60,6 +60,6 @@ const InputCapability* InputDevice::GetCapability(const Rtti& pCapabilityType) c
 
 void InputDevice::RegisterCapability(InputCapability* pInputCapability)
 {
-	mCapabilitiesByType.insert(std::pair<const Rtti*, InputCapability*>(&pInputCapability->GetType(), pInputCapability));
-	mReadOnlyCapabilities.push_back(pInputCapability);
+	mCapabilitiesByType.Insert(&pInputCapability->GetType(), pInputCapability);
+	mReadOnlyCapabilities.Append(pInputCapability);
 }

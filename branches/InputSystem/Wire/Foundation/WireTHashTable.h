@@ -67,13 +67,13 @@ public:
 	class Iterator
 	{
 	public:
-		Iterator(THashTable* pHashTable);
+		Iterator(const THashTable* pHashTable);
 
  		TVALUE* GetFirst(TKEY* pKey = NULL) const;
  		TVALUE* GetNext(TKEY* pKey = NULL) const;
 
 	private:
-		THashTable* mpHashTable;
+		const THashTable* mpHashTable;
 		mutable UInt mIndex;
 		mutable HashItem* mpItem;
 	};

@@ -4,15 +4,13 @@
 
 #include "Importer.h"
 #include "Cursors.h"
-#include <vector>
-#include <algorithm>
 
-using namespace Wire;
 using namespace std;
+using namespace Wire;
 
 #define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
 
-WIRE_APPLICATION (Sample11);
+WIRE_APPLICATION(Sample11);
 
 //----------------------------------------------------------------------------
 Sample11::Sample11() :
@@ -62,6 +60,8 @@ void Sample11::OnIdle()
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
+
+//	PrintInputDevicesInformations();
 }
 
 void Sample11::OnInput()
@@ -161,7 +161,8 @@ void Sample11::OnDevicesChange()
 }
 
 //----------------------------------------------------------------------------
-void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo, Float zRollInRadian)
+void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo,
+	Float zRollInRadian)
 {
 	if (playerNo >= mspCursors->GetQuantity())
 	{
@@ -169,7 +170,7 @@ void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo, Float
 		return;
 	}
 
-	Node* pCursors = DynamicCast < Node > (mspCursors->GetChild(playerNo));
+	Node* pCursors = DynamicCast<Node>(mspCursors->GetChild(playerNo));
 	WIRE_ASSERT(pCursors);
 	WIRE_ASSERT(pCursors->GetQuantity() == 3);
 	for (UInt i = 0; i < pCursors->GetQuantity(); i++)
@@ -299,14 +300,15 @@ void Sample11::PrintInputDevicesInformations()
 
 		System::Print("- Capabilities:");
 
-		const vector<const InputCapability*>& inputCapabilities = pInputDevice->GetCapabilities();
-		vector<const InputCapability*>::const_iterator j = inputCapabilities.begin();
-		while (j != inputCapabilities.end())
+		const TArray<const InputCapability*>& inputCapabilities = pInputDevice->GetCapabilities();
+		for (UInt j = 0; j < inputCapabilities.GetQuantity(); j++)
 		{
-			message << (*j)->GetType().GetName() << endl;
+			message << inputCapabilities[j]->GetType().GetName() << endl;
 			PrintAndClear(message);
-			j++;
 		}
 	}
+
+	message << endl;
+	PrintAndClear(message);
 }
 

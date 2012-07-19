@@ -10,10 +10,10 @@
 #ifndef WIREINPUTDEVICE_H
 #define WIREINPUTDEVICE_H
 
-#include "WireObject.h"
 #include "WireInputDataBuffer.h"
-#include <vector>
-#include <map>
+#include "WireObject.h"
+#include "WireTArray.h"
+#include "WireTHashTable.h"
 
 namespace Wire
 {
@@ -28,18 +28,18 @@ public:
 	InputDevice();
 	virtual ~InputDevice();
 
-	Bool HasCapability(const Rtti& pCapabilityType) const;
+	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const InputDataBuffer* GetDataBuffer() const;
 	void SetDataBuffer(const InputDataBuffer* pInputData);
-	const std::vector<const InputCapability*>& GetCapabilities() const;
-	const InputCapability* GetCapability(const Rtti& pCapabilityType) const;
+	const TArray<const InputCapability*>& GetCapabilities() const;
+	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
 	virtual void SetUp() = 0;
 
 protected:
-	std::map<const Rtti*, InputCapability*> mCapabilitiesByType;
-	std::vector<const InputCapability*> mReadOnlyCapabilities;
-
 	void RegisterCapability(InputCapability* pInputCapability);
+
+	THashTable<const Rtti*, InputCapability*> mCapabilitiesByType;
+	TArray<const InputCapability*> mReadOnlyCapabilities;
 
 private:
 	const InputDataBuffer* mpDataBuffer;

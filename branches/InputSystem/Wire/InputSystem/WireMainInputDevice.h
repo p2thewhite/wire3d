@@ -29,8 +29,9 @@ public:
 	void AddExtension(InputDeviceExtension* pInputDevice);
 	const InputDeviceExtension* GetExtension(UInt index) const;
 	UInt GetExtensionsCount() const;
-	Bool HasCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const;
-	const InputCapability* GetCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const;
+	Bool HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
+	const InputCapability* GetCapability(const Rtti& rCapabilityType,
+		Bool lookupExtensions) const;
 
 private:
 	TArray<const InputDeviceExtension*> mExtensions;

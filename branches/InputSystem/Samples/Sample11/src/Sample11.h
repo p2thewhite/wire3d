@@ -5,7 +5,6 @@
 #include "WireApplication.h"
 #include <sstream>
 
-using namespace std;
 using namespace Wire;
 
 class Sample11 : public WIREAPPLICATION, public InputSystemListener
@@ -38,7 +37,7 @@ private:
 	Geometry* CreateCursor(Float uOffset, Float vOffset);
 
 	// utilitarian
-	void PrintAndClear(stringstream& message);
+	void PrintAndClear(std::stringstream& message);
 
 	// debug output
 	void PrintInputDevicesInformations();

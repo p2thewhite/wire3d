@@ -36,15 +36,15 @@ UInt MainInputDevice::GetExtensionsCount() const
 	return mExtensions.GetQuantity();
 }
 
-Bool MainInputDevice::HasCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const
+Bool MainInputDevice::HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const
 {
-	Bool hasCapability = InputDevice::HasCapability(pCapabilityType);
+	Bool hasCapability = InputDevice::HasCapability(rCapabilityType);
 
 	if (lookupExtensions && !hasCapability)
 	{
 		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 		{
-			if (mExtensions[i]->HasCapability(pCapabilityType))
+			if (mExtensions[i]->HasCapability(rCapabilityType))
 			{
 				return true;
 			}
@@ -54,15 +54,15 @@ Bool MainInputDevice::HasCapability(const Rtti& pCapabilityType, Bool lookupExte
 	return hasCapability;
 }
 
-const InputCapability* MainInputDevice::GetCapability(const Rtti& pCapabilityType, Bool lookupExtensions) const
+const InputCapability* MainInputDevice::GetCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const
 {
-	const InputCapability* pInputCapability = InputDevice::GetCapability(pCapabilityType);
+	const InputCapability* pInputCapability = InputDevice::GetCapability(rCapabilityType);
 
 	if (lookupExtensions && pInputCapability == NULL)
 	{
 		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 		{
-			pInputCapability = mExtensions[i]->GetCapability(pCapabilityType);
+			pInputCapability = mExtensions[i]->GetCapability(rCapabilityType);
 
 			if (pInputCapability != NULL)
 			{

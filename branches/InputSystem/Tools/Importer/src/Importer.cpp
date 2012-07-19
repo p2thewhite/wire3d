@@ -619,10 +619,10 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	UpdateGS(pSpatial);
 
 	Char* pShape = GetValue(pXmlNode, "Shape");
-	WIRE_ASSERT(pShape);
+	WIRE_ASSERT_NO_SIDEEFFECTS(pShape);
 
 	// only box colliders supported for now
-	WIRE_ASSERT (Is("Box", pShape));
+	WIRE_ASSERT_NO_SIDEEFFECTS(Is("Box", pShape));
 	
 	Vector3F c = Vector3F::ZERO;
 	Vector3F s = Vector3F::ONE;

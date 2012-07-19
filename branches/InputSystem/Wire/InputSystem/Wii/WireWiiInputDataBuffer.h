@@ -2,8 +2,6 @@
 #define WIIINPUTDATABUFFER_H_
 
 #include "WireInputDataBuffer.h"
-#include "WireTypes.h"
-#include <map>
 #include <wiiuse/wpad.h>
 
 namespace Wire
