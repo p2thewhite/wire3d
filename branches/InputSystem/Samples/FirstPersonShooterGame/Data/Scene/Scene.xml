@@ -1,0 +1,411 @@
+<Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <Node Name="Colliders" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Node Name="Collider" Pos="-37.55618, 8.2, -18.14602" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-37.55618, 8.2, -2.470225" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-37.55618, 8.2, 5.330318" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-42.97352, 8.2, 5.330318" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-37.55618, 8.2, -25.84916" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-37.55618, 8.2, -10.04468" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-48.6862, 8.2, 5.330318" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-54.57924, 8.2, 5.330318" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-50.8, 8.2, -17.1" Rot="1, 0, 0, 0" Scale="17.6, 6.4, 34.4">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-47.7, 15.8, -37.05" Rot="1, 0, 0, 0" Scale="1, 21.71, 5.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-37.55618, 8.2, -33.53455" Rot="1, 0, 0, 0" Scale="1.84, 6.4, 1.81">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.02, 10.58, 19.86" Rot="1, 0, 0, 0" Scale="22, 6.8, 1.55">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0.0136075, 10.19, 19.1825" Rot="1, 0, 0, 0" Scale="14.75, 5.88, 1.3">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 10.39, 21.3" Rot="1, 0, 0, 0" Scale="26.89, 6.47, 1.4">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 5.06, 15" Rot="1, 0, 0, 0" Scale="38.3, 0.25, 13.1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 7.046841, 16.9" Rot="1, 0, 0, 0" Scale="32.13, 0.25, 10">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 5.242033, 15.2" Rot="1, 0, 0, 0" Scale="37.7, 0.25, 12.8">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 6.852664, 16.8" Rot="1, 0, 0, 0" Scale="32.76, 0.25, 10.4">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 5.649577, 15.6" Rot="1, 0, 0, 0" Scale="36.6, 0.25, 12.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 6.651238, 16.6" Rot="1, 0, 0, 0" Scale="33.4, 0.25, 10.7">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 5.493096, 15.4" Rot="1, 0, 0, 0" Scale="37.1, 0.25, 12.5">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 5.844929, 15.8" Rot="1, 0, 0, 0" Scale="35.8, 0.25, 12">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 6.052611, 16" Rot="1, 0, 0, 0" Scale="35.2, 0.25, 11.7">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 6.252482, 16.2" Rot="1, 0, 0, 0" Scale="34.6, 0.25, 11.3">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.1, 6.453413, 16.4" Rot="1, 0, 0, 0" Scale="34, 0.25, 11">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-51.2, 20.2, 12.8" Rot="1, 0, 0, 0" Scale="20, 29.8, 3.3">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-42.5323, 20.2, 17.35907" Rot="1, 0, 0, 0" Scale="2.7, 29.8, 11.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-60.56842, 20.2, 8.388562" Rot="1, 0, 0, 0" Scale="2.7, 29.8, 11.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="18.1513, 5.7888, -23.65755" Rot="1, 0, 0, 0" Scale="2.899997, 1.961534, 7.235397">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.55439, 5.7888, -23.65755" Rot="1, 0, 0, 0" Scale="2.899997, 1.961534, 7.235397">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.001744034, 5.78833, -5.666063" Rot="0.7071068, 0, -0.7071069, 0" Scale="2.899997, 1.961534, 7.235397">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.001739796, 5.78833, -41.21046" Rot="0.7071068, 0, -0.7071069, 0" Scale="2.899997, 1.961534, 7.235397">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.55755, 6.253436, -41.29654" Rot="0.7071068, 0, -0.7071068, 0" Scale="5.581104, 2.977168, 5.581104">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.58531, 10.79619, -41.29654" Rot="0.7071068, 0, -0.7071068, 0" Scale="3.961329, 6.467965, 3.961329">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.55814, 6.253436, -5.538008" Rot="0.7071068, 0, -0.7071068, 0" Scale="5.581105, 2.977168, 5.581105">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.55814, 10.79619, -5.538008" Rot="0.7071068, 0, -0.7071068, 0" Scale="3.96133, 6.467965, 3.96133">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.73337, 10.79619, -5.576369" Rot="0.7071068, 0, -0.7071068, 0" Scale="3.961331, 6.467965, 3.961331">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.73337, 6.253436, -5.576369" Rot="0.7071068, 0, -0.7071068, 0" Scale="5.581106, 2.977168, 5.581106">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.47082, 6.253436, -41.29708" Rot="0.7071068, 0, -0.7071068, 0" Scale="5.581107, 2.977168, 5.581107">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.47082, 10.79619, -41.29708" Rot="0.7071068, 0, -0.7071068, 0" Scale="3.961332, 6.467965, 3.961332">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-48.39307, 6.516814, -60.30706" Rot="0.7071068, 0, -0.7071068, 0" Scale="42.3, 3.881255, 14.91552">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -60.63414" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.6245298, 3.293466, 0.9666405">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -67.16307" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.62453, 3.293466, 0.9666407">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -74.35486" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.6245301, 3.293466, 0.9666409">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -80.21265" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.6245302, 3.293466, 0.9666412">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -53.44481" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.62453, 3.293466, 0.9666407">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -46.88369" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.6245301, 3.293466, 0.9666409">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-40.95492, 5.993401, -40.45926" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.6245302, 3.293466, 0.9666412">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-46.87436, 6.339357, -39.06656" Rot="-1.629207E-07, 0, -1, 0" Scale="0.6245303, 3.293466, 0.9666414">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-47.53837, 6.339357, -81.62486" Rot="-1.629207E-07, 0, -1, 0" Scale="0.7713734, 3.293466, 0.9666414">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-54.68003, 6.339357, -81.62486" Rot="-1.629207E-07, 0, -1, 0" Scale="0.7713734, 3.293466, 0.9666414">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.55755, 6.065969, -44.04247" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236706, 2.192546, 0.8236706">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="20.30361, 6.065969, -41.28583" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236709, 2.192546, 0.8236709">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.54459, 6.065969, -38.54779" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236711, 2.192546, 0.8236711">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="14.83422, 6.065969, -41.34896" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236713, 2.192546, 0.8236713">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.53697, 6.065969, -8.266732" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236709, 2.192546, 0.8236709">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="20.31996, 6.065969, -5.502282" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236711, 2.192546, 0.8236711">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="17.54458, 6.065969, -2.807359" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236713, 2.192546, 0.8236713">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="14.83422, 6.065969, -5.525639" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236716, 2.192546, 0.8236716">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-20.48278, 6.065969, -5.576186" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236718, 2.192546, 0.8236718">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.71367, 6.065969, -2.844414" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236716, 2.192546, 0.8236716">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-14.94187, 6.065969, -5.622382" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236713, 2.192546, 0.8236713">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.73977, 6.065969, -8.328691" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236711, 2.192546, 0.8236711">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.49025, 6.065969, -44.05892" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236713, 2.192546, 0.8236713">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-14.73261, 6.065969, -41.31677" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236716, 2.192546, 0.8236716">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-17.46268, 6.065969, -38.52081" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236718, 2.192546, 0.8236718">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-20.22311, 6.065969, -41.30642" Rot="0.7071068, 0, -0.7071068, 0" Scale="0.8236721, 2.192546, 0.8236721">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="38.74873, 10, -28.54293" Rot="0.7071068, 0, -0.7071068, 0" Scale="24, 10, 1.25">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-0.3, 3.5, -32.25" Rot="1, 0, 0, 0" Scale="160, 2.5, 160">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="-48.7, 24.7, -14.2" Rot="1, 0, 0, 0" Scale="-23.6, -26.88, 40.8">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="9.9, 20, 23.17" Rot="1, 0, 0, 0" Scale="103.99, 30, 3.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+  </Node>
+  <Node Name="Lights" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Node Name="BlueLight" Pos="0, 10, 0" Rot="-0.9264695, -0.3278413, 0.07195352, 0.1702855" Scale="1, 1, 1">
+      <Light Type="Directional" Ambient="0.1211073, 0.1372549, 0.1211972" Color="0.2713827, 0.3068908, 0.268379" />
+    </Node>
+    <Node Name="YellowLight" Pos="0, 10, 0" Rot="-0.8474875, -0.4312461, 0.2758437, -0.1403638" Scale="1, 1, 1">
+      <Light Type="Directional" Ambient="0.1211073, 0.1372549, 0.1211972" Color="0.8381492, 0.846798, 0.7903448" />
+    </Node>
+  </Node>
+  <Node Name="MainCamera" Pos="-1.25, 6, -1.4" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Camera Fov="60" Near="0.3" Far="1000" />
+  </Node>
+  <Node Name="Scene" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Node Name="CourtyardModel" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Leaf Name="Stairs" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+        <Collider Shape="Mesh" IsTrigger="False">
+          <Mesh Name="polySurface660_000003A0_0_0_0_0">
+            <Vertices Name="polySurface660_000003A0.vtx" LittleEndian="y" />
+            <Indices Name="polySurface660_000003A0.idx" LittleEndian="y" />
+            <Normals Name="polySurface660_000003A0.nm" LittleEndian="y" />
+            <Uv0 Name="polySurface660_000003A0.uv0" LittleEndian="y" />
+            <Uv1 Name="polySurface660_000003A0_0_0_0_0.uv1" LittleEndian="y" />
+          </Mesh>
+        </Collider>
+        <Mesh Name="polySurface660_000003A0_0.999023_0.999023_-0.00224994_-0.0021846">
+          <Vertices Name="polySurface660_000003A0.vtx" LittleEndian="y" />
+          <Indices Name="polySurface660_000003A0.idx" LittleEndian="y" />
+          <Normals Name="polySurface660_000003A0.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface660_000003A0.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface660_000003A0_0.999023_0.999023_-0.00224994_-0.0021846.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="courtyard-lambert31_2">
+          <Texture Name="stairs_diff_layersTGA_0000040A.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-2_00000450.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <MaterialState Ambient="0.8078431, 0.8078431, 0.8078431, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Ground" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+        <Mesh Name="polySurface666_000003A2_0.999023_0.999023_-0.0138993_-0.0191057">
+          <Vertices Name="polySurface666_000003A2.vtx" LittleEndian="y" />
+          <Indices Name="polySurface666_000003A2.idx" LittleEndian="y" />
+          <Normals Name="polySurface666_000003A2.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface666_000003A2.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface666_000003A2_0.999023_0.999023_-0.0138993_-0.0191057.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="courtyard-lambert21_4">
+          <Texture Name="mainsq_floor_small_diff_layersTGA_00000202.png" FilterMode="Bilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-4_000004BC.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <MaterialState Ambient="0.5921569, 0.5921569, 0.5921569, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Pilars" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+        <Collider Shape="Mesh" IsTrigger="False">
+          <Mesh Name="polySurface668_000003A4_0_0_0_0">
+            <Vertices Name="polySurface668_000003A4.vtx" LittleEndian="y" />
+            <Indices Name="polySurface668_000003A4.idx" LittleEndian="y" />
+            <Normals Name="polySurface668_000003A4.nm" LittleEndian="y" />
+            <Uv0 Name="polySurface668_000003A4.uv0" LittleEndian="y" />
+            <Uv1 Name="polySurface668_000003A4_0_0_0_0.uv1" LittleEndian="y" />
+          </Mesh>
+        </Collider>
+        <Mesh Name="polySurface668_000003A4_0.999023_0.999023_-0.0109198_0.00608334">
+          <Vertices Name="polySurface668_000003A4.vtx" LittleEndian="y" />
+          <Indices Name="polySurface668_000003A4.idx" LittleEndian="y" />
+          <Normals Name="polySurface668_000003A4.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface668_000003A4.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface668_000003A4_0.999023_0.999023_-0.0109198_0.00608334.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="courtyard-lambert10_1">
+          <Texture Name="house1_column_diff_layersTGA_000004FE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-1_000004EA.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <MaterialState Ambient="0.8313726, 0.8313726, 0.8313726, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Walls" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+        <Collider Shape="Mesh" IsTrigger="False">
+          <Mesh Name="polySurface669_000003A6_0_0_0_0">
+            <Vertices Name="polySurface669_000003A6.vtx" LittleEndian="y" />
+            <Indices Name="polySurface669_000003A6.idx" LittleEndian="y" />
+            <Normals Name="polySurface669_000003A6.nm" LittleEndian="y" />
+            <Uv0 Name="polySurface669_000003A6.uv0" LittleEndian="y" />
+            <Uv1 Name="polySurface669_000003A6_0_0_0_0.uv1" LittleEndian="y" />
+          </Mesh>
+        </Collider>
+        <Mesh Name="polySurface669_000003A6_0.999023_0.999023_-0.00224994_-0.0022349">
+          <Vertices Name="polySurface669_000003A6.vtx" LittleEndian="y" />
+          <Indices Name="polySurface669_000003A6.idx" LittleEndian="y" />
+          <Normals Name="polySurface669_000003A6.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface669_000003A6.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface669_000003A6_0.999023_0.999023_-0.00224994_-0.0022349.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="courtyard-lambert29_0">
+          <Texture Name="scnd_wall_diff_layersTGA_00000378.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-0_00000528.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Buildings" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
+        <Collider Shape="Mesh" IsTrigger="False">
+          <Mesh Name="polySurface670_000003A8_0_0_0_0">
+            <Vertices Name="polySurface670_000003A8.vtx" LittleEndian="y" />
+            <Indices Name="polySurface670_000003A8.idx" LittleEndian="y" />
+            <Normals Name="polySurface670_000003A8.nm" LittleEndian="y" />
+            <Uv0 Name="polySurface670_000003A8.uv0" LittleEndian="y" />
+            <Uv1 Name="polySurface670_000003A8_0_0_0_0.uv1" LittleEndian="y" />
+          </Mesh>
+        </Collider>
+        <Mesh Name="polySurface670_000003A8_0.999023_0.999023_-0.019215_0.00498476">
+          <Vertices Name="polySurface670_000003A8.vtx" LittleEndian="y" />
+          <Indices Name="polySurface670_000003A8.idx" LittleEndian="y" />
+          <Normals Name="polySurface670_000003A8.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface670_000003A8.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface670_000003A8_0.999023_0.999023_-0.019215_0.00498476.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="courtyard-lambert12_3">
+          <Texture Name="house2_diff_layersTGA_0000053C.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-3_0000028E.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+    </Node>
+  </Node>
+  <Node Name="StartingPosition" Pos="0, 6.5, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  </Node>
+</Node>

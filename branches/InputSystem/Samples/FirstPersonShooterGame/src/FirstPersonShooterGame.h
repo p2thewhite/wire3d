@@ -3,6 +3,7 @@
 #define FIRSTPERSONSHOOTERGAME_H_
 
 #include "WireApplication.h"
+#include "WireTArray.h"
 #include "Importer.h"
 #include "FirstPersonController.h"
 
@@ -49,25 +50,28 @@ private:
 	SpatialPtr mspCrosshair;
 	CameraPtr mspTextCamera;
 	TextPtr mspText;
+	Bool mShowColliders;
+	TArray<Spatial*> mColliderSpatials;
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
 	btBroadphaseInterface* mpOverlappingPairCache;
 	btSequentialImpulseConstraintSolver* mpConstraintSolver;
 	btDiscreteDynamicsWorld* mpPhysicsWorld;
 
-	void StateLoading(Double time);
-	void StateRunning(Double time);
-	Node* LoadAndInitLogo();
-	Node* LoadAndInitScene();
-	Node* LoadAndInitGUI();
+	void OnLoading(Double time, Double deltaTime);
+	void OnRunning(Double time, Double deltaTime);
+	Node* LoadAndInitializeLoading();
+	Node* LoadAndInitializeScene();
+	Node* LoadAndInitializeGUI();
 	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
 	Texture2D* LoadTexture(Importer& rImporter, Char* pFileName);
 	void MoveCrosshairTo(const Vector2F& rScreenPoint);
 	void InitializePhysics();
 	void RegisterStaticCollider(const Collider* pCollider);
-	void UpdatePhysics(Float deltaTime);
+	void UpdatePhysics(Double deltaTime);
 	void TerminatePhysics();
-	void DrawFPS(Double time);
+	void DrawFPS(Double deltaTime);
+	void ToggleCollidersVisibility();
 
 };
 

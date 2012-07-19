@@ -11,15 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ConveyorBelt.h" />
-    <ClInclude Include="src\FanRotator.h" />
+    <ClInclude Include="src\CollisionShapeToGeometryConverter.h" />
     <ClInclude Include="src\FirstPersonController.h" />
     <ClInclude Include="src\FirstPersonShooterGame.h" />
     <ClInclude Include="src\MaterialFader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ConveyorBelt.cpp" />
-    <ClCompile Include="src\FanRotator.cpp" />
+    <ClCompile Include="src\CollisionShapeToGeometryConverter.cpp" />
     <ClCompile Include="src\FirstPersonController.cpp" />
     <ClCompile Include="src\FirstPersonShooterGame.cpp" />
     <ClCompile Include="src\MaterialFader.cpp" />
