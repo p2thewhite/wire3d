@@ -115,39 +115,40 @@ void Sample11::OnInput()
 		
 		CursorMode mode = CM_POINTING;
 
+		const Buttons* pButtons = NULL;
+
+		// if there are buttons in the main device, get them
 		if (pInputDevice->HasCapability(Buttons::TYPE, false))
 		{
-			const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
-			
-			// check the buttons and change the cursor mode properly
-			if (pButtons->GetButton(Buttons::BUTTON_A)) {
-				mode = CM_PRIMARY_BUTTON_PRESSED;
-			}
+			pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
 		}
 
+		// if there are buttons and the 'A' button is pressed, change the cursor mode
+		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_A)) {
+			mode = CM_PRIMARY_BUTTON_PRESSED;
+		}
+
+		// if there's an extension, get its buttons
 		if (pInputDevice->GetExtensionsCount() > 0)
 		{
 			if (pInputDevice->GetExtension(0)->HasCapability(Buttons::TYPE))
 			{
-				const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
-
-				// check the buttons and change the cursor mode properly
-				if (pButtons->GetButton(Buttons::BUTTON_Z)) {
-					mode = CM_SECONDARY_BUTTON_PRESSED;
-				}
+				pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
 			}
 		}
-		
-		Float tilt;
 
+		// if there are buttons and the 'Z' button is pressed, change the cursor mode
+		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_Z)) {
+			mode = CM_SECONDARY_BUTTON_PRESSED;
+		}
+		
+		Float tilt = 0;
+
+		// get the main device tilt (in degrees)
 		if (pInputDevice->HasCapability(Tilt::TYPE, false))
 		{
 			const Tilt* pTilt = static_cast<const Tilt*>(pInputDevice->GetCapability(Tilt::TYPE, false));
 			tilt = DEGREES_TO_RADIANS(pTilt->GetRight());
-		}
-		else
-		{
-			tilt = 0;
 		}
 
 		SetCursor(x, y, mode, playerIndex, tilt);
