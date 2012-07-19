@@ -551,11 +551,6 @@ Node* FirstPersonShooterGame::LoadAndInitializeScene()
 
 	pScene->GetAllChildrenByName("Collider", mColliderSpatials);
 
-	mColliderSpatials.Append(pScene->GetChildByName("Buildings"));
-	mColliderSpatials.Append(pScene->GetChildByName("Pilars"));
-	mColliderSpatials.Append(pScene->GetChildByName("Stairs"));
-	mColliderSpatials.Append(pScene->GetChildByName("Walls"));
-
 	// Create and configure the character controller
 	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPosition, mSceneCameras[0]);
 

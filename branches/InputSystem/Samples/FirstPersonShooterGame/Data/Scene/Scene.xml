@@ -276,11 +276,43 @@
       <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
       </Collider>
     </Node>
+    <Node Name="Collider" Pos="0, 6.2, -23.6" Rot="1, 0, 0, 0" Scale="14.14, 0.27, 14.3">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 5.6, -23.6" Rot="1, 0, 0, 0" Scale="16.7, 0.27, 16.77">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 5.1, -23.6" Rot="1, 0, 0, 0" Scale="20.58, 0.2, 21.4">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
     <Node Name="Collider" Pos="-48.7, 24.7, -14.2" Rot="1, 0, 0, 0" Scale="-23.6, -26.88, 40.8">
       <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
       </Collider>
     </Node>
     <Node Name="Collider" Pos="9.9, 20, 23.17" Rot="1, 0, 0, 0" Scale="103.99, 30, 3.2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 4.9, -23.6" Rot="1, 0, 0, 0" Scale="23.8, 0.2, 23.8">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 5.9, -23.6" Rot="1, 0, 0, 0" Scale="15.26, 0.27, 15.5">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 6.95, -23.6" Rot="1, 0, 0, 0" Scale="10, 1, 10">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 8.2, -23.6" Rot="1, 0, 0, 0" Scale="2, 1.5, 2">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
+      </Collider>
+    </Node>
+    <Node Name="Collider" Pos="0, 5.32, -23.6" Rot="1, 0, 0, 0" Scale="17.8, 0.27, 18.1">
       <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1, 1, 1">
       </Collider>
     </Node>
@@ -299,108 +331,72 @@
   <Node Name="Scene" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Node Name="CourtyardModel" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
       <Leaf Name="Stairs" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
-        <Collider Shape="Mesh" IsTrigger="False">
-          <Mesh Name="polySurface660_000003A0_0_0_0_0">
-            <Vertices Name="polySurface660_000003A0.vtx" LittleEndian="y" />
-            <Indices Name="polySurface660_000003A0.idx" LittleEndian="y" />
-            <Normals Name="polySurface660_000003A0.nm" LittleEndian="y" />
-            <Uv0 Name="polySurface660_000003A0.uv0" LittleEndian="y" />
-            <Uv1 Name="polySurface660_000003A0_0_0_0_0.uv1" LittleEndian="y" />
-          </Mesh>
-        </Collider>
-        <Mesh Name="polySurface660_000003A0_0.999023_0.999023_-0.00224994_-0.0021846">
-          <Vertices Name="polySurface660_000003A0.vtx" LittleEndian="y" />
-          <Indices Name="polySurface660_000003A0.idx" LittleEndian="y" />
-          <Normals Name="polySurface660_000003A0.nm" LittleEndian="y" />
-          <Uv0 Name="polySurface660_000003A0.uv0" LittleEndian="y" />
-          <Uv1 Name="polySurface660_000003A0_0.999023_0.999023_-0.00224994_-0.0021846.uv1" LittleEndian="y" />
+        <Mesh Name="polySurface660_000002BE_0.999023_0.999023_-0.00224994_-0.0021846">
+          <Vertices Name="polySurface660_000002BE.vtx" LittleEndian="y" />
+          <Indices Name="polySurface660_000002BE.idx" LittleEndian="y" />
+          <Normals Name="polySurface660_000002BE.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface660_000002BE.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface660_000002BE_0.999023_0.999023_-0.00224994_-0.0021846.uv1" LittleEndian="y" />
         </Mesh>
         <Material Name="courtyard-lambert31_2">
-          <Texture Name="stairs_diff_layersTGA_0000040A.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
-          <Texture Name="LightmapFar-2_00000450.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <Texture Name="stairs_diff_layersTGA_00000302.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-2_00000336.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
           <MaterialState Ambient="0.8078431, 0.8078431, 0.8078431, 1" />
         </Material>
       </Leaf>
       <Leaf Name="Ground" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
-        <Mesh Name="polySurface666_000003A2_0.999023_0.999023_-0.0138993_-0.0191057">
-          <Vertices Name="polySurface666_000003A2.vtx" LittleEndian="y" />
-          <Indices Name="polySurface666_000003A2.idx" LittleEndian="y" />
-          <Normals Name="polySurface666_000003A2.nm" LittleEndian="y" />
-          <Uv0 Name="polySurface666_000003A2.uv0" LittleEndian="y" />
-          <Uv1 Name="polySurface666_000003A2_0.999023_0.999023_-0.0138993_-0.0191057.uv1" LittleEndian="y" />
+        <Mesh Name="polySurface666_000002C0_0.999023_0.999023_-0.0138993_-0.0191057">
+          <Vertices Name="polySurface666_000002C0.vtx" LittleEndian="y" />
+          <Indices Name="polySurface666_000002C0.idx" LittleEndian="y" />
+          <Normals Name="polySurface666_000002C0.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface666_000002C0.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface666_000002C0_0.999023_0.999023_-0.0138993_-0.0191057.uv1" LittleEndian="y" />
         </Mesh>
         <Material Name="courtyard-lambert21_4">
-          <Texture Name="mainsq_floor_small_diff_layersTGA_00000202.png" FilterMode="Bilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" />
-          <Texture Name="LightmapFar-4_000004BC.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <Texture Name="mainsq_floor_small_diff_layersTGA_000001D0.png" FilterMode="Bilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-4_0000038C.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
           <MaterialState Ambient="0.5921569, 0.5921569, 0.5921569, 1" />
         </Material>
       </Leaf>
       <Leaf Name="Pilars" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
-        <Collider Shape="Mesh" IsTrigger="False">
-          <Mesh Name="polySurface668_000003A4_0_0_0_0">
-            <Vertices Name="polySurface668_000003A4.vtx" LittleEndian="y" />
-            <Indices Name="polySurface668_000003A4.idx" LittleEndian="y" />
-            <Normals Name="polySurface668_000003A4.nm" LittleEndian="y" />
-            <Uv0 Name="polySurface668_000003A4.uv0" LittleEndian="y" />
-            <Uv1 Name="polySurface668_000003A4_0_0_0_0.uv1" LittleEndian="y" />
-          </Mesh>
-        </Collider>
-        <Mesh Name="polySurface668_000003A4_0.999023_0.999023_-0.0109198_0.00608334">
-          <Vertices Name="polySurface668_000003A4.vtx" LittleEndian="y" />
-          <Indices Name="polySurface668_000003A4.idx" LittleEndian="y" />
-          <Normals Name="polySurface668_000003A4.nm" LittleEndian="y" />
-          <Uv0 Name="polySurface668_000003A4.uv0" LittleEndian="y" />
-          <Uv1 Name="polySurface668_000003A4_0.999023_0.999023_-0.0109198_0.00608334.uv1" LittleEndian="y" />
+        <Mesh Name="polySurface668_000002C2_0.999023_0.999023_-0.0109198_0.00608334">
+          <Vertices Name="polySurface668_000002C2.vtx" LittleEndian="y" />
+          <Indices Name="polySurface668_000002C2.idx" LittleEndian="y" />
+          <Normals Name="polySurface668_000002C2.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface668_000002C2.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface668_000002C2_0.999023_0.999023_-0.0109198_0.00608334.uv1" LittleEndian="y" />
         </Mesh>
         <Material Name="courtyard-lambert10_1">
-          <Texture Name="house1_column_diff_layersTGA_000004FE.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
-          <Texture Name="LightmapFar-1_000004EA.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <Texture Name="house1_column_diff_layersTGA_000003C0.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-1_000003B0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
           <MaterialState Ambient="0.8313726, 0.8313726, 0.8313726, 1" />
         </Material>
       </Leaf>
       <Leaf Name="Walls" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
-        <Collider Shape="Mesh" IsTrigger="False">
-          <Mesh Name="polySurface669_000003A6_0_0_0_0">
-            <Vertices Name="polySurface669_000003A6.vtx" LittleEndian="y" />
-            <Indices Name="polySurface669_000003A6.idx" LittleEndian="y" />
-            <Normals Name="polySurface669_000003A6.nm" LittleEndian="y" />
-            <Uv0 Name="polySurface669_000003A6.uv0" LittleEndian="y" />
-            <Uv1 Name="polySurface669_000003A6_0_0_0_0.uv1" LittleEndian="y" />
-          </Mesh>
-        </Collider>
-        <Mesh Name="polySurface669_000003A6_0.999023_0.999023_-0.00224994_-0.0022349">
-          <Vertices Name="polySurface669_000003A6.vtx" LittleEndian="y" />
-          <Indices Name="polySurface669_000003A6.idx" LittleEndian="y" />
-          <Normals Name="polySurface669_000003A6.nm" LittleEndian="y" />
-          <Uv0 Name="polySurface669_000003A6.uv0" LittleEndian="y" />
-          <Uv1 Name="polySurface669_000003A6_0.999023_0.999023_-0.00224994_-0.0022349.uv1" LittleEndian="y" />
+        <Mesh Name="polySurface669_000002C4_0.999023_0.999023_-0.00224994_-0.0022349">
+          <Vertices Name="polySurface669_000002C4.vtx" LittleEndian="y" />
+          <Indices Name="polySurface669_000002C4.idx" LittleEndian="y" />
+          <Normals Name="polySurface669_000002C4.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface669_000002C4.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface669_000002C4_0.999023_0.999023_-0.00224994_-0.0022349.uv1" LittleEndian="y" />
         </Mesh>
         <Material Name="courtyard-lambert29_0">
-          <Texture Name="scnd_wall_diff_layersTGA_00000378.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
-          <Texture Name="LightmapFar-0_00000528.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <Texture Name="scnd_wall_diff_layersTGA_000002A4.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-0_000003DC.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
       <Leaf Name="Buildings" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1" Static="1">
-        <Collider Shape="Mesh" IsTrigger="False">
-          <Mesh Name="polySurface670_000003A8_0_0_0_0">
-            <Vertices Name="polySurface670_000003A8.vtx" LittleEndian="y" />
-            <Indices Name="polySurface670_000003A8.idx" LittleEndian="y" />
-            <Normals Name="polySurface670_000003A8.nm" LittleEndian="y" />
-            <Uv0 Name="polySurface670_000003A8.uv0" LittleEndian="y" />
-            <Uv1 Name="polySurface670_000003A8_0_0_0_0.uv1" LittleEndian="y" />
-          </Mesh>
-        </Collider>
-        <Mesh Name="polySurface670_000003A8_0.999023_0.999023_-0.019215_0.00498476">
-          <Vertices Name="polySurface670_000003A8.vtx" LittleEndian="y" />
-          <Indices Name="polySurface670_000003A8.idx" LittleEndian="y" />
-          <Normals Name="polySurface670_000003A8.nm" LittleEndian="y" />
-          <Uv0 Name="polySurface670_000003A8.uv0" LittleEndian="y" />
-          <Uv1 Name="polySurface670_000003A8_0.999023_0.999023_-0.019215_0.00498476.uv1" LittleEndian="y" />
+        <Mesh Name="polySurface670_000002C6_0.999023_0.999023_-0.019215_0.00498476">
+          <Vertices Name="polySurface670_000002C6.vtx" LittleEndian="y" />
+          <Indices Name="polySurface670_000002C6.idx" LittleEndian="y" />
+          <Normals Name="polySurface670_000002C6.nm" LittleEndian="y" />
+          <Uv0 Name="polySurface670_000002C6.uv0" LittleEndian="y" />
+          <Uv1 Name="polySurface670_000002C6_0.999023_0.999023_-0.019215_0.00498476.uv1" LittleEndian="y" />
         </Mesh>
         <Material Name="courtyard-lambert12_3">
-          <Texture Name="house2_diff_layersTGA_0000053C.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
-          <Texture Name="LightmapFar-3_0000028E.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
+          <Texture Name="house2_diff_layersTGA_000003F0.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" />
+          <Texture Name="LightmapFar-3_00000220.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="10" />
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
