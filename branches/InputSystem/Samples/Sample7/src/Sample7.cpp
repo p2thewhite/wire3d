@@ -6,8 +6,6 @@
 
 #include "Sample7.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample7);
 
 //----------------------------------------------------------------------------

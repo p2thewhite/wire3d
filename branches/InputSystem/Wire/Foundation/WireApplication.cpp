@@ -19,6 +19,7 @@ Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	Bool isFullscreen, Bool useVSync)
 	:
 	mpRenderer(NULL),
+	mpInputSystem(NULL),
 	mBackgroundColor(rBackgroundColor),
 	mpWindowTitle(pWindowTitle),
 	mXPosition(xPosition),
@@ -46,11 +47,6 @@ Application* Application::GetApplication()
 {
 	return s_pApplication;
 }
-
-//----------------------------------------------------------------------------
-/*void Application::OnButton(UInt, UInt)
-{
-}*/
 
 //----------------------------------------------------------------------------
 void Application::OnResize(UInt width, UInt height)

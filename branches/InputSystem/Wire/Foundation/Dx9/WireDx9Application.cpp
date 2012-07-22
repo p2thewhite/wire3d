@@ -51,6 +51,9 @@ Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char* pW
 //----------------------------------------------------------------------------
 Dx9Application::~Dx9Application()
 {
+	WIRE_DELETE mpInputSystem;
+	mpInputSystem = NULL;
+
 	WIRE_DELETE mpRenderer;
 	mpRenderer = NULL;
 }

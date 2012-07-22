@@ -176,6 +176,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 //----------------------------------------------------------------------------
 Renderer::~Renderer()
 {
+	Terminate();
+
 	if (mpData->D3DDevice)
 	{
 		mpData->D3DDevice->Release();
@@ -187,8 +189,6 @@ Renderer::~Renderer()
 	}
 
 	WIRE_DELETE mpData;
-
-	Terminate();
 }
 
 //----------------------------------------------------------------------------

@@ -6,7 +6,6 @@
 #include "Cursors.h"
 
 using namespace std;
-using namespace Wire;
 
 #define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
 

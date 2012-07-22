@@ -9,8 +9,6 @@
 #include "WireApplication.h"
 #include "WireGXRendererData.h"
 #include "WireRenderer.h"
-#include "WireInputSystem.h"
-#include "WireButtons.h"
 #include <stdlib.h>
 #include <cstring>
 
@@ -38,10 +36,20 @@ void System::Print(const Char* pFormat, ...)
 {
 	static Bool s_IsInitialized = false;
 
+	Application* pApp = Application::GetApplication();
+	if (!pApp)
+	{
+		return;
+	}
+
+	Renderer* pRenderer = pApp->GetRenderer();
+	if (!pRenderer)
+	{
+		return;
+	}
+
 	if (!s_IsInitialized)
 	{
-		Application* pApp = Application::GetApplication();
-		Renderer* pRenderer = pApp->GetRenderer();
 		PdrRendererData* pData = pRenderer->GetRendererData();
 		void* pFrameBuffer = pData->GetFramebuffer();
 		GXRenderModeObj* pRMode = pData->RMode;
@@ -65,41 +73,36 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Int lineNumber)
 {
 	Application* pApp = Application::GetApplication();
-	Renderer* pRenderer = pApp->GetRenderer();
-	PdrRendererData* pData = pRenderer->GetRendererData();
+	if (!pApp)
+	{
+		return;
+	}
 
+	Renderer* pRenderer = pApp->GetRenderer();
+	if (!pRenderer)
+	{
+		return;
+	}
+
+	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();
 
 	Print("\x1b[4;0H");
-	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile, lineNumber);
-
-	InputSystem* pInputSystem = pApp->GetInputSystem();
-
-	// if there's no controller, exit
-	if (pInputSystem->GetMainDevicesCount() == 0) 
-	{
-		exit(0);
-	}
-
-	// if the controller has no button, exit
-	if (pInputSystem->GetMainDevice(0)->HasCapability(Buttons::TYPE, false)) 
-	{
-		exit(0);
-	}
+	Print("Assertion failed, %s, %s, line %d\n\n", pExpression, pFile,
+		lineNumber);
 
 	Print("Press 'A' to ignore and continue, or 'HOME' button to exit.");
-	
-	const Buttons* pButtons = static_cast<const Buttons*>(pInputSystem->GetMainDevice(0)->GetCapability(Buttons::TYPE, false));
+
 	do
 	{
-		pInputSystem->Capture();
-		if (pButtons->GetButton(Buttons::BUTTON_HOME))
+		WPAD_ScanPads();
+		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
 		{
 			exit(0);
 		}
-	
-	} while (!(pButtons->GetButton(Buttons::BUTTON_A)));
+
+	} while (!(WPAD_ButtonsDown(0) & WPAD_BUTTON_A));
 }
 
 //----------------------------------------------------------------------------

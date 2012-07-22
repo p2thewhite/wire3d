@@ -7,11 +7,15 @@
 // that agreement.
 
 #include "WireMain.h"
+#include "WireObject.h"
 
 using namespace Wire;
 
 Main::InitializerArray* Main::s_pInitializers = NULL;
 Main::TerminatorArray* Main::s_pTerminators = NULL;
+
+UInt Main::s_StartObjectCount = 0;
+UInt Main::s_FinalObjectCount = 0;
 
 //----------------------------------------------------------------------------
 void Main::AddInitializer(Initializer initializer)
@@ -38,6 +42,14 @@ void Main::AddTerminator(Terminator terminator)
 //----------------------------------------------------------------------------
 void Main::Initialize()
 {
+	Bool isObjectCountCorrect = true;
+	if (Object::InUse)
+	{
+		isObjectCountCorrect = false;
+	}
+
+	WIRE_ASSERT(isObjectCountCorrect /* objects should not be created pre Initialize() */);
+
 	if (s_pInitializers)
 	{
 		for (UInt i = 0; i < s_pInitializers->GetQuantity(); i++)
@@ -48,11 +60,17 @@ void Main::Initialize()
 
 	WIRE_DELETE s_pInitializers;
 	s_pInitializers = NULL;
+
+	// number of objects created during initialization
+	s_StartObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 }
 
 //----------------------------------------------------------------------------
 void Main::Terminate()
 {
+	// all objects created during the application should be deleted by now
+	s_FinalObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
+
 	if (s_pTerminators)
 	{
 		for (UInt i = 0; i < s_pTerminators->GetQuantity(); i++)
@@ -61,6 +79,28 @@ void Main::Terminate()
 		}
 	}
 
+	Bool isObjectCountCorrect = (s_StartObjectCount == s_FinalObjectCount);
+
 	WIRE_DELETE s_pTerminators;
 	s_pTerminators = NULL;
+
+	if (isObjectCountCorrect)
+	{
+		// objects should not be deleted post-terminate
+		s_FinalObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
+		isObjectCountCorrect = s_FinalObjectCount == 0;
+	}
+
+	if (!isObjectCountCorrect)
+	{
+		Object::SaveInUse("LeakingWireObjects.txt");
+	}
+
+//	WIRE_ASSERT(isObjectCountCorrect);
+
+	// Now that the object leak detection system has completed its tasks,
+	// delete the hash table to free up memory so that the debug memory
+	// system will not flag it as a leak.
+	WIRE_DELETE Object::InUse;
+	Object::InUse = NULL;
 }

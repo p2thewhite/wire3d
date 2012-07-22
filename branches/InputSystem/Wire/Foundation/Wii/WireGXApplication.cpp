@@ -27,10 +27,11 @@ GXApplication::GXApplication(const ColorRGBA& rBackgroundColor, const Char*
 //----------------------------------------------------------------------------
 GXApplication::~GXApplication()
 {
-	WIRE_DELETE mpRenderer;
-	mpRenderer = NULL;
 	WIRE_DELETE mpInputSystem;
 	mpInputSystem = NULL;
+
+	WIRE_DELETE mpRenderer;
+	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------

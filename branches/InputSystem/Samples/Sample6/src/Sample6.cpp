@@ -6,8 +6,6 @@
 #include "Sample6.h"
 #include "LensflareNode.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample6);
 
 //----------------------------------------------------------------------------

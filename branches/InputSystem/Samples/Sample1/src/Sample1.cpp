@@ -4,8 +4,6 @@
 
 #include "Sample1.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample1);
 
 //----------------------------------------------------------------------------
