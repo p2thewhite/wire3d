@@ -11,7 +11,6 @@
 #include "WireDx9RendererInput.h"
 #include "WireButton.h"
 #include "WireWin32InputSystem.h"
-#include "WireWin32InputSystemMessageBroker.h"
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
@@ -72,8 +71,10 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam, LP
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
+	Win32InputSystem* pInputSystem = static_cast<Win32InputSystem*>(pApp->GetInputSystem());
+
 	// It this call returns true it means that the given system message was handled by the broker.
-	if (Win32InputSystemMessageBroker::GetInstance()->OnSystemMessage(msg, wParam, lParam))
+	if (pInputSystem->OnSystemMessage(msg, wParam, lParam))
 	{
 		return 0;
 	}

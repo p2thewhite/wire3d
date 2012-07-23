@@ -169,7 +169,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiMote.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32InputSystem.h" />
-    <ClInclude Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedButtons.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.h" />
@@ -358,9 +357,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32InputSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.cpp">

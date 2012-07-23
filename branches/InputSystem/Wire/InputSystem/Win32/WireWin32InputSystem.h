@@ -11,6 +11,7 @@
 #define WIREWIN32INPUTSYSTEM_H
 
 #include "WireInputSystem.h"
+#include "WireWin32InputDataBuffer.h"
 
 namespace Wire
 {
@@ -23,8 +24,21 @@ public:
 	virtual ~Win32InputSystem();
 
 	virtual void Capture();
+	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
+
 protected:
 	virtual void DoDevicesDiscovery();
+
+private:
+	static Double s_MouseStagnationTolerance;
+
+	Double mLastMouseMoveTime;
+	Win32InputDataBuffer* mpFrontBuffer;
+	Win32InputDataBuffer* mpBackBuffer;
+
+	Bool IsMouseStagnant();
+	void ResetMousePosition();
+	void SwapBuffers();
 
 };
 

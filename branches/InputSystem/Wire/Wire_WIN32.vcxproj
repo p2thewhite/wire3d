@@ -172,7 +172,6 @@
     <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiMote.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32InputSystem.h" />
-    <ClInclude Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedButtons.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.h" />
@@ -392,7 +391,6 @@
     <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiMote.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32InputDataBuffer.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32InputSystem.cpp" />
-    <ClCompile Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedButtons.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.cpp" />

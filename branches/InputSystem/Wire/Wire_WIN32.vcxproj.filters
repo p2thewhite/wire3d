@@ -362,9 +362,6 @@
     <ClInclude Include="InputSystem\Win32\WireWin32InputSystem.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.h">
-      <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
@@ -889,9 +886,6 @@
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32InputSystem.cpp">
-      <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem\Win32\WireWin32InputSystemMessageBroker.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.cpp">
