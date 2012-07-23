@@ -32,8 +32,12 @@ using namespace Wire;
 #endif
 
 //----------------------------------------------------------------------------
-Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height, Bool isFullscreen, Bool useVSync) :
-		Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, isFullscreen, useVSync), mWindowID(0), mIsRunning(false)
+Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor,
+	const Char* pWindowTitle, Int xPosition, Int yPosition, UInt width,
+	UInt height, Bool isFullscreen, Bool useVSync)
+	:
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
+		height, isFullscreen, useVSync), mWindowID(0)
 {
 	_set_error_mode (_OUT_TO_MSGBOX);
 
@@ -165,6 +169,13 @@ Int Dx9Application::Main(Int, Char*[])
 
 	mWindowID = PtrToInt(hWnd);
 
+	// hide mouse pointer
+	UChar and[1] = { 0xFF };
+	UChar xor[1] = { 0x00 };
+	HCURSOR hCursor = CreateCursor(0, 0, 0, 1, 1, &and, &xor);
+	SetClassLong(hWnd, GCL_HCURSOR, PtrToLong(hCursor));
+	SetCursor(hCursor);
+
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
 
@@ -219,37 +230,3 @@ Int Dx9Application::Main(Int, Char*[])
 
 	return 0;
 }
-
-//----------------------------------------------------------------------------
-Bool Dx9Application::OnPrecreate()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-Bool Dx9Application::OnInitialize()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::OnTerminate()
-{
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::OnIdle()
-{
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::OnInput()
-{
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::Close()
-{
-	mIsRunning = false;
-}
-

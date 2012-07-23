@@ -43,12 +43,18 @@ void Main::AddTerminator(Terminator terminator)
 void Main::Initialize()
 {
 	Bool isObjectCountCorrect = true;
+	(void)isObjectCountCorrect;
+
 	if (Object::InUse)
 	{
 		isObjectCountCorrect = false;
+		Object::SaveInUse("PreMainWireObjects.txt");
 	}
 
 	WIRE_ASSERT(isObjectCountCorrect /* objects should not be created pre Initialize() */);
+
+	// number of objects created during initialization
+	s_StartObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 
 	if (s_pInitializers)
 	{
@@ -60,17 +66,11 @@ void Main::Initialize()
 
 	WIRE_DELETE s_pInitializers;
 	s_pInitializers = NULL;
-
-	// number of objects created during initialization
-	s_StartObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 }
 
 //----------------------------------------------------------------------------
 void Main::Terminate()
 {
-	// all objects created during the application should be deleted by now
-	s_FinalObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
-
 	if (s_pTerminators)
 	{
 		for (UInt i = 0; i < s_pTerminators->GetQuantity(); i++)
@@ -79,7 +79,13 @@ void Main::Terminate()
 		}
 	}
 
+	// all objects created during the application should be deleted by now
+	s_FinalObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 	Bool isObjectCountCorrect = (s_StartObjectCount == s_FinalObjectCount);
+	if (!isObjectCountCorrect)
+	{
+		Object::SaveInUse("LeakingWireObjects.txt");
+	}
 
 	WIRE_DELETE s_pTerminators;
 	s_pTerminators = NULL;
@@ -89,14 +95,14 @@ void Main::Terminate()
 		// objects should not be deleted post-terminate
 		s_FinalObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 		isObjectCountCorrect = s_FinalObjectCount == 0;
+
+		if (!isObjectCountCorrect)
+		{
+			Object::SaveInUse("PostMainWireObjects.txt");
+		}
 	}
 
-	if (!isObjectCountCorrect)
-	{
-		Object::SaveInUse("LeakingWireObjects.txt");
-	}
-
-//	WIRE_ASSERT(isObjectCountCorrect);
+	WIRE_ASSERT(isObjectCountCorrect);
 
 	// Now that the object leak detection system has completed its tasks,
 	// delete the hash table to free up memory so that the debug memory

@@ -68,14 +68,19 @@ Bool Object::SaveInUse(const Char* pFilename)
 	for (Object** pObject = it.GetFirst(); pObject; pObject = it.GetNext())
 	{
 		WIRE_ASSERT(*pObject);
-		String s = (*pObject)->GetType().GetName();
+		System::Fprintf(pFile, "%s", static_cast<const Char*>((*pObject)->
+			GetType().GetName()));
+
 		SceneObject* pSceneObject = DynamicCast<SceneObject>(*pObject);
 		if (pSceneObject)
 		{
-			s += String("(") + (pSceneObject->GetName()) + String(")");
+			System::Fprintf(pFile, " (%s)\n", static_cast<const Char*>(
+				pSceneObject->GetName()));
 		}
-
-		System::Fprintf(pFile, "%s\n", static_cast<const Char*>(s));
+		else
+		{
+			System::Fprintf(pFile, "\n");
+		}
 	}
 
 	return (System::Fclose(pFile) == 0);

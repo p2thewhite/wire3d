@@ -32,6 +32,8 @@ private:
 
 };
 
+typedef Pointer<InputCapability> InputCapabilityPtr;
+
 }
 
 #endif

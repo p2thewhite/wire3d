@@ -18,8 +18,9 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Nunchuk, InputDeviceExtension);
 
-Nunchuk::Nunchuk(const MainInputDevice* pMainInputDevice)
-	: InputDeviceExtension(pMainInputDevice)
+Nunchuk::Nunchuk(MainInputDevice* pMainInputDevice)
+	:
+	InputDeviceExtension(pMainInputDevice)
 {
 }
 

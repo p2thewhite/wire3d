@@ -31,20 +31,21 @@ public:
 	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const InputDataBuffer* GetDataBuffer() const;
 	void SetDataBuffer(const InputDataBuffer* pInputData);
-	const TArray<const InputCapability*>& GetCapabilities() const;
+	const TArray<Pointer<InputCapability> >& GetCapabilities() const;
 	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
 	virtual void SetUp() = 0;
 
 protected:
 	void RegisterCapability(InputCapability* pInputCapability);
 
-	THashTable<const Rtti*, InputCapability*> mCapabilitiesByType;
-	TArray<const InputCapability*> mReadOnlyCapabilities;
+	THashTable<const Rtti*, Pointer<InputCapability> > mCapabilitiesByType;
+	TArray<Pointer<InputCapability> > mReadOnlyCapabilities;
 
 private:
 	const InputDataBuffer* mpDataBuffer;
-
 };
+
+typedef Pointer<InputDevice> InputDevicePtr;
 
 }
 

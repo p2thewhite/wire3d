@@ -22,11 +22,10 @@ class Nunchuk : public InputDeviceExtension
 	WIRE_DECLARE_RTTI;
 
 public:
-	Nunchuk(const MainInputDevice* pMainInputDevice);
+	Nunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~Nunchuk();
 
 	virtual void SetUp();
-
 };
 
 }

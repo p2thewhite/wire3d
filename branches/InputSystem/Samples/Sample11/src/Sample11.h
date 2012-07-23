@@ -3,6 +3,7 @@
 #define SAMPLE11_H
 
 #include "WireApplication.h"
+#include "Cursors.h"
 #include <sstream>
 
 using namespace Wire;
@@ -15,27 +16,14 @@ class Sample11 : public WIREAPPLICATION, public InputSystemListener
 
 public:
 	Sample11();
+
 	virtual Bool OnInitialize();
+	virtual void OnTerminate();
 	virtual void OnIdle();
 	virtual void OnInput();
-
-	enum CursorMode
-	{
-		CM_POINTING,
-		CM_PRIMARY_BUTTON_PRESSED,
-		CM_SECONDARY_BUTTON_PRESSED,
-		CM_OFF
-	};
-
-	void SetCursor(Float x, Float y, CursorMode mode = CM_POINTING,
-		UInt playerNo = 0, Float zRollInRadian = 0);
-
 	virtual void OnDevicesChange();
 
 private:
-	void InitCursors();
-	Geometry* CreateCursor(Float uOffset, Float vOffset);
-
 	// utilitarian
 	void PrintAndClear(std::stringstream& message);
 
@@ -46,11 +34,9 @@ private:
 
 	Culler mCuller;
 	CameraPtr mspGuiCamera;
+	NodePtr mspGuiRoot;
 
-	NodePtr mspCursors;
-	MaterialPtr mspMaterial;
-	StateAlphaPtr mspCursorsAlpha;
-
+	Cursors* mpCursors;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample11);

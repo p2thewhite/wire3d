@@ -20,7 +20,8 @@ GXApplication::GXApplication(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
-	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width, height, true, useVSync), mIsRunning(false)
+	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
+		height, true, useVSync)
 {
 }
 
@@ -72,37 +73,4 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	s_pApplication->OnTerminate();
 
 	return 0;
-}
-
-//----------------------------------------------------------------------------
-Bool GXApplication::OnPrecreate()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-Bool GXApplication::OnInitialize()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-void GXApplication::OnTerminate()
-{
-}
-
-//----------------------------------------------------------------------------
-void GXApplication::OnIdle()
-{
-}
-
-//----------------------------------------------------------------------------
-void GXApplication::OnInput()
-{
-}
-
-//----------------------------------------------------------------------------
-void GXApplication::Close()
-{
-	mIsRunning = false;
 }

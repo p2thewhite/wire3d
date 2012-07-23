@@ -15,13 +15,14 @@ using namespace Wire;
 Win32InputDataBuffer::Win32InputDataBuffer()
 	: mMouseX(0), mMouseY(0), mMouseWheel(0)
 {
-	mpKeys = WIRE_NEW Bool[256];
-	System::Memset(mpKeys, 0, 256);
+	const UInt keysCount = 256;
+	mpKeys = WIRE_NEW Bool[keysCount];
+	System::Memset(mpKeys, 0, sizeof(Bool)*keysCount);
 }
 
 Win32InputDataBuffer::~Win32InputDataBuffer()
 {
-	WIRE_DELETE mpKeys;
+	WIRE_DELETE[] mpKeys;
 }
 
 Bool Win32InputDataBuffer::GetKey(UInt key) const

@@ -2,9 +2,6 @@
 
 #include "Sample11.h"
 
-#include "Importer.h"
-#include "Cursors.h"
-
 using namespace std;
 
 #define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
@@ -12,8 +9,10 @@ using namespace std;
 WIRE_APPLICATION(Sample11);
 
 //----------------------------------------------------------------------------
-Sample11::Sample11() :
-		mInputDevicesStateChanged(false)
+Sample11::Sample11()
+	:
+	mInputDevicesStateChanged(false),
+	mpCursors(NULL)
 {
 }
 
@@ -27,11 +26,23 @@ Bool Sample11::OnInitialize()
 
 	GetInputSystem()->AddListener(this);
 
-	InitCursors();
+	mpCursors = WIRE_NEW Cursors;
+	mspGuiRoot = WIRE_NEW Node;
+	mspGuiRoot->AttachChild(mpCursors->GetRoot());
 
 	mspGuiCamera = WIRE_NEW Camera(/* isPerspective */false);
 	mCuller.SetCamera(mspGuiCamera);
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void Sample11::OnTerminate()
+{
+	if (mpCursors)
+	{
+		WIRE_DELETE mpCursors;
+		mpCursors = NULL;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -45,8 +56,8 @@ void Sample11::OnIdle()
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
 	mspGuiCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
 
-	mspCursors->UpdateGS(time);
-	mCuller.ComputeVisibleSet(mspCursors);
+	mspGuiRoot->UpdateGS(time);
+	mCuller.ComputeVisibleSet(mspGuiRoot);
 
 	if (mInputDevicesStateChanged)
 	{
@@ -106,14 +117,14 @@ void Sample11::OnInput()
 			x = pIR->GetRight();
 			y = screenHeight - pIR->GetUp();
 		} 
-		else {
+		else
+		{
 			// if there's no IR, position the pointer at the center of the screen
 			x = screenWidth / 2;
 			y = screenHeight / 2;
 		}
 		
-		CursorMode mode = CM_POINTING;
-
+		Cursors::CursorMode mode = Cursors::CM_POINTING;
 		const Buttons* pButtons = NULL;
 
 		// if there are buttons in the main device, get them
@@ -123,8 +134,9 @@ void Sample11::OnInput()
 		}
 
 		// if there are buttons and the 'A' button is pressed, change the cursor mode
-		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_A)) {
-			mode = CM_PRIMARY_BUTTON_PRESSED;
+		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_A))
+		{
+			mode = Cursors::CM_PRIMARY_BUTTON_PRESSED;
 		}
 
 		// if there's an extension, get its buttons
@@ -137,8 +149,9 @@ void Sample11::OnInput()
 		}
 
 		// if there are buttons and the 'Z' button is pressed, change the cursor mode
-		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_Z)) {
-			mode = CM_SECONDARY_BUTTON_PRESSED;
+		if (pButtons != NULL && pButtons->GetButton(Buttons::BUTTON_Z))
+		{
+			mode = Cursors::CM_SECONDARY_BUTTON_PRESSED;
 		}
 		
 		Float tilt = 0;
@@ -150,7 +163,7 @@ void Sample11::OnInput()
 			tilt = DEGREES_TO_RADIANS(pTilt->GetRight());
 		}
 
-		SetCursor(x, y, mode, playerIndex, tilt);
+		mpCursors->SetCursor(x, y, mode, playerIndex, tilt);
 	}
 }
 
@@ -158,118 +171,6 @@ void Sample11::OnInput()
 void Sample11::OnDevicesChange()
 {
 	mInputDevicesStateChanged = true;
-}
-
-//----------------------------------------------------------------------------
-void Sample11::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo,
-	Float zRollInRadian)
-{
-	if (playerNo >= mspCursors->GetQuantity())
-	{
-		WIRE_ASSERT(false /* playerIndex number is out of bounds */);
-		return;
-	}
-
-	Node* pCursors = DynamicCast<Node>(mspCursors->GetChild(playerNo));
-	WIRE_ASSERT(pCursors);
-	WIRE_ASSERT(pCursors->GetQuantity() == 3);
-	for (UInt i = 0; i < pCursors->GetQuantity(); i++)
-	{
-		pCursors->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
-	}
-
-	switch (mode)
-	{
-	case CM_OFF:
-		return;
-
-	case CM_POINTING:
-		pCursors->GetChild(0)->Culling = Spatial::CULL_NEVER;
-		break;
-
-	case CM_PRIMARY_BUTTON_PRESSED:
-		pCursors->GetChild(1)->Culling = Spatial::CULL_NEVER;
-		break;
-
-	case CM_SECONDARY_BUTTON_PRESSED:
-		pCursors->GetChild(2)->Culling = Spatial::CULL_NEVER;
-		break;
-
-	default:
-		WIRE_ASSERT(false);
-	}
-
-	Vector3F pos(x, y, 0);
-	pCursors->Local.SetTranslate(pos);
-	Matrix3F roll(Vector3F::UNIT_Z, zRollInRadian);
-	pCursors->Local.SetRotate(roll);
-}
-
-//----------------------------------------------------------------------------
-void Sample11::InitCursors()
-{
-	mspCursors = WIRE_NEW Node;
-	mspCursorsAlpha = WIRE_NEW StateAlpha();
-	mspCursorsAlpha->BlendEnabled = true;
-	mspCursors->AttachState(mspCursorsAlpha);
-
-	Image2D* pImage = Importer::DecodePNG(Cursors::PNG, Cursors::SIZE, false);
-	Texture2D * pTexture = WIRE_NEW	Texture2D(pImage);
-	mspMaterial = WIRE_NEW	Material();
-	mspMaterial->AddTexture(pTexture, Material::BM_REPLACE);
-
-	Node * pPlayer0 = WIRE_NEW Node;
-	mspCursors->AttachChild(pPlayer0);
-	pPlayer0->AttachChild(CreateCursor(0.25F, 0.75F));
-	pPlayer0->AttachChild(CreateCursor(0, 0.75F));
-	pPlayer0->AttachChild(CreateCursor(0.5F, 0.75F));
-
-	Node * pPlayer1 = WIRE_NEW Node;
-	mspCursors->AttachChild(pPlayer1);
-	pPlayer1->AttachChild(CreateCursor(0, 0.25F));
-	pPlayer1->AttachChild(CreateCursor(0, 0));
-	pPlayer1->AttachChild(CreateCursor(0, 0.5F));
-
-	Node * pPlayer2 = WIRE_NEW Node;
-	mspCursors->AttachChild(pPlayer2);
-	pPlayer2->AttachChild(CreateCursor(0.25F, 0.25F));
-	pPlayer2->AttachChild(CreateCursor(0.25F, 0));
-	pPlayer2->AttachChild(CreateCursor(0.25F, 0.5F));
-
-	Node * pPlayer3 = WIRE_NEW Node;
-	mspCursors->AttachChild(pPlayer3);
-	pPlayer3->AttachChild(CreateCursor(0.5F, 0.25F));
-	pPlayer3->AttachChild(CreateCursor(0.5F, 0));
-	pPlayer3->AttachChild(CreateCursor(0.5F, 0.5F));
-
-	Node * pPlayer4 = WIRE_NEW Node;
-	mspCursors->AttachChild(pPlayer4);
-	pPlayer4->AttachChild(CreateCursor(0.75F, 0.25F));
-	pPlayer4->AttachChild(CreateCursor(0.75F, 0));
-	pPlayer4->AttachChild(CreateCursor(0.75F, 0.5F));
-
-	mspCursors->UpdateRS();
-}
-
-//----------------------------------------------------------------------------
-Geometry* Sample11::CreateCursor(Float uOffset, Float vOffset)
-{
-	Geometry* pCursor = StandardMesh::CreateQuad(0, 1, false, 32.0f);
-	const Vector2F uvs[] =
-	{ Vector2F(0 + uOffset, 0 + vOffset), Vector2F(0.25f + uOffset, 0 + vOffset), Vector2F(0.25f + uOffset, 0.25f + vOffset), Vector2F(0 + uOffset, 0.25f + vOffset) };
-
-	VertexBuffer* pVBuffer = pCursor->GetMesh()->GetVertexBuffer();
-	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
-	{
-		// recenter to fingertip
-		pVBuffer->Position3(i) -= Vector3F(-16.0F, 16.0F, 0);
-		pVBuffer->TCoord2(i) = uvs[i];
-	}
-
-	pCursor->Culling = Spatial::CULL_ALWAYS;
-	pCursor->SetMaterial(mspMaterial);
-
-	return pCursor;
 }
 
 //----------------------------------------------------------------------------
@@ -300,7 +201,7 @@ void Sample11::PrintInputDevicesInformations()
 
 		System::Print("- Capabilities:");
 
-		const TArray<const InputCapability*>& inputCapabilities = pInputDevice->GetCapabilities();
+		const TArray<InputCapabilityPtr>& inputCapabilities = pInputDevice->GetCapabilities();
 		for (UInt j = 0; j < inputCapabilities.GetQuantity(); j++)
 		{
 			message << inputCapabilities[j]->GetType().GetName() << endl;
@@ -311,4 +212,3 @@ void Sample11::PrintInputDevicesInformations()
 	message << endl;
 	PrintAndClear(message);
 }
-

@@ -10,14 +10,16 @@
 #ifndef WIREWIN32INPUTSYSTEMMESSAGEBROKER_H
 #define WIREWIN32INPUTSYSTEMMESSAGEBROKER_H
 
+#include "WireMain.h"
 #include "WireWin32InputDataBuffer.h"
-#include "WireTypes.h"
 
 namespace Wire
 {
 
 class Win32InputSystemMessageBroker
 {
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	Win32InputSystemMessageBroker();
@@ -36,6 +38,9 @@ private:
 	Win32InputDataBuffer* mpFrontBuffer;
 	Win32InputDataBuffer* mpBackBuffer;
 };
+
+WIRE_REGISTER_INITIALIZE(Win32InputSystemMessageBroker);
+WIRE_REGISTER_TERMINATE(Win32InputSystemMessageBroker);
 
 }
 

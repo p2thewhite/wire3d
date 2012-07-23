@@ -18,8 +18,9 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Win32EmulatedNunchuk, InputDeviceExtension);
 
-Win32EmulatedNunchuk::Win32EmulatedNunchuk(const MainInputDevice* pMainInputDevice)
-	: InputDeviceExtension(pMainInputDevice)
+Win32EmulatedNunchuk::Win32EmulatedNunchuk(MainInputDevice* pMainInputDevice)
+	:
+	InputDeviceExtension(pMainInputDevice)
 {
 }
 

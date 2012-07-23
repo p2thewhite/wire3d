@@ -21,7 +21,7 @@ class Win32EmulatedNunchuk : public InputDeviceExtension
 	WIRE_DECLARE_RTTI;
 
 public:
-	Win32EmulatedNunchuk(const MainInputDevice* pMainInputDevice);
+	Win32EmulatedNunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~Win32EmulatedNunchuk();
 
 	virtual void SetUp();

@@ -27,7 +27,8 @@ Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	mWidth(width),
 	mHeight(height),
 	mIsFullscreen(isFullscreen),
-	mUseVSync(useVSync)
+	mUseVSync(useVSync),
+	mIsRunning(false)
 {
 }
 
@@ -46,6 +47,66 @@ void Application::SetApplication(Application* pApplication)
 Application* Application::GetApplication()
 {
 	return s_pApplication;
+}
+
+//----------------------------------------------------------------------------
+Bool Application::OnPrecreate()
+{
+	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool Application::OnInitialize()
+{
+	return true;
+}
+
+//----------------------------------------------------------------------------
+void Application::OnIdle()
+{
+}
+
+//----------------------------------------------------------------------------
+void Application::OnTerminate()
+{
+}
+
+//----------------------------------------------------------------------------
+void Application::OnInput()
+{
+	// default handling exits Application when HOME button/ESC key is pressed
+	if (!mpInputSystem)
+	{
+		return;
+	}
+
+	if (mpInputSystem->GetMainDevicesCount() == 0)
+	{
+		return;
+	}
+
+	const MainInputDevice* pInputDevice = mpInputSystem->GetMainDevice(0);
+
+	// checking for minimum capabilities
+	if (!pInputDevice->HasCapability(Buttons::TYPE, true))
+	{
+		return;
+	}
+
+	const Buttons* pButtons = DynamicCast<Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
+	if (pButtons->GetButton(Buttons::BUTTON_HOME))
+	{
+		Close();
+		return;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Application::Close()
+{
+	mIsRunning = false;
 }
 
 //----------------------------------------------------------------------------

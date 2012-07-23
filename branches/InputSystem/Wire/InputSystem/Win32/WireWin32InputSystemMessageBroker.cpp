@@ -16,9 +16,30 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_INITIALIZE(Win32InputSystemMessageBroker);
+WIRE_IMPLEMENT_TERMINATE(Win32InputSystemMessageBroker);
+
 Win32InputSystemMessageBroker* Win32InputSystemMessageBroker::s_pInstance = NULL;
 Double Win32InputSystemMessageBroker::s_MouseStagnationTolerance = 5; // 5 seconds
 
+//----------------------------------------------------------------------------
+void Win32InputSystemMessageBroker::Initialize()
+{
+	WIRE_ASSERT(s_pInstance == NULL);
+	s_pInstance = WIRE_NEW Win32InputSystemMessageBroker();
+}
+
+//----------------------------------------------------------------------------
+void Win32InputSystemMessageBroker::Terminate()
+{
+	if (s_pInstance)
+	{
+		WIRE_DELETE s_pInstance;
+		s_pInstance = NULL;
+	}
+}
+
+//----------------------------------------------------------------------------
 Win32InputSystemMessageBroker::Win32InputSystemMessageBroker() :
 	mLastMouseMoveTime(0)
 {
@@ -39,11 +60,7 @@ const Win32InputDataBuffer* Win32InputSystemMessageBroker::GetCurrentInputDataBu
 
 Win32InputSystemMessageBroker* Win32InputSystemMessageBroker::GetInstance()
 {
-	if (s_pInstance == NULL)
-	{
-		s_pInstance = WIRE_NEW Win32InputSystemMessageBroker();
-	}
-
+	WIRE_ASSERT(s_pInstance);
 	return s_pInstance;
 }
 

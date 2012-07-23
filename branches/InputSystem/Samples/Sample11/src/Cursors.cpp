@@ -1,6 +1,140 @@
 #include "Cursors.h"
 
-const unsigned char Cursors::PNG[] = {
+#include "Importer.h"
+#include "WireMesh.h"
+#include "WireStandardMesh.h"
+#include "WireVertexBuffer.h"
+
+//----------------------------------------------------------------------------
+Cursors::Cursors()
+{
+	InitCursors();
+}
+
+//----------------------------------------------------------------------------
+void Cursors::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo,
+	Float zRollInRadian)
+{
+	if (playerNo >= mspCursors->GetQuantity())
+	{
+		WIRE_ASSERT(false /* playerIndex number is out of bounds */);
+		return;
+	}
+
+	Node* pCursors = DynamicCast<Node>(mspCursors->GetChild(playerNo));
+	WIRE_ASSERT(pCursors);
+	WIRE_ASSERT(pCursors->GetQuantity() == 3);
+	for (UInt i = 0; i < pCursors->GetQuantity(); i++)
+	{
+		pCursors->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
+	}
+
+	switch (mode)
+	{
+	case CM_OFF:
+		return;
+
+	case CM_POINTING:
+		pCursors->GetChild(0)->Culling = Spatial::CULL_NEVER;
+		break;
+
+	case CM_PRIMARY_BUTTON_PRESSED:
+		pCursors->GetChild(1)->Culling = Spatial::CULL_NEVER;
+		break;
+
+	case CM_SECONDARY_BUTTON_PRESSED:
+		pCursors->GetChild(2)->Culling = Spatial::CULL_NEVER;
+		break;
+
+	default:
+		WIRE_ASSERT(false);
+	}
+
+	Vector3F pos(x, y, 0);
+	pCursors->Local.SetTranslate(pos);
+	Matrix3F roll(Vector3F::UNIT_Z, zRollInRadian);
+	pCursors->Local.SetRotate(roll);
+}
+
+//----------------------------------------------------------------------------
+Node* Cursors::GetRoot()
+{
+	return mspCursors;
+}
+
+//----------------------------------------------------------------------------
+void Cursors::InitCursors()
+{
+	mspCursors = WIRE_NEW Node;
+	StateAlpha *pCursorsAlpha = WIRE_NEW StateAlpha();
+	pCursorsAlpha->BlendEnabled = true;
+	mspCursors->AttachState(pCursorsAlpha);
+
+	Image2D* pImage = Importer::DecodePNG(Cursors::s_Png, Cursors::s_PngSize,
+		false);
+	Texture2D * pTexture = WIRE_NEW	Texture2D(pImage);
+	mspMaterial = WIRE_NEW	Material();
+	mspMaterial->AddTexture(pTexture, Material::BM_REPLACE);
+
+	Node * pPlayer0 = WIRE_NEW Node;
+	mspCursors->AttachChild(pPlayer0);
+	pPlayer0->AttachChild(CreateCursor(0.25F, 0.75F));
+	pPlayer0->AttachChild(CreateCursor(0, 0.75F));
+	pPlayer0->AttachChild(CreateCursor(0.5F, 0.75F));
+
+	Node * pPlayer1 = WIRE_NEW Node;
+	mspCursors->AttachChild(pPlayer1);
+	pPlayer1->AttachChild(CreateCursor(0, 0.25F));
+	pPlayer1->AttachChild(CreateCursor(0, 0));
+	pPlayer1->AttachChild(CreateCursor(0, 0.5F));
+
+	Node * pPlayer2 = WIRE_NEW Node;
+	mspCursors->AttachChild(pPlayer2);
+	pPlayer2->AttachChild(CreateCursor(0.25F, 0.25F));
+	pPlayer2->AttachChild(CreateCursor(0.25F, 0));
+	pPlayer2->AttachChild(CreateCursor(0.25F, 0.5F));
+
+	Node * pPlayer3 = WIRE_NEW Node;
+	mspCursors->AttachChild(pPlayer3);
+	pPlayer3->AttachChild(CreateCursor(0.5F, 0.25F));
+	pPlayer3->AttachChild(CreateCursor(0.5F, 0));
+	pPlayer3->AttachChild(CreateCursor(0.5F, 0.5F));
+
+	Node * pPlayer4 = WIRE_NEW Node;
+	mspCursors->AttachChild(pPlayer4);
+	pPlayer4->AttachChild(CreateCursor(0.75F, 0.25F));
+	pPlayer4->AttachChild(CreateCursor(0.75F, 0));
+	pPlayer4->AttachChild(CreateCursor(0.75F, 0.5F));
+
+	mspCursors->UpdateRS();
+}
+
+//----------------------------------------------------------------------------
+Geometry* Cursors::CreateCursor(Float uOffset, Float vOffset)
+{
+	Geometry* pCursor = StandardMesh::CreateQuad(0, 1, false, 32.0f);
+	const Vector2F uvs[] =
+	{
+		Vector2F(0 + uOffset, 0 + vOffset), Vector2F(0.25f + uOffset, 0 + vOffset),
+		Vector2F(0.25f + uOffset, 0.25f + vOffset), Vector2F(0 + uOffset, 0.25f + vOffset)
+	};
+
+	VertexBuffer* pVBuffer = pCursor->GetMesh()->GetVertexBuffer();
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
+	{
+		// recenter to fingertip
+		pVBuffer->Position3(i) -= Vector3F(-16.0F, 16.0F, 0);
+		pVBuffer->TCoord2(i) = uvs[i];
+	}
+
+	pCursor->Culling = Spatial::CULL_ALWAYS;
+	pCursor->SetMaterial(mspMaterial);
+
+	return pCursor;
+}
+
+//----------------------------------------------------------------------------
+const unsigned char Cursors::s_Png[] = {
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, 
 	0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x08, 0x06, 0x00, 0x00, 0x00, 0x5c, 0x72, 0xa8, 
 	0x66, 0x00, 0x00, 0x00, 0x01, 0x73, 0x52, 0x47, 0x42, 0x00, 0xae, 0xce, 0x1c, 0xe9, 0x00, 0x00, 
@@ -1568,4 +1702,4 @@ const unsigned char Cursors::PNG[] = {
 	0xae, 0x42, 0x60, 0x82
 };
 
-const int Cursors::SIZE = sizeof(PNG);
+const int Cursors::s_PngSize = sizeof(s_Png);

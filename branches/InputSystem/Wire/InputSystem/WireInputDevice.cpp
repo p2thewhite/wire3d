@@ -23,7 +23,7 @@ InputDevice::~InputDevice()
 {
 }
 
-const TArray<const InputCapability*>& InputDevice::GetCapabilities() const
+const TArray<InputCapabilityPtr>& InputDevice::GetCapabilities() const
 {
 	return mReadOnlyCapabilities;
 }
@@ -45,9 +45,9 @@ void InputDevice::SetDataBuffer(const InputDataBuffer* pDataBuffer)
 
 const InputCapability* InputDevice::GetCapability(const Rtti& rCapabilityType) const
 {
-	THashTable<const Rtti*, InputCapability*>::Iterator it(&mCapabilitiesByType);
+	THashTable<const Rtti*, InputCapabilityPtr>::Iterator it(&mCapabilitiesByType);
 	const Rtti* pKey = NULL;
-	for (InputCapability** pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
+	for (InputCapabilityPtr* pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
 	{
 		if (pKey->IsDerived(rCapabilityType))
 		{

@@ -26,13 +26,6 @@ public:
 		Bool useVSync = true);
 	virtual ~Dx9Application();
 
-	virtual Bool OnPrecreate();
-	virtual Bool OnInitialize();
-	virtual void OnTerminate();
-	virtual void OnIdle();
-	virtual void OnInput();
-	virtual void Close();
-
 	Int GetWindowID() const;
 
 private:
@@ -42,7 +35,6 @@ private:
 
 	// An identifier for the window (representation is platform-specific).
 	Int mWindowID;
-	Bool mIsRunning;
 };
 
 }

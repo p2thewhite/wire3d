@@ -28,24 +28,24 @@ public:
 
  	// Called before the creation and initialization of the renderer.
  	// Returning 'false' quits the application.
- 	virtual Bool OnPrecreate() = 0;
+ 	virtual Bool OnPrecreate();
 
 	// Called before main loop. Returning 'false' quits the application.
-	virtual Bool OnInitialize() = 0;
+	virtual Bool OnInitialize();
 
 	// Called by the main loop
-	virtual void OnIdle() = 0;
+	virtual void OnIdle();
 
 	// Called before terminating the application.
-	virtual void OnTerminate() = 0;
+	virtual void OnTerminate();
 
 	// Called when the window is resized.
 	virtual void OnResize(UInt width, UInt height);
 
-	// Called bu the main loop just before the input capturing.
-	virtual void OnInput() = 0;
+	// Called by the main loop just after input capturing.
+	virtual void OnInput();
 
-	virtual void Close() = 0;
+	virtual void Close();
 
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 
@@ -72,6 +72,7 @@ protected:
 	UInt mHeight;
 	Bool mIsFullscreen;
 	Bool mUseVSync;
+	Bool mIsRunning;
 };
 
 #include "WireApplication.inl"

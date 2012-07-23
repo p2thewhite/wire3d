@@ -43,9 +43,9 @@ public:
 	void RemoveListener(InputSystemListener* pListener);
 
 protected:
-	TArray<InputDevice*> mDevices;
-	TArray<MainInputDevice*> mMainDevices;
-	TArray<InputDeviceExtension*> mDeviceExtensions;
+	TArray<InputDevicePtr> mDevices;
+	TArray<MainInputDevicePtr> mMainDevices;
+	TArray<InputDeviceExtensionPtr> mDeviceExtensions;
 	TArray<InputSystemListener*> mListeners;
 
 	virtual void BeforeDevicesDiscovery();

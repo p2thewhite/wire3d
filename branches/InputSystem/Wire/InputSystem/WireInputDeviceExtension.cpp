@@ -12,8 +12,9 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, InputDeviceExtension, InputDevice);
 
-InputDeviceExtension::InputDeviceExtension(const MainInputDevice* pMainInputDevice)
-	: mpMainInputDevice(pMainInputDevice)
+InputDeviceExtension::InputDeviceExtension(MainInputDevice* pMainInputDevice)
+	:
+	mspMainInputDevice(pMainInputDevice)
 {
 }
 
@@ -23,5 +24,5 @@ InputDeviceExtension::~InputDeviceExtension()
 
 const MainInputDevice* InputDeviceExtension::GetMainInputDevice() const
 {
-	return mpMainInputDevice;
+	return mspMainInputDevice;
 }

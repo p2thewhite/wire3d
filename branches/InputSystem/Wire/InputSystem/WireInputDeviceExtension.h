@@ -21,16 +21,17 @@ class InputDeviceExtension : public InputDevice
 	WIRE_DECLARE_RTTI;
 
 public:
-	InputDeviceExtension(const MainInputDevice* pMainInputDevice);
+	InputDeviceExtension(MainInputDevice* pMainInputDevice);
 	virtual ~InputDeviceExtension();
 
 protected:
 	const MainInputDevice* GetMainInputDevice() const;
 
 private:
-	const MainInputDevice* mpMainInputDevice;
-
+	MainInputDevicePtr mspMainInputDevice;
 };
+
+typedef Pointer<InputDeviceExtension> InputDeviceExtensionPtr;
 
 }
 

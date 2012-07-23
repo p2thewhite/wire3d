@@ -34,9 +34,10 @@ public:
 		Bool lookupExtensions) const;
 
 private:
-	TArray<const InputDeviceExtension*> mExtensions;
-
+	TArray<Pointer<InputDeviceExtension> > mExtensions;
 };
+
+typedef Pointer<MainInputDevice> MainInputDevicePtr;
 
 }
 
