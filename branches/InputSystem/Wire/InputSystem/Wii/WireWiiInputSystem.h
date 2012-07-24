@@ -11,10 +11,9 @@
 #define WIREWIIINPUTSYSTEM_H
 
 #include "WireInputSystem.h"
+#include "WireTHashTable.h"
 #include "WireWiiInputDataBuffer.h"
 #include "WireWiiMote.h"
-#include "WireTypes.h"
-#include <map>
 #include <wiiuse/wpad.h>
 
 namespace Wire
@@ -39,7 +38,7 @@ private:
 
 	static UInt s_mEventCounter;
 
-	std::map<Int, WiiInputDataBuffer*> mDataBufferByChannel;
+	THashTable<Int, WiiInputDataBuffer*> mDataBufferByChannel;
 	Int mLastDiscoveredChannel;
 	Bool mChanged;
 

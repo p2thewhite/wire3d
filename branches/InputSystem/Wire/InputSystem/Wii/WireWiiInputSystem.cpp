@@ -10,7 +10,6 @@
 #include "WireWiiMote.h"
 #include "WireNunchuk.h"
 #include "WireApplication.h"
-#include "WireRenderer.h"
 #include "WireMemory.h"
 #include <wiiuse/wpad.h>
 
@@ -30,12 +29,24 @@ WiiInputSystem::WiiInputSystem() :
 
 WiiInputSystem::~WiiInputSystem()
 {
+	THashTable<Int, WiiInputDataBuffer*>::Iterator it(&mDataBufferByChannel);
+	Int key;
+	for (WiiInputDataBuffer** pValue = it.GetFirst(&key); pValue; pValue = it.GetNext(&key))
+	{
+		WIRE_ASSERT(*pValue);
+		WIRE_DELETE *pValue;
+	}
+
 	WPAD_Shutdown();
 }
 
 void WiiInputSystem::AfterDevicesDiscovery()
 {
-	Renderer* pRenderer = Application::GetApplication()->GetRenderer();
+	Application* pApp = Application::GetApplication();
+	if (!pApp)
+	{
+		return;
+	}
 
 	for (UInt i = 0; i < GetMainDevicesCount(); i++)
 	{
@@ -47,21 +58,22 @@ void WiiInputSystem::AfterDevicesDiscovery()
 		}
 
 		// TODO: what about the x and y offsets?
-		WPAD_SetVRes(pWiiMote->GetChannel(), pRenderer->GetWidth(), pRenderer->GetHeight());
+		WPAD_SetVRes(pWiiMote->GetChannel(), pApp->GetWidth(), pApp->GetHeight());
 	}
 }
 
 WiiInputDataBuffer* WiiInputSystem::GetChannelDataBuffer(UInt channel)
 {
-	WiiInputDataBuffer* pDataBuffer = mDataBufferByChannel[channel];
+	WiiInputDataBuffer** pValue = mDataBufferByChannel.Find(channel);
 
-	if (pDataBuffer == NULL)
+	if (pValue == NULL)
 	{
-		pDataBuffer = WIRE_NEW WiiInputDataBuffer();
-		mDataBufferByChannel[channel] = pDataBuffer;
+		WiiInputDataBuffer* pDataBuffer = WIRE_NEW WiiInputDataBuffer();
+		mDataBufferByChannel.Insert(channel, pDataBuffer);
+		return pDataBuffer;
 	}
 
-	return pDataBuffer;
+	return *pValue;
 }
 
 void WiiInputSystem::Capture()

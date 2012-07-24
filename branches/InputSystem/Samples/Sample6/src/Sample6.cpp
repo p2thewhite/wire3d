@@ -38,11 +38,8 @@ Bool Sample6::OnInitialize()
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
+	mspCamera->SetFrustum(45, GetWidthF() / GetHeightF(), 0.1F, 300.0F);
 
-	// initialize the viewing frustum and culler
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
 	// initialize working variables used in the render loop (i.e. OnIdle())

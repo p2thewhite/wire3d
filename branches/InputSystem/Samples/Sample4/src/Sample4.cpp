@@ -30,10 +30,7 @@ Bool Sample4::OnInitialize()
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
-
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+	mspCamera->SetFrustum(45, GetWidthF() / GetHeightF() , 0.1F, 300.0F);
 
 	// initializing working variables
 	mAngle = 0.0F;

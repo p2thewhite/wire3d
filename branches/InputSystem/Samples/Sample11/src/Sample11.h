@@ -4,7 +4,6 @@
 
 #include "WireApplication.h"
 #include "Cursors.h"
-#include <sstream>
 
 using namespace Wire;
 
@@ -24,17 +23,14 @@ public:
 	virtual void OnDevicesChange();
 
 private:
-	// utilitarian
-	void PrintAndClear(std::stringstream& message);
-
-	// debug output
-	void PrintInputDevicesInformations();
+	void UpdateInputDevicesInformationText();
 
 	Bool mInputDevicesStateChanged;
 
 	Culler mCuller;
 	CameraPtr mspGuiCamera;
 	NodePtr mspGuiRoot;
+	TextPtr mspText;
 
 	Cursors* mpCursors;
 };

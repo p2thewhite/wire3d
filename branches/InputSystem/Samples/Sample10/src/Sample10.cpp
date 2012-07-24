@@ -49,13 +49,7 @@ Bool Sample10::OnInitialize()
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
-	UInt width = GetRenderer()->GetWidth();
-	UInt height = GetRenderer()->GetHeight();
-	Float fieldOfView = 45.0F;
-	Float aspectRatio = static_cast<Float>(width)/static_cast<Float>(height);
-	Float nearPlane = 0.1F;
-	Float farPlane = 300.0F;
-	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
+	mspCamera->SetFrustum(45.0F, GetWidthF()/GetHeightF(), 0.1F, 300.0F);
 
 	mCuller.SetCamera(mspCamera);
 	mCullerSorting.SetCamera(mspCamera);
@@ -337,16 +331,14 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 {
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	mspTextCamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
 	// set to screen width (might change any time in window mode)
-	mspText->SetLineWidth(screenWidth);
+	mspText->SetLineWidth(GetWidthF());
 	mspText->SetColor(Color32::WHITE);
 	// Text uses OpenGL convention of (0,0) being left bottom of window
-	mspText->Set("Sorting: ", 0, screenHeight-mspText->GetFontHeight()-32.0F);
+	mspText->Set("Sorting: ", 0, GetHeightF()-mspText->GetFontHeight()-32.0F);
 
 	if (usesSorting)
 	{

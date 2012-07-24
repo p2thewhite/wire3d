@@ -1862,10 +1862,6 @@
 							>
 						</File>
 						<File
-							RelativePath=".\InputSystem\Win32\WireWin32InputSystemMessageBroker.h"
-							>
-						</File>
-						<File
 							RelativePath=".\InputSystem\Win32\WireWin32KeyMappedAnalogPad.h"
 							>
 						</File>
@@ -1911,10 +1907,6 @@
 						</File>
 						<File
 							RelativePath=".\InputSystem\Win32\WireWin32InputSystem.cpp"
-							>
-						</File>
-						<File
-							RelativePath=".\InputSystem\Win32\WireWin32InputSystemMessageBroker.cpp"
 							>
 						</File>
 						<File

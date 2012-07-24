@@ -17,3 +17,27 @@ inline InputSystem* Application::GetInputSystem() const
 {
 	return mpInputSystem;
 }
+
+//----------------------------------------------------------------------------
+inline UInt Application::GetWidth() const
+{
+	return mWidth;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Application::GetHeight() const
+{
+	return mHeight;
+}
+
+//----------------------------------------------------------------------------
+inline Float Application::GetWidthF() const
+{
+	return static_cast<Float>(mWidth);
+}
+
+//----------------------------------------------------------------------------
+inline Float Application::GetHeightF() const
+{
+	return static_cast<Float>(mHeight);
+}

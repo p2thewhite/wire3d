@@ -53,6 +53,11 @@ public:
 	inline Renderer* GetRenderer() const;
 	inline InputSystem* GetInputSystem() const;
 
+	inline UInt GetWidth() const;
+	inline UInt GetHeight() const;
+	inline Float GetWidthF() const;
+	inline Float GetHeightF() const;
+
 protected:
 	Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle,
 		Int xPosition, Int yPosition, UInt width, UInt height,

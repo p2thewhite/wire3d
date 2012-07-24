@@ -53,7 +53,7 @@ void Main::Initialize()
 
 	WIRE_ASSERT(isObjectCountCorrect /* objects should not be created pre Initialize() */);
 
-	// number of objects created during initialization
+	// number of objects created before initialization
 	s_StartObjectCount = Object::InUse ? Object::InUse->GetQuantity() : 0;
 
 	if (s_pInitializers)
