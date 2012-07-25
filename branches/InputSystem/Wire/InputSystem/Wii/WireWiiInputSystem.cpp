@@ -19,7 +19,9 @@ const UInt WiiInputSystem::FIRST_CHANNEL = 0;
 const UInt WiiInputSystem::LAST_CHANNEL = 3;
 UInt WiiInputSystem::s_mEventCounter = 0;
 
-WiiInputSystem::WiiInputSystem() :
+WiiInputSystem::WiiInputSystem()
+	:
+	mDataBufferByChannel(16),
 	mLastDiscoveredChannel(-1),
 	mChanged(false)
 {
