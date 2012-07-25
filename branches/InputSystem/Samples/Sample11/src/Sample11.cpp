@@ -140,6 +140,11 @@ void Sample11::OnInput()
 		{
 			pButtons = DynamicCast<const Buttons>(pInputDevice->
 				GetExtension(0)->GetCapability(Buttons::TYPE));
+			if (pButtons)
+			{
+				// query nunchuck to initiate recognition just for info text
+				pButtons->GetButton(Buttons::BUTTON_Z);
+			}
 		}
 
 		Float tilt = 0;
