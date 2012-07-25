@@ -3,11 +3,12 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-MaterialFader::MaterialFader(Float duration, Bool fadeOut, Float delay) :
+MaterialFader::MaterialFader(Float duration, Bool fadeOut, Float delay)
+	:
 	mTotalTime(duration), 
+	mDelay(delay),
 	mTimeLeft(duration),
-	mFadeOut(fadeOut),
-	mDelay(delay)
+	mFadeOut(fadeOut)
 {
 	WIRE_ASSERT(duration > 0);
 	mTimeLeft = duration;

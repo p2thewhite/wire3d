@@ -606,11 +606,9 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	UpdateGS(pSpatial);
 
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
-	WIRE_ASSERT_NO_SIDEEFFECTS(pShapeName);
+	WIRE_ASSERT(pShapeName);
 
-	Collider* pCollider;
-	btCollisionShape* pCollisionShape;
-
+	btCollisionShape* pCollisionShape = NULL;
 	if (Is("Box", pShapeName))
 	{
 		// FIXME: center is not being used!
@@ -639,8 +637,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	{
 		rapidxml::xml_node<>* pFirstChild = pXmlNode->first_node();
 
-		WIRE_ASSERT_NO_SIDEEFFECTS(pFirstChild /* Mesh collider has no child */);
-		WIRE_ASSERT_NO_SIDEEFFECTS(Is("Mesh", pFirstChild->name()) /* First child of mesh collider is not a mesh */);
+		WIRE_ASSERT(pFirstChild /* Mesh collider has no child */);
+		WIRE_ASSERT(Is("Mesh", pFirstChild->name()) /* First child of mesh collider is not a mesh */);
 		
 		Mesh* pMesh = ParseMesh(pFirstChild);
 		btTriangleIndexVertexArray* pTriangleIndexVertexArray = BulletUtils::Convert(pMesh);
@@ -649,11 +647,15 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	}
 	else 
 	{
-		WIRE_ASSERT_NO_SIDEEFFECTS(false /* Collider shape not supported yet! */);
+		WIRE_ASSERT(false /* Collider shape not supported yet! */);
 	}
 
-	pCollider = WIRE_NEW Collider(pCollisionShape);
+	if (!pCollisionShape)
+	{
+		return;
+	}
 
+	Collider* pCollider = WIRE_NEW Collider(pCollisionShape);
 	pSpatial->AttachController(pCollider);
 	mColliders.Append(pCollider);
 

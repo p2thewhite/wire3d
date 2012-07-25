@@ -54,7 +54,7 @@
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIRE_WII;NDEBUG;WIRE_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;..\..\Tools\bullet-2.77\src;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make WIRE_DEBUG=y clean
 make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’
@@ -69,7 +69,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <NMakeOutput>
     </NMakeOutput>
     <NMakePreprocessorDefinitions>WIRE_WII;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\Wire\Foundation;..\..\Wire\Engine;..\..\Wire\Renderer;..\..\Wire\InputSystem;..\..\Tools\Importer\src;..\..\Tools\bullet-2.77\src;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make clean
 make -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\2):/’</NMakeReBuildCommandLine>

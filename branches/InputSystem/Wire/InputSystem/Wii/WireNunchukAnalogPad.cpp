@@ -9,7 +9,6 @@
 #include "WireNunchukAnalogPad.h"
 #include "WireWiiInputDataBuffer.h"
 #include "WireMath.h"
-#include <wiiuse/wpad.h>
 
 using namespace Wire;
 

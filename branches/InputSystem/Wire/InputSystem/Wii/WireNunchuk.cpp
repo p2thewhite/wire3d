@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireNunchuk.h"
-#include "WireMemory.h"
 #include "WireNunchukAnalogPad.h"
 #include "WireNunchukButtons.h"
 #include "WireNunchukShake.h"

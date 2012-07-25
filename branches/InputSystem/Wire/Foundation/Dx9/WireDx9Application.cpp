@@ -9,7 +9,6 @@
 #include "WireDx9Application.h"
 #include "WireRenderer.h"
 #include "WireDx9RendererInput.h"
-#include "WireButton.h"
 #include "WireWin32InputSystem.h"
 #include <Windows.h>
 

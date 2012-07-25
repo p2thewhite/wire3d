@@ -64,7 +64,7 @@ private:
 	Node* LoadAndInitializeScene();
 	Node* LoadAndInitializeGUI();
 	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
-	Texture2D* LoadTexture(Importer& rImporter, Char* pFileName);
+	Texture2D* LoadTexture(Importer& rImporter, const Char* pFileName);
 	void MoveCrosshairTo(const Vector2F& rScreenPoint);
 	void InitializePhysics();
 	void RegisterStaticCollider(const Collider* pCollider);

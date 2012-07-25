@@ -11,7 +11,6 @@
 #define WIREBUTTONS_H
 
 #include "WireInputCapability.h"
-#include "WireButton.h"
 
 namespace Wire
 {

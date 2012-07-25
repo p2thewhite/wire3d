@@ -177,7 +177,6 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedSwing.h" />
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedTilt.h" />
     <ClInclude Include="InputSystem\WireAnalogPad.h" />
-    <ClInclude Include="InputSystem\WireButton.h" />
     <ClInclude Include="InputSystem\WireButtons.h" />
     <ClInclude Include="InputSystem\WireDigitalPad.h" />
     <ClInclude Include="InputSystem\WireInputCapability.h" />

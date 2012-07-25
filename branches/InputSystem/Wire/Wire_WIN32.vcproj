@@ -1408,10 +1408,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\InputSystem\WireButton.h"
-					>
-				</File>
-				<File
 					RelativePath=".\InputSystem\WireButtons.h"
 					>
 				</File>

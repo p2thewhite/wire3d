@@ -7,10 +7,10 @@
 // that agreement.
 
 #include "WireWiiInputSystem.h"
-#include "WireWiiMote.h"
-#include "WireNunchuk.h"
+
 #include "WireApplication.h"
-#include "WireMemory.h"
+#include "WireNunchuk.h"
+#include "WireWiiMote.h"
 #include <wiiuse/wpad.h>
 
 using namespace Wire;

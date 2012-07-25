@@ -3,31 +3,28 @@
 
 using namespace Wire;
 
-#define DEGREES_TO_RADIANS(x) (x / 180.0f) * 3.14f
-
 //----------------------------------------------------------------------------
-FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera) :
+FirstPersonController::FirstPersonController(const Vector3F& rPosition, Camera* pCamera)
+	:
+	mMaxPitch(MathF::PI / 4),
+	mMoveSpeed(2.5f),
+	mRotateSpeed(MathF::PI / 9),
+	mCharacterWidth(1),
+	mCharacterHeight(1),
 	mPitch(0),
 	mYaw(0),
 	mPitchIncrement(0),
 	mYawIncrement(0),
 	mMove(Vector3F::ZERO),
-	mJump(false),
-	mMaxPitch(MathF::PI / 4),
-	mCharacterHeight(1),
-	mCharacterWidth(1),
-	mMoveSpeed(2.5f),
-	mRotateSpeed(MathF::PI / 9)
+	mJump(false)
 {
 	if (!pCamera)
 	{
 		return;
 	}
 
-	// ---
-
 	mspCamera = pCamera;
-	mspCamera->SetFrame(rPosition, Vector3F(0, 0, -1), Vector3F(0, 1, 0), Vector3F(1, 0, 0));
+	mspCamera->SetFrame(rPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
 }
 
 //----------------------------------------------------------------------------
@@ -142,7 +139,7 @@ void FirstPersonController::SetLookUpDeadZone(const Vector2F& rLookUpDeadZone)
 //----------------------------------------------------------------------------
 void FirstPersonController::SetMaximumVerticalAngle(Float maximumVerticalAngle)
 {
-	mMaxPitch = DEGREES_TO_RADIANS(maximumVerticalAngle);
+	mMaxPitch = MathF::DEG_TO_RAD * (maximumVerticalAngle);
 }
 
 //----------------------------------------------------------------------------

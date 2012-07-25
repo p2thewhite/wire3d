@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireWiiMote.h"
-#include "WireMemory.h"
 #include "WireWiiMoteButtons.h"
 #include "WireWiiMoteDigitalPad.h"
 #include "WireWiiMoteIR.h"

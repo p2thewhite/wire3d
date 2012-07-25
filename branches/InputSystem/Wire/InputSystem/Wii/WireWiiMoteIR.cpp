@@ -7,11 +7,9 @@
 // that agreement.
 
 #include "WireWiiMoteIR.h"
-#include "WireWiiMoteButtons.h"
-#include "WireWiiMote.h"
+
 #include "WireWiiInputDataBuffer.h"
 #include "WireMath.h"
-#include <wiiuse/wpad.h>
 
 using namespace Wire;
 

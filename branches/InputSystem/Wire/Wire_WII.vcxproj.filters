@@ -351,9 +351,6 @@
     <ClInclude Include="InputSystem\WireAnalogPad.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\WireButton.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\WireButtons.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>

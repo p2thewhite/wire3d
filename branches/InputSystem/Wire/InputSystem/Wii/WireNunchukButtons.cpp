@@ -8,7 +8,6 @@
 
 #include "WireNunchukButtons.h"
 #include "WireWiiInputDataBuffer.h"
-#include <wiiuse/wpad.h>
 
 using namespace Wire;
 

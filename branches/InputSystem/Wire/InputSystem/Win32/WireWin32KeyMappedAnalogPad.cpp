@@ -8,8 +8,6 @@
 
 #include "WireWin32KeyMappedAnalogPad.h"
 #include "WireWin32InputDataBuffer.h"
-#include <Windows.h>
-#include <WinUser.h>
 
 using namespace Wire;
 

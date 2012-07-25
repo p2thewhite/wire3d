@@ -8,9 +8,6 @@
 
 #include "WireWin32KeyMappedSwing.h"
 #include "WireWin32InputDataBuffer.h"
-#include "WireButton.h"
-#include <Windows.h>
-#include <WinUser.h>
 
 using namespace Wire;
 

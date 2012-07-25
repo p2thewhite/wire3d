@@ -268,18 +268,19 @@ void FirstPersonShooterGame::ToggleCollidersVisibility()
 
 		if (mShowColliders)
 		{
-			Collider* pColliderController = static_cast<Collider*>(pColliderNode->GetController(0));
+			Collider* pColliderController = DynamicCast<Collider>(pColliderNode->GetController(0));
+			WIRE_ASSERT(pColliderController);
 			// Create proper geometry according to the collider shape
 			pColliderGeometry = CollisionShapeToGeometryConverter::Convert(pColliderController->GetShape(), Color32::GREEN);
-			UInt position = pColliderNode->AttachChild(pColliderGeometry);
+			pColliderNode->AttachChild(pColliderGeometry);
 
 			// Update the render state (necessary because of wireframe)
 			pColliderNode->UpdateRS();
 		}
 		else
 		{
-			Spatial* pSpatial = static_cast<Spatial*>(pColliderNode->DetachChildAt(pColliderNode->GetQuantity() - 1));
-			WIRE_ASSERT(pSpatial);
+			Spatial* pSpatial = pColliderNode->DetachChildAt(pColliderNode->GetQuantity() - 1);
+			WIRE_ASSERT_NO_SIDEEFFECTS(pSpatial);
 		}
 	}
 }
@@ -579,7 +580,7 @@ void FirstPersonShooterGame::UpdateCameraFrustumAccordingToScreenDimensions(Came
 }
 
 //----------------------------------------------------------------------------
-Texture2D* FirstPersonShooterGame::LoadTexture(Importer& rImporter, Char* pFileName)
+Texture2D* FirstPersonShooterGame::LoadTexture(Importer& rImporter, const Char* pFileName)
 {
 	Texture2D* pTexture = WIRE_NEW Texture2D(rImporter.LoadPNG(pFileName, false));
 

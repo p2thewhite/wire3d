@@ -10,7 +10,6 @@
 #include "WireWin32EmulatedWiiMote.h"
 #include "WireWin32EmulatedNunchuk.h"
 #include <Windows.h>
-#include <WinUser.h>
 #include <Windowsx.h>
 
 using namespace Wire;
