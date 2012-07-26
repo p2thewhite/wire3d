@@ -28,7 +28,7 @@ protected:
 	const MainInputDevice* GetMainInputDevice() const;
 
 private:
-	MainInputDevicePtr mspMainInputDevice;
+	MainInputDevice* mpMainInputDevice;
 };
 
 typedef Pointer<InputDeviceExtension> InputDeviceExtensionPtr;

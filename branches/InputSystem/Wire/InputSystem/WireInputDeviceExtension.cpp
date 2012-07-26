@@ -14,7 +14,7 @@ WIRE_IMPLEMENT_RTTI(Wire, InputDeviceExtension, InputDevice);
 
 InputDeviceExtension::InputDeviceExtension(MainInputDevice* pMainInputDevice)
 	:
-	mspMainInputDevice(pMainInputDevice)
+	mpMainInputDevice(pMainInputDevice)
 {
 }
 
@@ -24,5 +24,5 @@ InputDeviceExtension::~InputDeviceExtension()
 
 const MainInputDevice* InputDeviceExtension::GetMainInputDevice() const
 {
-	return mspMainInputDevice;
+	return mpMainInputDevice;
 }
