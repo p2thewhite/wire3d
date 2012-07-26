@@ -135,18 +135,6 @@ void Sample11::OnInput()
 			mode = Cursors::CM_SECONDARY_BUTTON_PRESSED;
 		}
 
-		// if there's an extension, get its buttons
-		if (pInputDevice->GetExtensionsCount() > 0)
-		{
-			pButtons = DynamicCast<const Buttons>(pInputDevice->
-				GetExtension(0)->GetCapability(Buttons::TYPE));
-			if (pButtons)
-			{
-				// query nunchuck to initiate recognition just for info text
-				pButtons->GetButton(Buttons::BUTTON_Z);
-			}
-		}
-
 		Float tilt = 0;
 		// get the main device tilt (in degrees)
 		const Tilt* pTilt = DynamicCast<const Tilt>(pInputDevice->GetCapability(Tilt::TYPE, false));

@@ -16,17 +16,18 @@
 using namespace Wire;
 
 const UInt WiiInputSystem::FIRST_CHANNEL = 0;
-const UInt WiiInputSystem::LAST_CHANNEL = 3;
+const UInt WiiInputSystem::LAST_CHANNEL = MAXIMUM_NUMBER_OF_CHANNELS - 1;
 UInt WiiInputSystem::s_mEventCounter = 0;
 
-WiiInputSystem::WiiInputSystem()
-	:
+WiiInputSystem::WiiInputSystem() :
 	mDataBufferByChannel(16),
-	mLastDiscoveredChannel(-1),
 	mChanged(false)
 {
 	PAD_Init();
 	WPAD_Init();
+
+	// reset channel status
+	System::Memset(mChannelsConnectionStatus, false, MAXIMUM_NUMBER_OF_CHANNELS);
 }
 
 WiiInputSystem::~WiiInputSystem()
@@ -45,19 +46,12 @@ WiiInputSystem::~WiiInputSystem()
 void WiiInputSystem::AfterDevicesDiscovery()
 {
 	Application* pApp = Application::GetApplication();
-	if (!pApp)
-	{
-		return;
-	}
+	WIRE_ASSERT(pApp /* Application is not instantiated */);
 
-	for (UInt i = 0; i < GetMainDevicesCount(); i++)
+	for (UInt i = 0; i < mMainDevices.GetQuantity(); i++)
 	{
 		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
 		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
-		if (!pWiiMote)
-		{
-			continue;
-		}
 
 		// TODO: what about the x and y offsets?
 		WPAD_SetVRes(pWiiMote->GetChannel(), pApp->GetWidth(), pApp->GetHeight());
@@ -82,73 +76,15 @@ void WiiInputSystem::Capture()
 {
 	WPAD_ReadPending(WPAD_CHAN_ALL,	&WiiInputSystem::ReadWPADPendingEventsCallback);
 
-	for (UInt i = 0; i < GetMainDevicesCount(); i++)
+	for (UInt i = 0; i < mMainDevices.GetQuantity(); i++)
 	{
 		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
 		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
-		if (!pWiiMote)
-		{
-			continue;
-		}
 
 		UInt channel = pWiiMote->GetChannel();
-		WiiInputDataBuffer* pChannelDataBuffer = GetChannelDataBuffer(pWiiMote->GetChannel());
+		WiiInputDataBuffer* pChannelDataBuffer = GetChannelDataBuffer(channel);
 		pChannelDataBuffer->SetData(WPAD_Data(channel));
 		pWiiMote->SetDataBuffer(pChannelDataBuffer);
-
-		// FIXME: shouldn't it be at WiiMote::SetDataBuffer(..)?
-		for (UInt j = 0; j < pWiiMote->GetExtensionsCount(); j++)
-		{
-			InputDeviceExtension* pExtension = const_cast<InputDeviceExtension*>(pWiiMote->GetExtension(j));
-			pExtension->SetDataBuffer(pChannelDataBuffer);
-		}
-	}
-}
-
-void WiiInputSystem::UpdateCurrentlyConnectedChannels()
-{
-	for (UInt i = 0; i < GetMainDevicesCount(); i++)
-	{
-		WiiMote* pWiiMote =	DynamicCast<WiiMote>(mMainDevices[i]);
-		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
-		if (!pWiiMote)
-		{
-			continue;
-		}
-
-		// if it's not connected anymore, remove it
-		if (!IsWiiMoteConnectedToChannel(pWiiMote->GetChannel()))
-		{
-			RemoveDevice(pWiiMote);
-			continue;
-		}
-
-		if (pWiiMote->GetExtensionsCount() == 0)
-		{
-			DiscoverWiiMoteExpansions(pWiiMote);
-		}
-	}
-}
-
-void WiiInputSystem::ProbePreviouslyDisconnectedChannels()
-{
-	for (UInt channel = mLastDiscoveredChannel + 1; channel <= LAST_CHANNEL;	channel++)
-	{
-		if (!IsWiiMoteConnectedToChannel(channel))
-		{
-			continue;
-		}
-
-		// register wiimote's expected data format
-		WPAD_SetDataFormat(channel, WPAD_FMT_BTNS_ACC_IR);
-
-		// create and add the wiimote
-		WiiMote* pWiiMote = WIRE_NEW WiiMote(channel);
-		pWiiMote->SetUp();
-		AddDevice(pWiiMote);
-		DiscoverWiiMoteExpansions(pWiiMote);
-		mLastDiscoveredChannel = channel;
-		mChanged = true;
 	}
 }
 
@@ -161,42 +97,128 @@ void WiiInputSystem::NotifyDevicesChangeIfNecessary()
 	}
 }
 
+WiiMote* WiiInputSystem::GetWiiMoteByChannel(UInt channel)
+{
+	for (UInt i = 0; i < mMainDevices.GetQuantity(); i++)
+	{
+		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
+		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
+
+		if (pWiiMote->GetChannel() == channel)
+		{
+			return pWiiMote;
+		}
+	}
+
+	return NULL;
+}
+
 void WiiInputSystem::DoDevicesDiscovery()
 {
-	UpdateCurrentlyConnectedChannels();
-	ProbePreviouslyDisconnectedChannels();
+	WiiMote* pWiiMote;
+	for (UInt channel = FIRST_CHANNEL; channel <= LAST_CHANNEL; channel++)
+	{
+		Bool isConnected = GetChannelConnectionStatus(channel);
+		Bool wasConnected = mChannelsConnectionStatus[channel];
+
+		if (isConnected)
+		{
+			// if the channel is connected and was not connected before, 
+			// add a new wiimote to use it
+			if (!wasConnected)
+			{
+				// register wiimote's expected data format
+				WPAD_SetDataFormat(channel, WPAD_FMT_BTNS_ACC_IR);
+
+				// create and add the wiimote
+				pWiiMote = WIRE_NEW WiiMote(channel);
+				pWiiMote->SetUp();
+
+				AddDevice(pWiiMote);
+
+				DiscoverExpansions(pWiiMote);
+
+				mChanged = true;
+			}
+			// if the channel still connected, get wiimote that is using it
+			else
+			{
+				pWiiMote = GetWiiMoteByChannel(channel);
+				WIRE_ASSERT(pWiiMote /* There's no WiiMote connected to channel */);
+			}
+
+			// probe channel for new WiiMote expansions
+			DiscoverExpansions(pWiiMote);
+		}
+
+		// if the channel was connected but is not connected anymore,
+		// remove the wiimote using the channel
+		else if (!isConnected && wasConnected)
+		{
+			pWiiMote = GetWiiMoteByChannel(channel);
+			WIRE_ASSERT(pWiiMote /* There's no WiiMote connected to channel */);
+
+			// note: all expansions (InputDeviceExtensions) of that WiiMote are removed as well
+			RemoveDevice(pWiiMote);
+
+			mChanged = true;
+		}
+
+		mChannelsConnectionStatus[channel] = isConnected;
+	}
+	
 	NotifyDevicesChangeIfNecessary();
 }
 
-void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
+void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
 {
 	expansion_t data;
 	WPAD_Expansion(pWiiMote->GetChannel(), &data);
 
-	if (data.type == WPAD_EXP_NONE)
-	{
-		return;
-	}
-
-	InputDeviceExtension* pWiiMoteExpansion;
+	InputDeviceExtension* pExpansion;
+	const TArray<Pointer<InputDeviceExtension> >& rExtensions = pWiiMote->GetExtensions();
 
 	switch (data.type)
 	{
+	case WPAD_EXP_NONE:
+		// if there was no extension already, exit
+		if (pWiiMote->GetExtensionsCount() == 0)
+		{
+			return;
+		}
+
+		for (UInt i = 0; i < rExtensions.GetQuantity(); i++)
+		{
+			RemoveDevice(rExtensions[i]);
+		}
+		pWiiMote->RemoveAllExtensions();
+
+		break;
+
 	case WPAD_EXP_NUNCHUK:
-		pWiiMoteExpansion = WIRE_NEW Nunchuk(pWiiMote);
-		pWiiMote->AddExtension(pWiiMoteExpansion);
-		pWiiMoteExpansion->SetUp();
+		// if a nunchuk was already added, exit
+		if (pWiiMote->HasExtension("Nunchuk"))
+		{
+			return;
+		}
+
+		pExpansion = WIRE_NEW Nunchuk(pWiiMote);
+		pWiiMote->AddExtension("Nunchuk", pExpansion);
+		AddDevice(pExpansion);
+		pExpansion->SetUp();
+
 		break;
 
 	default:
-		WIRE_ASSERT(false /* Unsupported wiimote expansion found */);
+		WIRE_ASSERT(false /* Unsupported WiiMote expansion */);
+
 		return;
 	}
 
 	mChanged = true;
 }
 
-Bool WiiInputSystem::IsWiiMoteConnectedToChannel(UInt channel)
+Bool WiiInputSystem::GetChannelConnectionStatus(UInt channel)
 {
 	UInt type;
 	return (WPAD_Probe(channel, &type) == WPAD_ERR_NONE);

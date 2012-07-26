@@ -8,6 +8,7 @@
 
 #include "WireWin32KeyMappedAnalogPad.h"
 #include "WireWin32InputDataBuffer.h"
+#include <Windows.h>
 
 using namespace Wire;
 
@@ -22,22 +23,27 @@ Win32KeyMappedAnalogPad::~Win32KeyMappedAnalogPad()
 {
 }
 
-Float Win32KeyMappedAnalogPad::GetDown() const
+Float Win32KeyMappedAnalogPad::GetUp() const
 {
-	return 0;
+	// 'w' key
+	return (static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x57)) ? 1.0f : 0;
 }
 
 Float Win32KeyMappedAnalogPad::GetLeft() const
 {
-	return 0;
+	// 'a' key
+	return (static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x41)) ? 1.0f : 0;
+}
+
+Float Win32KeyMappedAnalogPad::GetDown() const
+{
+	// 's' key
+	return (static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x53)) ? 1.0f : 0;
 }
 
 Float Win32KeyMappedAnalogPad::GetRight() const
 {
-	return 0;
+	// 'd' key
+	return (static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x44)) ? 1.0f : 0;
 }
 
-Float Win32KeyMappedAnalogPad::GetUp() const
-{
-	return 0;
-}

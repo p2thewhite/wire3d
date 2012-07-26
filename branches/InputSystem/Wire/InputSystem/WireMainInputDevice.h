@@ -11,6 +11,7 @@
 #define WIREMAININPUTDEVICE_H
 
 #include "WireInputDevice.h"
+#include "WireTHashTable.h"
 #include "WireTArray.h"
 
 namespace Wire
@@ -26,15 +27,21 @@ public:
 	MainInputDevice();
 	virtual ~MainInputDevice();
 
-	void AddExtension(InputDeviceExtension* pInputDevice);
-	const InputDeviceExtension* GetExtension(UInt index) const;
+	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
+	void AddExtension(const Char* pAlias, InputDeviceExtension* pInputDevice);
+	void RemoveExtensionByAlias(const Char* pAlias);
+	const InputDeviceExtension* GetExtensionByAlias(const Char* pAlias) const;
+	Bool HasExtension(const Char* pAlias) const;
+	const TArray<Pointer<InputDeviceExtension> >& GetExtensions() const;
+	void RemoveAllExtensions();
 	UInt GetExtensionsCount() const;
 	Bool HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
-	const InputCapability* GetCapability(const Rtti& rCapabilityType,
-		Bool lookupExtensions) const;
+	const InputCapability* GetCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
 
 private:
-	TArray<Pointer<InputDeviceExtension> > mExtensions;
+	THashTable<const Char*, Pointer<InputDeviceExtension> > mExtensionsByAlias;
+	TArray<Pointer<InputDeviceExtension> > mReadOnlyExtensions;
+
 };
 
 typedef Pointer<MainInputDevice> MainInputDevicePtr;

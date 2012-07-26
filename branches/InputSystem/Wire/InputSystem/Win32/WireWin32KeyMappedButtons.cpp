@@ -28,31 +28,31 @@ Bool Win32KeyMappedButtons::GetButton(Button button) const
 	switch (button)
 	{
 	case BUTTON_A:
-		// letter a
+		// left mouse button
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_LBUTTON);
 	case BUTTON_B:
-		// letter b
+		// right mouse button
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_RBUTTON);
 	case BUTTON_C:
-		// letter c
+		// 'c' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x43);
 	case BUTTON_HOME:
-		// escape
+		// 'esc' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ESCAPE);
 	case BUTTON_MINUS:
-		// minus sign
+		// '-' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_SUBTRACT);
 	case BUTTON_PLUS:
-		// plus sign
+		// '+' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ADD);
 	case BUTTON_Z:
-		// letter z
+		// 'z' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x5A);
 	case BUTTON_1:
-		// number 1
+		// '1' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x31);
 	case BUTTON_2:
-		// number 2
+		// '2' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x32);
 	}
 

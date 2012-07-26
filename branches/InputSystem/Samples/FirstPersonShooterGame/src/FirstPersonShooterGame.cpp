@@ -238,10 +238,10 @@ void FirstPersonShooterGame::OnInput()
 		lastButton1PressTime = time;
 	}
 
-	// If there's an extension, start reading its buttons instead
-	if (pInputDevice->GetExtensionsCount() > 0)
+	// If there's a nunchuk, start reading its buttons instead
+	if (pInputDevice->HasExtension("Nunchuk"))
 	{
-		pButtons = static_cast<const Buttons*>(pInputDevice->GetExtension(0)->GetCapability(Buttons::TYPE));
+		pButtons = static_cast<const Buttons*>(pInputDevice->GetExtensionByAlias("Nunchuk")->GetCapability(Buttons::TYPE));
 	}
 
 	// 'Z' button makes the player run

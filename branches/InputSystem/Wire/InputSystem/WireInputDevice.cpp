@@ -13,8 +13,7 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, InputDevice, Object);
 
-InputDevice::InputDevice()
-	:
+InputDevice::InputDevice() :
 	mCapabilitiesByType(16)
 {
 }

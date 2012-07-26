@@ -70,41 +70,44 @@ void InputSystem::AddDevice(InputDevice* pDevice)
 {
 	mDevices.Append(pDevice);
 	
-	MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
-	if (pMainDevice)
-	{
-		mMainDevices.Append(pMainDevice);
-		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
-		{
-			AddDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
-		}
-	}
-
-	InputDeviceExtension* pInputDeviceExtension = DynamicCast<InputDeviceExtension>(pDevice);
-	if (pInputDeviceExtension)
-	{
-		mDeviceExtensions.Append(pInputDeviceExtension);
-	}
-}
-
-void InputSystem::RemoveDevice(InputDevice* pDevice)
-{
-	mDevices.Remove(pDevice);
-
 	if (pDevice->IsDerived(MainInputDevice::TYPE))
 	{
-		MainInputDevice* pMainDevice = static_cast<MainInputDevice*>(pDevice);
-		mMainDevices.Remove(pMainDevice);
-		for (UInt i = 0; i < pMainDevice->GetExtensionsCount(); i++)
+		MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
+		mMainDevices.Append(pMainDevice);
+		const TArray<Pointer<InputDeviceExtension> >& rExtensions = pMainDevice->GetExtensions();
+		for (UInt i = 0; i < rExtensions.GetQuantity(); i++)
 		{
-			RemoveDevice(const_cast<InputDeviceExtension*>(pMainDevice->GetExtension(i)));
+			AddDevice(rExtensions[i]);
 		}
 	}
 
 	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
 	{
-		mDeviceExtensions.Remove(static_cast<InputDeviceExtension*>(pDevice));
+		InputDeviceExtension* pExtension = DynamicCast<InputDeviceExtension>(pDevice);
+		mDeviceExtensions.Append(pExtension);
 	}
+}
+
+void InputSystem::RemoveDevice(InputDevice* pDevice)
+{
+	if (pDevice->IsDerived(MainInputDevice::TYPE))
+	{
+		MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
+		mMainDevices.Remove(pMainDevice);
+		const TArray<Pointer<InputDeviceExtension> >& rExtensions = pMainDevice->GetExtensions();
+		for (UInt i = 0; i < rExtensions.GetQuantity(); i++)
+		{
+			RemoveDevice(rExtensions[i]);
+		}
+	}
+
+	else if (pDevice->IsDerived(InputDeviceExtension::TYPE))
+	{
+		InputDeviceExtension* pExtension = DynamicCast<InputDeviceExtension>(pDevice);
+		mDeviceExtensions.Remove(pExtension);
+	}
+
+	mDevices.Remove(pDevice);
 }
 
 void InputSystem::AddListener(InputSystemListener* pListener)

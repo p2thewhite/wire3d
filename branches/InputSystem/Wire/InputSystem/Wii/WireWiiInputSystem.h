@@ -16,6 +16,8 @@
 #include "WireWiiMote.h"
 #include <wiiuse/wpad.h>
 
+#define MAXIMUM_NUMBER_OF_CHANNELS 4
+
 namespace Wire
 {
 
@@ -39,14 +41,13 @@ private:
 	static UInt s_mEventCounter;
 
 	THashTable<Int, WiiInputDataBuffer*> mDataBufferByChannel;
-	Int mLastDiscoveredChannel;
+	Bool mChannelsConnectionStatus[MAXIMUM_NUMBER_OF_CHANNELS];
 	Bool mChanged;
 
-	void UpdateCurrentlyConnectedChannels();
-	void ProbePreviouslyDisconnectedChannels();
-	void DiscoverWiiMoteExpansions(WiiMote* pWiiMote);
+	void DiscoverExpansions(WiiMote* pWiiMote);
 	void NotifyDevicesChangeIfNecessary();
-	Bool IsWiiMoteConnectedToChannel(UInt channel);
+	Bool GetChannelConnectionStatus(UInt channel);
+	WiiMote* GetWiiMoteByChannel(UInt channel);
 	WiiInputDataBuffer* GetChannelDataBuffer(UInt channel);
 
 	static void ReadWPADPendingEventsCallback(Int channel, const WPADData* pData);

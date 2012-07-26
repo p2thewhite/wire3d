@@ -13,7 +13,8 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, MainInputDevice, InputDevice);
 
-MainInputDevice::MainInputDevice()
+MainInputDevice::MainInputDevice() :
+	mExtensionsByAlias(5)
 {
 }
 
@@ -21,19 +22,62 @@ MainInputDevice::~MainInputDevice()
 {
 }
 
-void MainInputDevice::AddExtension(InputDeviceExtension* pInputDeviceExtension)
+void MainInputDevice::SetDataBuffer(const InputDataBuffer* pInputData)
 {
-	mExtensions.Append(pInputDeviceExtension);
+	InputDevice::SetDataBuffer(pInputData);
+
+	THashTable<const Char*, InputDeviceExtensionPtr >::Iterator it(&mExtensionsByAlias);
+	const Char* pKey = NULL;
+	for (InputDeviceExtensionPtr* pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
+	{
+		(*pValue)->SetDataBuffer(pInputData);
+	}
 }
 
-const InputDeviceExtension* MainInputDevice::GetExtension(UInt index) const
+void MainInputDevice::AddExtension(const Char* pAlias, InputDeviceExtension* pExtension)
 {
-	return mExtensions[index];
+	mExtensionsByAlias.Insert(pAlias, pExtension);
+	mReadOnlyExtensions.Append(pExtension);
+}
+
+void MainInputDevice::RemoveExtensionByAlias(const Char* pAlias)
+{
+	mExtensionsByAlias.Remove(pAlias);
+}
+
+const InputDeviceExtension* MainInputDevice::GetExtensionByAlias(const Char* pAlias) const
+{
+	InputDeviceExtensionPtr* pValue = mExtensionsByAlias.Find(pAlias);
+
+	if (pValue == NULL) 
+	{
+		return NULL;
+	}
+	else 
+	{
+		return *pValue;
+	}
+}
+
+Bool MainInputDevice::HasExtension(const Char* pAlias) const
+{
+	return GetExtensionByAlias(pAlias) != NULL;
+}
+
+const TArray<Pointer<InputDeviceExtension> >& MainInputDevice::GetExtensions() const
+{
+	return mReadOnlyExtensions;
+}
+
+void MainInputDevice::RemoveAllExtensions()
+{
+	mExtensionsByAlias.RemoveAll();
+	mReadOnlyExtensions.RemoveAll();
 }
 
 UInt MainInputDevice::GetExtensionsCount() const
 {
-	return mExtensions.GetQuantity();
+	return mExtensionsByAlias.GetQuantity();
 }
 
 Bool MainInputDevice::HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const
@@ -42,9 +86,11 @@ Bool MainInputDevice::HasCapability(const Rtti& rCapabilityType, Bool lookupExte
 
 	if (lookupExtensions && !hasCapability)
 	{
-		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
+		THashTable<const Char*, InputDeviceExtensionPtr >::Iterator it(&mExtensionsByAlias);
+		const Char* pKey = NULL;
+		for (InputDeviceExtensionPtr* pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
 		{
-			if (mExtensions[i]->HasCapability(rCapabilityType))
+			if ((*pValue)->HasCapability(rCapabilityType))
 			{
 				return true;
 			}
@@ -60,9 +106,11 @@ const InputCapability* MainInputDevice::GetCapability(const Rtti& rCapabilityTyp
 
 	if (lookupExtensions && pInputCapability == NULL)
 	{
-		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
+		THashTable<const Char*, InputDeviceExtensionPtr >::Iterator it(&mExtensionsByAlias);
+		const Char* pKey = NULL;
+		for (InputDeviceExtensionPtr* pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
 		{
-			pInputCapability = mExtensions[i]->GetCapability(rCapabilityType);
+			pInputCapability = (*pValue)->GetCapability(rCapabilityType);
 
 			if (pInputCapability != NULL)
 			{

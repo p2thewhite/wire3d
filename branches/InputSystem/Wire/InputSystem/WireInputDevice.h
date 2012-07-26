@@ -30,7 +30,7 @@ public:
 
 	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const InputDataBuffer* GetDataBuffer() const;
-	void SetDataBuffer(const InputDataBuffer* pInputData);
+	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
 	const TArray<Pointer<InputCapability> >& GetCapabilities() const;
 	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
 	virtual void SetUp() = 0;
