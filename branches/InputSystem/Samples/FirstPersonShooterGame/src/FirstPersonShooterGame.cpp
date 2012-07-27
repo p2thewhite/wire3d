@@ -131,7 +131,7 @@ void FirstPersonShooterGame::OnInput()
 		{
 			mpCharacterController->MoveForward();
 		}
-		else if (pAnalogPad->GetUp() < 0)
+		else if (pAnalogPad->GetDown() > 0)
 		{
 			mpCharacterController->MoveBackward();
 		}
@@ -140,7 +140,7 @@ void FirstPersonShooterGame::OnInput()
 		{
 			mpCharacterController->StrafeRight();
 		}
-		else if (pAnalogPad->GetRight() < 0)
+		else if (pAnalogPad->GetLeft() > 0)
 		{
 			mpCharacterController->StrafeLeft();
 		}
