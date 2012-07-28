@@ -263,19 +263,24 @@ void FirstPersonShooterGame::ToggleCollidersVisibility()
 
 	for (UInt i = 0; i < mColliderSpatials.GetQuantity(); i++)
 	{
-		Node* pColliderNode = static_cast<Node*>(mColliderSpatials[i]);
-		Geometry* pColliderGeometry;
+		Node* pColliderNode = DynamicCast<Node>(mColliderSpatials[i]);
+		WIRE_ASSERT(pColliderNode);
 
 		if (mShowColliders)
 		{
 			Collider* pColliderController = DynamicCast<Collider>(pColliderNode->GetController(0));
 			WIRE_ASSERT(pColliderController);
-			// Create proper geometry according to the collider shape
-			pColliderGeometry = CollisionShapeToGeometryConverter::Convert(pColliderController->GetShape(), Color32::GREEN);
-			pColliderNode->AttachChild(pColliderGeometry);
 
-			// Update the render state (necessary because of wireframe)
-			pColliderNode->UpdateRS();
+			// Create proper geometry according to the collider shape
+			Geometry*  pColliderGeometry = CollisionShapeToGeometryConverter::Convert(
+				pColliderController->GetShape(), Color32::GREEN);
+			if (pColliderGeometry)
+			{
+				pColliderNode->AttachChild(pColliderGeometry);
+
+				// Update the render state (necessary because of wireframe)
+				pColliderNode->UpdateRS();
+			}
 		}
 		else
 		{

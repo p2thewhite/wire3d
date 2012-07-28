@@ -18,11 +18,11 @@ CollisionShapeToGeometryConverter::~CollisionShapeToGeometryConverter()
 //----------------------------------------------------------------------------
 Geometry* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape, const Color32& rColor)
 {
-	if (static_cast<const btBoxShape*>(pShape) != NULL)
+	if (pShape->getShapeType() == BOX_SHAPE_PROXYTYPE)
 	{
 		return CreateWireframeBox(static_cast<btBoxShape*>(pShape), rColor);
 	}
-	else if (static_cast<btBvhTriangleMeshShape*>(pShape) != NULL)
+	else if (pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
 	{
 		return CreateWireframeMesh(static_cast<btBvhTriangleMeshShape*>(pShape), rColor);
 	}
@@ -112,11 +112,11 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);
 	attributes.SetColorChannels(3);
-	attributes.SetNormalChannels(3);
 
 	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
 
 	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, vertexQuantity);
+	WIRE_ASSERT(pVertexBuffer);
 
 	for (UInt i = 0; i < pVertexBuffer->GetQuantity(); i++)
 	{
@@ -132,8 +132,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 	}
 
 	Geometry* pBox = WIRE_NEW Geometry(pVertexBuffer, pIndexBuffer);
-
-	pBox->GetMesh()->GenerateNormals();
+	WIRE_ASSERT(pBox);
 
 	// Set wireframe rendering state
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
