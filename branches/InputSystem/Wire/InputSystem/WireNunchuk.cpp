@@ -7,11 +7,6 @@
 // that agreement.
 
 #include "WireNunchuk.h"
-#include "WireNunchukAnalogPad.h"
-#include "WireNunchukButtons.h"
-#include "WireNunchukShake.h"
-#include "WireNunchukSwing.h"
-#include "WireNunchukTilt.h"
 
 using namespace Wire;
 
@@ -25,13 +20,4 @@ Nunchuk::Nunchuk(MainInputDevice* pMainInputDevice)
 
 Nunchuk::~Nunchuk()
 {
-}
-
-void Nunchuk::SetUp()
-{
-	RegisterCapability(WIRE_NEW NunchukAnalogPad(this));
-	RegisterCapability(WIRE_NEW NunchukButtons(this));
-	RegisterCapability(WIRE_NEW NunchukShake(this));
-	RegisterCapability(WIRE_NEW NunchukSwing(this));
-	RegisterCapability(WIRE_NEW NunchukTilt(this));
 }

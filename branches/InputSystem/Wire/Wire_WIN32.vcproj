@@ -1448,6 +1448,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\InputSystem\WireNunchuk.h"
+					>
+				</File>
+				<File
 					RelativePath=".\InputSystem\WireShake.h"
 					>
 				</File>
@@ -1469,10 +1473,6 @@
 					<Filter
 						Name="Header Files"
 						>
-						<File
-							RelativePath=".\InputSystem\Wii\WireNunchuk.h"
-							>
-						</File>
 						<File
 							RelativePath=".\InputSystem\Wii\WireNunchukAnalogPad.h"
 							>
@@ -1529,30 +1529,14 @@
 							RelativePath=".\InputSystem\Wii\WireWiiMoteTilt.h"
 							>
 						</File>
+						<File
+							RelativePath=".\InputSystem\Wii\WireWiiNunchuk.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Source Files"
 						>
-						<File
-							RelativePath=".\InputSystem\Wii\WireNunchuk.cpp"
-							>
-							<FileConfiguration
-								Name="Debug|Win32"
-								ExcludedFromBuild="true"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-								/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32"
-								ExcludedFromBuild="true"
-								>
-								<Tool
-									Name="VCCLCompilerTool"
-								/>
-							</FileConfiguration>
-						</File>
 						<File
 							RelativePath=".\InputSystem\Wii\WireNunchukAnalogPad.cpp"
 							>
@@ -1833,6 +1817,26 @@
 								/>
 							</FileConfiguration>
 						</File>
+						<File
+							RelativePath=".\InputSystem\Wii\WireWiiNunchuk.cpp"
+							>
+							<FileConfiguration
+								Name="Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -1981,6 +1985,10 @@
 				</File>
 				<File
 					RelativePath=".\InputSystem\WireMainInputDevice.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\InputSystem\WireNunchuk.cpp"
 					>
 				</File>
 				<File

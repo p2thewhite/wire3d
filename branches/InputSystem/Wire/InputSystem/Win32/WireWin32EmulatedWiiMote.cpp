@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireWin32EmulatedWiiMote.h"
-#include "WireMemory.h"
 #include "WireWin32KeyMappedDigitalPad.h"
 #include "WireWin32KeyMappedButtons.h"
 #include "WireWin32KeyMappedIR.h"

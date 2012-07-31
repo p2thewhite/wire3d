@@ -7,24 +7,23 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREWIN32EMULATEDNUNCHUK_H
-#define WIREWIN32EMULATEDNUNCHUK_H
+#ifndef WIREWIINUNCHUK_H
+#define WIREWIINUNCHUK_H
 
 #include "WireNunchuk.h"
 
 namespace Wire
 {
 
-class Win32EmulatedNunchuk : public Nunchuk
+class WiiNunchuk : public Nunchuk
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	Win32EmulatedNunchuk(MainInputDevice* pMainInputDevice);
-	virtual ~Win32EmulatedNunchuk();
+	WiiNunchuk(MainInputDevice* pMainInputDevice);
+	virtual ~WiiNunchuk();
 
 	virtual void SetUp();
-
 };
 
 }

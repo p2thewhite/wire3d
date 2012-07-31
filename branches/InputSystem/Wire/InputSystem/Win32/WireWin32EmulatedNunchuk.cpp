@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireWin32EmulatedNunchuk.h"
-#include "WireMemory.h"
 #include "WireWin32KeyMappedAnalogPad.h"
 #include "WireWin32KeyMappedButtons.h"
 #include "WireWin32KeyMappedShake.h"
@@ -16,11 +15,11 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, Win32EmulatedNunchuk, InputDeviceExtension);
+WIRE_IMPLEMENT_RTTI(Wire, Win32EmulatedNunchuk, Nunchuk);
 
 Win32EmulatedNunchuk::Win32EmulatedNunchuk(MainInputDevice* pMainInputDevice)
 	:
-	InputDeviceExtension(pMainInputDevice)
+	Nunchuk(pMainInputDevice)
 {
 }
 

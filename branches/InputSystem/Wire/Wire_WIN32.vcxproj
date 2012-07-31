@@ -139,13 +139,13 @@
     <ClInclude Include="Foundation\Wii\WireGXApplication.h" />
     <ClInclude Include="Foundation\Wii\WireOgcDefines.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
-    <ClInclude Include="InputSystem\Wii\WireNunchuk.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukButtons.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukShake.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukSwing.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h" />
     <ClInclude Include="InputSystem\Wii\WireWiiInputDataBuffer.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiNunchuk.h" />
     <ClInclude Include="InputSystem\WireAnalogPad.h" />
     <ClInclude Include="InputSystem\WireButtons.h" />
     <ClInclude Include="InputSystem\WireDigitalPad.h" />
@@ -157,6 +157,7 @@
     <ClInclude Include="InputSystem\WireInputSystemListener.h" />
     <ClInclude Include="InputSystem\WireIR.h" />
     <ClInclude Include="InputSystem\WireMainInputDevice.h" />
+    <ClInclude Include="InputSystem\WireNunchuk.h" />
     <ClInclude Include="InputSystem\WireShake.h" />
     <ClInclude Include="InputSystem\WireSwing.h" />
     <ClInclude Include="InputSystem\WireTilt.h" />
@@ -323,6 +324,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiNunchuk.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="InputSystem\WireAnalogPad.cpp" />
     <ClCompile Include="InputSystem\WireButtons.cpp" />
     <ClCompile Include="InputSystem\WireDigitalPad.cpp" />
@@ -331,10 +336,6 @@
     <ClCompile Include="InputSystem\WireInputDevice.cpp" />
     <ClCompile Include="InputSystem\WireInputDeviceExtension.cpp" />
     <ClCompile Include="InputSystem\WireInputSystem.cpp" />
-    <ClCompile Include="InputSystem\Wii\WireNunchuk.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="InputSystem\Wii\WireNunchukAnalogPad.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -401,6 +402,7 @@
     <ClCompile Include="InputSystem\WireInputSystemListener.cpp" />
     <ClCompile Include="InputSystem\WireIR.cpp" />
     <ClCompile Include="InputSystem\WireMainInputDevice.cpp" />
+    <ClCompile Include="InputSystem\WireNunchuk.cpp" />
     <ClCompile Include="InputSystem\WireShake.cpp" />
     <ClCompile Include="InputSystem\WireSwing.cpp" />
     <ClCompile Include="InputSystem\WireTilt.cpp" />

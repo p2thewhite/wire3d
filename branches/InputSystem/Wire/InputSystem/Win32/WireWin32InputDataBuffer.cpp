@@ -7,7 +7,6 @@
 // that agreement.
 
 #include "WireWin32InputDataBuffer.h"
-#include "WireMemory.h"
 #include "WireSystem.h"
 
 using namespace Wire;

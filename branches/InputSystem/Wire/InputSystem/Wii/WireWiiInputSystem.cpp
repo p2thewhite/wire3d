@@ -9,7 +9,7 @@
 #include "WireWiiInputSystem.h"
 
 #include "WireApplication.h"
-#include "WireNunchuk.h"
+#include "WireWiiNunchuk.h"
 #include "WireWiiMote.h"
 #include <wiiuse/wpad.h>
 
@@ -202,7 +202,7 @@ void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
 			return;
 		}
 
-		pExpansion = WIRE_NEW Nunchuk(pWiiMote);
+		pExpansion = WIRE_NEW WiiNunchuk(pWiiMote);
 		pWiiMote->AddExtension("Nunchuk", pExpansion);
 		AddDevice(pExpansion);
 		pExpansion->SetUp();

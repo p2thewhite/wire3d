@@ -1043,6 +1043,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\InputSystem\WireNunchuk.h"
+					>
+				</File>
+				<File
 					RelativePath=".\InputSystem\WireShake.h"
 					>
 				</File>
@@ -1103,6 +1107,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\InputSystem\WireNunchuk.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\InputSystem\WireShake.cpp"
 					>
 				</File>
@@ -1128,10 +1136,6 @@
 					<Filter
 						Name="Header Files"
 						>
-						<File
-							RelativePath=".\InputSystem\Wii\WireNunchuk.h"
-							>
-						</File>
 						<File
 							RelativePath=".\InputSystem\Wii\WireNunchukAnalogPad.h"
 							>
@@ -1188,14 +1192,14 @@
 							RelativePath=".\InputSystem\Wii\WireWiiMoteTilt.h"
 							>
 						</File>
+						<File
+							RelativePath=".\InputSystem\Wii\WireWiiNunchuk.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Source Files"
 						>
-						<File
-							RelativePath=".\InputSystem\Wii\WireNunchuk.cpp"
-							>
-						</File>
 						<File
 							RelativePath=".\InputSystem\Wii\WireNunchukAnalogPad.cpp"
 							>
@@ -1250,6 +1254,10 @@
 						</File>
 						<File
 							RelativePath=".\InputSystem\Wii\WireWiiMoteTilt.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\InputSystem\Wii\WireWiiNunchuk.cpp"
 							>
 						</File>
 					</Filter>

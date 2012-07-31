@@ -14,7 +14,7 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, InputDevice, Object);
 
 InputDevice::InputDevice() :
-	mCapabilitiesByType(16)
+	mCapabilities(8, 8)
 {
 }
 
@@ -24,7 +24,7 @@ InputDevice::~InputDevice()
 
 const TArray<InputCapabilityPtr>& InputDevice::GetCapabilities() const
 {
-	return mReadOnlyCapabilities;
+	return mCapabilities;
 }
 
 Bool InputDevice::HasCapability(const Rtti& rCapabilityType) const
@@ -44,13 +44,11 @@ void InputDevice::SetDataBuffer(const InputDataBuffer* pDataBuffer)
 
 const InputCapability* InputDevice::GetCapability(const Rtti& rCapabilityType) const
 {
-	THashTable<const Rtti*, InputCapabilityPtr>::Iterator it(&mCapabilitiesByType);
-	const Rtti* pKey = NULL;
-	for (InputCapabilityPtr* pValue = it.GetFirst(&pKey); pValue; pValue = it.GetNext(&pKey))
+	for (UInt i = 0; i < mCapabilities.GetQuantity(); i++)
 	{
-		if (pKey->IsDerived(rCapabilityType))
+		if (mCapabilities[i]->IsDerived(rCapabilityType))
 		{
-			return *pValue;
+			return mCapabilities[i];
 		}
 	}
 
@@ -59,6 +57,5 @@ const InputCapability* InputDevice::GetCapability(const Rtti& rCapabilityType) c
 
 void InputDevice::RegisterCapability(InputCapability* pInputCapability)
 {
-	mCapabilitiesByType.Insert(&pInputCapability->GetType(), pInputCapability);
-	mReadOnlyCapabilities.Append(pInputCapability);
+	mCapabilities.Append(pInputCapability);
 }

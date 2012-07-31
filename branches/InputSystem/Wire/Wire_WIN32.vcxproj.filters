@@ -443,9 +443,6 @@
     <ClInclude Include="InputSystem\WireTilt.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\Wii\WireNunchuk.h">
-      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h">
       <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
     </ClInclude>
@@ -508,6 +505,12 @@
     </ClInclude>
     <ClInclude Include="InputSystem\Wii\WireWiiInputDataBuffer.h">
       <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWiiNunchuk.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\WireNunchuk.h">
+      <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -933,9 +936,6 @@
     <ClCompile Include="InputSystem\Wii\WireWiiMoteTilt.cpp">
       <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputSystem\Wii\WireNunchuk.cpp">
-      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputSystem\Wii\WireNunchukAnalogPad.cpp">
       <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
@@ -1070,6 +1070,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp">
       <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireWiiNunchuk.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireNunchuk.cpp">
+      <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,11 +8,9 @@
 
 #pragma once
 #ifndef WIRENUNCHUK_H
-#define WIRENUNCHUK_H
+#define WIRECHUK_H
 
 #include "WireInputDeviceExtension.h"
-#include "WireMainInputDevice.h"
-#include "WireRtti.h"
 
 namespace Wire
 {
@@ -25,7 +23,7 @@ public:
 	Nunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~Nunchuk();
 
-	virtual void SetUp();
+	virtual void SetUp() = 0;
 };
 
 }

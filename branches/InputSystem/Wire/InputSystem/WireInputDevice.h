@@ -13,7 +13,6 @@
 #include "WireInputDataBuffer.h"
 #include "WireObject.h"
 #include "WireTArray.h"
-#include "WireTHashTable.h"
 
 namespace Wire
 {
@@ -28,9 +27,10 @@ public:
 	InputDevice();
 	virtual ~InputDevice();
 
-	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const InputDataBuffer* GetDataBuffer() const;
 	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
+
+	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const TArray<Pointer<InputCapability> >& GetCapabilities() const;
 	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
 	virtual void SetUp() = 0;
@@ -38,8 +38,7 @@ public:
 protected:
 	void RegisterCapability(InputCapability* pInputCapability);
 
-	THashTable<const Rtti*, Pointer<InputCapability> > mCapabilitiesByType;
-	TArray<Pointer<InputCapability> > mReadOnlyCapabilities;
+	TArray<Pointer<InputCapability> > mCapabilities;
 
 private:
 	const InputDataBuffer* mpDataBuffer;
