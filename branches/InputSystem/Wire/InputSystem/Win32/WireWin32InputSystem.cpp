@@ -46,7 +46,7 @@ void Win32InputSystem::Capture()
 	}
 }
 
-void Win32InputSystem::DoDevicesDiscovery()
+void Win32InputSystem::DiscoverDevices()
 {
 	// FIXME: Since there's no way to know how many keyboards and mouses are connected using Win32 api, 
 	// assume there will always be 1 main device and 1 extension (1 emulated wiimote + 1 emulated nunchuk)
@@ -61,7 +61,7 @@ void Win32InputSystem::DoDevicesDiscovery()
 
 	Win32EmulatedNunchuk* pEmulatedNunchuk = WIRE_NEW Win32EmulatedNunchuk(pEmulatedWiiMote);
 	AddDevice(pEmulatedNunchuk);
-	pEmulatedWiiMote->AddExtension("Nunchuk", pEmulatedNunchuk);
+	pEmulatedWiiMote->AddExtension(pEmulatedNunchuk);
 	pEmulatedNunchuk->SetUp();
 
 	NotifyDevicesChange();

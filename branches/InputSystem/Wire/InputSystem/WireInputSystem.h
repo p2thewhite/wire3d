@@ -17,6 +17,7 @@
 #include "WireInputSystemListener.h"
 #include "WireIR.h"
 #include "WireMainInputDevice.h"
+#include "WireNunchuk.h"
 #include "WireShake.h"
 #include "WireSwing.h"
 #include "WireTilt.h"
@@ -32,7 +33,8 @@ public:
 	virtual ~InputSystem();
 
 	virtual void Capture() = 0;
-	void DiscoverDevices();
+	virtual void DiscoverDevices() = 0;
+
 	const InputDeviceExtension* GetDeviceExtension(UInt index) const;
 	UInt GetDeviceExtensionsCount() const;
 	const MainInputDevice* GetMainDevice(UInt index) const;
@@ -48,13 +50,9 @@ protected:
 	TArray<InputDeviceExtensionPtr> mDeviceExtensions;
 	TArray<InputSystemListener*> mListeners;
 
-	virtual void BeforeDevicesDiscovery();
-	virtual void DoDevicesDiscovery() = 0;
-	virtual void AfterDevicesDiscovery();
 	void AddDevice(InputDevice* pInputDevice);
 	void RemoveDevice(InputDevice* pInputDevice);
 	void NotifyDevicesChange();
-
 };
 
 }

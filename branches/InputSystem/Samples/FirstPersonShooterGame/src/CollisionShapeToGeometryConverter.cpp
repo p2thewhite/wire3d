@@ -144,7 +144,8 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeMesh(btBvhTriangleMeshShape* pTriangleMeshShape, const Color32& rColor)
+Geometry* CollisionShapeToGeometryConverter::CreateWireframeMesh(
+	btBvhTriangleMeshShape* pTriangleMeshShape, const Color32& rColor)
 {
 	Mesh* pMesh = BulletUtils::Convert(pTriangleMeshShape);
 

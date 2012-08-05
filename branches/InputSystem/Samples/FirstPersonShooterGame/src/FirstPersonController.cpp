@@ -73,24 +73,26 @@ void FirstPersonController::Register(btDynamicsWorld* pPhysicsWorld)
 	mpPhysicsWorld = pPhysicsWorld;
 
 	btTransform transform;
-	transform.setIdentity ();
+	transform.setIdentity();
 
 	// set position
 	transform.setOrigin(BulletUtils::Convert(mspCamera->GetLocation()));
 
-	mpGhostObject = new btPairCachingGhostObject();
+	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
 	mpGhostObject->setWorldTransform(transform);
 
-	pPhysicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	pPhysicsWorld->getPairCache()->setInternalGhostPairCallback(WIRE_NEW btGhostPairCallback());
 
-	btConvexShape* capsuleShape = new btCapsuleShape(mCharacterWidth, mCharacterHeight);
-	mpGhostObject->setCollisionShape (capsuleShape);
-	mpGhostObject->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
+	btConvexShape* capsuleShape = WIRE_NEW btCapsuleShape(mCharacterWidth, mCharacterHeight);
+	mpGhostObject->setCollisionShape(capsuleShape);
+	mpGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
-	mpPhysicsCharacterController = new btKinematicCharacterController (mpGhostObject, capsuleShape, mStepHeight);
+	mpPhysicsCharacterController = WIRE_NEW btKinematicCharacterController(
+		mpGhostObject, capsuleShape, mStepHeight);
 
 	// collide only with static objects (for now)
-	mpPhysicsWorld->addCollisionObject(mpGhostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
+	mpPhysicsWorld->addCollisionObject(mpGhostObject, btBroadphaseProxy::CharacterFilter,
+		btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
 	mpPhysicsWorld->addAction(mpPhysicsCharacterController);
 }
 
@@ -179,7 +181,6 @@ void FirstPersonController::LookAt(const Vector2F& rLookAt)
 	{
 		mYawIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
 	}
-
 	else if (rLookAt.X() < -mLookUpDeadZone.X())
 	{
 		mYawIncrement += mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
@@ -189,7 +190,6 @@ void FirstPersonController::LookAt(const Vector2F& rLookAt)
 	{
 		mPitchIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
 	}
-
 	else if (rLookAt.Y() < -mLookUpDeadZone.Y())
 	{
 		mPitchIncrement += mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());

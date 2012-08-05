@@ -8,8 +8,7 @@
 
 #include "WireInputSystemListener.h"
 
-namespace Wire
-{
+using namespace Wire;
 
 InputSystemListener::InputSystemListener()
 {
@@ -17,6 +16,4 @@ InputSystemListener::InputSystemListener()
 
 InputSystemListener::~InputSystemListener()
 {
-}
-
 }

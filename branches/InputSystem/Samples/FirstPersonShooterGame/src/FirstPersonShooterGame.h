@@ -33,6 +33,21 @@ private:
 		AS_RUNNING
 	};
 
+	void OnLoading(Double time, Double deltaTime);
+	void OnRunning(Double time, Double deltaTime);
+	Node* LoadAndInitializeLoading();
+	Node* LoadAndInitializeScene();
+	Node* LoadAndInitializeGUI();
+
+	Texture2D* LoadTexture(Importer& rImporter, const Char* pFileName);
+	void MoveCrosshairTo(const Vector2F& rScreenPoint);
+	void InitializePhysics();
+	void RegisterStaticCollider(const Collider* pCollider);
+	void UpdatePhysics(Double deltaTime);
+	void TerminatePhysics();
+	void DrawFPS(Double deltaTime);
+	void ToggleCollidersVisibility();
+
 	Double mLastTime;
 	UInt mAppState;
 	Bool mShowFps;
@@ -57,22 +72,6 @@ private:
 	btBroadphaseInterface* mpOverlappingPairCache;
 	btSequentialImpulseConstraintSolver* mpConstraintSolver;
 	btDiscreteDynamicsWorld* mpPhysicsWorld;
-
-	void OnLoading(Double time, Double deltaTime);
-	void OnRunning(Double time, Double deltaTime);
-	Node* LoadAndInitializeLoading();
-	Node* LoadAndInitializeScene();
-	Node* LoadAndInitializeGUI();
-	void UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera);
-	Texture2D* LoadTexture(Importer& rImporter, const Char* pFileName);
-	void MoveCrosshairTo(const Vector2F& rScreenPoint);
-	void InitializePhysics();
-	void RegisterStaticCollider(const Collider* pCollider);
-	void UpdatePhysics(Double deltaTime);
-	void TerminatePhysics();
-	void DrawFPS(Double deltaTime);
-	void ToggleCollidersVisibility();
-
 };
 
 WIRE_REGISTER_INITIALIZE(FirstPersonShooterGame);

@@ -24,22 +24,20 @@ public:
 	virtual ~Win32InputSystem();
 
 	virtual void Capture();
+	virtual void DiscoverDevices();
+
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
-protected:
-	virtual void DoDevicesDiscovery();
-
 private:
+	Bool IsMouseStagnant();
+	void ResetMousePosition();
+	void SwapBuffers();
+
 	static Double s_MouseStagnationTolerance;
 
 	Double mLastMouseMoveTime;
 	Win32InputDataBuffer* mpFrontBuffer;
 	Win32InputDataBuffer* mpBackBuffer;
-
-	Bool IsMouseStagnant();
-	void ResetMousePosition();
-	void SwapBuffers();
-
 };
 
 }

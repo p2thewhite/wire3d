@@ -18,24 +18,6 @@ InputSystem::~InputSystem()
 {
 }
 
-void InputSystem::AfterDevicesDiscovery()
-{
-}
-
-void InputSystem::BeforeDevicesDiscovery()
-{
-}
-
-/************************************************************************/
-/*                       Template method                                */
-/************************************************************************/
-void InputSystem::DiscoverDevices()
-{
-	BeforeDevicesDiscovery();
-	DoDevicesDiscovery();
-	AfterDevicesDiscovery();
-}
-
 const InputDeviceExtension* InputSystem::GetDeviceExtension(UInt index) const
 {
 	return mDeviceExtensions[index];

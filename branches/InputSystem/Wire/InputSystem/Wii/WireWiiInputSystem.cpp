@@ -88,13 +88,10 @@ void WiiInputSystem::Capture()
 	}
 }
 
-void WiiInputSystem::NotifyDevicesChangeIfNecessary()
+void WiiInputSystem::DiscoverDevices()
 {
-	if (mChanged)
-	{
-		NotifyDevicesChange();
-		mChanged = false;
-	}
+	DoDevicesDiscovery();
+	AfterDevicesDiscovery();
 }
 
 WiiMote* WiiInputSystem::GetWiiMoteByChannel(UInt channel)
@@ -167,7 +164,11 @@ void WiiInputSystem::DoDevicesDiscovery()
 		mChannelsConnectionStatus[channel] = isConnected;
 	}
 	
-	NotifyDevicesChangeIfNecessary();
+	if (mChanged)
+	{
+		NotifyDevicesChange();
+		mChanged = false;
+	}
 }
 
 void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
@@ -197,13 +198,13 @@ void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
 
 	case WPAD_EXP_NUNCHUK:
 		// if a nunchuk was already added, exit
-		if (pWiiMote->HasExtension("Nunchuk"))
+		if (pWiiMote->HasExtension(Nunchuk::TYPE))
 		{
 			return;
 		}
 
 		pExpansion = WIRE_NEW WiiNunchuk(pWiiMote);
-		pWiiMote->AddExtension("Nunchuk", pExpansion);
+		pWiiMote->AddExtension(pExpansion);
 		AddDevice(pExpansion);
 		pExpansion->SetUp();
 

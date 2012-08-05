@@ -29,12 +29,12 @@ public:
 	virtual ~WiiInputSystem();
 
 	virtual void Capture();
-
-protected:
-	virtual void DoDevicesDiscovery();
-	virtual void AfterDevicesDiscovery();
+	virtual void DiscoverDevices();
 
 private:
+	void DoDevicesDiscovery();
+	void AfterDevicesDiscovery();
+
 	static const UInt FIRST_CHANNEL;
 	static const UInt LAST_CHANNEL;
 
@@ -45,7 +45,6 @@ private:
 	Bool mChanged;
 
 	void DiscoverExpansions(WiiMote* pWiiMote);
-	void NotifyDevicesChangeIfNecessary();
 	Bool GetChannelConnectionStatus(UInt channel);
 	WiiMote* GetWiiMoteByChannel(UInt channel);
 	WiiInputDataBuffer* GetChannelDataBuffer(UInt channel);

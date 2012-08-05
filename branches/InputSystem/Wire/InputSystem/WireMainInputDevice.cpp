@@ -14,7 +14,6 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, MainInputDevice, InputDevice);
 
 MainInputDevice::MainInputDevice() :
-	mExtensionsByAlias(5),
 	mExtensions(8, 8)
 {
 }
@@ -33,29 +32,27 @@ void MainInputDevice::SetDataBuffer(const InputDataBuffer* pInputData)
 	}
 }
 
-void MainInputDevice::AddExtension(const Char* pAlias, InputDeviceExtension* pExtension)
+void MainInputDevice::AddExtension(InputDeviceExtension* pExtension)
 {
-	mExtensionsByAlias.Insert(pAlias, pExtension);
 	mExtensions.Append(pExtension);
 }
 
-const InputDeviceExtension* MainInputDevice::GetExtensionByAlias(const Char* pAlias) const
+const InputDeviceExtension* MainInputDevice::GetExtension(const Rtti& rExtensionType) const
 {
-	InputDeviceExtensionPtr* pValue = mExtensionsByAlias.Find(pAlias);
+	for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
+	{
+		if (mExtensions[i]->IsDerived(rExtensionType))
+		{
+			return mExtensions[i];
+		}
+	}
 
-	if (pValue == NULL) 
-	{
-		return NULL;
-	}
-	else 
-	{
-		return *pValue;
-	}
+	return NULL;
 }
 
-Bool MainInputDevice::HasExtension(const Char* pAlias) const
+Bool MainInputDevice::HasExtension(const Rtti& rExtensionType) const
 {
-	return GetExtensionByAlias(pAlias) != NULL;
+	return GetExtension(rExtensionType) != NULL;
 }
 
 const TArray<Pointer<InputDeviceExtension> >& MainInputDevice::GetExtensions() const
@@ -65,7 +62,6 @@ const TArray<Pointer<InputDeviceExtension> >& MainInputDevice::GetExtensions() c
 
 void MainInputDevice::RemoveAllExtensions()
 {
-	mExtensionsByAlias.RemoveAll();
 	mExtensions.RemoveAll();
 }
 

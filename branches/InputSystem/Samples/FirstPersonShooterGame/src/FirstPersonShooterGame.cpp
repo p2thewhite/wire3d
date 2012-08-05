@@ -67,7 +67,7 @@ void FirstPersonShooterGame::OnIdle()
 	Double deltaTime = time - mLastTime;
 	mLastTime = time;
 
-	UpdateCameraFrustumAccordingToScreenDimensions(mLogoCameras[0]);
+	mLogoCameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
 	switch (mAppState)
 	{
@@ -105,7 +105,8 @@ void FirstPersonShooterGame::OnInput()
 	const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(0);
 
 	// Checking minimum capabilities
-	if (!pInputDevice->HasCapability(AnalogPad::TYPE, true) && !pInputDevice->HasCapability(DigitalPad::TYPE, true))
+	if (!pInputDevice->HasCapability(AnalogPad::TYPE, true) && !pInputDevice->
+		HasCapability(DigitalPad::TYPE, true))
 	{
 		return;
 	}
@@ -125,7 +126,9 @@ void FirstPersonShooterGame::OnInput()
 
 	if (pInputDevice->HasCapability(AnalogPad::TYPE, true))
 	{
-		const AnalogPad* pAnalogPad = static_cast<const AnalogPad*>(pInputDevice->GetCapability(AnalogPad::TYPE, true));
+		const AnalogPad* pAnalogPad = DynamicCast<const AnalogPad>(pInputDevice->
+			GetCapability(AnalogPad::TYPE, true));
+		WIRE_ASSERT(pAnalogPad);
 
 		if (pAnalogPad->GetUp() > 0)
 		{
@@ -147,13 +150,14 @@ void FirstPersonShooterGame::OnInput()
 	}
 	else 
 	{
-		const DigitalPad* pDigitalPad = static_cast<const DigitalPad*>(pInputDevice->GetCapability(DigitalPad::TYPE, false));
+		const DigitalPad* pDigitalPad = DynamicCast<const DigitalPad>(pInputDevice->
+			GetCapability(DigitalPad::TYPE, false));
+		WIRE_ASSERT(pDigitalPad);
 
 		if (pDigitalPad->GetUp())
 		{
 			mpCharacterController->MoveForward();
 		}
-
 		else if (pDigitalPad->GetDown())
 		{
 			mpCharacterController->MoveBackward();
@@ -163,7 +167,6 @@ void FirstPersonShooterGame::OnInput()
 		{
 			mpCharacterController->StrafeLeft();
 		}
-
 		else if (pDigitalPad->GetRight())
 		{
 			mpCharacterController->StrafeRight();
@@ -173,10 +176,8 @@ void FirstPersonShooterGame::OnInput()
 	// ---
 	// Processing IR
 
-	const IR* pIR = static_cast<const IR*>(pInputDevice->GetCapability(IR::TYPE, false));
-
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
+	const IR* pIR = DynamicCast<const IR>(pInputDevice->GetCapability(IR::TYPE, false));
+	WIRE_ASSERT(pIR);
 
 	Float x = pIR->GetRight();
 	Float y = pIR->GetUp();
@@ -190,7 +191,7 @@ void FirstPersonShooterGame::OnInput()
 	else
 	{
 		// Height correction
-		y = screenHeight - y;
+		y = GetHeightF() - y;
 	}
 
 	oldX = x;
@@ -199,15 +200,17 @@ void FirstPersonShooterGame::OnInput()
 	MoveCrosshairTo(Vector2F(x, y));
 
 	// Converting from (top, left) to (horizontal screen center, vertical screen center) coordinate system
-	x -= screenWidth * 0.5F;
-	y -= screenHeight * 0.5F;
+	x -= GetWidthF() * 0.5F;
+	y -= GetHeightF() * 0.5F;
 
 	mpCharacterController->LookAt(Vector2F(x, y));
 
 	// ---
 	// Processing buttons
 
-	const Buttons* pButtons = static_cast<const Buttons*>(pInputDevice->GetCapability(Buttons::TYPE, false));
+	const Buttons* pButtons = DynamicCast<const Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
 
 	// 'HOME' button exit the game
 	if (pButtons->GetButton(Buttons::BUTTON_HOME))
@@ -239,9 +242,11 @@ void FirstPersonShooterGame::OnInput()
 	}
 
 	// If there's a nunchuk, start reading its buttons instead
-	if (pInputDevice->HasExtension("Nunchuk"))
+	if (pInputDevice->HasExtension(Nunchuk::TYPE))
 	{
-		pButtons = static_cast<const Buttons*>(pInputDevice->GetExtensionByAlias("Nunchuk")->GetCapability(Buttons::TYPE));
+		pButtons = DynamicCast<const Buttons>(pInputDevice->GetExtension(Nunchuk::TYPE)->
+			GetCapability(Buttons::TYPE));
+		WIRE_ASSERT(pButtons);
 	}
 
 	// 'Z' button makes the player run
@@ -249,7 +254,6 @@ void FirstPersonShooterGame::OnInput()
 	{
 		mpCharacterController->SetMoveSpeed(5.0f);
 	}
-
 	else
 	{
 		mpCharacterController->SetMoveSpeed(2.5f);
@@ -284,8 +288,7 @@ void FirstPersonShooterGame::ToggleCollidersVisibility()
 		}
 		else
 		{
-			Spatial* pSpatial = pColliderNode->DetachChildAt(pColliderNode->GetQuantity() - 1);
-			WIRE_ASSERT_NO_SIDEEFFECTS(pSpatial);
+			pColliderNode->DetachChildAt(pColliderNode->GetQuantity() - 1);
 		}
 	}
 }
@@ -293,7 +296,7 @@ void FirstPersonShooterGame::ToggleCollidersVisibility()
 //----------------------------------------------------------------------------
 void FirstPersonShooterGame::OnRunning(Double time, Double deltaTime)
 {
-	UpdateCameraFrustumAccordingToScreenDimensions(mGUICameras[0]);
+	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
 	mspLogo->UpdateGS(time);
 	mLogoCuller.ComputeVisibleSet(mspLogo);
@@ -383,8 +386,7 @@ void FirstPersonShooterGame::OnLoading(Double time, Double deltaTime)
 
 	if (pLoading)
 	{
-		StateMaterial* pMaterialState = static_cast<StateMaterial*>(pLoading->GetState(State::MATERIAL));
-
+		StateMaterial* pMaterialState = DynamicCast<StateMaterial>(pLoading->GetState(State::MATERIAL));
 		if (pMaterialState)
 		{
 			pMaterialState->Ambient.A() += static_cast<Float>(deltaTime) * 0.5F;
@@ -452,10 +454,8 @@ Node* FirstPersonShooterGame::LoadAndInitializeLoading()
 		pLogo->AttachController(WIRE_NEW MaterialFader(2.5f));
 	}
 
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-
-	pRoot->Local.SetTranslate(Vector3F((screenWidth - 512) * 0.5F, (screenHeight  - 256)  * 0.5F, 0));
+	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
+		(GetHeightF() - 256.0F)  * 0.5F, 0));
 
 	GetRenderer()->BindAll(pRoot);
 
@@ -480,33 +480,42 @@ Node* FirstPersonShooterGame::LoadAndInitializeGUI()
 
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Geometry* pMainInputDeviceIcon = static_cast<Geometry*>(pRoot->GetChildByName("MainInputDeviceIcon"));
-
+	Geometry* pMainInputDeviceIcon = DynamicCast<Geometry>(pRoot->
+		GetChildByName("MainInputDeviceIcon"));
 	WIRE_ASSERT(pMainInputDeviceIcon /* No MainInputDeviceIcon in GUI.xml */);
 
-	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, screenHeight - 64, 0));
+	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
 
 	// loading the main input device icon dynamically according to the platform
-#ifdef WIRE_WII
-	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/wiiMoteIcon.png"));
-#else
-	pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/keyboardIcon.png"));
-#endif
+	if (System::GetPlatform() == System::PF_WII)
+	{
+		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(
+			importer, "Data/GUI/wiiMoteIcon.png"));
+	}
+	else
+	{
+		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(
+			importer, "Data/GUI/keyboardIcon.png"));
+	}
 
-	Geometry* pInputDeviceExtensionIcon = static_cast<Geometry*>(pRoot->GetChildByName("InputDeviceExtensionIcon"));
+	Geometry* pInputDeviceExtensionIcon = DynamicCast<Geometry>(pRoot->
+		GetChildByName("InputDeviceExtensionIcon"));
 	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
-	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, screenHeight - 64, 0));
+	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, GetHeightF()-64.0F, 0));
 
 	// loading the input device extension icon dynamically according to the platform
-#ifdef WIRE_WII
-	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/nunchukIcon.png"));
-#else
-	pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(importer, "Data/GUI/mouseIcon.png"));
-#endif
+	if (System::GetPlatform() == System::PF_WII)
+	{
+		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(
+			importer, "Data/GUI/nunchukIcon.png"));
+	}
+	else
+	{
+		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(
+			importer, "Data/GUI/mouseIcon.png"));
+	}
 
 	GetRenderer()->BindAll(pRoot);
-
 	return pRoot;
 }
 
@@ -524,12 +533,8 @@ Node* FirstPersonShooterGame::LoadAndInitializeScene()
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
 
 	Float fov, aspect, near, far;
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-
 	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
-	aspect = screenWidth / screenHeight;
-	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
+	mSceneCameras[0]->SetFrustum(fov, GetWidthF() / GetHeightF(), near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
 	Spatial* pStartingPosition = pScene->GetChildByName("StartingPosition");
@@ -576,15 +581,6 @@ Node* FirstPersonShooterGame::LoadAndInitializeScene()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::UpdateCameraFrustumAccordingToScreenDimensions(Camera* pCamera)
-{
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-
-	pCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
-}
-
-//----------------------------------------------------------------------------
 Texture2D* FirstPersonShooterGame::LoadTexture(Importer& rImporter, const Char* pFileName)
 {
 	Texture2D* pTexture = WIRE_NEW Texture2D(rImporter.LoadPNG(pFileName, false));
@@ -615,7 +611,8 @@ void FirstPersonShooterGame::InitializePhysics()
 	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax);
 
 	mpConstraintSolver = WIRE_NEW btSequentialImpulseConstraintSolver();
-	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher, mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
+	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher,
+		mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
 
 	mpPhysicsWorld->setGravity(btVector3(0, -9.8f, 0));
 }

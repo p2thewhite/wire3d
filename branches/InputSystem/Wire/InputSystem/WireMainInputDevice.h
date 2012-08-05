@@ -29,11 +29,10 @@ public:
 
 	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
 
-	void AddExtension(const Char* pAlias, InputDeviceExtension* pInputDevice);
-	const InputDeviceExtension* GetExtensionByAlias(const Char* pAlias) const;
-	Bool HasExtension(const Char* pAlias) const;
-
 	void AddExtension(InputDeviceExtension* pInputDevice);
+	const InputDeviceExtension* GetExtension(const Rtti& rExtensionType) const;
+	Bool HasExtension(const Rtti& rExtensionType) const;
+
 	const TArray<Pointer<InputDeviceExtension> >& GetExtensions() const;
 	void RemoveAllExtensions();
 	UInt GetExtensionsCount() const;
@@ -42,7 +41,6 @@ public:
 	const InputCapability* GetCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
 
 private:
-	THashTable<const Char*, Pointer<InputDeviceExtension> > mExtensionsByAlias;
 	TArray<Pointer<InputDeviceExtension> > mExtensions;
 };
 
