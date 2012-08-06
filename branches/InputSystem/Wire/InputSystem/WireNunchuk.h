@@ -8,7 +8,7 @@
 
 #pragma once
 #ifndef WIRENUNCHUK_H
-#define WIRECHUK_H
+#define WIRENUNCHUK_H
 
 #include "WireInputDeviceExtension.h"
 

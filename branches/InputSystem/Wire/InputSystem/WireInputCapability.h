@@ -10,7 +10,6 @@
 #ifndef WIREINPUTCAPABILITY_H
 #define WIREINPUTCAPABILITY_H
 
-#include "WireObject.h"
 #include "WireInputDevice.h"
 
 namespace Wire

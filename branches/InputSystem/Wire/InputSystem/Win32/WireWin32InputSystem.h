@@ -29,13 +29,8 @@ public:
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
 private:
-	Bool IsMouseStagnant();
-	void ResetMousePosition();
 	void SwapBuffers();
 
-	static Double s_MouseStagnationTolerance;
-
-	Double mLastMouseMoveTime;
 	Win32InputDataBuffer* mpFrontBuffer;
 	Win32InputDataBuffer* mpBackBuffer;
 };

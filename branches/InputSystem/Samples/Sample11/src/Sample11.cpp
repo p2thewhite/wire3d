@@ -3,8 +3,6 @@
 
 #include "Sample11.h"
 
-using namespace std;
-
 WIRE_APPLICATION(Sample11);
 
 //----------------------------------------------------------------------------
@@ -171,17 +169,21 @@ void Sample11::UpdateInputDevicesInformationText()
 	for (UInt i = 0; i < mpInputSystem->GetDevicesCount(); i++)
 	{
 		const InputDevice* pInputDevice = mpInputSystem->GetDevice(i);
-
-		System::Sprintf(text, TextArraySize, "\nInput Device Number: %d "
-			"(%s)\n- Capabilities:\n", i, pInputDevice->GetType().GetName());
+		const Rtti& rType = pInputDevice->GetType();
+		
+		System::Sprintf(text, TextArraySize, "\nInput Device Number: %d - "
+			"%s (%s)\n- Capabilities:\n", i, rType.GetBaseType()->GetName(),
+			rType.GetName());
 		mspText->Append(text);
 
 		const TArray<InputCapabilityPtr>& inputCapabilities = pInputDevice->
 			GetCapabilities();
 		for (UInt j = 0; j < inputCapabilities.GetQuantity(); j++)
 		{
-			System::Sprintf(text, TextArraySize, "%s\n",
-				inputCapabilities[j]->GetType().GetName());
+			const Rtti& rType = inputCapabilities[j]->GetType();
+
+			System::Sprintf(text, TextArraySize, "%s (%s)\n",
+				rType.GetBaseType()->GetName(), rType.GetName());
 			mspText->Append(text);
 		}
 	}

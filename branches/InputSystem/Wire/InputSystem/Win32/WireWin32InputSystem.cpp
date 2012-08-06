@@ -14,10 +14,7 @@
 
 using namespace Wire;
 
-Double Win32InputSystem::s_MouseStagnationTolerance = 5; // 5 seconds
-
-Win32InputSystem::Win32InputSystem() :
-	mLastMouseMoveTime(0)
+Win32InputSystem::Win32InputSystem()
 {
 	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer();
 	mpBackBuffer = WIRE_NEW Win32InputDataBuffer();
@@ -31,11 +28,6 @@ Win32InputSystem::~Win32InputSystem()
 
 void Win32InputSystem::Capture()
 {
-	if (IsMouseStagnant())
-	{
-		ResetMousePosition();
-	}
-
 	// Swap input data buffers
 	SwapBuffers();
 
@@ -110,8 +102,6 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
-		mLastMouseMoveTime = System::GetTime();
-
 		x = GET_X_LPARAM(longParameter); 
 		y = GET_Y_LPARAM(longParameter);
 
@@ -128,15 +118,4 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 	}
 
 	return false;
-}
-
-Bool Win32InputSystem::IsMouseStagnant()
-{
-	return (System::GetTime() - mLastMouseMoveTime) > s_MouseStagnationTolerance;
-}
-
-void Win32InputSystem::ResetMousePosition()
-{
-	mpBackBuffer->SetMouseX(MathF::MAX_REAL);
-	mpBackBuffer->SetMouseY(MathF::MAX_REAL);
 }
