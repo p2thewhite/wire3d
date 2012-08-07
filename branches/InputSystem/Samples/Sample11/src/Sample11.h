@@ -21,11 +21,10 @@ public:
 	virtual void OnIdle();
 	virtual void OnInput();
 	virtual void OnInputDevicesChange();
+	virtual void OnResize(UInt width, UInt height);
 
 private:
 	void UpdateInputDevicesInformationText();
-
-	Bool mInputDevicesStateChanged;
 
 	Culler mCuller;
 	CameraPtr mspGuiCamera;

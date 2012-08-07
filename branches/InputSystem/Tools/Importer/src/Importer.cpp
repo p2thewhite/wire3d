@@ -99,6 +99,20 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
+Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps)
+{
+	Image2D* pImage = LoadPNG(pFilename, hasMipmaps);
+	if (!pImage)
+	{
+		return NULL;
+	}
+
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	WIRE_ASSERT(pTexture);
+	return pTexture;
+}
+
+//----------------------------------------------------------------------------
 Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize, Bool hasMipmaps)
 {
 	std::vector<UChar> rawImage;

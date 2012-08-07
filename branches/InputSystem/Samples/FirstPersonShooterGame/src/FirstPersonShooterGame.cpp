@@ -414,14 +414,12 @@ void FirstPersonShooterGame::OnLoading(Double time, Double deltaTime)
 	}
 
 	mspScene = LoadAndInitializeScene();
-
 	if (!mspScene)
 	{
 		WIRE_ASSERT(false /* Could not load scene.xml */);
 	}
 
 	mspGUI = LoadAndInitializeGUI();
-
 	if (!mspGUI)
 	{
 		WIRE_ASSERT(false /* Could not load GUI.xml */);
@@ -489,13 +487,13 @@ Node* FirstPersonShooterGame::LoadAndInitializeGUI()
 	// loading the main input device icon dynamically according to the platform
 	if (System::GetPlatform() == System::PF_WII)
 	{
-		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(
-			importer, "Data/GUI/wiiMoteIcon.png"));
+		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/wiiMoteIcon.png", false);
+		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, pIcon);
 	}
 	else
 	{
-		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, LoadTexture(
-			importer, "Data/GUI/keyboardIcon.png"));
+		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/keyboardIcon.png", false);
+		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, pIcon);
 	}
 
 	Geometry* pInputDeviceExtensionIcon = DynamicCast<Geometry>(pRoot->
@@ -506,13 +504,13 @@ Node* FirstPersonShooterGame::LoadAndInitializeGUI()
 	// loading the input device extension icon dynamically according to the platform
 	if (System::GetPlatform() == System::PF_WII)
 	{
-		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(
-			importer, "Data/GUI/nunchukIcon.png"));
+		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/nunchukIcon.png", false);
+		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, pIcon);
 	}
 	else
 	{
-		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, LoadTexture(
-			importer, "Data/GUI/mouseIcon.png"));
+		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/mouseIcon.png", false);
+		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, pIcon);
 	}
 
 	GetRenderer()->BindAll(pRoot);
@@ -578,19 +576,6 @@ Node* FirstPersonShooterGame::LoadAndInitializeScene()
 	GetRenderer()->BindAll(pScene);
 
 	return pScene;
-}
-
-//----------------------------------------------------------------------------
-Texture2D* FirstPersonShooterGame::LoadTexture(Importer& rImporter, const Char* pFileName)
-{
-	Texture2D* pTexture = WIRE_NEW Texture2D(rImporter.LoadPNG(pFileName, false));
-
-	pTexture->SetFilterType(Texture2D::FT_LINEAR_NEAREST);
-	pTexture->SetWrapType(0, Texture2D::WT_CLAMP);
-	pTexture->SetWrapType(1, Texture2D::WT_CLAMP);
-	pTexture->SetAnisotropyValue(1);
-
-	return pTexture;
 }
 
 //----------------------------------------------------------------------------

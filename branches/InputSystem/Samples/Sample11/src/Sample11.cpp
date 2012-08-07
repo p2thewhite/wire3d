@@ -1,5 +1,5 @@
 // Sample11 - Input
-// This sample demonstrates how to handle inputs from Wii/PC devices.
+// This sample demonstrates how to handle input and input devices.
 
 #include "Sample11.h"
 
@@ -8,7 +8,6 @@ WIRE_APPLICATION(Sample11);
 //----------------------------------------------------------------------------
 Sample11::Sample11()
 	:
-	mInputDevicesStateChanged(false),
 	mpCursors(NULL)
 {
 }
@@ -56,12 +55,6 @@ void Sample11::OnIdle()
 	mspGuiRoot->UpdateGS(time);
 	mCuller.ComputeVisibleSet(mspGuiRoot);
 
-	if (mInputDevicesStateChanged)
-	{
-		UpdateInputDevicesInformationText();
-		mInputDevicesStateChanged = false;
-	}
-
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspGuiCamera);
 	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
@@ -75,16 +68,15 @@ void Sample11::OnInput()
 	UInt playerCount = GetInputSystem()->GetMainDevicesCount();
 	playerCount = playerCount > 4 ? 4 : playerCount; // maximum of 4 players
 
-	// if there's no controller yet, return
+	// if there's no controller connected yet, return
 	if (playerCount == 0) 
 	{
 		return;
 	}
 
+	// check if the controller device has buttons
 	const Buttons* pButtons = DynamicCast<Buttons>(GetInputSystem()->
 		GetMainDevice(0)->GetCapability(Buttons::TYPE, false));
-
-	// if there's no button capability, return
 	if (!pButtons)
 	{
 		return;
@@ -93,47 +85,53 @@ void Sample11::OnInput()
 	// close the application if the home button is pressed
 	if (pButtons->GetButton(Buttons::BUTTON_HOME))
 	{
-		Close();
+		Parent::Close();
 		return;
 	}
 
 	for (UInt playerIndex = 0; playerIndex < playerCount; playerIndex++) 
 	{
-		const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(playerIndex);
+		const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(
+			playerIndex);
+
 		// if there's no IR, position the pointer at the center of the screen
 		Float x = GetWidthF() * 0.5F;
 		Float y = GetHeightF() * 0.5F;
 
-		const IR* pIR = DynamicCast<const IR>(pInputDevice->GetCapability(IR::TYPE, false));
-		// Wire3D uses the OpenGL convention of (0,0) being at the bottom left corner of the screen, 
-		// but we want the upper left corner so make a vertical correction here
+		const IR* pIR = DynamicCast<const IR>(pInputDevice->GetCapability(
+			IR::TYPE, false));
 		if (pIR)
 		{
+			// Wire3D uses the OpenGL convention of (0,0) being at the bottom
+			// left corner of the screen, but we want the upper left corner
+			// so make a vertical correction here
 			x = pIR->GetRight();
 			y = GetHeightF() - pIR->GetUp();
 		}
 		
 		Cursors::CursorMode mode = Cursors::CM_POINTING;
-		const Buttons* pButtons = NULL;
 
 		// if there are buttons in the main device, get them
-		pButtons = DynamicCast<const Buttons>(pInputDevice->GetCapability(Buttons::TYPE, false));
+		const Buttons* pButtons = DynamicCast<const Buttons>(pInputDevice->
+			GetCapability(Buttons::TYPE, false));
 
-		// if there are buttons and the 'A' button is pressed, change the cursor mode
+		// if there are buttons and the 'A' (win32: left mouse button) button
+		// is pressed, change the cursor mode
 		if (pButtons && pButtons->GetButton(Buttons::BUTTON_A))
 		{
 			mode = Cursors::CM_PRIMARY_BUTTON_PRESSED;
 		}
 
-		// if 'B' button is pressed, change the cursor mode
+		// same for 'B' button (win32: right mouse button)
 		if (pButtons && pButtons->GetButton(Buttons::BUTTON_B))
 		{
 			mode = Cursors::CM_SECONDARY_BUTTON_PRESSED;
 		}
 
 		Float tilt = 0;
-		// get the main device tilt (in degrees)
-		const Tilt* pTilt = DynamicCast<const Tilt>(pInputDevice->GetCapability(Tilt::TYPE, false));
+		// get the main device tilt (win32: mouse wheel) (in degrees)
+		const Tilt* pTilt = DynamicCast<const Tilt>(pInputDevice->
+			GetCapability(Tilt::TYPE, false));
 		if (pTilt)
 		{
 			tilt = MathF::DEG_TO_RAD * (pTilt->GetRight());
@@ -146,7 +144,17 @@ void Sample11::OnInput()
 //----------------------------------------------------------------------------
 void Sample11::OnInputDevicesChange()
 {
-	mInputDevicesStateChanged = true;
+	// new input devices found or existing ones disconnected
+	UpdateInputDevicesInformationText();
+}
+
+//----------------------------------------------------------------------------
+void Sample11::OnResize(UInt width, UInt height)
+{
+	Parent::OnResize(width, height);
+
+	// window size changed, re-layout the text accordingly
+	UpdateInputDevicesInformationText();
 }
 
 //----------------------------------------------------------------------------

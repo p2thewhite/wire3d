@@ -38,13 +38,16 @@ public:
 		UInt ColliderCount;
 	};
 
-	Importer(const Char* pPath = "", Bool materialsWithEqualNamesAreIdentical = true, Bool prepareForStaticBatching = true);
+	Importer(const Char* pPath = "", Bool materialsWithEqualNamesAreIdentical = true,
+		Bool prepareForStaticBatching = true);
 
 	static Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool hasMipmaps);
 	static Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
+	static Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps);
 	static Text* CreateText(const Char* pFilename, UInt width, UInt height, UInt maxLength = 4000);
 
-	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCameras = NULL, btDynamicsWorld* pPhysicsWorld = NULL);
+	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCameras = NULL,
+		btDynamicsWorld* pPhysicsWorld = NULL);
 	const Statistics* GetStatistics();
 
 private:
