@@ -55,18 +55,24 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	if (s_pApplication->OnInitialize())
 	{
 		// first attempt to discover input devices
-		mpInputSystem->DiscoverDevices();
+		if (mpInputSystem->DiscoverDevices())
+		{
+			s_pApplication->OnInputDevicesChange();
+		}
 
 		mIsRunning = true;
 		while (mIsRunning) 
 		{
 			mpInputSystem->Capture();
-			OnInput();
+			s_pApplication->OnInput();
 
 			s_pApplication->OnIdle();
 
 			// new attempt to discover input devices
-			mpInputSystem->DiscoverDevices();
+			if (mpInputSystem->DiscoverDevices())
+			{
+				s_pApplication->OnInputDevicesChange();
+			}
 		}
 	}
 

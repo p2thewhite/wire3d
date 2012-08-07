@@ -91,22 +91,3 @@ void InputSystem::RemoveDevice(InputDevice* pDevice)
 
 	mDevices.Remove(pDevice);
 }
-
-void InputSystem::AddListener(InputSystemListener* pListener)
-{
-	mListeners.Append(pListener);
-}
-
-void InputSystem::NotifyDevicesChange()
-{
-	for (UInt i = 0; i < mListeners.GetQuantity(); i++)
-	{
-		WIRE_ASSERT(mListeners[i]);
-		mListeners[i]->OnDevicesChange();
-	}
-}
-
-void InputSystem::RemoveListener(InputSystemListener*)
-{
-	// TODO:
-}

@@ -7,7 +7,7 @@
 
 using namespace Wire;
 
-class Sample11 : public WIREAPPLICATION, public InputSystemListener
+class Sample11 : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
 
@@ -20,7 +20,7 @@ public:
 	virtual void OnTerminate();
 	virtual void OnIdle();
 	virtual void OnInput();
-	virtual void OnDevicesChange();
+	virtual void OnInputDevicesChange();
 
 private:
 	void UpdateInputDevicesInformationText();

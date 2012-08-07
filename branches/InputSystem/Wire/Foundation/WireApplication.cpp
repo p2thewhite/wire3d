@@ -104,6 +104,11 @@ void Application::OnInput()
 }
 
 //----------------------------------------------------------------------------
+void Application::OnInputDevicesChange()
+{
+}
+
+//----------------------------------------------------------------------------
 void Application::Close()
 {
 	mIsRunning = false;

@@ -462,9 +462,6 @@
     <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedTilt.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\WireInputSystemListener.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h">
       <Filter>Foundation\Platforms\Dx9\Header Files</Filter>
     </ClInclude>
@@ -987,9 +984,6 @@
     </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedTilt.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WireInputSystemListener.cpp">
-      <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp">
       <Filter>Foundation\Platforms\Dx9\Source Files</Filter>

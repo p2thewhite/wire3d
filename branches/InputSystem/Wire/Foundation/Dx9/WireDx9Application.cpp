@@ -191,7 +191,10 @@ Int Dx9Application::Main(Int, Char*[])
 		UpdateWindow(hWnd);
 
 		// first attempt to discover input devices
-		mpInputSystem->DiscoverDevices();
+		if (mpInputSystem->DiscoverDevices())
+		{
+			s_pApplication->OnInputDevicesChange();
+		}
 
 		mIsRunning = true;
 		// start the message pump
@@ -221,7 +224,10 @@ Int Dx9Application::Main(Int, Char*[])
 				s_pApplication->OnIdle();
 
 				// new attempt to discover input devices
-				mpInputSystem->DiscoverDevices();
+				if (mpInputSystem->DiscoverDevices())
+				{
+					s_pApplication->OnInputDevicesChange();
+				}
 			}
 		}
 	}

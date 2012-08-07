@@ -154,7 +154,6 @@
     <ClInclude Include="InputSystem\WireInputDevice.h" />
     <ClInclude Include="InputSystem\WireInputDeviceExtension.h" />
     <ClInclude Include="InputSystem\WireInputSystem.h" />
-    <ClInclude Include="InputSystem\WireInputSystemListener.h" />
     <ClInclude Include="InputSystem\WireIR.h" />
     <ClInclude Include="InputSystem\WireMainInputDevice.h" />
     <ClInclude Include="InputSystem\WireNunchuk.h" />
@@ -399,7 +398,6 @@
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedShake.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedSwing.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedTilt.cpp" />
-    <ClCompile Include="InputSystem\WireInputSystemListener.cpp" />
     <ClCompile Include="InputSystem\WireIR.cpp" />
     <ClCompile Include="InputSystem\WireMainInputDevice.cpp" />
     <ClCompile Include="InputSystem\WireNunchuk.cpp" />

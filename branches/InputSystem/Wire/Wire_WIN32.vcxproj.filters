@@ -464,9 +464,6 @@
     <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputSystem\WireInputSystemListener.h">
-      <Filter>InputSystem\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\WireRenderer.h">
       <Filter>Renderer\Header Files</Filter>
     </ClInclude>
@@ -991,9 +988,6 @@
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem\WireInputDataBuffer.cpp">
-      <Filter>InputSystem\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem\WireInputSystemListener.cpp">
       <Filter>InputSystem\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\WireRenderer.cpp">

@@ -24,7 +24,7 @@ public:
 	virtual ~Win32InputSystem();
 
 	virtual void Capture();
-	virtual void DiscoverDevices();
+	virtual Bool DiscoverDevices();
 
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 

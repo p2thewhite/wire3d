@@ -45,6 +45,9 @@ public:
 	// Called by the main loop just after input capturing.
 	virtual void OnInput();
 
+	// Called when input devices are connected/disconnected.
+	virtual void OnInputDevicesChange();
+
 	virtual void Close();
 
 	static void SetApplication(Application* pApplication);

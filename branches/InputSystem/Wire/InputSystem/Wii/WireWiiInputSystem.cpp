@@ -88,10 +88,11 @@ void WiiInputSystem::Capture()
 	}
 }
 
-void WiiInputSystem::DiscoverDevices()
+Bool WiiInputSystem::DiscoverDevices()
 {
-	DoDevicesDiscovery();
+	Bool hasChanged = DoDevicesDiscovery();
 	AfterDevicesDiscovery();
+	return hasChanged;
 }
 
 WiiMote* WiiInputSystem::GetWiiMoteByChannel(UInt channel)
@@ -110,7 +111,7 @@ WiiMote* WiiInputSystem::GetWiiMoteByChannel(UInt channel)
 	return NULL;
 }
 
-void WiiInputSystem::DoDevicesDiscovery()
+Bool WiiInputSystem::DoDevicesDiscovery()
 {
 	WiiMote* pWiiMote;
 	for (UInt channel = FIRST_CHANNEL; channel <= LAST_CHANNEL; channel++)
@@ -164,11 +165,10 @@ void WiiInputSystem::DoDevicesDiscovery()
 		mChannelsConnectionStatus[channel] = isConnected;
 	}
 	
-	if (mChanged)
-	{
-		NotifyDevicesChange();
-		mChanged = false;
-	}
+	Bool hasChanged = mChanged;
+	mChanged = false;
+
+	return hasChanged;
 }
 
 void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)

@@ -29,10 +29,10 @@ public:
 	virtual ~WiiInputSystem();
 
 	virtual void Capture();
-	virtual void DiscoverDevices();
+	virtual Bool DiscoverDevices();
 
 private:
-	void DoDevicesDiscovery();
+	Bool DoDevicesDiscovery();
 	void AfterDevicesDiscovery();
 
 	static const UInt FIRST_CHANNEL;

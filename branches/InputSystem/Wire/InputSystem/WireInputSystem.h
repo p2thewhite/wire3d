@@ -14,7 +14,6 @@
 #include "WireButtons.h"
 #include "WireDigitalPad.h"
 #include "WireInputDeviceExtension.h"
-#include "WireInputSystemListener.h"
 #include "WireIR.h"
 #include "WireMainInputDevice.h"
 #include "WireNunchuk.h"
@@ -33,7 +32,7 @@ public:
 	virtual ~InputSystem();
 
 	virtual void Capture() = 0;
-	virtual void DiscoverDevices() = 0;
+	virtual Bool DiscoverDevices() = 0;
 
 	const InputDeviceExtension* GetDeviceExtension(UInt index) const;
 	UInt GetDeviceExtensionsCount() const;
@@ -41,18 +40,14 @@ public:
 	UInt GetMainDevicesCount() const;
 	const InputDevice* GetDevice(UInt index) const;
 	UInt GetDevicesCount() const;
-	void AddListener(InputSystemListener* pListener);
-	void RemoveListener(InputSystemListener* pListener);
 
 protected:
 	TArray<InputDevicePtr> mDevices;
 	TArray<MainInputDevicePtr> mMainDevices;
 	TArray<InputDeviceExtensionPtr> mDeviceExtensions;
-	TArray<InputSystemListener*> mListeners;
 
 	void AddDevice(InputDevice* pInputDevice);
 	void RemoveDevice(InputDevice* pInputDevice);
-	void NotifyDevicesChange();
 };
 
 }

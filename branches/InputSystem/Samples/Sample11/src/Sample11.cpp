@@ -21,8 +21,6 @@ Bool Sample11::OnInitialize()
 		return false;
 	}
 
-	GetInputSystem()->AddListener(this);
-
 	mpCursors = WIRE_NEW Cursors;
 	mspGuiRoot = WIRE_NEW Node;
 	mspGuiRoot->AttachChild(mpCursors->GetRoot());
@@ -146,7 +144,7 @@ void Sample11::OnInput()
 }
 
 //----------------------------------------------------------------------------
-void Sample11::OnDevicesChange()
+void Sample11::OnInputDevicesChange()
 {
 	mInputDevicesStateChanged = true;
 }
