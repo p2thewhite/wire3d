@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="FirstPersonShooterGame"
+	Name="Game"
 	ProjectGUID="{8CF315C5-77D6-49B7-8878-CAE7FE16501F}"
-	RootNamespace="FirstPersonShooterGame"
+	RootNamespace="Game"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -78,11 +78,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\FirstPersonShooterGame.cpp"
+			RelativePath=".\src\Game.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\FirstPersonShooterGame.h"
+			RelativePath=".\src\Game.h"
 			>
 		</File>
 		<File

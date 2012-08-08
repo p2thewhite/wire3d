@@ -1,19 +1,20 @@
 #include "Game.h"
 
+#include "Importer.h"
 #include "MaterialFader.h"
 #include "CollisionShapeToGeometryConverter.h"
 
-WIRE_APPLICATION(FirstPersonShooterGame);
+WIRE_APPLICATION(Game);
 
 //----------------------------------------------------------------------------
-FirstPersonShooterGame::FirstPersonShooterGame() :
+Game::Game() :
 	mpCharacterController(NULL),
 	mShowColliders(false)
 {
 }
 
 //----------------------------------------------------------------------------
-Bool FirstPersonShooterGame::OnInitialize()
+Bool Game::OnInitialize()
 {
 	if (!Parent::OnInitialize())
 	{
@@ -47,13 +48,13 @@ Bool FirstPersonShooterGame::OnInitialize()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::OnTerminate()
+void Game::OnTerminate()
 {
 	TerminatePhysics();
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::OnIdle()
+void Game::OnIdle()
 {
 	Double time = System::GetTime();
 	Double deltaTime = time - mLastTime;
@@ -77,7 +78,7 @@ void FirstPersonShooterGame::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::OnInput()
+void Game::OnInput()
 {
 	static Double lastButton1PressTime = 0;
 	static Float oldX = 0;
@@ -253,7 +254,7 @@ void FirstPersonShooterGame::OnInput()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::ToggleCollidersVisibility()
+void Game::ToggleCollidersVisibility()
 {
 	mShowColliders = !mShowColliders;
 
@@ -286,7 +287,7 @@ void FirstPersonShooterGame::ToggleCollidersVisibility()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::OnRunning(Double time, Double deltaTime)
+void Game::OnRunning(Double time, Double deltaTime)
 {
 	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
@@ -319,7 +320,7 @@ void FirstPersonShooterGame::OnRunning(Double time, Double deltaTime)
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::DrawFPS(Double deltaTime)
+void Game::DrawFPS(Double deltaTime)
 {
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
@@ -371,7 +372,7 @@ void FirstPersonShooterGame::DrawFPS(Double deltaTime)
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::OnLoading(Double time, Double deltaTime)
+void Game::OnLoading(Double time, Double deltaTime)
 {
 	Spatial* pLoading = mspLogo->GetChildByName("Loading");
 	Bool isFadedIn = false;
@@ -422,7 +423,7 @@ void FirstPersonShooterGame::OnLoading(Double time, Double deltaTime)
 }
 
 //----------------------------------------------------------------------------
-Node* FirstPersonShooterGame::LoadAndInitializeLoading()
+Node* Game::LoadAndInitializeLoading()
 {
 	Importer importer("Data/Logo/");
 	Node* pRoot = importer.LoadSceneFromXml("logo.xml", &mLogoCameras);
@@ -453,7 +454,7 @@ Node* FirstPersonShooterGame::LoadAndInitializeLoading()
 }
 
 //----------------------------------------------------------------------------
-Node* FirstPersonShooterGame::LoadAndInitializeGUI()
+Node* Game::LoadAndInitializeGUI()
 {
 	Importer importer("Data/GUI/");
 	Node* pRoot = importer.LoadSceneFromXml("GUI.xml", &mGUICameras);
@@ -510,7 +511,7 @@ Node* FirstPersonShooterGame::LoadAndInitializeGUI()
 }
 
 //----------------------------------------------------------------------------
-Node* FirstPersonShooterGame::LoadAndInitializeScene()
+Node* Game::LoadAndInitializeScene()
 {
 	Importer importer("Data/Scene/");
 	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &mSceneCameras, mpPhysicsWorld);
@@ -571,13 +572,13 @@ Node* FirstPersonShooterGame::LoadAndInitializeScene()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::MoveCrosshairTo(const Vector2F& rScreenPosition)
+void Game::MoveCrosshairTo(const Vector2F& rScreenPosition)
 {
 	mspCrosshair->Local.SetTranslate(Vector3F(rScreenPosition.X() - 16, rScreenPosition.Y() - 16, 0));
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::InitializePhysics()
+void Game::InitializePhysics()
 {
 	mpCollisionConfiguration = WIRE_NEW btDefaultCollisionConfiguration();
 
@@ -595,13 +596,13 @@ void FirstPersonShooterGame::InitializePhysics()
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::UpdatePhysics(Double deltaTime)
+void Game::UpdatePhysics(Double deltaTime)
 {
 	mpPhysicsWorld->stepSimulation(btScalar(deltaTime), 10);
 }
 
 //----------------------------------------------------------------------------
-void FirstPersonShooterGame::TerminatePhysics()
+void Game::TerminatePhysics()
 {
 	for (Int i = mpPhysicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
