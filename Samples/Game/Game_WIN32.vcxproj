@@ -13,21 +13,21 @@
   <ItemGroup>
     <ClInclude Include="src\CollisionShapeToGeometryConverter.h" />
     <ClInclude Include="src\FirstPersonController.h" />
-    <ClInclude Include="src\FirstPersonShooterGame.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\MaterialFader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CollisionShapeToGeometryConverter.cpp" />
     <ClCompile Include="src\FirstPersonController.cpp" />
-    <ClCompile Include="src\FirstPersonShooterGame.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\MaterialFader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7B26A34A-1C24-4431-B2B0-77A7D405FD4D}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>FirstPersonShooterGame</RootNamespace>
-    <ProjectName>First Person Shooter Game</ProjectName>
+    <RootNamespace>Game</RootNamespace>
+    <ProjectName>Game</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -59,14 +59,14 @@
     <LibraryPath>$(DXSDK_DIR)\Lib;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
-    <TargetName>FirstPersonShooterGamed</TargetName>
+    <TargetName>Gamed</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>
     </LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
-    <TargetName>FirstPersonShooterGame</TargetName>
+    <TargetName>Game</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,7 +80,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wired.lib;Importerd.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>FirstPersonShooterGamed.exe</OutputFile>
+      <OutputFile>Gamed.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\Wire\lib\debug;..\..\Tools\Importer\lib\debug;..\..\Tools\bullet-2.77\lib\Debug</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
@@ -95,7 +95,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Wire.lib;Importer.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>FirstPersonShooterGame.exe</OutputFile>
+      <OutputFile>Game.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\Wire\lib\release;..\..\Tools\Importer\lib\release;..\..\Tools\bullet-2.77\lib\Release</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
