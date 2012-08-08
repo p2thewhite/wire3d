@@ -1436,10 +1436,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\InputSystem\WireInputSystemListener.h"
-					>
-				</File>
-				<File
 					RelativePath=".\InputSystem\WireIR.h"
 					>
 				</File>
@@ -1973,10 +1969,6 @@
 				</File>
 				<File
 					RelativePath=".\InputSystem\WireInputSystem.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\InputSystem\WireInputSystemListener.cpp"
 					>
 				</File>
 				<File

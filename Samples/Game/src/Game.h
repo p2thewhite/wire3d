@@ -1,25 +1,23 @@
 #pragma once
-#ifndef FIRSTPERSONSHOOTERGAME_H_
-#define FIRSTPERSONSHOOTERGAME_H_
+#ifndef GAME_H
+#define GAME_H
 
 #include "WireApplication.h"
-#include "WireTArray.h"
-#include "Importer.h"
-#include "FirstPersonController.h"
 
+#include "FirstPersonController.h"
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
 
 using namespace Wire;
 
-class FirstPersonShooterGame : public WIREAPPLICATION
+class Game : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
 
 	typedef WIREAPPLICATION Parent;
 
 public:
-	FirstPersonShooterGame();
+	Game();
 
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
@@ -73,6 +71,6 @@ private:
 	btDiscreteDynamicsWorld* mpPhysicsWorld;
 };
 
-WIRE_REGISTER_INITIALIZE(FirstPersonShooterGame);
+WIRE_REGISTER_INITIALIZE(Game);
 
 #endif

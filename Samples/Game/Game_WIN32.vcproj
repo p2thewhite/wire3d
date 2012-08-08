@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="FirstPersonShooterGame"
+	Name="Game"
 	ProjectGUID="{769C3D4D-4630-4E1A-B3DE-7E1978F18018}"
-	RootNamespace="FirstPersonShooterGame_WIN32"
+	RootNamespace="Game_WIN32"
 	>
 	<Platforms>
 		<Platform
@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Wired.lib Importerd.lib"
-				OutputFile="FirstPersonShooterGamed.exe"
+				OutputFile="Gamed.exe"
 				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\debug;..\..\Tools\Importer\lib\debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
@@ -146,7 +146,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Wire.lib Importer.lib"
-				OutputFile="FirstPersonShooterGame.exe"
+				OutputFile="Game.exe"
 				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\release;..\..\Tools\Importer\lib\release"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
@@ -201,11 +201,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\FirstPersonShooterGame.cpp"
+			RelativePath=".\src\Game.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\FirstPersonShooterGame.h"
+			RelativePath=".\src\Game.h"
 			>
 		</File>
 		<File
