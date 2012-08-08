@@ -101,6 +101,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation \
 					-I$(WIREDIR)/Engine \
 					-I$(WIREDIR)/Renderer \
+					-I$(WIREDIR)/InputSystem \
 					-I$(BULLETDIR)/src
 
 #---------------------------------------------------------------------------------

@@ -8,8 +8,6 @@
 
 #include "Sample5.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample5);
 
 //----------------------------------------------------------------------------
@@ -104,9 +102,7 @@ Bool Sample5::OnInitialize()
 
 	// By providing a field of view (FOV) in degrees, aspect ratio,
 	// near and far plane, we define a viewing frustum used for culling.
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+	mspCamera->SetFrustum(45, GetWidthF() / GetHeightF() , 0.1F, 300.0F);
 	mCuller.SetCamera(mspCamera);
 
 	// Initialize working variables used in the render loop (i.e. OnIdle()).

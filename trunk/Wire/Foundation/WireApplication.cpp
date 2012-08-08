@@ -13,24 +13,13 @@ using namespace Wire;
 
 Application* Application::s_pApplication = NULL;
 
-const UInt Application::BUTTON_A = 0;
-const UInt Application::BUTTON_B = 1;
-const UInt Application::BUTTON_LEFT = 2;
-const UInt Application::BUTTON_RIGHT = 3;
-const UInt Application::BUTTON_UP = 4;
-const UInt Application::BUTTON_DOWN = 5;
-const UInt Application::BUTTON_1 = 6;
-const UInt Application::BUTTON_2 = 7;
-
-const UInt Application::BUTTON_PRESS = 0;
-const UInt Application::BUTTON_RELEASE = 1;
-
 //----------------------------------------------------------------------------
 Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
 	Bool isFullscreen, Bool useVSync)
 	:
 	mpRenderer(NULL),
+	mpInputSystem(NULL),
 	mBackgroundColor(rBackgroundColor),
 	mpWindowTitle(pWindowTitle),
 	mXPosition(xPosition),
@@ -38,7 +27,8 @@ Application::Application(const ColorRGBA& rBackgroundColor, const Char*
 	mWidth(width),
 	mHeight(height),
 	mIsFullscreen(isFullscreen),
-	mUseVSync(useVSync)
+	mUseVSync(useVSync),
+	mIsRunning(false)
 {
 }
 
@@ -60,8 +50,68 @@ Application* Application::GetApplication()
 }
 
 //----------------------------------------------------------------------------
-void Application::OnButton(UInt, UInt)
+Bool Application::OnPrecreate()
 {
+	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool Application::OnInitialize()
+{
+	return true;
+}
+
+//----------------------------------------------------------------------------
+void Application::OnIdle()
+{
+}
+
+//----------------------------------------------------------------------------
+void Application::OnTerminate()
+{
+}
+
+//----------------------------------------------------------------------------
+void Application::OnInput()
+{
+	// default handling exits Application when HOME button/ESC key is pressed
+	if (!mpInputSystem)
+	{
+		return;
+	}
+
+	if (mpInputSystem->GetMainDevicesCount() == 0)
+	{
+		return;
+	}
+
+	const MainInputDevice* pInputDevice = mpInputSystem->GetMainDevice(0);
+
+	// checking for minimum capabilities
+	if (!pInputDevice->HasCapability(Buttons::TYPE, true))
+	{
+		return;
+	}
+
+	const Buttons* pButtons = DynamicCast<Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
+	if (pButtons->GetButton(Buttons::BUTTON_HOME))
+	{
+		Close();
+		return;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Application::OnInputDevicesChange()
+{
+}
+
+//----------------------------------------------------------------------------
+void Application::Close()
+{
+	mIsRunning = false;
 }
 
 //----------------------------------------------------------------------------

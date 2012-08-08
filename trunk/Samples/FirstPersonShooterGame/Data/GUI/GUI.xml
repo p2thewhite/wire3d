@@ -1,0 +1,39 @@
+<Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <AlphaState Enabled="1" SrcBlendMode="SRC_ALPHA" DstBlendMode="ONE_MINUS_SRC_ALPHA" />
+  <ZBufferState Enabled="0" Writable="0" CmpFunc="LEQUAL" />
+  <Camera Fov="0" Near="0.3" Far="1000" />
+  <Light Type="Point" Ambient="1, 1, 1" Color="1, 1, 1" />
+  <Leaf Name="Crosshair" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.0625, 0.125, 1" Static="0">
+	<MaterialState Ambient="1, 1, 1, 1" />
+    <Mesh Name="Quad_0001E0FA_1_1_0_0">
+      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
+      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
+      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
+    </Mesh>
+    <Material Name="CrosshairMaterial">
+      <Texture Name="crosshair_0000137A.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
+    </Material>
+  </Leaf>
+  <Leaf Name="MainInputDeviceIcon" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.125, 0.25, 1" Static="0">
+	<MaterialState Ambient="1, 1, 1, 1" />
+    <Mesh Name="Quad_0001E0FA_1_1_0_0">
+      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
+      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
+      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
+    </Mesh>
+    <Material Name="MainInputDeviceMaterial">
+      <Texture Name="keyboardIcon.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
+    </Material>
+  </Leaf>
+  <Leaf Name="InputDeviceExtensionIcon" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.125, 0.25, 1" Static="0">
+	<MaterialState Ambient="1, 1, 1, 1" />
+    <Mesh Name="Quad_0001E0FA_1_1_0_0">
+      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
+      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
+      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
+    </Mesh>
+    <Material Name="InputDeviceExtensionMaterial">
+      <Texture Name="mouseIcon.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
+    </Material>
+  </Leaf>
+</Node>

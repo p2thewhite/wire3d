@@ -7,8 +7,6 @@
 
 #include "Sample2.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample2);
 
 //----------------------------------------------------------------------------
@@ -62,9 +60,7 @@ Bool Sample2::OnInitialize()
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
 
 	// specify FOV, aspect ratio, near and far plane of the frustum
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+	mspCamera->SetFrustum(45, GetWidthF()/GetHeightF() , 0.1F, 300.0F);
 
 	// the culler needs to know which camera to use when performing its task
 	mCuller.SetCamera(mspCamera);

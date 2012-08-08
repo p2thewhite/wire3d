@@ -26,11 +26,6 @@ public:
 		Bool useVSync = true);
 	virtual ~Dx9Application();
 
-	virtual Bool OnPrecreate();
-	virtual Bool OnInitialize();
-	virtual void OnTerminate();
-	virtual void OnIdle();
-
 	Int GetWindowID() const;
 
 private:

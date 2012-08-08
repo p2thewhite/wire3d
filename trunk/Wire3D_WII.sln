@@ -308,6 +308,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NarrowPhaseCollision", "Nar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "freetype", "Tools\freetype\builds\wii\freetype_WII.vcproj", "{C9F6B64D-6F9D-4918-BFC3-868A4D8B1767}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sample11 - Input", "Samples\Sample11\Sample11_WII.vcproj", "{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17} = {04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FirstPersonShooterGame", "Samples\FirstPersonShooterGame\FirstPersonShooterGame_WII.vcproj", "{8CF315C5-77D6-49B7-8878-CAE7FE16501F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F95787AD-C522-4532-98F2-107E57D5019C} = {F95787AD-C522-4532-98F2-107E57D5019C}
+		{04C5CFBE-AAC1-4536-AD3A-32523B0BFD17} = {04C5CFBE-AAC1-4536-AD3A-32523B0BFD17}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -374,6 +386,14 @@ Global
 		{C9F6B64D-6F9D-4918-BFC3-868A4D8B1767}.Debug|Win32.Build.0 = Debug|Win32
 		{C9F6B64D-6F9D-4918-BFC3-868A4D8B1767}.Release|Win32.ActiveCfg = Release|Win32
 		{C9F6B64D-6F9D-4918-BFC3-868A4D8B1767}.Release|Win32.Build.0 = Release|Win32
+		{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}.Debug|Win32.Build.0 = Debug|Win32
+		{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}.Release|Win32.ActiveCfg = Release|Win32
+		{0A5EB232-3A86-4B9E-AA6D-4585C46B69AB}.Release|Win32.Build.0 = Release|Win32
+		{8CF315C5-77D6-49B7-8878-CAE7FE16501F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8CF315C5-77D6-49B7-8878-CAE7FE16501F}.Debug|Win32.Build.0 = Debug|Win32
+		{8CF315C5-77D6-49B7-8878-CAE7FE16501F}.Release|Win32.ActiveCfg = Release|Win32
+		{8CF315C5-77D6-49B7-8878-CAE7FE16501F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

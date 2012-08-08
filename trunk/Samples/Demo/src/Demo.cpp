@@ -49,10 +49,8 @@ void Demo::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	mLogoCameras[0]->SetFrustum(0, width, 0, height, 0, 1);
-	Vector3F centered((width-512)*0.5F, (height-256)*0.5F, 0);
+	mLogoCameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
+	Vector3F centered((GetWidthF()-512)*0.5F, (GetHeightF()-256)*0.5F, 0);
 	mspLogo->Local.SetTranslate(centered);
 
 	switch (mAppState)
@@ -71,31 +69,33 @@ void Demo::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void Demo::OnButton(UInt /*button*/, UInt state)
+void Demo::OnInput()
 {
-	// Buttons are:     Wii          | PC
-	//   BUTTON_A =     Button 'A'   | left mouse button
-	//   BUTTON_B =     Button 'B'   | right mouse button
-	//   BUTTON_LEFT =  Button left  | cursor key left
-	//   BUTTON_RIGHT = Button right | cursor key right
-	//   BUTTON_UP =    Button up    | cursor key up
-	//   BUTTON_DOWN =  Button down  | cursor key down
-	//   BUTTON_1 =     Button '1'   | key '1'
-	//   BUTTON_2 =     Button '2'   | key '2'
-	//
-	// States are:
-	//   BUTTON_PRESS   = button/key pressed
-	//   BUTTON_RELEASE = button/key released
+	if (GetInputSystem()->GetMainDevicesCount() == 0)
+	{
+		return;
+	}
 
-	// any of the above buttons pressed displays FPS at the top of the screen
-	if (state == Application::BUTTON_PRESS)
+	const MainInputDevice* pInputDevice = GetInputSystem()->GetMainDevice(0);
+
+	// checking for minimum capabilities
+	if (!pInputDevice->HasCapability(Buttons::TYPE, true))
 	{
-		mShowFps = true;
+		return;
 	}
-	else
+
+	const Buttons* pButtons = DynamicCast<Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
+
+	// when home is pressed, exit the game
+	if (pButtons->GetButton(Buttons::BUTTON_HOME))
 	{
-		mShowFps = false;
+		Close();
+		return;
 	}
+
+	mShowFps = pButtons->GetButton(Buttons::BUTTON_B);
 }
 
 //----------------------------------------------------------------------------
@@ -134,16 +134,14 @@ void Demo::DrawFPS(Double time)
 
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-	mspTextCamera->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	mspTextCamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	GetRenderer()->SetCamera(mspTextCamera);
 
 	// set to screen width (might change any time in window mode)
-	mspText->SetLineWidth(screenWidth);
+	mspText->SetLineWidth(GetWidthF());
 	mspText->Clear(Color32::WHITE);
 	// Text uses OpenGL convention of (0,0) being left bottom of window
-	mspText->SetPen(0, screenHeight-mspText->GetFontHeight()-32.0F);
+	mspText->SetPen(0, GetHeightF()-mspText->GetFontHeight()-32.0F);
 
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
@@ -247,10 +245,8 @@ Node* Demo::LoadAndInitScene()
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
 	Float fov, aspect, near, far;
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
 	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
-	aspect = width / height;
+	aspect = GetWidthF() / GetHeightF();
 	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 

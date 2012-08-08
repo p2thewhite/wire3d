@@ -3,8 +3,6 @@
 
 #include "Sample8.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample8);
 
 //----------------------------------------------------------------------------
@@ -35,13 +33,7 @@ Bool Sample8::OnInitialize()
 	CreateGameObjects();
 
 	mspCamera = WIRE_NEW Camera;
-	UInt width = GetRenderer()->GetWidth();
-	UInt height = GetRenderer()->GetHeight();
-	Float fieldOfView = 45.0F;
-	Float aspectRatio = static_cast<Float>(width)/static_cast<Float>(height);
-	Float nearPlane = 0.1F;
-	Float farPlane = 300.0F;
-	mspCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
+	mspCamera->SetFrustum(45.0F, GetWidthF()/GetHeightF(), 0.1F, 300.0F);
 
 	mspLightA = WIRE_NEW Light;
 	mspLightA->Direction = Vector3F(0.5F, -0.2F, 1.0F);

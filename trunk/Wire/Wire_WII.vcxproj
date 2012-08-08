@@ -60,8 +60,8 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
     <NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Foundation;Engine;Renderer;Renderer\GX;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Foundation;Engine;Renderer;Renderer\GX;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Foundation;Engine;Renderer;Renderer\GX;InputSystem;InputSystem\Wii;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Foundation;Engine;Renderer;Renderer\GX;InputSystem;InputSystem\Wii;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <BuildLog>
@@ -79,6 +79,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeSkybox.h" />
     <ClInclude Include="Engine\WireText.h" />
+    <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
     <ClInclude Include="Foundation\WireColor32.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
@@ -149,6 +150,51 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireVertexBuffer.h" />
     <ClInclude Include="Engine\WireVisibleObject.h" />
     <ClInclude Include="Engine\WireVisibleSet.h" />
+    <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h" />
+    <ClInclude Include="InputSystem\Wii\WireNunchukButtons.h" />
+    <ClInclude Include="InputSystem\Wii\WireNunchukShake.h" />
+    <ClInclude Include="InputSystem\Wii\WireNunchukSwing.h" />
+    <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiInputDataBuffer.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiInputSystem.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMote.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteButtons.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteDigitalPad.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteIR.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteShake.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteSwing.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiMoteTilt.h" />
+    <ClInclude Include="InputSystem\Wii\WireWiiNunchuk.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedNunchuk.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32EmulatedWiiMote.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32InputDataBuffer.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32InputSystem.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedButtons.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedIR.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedShake.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedSwing.h" />
+    <ClInclude Include="InputSystem\Win32\WireWin32KeyMappedTilt.h" />
+    <ClInclude Include="InputSystem\WireAnalogPad.h" />
+    <ClInclude Include="InputSystem\WireButtons.h" />
+    <ClInclude Include="InputSystem\WireDigitalPad.h" />
+    <ClInclude Include="InputSystem\WireInputCapability.h" />
+    <ClInclude Include="InputSystem\WireInputDataBuffer.h" />
+    <ClInclude Include="InputSystem\WireInputDevice.h" />
+    <ClInclude Include="InputSystem\WireInputDeviceExtension.h" />
+    <ClInclude Include="InputSystem\WireInputSystem.h" />
+    <ClInclude Include="InputSystem\WireIR.h" />
+    <ClInclude Include="InputSystem\WireMainInputDevice.h" />
+    <ClInclude Include="InputSystem\WireNunchuk.h" />
+    <ClInclude Include="InputSystem\WireShake.h" />
+    <ClInclude Include="InputSystem\WireSwing.h" />
+    <ClInclude Include="InputSystem\WireTilt.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9IndexBuffer.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererData.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9RendererInput.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9Texture2D.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9VertexBuffer.h" />
     <ClInclude Include="Renderer\GX\WireGXDisplayList.h" />
     <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h" />
     <ClInclude Include="Renderer\GX\WireGXRendererData.h" />
@@ -160,6 +206,9 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
+    <None Include="Foundation\Dx9\WireSystemDx9.inl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
     <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColor32.inl" />
@@ -213,6 +262,8 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Engine\WireVertexBuffer.inl" />
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
+    <None Include="Renderer\Dx9\WireDx9IndexBuffer.inl" />
+    <None Include="Renderer\Dx9\WireDx9VertexBuffer.inl" />
     <None Include="Renderer\GX\WireGXDisplayList.inl" />
     <None Include="Renderer\GX\WireGXIndexBuffer.inl" />
     <None Include="Renderer\GX\WireGXVertexBuffer.inl" />
@@ -224,6 +275,9 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />
     <ClCompile Include="Engine\WireText.cpp" />
+    <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColor32.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />
@@ -277,6 +331,80 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireNunchukAnalogPad.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireNunchukButtons.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireNunchukShake.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireNunchukSwing.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireNunchukTilt.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiInputDataBuffer.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiInputSystem.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMote.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteButtons.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteDigitalPad.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteIR.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteShake.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteSwing.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiMoteTilt.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireWiiNunchuk.cpp" />
+    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedNunchuk.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32EmulatedWiiMote.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32InputDataBuffer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32InputSystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedAnalogPad.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedButtons.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedDigitalPad.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedIR.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedShake.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedSwing.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Win32\WireWin32KeyMappedTilt.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InputSystem\WireAnalogPad.cpp" />
+    <ClCompile Include="InputSystem\WireButtons.cpp" />
+    <ClCompile Include="InputSystem\WireDigitalPad.cpp" />
+    <ClCompile Include="InputSystem\WireInputCapability.cpp" />
+    <ClCompile Include="InputSystem\WireInputDataBuffer.cpp" />
+    <ClCompile Include="InputSystem\WireInputDevice.cpp" />
+    <ClCompile Include="InputSystem\WireInputDeviceExtension.cpp" />
+    <ClCompile Include="InputSystem\WireInputSystem.cpp" />
+    <ClCompile Include="InputSystem\WireIR.cpp" />
+    <ClCompile Include="InputSystem\WireMainInputDevice.cpp" />
+    <ClCompile Include="InputSystem\WireNunchuk.cpp" />
+    <ClCompile Include="InputSystem\WireShake.cpp" />
+    <ClCompile Include="InputSystem\WireSwing.cpp" />
+    <ClCompile Include="InputSystem\WireTilt.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9BlendMode.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Light.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Renderer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateAlpha.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateCull.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateFog.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateMaterial.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateWireframe.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9StateZBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp" />
     <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp" />
     <ClCompile Include="Renderer\GX\WireGXDisplayList.cpp" />
     <ClCompile Include="Renderer\GX\WireGXIndexBuffer.cpp" />

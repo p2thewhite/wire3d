@@ -130,8 +130,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 //----------------------------------------------------------------------------
 Renderer::~Renderer()
 {
-	WIRE_DELETE mpData;
 	Terminate();
+	WIRE_DELETE mpData;
 }
 
 //----------------------------------------------------------------------------

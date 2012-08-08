@@ -244,13 +244,14 @@ void Text::Update(Renderer* pRenderer)
 	VertexBuffer* pVertexBuffer = GetMesh()->GetVertexBuffer();
 	if (pRenderer->GetResource(pVertexBuffer))
 	{
-		pRenderer->Update(pVertexBuffer, ActiveIndexCount*4);
+		WIRE_ASSERT(ActiveIndexCount % 6 == 0);
+		pRenderer->Update(pVertexBuffer, ActiveIndexCount/6*4);
 	}
 
 	IndexBuffer* pIndexBuffer = GetMesh()->GetIndexBuffer();
 	if (pRenderer->GetResource(pIndexBuffer))
 	{
-		pRenderer->Update(pIndexBuffer, ActiveIndexCount*6);
+		pRenderer->Update(pIndexBuffer, ActiveIndexCount);
 	}
 
 	mIsPdrBufferOutOfDate = false;

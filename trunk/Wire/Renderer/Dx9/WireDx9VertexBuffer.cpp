@@ -153,6 +153,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	WIRE_ASSERT(mBufferSize == (mVertexSize * pVertexBuffer->GetQuantity()));
 	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
 		GetChannelQuantity()*sizeof(Float));
+	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
 
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;

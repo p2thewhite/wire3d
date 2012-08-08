@@ -7,10 +7,9 @@
 // that agreement.
 
 #include "WireDx9Application.h"
-
 #include "WireRenderer.h"
 #include "WireDx9RendererInput.h"
-
+#include "WireWin32InputSystem.h"
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
@@ -30,18 +29,15 @@ using namespace Wire;
 #define PtrToInt(p)  ((INT)(INT_PTR)(p))
 #endif
 
-const UInt Application::KEY_ESCAPE = VK_ESCAPE;
-
 //----------------------------------------------------------------------------
-Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char*
-	pWindowTitle, Int xPosition, Int yPosition, UInt width, UInt height,
-	Bool isFullscreen, Bool useVSync)
+Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor,
+	const Char* pWindowTitle, Int xPosition, Int yPosition, UInt width,
+	UInt height, Bool isFullscreen, Bool useVSync)
 	:
 	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
-		height, isFullscreen, useVSync),
-	mWindowID(0)
+		height, isFullscreen, useVSync), mWindowID(0)
 {
-	_set_error_mode(_OUT_TO_MSGBOX);
+	_set_error_mode (_OUT_TO_MSGBOX);
 
 	DEVMODE mode;
 	mode.dmSize = sizeof(DEVMODE);
@@ -57,23 +53,32 @@ Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor, const Char*
 //----------------------------------------------------------------------------
 Dx9Application::~Dx9Application()
 {
+	WIRE_DELETE mpInputSystem;
+	mpInputSystem = NULL;
+
 	WIRE_DELETE mpRenderer;
 	mpRenderer = NULL;
 }
 
 //----------------------------------------------------------------------------
-LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
-	LPARAM lParam)
+LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	Dx9Application* pApp = static_cast<Dx9Application*>(
-		Application::GetApplication());
+	Dx9Application* pApp = static_cast<Dx9Application*>(Application::GetApplication());
 
 	if (!pApp || !pApp->GetWindowID())
 	{
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	switch (msg) 
+	Win32InputSystem* pInputSystem = static_cast<Win32InputSystem*>(pApp->GetInputSystem());
+
+	// It this call returns true it means that the given system message was handled by the broker.
+	if (pInputSystem->OnSystemMessage(msg, wParam, lParam))
+	{
+		return 0;
+	}
+
+	switch (msg)
 	{
 	case WM_PAINT:
 	{
@@ -85,128 +90,6 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam,
 		}
 
 		EndPaint(hWnd, &ps);
-		return 0;
-	}
-
-	case WM_CHAR:
-	{
-		UChar key = static_cast<UChar>(wParam);
-
-		// quit application if the KEY_TERMINATE key is pressed
-		if (key == pApp->KEY_TERMINATE)
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
-
-		return 0;
-	}
-
-	case WM_LBUTTONDOWN:
-	{
-		pApp->OnButton(Application::BUTTON_A, Application::BUTTON_PRESS);
-		return 0;
-	}
-
-	case WM_LBUTTONUP:
-	{
-		pApp->OnButton(Application::BUTTON_A, Application::BUTTON_RELEASE);
-		return 0;
-	}
-
-	case WM_RBUTTONDOWN:
-	{
-		pApp->OnButton(Application::BUTTON_B, Application::BUTTON_PRESS);
-		return 0;
-	}
-
-	case WM_RBUTTONUP:
-	{
-		pApp->OnButton(Application::BUTTON_B, Application::BUTTON_RELEASE);
-		return 0;
-	}
-
-	case WM_KEYDOWN:
-	{
-		Int virtKey = Int(wParam);
-		UInt state = Application::BUTTON_PRESS;
-	
-		switch (virtKey)
-		{
-		case VK_LEFT:
-		{
-			pApp->OnButton(Application::BUTTON_LEFT, state);
-			return 0;
-		}
-		case VK_RIGHT:
-		{
-			pApp->OnButton(Application::BUTTON_RIGHT, state);
-			return 0;
-		}
-		case VK_UP:
-		{
-			pApp->OnButton(Application::BUTTON_UP, state);
-			return 0;
-		}
-		case VK_DOWN:
-		{
-			pApp->OnButton(Application::BUTTON_DOWN, state);
-			return 0;
-		}
-		case '1':
-		{
-			pApp->OnButton(Application::BUTTON_1, state);
-			return 0;
-		}
-		case '2':
-		{
-			pApp->OnButton(Application::BUTTON_2, state);
-			return 0;
-		}
-		}
-
-		return 0;
-	}
-
-	case WM_KEYUP:
-	{
-		Int virtKey = Int(wParam);
-		UInt state = Application::BUTTON_RELEASE;
-
-		switch (virtKey)
-		{
-		case VK_LEFT:
-		{
-			pApp->OnButton(Application::BUTTON_LEFT, state);
- 			return 0;
-		}
-		case VK_RIGHT:
-		{
-			pApp->OnButton(Application::BUTTON_RIGHT, state);
-			return 0;
-		}
-		case VK_UP:
-		{
-			pApp->OnButton(Application::BUTTON_UP, state);
-			return 0;
-		}
-		case VK_DOWN:
-		{
-			pApp->OnButton(Application::BUTTON_DOWN, state);
-			return 0;
-		}
-		case '1':
-		{
-			pApp->OnButton(Application::BUTTON_1, state);
-			return 0;
-		}
-		case '2':
-		{
-			pApp->OnButton(Application::BUTTON_2, state);
-			return 0;
-		}
-		}
-
 		return 0;
 	}
 
@@ -250,12 +133,9 @@ Int Dx9Application::GetWindowID() const
 {
 	return mWindowID;
 }
-
 //----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {
-	s_pApplication->KEY_TERMINATE = Application::KEY_ESCAPE;
-
 	// allow work to be done before the window and renderer is created
 	if (!s_pApplication->OnPrecreate())
 	{
@@ -265,35 +145,44 @@ Int Dx9Application::Main(Int, Char*[])
 	// register the window class
 	static Char s_WindowClass[] = "Wire Application";
 	WNDCLASS wc;
-	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc   = WireMsWindowEventHandler;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = 0;
-	wc.hIcon         = LoadIcon(0,IDI_APPLICATION);
-	wc.hCursor       = LoadCursor(0,IDC_ARROW);
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.lpfnWndProc = WireMsWindowEventHandler;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = 0;
+	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH));
 	wc.lpszClassName = s_WindowClass;
-	wc.lpszMenuName  = 0;
+	wc.lpszMenuName = 0;
 	RegisterClass(&wc);
 
 	// require the window to have the specified client area
-	RECT rect = { 0, 0, mWidth-1, mHeight-1 };
+	RECT rect =
+	{ 0, 0, mWidth - 1, mHeight - 1 };
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	// create the application window
 	HWND hWnd = CreateWindow(s_WindowClass, mpWindowTitle,
-		WS_OVERLAPPEDWINDOW, mXPosition, mYPosition,
-		rect.right-rect.left+1, rect.bottom-rect.top+1, 0, 0, 0, 0);
+			WS_OVERLAPPEDWINDOW, mXPosition, mYPosition,
+			rect.right-rect.left+1, rect.bottom-rect.top+1, 0, 0, 0, 0);
 
 	mWindowID = PtrToInt(hWnd);
+
+	// hide mouse pointer
+	UChar and[1] = { 0xFF };
+	UChar xor[1] = { 0x00 };
+	HCURSOR hCursor = CreateCursor(0, 0, 0, 1, 1, &and, &xor);
+	SetClassLong(hWnd, GCL_HCURSOR, PtrToLong(hCursor));
+	SetCursor(hCursor);
 
 	PdrRendererInput input;
 	input.WindowHandle = hWnd;
 
-	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen,
-		mUseVSync);
+	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen, mUseVSync);
 	mpRenderer->SetClearColor(mBackgroundColor);
+
+	mpInputSystem = WIRE_NEW Win32InputSystem();
 
 	if (s_pApplication->OnInitialize())
 	{
@@ -301,16 +190,22 @@ Int Dx9Application::Main(Int, Char*[])
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 
+		// first attempt to discover input devices
+		if (mpInputSystem->DiscoverDevices())
+		{
+			s_pApplication->OnInputDevicesChange();
+		}
+
+		mIsRunning = true;
 		// start the message pump
-		Bool isApplicationRunning = true;
-		while (isApplicationRunning)
+		while (mIsRunning)
 		{
 			MSG msg;
 			if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
 				{
-					isApplicationRunning = false;
+					mIsRunning = false;
 					continue;
 				}
 
@@ -323,33 +218,21 @@ Int Dx9Application::Main(Int, Char*[])
 			}
 			else
 			{
+				mpInputSystem->Capture();
+				s_pApplication->OnInput();
+
 				s_pApplication->OnIdle();
+
+				// new attempt to discover input devices
+				if (mpInputSystem->DiscoverDevices())
+				{
+					s_pApplication->OnInputDevicesChange();
+				}
 			}
 		}
 	}
 
 	s_pApplication->OnTerminate();
+
 	return 0;
-}
-
-//----------------------------------------------------------------------------
-Bool Dx9Application::OnPrecreate()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-Bool Dx9Application::OnInitialize()
-{
-	return true;
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::OnTerminate()
-{
-}
-
-//----------------------------------------------------------------------------
-void Dx9Application::OnIdle()
-{
 }
