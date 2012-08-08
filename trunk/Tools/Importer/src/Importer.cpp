@@ -1,5 +1,6 @@
 #include "Importer.h"
 
+#include "BulletUtils.h"
 #include "PicoPNG.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -18,8 +19,6 @@
 #include "WireStateZBuffer.h"
 #include "WireTStack.h"
 #include "WireVertexAttributes.h"
-
-#include "BulletUtils.h"
 
 using namespace Wire;
 
@@ -412,6 +411,17 @@ void Importer::ResetStatistics()
 //----------------------------------------------------------------------------
 void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
+	if (Is("Skybox", pXmlNode->name()))
+	{
+		NodeSkybox* pSkybox = ParseSkybox(pXmlNode);
+		if (pSkybox)
+		{
+			pParent->AttachChild(pSkybox);
+		}
+
+		return;
+	}
+
 	if (Is("Text", pXmlNode->name()))
 	{
 		Text* pText = ParseText(pXmlNode);
@@ -440,12 +450,13 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
 		{
 			ParseComponents(pChild, pNode);
 
 			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()) ||
-				Is("Text", pChild->name()))
+				Is("Text", pChild->name()) || Is("Skybox", pChild->name()))
 			{
 				Traverse(pChild, pNode);
 			}
@@ -456,7 +467,8 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 //----------------------------------------------------------------------------
 Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
 		if (Is(pName, attr->name()))
 		{
@@ -470,7 +482,8 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
 		if (Is(pName, attr->name()))
 		{
@@ -484,7 +497,8 @@ Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
 		if (Is("LittleEndian", attr->name()))
 		{
@@ -505,7 +519,8 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
 		if (Is("Usage", attr->name()))
 		{
@@ -562,7 +577,8 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
-ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue)
+ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName, Bool& rHasValue)
 {
 	ColorRGB c = ColorRGB::WHITE;
 	rHasValue = false;
@@ -579,7 +595,8 @@ ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName
 }
 
 //----------------------------------------------------------------------------
-ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue)
+ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName, Bool& rHasValue)
 {
 	ColorRGBA c = ColorRGBA::WHITE;
 	rHasValue = false;
@@ -629,7 +646,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		Vector3F center = Vector3F::ZERO;
 		Vector3F size = Vector3F::ONE;
 
-		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
+			attr; attr = attr->next_attribute())
 		{
 			if (Is("Center", attr->name()))
 			{
@@ -759,7 +777,8 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
+	pSpatial)
 {
 	Vector3F t = Vector3F::ZERO;
 	QuaternionF r = QuaternionF::IDENTITY;
@@ -850,7 +869,8 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild; pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
 		{
 			if (Is("Mesh", pChild->name()))
 			{
@@ -983,7 +1003,58 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+NodeSkybox* Importer::ParseSkybox(rapidxml::xml_node<>* pXmlNode)
+{
+	String filename = String(mpPath) + String(GetValue(pXmlNode, "PosZ"));
+	Image2D* pSkyboxPosZ = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxPosZ);
+
+	filename = String(mpPath) + String(GetValue(pXmlNode, "NegZ"));
+	Image2D* pSkyboxNegZ = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxNegZ);
+
+	filename = String(mpPath) + String(GetValue(pXmlNode, "PosX"));
+	Image2D* pSkyboxPosX = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxPosX);
+
+	filename = String(mpPath) + String(GetValue(pXmlNode, "NegX"));
+	Image2D* pSkyboxNegX = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxNegX);
+
+	filename = String(mpPath) + String(GetValue(pXmlNode, "PosY"));
+	Image2D* pSkyboxPosY = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxPosY);
+
+	filename = String(mpPath) + String(GetValue(pXmlNode, "NegY"));
+	Image2D* pSkyboxNegY = LoadPNG(filename, false);
+	WIRE_ASSERT(pSkyboxNegY);
+
+	if (!(pSkyboxPosZ && pSkyboxNegZ && pSkyboxPosX && pSkyboxNegX &&
+		pSkyboxPosY && pSkyboxNegY))
+	{
+		return NULL;
+	}
+
+	Float scale = 1.0f;
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (Is("Scale", attr->name()))
+		{
+			Int n;
+			n = sscanf(attr->value(), "%f", &scale);
+			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+		}
+	}
+
+	NodeSkybox* pSkyBox = WIRE_NEW NodeSkybox(pSkyboxPosZ, pSkyboxNegZ,
+		pSkyboxPosX, pSkyboxNegX, pSkyboxPosY, pSkyboxNegY, scale);
+	return pSkyBox;
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
+	pSpatial)
 {
 	State* pState = ParseRenderStates(pXmlNode);
 	if (pState)
@@ -1005,13 +1076,15 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
+	Spatial* pSpatial)
 {
 	ParseTransformation(pXmlNode, pSpatial);
 
 	if (pXmlNode->first_node())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
 		{
 			ParseComponents(pChild, pSpatial);
 		}
@@ -1257,7 +1330,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 	Buffer::UsageType vertexBufferUsage = Buffer::UT_STATIC;
 	Buffer::UsageType indexBufferUsage = Buffer::UT_STATIC;
 
-	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;	pChild = pChild->next_sibling())
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
 	{
 		if (!pVerticesFileName && Is("Vertices", pChild->name()))
 		{
@@ -1298,12 +1372,13 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	VertexBuffer* pVertexBuffer = LoadVertexBufferFromFiles(pVerticesFileName, isVertexBufferBigEndian, vertexBufferUsage, 
-		pNormalsFileName, isNormalsBigEndian, 
-		pColorsFileName, isColorsBigEndian, 
-		uvSetNames, uvBigEndian);
+	VertexBuffer* pVertexBuffer = LoadVertexBufferFromFiles(pVerticesFileName,
+		isVertexBufferBigEndian, vertexBufferUsage, pNormalsFileName,
+		isNormalsBigEndian, pColorsFileName, isColorsBigEndian, uvSetNames,
+		uvBigEndian);
 
-	IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(pIndicesFileName, isIndexBufferBigEndian, indexBufferUsage);
+	IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(pIndicesFileName,
+		isIndexBufferBigEndian, indexBufferUsage);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mMeshes.Insert(pName, pMesh);
@@ -1404,7 +1479,8 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode)
+Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
+	Material::BlendMode& blendMode)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
@@ -1425,7 +1501,8 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::Blen
 	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
 	UInt anisoLevel = 0;
 
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr; attr = attr->next_attribute())
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
 	{
 		if (Is("Mipmaps", attr->name()))
 		{
@@ -1511,7 +1588,8 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::Blen
 }
 
 //----------------------------------------------------------------------------
-void Importer::InitializeStaticSpatials(TArray<Spatial*>& rSpatials, Bool prepareForStaticBatching)
+void Importer::InitializeStaticSpatials(TArray<Spatial*>& rSpatials,
+	Bool prepareForStaticBatching)
 {
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
 	{
@@ -1530,7 +1608,8 @@ void Importer::InitializeStaticSpatials(TArray<Spatial*>& rSpatials, Bool prepar
 }
 
 //----------------------------------------------------------------------------
-void Importer::RegisterColliders(TArray<Collider*>& rColliders, btDynamicsWorld* pPhysicsWorld)
+void Importer::RegisterColliders(TArray<Collider*>& rColliders,
+	btDynamicsWorld* pPhysicsWorld)
 {
 	for (UInt i = 0; i < rColliders.GetQuantity(); i++)
 	{
@@ -1547,10 +1626,10 @@ Bool Importer::Is(const Char* pSrc, const Char* pDst)
 }
 
 //----------------------------------------------------------------------------
-VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian, Buffer::UsageType vertexBufferUsage, 
-	Char* pNormalsName, Bool isNormalsBigEndian, 
-	Char* pColorsName, Bool isColorsBigEndian, 
-	TArray<Char*> &uvSetNames, TArray<Bool> uvBigEndian)
+VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
+	isVertexBufferBigEndian, Buffer::UsageType vertexBufferUsage, 
+	Char* pNormalsName, Bool isNormalsBigEndian, Char* pColorsName, Bool
+	isColorsBigEndian, TArray<Char*>& rUvSetNames, TArray<Bool>& rUvBigEndian)
 {
 	VertexAttributes vertexAttributes;
 	vertexAttributes.SetPositionChannels(3);
@@ -1586,12 +1665,12 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool isVertex
 		}
 	}
 
-	TArray<Float*> uvSets(uvSetNames.GetQuantity());
-	TArray<Int> uvSetSizes(uvSetNames.GetQuantity());
-	for (UInt i = 0; i < uvSetNames.GetQuantity(); i++)
+	TArray<Float*> uvSets(rUvSetNames.GetQuantity());
+	TArray<Int> uvSetSizes(rUvSetNames.GetQuantity());
+	for (UInt i = 0; i < rUvSetNames.GetQuantity(); i++)
 	{
 		uvSetSizes.Append(0);
-		uvSets.Append(Load32(uvSetNames[i], uvSetSizes[i], uvBigEndian[i]));
+		uvSets.Append(Load32(rUvSetNames[i], uvSetSizes[i], rUvBigEndian[i]));
 		vertexAttributes.SetTCoordChannels(2, i);
 		if (verticesSize / (3 * sizeof(Float)) != uvSetSizes[i] / (2 * sizeof(Float)))
 		{
@@ -1603,7 +1682,8 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool isVertex
 		}	
 	}
 
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(vertexAttributes, verticesSize / (3 * sizeof(Float)), vertexBufferUsage);
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(vertexAttributes,
+		verticesSize / (3 * sizeof(Float)), vertexBufferUsage);
 	mStatistics.VertexBufferCount++;
 
 	Float* pTempVertices = pVertices;
@@ -1659,11 +1739,14 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool isVertex
 }
 
 //----------------------------------------------------------------------------
-IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage)
+IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool
+	isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage)
 {
 	Int indicesSize;
-	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pFileName, indicesSize, isIndexBufferBigEndian));
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize / sizeof(UInt), indexBufferUsage);
+	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pFileName, indicesSize,
+		isIndexBufferBigEndian));
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize/sizeof(UInt),
+		indexBufferUsage);
 	mStatistics.IndexBufferCount++;
 	for (UInt i = 0; i < indicesSize/sizeof(UInt); i++)
 	{

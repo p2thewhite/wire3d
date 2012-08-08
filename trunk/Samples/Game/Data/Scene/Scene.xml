@@ -404,4 +404,5 @@
   </Node>
   <Node Name="StartingPosition" Pos="0, 6.5, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
   </Node>
+  <Skybox Name="Skybox" PosZ="SkyboxFront.png" NegZ="SkyboxBack.png" PosX="SkyboxRight.png" NegX="SkyboxLeft.png" PosY="SkyboxTop.png" NegY="SkyboxBottom.png" Scale="100"/>
 </Node>
