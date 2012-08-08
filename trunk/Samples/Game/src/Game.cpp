@@ -1,15 +1,7 @@
-#include "FirstPersonShooterGame.h"
+#include "Game.h"
 
 #include "MaterialFader.h"
-#include "WireInputSystem.h"
-#include "WireAnalogPad.h"
-#include "WireDigitalPad.h"
-#include "WireIR.h"
-#include "WireButtons.h"
-
 #include "CollisionShapeToGeometryConverter.h"
-
-using namespace Wire;
 
 WIRE_APPLICATION(FirstPersonShooterGame);
 

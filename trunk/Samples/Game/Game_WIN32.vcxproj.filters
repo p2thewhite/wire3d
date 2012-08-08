@@ -2,20 +2,17 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{e8f44db4-dd33-4be1-98ee-6366ff6e9cc2}</UniqueIdentifier>
+      <UniqueIdentifier>{95e65c9a-4334-4e99-812f-5ceee5bf0a09}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{b672413d-79bc-4f13-8b89-39568b340ecf}</UniqueIdentifier>
+      <UniqueIdentifier>{b947fcdf-a02e-4bde-b090-85be96536e08}</UniqueIdentifier>
     </Filter>
     <Filter Include="Inline Files">
-      <UniqueIdentifier>{1493315e-f73a-414a-a030-207a249564c1}</UniqueIdentifier>
+      <UniqueIdentifier>{b1454a7a-8b68-45e0-9c98-df20c8d84bbe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\FirstPersonController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPersonShooterGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MaterialFader.h">
@@ -24,18 +21,21 @@
     <ClInclude Include="src\CollisionShapeToGeometryConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FirstPersonController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstPersonShooterGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\MaterialFader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\CollisionShapeToGeometryConverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
