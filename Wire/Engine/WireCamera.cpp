@@ -146,3 +146,40 @@ void Camera::GetViewport(Float& rLeft, Float& rRight, Float& rTop,
 	rTop = mPortTop;
 	rBottom = mPortBottom;
 }
+
+//----------------------------------------------------------------------------
+Matrix4F Camera::GetProjectionMatrix() const
+{
+	Float n = mFrustum[0];
+	Float f = mFrustum[1];
+	Float b = mFrustum[2];
+	Float t = mFrustum[3];
+	Float l = mFrustum[4];
+	Float r = mFrustum[5];
+	return Matrix4F(2 * n / (r - l),	0,					(r + l) / (r - l),		0,
+		            0,					2 * n / (t - b),	(t + b) / (t - b),		0,
+					0,					0,					-(f + n) / (f - n),		-(2 * n * f) / (f - n),
+					0,					0,					-1,						0 );
+}
+
+//----------------------------------------------------------------------------
+Matrix4F Camera::GetViewMatrix() const
+{
+	return Matrix4F(mRVector.X(), mUVector.X(), mDVector.X(),	0,
+					mRVector.Y(), mUVector.Y(), mDVector.Y(),	0,
+					mRVector.Z(), mUVector.Z(), mDVector.Z(),	0,
+					0,			  0,			0,				1);
+}
+
+//----------------------------------------------------------------------------
+Vector3F Camera::ScreenToWorldPoint(const Vector2F& rScreenPoint) const
+{
+	Vector4F worldPoint = (GetProjectionMatrix() * GetViewMatrix()).Inverse() * Vector4F(rScreenPoint.X(), rScreenPoint.Y(), 0, 1);
+	return Vector3F(worldPoint.X(), worldPoint.Y(), worldPoint.Z());
+}
+
+//----------------------------------------------------------------------------
+void Camera::LookAtScreenPoint(const Vector2F& rScreenPoint)
+{
+	LookAt(mLocation, ScreenToWorldPoint(rScreenPoint), mUVector);
+}

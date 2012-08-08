@@ -15,6 +15,15 @@ inline void Object::IncrementReferences()
 }
 
 //----------------------------------------------------------------------------
+inline void Object::DecrementReferences()
+{
+	if (--mReferences == 0)
+	{
+		WIRE_DELETE this;
+	}
+}
+
+//----------------------------------------------------------------------------
 inline Int Object::GetReferences() const
 {
 	return mReferences;

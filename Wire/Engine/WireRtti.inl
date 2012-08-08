@@ -17,3 +17,9 @@ inline Bool Rtti::IsExactly(const Rtti& rType) const
 {
 	return &rType == this;
 }
+
+//----------------------------------------------------------------------------
+inline const Rtti* Rtti::GetBaseType() const
+{
+	return mpBaseType;
+}

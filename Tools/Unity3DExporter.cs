@@ -11,11 +11,13 @@ public class Unity3DExporter : EditorWindow
     private bool mExportStateMaterial;
     private bool mIgnoreUnderscore;
 	private bool mExportXmlOnly;
+	private bool mPreventRepeatedNodeNames;
 	private string m2ndTextureName;
 
     private string mPath;
     private List<string> mMeshAssetsProcessed;
     private List<string> mTextureAssetsProcessed;
+	private Dictionary<string, int> mNodeNameCounter;
 
     [MenuItem("Wire3D/Exporter")]
     protected static void CreateWizard()
@@ -40,7 +42,7 @@ public class Unity3DExporter : EditorWindow
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.LookLikeControls();
-        mPath = EditorGUILayout.TextField("Save to:", mPath ?? string.Empty);
+        mPath = EditorGUILayout.TextField("Save to directory:", mPath ?? string.Empty);
         EditorGUILayout.EndHorizontal();
 
         bool dirExists = Directory.Exists(mPath);
@@ -49,14 +51,24 @@ public class Unity3DExporter : EditorWindow
         {
             GUILayout.Label("Specified path '" + mPath + "' does not exist.");
         }
+		
+		// ---
+		GUILayout.Space(10);
 
         mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, "Try to export Material State (i.e. Main Color)");
         mIgnoreUnderscore = GUILayout.Toggle(mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
         mExportXmlOnly = GUILayout.Toggle(mExportXmlOnly, "Export scene XML only");
-
-        GUILayout.Label("Property name of");
-        m2ndTextureName = EditorGUILayout.TextField("2nd Texture:", m2ndTextureName ?? string.Empty);
-
+		mPreventRepeatedNodeNames = GUILayout.Toggle(mPreventRepeatedNodeNames, "Prevent repeated node names");
+		
+		// ---
+		GUILayout.Space(10);
+		
+        GUILayout.Label("Use property names:");
+        m2ndTextureName = EditorGUILayout.TextField("- 2nd Texture ", m2ndTextureName ?? string.Empty);
+		
+		// ---
+		GUILayout.Space(20);
+		
         if (dirExists && !string.IsNullOrEmpty(mPath))
         {
             if (GUILayout.Button("Export"))
@@ -71,7 +83,39 @@ public class Unity3DExporter : EditorWindow
                 Export();
             }
         }
+		
+		if (mPreventRepeatedNodeNames)
+		{
+			mNodeNameCounter = new Dictionary<string, int>();
+		}
     }
+	
+	private string GetNodeName(GameObject gameObject)
+	{
+		string nodeName = gameObject.name;
+		
+		if (!mPreventRepeatedNodeNames) return nodeName;
+				
+		int nameUsageCount;
+		if (mNodeNameCounter.ContainsKey(nodeName))
+		{
+			 nameUsageCount = mNodeNameCounter[nodeName];
+		}
+		else
+		{
+			nameUsageCount = 0;
+		}
+		
+		mNodeNameCounter[nodeName] = ++nameUsageCount;
+		
+		if (nameUsageCount > 1)
+		{
+			return nodeName + nameUsageCount;
+		}
+		else {
+			return nodeName;
+		}
+	}
 
     private void Export()
     {
@@ -89,229 +133,292 @@ public class Unity3DExporter : EditorWindow
             }
         }
         
-        StreamWriter outfile = new StreamWriter(mPath + unitySceneName + ".xml");
+		StreamWriter outFile = new StreamWriter(mPath + unitySceneName + ".xml");
+		try 
+		{
+	        List<Transform> allTransforms = new List<Transform>(FindObjectsOfType(typeof (Transform)) as Transform[]);
 	
-        List<Transform> allTrafos = new List<Transform>(FindObjectsOfType(typeof (Transform)) as Transform[]);
-
-        List<Transform> rootTrafos = allTrafos.Where(t => t.parent == null).ToList();
-        rootTrafos = (from s in rootTrafos orderby s.name select s).ToList();
-
-        GameObject root = new GameObject("Root");
-        outfile.WriteLine("<Node Name=\"" + root.name + "\" " + GetTransform(root.transform) + ">");
-        string indent = "  ";
-
-        foreach (Transform t in rootTrafos)
-        {
-            Traverse(t, outfile, indent);
-        }
-
-        DestroyImmediate(root);
-        outfile.WriteLine("</Node>");
-        outfile.Close();
+	        List<Transform> rootTransforms = allTransforms.Where(t => t.parent == null).ToList();
+	        rootTransforms = (from s in rootTransforms orderby s.name select s).ToList();
+	
+	        GameObject root = new GameObject("Root");
+	        outFile.WriteLine("<Node Name=\"" + GetNodeName(root) + "\" " + GetTransform(root.transform) + ">");
+	        string indent = "  ";
+	
+	        foreach (Transform transform in rootTransforms)
+	        {
+	            Traverse(transform, outFile, indent);
+	        }
+	
+	        DestroyImmediate(root);
+			
+	        outFile.WriteLine("</Node>");
+		} 
+		finally
+		{
+        	outFile.Close();
+		}
     }
 
-    private void Traverse(Transform t, StreamWriter outfile, string indent)
+    private void Traverse(Transform transform, StreamWriter outFile, string indent)
     {
-        if (mIgnoreUnderscore && t.gameObject.name.StartsWith("_"))
+        if (mIgnoreUnderscore && transform.gameObject.name.StartsWith("_"))
         {
             return;
         }
 
-        GameObject go = t.gameObject;
-        MeshFilter mf = go.GetComponent<MeshFilter>();
-        MeshRenderer mr = go.GetComponent<MeshRenderer>();
+        GameObject gameObject = transform.gameObject;
+        MeshFilter meshFilter = gameObject.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
       
-        if ((mf != null) && (mr != null) && t.GetChildCount() == 0)
+        if ((meshFilter != null) && (meshRenderer != null) && transform.GetChildCount() == 0)
         {
-            WriteLeaf(t, outfile, indent);
-            return;
-        }
-
-        outfile.WriteLine(indent + "<Node Name=\"" + t.gameObject.name + "\" " + GetTransform(t) + ">");
-
-        WriteCamera(t.gameObject, outfile, indent);
-        WriteLight(t.gameObject, outfile, indent);
-
-        if (t.GetChildCount() > 0)
-        {
-            if ((mf != null) && (mr != null))
-            {
-                WriteLeaf(t, outfile, indent + "  ", false);
-            }
-
-            for (int i = 0; i < t.GetChildCount(); i++)
-            {
-                Traverse(t.GetChild(i), outfile, indent + "  ");
-            }
-        }
-
-        outfile.WriteLine(indent + "</Node>");
+            WriteLeaf(transform, outFile, indent);
+        } 
+		else 
+		{
+			WriteNonVisibleNode (transform, outFile, indent, meshFilter, meshRenderer);
+		}
     }
 
-    private string GetTransform(Transform t)
+    private string GetTransform(Transform transform)
     {
-        Vector3 pos = t.localPosition;
-        Quaternion rot = t.localRotation;
-        Vector3 scale = t.localScale;
-        return "Pos=\"" + (-pos.x) + ", " + pos.y + ", " + pos.z + "\" " +
-            "Rot=\"" + rot.w + ", " + rot.x + ", " + (-rot.y) + ", " + (-rot.z) + "\" " +
-            "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
+        Vector3 position = transform.localPosition;
+        Quaternion rotation = transform.localRotation;
+        Vector3 scale = transform.localScale;
+		
+        return "Pos=\"" + (-position.x) + ", " + position.y + ", " + position.z + "\" " +
+               "Rot=\"" + rotation.w + ", " + rotation.x + ", " + (-rotation.y) + ", " + (-rotation.z) + "\" " +
+               "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
     }
 
-    private void WriteLight(GameObject go, StreamWriter outfile, string indent)
+    private void WriteLight(GameObject gameObject, StreamWriter outFile, string indent)
     {
-        Light light = go.GetComponent<Light>();
+        Light light = gameObject.GetComponent<Light>();
+		
         if (light == null)
         {
             return;
         }
 
-		Color amb = RenderSettings.ambientLight;
-		Color col = light.color * light.intensity; 
-        outfile.WriteLine(indent + "  " + "<Light Type=\"" + light.type +
-			"\" Ambient=\"" + amb.r + ", " + amb.g + ", " + amb.b +
-			"\" Color=\"" +	col.r + ", " + col.g + ", " + col.b + "\" />");
+		Color ambient = RenderSettings.ambientLight;
+		Color color = light.color * light.intensity; 
+		
+        outFile.WriteLine(indent + "  " + "<Light Type=\"" + light.type +
+			"\" Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
+			"\" Color=\"" +	color.r + ", " + color.g + ", " + color.b + "\" />");
+    }
+	
+	private void WriteCollider(GameObject gameObject, StreamWriter outFile, string indent)
+    {
+        Collider collider = gameObject.GetComponent<Collider>();
+		
+        if (collider == null)
+        {
+            return;
+        }
+		
+		string shape = GetColliderShapeName(collider);
+		
+		// collider element start
+		outFile.Write(indent + "  " + "<Collider Shape=\"" + shape + "\" ");
+		
+		if (collider is BoxCollider)
+		{
+			WriteBoxColliderAttributes(collider as BoxCollider, outFile, indent);
+		}
+		else
+		{
+			Debug.Log("Collider shape not supported yet: '" + shape + "'.");
+		}
+		
+		// collider element end
+		outFile.Write(" />\n");
+    }
+	
+	private string GetColliderShapeName(Collider collider)
+	{
+		string typeName = collider.GetType().Name;
+		return typeName.Replace("Collider", "");
+	}
+	
+	private void WriteBoxColliderAttributes(BoxCollider boxCollider, StreamWriter outFile, string indent)
+    {
+		bool isTrigger = boxCollider.isTrigger;
+		Vector3 center = boxCollider.center;
+		Vector3 size = boxCollider.size;
+		
+		outFile.Write("IsTrigger=\"" + isTrigger + "\" Center=\"" + center.x + ", " + center.y + ", " + center.z +
+			"\" Size=\"" +	size.x + ", " + size.y + ", " + size.z + "\"");
     }
     
-    private void WriteCamera(GameObject go, StreamWriter outfile, string indent)
+    private void WriteCamera(GameObject gameObject, StreamWriter outFile, string indent)
     {
-        Camera cam = go.GetComponent<Camera>();
-        if (cam == null)
+        Camera camera = gameObject.GetComponent<Camera>();
+		
+        if (camera == null)
         {
             return;
         }
 
-        float fov = cam.fieldOfView;
-        if (cam.orthographic)
+        float fieldOfView = camera.fieldOfView;
+        if (camera.orthographic)
         {
-            fov = 0;
+            fieldOfView = 0;
         }
 
-        outfile.WriteLine(indent + "  " + "<Camera Fov=\"" + fov + "\" Near=\"" +
-            cam.nearClipPlane + "\" Far=\"" + cam.farClipPlane + "\" />");
+        outFile.WriteLine(indent + "  " + "<Camera Fov=\"" + fieldOfView + "\" Near=\"" +
+            camera.nearClipPlane + "\" Far=\"" + camera.farClipPlane + "\" />");
     }
 
-    private void WriteLeaf(Transform t, StreamWriter outfile, string indent,
-		bool writeComponents = true)
+    private void WriteLeaf(Transform transform, StreamWriter outFile, string indent, bool writeComponents = true)
     {
-        MeshFilter mf = t.gameObject.GetComponent<MeshFilter>();
-        MeshRenderer mr = t.gameObject.GetComponent<MeshRenderer>();
-        if ((mr == null) || (mf == null))
+        MeshFilter meshFilter = transform.gameObject.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = transform.gameObject.GetComponent<MeshRenderer>();
+		
+        if ((meshRenderer == null) || (meshFilter == null))
         {
             return;
         }
 
-        string isStatic = " Static=\"" + (t.gameObject.isStatic ? "1" : "0") + "\"";
-        outfile.WriteLine(indent + "<Leaf Name=\"" + t.gameObject.name + "\" " + GetTransform(t) + isStatic + ">");
+        string isStatic = " Static=\"" + (transform.gameObject.isStatic ? "1" : "0") + "\"";
+        outFile.WriteLine(indent + "<Leaf Name=\"" + GetNodeName(transform.gameObject) + "\" " + GetTransform(transform) + isStatic + ">");
 
 		if (writeComponents)
 		{
-			WriteCamera(t.gameObject, outfile, indent);
-			WriteLight(t.gameObject, outfile, indent);
+			WriteCamera(transform.gameObject, outFile, indent);
+			WriteLight(transform.gameObject, outFile, indent);
+			WriteCollider(transform.gameObject, outFile, indent);
 		}
 		
-        WriteMesh(mf.sharedMesh, outfile, indent + "  ", mr.lightmapTilingOffset);
-        WriteMaterial(mr, outfile, indent + "  ");
-        outfile.WriteLine(indent + "</Leaf>");       
+        WriteMesh(meshFilter.sharedMesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
+        WriteMaterial(meshRenderer, outFile, indent + "  ");
+		
+        outFile.WriteLine(indent + "</Leaf>");       
     }
+	
+	private void WriteNonVisibleNode (Transform transform, StreamWriter outFile, string indent, MeshFilter meshFilter, MeshRenderer meshRenderer)
+	{
+		outFile.WriteLine(indent + "<Node Name=\"" + GetNodeName(transform.gameObject) + "\" " + GetTransform(transform) + ">");
+    	
+    	WriteCamera(transform.gameObject, outFile, indent);
+    	WriteLight(transform.gameObject, outFile, indent);
+		WriteCollider(transform.gameObject, outFile, indent);
+    	
+    	if (transform.GetChildCount() > 0)
+    	{
+    	    if ((meshFilter != null) && (meshRenderer != null))
+    	    {
+    	        WriteLeaf(transform, outFile, indent + "  ", false);
+    	    }
+    	
+    	    for (int i = 0; i < transform.GetChildCount(); i++)
+    	    {
+    	        Traverse(transform.GetChild(i), outFile, indent + "  ");
+    	    }
+    	}
+    	
+    	outFile.WriteLine(indent + "</Node>");
+	}
 
-    private void WriteMaterial(MeshRenderer mr, StreamWriter outfile, string indent)
+    private void WriteMaterial(MeshRenderer meshRenderer, StreamWriter outFile, string indent)
     {
-        Material m = mr.sharedMaterial;
-        if (m == null)
+        Material material = meshRenderer.sharedMaterial;
+        if (material == null)
         {
             return;
         }
 
         string lightMapIndex = string.Empty;
-        if (mr.lightmapIndex != -1)
+        if (meshRenderer.lightmapIndex != -1)
         {
-            lightMapIndex = "_" + mr.lightmapIndex;
+            lightMapIndex = "_" + meshRenderer.lightmapIndex;
         }
 
-        outfile.WriteLine(indent + "<Material Name=\"" + m.name + lightMapIndex + "\">");      
+        outFile.WriteLine(indent + "<Material Name=\"" + material.name + lightMapIndex + "\">");      
 
-        Texture2D tex = m.mainTexture as Texture2D;
-        WriteTexture(tex, outfile, indent);
+        Texture2D texture = material.mainTexture as Texture2D;
+        WriteTexture(texture, outFile, indent);
 
-        if (!string.IsNullOrEmpty(m2ndTextureName) && m.HasProperty(m2ndTextureName))
+        if (!string.IsNullOrEmpty(m2ndTextureName) && material.HasProperty(m2ndTextureName))
         {
-            Texture2D tex2 = m.GetTexture(m2ndTextureName) as Texture2D;
-            WriteTexture(tex2, outfile, indent);
+            Texture2D _2ndTexture = material.GetTexture(m2ndTextureName) as Texture2D;
+            WriteTexture(_2ndTexture, outFile, indent);
         }
 
-        if (mr.lightmapIndex != -1 && mr.lightmapIndex != 254)
+        if (meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254)
         {
-            Texture2D lightmap = LightmapSettings.lightmaps[mr.lightmapIndex].lightmapFar;
-            WriteTexture(lightmap, outfile, indent, true);               
+            Texture2D lightmap = LightmapSettings.lightmaps[meshRenderer.lightmapIndex].lightmapFar;
+            WriteTexture(lightmap, outFile, indent, true);               
         }
 
-        WriteMaterialState(m, outfile, indent);
+        WriteMaterialState(material, outFile, indent);
 
-        outfile.WriteLine(indent + "</Material>");
+        outFile.WriteLine(indent + "</Material>");
     }
 
-    private void WriteMaterialState(Material m, StreamWriter outfile, string indent)
+    private void WriteMaterialState(Material materialState, StreamWriter outFile, string indent)
     {
         if (mExportStateMaterial == false)
         {
             return;
         }
 
-        if (m.HasProperty("_Color"))
+        if (materialState.HasProperty("_Color"))
         {
-            Color c = m.GetColor("_Color");
-            outfile.WriteLine(indent + "  " + "<MaterialState Ambient=\"" +
-                c.r + ", " + c.g + ", " + c.b + ", " + c.a + "\" />");
+            Color color = materialState.GetColor("_Color");
+			
+            outFile.WriteLine(indent + "  " + "<MaterialState Ambient=\"" +
+                color.r + ", " + color.g + ", " + color.b + ", " + color.a + "\" />");
         }
     }
 
-    private void WriteTexture(Texture2D tex, StreamWriter outfile, string indent, bool isLightmap = false)
+    private void WriteTexture(Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false)
     {
-        if (tex == null)
+        if (texture == null)
         {
             return;
         }
 
-        string texName = tex.name + "_" + tex.GetInstanceID().ToString("X8") + ".png";
-        outfile.WriteLine(indent + "  <Texture Name=\"" + texName + 
-            "\" FilterMode=\"" + tex.filterMode + "\" AnisoLevel=\"" + tex.anisoLevel +
-            "\" WrapMode=\"" + tex.wrapMode + "\" Mipmaps=\"" + tex.mipmapCount + "\" />");
+        string texName = texture.name + "_" + texture.GetInstanceID().ToString("X8") + ".png";
+        outFile.WriteLine(indent + "  <Texture Name=\"" + texName + 
+            "\" FilterMode=\"" + texture.filterMode + "\" AnisoLevel=\"" + texture.anisoLevel +
+            "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + texture.mipmapCount + "\" />");
 		
 		if (mExportXmlOnly)
 		{
 			return;
 		}
 		
-        string assetPath = AssetDatabase.GetAssetPath(tex);
-        TextureImporter ti = AssetImporter.GetAtPath(assetPath) as TextureImporter;
-        if (ti == null)
+        string assetPath = AssetDatabase.GetAssetPath(texture);
+        TextureImporter textureImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+        if (textureImporter == null)
         {
-            Debug.Log("Error getting TextureImporter for '" + tex.name + "'");
+            Debug.Log("Error getting TextureImporter for '" + texture.name + "'");
             return;
         }
 
-        bool wasReadable = ti.isReadable;
-        TextureImporterFormat wasFormat = ti.textureFormat;
+        bool wasReadable = textureImporter.isReadable;
+        TextureImporterFormat wasFormat = textureImporter.textureFormat;
 
         bool needsReimport = false;
 
         if (wasReadable == false)
         {
             needsReimport = true;
-            ti.isReadable = true;
+            textureImporter.isReadable = true;
         }
 
-        if (tex.format == TextureFormat.DXT1)
+        if (texture.format == TextureFormat.DXT1)
         {
             needsReimport = true;
-            ti.textureFormat = TextureImporterFormat.RGB24;
+            textureImporter.textureFormat = TextureImporterFormat.RGB24;
         }
 
-        if (tex.format == TextureFormat.DXT5 || tex.format == TextureFormat.RGBA32)
+        if (texture.format == TextureFormat.DXT5 || texture.format == TextureFormat.RGBA32)
         {
             needsReimport = true;
-            ti.textureFormat = TextureImporterFormat.ARGB32;
+            textureImporter.textureFormat = TextureImporterFormat.ARGB32;
         }
 
         bool alreadyProcessed = false;
@@ -333,16 +440,16 @@ public class Unity3DExporter : EditorWindow
         {
             if (!isLightmap)
             {
-                Byte[] bytes = tex.EncodeToPNG();
+                Byte[] bytes = texture.EncodeToPNG();
                 File.WriteAllBytes(mPath + "/" + texName, bytes);
             }
             else
             {                  
-                if (tex.format == TextureFormat.ARGB32)
+                if (texture.format == TextureFormat.ARGB32)
                 {
-                    Color32[] texSrc = tex.GetPixels32();
+                    Color32[] texSrc = texture.GetPixels32();
 
-                    Texture2D texRGB = new Texture2D(tex.width, tex.height, TextureFormat.RGB24, false);
+                    Texture2D texRGB = new Texture2D(texture.width, texture.height, TextureFormat.RGB24, false);
                     Color32[] texDst = texRGB.GetPixels32();
 
                     for (int k = 0; k < texSrc.Length; k++)
@@ -371,15 +478,15 @@ public class Unity3DExporter : EditorWindow
                 }
                 else
                 {
-                    Debug.Log("Lightmap '" + tex.name + "'could not be read as ARGB32.");
+                    Debug.Log("Lightmap '" + texture.name + "'could not be read as ARGB32.");
                 }
             }
         }
 
         if (needsReimport)
         {
-            ti.isReadable = wasReadable;
-            ti.textureFormat = wasFormat;
+            textureImporter.isReadable = wasReadable;
+            textureImporter.textureFormat = wasFormat;
             if (!alreadyProcessed)
             {
                 AssetDatabase.ImportAsset(assetPath);
@@ -387,9 +494,9 @@ public class Unity3DExporter : EditorWindow
         }
     }
 
-    private void WriteMesh(Mesh m, StreamWriter outfile, string indent, Vector4 lightmapTilingOffset)
+    private void WriteMesh(Mesh mesh, StreamWriter outFile, string indent, Vector4 lightmapTilingOffset)
     {
-        if (m == null)
+        if (mesh == null)
         {
             return;
         }
@@ -397,9 +504,9 @@ public class Unity3DExporter : EditorWindow
         string lightmapPostfix = "_" + lightmapTilingOffset.x + "_" + lightmapTilingOffset.y +
             "_" + lightmapTilingOffset.z + "_" + lightmapTilingOffset.w;
 
-        string prefix = m.name + "_" + m.GetInstanceID().ToString("X8");
+        string prefix = mesh.name + "_" + mesh.GetInstanceID().ToString("X8");
         string meshName = prefix + lightmapPostfix;
-        outfile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\">");
+        outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\">");
 
         bool alreadyProcessed = true;
         if (!mMeshAssetsProcessed.Contains(meshName))
@@ -411,60 +518,60 @@ public class Unity3DExporter : EditorWindow
         char le = BitConverter.IsLittleEndian ? 'y' : 'n';
 
         string vtxName = prefix + ".vtx";
-        outfile.WriteLine(indent + "  <Vertices Name=\"" + vtxName + "\" LittleEndian=\"" + le + "\" />");
+        outFile.WriteLine(indent + "  <Vertices Name=\"" + vtxName + "\" LittleEndian=\"" + le + "\" />");
         if (!alreadyProcessed)
         {
-            SaveVector3s(m.vertices, vtxName);
+            SaveVector3s(mesh.vertices, vtxName);
         }
 
         string idxName = prefix + ".idx";
-        outfile.WriteLine(indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"" + le + "\" />");
+        outFile.WriteLine(indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"" + le + "\" />");
         if (!alreadyProcessed)
         {
-            SaveIndices(m.triangles, idxName);
+            SaveIndices(mesh.triangles, idxName);
         }
 
-        if (m.normals.Length > 0)
+        if (mesh.normals.Length > 0)
         {
             string nmName = prefix + ".nm";
-            outfile.WriteLine(indent + "  <Normals Name=\"" + nmName + "\" LittleEndian=\"" + le + "\" />");
+            outFile.WriteLine(indent + "  <Normals Name=\"" + nmName + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
-                SaveVector3s(m.normals, nmName);
+                SaveVector3s(mesh.normals, nmName);
             }
         }
 
-        if (m.colors.Length > 0)
+        if (mesh.colors.Length > 0)
         {
             string colName = prefix + ".col";
-            outfile.WriteLine(indent + "  <Colors Name=\"" + colName + "\" LittleEndian=\"" + le + "\" />");
+            outFile.WriteLine(indent + "  <Colors Name=\"" + colName + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
-                SaveColors(m.colors, colName);
+                SaveColors(mesh.colors, colName);
             }
         }
 
-        if (m.uv.Length > 0)
+        if (mesh.uv.Length > 0)
         {
             string uv0Name = prefix + ".uv0";
-            outfile.WriteLine(indent + "  <Uv0 Name=\"" + uv0Name + "\" LittleEndian=\"" + le + "\" />");
+            outFile.WriteLine(indent + "  <Uv0 Name=\"" + uv0Name + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
-                SaveVector2s(m.uv, uv0Name, new Vector4(1,1,0,0));
+                SaveVector2s(mesh.uv, uv0Name, new Vector4(1,1,0,0));
             }
         }
 
-        if (m.uv2.Length > 0)
+        if (mesh.uv2.Length > 0)
         {
             string uv1Name = prefix + lightmapPostfix + ".uv1";
-            outfile.WriteLine(indent + "  <Uv1 Name=\"" + uv1Name + "\" LittleEndian=\"" + le + "\" />");
+            outFile.WriteLine(indent + "  <Uv1 Name=\"" + uv1Name + "\" LittleEndian=\"" + le + "\" />");
             if (!alreadyProcessed)
             {
-                SaveVector2s(m.uv2, uv1Name, lightmapTilingOffset);
+                SaveVector2s(mesh.uv2, uv1Name, lightmapTilingOffset);
             }
         }
         
-        outfile.WriteLine(indent + "</Mesh>");
+        outFile.WriteLine(indent + "</Mesh>");
     }
 
     private void SaveVector3s(Vector3[] vectors, string name)
@@ -474,18 +581,18 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 		
-        FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
-        BinaryWriter w = new BinaryWriter(fs);
+        FileStream fileStream = new FileStream(mPath + "/" + name, FileMode.Create);
+        BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
         for (int i = 0; i < vectors.Length; i++)
         {
-            w.Write(-vectors[i].x);
-            w.Write(vectors[i].y);
-            w.Write(vectors[i].z);
+            binaryWriter.Write(-vectors[i].x);
+            binaryWriter.Write(vectors[i].y);
+            binaryWriter.Write(vectors[i].z);
         }
 
-        w.Close();
-        fs.Close();
+        binaryWriter.Close();
+        fileStream.Close();
     }
 
     private void SaveVector2s(Vector2[] vectors, string name, Vector4 lightmapTilingOffset)
@@ -495,8 +602,8 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 
-        FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
-        BinaryWriter w = new BinaryWriter(fs);
+        FileStream fileStream = new FileStream(mPath + "/" + name, FileMode.Create);
+        BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
         Vector2 scale = new Vector2(lightmapTilingOffset.x, lightmapTilingOffset.y);
         Vector2 offset = new Vector2(lightmapTilingOffset.z, lightmapTilingOffset.w);
@@ -504,12 +611,12 @@ public class Unity3DExporter : EditorWindow
         for (int i = 0; i < vectors.Length; i++)
         {
             Vector2 uv = offset + new Vector2(scale.x * vectors[i].x, scale.y * vectors[i].y);
-            w.Write(uv.x);
-            w.Write(1.0f - uv.y); // OpenGL vs DirectX convention
+            binaryWriter.Write(uv.x);
+            binaryWriter.Write(1.0f - uv.y); // OpenGL vs DirectX convention
         }
 
-        w.Close();
-        fs.Close();
+        binaryWriter.Close();
+        fileStream.Close();
     }
 
     private void SaveColors(Color[] colors, string name)
@@ -519,19 +626,19 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 
-        FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
-        BinaryWriter w = new BinaryWriter(fs);
+        FileStream fileStream = new FileStream(mPath + "/" + name, FileMode.Create);
+        BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
         for (int i = 0; i < colors.Length; i++)
         {
-            w.Write(colors[i].r);
-            w.Write(colors[i].g);
-            w.Write(colors[i].b);
-            w.Write(colors[i].a);
+            binaryWriter.Write(colors[i].r);
+            binaryWriter.Write(colors[i].g);
+            binaryWriter.Write(colors[i].b);
+            binaryWriter.Write(colors[i].a);
         }
 
-        w.Close();
-        fs.Close();       
+        binaryWriter.Close();
+        fileStream.Close();       
     }
 
     private void SaveIndices(int[] indices, string name)
@@ -541,15 +648,15 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 
-        FileStream fs = new FileStream(mPath + "/" + name, FileMode.Create);
-        BinaryWriter w = new BinaryWriter(fs);
+        FileStream fileStream = new FileStream(mPath + "/" + name, FileMode.Create);
+        BinaryWriter binaryWriter = new BinaryWriter(fileStream);
 
         for (int i = 0; i < indices.Length; i++)
         {
-            w.Write(indices[i]);
+            binaryWriter.Write(indices[i]);
         }
 
-        w.Close();
-        fs.Close();
+        binaryWriter.Close();
+        fileStream.Close();
     }   
 }

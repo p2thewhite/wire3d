@@ -15,8 +15,7 @@ class Demo : public WIREAPPLICATION
 public:
 	virtual Bool OnInitialize();
 	virtual void OnIdle();
-
-	virtual void OnButton(UInt button, UInt state);
+	virtual void OnInput();
 
 private:
 	enum AppState

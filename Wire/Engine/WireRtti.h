@@ -24,6 +24,7 @@ public:
 
 	inline const Char* GetName () const;
 	inline Bool IsExactly(const Rtti& rType) const;
+	inline const Rtti* GetBaseType() const;
 	Bool IsDerived(const Rtti& rType) const;
 
 private:

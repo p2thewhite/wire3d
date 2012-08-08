@@ -11,13 +11,12 @@
 #define WIREAPPLICATION_H
 
 #include "WireEngine.h"
+#include "WireInputSystem.h"
 #include "WireFoundation.h"
 #include "WireRenderer.h"
 
 namespace Wire
 {
-
-class Renderer;
 
 class Application
 {
@@ -29,45 +28,38 @@ public:
 
  	// Called before the creation and initialization of the renderer.
  	// Returning 'false' quits the application.
- 	virtual Bool OnPrecreate() = 0;
+ 	virtual Bool OnPrecreate();
 
 	// Called before main loop. Returning 'false' quits the application.
-	virtual Bool OnInitialize() = 0;
+	virtual Bool OnInitialize();
 
 	// Called by the main loop
-	virtual void OnIdle() = 0;
+	virtual void OnIdle();
 
 	// Called before terminating the application.
-	virtual void OnTerminate() = 0;
-
-	// Called when a mouse/controller button is pressed/released.
-	virtual void OnButton(UInt button, UInt state);
+	virtual void OnTerminate();
 
 	// Called when the window is resized.
 	virtual void OnResize(UInt width, UInt height);
+
+	// Called by the main loop just after input capturing.
+	virtual void OnInput();
+
+	// Called when input devices are connected/disconnected.
+	virtual void OnInputDevicesChange();
+
+	virtual void Close();
 
 	static void SetApplication(Application* pApplication);
 	static Application* GetApplication(); 
 
 	inline Renderer* GetRenderer() const;
+	inline InputSystem* GetInputSystem() const;
 
-	// Key identifiers. These are platform-specific, so classes that
-	// implement the Application interface must define these variables.
-	// They are not defined by Application.
-	UInt KEY_TERMINATE;  // default KEY_ESCAPE, redefine as desired
-	static const UInt KEY_ESCAPE;
-
-	static const UInt BUTTON_A;
-	static const UInt BUTTON_B;
-	static const UInt BUTTON_LEFT;
-	static const UInt BUTTON_RIGHT;
-	static const UInt BUTTON_UP;
-	static const UInt BUTTON_DOWN;
-	static const UInt BUTTON_1;
-	static const UInt BUTTON_2;
-
-	static const UInt BUTTON_PRESS;
-	static const UInt BUTTON_RELEASE;
+	inline UInt GetWidth() const;
+	inline UInt GetHeight() const;
+	inline Float GetWidthF() const;
+	inline Float GetHeightF() const;
 
 protected:
 	Application(const ColorRGBA& rBackgroundColor, const Char* pWindowTitle,
@@ -78,6 +70,7 @@ protected:
 	static Application* s_pApplication;
 
 	Renderer* mpRenderer;
+	InputSystem* mpInputSystem;
 
 	ColorRGBA mBackgroundColor;
 	const Char* mpWindowTitle;
@@ -87,6 +80,7 @@ protected:
 	UInt mHeight;
 	Bool mIsFullscreen;
 	Bool mUseVSync;
+	Bool mIsRunning;
 };
 
 #include "WireApplication.inl"

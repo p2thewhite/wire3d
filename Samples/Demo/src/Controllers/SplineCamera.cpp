@@ -38,13 +38,13 @@ Bool SplineCamera::Update(Double appTime)
 		return false;
 	}
 
-	Double elapsedTime = appTime - mLastAppTime;
-	if (mLastAppTime == -MathD::MAX_REAL)
+	Double elapsedTime = appTime - mLastApplicationTime;
+	if (mLastApplicationTime == -MathD::MAX_REAL)
 	{
 		elapsedTime = 0;
 	}
 
-	mLastAppTime = appTime;
+	mLastApplicationTime = appTime;
 
 	Vector3F camPos = GetHermite(mSplinePoints, mSplinePointIndex, mT);
 	QuaternionF camRot = GetSquad(mSplinePoints, mSplinePointIndex, mT);

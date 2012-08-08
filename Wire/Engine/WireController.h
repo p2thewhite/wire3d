@@ -47,7 +47,7 @@ protected:
 	// pointers between controller and object.
 	SceneObject* mpObject;
 
-	Double mLastAppTime;
+	Double mLastApplicationTime;
 };
 
 typedef Pointer<Controller> ControllerPtr;

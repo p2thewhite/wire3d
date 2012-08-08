@@ -16,6 +16,8 @@ include $(DEVKITPPC)/wii_rules
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
 WIREDIR			:=  ../../../Wire
+FREETYPEDIR		:=	../../../Tools/freetype
+BULLETDIR		:=  ../../../Tools/bullet-2.77
 TARGET			:=	$(notdir $(CURDIR))
 SOURCES			:=	src
 DATA			:=	data  
@@ -46,7 +48,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lWire$(BUILDPOSTFIX) -lfreetype -lwiiuse -lbte -lfat -logc -lm
+LIBS	:= -lBulletDynamics -lBulletCollision -lLinearMath -lWire$(BUILDPOSTFIX) -lfreetype -lwiiuse -lbte -lfat -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -100,13 +102,14 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					-I$(WIREDIR)/Foundation \
 					-I$(WIREDIR)/Foundation/Wii \
 					-I$(WIREDIR)/Engine \
-					-I../../freetype/include
+					-I$(FREETYPEDIR)/include \
+					-I$(BULLETDIR)/src
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB)
+					-L$(LIBOGC_LIB) -L$(FREETYPEDIR) -L$(BULLETDIR)/lib/wii
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean

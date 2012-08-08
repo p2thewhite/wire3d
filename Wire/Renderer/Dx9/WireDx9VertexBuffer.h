@@ -39,6 +39,7 @@ public:
 
 	inline UInt GetBufferSize() const;
 
+	inline void SetDeclaration(Renderer* pRenderer);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 	inline UInt GetVertexSize() const;
@@ -46,9 +47,7 @@ public:
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-
 	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
-	inline void SetDeclaration(Renderer* pRenderer);
 
 	IDirect3DVertexBuffer9* mpBuffer;
 	UInt mBufferSize;

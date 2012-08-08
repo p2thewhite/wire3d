@@ -175,7 +175,7 @@ UInt THashTable<TKEY, TVALUE>::HashFunction(const TKEY& rKey) const
 
 //----------------------------------------------------------------------------
 template <class TKEY, class TVALUE>
-THashTable<TKEY, TVALUE>::Iterator::Iterator(THashTable* pHashTable)
+THashTable<TKEY, TVALUE>::Iterator::Iterator(const THashTable* pHashTable)
 	:
 	mpHashTable(pHashTable),
 	mIndex(0),

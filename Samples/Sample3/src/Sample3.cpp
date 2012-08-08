@@ -3,8 +3,6 @@
 
 #include "Sample3.h"
 
-using namespace Wire;
-
 WIRE_APPLICATION(Sample3);
 
 //----------------------------------------------------------------------------
@@ -52,10 +50,7 @@ Bool Sample3::OnInitialize()
 	Vector3F right = viewDirection.Cross(up);
 	mspCamera = WIRE_NEW Camera;
 	mspCamera->SetFrame(cameraLocation, viewDirection, up, right);
-
-	Float width = static_cast<Float>(GetRenderer()->GetWidth());
-	Float height = static_cast<Float>(GetRenderer()->GetHeight());
-	mspCamera->SetFrustum(45, width / height , 0.1F, 300.0F);
+	mspCamera->SetFrustum(45, GetWidthF()/GetHeightF() , 0.1F, 300.0F);
 
 	mCuller.SetCamera(mspCamera);
 
@@ -123,9 +118,7 @@ void Sample3::DrawLodTextLabel()
 
 	// set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
-	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
-	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
-	mspOrthographic->SetFrustum(0, screenWidth, 0, screenHeight, 0, 1);
+	mspOrthographic->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	GetRenderer()->SetCamera(mspOrthographic);
 
 	const UInt textArraySize = 100;
@@ -136,8 +129,8 @@ void Sample3::DrawLodTextLabel()
 	mspText->Update(GetRenderer());
 
 	// center text (window resizing can happen any time)
-	Float offsetX = (screenWidth - 21.0F*8.0F) * 0.5F;
-	Float offsetY = screenHeight - 6.0F * 8.0F;
+	Float offsetX = (GetWidthF() - 21.0F*8.0F) * 0.5F;
+	Float offsetY = GetHeightF() - 6.0F * 8.0F;
 	mspText->World.SetTranslate(Vector3F(offsetX, offsetY, 0));
 
 	GetRenderer()->Draw(mspText);

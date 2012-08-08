@@ -32,6 +32,9 @@ public:
 private:
 	static InitializerArray* s_pInitializers;
 	static TerminatorArray* s_pTerminators;
+
+	static UInt s_StartObjectCount;
+	static UInt s_FinalObjectCount;
 };
 
 }

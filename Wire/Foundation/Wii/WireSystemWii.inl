@@ -36,10 +36,20 @@ void System::Print(const Char* pFormat, ...)
 {
 	static Bool s_IsInitialized = false;
 
+	Application* pApp = Application::GetApplication();
+	if (!pApp)
+	{
+		return;
+	}
+
+	Renderer* pRenderer = pApp->GetRenderer();
+	if (!pRenderer)
+	{
+		return;
+	}
+
 	if (!s_IsInitialized)
 	{
-		Application* pApp = Application::GetApplication();
-		Renderer* pRenderer = pApp->GetRenderer();
 		PdrRendererData* pData = pRenderer->GetRendererData();
 		void* pFrameBuffer = pData->GetFramebuffer();
 		GXRenderModeObj* pRMode = pData->RMode;
@@ -63,7 +73,17 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	Int lineNumber)
 {
 	Application* pApp = Application::GetApplication();
+	if (!pApp)
+	{
+		return;
+	}
+
 	Renderer* pRenderer = pApp->GetRenderer();
+	if (!pRenderer)
+	{
+		return;
+	}
+
 	PdrRendererData* pData = pRenderer->GetRendererData();
 	pData->SetFramebufferIndex(1);
 	pRenderer->DisplayBackBuffer();
@@ -77,7 +97,7 @@ void System::Assert(const Char* pExpression, const Char* pFile,
 	do
 	{
 		WPAD_ScanPads();
-		if (WPAD_ButtonsDown(0) & Application::KEY_ESCAPE)
+		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
 		{
 			exit(0);
 		}

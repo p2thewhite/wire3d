@@ -12,6 +12,7 @@
 
 #include "WireRtti.h"
 #include "WireSmartPointer.h"
+#include "WireTHashSet.h"
 
 namespace Wire
 {
@@ -31,8 +32,11 @@ public:
 
 	// smart pointer system
 	inline void IncrementReferences();
-	void DecrementReferences();
+	inline void DecrementReferences();
 	Int GetReferences() const;
+
+    static THashSet<Object*>* InUse;
+	static Bool SaveInUse(const Char* pFilename);
 
 protected:
 	Object();

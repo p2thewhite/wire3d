@@ -11,6 +11,8 @@
 #define WIRECAMERA_H
 
 #include "WireMatrix34.h"
+#include "WireMatrix4.h"
+#include "WireVector2.h"
 #include "WireObject.h"
 
 namespace Wire
@@ -54,6 +56,8 @@ public:
 
 	void LookAt(const Vector3F& rLocation, const Vector3F& rLookAt,
 		const Vector3F& rUp);
+
+	void LookAtScreenPoint(const Vector2F& rScreenPoint);
 
 	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 		const Vector3F& rRVector);
@@ -102,6 +106,10 @@ public:
 		Float& rBottom);
 
 	inline Bool IsPerspective() const;
+
+	Matrix4F GetProjectionMatrix() const;
+	Matrix4F GetViewMatrix() const;
+	Vector3F ScreenToWorldPoint(const Vector2F& rScreenPoint) const;
 
 private:
 	// world coordinate frame
