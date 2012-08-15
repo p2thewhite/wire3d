@@ -37,7 +37,16 @@ public class Unity3DExporter : EditorWindow
 		return (from s in rootTransforms orderby s.name select s).ToList ();
 	}
 	
-	private static void GenerateAxisAlignedBoxFromVertices (Vector3[] vertices, out Vector3 aabbMin, out Vector3 aabbMax)
+	private static bool IsLeaf (Transform transform)
+	{
+		GameObject gameObject = transform.gameObject;
+		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
+		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
+		
+		return (meshFilter != null) && (meshRenderer != null && meshRenderer.enabled) && transform.GetChildCount () == 0;
+	}
+	
+	private static void GenerateAABBFromVertices (Vector3[] vertices, out Vector3 aabbMin, out Vector3 aabbMax)
 	{
 		aabbMin = new Vector3 (vertices [0].x, vertices [0].y, vertices [0].z);
 		aabbMax = new Vector3 (aabbMin.x, aabbMin.y, aabbMin.z);
@@ -79,27 +88,21 @@ public class Unity3DExporter : EditorWindow
 
 	private static void GenerateBoxCollider (Transform transform)
 	{
-		MeshFilter meshFilter = transform.gameObject.GetComponent<MeshFilter> ();
+		MeshFilter meshFilter = transform.GetComponent<MeshFilter> ();
 		Mesh mesh = meshFilter.sharedMesh;
-		List<Vector3[] > meshComponents = TriMesh.FindComponents (mesh, true);
 		
-		Debug.Log ("meshComponents: " + meshComponents.Count);
-		
-		/*foreach (Vector3[] meshComponent in meshComponents) {
-			Vector3 aabbMin;
-			Vector3 aabbMax;
-			GenerateAxisAlignedBoxFromVertices (meshComponent, out aabbMin, out aabbMax);
+		Vector3 aabbMin;
+		Vector3 aabbMax;
+		GenerateAABBFromVertices (mesh.vertices, out aabbMin, out aabbMax);
 			
-			GameObject dummyGameObject = new GameObject ();
-			dummyGameObject.transform.position = gameObject.transform.position;
-			BoxCollider boxCollider = dummyGameObject.AddComponent<BoxCollider> ();
-			boxCollider.center = Vector3.zero;
-			boxCollider.size = new Vector3 (
-				(aabbMax.x - aabbMin.x), 
-				(aabbMax.y - aabbMin.y), 
-				(aabbMax.z - aabbMin.z)
-				);
-		}*/
+		GameObject colliderGameObject = new GameObject ("Collider_" + System.Guid.NewGuid ().ToString ());
+		
+		Vector3 aabbSize = new Vector3 (aabbMax.x - aabbMin.x, aabbMax.y - aabbMin.y, aabbMax.z - aabbMin.z);
+		Vector3 aabbCenter = aabbMin + (aabbSize * 0.5f);
+		
+		colliderGameObject.transform.position = aabbCenter;
+		BoxCollider boxCollider = colliderGameObject.AddComponent<BoxCollider> ();
+		boxCollider.size = aabbSize;
 	}
 	
 	[MenuItem("Wire3D/Generate Box Colliders")]
@@ -184,7 +187,69 @@ public class Unity3DExporter : EditorWindow
 			return nodeName;
 		}
 	}
+	
+	private void WriteLeaf (Transform transform, StreamWriter outFile, string indent, bool writeComponents = true)
+	{
+		MeshFilter meshFilter = transform.gameObject.GetComponent<MeshFilter> ();
+		MeshRenderer meshRenderer = transform.gameObject.GetComponent<MeshRenderer> ();
+		
+		if ((meshRenderer == null) || (meshFilter == null)) {
+			return;
+		}
 
+		string isStatic = " Static=\"" + (transform.gameObject.isStatic ? "1" : "0") + "\"";
+		outFile.WriteLine (indent + "<Leaf Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + isStatic + ">");
+
+		if (writeComponents) {
+			WriteCamera (transform.gameObject, outFile, indent);
+			WriteLight (transform.gameObject, outFile, indent);
+			WriteCollider (transform.gameObject, outFile, indent);
+		}
+		
+		WriteMesh (meshFilter.sharedMesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
+		WriteMaterial (meshRenderer, outFile, indent + "  ");
+		
+		outFile.WriteLine (indent + "</Leaf>");       
+	}
+	
+	private void WriteNonVisibleNode (Transform transform, StreamWriter outFile, string indent)
+	{
+		GameObject gameObject = transform.gameObject;
+		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
+		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
+		
+		outFile.WriteLine (indent + "<Node Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + ">");
+    	
+		WriteCamera (transform.gameObject, outFile, indent);
+		WriteLight (transform.gameObject, outFile, indent);
+		WriteCollider (transform.gameObject, outFile, indent);
+    	
+		if (transform.GetChildCount () > 0) {
+			if ((meshFilter != null) && (meshRenderer != null)) {
+				WriteLeaf (transform, outFile, indent + "  ", false);
+			}
+    	
+			for (int i = 0; i < transform.GetChildCount(); i++) {
+				WriteTraverse (transform.GetChild (i), outFile, indent + "  ");
+			}
+		}
+    	
+		outFile.WriteLine (indent + "</Node>");
+	}
+	
+	private void WriteTraverse (Transform transform, StreamWriter outFile, string indent)
+	{
+		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
+			return;
+		}
+      	
+		if (IsLeaf (transform)) {
+			WriteLeaf (transform, outFile, indent);
+		} else {
+			WriteNonVisibleNode (transform, outFile, indent);
+		}
+	}
+	
 	private void Export ()
 	{
 		string[] unityScenePath = EditorApplication.currentScene.Split (char.Parse ("/"));
@@ -212,28 +277,6 @@ public class Unity3DExporter : EditorWindow
 			outFile.WriteLine ("</Node>");
 		} finally {
 			outFile.Close ();
-		}
-	}
-
-	private static bool IsLeaf (Transform transform)
-	{
-		GameObject gameObject = transform.gameObject;
-		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
-		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
-		
-		return (meshFilter != null) && (meshRenderer != null && meshRenderer.enabled) && transform.GetChildCount () == 0;
-	}
-
-	private void WriteTraverse (Transform transform, StreamWriter outFile, string indent)
-	{
-		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
-			return;
-		}
-      	
-		if (IsLeaf (transform)) {
-			WriteLeaf (transform, outFile, indent);
-		} else {
-			WriteNonVisibleNode (transform, outFile, indent);
 		}
 	}
 
@@ -318,55 +361,6 @@ public class Unity3DExporter : EditorWindow
 
 		outFile.WriteLine (indent + "  " + "<Camera Fov=\"" + fieldOfView + "\" Near=\"" +
             camera.nearClipPlane + "\" Far=\"" + camera.farClipPlane + "\" />");
-	}
-
-	private void WriteLeaf (Transform transform, StreamWriter outFile, string indent, bool writeComponents = true)
-	{
-		MeshFilter meshFilter = transform.gameObject.GetComponent<MeshFilter> ();
-		MeshRenderer meshRenderer = transform.gameObject.GetComponent<MeshRenderer> ();
-		
-		if ((meshRenderer == null) || (meshFilter == null)) {
-			return;
-		}
-
-		string isStatic = " Static=\"" + (transform.gameObject.isStatic ? "1" : "0") + "\"";
-		outFile.WriteLine (indent + "<Leaf Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + isStatic + ">");
-
-		if (writeComponents) {
-			WriteCamera (transform.gameObject, outFile, indent);
-			WriteLight (transform.gameObject, outFile, indent);
-			WriteCollider (transform.gameObject, outFile, indent);
-		}
-		
-		WriteMesh (meshFilter.sharedMesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
-		WriteMaterial (meshRenderer, outFile, indent + "  ");
-		
-		outFile.WriteLine (indent + "</Leaf>");       
-	}
-	
-	private void WriteNonVisibleNode (Transform transform, StreamWriter outFile, string indent)
-	{
-		GameObject gameObject = transform.gameObject;
-		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
-		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
-		
-		outFile.WriteLine (indent + "<Node Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + ">");
-    	
-		WriteCamera (transform.gameObject, outFile, indent);
-		WriteLight (transform.gameObject, outFile, indent);
-		WriteCollider (transform.gameObject, outFile, indent);
-    	
-		if (transform.GetChildCount () > 0) {
-			if ((meshFilter != null) && (meshRenderer != null)) {
-				WriteLeaf (transform, outFile, indent + "  ", false);
-			}
-    	
-			for (int i = 0; i < transform.GetChildCount(); i++) {
-				WriteTraverse (transform.GetChild (i), outFile, indent + "  ");
-			}
-		}
-    	
-		outFile.WriteLine (indent + "</Node>");
 	}
 
 	private void WriteMaterial (MeshRenderer meshRenderer, StreamWriter outFile, string indent)
