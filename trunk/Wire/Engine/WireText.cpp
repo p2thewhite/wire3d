@@ -136,13 +136,6 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 	WIRE_ASSERT(pIndexBuffer);
 	const UInt offset = ActiveIndexCount/6;
 
-	// DirectX9 oddity, pixel's center is at (0.5,0.5)
-	if (System::GetPlatform() == System::PF_DX9)
-	{
-		x += 0.5F;
-		y += 0.5F;
-	}
-
 	const UInt maxLength = pVertexBuffer->GetQuantity() / 4;
 	UInt indexCount = 0;
 	for (UInt j = 0; pText[j]; j++)
@@ -170,7 +163,7 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 		Float cStride = mCharSizes[c].Z();
 		if ((x+cStride) >= mLineWidth || c == '\n')
 		{
-			x = System::GetPlatform() == System::PF_DX9 ? 0.5F : 0.0F;
+			x = 0.0F;
 			y -= mFontHeight;
 
 			if (c == '\n')
@@ -212,13 +205,6 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 
 	ActiveIndexCount += indexCount*6;
 	mIsPdrBufferOutOfDate = true;
-
-	// DirectX9 oddity, pixel's center is at (0.5,0.5)
-	if (System::GetPlatform() == System::PF_DX9)
-	{
-		x -= 0.5F;
-		y -= 0.5F;
-	}
 
 	mPenX = x;
 	mPenY = y;
