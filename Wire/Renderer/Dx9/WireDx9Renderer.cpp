@@ -394,13 +394,19 @@ void Renderer::SetCamera(Camera* pCamera)
 	}
 	else
 	{
-		D3DMATRIX matProj = {
+		Matrix4F orthogonalProjection(
 			2.0F*w,   0.0F,     0.0F, 0.0F,
 			0.0F,     2.0F*h,   0.0F, 0.0F,
 			0.0F,     0.0F,     d,    0.0F,
-			-(l+r)*w, -(t+b)*h, -n*d, 1.0F };
+			-(l+r)*w, -(t+b)*h, -n*d, 1.0F );
 
-		rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+		Matrix4F halfPixelOffset(false);
+		halfPixelOffset[3][0] = 0.5F;
+		halfPixelOffset[3][1] = 0.5F;
+		orthogonalProjection = halfPixelOffset * orthogonalProjection;
+
+		rDevice->SetTransform(D3DTS_PROJECTION, reinterpret_cast<D3DMATRIX*>(
+			&orthogonalProjection));
 	}
 
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
