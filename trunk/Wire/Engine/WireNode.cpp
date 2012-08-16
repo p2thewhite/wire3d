@@ -326,6 +326,28 @@ void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 }
 
 //----------------------------------------------------------------------------
+void Node::GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*>&
+	rChildren) const
+{
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		if (mChildren[i])
+		{
+			if (mChildren[i]->GetName().StartsWith(rName))
+			{
+				rChildren.Append(mChildren[i]);
+			}
+
+			const Node* pNode = DynamicCast<Node>(mChildren[i]);
+			if (pNode)
+			{
+				pNode->GetAllChildrenByNameStartingWith(rName, rChildren);
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 void Node::MakeStatic(Bool forceStatic)
 {
 	for (UInt i = 0; i < GetQuantity(); i++)

@@ -38,6 +38,8 @@ public:
 	// implicit conversion (support for hash tables)
 	operator UInt () const;
 
+	bool StartsWith(const String& rString) const;
+
     // case-related
 	String ToUpper() const;
 	String ToLower() const;

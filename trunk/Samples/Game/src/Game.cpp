@@ -245,11 +245,11 @@ void Game::OnInput()
 	// 'Z' button makes the player run
 	if (pButtons->GetButton(Buttons::BUTTON_Z))
 	{
-		mpCharacterController->SetMoveSpeed(5.0f);
+		mpCharacterController->SetMoveSpeed(10.0f);
 	}
 	else
 	{
-		mpCharacterController->SetMoveSpeed(2.5f);
+		mpCharacterController->SetMoveSpeed(5.0f);
 	}
 }
 
@@ -528,15 +528,15 @@ Node* Game::LoadAndInitializeScene()
 	mSceneCameras[0]->SetFrustum(fov, GetWidthF() / GetHeightF(), near, far);
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
-	Spatial* pStartingPosition = pScene->GetChildByName("StartingPosition");
+	Spatial* pStartingPoint = pScene->GetChildByName("Starting Point");
 
-	if (pStartingPosition)
+	if (pStartingPoint)
 	{
-		mStartingPosition = pStartingPosition->World.GetTranslate();
+		mStartingPoint = pStartingPoint->World.GetTranslate();
 	}
 	else
 	{
-		mStartingPosition = Vector3F::ZERO;
+		mStartingPoint = Vector3F::ZERO;
 	}
 
 	// The maximum number of objects that are going to be culled is the
@@ -551,17 +551,18 @@ Node* Game::LoadAndInitializeScene()
 		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(geometryCount);
 	}
 
-	pScene->GetAllChildrenByName("Collider", mColliderSpatials);
+	pScene->GetAllChildrenByNameStartingWith("Collider for", mColliderSpatials);
 
 	// Create and configure the character controller
-	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPosition, mSceneCameras[0]);
+	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPoint, mSceneCameras[0]);
 
 	mpCharacterController->SetLookUpDeadZone(Vector2F(50, 50));
 	mpCharacterController->SetHeadHeight(0.5f);
 	mpCharacterController->SetCharacterHeight(1.5f);
 	mpCharacterController->SetCharacterWidth(0.75f);
-	mpCharacterController->SetStepHeight(0.35f);
+	mpCharacterController->SetStepHeight(0.5f);
 	mpCharacterController->SetMaximumVerticalAngle(45);
+	mpCharacterController->SetMoveSpeed(5.0f);
 	mpCharacterController->Register(mpPhysicsWorld);
 
 	pScene->AttachController(mpCharacterController);

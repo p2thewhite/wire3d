@@ -29,6 +29,14 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 	}
+	
+	[MenuItem("Wire3D/Generate Box Colliders")]
+	protected static void GenerateBoxColliders ()
+	{
+		foreach (Transform transform in GetRootTransforms ()) {
+			GenerateBoxColliderTraverse (transform);
+		}
+	}
 
 	private static List<Transform> GetRootTransforms ()
 	{
@@ -95,7 +103,7 @@ public class Unity3DExporter : EditorWindow
 		Vector3 aabbMax;
 		GenerateAABBFromVertices (mesh.vertices, out aabbMin, out aabbMax);
 			
-		GameObject colliderGameObject = new GameObject ("Collider_" + System.Guid.NewGuid ().ToString ());
+		GameObject colliderGameObject = new GameObject ("Collider for " + transform.gameObject.name);
 		
 		Vector3 aabbSize = new Vector3 (aabbMax.x - aabbMin.x, aabbMax.y - aabbMin.y, aabbMax.z - aabbMin.z);
 		Vector3 aabbCenter = aabbMin + (aabbSize * 0.5f);
@@ -103,14 +111,6 @@ public class Unity3DExporter : EditorWindow
 		colliderGameObject.transform.position = aabbCenter;
 		BoxCollider boxCollider = colliderGameObject.AddComponent<BoxCollider> ();
 		boxCollider.size = aabbSize;
-	}
-	
-	[MenuItem("Wire3D/Generate Box Colliders")]
-	protected static void GenerateBoxColliders ()
-	{
-		foreach (Transform transform in GetRootTransforms ()) {
-			GenerateBoxColliderTraverse (transform);
-		}
 	}
 
 	protected void OnDestroy ()
@@ -230,14 +230,14 @@ public class Unity3DExporter : EditorWindow
 			}
     	
 			for (int i = 0; i < transform.GetChildCount(); i++) {
-				WriteTraverse (transform.GetChild (i), outFile, indent + "  ");
+				ExportTraverse (transform.GetChild (i), outFile, indent + "  ");
 			}
 		}
     	
 		outFile.WriteLine (indent + "</Node>");
 	}
 	
-	private void WriteTraverse (Transform transform, StreamWriter outFile, string indent)
+	private void ExportTraverse (Transform transform, StreamWriter outFile, string indent)
 	{
 		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
 			return;
@@ -269,7 +269,7 @@ public class Unity3DExporter : EditorWindow
 			string indent = "  ";
 	
 			foreach (Transform transform in GetRootTransforms ()) {
-				WriteTraverse (transform, outFile, indent);
+				ExportTraverse (transform, outFile, indent);
 			}
 	
 			DestroyImmediate (root);

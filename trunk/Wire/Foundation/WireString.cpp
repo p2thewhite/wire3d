@@ -155,6 +155,17 @@ String::operator UInt () const
 }
 
 //----------------------------------------------------------------------------
+bool String::StartsWith(const String& rString) const
+{
+	if (mLength < rString.GetLength())
+	{
+		return false;
+	}
+
+	return (System::Strncmp(mpText, rString.mpText, rString.GetLength()) == 0);
+}
+
+//----------------------------------------------------------------------------
 String String::ToUpper() const
 {
     String copy(*this);
