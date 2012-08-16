@@ -48,7 +48,7 @@ private:
 	Double mLastTime;
 	UInt mAppState;
 	Bool mShowFps;
-	Vector3F mStartingPosition;
+	Vector3F mStartingPoint;
 	FirstPersonController* mpCharacterController;
 	NodePtr mspLogo;
 	NodePtr mspScene;
