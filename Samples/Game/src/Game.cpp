@@ -40,9 +40,9 @@ Bool Game::OnInitialize()
 	WIRE_ASSERT(mspText);
 
 	GetRenderer()->BindAll(mspText);
-	GetRenderer()->CreateBatchingBuffers(60 * 1024);
-	GetRenderer()->SetDynamicBatchingThreshold(300);
-	GetRenderer()->SetStaticBatchingThreshold(10000);
+// 	GetRenderer()->CreateBatchingBuffers(60 * 1024);
+// 	GetRenderer()->SetDynamicBatchingThreshold(300);
+// 	GetRenderer()->SetStaticBatchingThreshold(10000);
 
 	return true;
 }
