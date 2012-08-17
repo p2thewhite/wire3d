@@ -856,6 +856,18 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 		VertexBuffer* pVertexBuffer = pGeometry->GetMesh()->GetVertexBuffer();
 		IndexBuffer* pIndexBuffer = pGeometry->GetMesh()->GetIndexBuffer();
 
+		UInt vertexSize = pVBPdr->GetVertexSize();
+		UInt vbSize = pVertexBuffer->GetQuantity() * vertexSize;
+		UInt ibSize = pIndexBuffer->GetQuantity() * sizeof(UShort);
+
+		if ((vbSize > mBatchedVertexBuffer->GetBufferSize()) ||
+			(ibSize > mBatchedIndexBuffer->GetBufferSize()) ||
+			(vertexCount + pVertexBuffer->GetQuantity() > 0xFFFF))
+		{
+			Draw(pGeometry, false, true);
+			continue;
+		}
+
 		if (pGeometry->World.IsIdentity())
 		{
 			if (pVertexBuffer->GetQuantity() > mStaticBatchingThreshold)
@@ -876,10 +888,6 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 
 			mStatistics.BatchedDynamic++;
 		}
-
-		UInt vertexSize = pVBPdr->GetVertexSize();
-		UInt vbSize = pVertexBuffer->GetQuantity() * vertexSize;
-		UInt ibSize = pIndexBuffer->GetQuantity() * sizeof(UShort);
 
 		if ((vbSize+vertexCount*vertexSize) > mBatchedVertexBuffer->
 			GetBufferSize() || (ibSize+indexCount*sizeof(UShort)) >
