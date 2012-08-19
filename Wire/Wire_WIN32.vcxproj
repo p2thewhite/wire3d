@@ -234,7 +234,6 @@
     <None Include="Foundation\WireMatrix3.inl" />
     <None Include="Foundation\WireMatrix34.inl" />
     <None Include="Foundation\WireMatrix4.inl" />
-    <None Include="Foundation\WireMemory.inl" />
     <None Include="Foundation\WireNoisePerlin.inl" />
     <None Include="Foundation\WirePlane3.inl" />
     <None Include="Foundation\WireQuaternion.inl" />

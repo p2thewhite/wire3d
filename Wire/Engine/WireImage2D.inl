@@ -120,3 +120,15 @@ inline void Image2D::RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888)
 	*pDst8888++ = *pSrc4444 & 0xF0;
 	*pDst8888++ = (*pSrc4444 & 0x0F) << 4;
 }
+
+//----------------------------------------------------------------------------
+inline Image2D* Image2D::GetDefault()
+{
+	return s_spDefault;
+}
+
+//----------------------------------------------------------------------------
+inline Image2D* Image2D::GetDefaultWithAlpha()
+{
+	return s_spDefaultWithAlpha;
+}

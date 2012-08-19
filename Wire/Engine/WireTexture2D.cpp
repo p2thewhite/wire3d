@@ -39,3 +39,9 @@ Texture2D::~Texture2D()
 	// This allows the renderer to free up any associated resources.
     Renderer::UnbindAll(this);
 }
+
+//----------------------------------------------------------------------------
+void Texture2D::SetImage(Image2D* pImage)
+{
+	mspImage = pImage;
+}

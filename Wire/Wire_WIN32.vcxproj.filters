@@ -676,9 +676,6 @@
     <None Include="Foundation\WireApplication.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
-    <None Include="Foundation\WireMemory.inl">
-      <Filter>Foundation\Inline Files</Filter>
-    </None>
     <None Include="Foundation\WireColor32.inl">
       <Filter>Foundation\Inline Files</Filter>
     </None>
