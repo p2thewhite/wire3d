@@ -46,6 +46,7 @@ public:
 
 	inline Image2D* GetImage();
 	inline const Image2D* GetImage() const;
+	void SetImage(Image2D* pImage);
 
 	// Access to filter modes. The default is LINEAR.
 	inline void SetFilterType(FilterType filterType);

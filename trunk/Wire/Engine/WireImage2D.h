@@ -11,6 +11,7 @@
 #define WIREIMAGE_H
 
 #include "WireObject.h"
+#include "WireMain.h"
 
 namespace Wire
 {
@@ -18,6 +19,8 @@ namespace Wire
 class Image2D : public Object
 {
 	WIRE_DECLARE_RTTI;
+	WIRE_DECLARE_INITIALIZE;
+	WIRE_DECLARE_TERMINATE;
 
 public:
 	enum FormatMode
@@ -66,11 +69,16 @@ public:
 	inline static void RGB565ToRGB888(UChar* pSrc565, UChar* pDst888);
 	inline static void RGBA4444ToRGBA8888(UChar* pSrc4444, UChar* pDst8888);
 
+	inline static Image2D* GetDefault();
+	inline static Image2D* GetDefaultWithAlpha();
+
 private:
 	inline Bool IsPowerOfTwo(UInt value) const;
 	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 
+	static Pointer<Image2D> s_spDefault;
+	static Pointer<Image2D> s_spDefaultWithAlpha;
 	static const UChar s_ImageBpp[];
 	FormatMode mFormat;
 	UChar* mpData;
@@ -80,6 +88,9 @@ private:
 
 typedef Pointer<Image2D> Image2DPtr;
 #include "WireImage2D.inl"
+
+WIRE_REGISTER_INITIALIZE(Image2D);
+WIRE_REGISTER_TERMINATE(Image2D);
 
 }
 

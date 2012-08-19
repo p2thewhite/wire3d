@@ -11,6 +11,8 @@
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Image2D, Object);
+WIRE_IMPLEMENT_INITIALIZE(Image2D);
+WIRE_IMPLEMENT_TERMINATE(Image2D);
 
 const UChar Image2D::s_ImageBpp[] =
 {
@@ -19,6 +21,65 @@ const UChar Image2D::s_ImageBpp[] =
 	2,	// FM_RGB565,
 	2	// FM_RGBA4444,
 };
+
+Image2DPtr Image2D::s_spDefault;
+Image2DPtr Image2D::s_spDefaultWithAlpha;
+
+//----------------------------------------------------------------------------
+void Image2D::Initialize()
+{
+	const UInt width = 2;
+	const UInt height = 2;
+
+	FormatMode format = FM_RGB888;
+	UChar* const pRawImage = WIRE_NEW UChar[width * height * 
+		Image2D::GetBytesPerPixel(format)];
+	pRawImage[0] = 0xFF;
+	pRawImage[1] = 0xFF;
+	pRawImage[2] = 0xFF;
+	pRawImage[3*1+0] = 0xFF;
+	pRawImage[3*1+1] = 0x00;
+	pRawImage[3*1+2] = 0x00;
+	pRawImage[3*2+0] = 0xFF;
+	pRawImage[3*2+1] = 0x00;
+	pRawImage[3*2+2] = 0x00;
+	pRawImage[3*3+0] = 0xFF;
+	pRawImage[3*3+1] = 0xFF;
+	pRawImage[3*3+2] = 0xFF;
+	s_spDefault = WIRE_NEW Image2D(format, width, height, pRawImage,
+		false);
+
+	format = FM_RGBA8888;
+	UChar* const pRawImageAlpha = WIRE_NEW UChar[width * height * 
+		Image2D::GetBytesPerPixel(format)];
+
+	pRawImageAlpha[0] = 0xFF;
+	pRawImageAlpha[1] = 0xFF;
+	pRawImageAlpha[2] = 0xFF;
+	pRawImageAlpha[3] = 0x7F;
+	pRawImageAlpha[4*1+0] = 0xFF;
+	pRawImageAlpha[4*1+1] = 0x00;
+	pRawImageAlpha[4*1+2] = 0x00;
+	pRawImageAlpha[4*1+3] = 0x7F;
+	pRawImageAlpha[4*2+0] = 0xFF;
+	pRawImageAlpha[4*2+1] = 0x00;
+	pRawImageAlpha[4*2+2] = 0x00;
+	pRawImageAlpha[4*2+3] = 0x7F;
+	pRawImageAlpha[4*3+0] = 0xFF;
+	pRawImageAlpha[4*3+1] = 0xFF;
+	pRawImageAlpha[4*3+2] = 0xFF;
+	pRawImageAlpha[4*3+3] = 0x7F;
+
+	s_spDefaultWithAlpha = WIRE_NEW Image2D(format, width, height,
+		pRawImageAlpha, false);
+}
+
+//----------------------------------------------------------------------------
+void Image2D::Terminate()
+{
+	s_spDefault = NULL;
+	s_spDefaultWithAlpha = NULL;
+}
 
 //----------------------------------------------------------------------------
 Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
