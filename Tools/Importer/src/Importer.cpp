@@ -539,6 +539,10 @@ Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
 				{
 					return  Buffer::UT_DYNAMIC_WRITE_ONLY;
 				}
+				else if (Is("STATIC_DISCARD_ON_BIND", pValue))
+				{
+					return  Buffer::UT_STATIC_DISCARD_ON_BIND;
+				}
 			}
 		}
 	}
@@ -1500,6 +1504,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	Texture2D::FilterType filter = Texture2D::FT_LINEAR_LINEAR;
 	Texture2D::WrapType warp = Texture2D::WT_CLAMP;
 	UInt anisoLevel = 0;
+	Buffer::UsageType usage = GetUsageType(pXmlNode);
 
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
@@ -1575,7 +1580,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		return NULL;
 	}
 
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage, usage);
 	mStatistics.TextureCount++;
 	pTexture->SetFilterType(filter);
 	pTexture->SetWrapType(0, warp);

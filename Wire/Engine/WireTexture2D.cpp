@@ -16,18 +16,13 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Texture2D, Buffer);
 
 //----------------------------------------------------------------------------
-Texture2D::Texture2D(Image2D* pImage)
+Texture2D::Texture2D(Image2D* pImage, UsageType usage)
 	:
-	Buffer(Buffer::UT_STATIC),
+	Buffer(usage),
 	mspImage(pImage),
-	mFilterType(FT_LINEAR),
+	mFilterType(FT_LINEAR_LINEAR),
 	mAnisotropy(1.0F)
 {
-	if (pImage->HasMipmaps())
-	{
-		mFilterType = FT_LINEAR_LINEAR;
-	}
-
 	mWarpType[0] = WT_CLAMP;
 	mWarpType[1] = WT_CLAMP;
 }

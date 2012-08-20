@@ -139,8 +139,9 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		}
 	}
 
-	const D3DPOOL pool = (pTexture->GetUsage() == Buffer::UT_STATIC) ?
-		D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
+	const Bool isStatic = (pTexture->GetUsage() == Buffer::UT_STATIC) ||
+		(pTexture->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND);
+	const D3DPOOL pool = isStatic ?	D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
 	const UInt mipmapCount = pImage->GetMipmapCount();
 	const DWORD usage = 0;
 
@@ -158,8 +159,8 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 
 	if (pDst)
 	{
-		Buffer::LockingMode lockingMode = pTexture->GetUsage() ==
-			Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
+		Buffer::LockingMode lockingMode = isStatic ? Buffer::LM_READ_WRITE :
+			Buffer::LM_WRITE_ONLY;
 
 		for (UInt level = 0; level < mipmapCount; ++level)
 		{

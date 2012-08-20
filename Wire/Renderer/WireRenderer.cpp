@@ -463,10 +463,29 @@ PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
 
 	if (!pValue)
 	{
+		Texture2D* pT = const_cast<Texture2D*>(pTexture);
+		if (!pTexture->GetImage())
+		{
+			pT->SetImage(Image2D::GetDefaultWithAlpha());
+		}
+
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pTexture);
 		mTexture2DMap.Insert(pTexture, pPdrTexture);
 		mStatistics.TextureCount++;
 		mStatistics.TextureTotalSize += pPdrTexture->GetBufferSize();
+
+		if (pTexture->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
+		{
+			if (pTexture->GetImage()->HasAlpha())
+			{
+				pT->SetImage(Image2D::GetDefaultWithAlpha());
+			}
+			else
+			{
+				pT->SetImage(Image2D::GetDefault());
+			}
+		}
+
 		return pPdrTexture;
 	}
 

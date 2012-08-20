@@ -506,7 +506,8 @@ const D3DPOOL PdrRendererData::POOLS[Buffer::UT_QUANTITY] =
 {
 	D3DPOOL_MANAGED,	// Buffer::UT_STATIC
 	D3DPOOL_DEFAULT,	// Buffer::UT_DYNAMIC
-	D3DPOOL_DEFAULT		// Buffer::UT_DYNAMIC_WRITE_ONLY
+	D3DPOOL_DEFAULT,	// Buffer::UT_DYNAMIC_WRITE_ONLY
+	D3DPOOL_MANAGED		// Buffer::UT_STATIC_DISCARD_ON_BIND
 };
 
 //----------------------------------------------------------------------------
@@ -514,7 +515,8 @@ const DWORD PdrRendererData::USAGES[Buffer::UT_QUANTITY] =
 {
 	D3DUSAGE_WRITEONLY,						// Buffer::UT_STATIC
 	D3DUSAGE_DYNAMIC,						// Buffer::UT_DYNAMIC
-	D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY	// Buffer::UT_DYNAMIC_WRITE_ONLY
+	D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY,	// Buffer::UT_DYNAMIC_WRITE_ONLY
+	D3DUSAGE_WRITEONLY						// Buffer::UT_STATIC_DISCARD_ON_BIND
 };
 
 //----------------------------------------------------------------------------
@@ -628,4 +630,3 @@ void PdrRendererData::ResetDevice()
 
 	rRenderer.Set(rRenderer.mspStates);
 }
-
