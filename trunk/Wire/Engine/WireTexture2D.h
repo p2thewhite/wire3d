@@ -41,7 +41,7 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture2D(Image2D* pImage);
+	Texture2D(Image2D* pImage, UsageType usage = Buffer::UT_STATIC);
 	virtual ~Texture2D();
 
 	inline Image2D* GetImage();
@@ -62,7 +62,7 @@ public:
 
 private:
 	Pointer<Image2D> mspImage;
-	FilterType mFilterType;	// default = FT_LINEAR
+	FilterType mFilterType;	// default = FT_LINEAR_LINEAR
 	WrapType mWarpType[2];	// default = WT_CLAMP
 	Float mAnisotropy;		// default = 1.0F
 };

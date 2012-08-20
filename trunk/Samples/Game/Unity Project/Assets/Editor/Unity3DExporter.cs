@@ -418,7 +418,7 @@ public class Unity3DExporter : EditorWindow
 		string texName = texture.name + "_" + texture.GetInstanceID ().ToString ("X8") + ".png";
 		outFile.WriteLine (indent + "  <Texture Name=\"" + texName + 
             "\" FilterMode=\"" + texture.filterMode + "\" AnisoLevel=\"" + texture.anisoLevel +
-            "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + texture.mipmapCount + "\" />");
+            "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + texture.mipmapCount + "\" Usage=\"STATIC_DISCARD_ON_BIND\" />");
 		
 		if (mExportXmlOnly) {
 			return;
