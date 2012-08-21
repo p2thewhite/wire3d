@@ -8,15 +8,17 @@ using System.IO;
 public class Unity3DExporter : EditorWindow
 {
 	private static bool mIsWindowOpen;
-	private bool mExportStateMaterial;
+	private bool mExportStateMaterial = true;
 	private bool mIgnoreUnderscore;
 	private bool mExportXmlOnly;
-	private bool mPreventRepeatedNodeNames;
+	private bool mRenameGameObjectsWithIdenticalNames;
+	private bool mDontDiscardTexturesOnBind;
 	private string m2ndTextureName;
-	private string mPath;
+	private string mPath = "../Data/Scene";
 	private List<string> mMeshAssetsProcessed;
 	private List<string> mTextureAssetsProcessed;
 	private Dictionary<string, int> mNodeNameCounter;
+	private float mSkyboxScale = 100.0f;
 
 	[MenuItem("Wire3D/Exporter")]
 	protected static void CreateWizard ()
@@ -134,10 +136,15 @@ public class Unity3DExporter : EditorWindow
 		// ---
 		GUILayout.Space (10);
 
-		mExportStateMaterial = GUILayout.Toggle (mExportStateMaterial, "Try to export Material State (i.e. Main Color)");
+		mExportStateMaterial = GUILayout.Toggle (mExportStateMaterial, new GUIContent ("Try to export StateMaterial from Shader", "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
 		mIgnoreUnderscore = GUILayout.Toggle (mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
-		mExportXmlOnly = GUILayout.Toggle (mExportXmlOnly, "Export scene XML only");
-		mPreventRepeatedNodeNames = GUILayout.Toggle (mPreventRepeatedNodeNames, "Prevent repeated node names");
+		mExportXmlOnly = GUILayout.Toggle (mExportXmlOnly, new GUIContent ("Export scene XML file only", "Textures, meshes, etc. will not be exported."));
+		mRenameGameObjectsWithIdenticalNames = GUILayout.Toggle (mRenameGameObjectsWithIdenticalNames, new GUIContent ("Rename GameObjects with identical names", "GameObjects with identical names will be enumerated, appending a number to the name."));
+		mDontDiscardTexturesOnBind = GUILayout.Toggle (mDontDiscardTexturesOnBind, new GUIContent ("Flag textures as 'Don't discard on bind'", "Textures that are not discarded at bind time can be bound multiple times, but at the cost of double ram usage per texture."));
+
+		if (RenderSettings.skybox != null) {
+			mSkyboxScale = EditorGUILayout.FloatField ("Skybox Scale factor", mSkyboxScale);
+		}
 		
 		// ---
 		GUILayout.Space (10);
@@ -156,20 +163,17 @@ public class Unity3DExporter : EditorWindow
 
 				mMeshAssetsProcessed = new List<string> ();
 				mTextureAssetsProcessed = new List<string> ();
+				mNodeNameCounter = new Dictionary<string, int> ();
 				Export ();
 			}
-		}
-		
-		if (mPreventRepeatedNodeNames) {
-			mNodeNameCounter = new Dictionary<string, int> ();
-		}
+		}	
 	}
 	
-	private string GetNodeName (GameObject gameObject)
+	private string GetSpatialName (GameObject gameObject)
 	{
 		string nodeName = gameObject.name;
 		
-		if (!mPreventRepeatedNodeNames)
+		if (!mRenameGameObjectsWithIdenticalNames)
 			return nodeName;
 				
 		int nameUsageCount;
@@ -198,7 +202,7 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		string isStatic = " Static=\"" + (transform.gameObject.isStatic ? "1" : "0") + "\"";
-		outFile.WriteLine (indent + "<Leaf Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + isStatic + ">");
+		outFile.WriteLine (indent + "<Leaf Name=\"" + GetSpatialName (transform.gameObject) + "\" " + GetTransformAsString (transform) + isStatic + ">");
 
 		if (writeComponents) {
 			WriteCamera (transform.gameObject, outFile, indent);
@@ -212,13 +216,13 @@ public class Unity3DExporter : EditorWindow
 		outFile.WriteLine (indent + "</Leaf>");       
 	}
 	
-	private void WriteNonVisibleNode (Transform transform, StreamWriter outFile, string indent)
+	private void WriteNode (Transform transform, StreamWriter outFile, string indent)
 	{
 		GameObject gameObject = transform.gameObject;
 		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
 		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
 		
-		outFile.WriteLine (indent + "<Node Name=\"" + GetNodeName (transform.gameObject) + "\" " + GetTransformAsString (transform) + ">");
+		outFile.WriteLine (indent + "<Node Name=\"" + GetSpatialName (transform.gameObject) + "\" " + GetTransformAsString (transform) + ">");
     	
 		WriteCamera (transform.gameObject, outFile, indent);
 		WriteLight (transform.gameObject, outFile, indent);
@@ -236,7 +240,66 @@ public class Unity3DExporter : EditorWindow
     	
 		outFile.WriteLine (indent + "</Node>");
 	}
-	
+
+	private void WriteSkybox (StreamWriter outFile, string indent)
+	{
+		Material skyboxMaterial = RenderSettings.skybox;
+		if (skyboxMaterial == null) {
+			return;
+		}
+
+		Shader skyBoxShader = skyboxMaterial.shader;
+		if (skyBoxShader == null) {
+			return;
+		}
+
+		if (!skyBoxShader.name.Equals ("RenderFX/Skybox")) {
+			return;
+		}
+
+		string posZName;
+		string negZName;
+		string posXName;
+		string negXName;
+		string posYName;
+		string negYName;
+
+		Texture2D posZTexture2D = GetTextureFromMaterial (skyboxMaterial, "_FrontTex", out posZName);
+		Texture2D negZTexture2D = GetTextureFromMaterial (skyboxMaterial, "_BackTex", out negZName);
+		Texture2D posXTexture2D = GetTextureFromMaterial (skyboxMaterial, "_LeftTex", out posXName);
+		Texture2D negXTexture2D = GetTextureFromMaterial (skyboxMaterial, "_RightTex", out negXName);
+		Texture2D posYTexture2D = GetTextureFromMaterial (skyboxMaterial, "_UpTex", out posYName);
+		Texture2D negYTexture2D = GetTextureFromMaterial (skyboxMaterial, "_DownTex", out negYName);
+
+		outFile.WriteLine (indent + "<Skybox PosZ=\"" + posZName + "\" NegZ=\"" + negZName + "\" PosX=\"" + negXName + "\" NegX=\"" + posXName + "\" PosY=\"" + posYName + "\" NegY=\"" + negYName + "\" Scale=\"" + mSkyboxScale + "\" />");
+
+		if (mExportXmlOnly) {
+			return;
+		}
+
+		WriteImage (posZTexture2D, false, posZName);
+		WriteImage (negZTexture2D, false, negZName);
+		WriteImage (posXTexture2D, false, posXName);
+		WriteImage (negXTexture2D, false, negXName);
+		WriteImage (posYTexture2D, false, posYName);
+		WriteImage (negYTexture2D, false, negYName);
+	}
+    
+	static private Texture2D GetTextureFromMaterial (Material material, string propertyName, out string textureName)
+	{
+		Texture2D texture = null;
+		textureName = "";
+
+		if (material.HasProperty (propertyName)) {
+			texture = material.GetTexture (propertyName) as Texture2D;
+			if (texture != null) {
+				textureName = texture.name + "_" + texture.GetInstanceID ().ToString ("X8") + ".png";
+			}
+		}
+
+		return texture;
+	}
+
 	private void ExportTraverse (Transform transform, StreamWriter outFile, string indent)
 	{
 		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
@@ -246,7 +309,7 @@ public class Unity3DExporter : EditorWindow
 		if (IsLeaf (transform)) {
 			WriteLeaf (transform, outFile, indent);
 		} else {
-			WriteNonVisibleNode (transform, outFile, indent);
+			WriteNode (transform, outFile, indent);
 		}
 	}
 	
@@ -265,15 +328,16 @@ public class Unity3DExporter : EditorWindow
 		StreamWriter outFile = new StreamWriter (mPath + unitySceneName + ".xml");
 		try {
 			GameObject root = new GameObject ("Root");
-			outFile.WriteLine ("<Node Name=\"" + GetNodeName (root) + "\" " + GetTransformAsString (root.transform) + ">");
+			outFile.WriteLine ("<Node Name=\"" + GetSpatialName (root) + "\" " + GetTransformAsString (root.transform) + ">");
+			DestroyImmediate (root);
 			string indent = "  ";
 	
 			foreach (Transform transform in GetRootTransforms ()) {
 				ExportTraverse (transform, outFile, indent);
 			}
 	
-			DestroyImmediate (root);
-			
+			WriteSkybox (outFile, indent);
+
 			outFile.WriteLine ("</Node>");
 		} finally {
 			outFile.Close ();
@@ -416,14 +480,32 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		string texName = texture.name + "_" + texture.GetInstanceID ().ToString ("X8") + ".png";
-		outFile.WriteLine (indent + "  <Texture Name=\"" + texName + 
+		string textureXmlNode = indent + "  <Texture Name=\"" + texName +
             "\" FilterMode=\"" + texture.filterMode + "\" AnisoLevel=\"" + texture.anisoLevel +
-            "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + texture.mipmapCount + "\" Usage=\"STATIC_DISCARD_ON_BIND\" />");
+            "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + texture.mipmapCount + "\" ";
+
+		if (!mDontDiscardTexturesOnBind) {
+			textureXmlNode += "Usage=\"STATIC_DISCARD_ON_BIND\" ";
+		}
+
+		textureXmlNode += "/>";
+
+		outFile.WriteLine (textureXmlNode);
 		
 		if (mExportXmlOnly) {
 			return;
 		}
-		
+
+		WriteImage (texture, isLightmap, texName);
+		return;
+	}
+
+	private void WriteImage (Texture2D texture, bool isLightmap, string texName)
+	{
+		if (texture == null) {
+			return;
+		}
+
 		string assetPath = AssetDatabase.GetAssetPath (texture);
 		TextureImporter textureImporter = AssetImporter.GetAtPath (assetPath) as TextureImporter;
 		if (textureImporter == null) {
@@ -466,7 +548,7 @@ public class Unity3DExporter : EditorWindow
 			if (!isLightmap) {
 				Byte[] bytes = texture.EncodeToPNG ();
 				File.WriteAllBytes (mPath + "/" + texName, bytes);
-			} else {                  
+			} else {
 				if (texture.format == TextureFormat.ARGB32) {
 					Color32[] texSrc = texture.GetPixels32 ();
 
