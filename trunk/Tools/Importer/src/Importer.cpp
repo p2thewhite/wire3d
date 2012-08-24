@@ -355,6 +355,11 @@ Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 
 	String path = String(mpPath) + String(pFilename);
 	Char* pBuffer = Load(static_cast<const Char*>(path), rSize);
+	if (!pBuffer)
+	{
+		return NULL;
+	}
+
 	Float* pBuffer32 = reinterpret_cast<Float*>(pBuffer);
 	if (System::IsBigEndian() != isBigEndian)
 	{
@@ -1009,51 +1014,49 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 NodeSkybox* Importer::ParseSkybox(rapidxml::xml_node<>* pXmlNode)
 {
-	String filename = String(mpPath) + String(GetValue(pXmlNode, "PosZ"));
-	Image2D* pSkyboxPosZ = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxPosZ);
-
-	filename = String(mpPath) + String(GetValue(pXmlNode, "NegZ"));
-	Image2D* pSkyboxNegZ = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxNegZ);
-
-	filename = String(mpPath) + String(GetValue(pXmlNode, "PosX"));
-	Image2D* pSkyboxPosX = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxPosX);
-
-	filename = String(mpPath) + String(GetValue(pXmlNode, "NegX"));
-	Image2D* pSkyboxNegX = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxNegX);
-
-	filename = String(mpPath) + String(GetValue(pXmlNode, "PosY"));
-	Image2D* pSkyboxPosY = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxPosY);
-
-	filename = String(mpPath) + String(GetValue(pXmlNode, "NegY"));
-	Image2D* pSkyboxNegY = LoadPNG(filename, false);
-	WIRE_ASSERT(pSkyboxNegY);
-
-	if (!(pSkyboxPosZ && pSkyboxNegZ && pSkyboxPosX && pSkyboxNegX &&
-		pSkyboxPosY && pSkyboxNegY))
+	if (!pXmlNode->first_node())
 	{
 		return NULL;
 	}
 
-	Float scale = 1.0f;
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
+	Float scale = GetFloat(pXmlNode, "Scale");
+	scale = (scale == 0) ? 100.0F : scale;
+
+	Texture2D* pPosZ = ParseSkyboxTexture("PosZ", pXmlNode);
+	Texture2D* pNegZ = ParseSkyboxTexture("NegZ", pXmlNode);
+	Texture2D* pPosX = ParseSkyboxTexture("PosX", pXmlNode);
+	Texture2D* pNegX = ParseSkyboxTexture("NegX", pXmlNode);
+	Texture2D* pPosY = ParseSkyboxTexture("PosY", pXmlNode);
+	Texture2D* pNegY = ParseSkyboxTexture("NegY", pXmlNode);
+
+	NodeSkybox* pSkyBox = WIRE_NEW NodeSkybox(pPosZ, pNegZ, pPosX, pNegX,
+		pPosY, pNegY, scale);
+	return pSkyBox;
+}
+
+//----------------------------------------------------------------------------
+Texture2D* Importer::ParseSkyboxTexture(const Char* pName,
+	rapidxml::xml_node<>* pXmlNode)
+{
+	Texture2D* pTexture = NULL;
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
 	{
-		if (Is("Scale", attr->name()))
+		if (Is(pName, pChild->name()))
 		{
-			Int n;
-			n = sscanf(attr->value(), "%f", &scale);
-			WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+			for (rapidxml::xml_node<>* pGrandChild = pChild->first_node();
+				pGrandChild; pGrandChild = pGrandChild->next_sibling())
+			{
+				if (Is("Texture", pGrandChild->name()))
+				{
+					Material::BlendMode bm = Material::BM_REPLACE;
+					return ParseTexture(pGrandChild, bm);
+				}
+			}
 		}
 	}
 
-	NodeSkybox* pSkyBox = WIRE_NEW NodeSkybox(pSkyboxPosZ, pSkyboxNegZ,
-		pSkyboxPosX, pSkyboxNegX, pSkyboxPosY, pSkyboxNegY, scale);
-	return pSkyBox;
+	return pTexture;
 }
 
 //----------------------------------------------------------------------------
@@ -1582,6 +1585,18 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage, usage);
 	mStatistics.TextureCount++;
+	if (mipmapCount == 1)
+	{
+		if (filter == Texture2D::FT_NEAREST_NEAREST)
+		{
+			filter = Texture2D::FT_NEAREST;
+		}
+		else
+		{
+			filter = Texture2D::FT_LINEAR;
+		}
+	}
+
 	pTexture->SetFilterType(filter);
 	pTexture->SetWrapType(0, warp);
 	pTexture->SetWrapType(1, warp);
@@ -1680,6 +1695,11 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 		if (verticesSize / (3 * sizeof(Float)) != uvSetSizes[i] / (2 * sizeof(Float)))
 		{
 			WIRE_ASSERT(false /* vertices and uv sets do not match */);
+			for (UInt j = 0; j <= i; j++)
+			{
+				Free32(uvSets[j]);
+			}
+
 			Free32(pColors);
 			Free32(pNormals);
 			Free32(pVertices);
@@ -1750,6 +1770,11 @@ IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool
 	Int indicesSize;
 	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pFileName, indicesSize,
 		isIndexBufferBigEndian));
+	if (!pIndices)
+	{
+		return NULL;
+	}
+
 	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indicesSize/sizeof(UInt),
 		indexBufferUsage);
 	mStatistics.IndexBufferCount++;
@@ -1758,6 +1783,9 @@ IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool
 		WIRE_ASSERT(pIndices[i] < 65536);
 		(*pIndexBuffer)[i] = static_cast<UShort>(pIndices[i]);
 	}
+
+	UChar* pUChar = reinterpret_cast<UChar*>(pIndices);
+	WIRE_DELETE[] pUChar;
 
 	return pIndexBuffer;
 }
