@@ -31,19 +31,6 @@ NodeSkybox::NodeSkybox(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
 }
 
 //----------------------------------------------------------------------------
-NodeSkybox::NodeSkybox(Image2D* pPosZ, Image2D* pNegZ, Image2D* pPosX,
-	Image2D* pNegX, Image2D* pPosY, Image2D* pNegY, Float scale)
-{
-	Texture2D* pPZ = WIRE_NEW Texture2D(pPosZ);
-	Texture2D* pNZ = WIRE_NEW Texture2D(pNegZ);
-	Texture2D* pPX = WIRE_NEW Texture2D(pPosX);
-	Texture2D* pNX = WIRE_NEW Texture2D(pNegX);
-	Texture2D* pPY = WIRE_NEW Texture2D(pPosY);
-	Texture2D* pNY = WIRE_NEW Texture2D(pNegY);
-	Init(pPZ, pNZ, pPX, pNX, pPY, pNY, scale);
-}
-
-//----------------------------------------------------------------------------
 NodeSkybox::~NodeSkybox()
 {
 }

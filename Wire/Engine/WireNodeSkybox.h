@@ -28,8 +28,6 @@ public:
 	NodeSkybox(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
 		Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY,
 		Float scale = 1.0f);
-	NodeSkybox(Image2D* pPosZ, Image2D* pNegZ, Image2D* pPosX,
-		Image2D* pNegX, Image2D* pPosY, Image2D* pNegY,	Float scale = 1.0f);
 	virtual ~NodeSkybox();
 
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);

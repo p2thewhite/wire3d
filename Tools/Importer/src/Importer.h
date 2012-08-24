@@ -76,6 +76,7 @@ private:
 	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
 	Text* ParseText(rapidxml::xml_node<>* pXmlNode);
 	NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
+	Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode);
