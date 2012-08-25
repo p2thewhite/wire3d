@@ -1225,7 +1225,7 @@
   </Node>
   <Node Name="Starting Point" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
   </Node>
-  <Skybox Scale="100">
+  <Skybox Scale="120">
     <PosZ>
       <Texture Name="Front.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
     </PosZ>

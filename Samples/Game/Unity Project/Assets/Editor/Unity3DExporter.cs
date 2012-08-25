@@ -22,7 +22,7 @@ public class Unity3DExporter : EditorWindow
 	private List<string> mTextureAssetsProcessed;
 	private Dictionary<string, string> mTextureAssetNameToTextureName;
 	private Dictionary<string, int> mTextureNameToCount;
-	private float mSkyboxScale = 100.0f;
+	private float mSkyboxScale = 120.0f;
 
 	private struct Statistics
 	{
