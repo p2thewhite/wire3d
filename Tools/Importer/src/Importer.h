@@ -81,6 +81,7 @@ private:
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+	void ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
 	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);

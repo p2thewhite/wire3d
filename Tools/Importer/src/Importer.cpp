@@ -458,7 +458,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			ParseComponents(pChild, pNode);
+			ParseComponent(pChild, pNode);
 
 			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()) ||
 				Is("Text", pChild->name()) || Is("Skybox", pChild->name()))
@@ -1031,6 +1031,9 @@ NodeSkybox* Importer::ParseSkybox(rapidxml::xml_node<>* pXmlNode)
 
 	NodeSkybox* pSkyBox = WIRE_NEW NodeSkybox(pPosZ, pNegZ, pPosX, pNegX,
 		pPosY, pNegY, scale);
+
+	ParseComponents(pXmlNode, pSkyBox);
+
 	return pSkyBox;
 }
 
@@ -1060,7 +1063,7 @@ Texture2D* Importer::ParseSkyboxTexture(const Char* pName,
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
+void Importer::ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial*
 	pSpatial)
 {
 	State* pState = ParseRenderStates(pXmlNode);
@@ -1083,19 +1086,25 @@ void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
-	Spatial* pSpatial)
+void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
+	pSpatial)
 {
-	ParseTransformation(pXmlNode, pSpatial);
-
 	if (pXmlNode->first_node())
 	{
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			ParseComponents(pChild, pSpatial);
+			ParseComponent(pChild, pSpatial);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
+	Spatial* pSpatial)
+{
+	ParseTransformation(pXmlNode, pSpatial);
+	ParseComponents(pXmlNode, pSpatial);
 }
 
 //----------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 <Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <FogState Enabled="1" Color="0.5921569, 0.7333333, 0.5686275" Start="0" End="300" Mode="EXPSQR" />
   <Node Name="Colliders" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Node Name="Collider for Column 1" Pos="-8.910089, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
       <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494316, 5, 0.7494278" />
@@ -685,7 +686,6 @@
         <Vertices Name="Doors.vtx" LittleEndian="y" />
         <Indices Name="Doors.idx" LittleEndian="y" />
         <Normals Name="Doors.nm" LittleEndian="y" />
-        <Colors Name="Doors.col" LittleEndian="y" />
         <Uv0 Name="Doors.uv0" LittleEndian="y" />
         <Uv1 Name="Doors_0.0429688_0.0429688_0.327146_0.869679.uv1" LittleEndian="y" />
       </Mesh>
@@ -1244,5 +1244,6 @@
     <NegY>
       <Texture Name="Bottom.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
     </NegY>
+  <FogState Enabled="0" />
   </Skybox>
 </Node>

@@ -319,6 +319,8 @@ public class Unity3DExporter : EditorWindow
 		WriteTexture (negYTexture2D, outFile, indent + "  ");
 		outFile.WriteLine (indent + "  " + "</NegY>");
 
+        outFile.WriteLine(indent + "<FogState Enabled=\"0\" />");
+
 		outFile.WriteLine (indent + "</Skybox>");
 	}
     
@@ -364,7 +366,9 @@ public class Unity3DExporter : EditorWindow
 			outFile.WriteLine ("<Node Name=\"" + root.name + "\" " + GetTransformAsString (root.transform) + ">");
 			DestroyImmediate (root);
 			string indent = "  ";
-	
+
+            WriteStateFog (outFile, indent);
+
 			foreach (Transform transform in GetRootTransforms ()) {
 				ExportTraverse (transform, outFile, indent);
 			}
@@ -388,6 +392,24 @@ public class Unity3DExporter : EditorWindow
                "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
 	}
 
+    private void WriteStateFog (StreamWriter outFile, string indent)
+    {
+        string enabled = RenderSettings.fog ? "1" : "0";
+        Color color = RenderSettings.fogColor;
+        string mode = "LINEAR";
+        if (RenderSettings.fogMode == FogMode.Exponential)
+        {
+            mode = "EXP";
+        }
+        else if (RenderSettings.fogMode == FogMode.ExponentialSquared)
+        {
+            mode = "EXPSQR";
+        }
+
+        outFile.WriteLine(indent + "<FogState Enabled=\"" + enabled + "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\" " +
+            "Start=\"" + RenderSettings.fogStartDistance + "\" End=\"" + RenderSettings.fogEndDistance + "\"" + " Mode=\"" + mode + "\" />");
+    }
+
 	private void WriteLight (GameObject gameObject, StreamWriter outFile, string indent)
 	{
 		Light light = gameObject.GetComponent<Light> ();
@@ -395,7 +417,7 @@ public class Unity3DExporter : EditorWindow
 		if (light == null) {
 			return;
 		}
-
+        
 		Color ambient = RenderSettings.ambientLight;
 		Color color = light.color * light.intensity; 
 		
