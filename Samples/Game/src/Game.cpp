@@ -468,22 +468,13 @@ Node* Game::LoadAndInitializeGUI()
 	mspCrosshair = pRoot->GetChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
-	Geometry* pHealthBarFrame = DynamicCast<Geometry>(pRoot->GetChildByName("PlayerHealthBarFrame"));
-	WIRE_ASSERT(pHealthBarFrame /* No PlayerHealthBarFrame in GUI.xml */);
-	pHealthBarFrame->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
-
-	pHealthBarFrame = DynamicCast<Geometry>(pRoot->GetChildByName("ProbeRobotHealthBarFrame"));
-	WIRE_ASSERT(pHealthBarFrame /* No ProbeRobotHealthBarFrame in GUI.xml */);
-	pHealthBarFrame->Local.SetTranslate(Vector3F(256, GetHeightF()-64.0F, 0));
-
 	mspGreenHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("GreenHealthBar"));
 	WIRE_ASSERT(mspGreenHealthBar /* No GreenHealthBar in GUI.xml */);
-	mspGreenHealthBar->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
+	mspGreenHealthBar->Local.SetTranslate(Vector3F(10, GetHeightF() - 26.0F, 0));
 
 	mspRedHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("RedHealthBar"));
 	WIRE_ASSERT(mspRedHealthBar /* No RedHealthBar in GUI.xml */);
-	mspRedHealthBar->Local.SetTranslate(Vector3F(256, GetHeightF()-64.0F, 0));
-
+	mspRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
 
 	// Create health monitor
 	mspHealthMonitor = WIRE_NEW HealthMonitor(mspGreenHealthBar, mspRedHealthBar, mspPlayer, mspProbeRobot);

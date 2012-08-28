@@ -34,15 +34,16 @@ private:
 	Float mSpeed;
 	Float mSquaredMaximumPlayerDistance;
 	Vector3F mMove;
-	Matrix3F mStartingRotation;
 	Matrix3F mRotation;
 	btDynamicsWorld* mpPhysicsWorld;
 	btPairCachingGhostObject* mpGhostObject;
 	btKinematicCharacterController* mpPhysicsEntity;
 
 	void InitializeIfNecessary();
+	Float GetDeltaTime(Double appTime);
+	void CalculateMovementAndRotation(Float deltaTime);
 	Vector3F GetPosition();
-	void UpdateSpatial();
+	void UpdateModel();
 	void MovePhysicsEntity();
 	void Die();
 
