@@ -12,6 +12,7 @@
 
 #include "WireMain.h"
 #include "WireTexture2D.h"
+#include "WireVector3.h"
 #include "WireTypes.h"
 
 namespace Wire
@@ -55,6 +56,10 @@ public:
 	static Geometry* CreateQuad(const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
+
+	static Geometry* CreateCylinder (Int axisSampleCount,
+		Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis, const Float radius,
+		const Float height, const UInt uvQuantity, const UInt vertexColorChannels, const Bool useNormals = false);
 
 	// sphere with poles going through z-axis
 	static Geometry* CreateSphere(Int zSampleCount, Int radialSampleCount,

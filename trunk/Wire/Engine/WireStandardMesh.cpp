@@ -544,6 +544,182 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
+Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
+	Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis, const Float radius,
+	const Float height, const UInt uvQuantity, const UInt vertexColorChannels, const Bool useNormals)
+{
+	VertexAttributes attr;
+	attr.SetPositionChannels(3);  // channels: X, Y, Z
+
+	for (UInt unit = 0; unit < uvQuantity; unit++)
+	{
+		attr.SetTCoordChannels(2, unit);	// channels: U, V
+	}
+
+	if (vertexColorChannels > 0)
+	{
+		WIRE_ASSERT(vertexColorChannels == 3 || vertexColorChannels == 4);
+		attr.SetColorChannels(vertexColorChannels);	// RGB(A)
+	}
+
+	if (useNormals)
+	{
+		attr.SetNormalChannels(3);	// channels: X, Y, Z
+	}
+
+	// allocate vertices
+	const Int vertexQuantity = axisSampleCount*(radialSampleCount+1);
+	Int triangleQuantity = 2*(axisSampleCount-1)*radialSampleCount;
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attr, vertexQuantity);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(3 * triangleQuantity);
+
+	// generate geometry
+	Float invRS = 1.0f/(Float)radialSampleCount;
+	Float invASm1 = 1.0f/(Float)(axisSampleCount-1);
+	Float fHalfHeight = 0.5f*height;
+
+	// Generate points on the unit circle to be used in computing the mesh
+	// points on a cylinder slice.
+	Float* pSin = new Float[radialSampleCount+1];
+	Float* pCos = new Float[radialSampleCount+1];
+	for (Int r = 0; r < radialSampleCount; r++)
+	{
+		Float angle = MathF::TWO_PI * invRS * r;
+		pCos[r] = MathF::Cos(angle);
+		pSin[r] = MathF::Sin(angle);
+	}
+
+	pSin[radialSampleCount] = pSin[0];
+	pCos[radialSampleCount] = pCos[0];
+
+	const UInt uvChannelCount = attr.GetTCoordChannelQuantity();
+	Int i = 0;
+	// generate the cylinder itself
+	for (Int a = 0; a < axisSampleCount; a++)
+	{
+		float axisFraction = a*invASm1;  // in [0,1]
+		float z = -fHalfHeight + height*axisFraction;
+
+		// compute center of slice
+		Vector3F sliceCenter = rCenter + z * rAxis;
+
+		// compute slice vertices with duplication at end point
+		int iSave = i;
+		for (Int r = 0; r < radialSampleCount; r++)
+		{
+			float radialFraction = r * invRS;  // in [0,1)
+			Vector3F normal(pCos[r], pSin[r], 0.0f);
+			pVBuffer->Position3(i) = sliceCenter + radius*normal;
+
+			if (attr.HasNormal())
+			{
+				normal = pVBuffer->Position3(i);
+				normal.Normalize();
+				pVBuffer->Normal3(i) = normal;
+			}
+
+			if (vertexColorChannels == 3)
+			{
+				Vector3F v = pVBuffer->Position3(i);
+				v.Normalize();
+				pVBuffer->Color3(i) = ColorRGB(v.X(), v.Y(), v.Z());
+			}
+			else if (vertexColorChannels == 4)
+			{
+				Vector3F v = pVBuffer->Position3(i);
+				v.Normalize();
+				pVBuffer->Color4(i) = ColorRGBA(v.X(), v.Y(), v.Z(), 1);
+			}
+
+			if (uvChannelCount > 0)
+			{
+				Vector2F tCoord = Vector2F(radialFraction, axisFraction);
+				for (UInt unit = 0; unit < uvChannelCount; unit++)
+				{
+					if (attr.HasTCoord(unit))
+					{
+						pVBuffer->TCoord2(i, unit) = tCoord;
+					}
+				}
+			}
+
+			i++;
+		}
+
+		pVBuffer->Position3(i) = pVBuffer->Position3(iSave);
+		if (attr.HasNormal())
+		{
+			pVBuffer->Normal3(i) = pVBuffer->Normal3(iSave);
+		}
+
+		if (vertexColorChannels == 3)
+		{
+			Vector3F v = pVBuffer->Position3(i);
+			v.Normalize();
+			pVBuffer->Color3(i) = ColorRGB(v.X(), v.Y(), v.Z());
+		}
+		else if (vertexColorChannels == 4)
+		{
+			Vector3F v = pVBuffer->Position3(i);
+			v.Normalize();
+			pVBuffer->Color4(i) = ColorRGBA(v.X(), v.Y(), v.Z(), 1);
+		}
+
+		if (uvChannelCount > 0)
+		{
+			Vector2F tCoord = Vector2F(1.0F, axisFraction);
+			for (UInt unit = 0; unit < uvChannelCount; unit++)
+			{
+				if (attr.HasTCoord(unit))
+				{
+					pVBuffer->TCoord2(i, unit) = tCoord;
+				}
+			}
+		}
+
+		i++;
+	}
+
+	Short rsc = static_cast<Short>(radialSampleCount);
+
+	// generate connectivity
+	UShort* pLocalIndex = pIBuffer->GetData();
+	Short aStart = 0;
+	for (Int a = 0; a < axisSampleCount-1; a++)
+	{
+		Short i0 = aStart;
+		Short i1 = i0 + 1;
+		aStart += rsc + 1;
+		Short i2 = aStart;
+		Short i3 = i2 + 1;
+		for (i = 0; i < radialSampleCount; i++)
+		{
+			pLocalIndex[0] = i0++;
+			pLocalIndex[1] = i1;
+			pLocalIndex[2] = i2;
+			pLocalIndex[3] = i1++;
+			pLocalIndex[4] = i3++;
+			pLocalIndex[5] = i2++;
+			pLocalIndex += 6;
+		}
+	}
+
+	WIRE_ASSERT(pLocalIndex == pIBuffer->GetData() + 3*triangleQuantity);
+
+	WIRE_DELETE[] pCos;
+	WIRE_DELETE[] pSin;
+
+	Geometry* pMesh = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+
+	// The duplication of vertices at the seam cause the automatically
+	// generated bounding volume to be slightly off center. Reset the bound
+	// to use the true information.
+	pMesh->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	pMesh->GetMesh()->GetModelBound()->SetRadius(radius);
+	return pMesh;
+}
+
+//----------------------------------------------------------------------------
 Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	Float radius, const UInt uvQuantity, const UInt vertexColorChannels,
 	const Bool useNormals)
@@ -590,7 +766,7 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	pSin[radialSampleCount] = pSin[0];
 	pCos[radialSampleCount] = pCos[0];
 
-	// generate the cylinder itself
+	// generate the sphere itself
 	const UInt uvChannelCount = attr.GetTCoordChannelQuantity();
 	Int i = 0;
 	for (Int iZ = 1; iZ < zSampleCount-1; iZ++)

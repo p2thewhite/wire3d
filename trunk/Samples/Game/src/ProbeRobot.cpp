@@ -22,18 +22,7 @@ ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 //----------------------------------------------------------------------------
 Bool ProbeRobot::Update(Double appTime)
 {
-	static Double lastApplicationTime = 0;
-	Float deltaTime;
-
-	if (lastApplicationTime == 0) 
-	{
-		deltaTime = 0;
-	} 
-	else 
-	{
-		deltaTime = (Float)(appTime - lastApplicationTime);
-	}
-	lastApplicationTime = appTime;
+	Float deltaTime = GetDeltaTime(appTime);
 
 	InitializeIfNecessary();
 
@@ -43,30 +32,8 @@ Bool ProbeRobot::Update(Double appTime)
 		return true;
 	}
 
-	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
-	Vector3F probeRobotPosition = GetPosition();
-	Float squaredDistance = MathF::FAbs(playerPosition.SquaredDistance(probeRobotPosition));
-
-	Vector3F direction = playerPosition - probeRobotPosition;
-	direction.Normalize();
-
-	Float angle = direction.GetAngle(Vector3F::UNIT_Z);
-
-	// Correcting angle sign
-	if (playerPosition.Cross(probeRobotPosition).Z() < 0)
-	{
-		angle = -angle;
-	}
-
-	// FIXME: probe robot model starts at -90 X rotation, so the Y corresponds to the Z
-	mRotation.FromAxisAngle(Vector3F::UNIT_Z, angle);
-
-	if (squaredDistance > mSquaredMaximumPlayerDistance)
-	{
-		mMove = direction * mSpeed * deltaTime;
-	}
-
-	UpdateSpatial();
+	CalculateMovementAndRotation(deltaTime);
+	UpdateModel();
 	MovePhysicsEntity();
 
 	mMove = Vector3F::ZERO;
@@ -77,14 +44,15 @@ Bool ProbeRobot::Update(Double appTime)
 //----------------------------------------------------------------------------
 void ProbeRobot::InitializeIfNecessary()
 {
-	if (mpSpatial != NULL) 
+	if (mpSpatial) 
 	{
 		return;
 	}
 
 	mpSpatial = DynamicCast<Spatial>(GetObject());
-	mStartingRotation = mpSpatial->World.GetRotate();
+	WIRE_ASSERT(mpSpatial);
 
+	// Set physics entity position
 	btTransform transform;
 	transform.setIdentity();
 	transform.setOrigin(BulletUtils::Convert(mpSpatial->Local.GetTranslate()));
@@ -95,7 +63,7 @@ void ProbeRobot::InitializeIfNecessary()
 void ProbeRobot::Die()
 {
 	// DEBUG:
-	System::Print("Probe robot has died\n");
+	//System::Print("Probe robot has died\n");
 
 	mpSpatial->DetachController(this);
 	mpGhostObject->setUserPointer(NULL);
@@ -164,10 +132,10 @@ Vector3F ProbeRobot::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::UpdateSpatial()
+void ProbeRobot::UpdateModel()
 {
 	mpSpatial->Local.SetTranslate(GetPosition());
-	mpSpatial->Local.SetRotate(mStartingRotation * mRotation);
+	mpSpatial->Local.SetRotate(mRotation);
 }
 
 //----------------------------------------------------------------------------
@@ -180,7 +148,51 @@ void ProbeRobot::MovePhysicsEntity()
 void ProbeRobot::TakeDamage(Float damage)
 {
 	// DEBUG:
-	System::Print("Probe robot has taken %.1f point of damage\n", damage);
+	//System::Print("Probe robot has taken %.1f point of damage\n", damage);
 
 	mHealth -= damage;
+}
+
+//----------------------------------------------------------------------------
+void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
+{
+	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
+	Vector3F probeRobotPosition = GetPosition();
+	Float squaredDistance = MathF::FAbs(playerPosition.SquaredDistance(probeRobotPosition));
+
+	Vector3F direction = playerPosition - probeRobotPosition;
+	direction.Normalize();
+
+	Float angle = direction.GetAngle(Vector3F::UNIT_Z);
+
+	// Correcting angle sign
+	if (playerPosition.Cross(probeRobotPosition).Z() < 0)
+	{
+		angle = -angle;
+	}
+
+	mRotation.FromAxisAngle(Vector3F::UNIT_Y, angle);
+
+	if (squaredDistance > mSquaredMaximumPlayerDistance)
+	{
+		mMove = direction * mSpeed * deltaTime;
+	}
+}
+
+//----------------------------------------------------------------------------
+Float ProbeRobot::GetDeltaTime(Double appTime)
+{
+	static Double lastApplicationTime = 0;
+	Float deltaTime;
+
+	if (lastApplicationTime == 0) 
+	{
+		deltaTime = 0;
+	} 
+	else 
+	{
+		deltaTime = (Float)(appTime - lastApplicationTime);
+	}
+	lastApplicationTime = appTime;
+	return deltaTime;
 }

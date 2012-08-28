@@ -13,30 +13,7 @@
       <Texture Name="crosshair.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
     </Material>
   </Leaf>
-  <Leaf Name="PlayerHealthBarFrame" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.125, 1" Static="0">
-	<MaterialState Ambient="1, 1, 1, 1" />
-    <Mesh Name="Quad_0001E0FA_1_1_0_0">
-      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
-      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
-      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
-    </Mesh>
-    <Material Name="PlayerHealthBarFrameMaterial">
-      <Texture Name="healthBarFrame.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" BlendMode="Modulate" />
-	  <MaterialState Ambient="1, 1, 1, 1" />
-    </Material>
-  </Leaf>
-  <Leaf Name="ProbeRobotHealthBarFrame" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.125, 1" Static="0">
-    <Mesh Name="Quad_0001E0FA_1_1_0_0">
-      <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
-      <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
-      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="y" />
-    </Mesh>
-    <Material Name="ProbeRobotHealthBarFrameMaterial">
-      <Texture Name="healthBarFrame.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" BlendMode="Modulate" />
-	  <MaterialState Ambient="1, 1, 1, 1" />
-    </Material>
-  </Leaf>
-  <Leaf Name="GreenHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.125, 1" Static="0">
+  <Leaf Name="GreenHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.0625, 1" Static="0">
     <Mesh Name="Quad_0001E0FA_1_1_0_0">
       <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
       <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
@@ -47,7 +24,7 @@
 	  <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
   </Leaf>
-  <Leaf Name="RedHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.125, 1" Static="0">
+  <Leaf Name="RedHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.0625, 1" Static="0">
     <Mesh Name="Quad_0001E0FA_1_1_0_0">
       <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
       <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />

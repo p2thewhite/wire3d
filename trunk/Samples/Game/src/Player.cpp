@@ -2,6 +2,9 @@
 
 #include "ProbeRobot.h"
 #include "BulletUtils.h"
+#include "WireGeometry.h"
+#include "WireStandardMesh.h"
+#include "WireStateWireframe.h"
 
 using namespace Wire;
 
@@ -32,18 +35,7 @@ Player::Player(Camera* pCamera)
 //----------------------------------------------------------------------------
 Bool Player::Update(Double appTime)
 {
-	static Double lastApplicationTime = 0;
-	Float deltaTime;
-
-	if (lastApplicationTime == 0) 
-	{
-		deltaTime = 0;
-	} 
-	else 
-	{
-		deltaTime = (Float)(appTime - lastApplicationTime);
-	}
-	lastApplicationTime = appTime;
+	Float deltaTime = GetDeltaTime(appTime);
 
 	InitializeIfNecessary();
 
@@ -66,8 +58,8 @@ Bool Player::Update(Double appTime)
 	rotation.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
 	mRight = rotation * mForward;
 
-	UpdatePlayer();
-	UpdateGun();
+	UpdatePlayerNode();
+	UpdateGunRotation();
 	DoShooting();
 	UpdateCamera();
 	MovePhysicsEntity();
@@ -84,14 +76,19 @@ Bool Player::Update(Double appTime)
 //----------------------------------------------------------------------------
 void Player::InitializeIfNecessary()
 {
-	if (mpNode != NULL)
+	if (mpNode)
 	{
 		return;
 	}
 
 	mpNode = DynamicCast<Node>(GetObject());
+	WIRE_ASSERT(mpNode);
+
 	mpGun = mpNode->GetChildByName("Gun");
-	mStartingGunRotation = mpGun->World.GetRotate();
+	if (mpGun)
+	{
+		mStartingGunRotation = mpGun->World.GetRotate();
+	}
 
 	// Set camera position
 	Vector3F cameraPosition = mpNode->World.GetTranslate();
@@ -261,14 +258,14 @@ Vector3F Player::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdatePlayer()
+void Player::UpdatePlayerNode()
 {
 	mpNode->Local.SetTranslate(GetPosition());
 	mpNode->Local.SetRotate(mRotationY * mRotationX);
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdateGun()
+void Player::UpdateGunRotation()
 {
 	if (mpGun == NULL)
 	{
@@ -283,8 +280,7 @@ void Player::UpdateGun()
 	Matrix3F rotationX;
 	rotationX.FromAxisAngle(Vector3F::UNIT_X, weaponPitch);
 	Matrix3F rotationY;
-	// FIXME: gun model starts at 90 X rotation, so the Y corresponds to the Z
-	rotationY.FromAxisAngle(Vector3F::UNIT_Z, weaponYaw);
+	rotationY.FromAxisAngle(Vector3F::UNIT_Y, weaponYaw);
 
 	mpGun->Local.SetRotate(mStartingGunRotation * rotationX * rotationY);
 }
@@ -302,11 +298,13 @@ void Player::DoShooting()
 	btVector3 rayEnd = rayStart + BulletUtils::Convert(mLookAt * 50.0f);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
-	hitCallback.m_collisionFilterMask = btBroadphaseProxy::CharacterFilter;
 
 	mpPhysicsWorld->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 
 	{
+		Vector3F hitPoint = BulletUtils::Convert(hitCallback.m_hitPointWorld);
+		CreateRay(hitPoint.Distance(GetPosition()));
+
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
 
 		if (pProbeRobotController) 
@@ -316,6 +314,11 @@ void Player::DoShooting()
 	}
 
 	mShoot = false;
+}
+
+//----------------------------------------------------------------------------
+void Player::CreateRay(Float size)
+{
 }
 
 //----------------------------------------------------------------------------
@@ -339,4 +342,23 @@ void Player::MovePhysicsEntity()
 void Player::TakeDamage(Float damage)
 {
 	mHealth -= damage;
+}
+
+//----------------------------------------------------------------------------
+Float Player::GetDeltaTime(Double appTime)
+{
+	static Double lastApplicationTime = 0;
+	Float deltaTime;
+
+	if (lastApplicationTime == 0) 
+	{
+		deltaTime = 0;
+	} 
+	else 
+	{
+		deltaTime = (Float)(appTime - lastApplicationTime);
+	}
+	lastApplicationTime = appTime;
+
+	return deltaTime;
 }

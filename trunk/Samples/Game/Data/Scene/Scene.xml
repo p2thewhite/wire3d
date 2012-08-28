@@ -1220,11 +1220,11 @@
   <Node Name="Directional Light Yellow" Pos="0, 10, 0" Rot="0.8473976, 0.4317706, -0.2753362, 0.1402908" Scale="1, 1, 1">
     <Light Type="Directional" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
   </Node>
-  <Node Name="Main Camera" Pos="0, 10, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <Node Name="Main Camera" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-    <Leaf Name="Gun" Pos="0.15, -0.35, 0.75" Rot="0.4777144, -0.4777144, -0.5213338, -0.5213338" Scale="0.0254, 0.0254, 0.0254" Static="0">
+    <Leaf Name="Gun" Pos="0, -0.5, 0.75" Rot="1, 0, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
       <Mesh Name="Assault Rifle">
         <Vertices Name="Assault Rifle.vtx" LittleEndian="y" />
         <Indices Name="Assault Rifle.idx" LittleEndian="y" />
@@ -1238,7 +1238,7 @@
       </Material>
     </Leaf>
   </Node>
-  <Leaf Name="Probe Robot" Pos="-10, 10, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.03342674, 0.03342674, 0.0254" Static="0">
+  <Leaf Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
     <Mesh Name="Sphere002">
       <Vertices Name="Sphere002.vtx" LittleEndian="y" />
       <Indices Name="Sphere002.idx" LittleEndian="y" />

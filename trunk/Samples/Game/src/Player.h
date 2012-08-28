@@ -73,12 +73,14 @@ private:
 	btKinematicCharacterController* mpPhysicsEntity;
 
 	void InitializeIfNecessary();
+	Float GetDeltaTime(Double appTime);
 	Vector3F GetPosition();
-	void UpdatePlayer();
-	void UpdateGun();
+	void UpdatePlayerNode();
+	void UpdateGunRotation();
 	void DoShooting();
 	void UpdateCamera();
 	void MovePhysicsEntity();
+	void CreateRay(Float size);
 	
 };
 
