@@ -70,14 +70,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\FirstPersonController.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\FirstPersonController.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\Game.cpp"
 			>
 		</File>
@@ -86,11 +78,27 @@
 			>
 		</File>
 		<File
-			RelativePath=".\src\MaterialFader.cpp"
+			RelativePath=".\src\HealthMonitor.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\src\MaterialFader.h"
+			RelativePath=".\src\HealthMonitor.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\Player.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\Player.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\ProbeRobot.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\ProbeRobot.h"
 			>
 		</File>
 	</Files>
