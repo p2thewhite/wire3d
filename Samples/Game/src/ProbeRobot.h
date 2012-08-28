@@ -12,6 +12,8 @@ using namespace Wire;
 
 class ProbeRobot : public Controller
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	ProbeRobot(Spatial* pPlayerSpatial);
 
