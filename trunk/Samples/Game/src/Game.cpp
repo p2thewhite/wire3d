@@ -7,7 +7,8 @@
 WIRE_APPLICATION(Game);
 
 //----------------------------------------------------------------------------
-Game::Game() :
+Game::Game() 
+	:
 	mShowColliders(false)
 {
 }
@@ -471,46 +472,33 @@ Node* Game::LoadAndInitializeGUI()
 	WIRE_ASSERT(mGUICameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
 
 	mGUICuller.SetCamera(mGUICameras[0]);
-	mspCrosshair = pRoot->GetChildByName("Crosshair");
 
+	mspCrosshair = pRoot->GetChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
-	Geometry* pMainInputDeviceIcon = DynamicCast<Geometry>(pRoot->
-		GetChildByName("MainInputDeviceIcon"));
-	WIRE_ASSERT(pMainInputDeviceIcon /* No MainInputDeviceIcon in GUI.xml */);
+	Geometry* pHealthBarFrame = DynamicCast<Geometry>(pRoot->GetChildByName("PlayerHealthBarFrame"));
+	WIRE_ASSERT(pHealthBarFrame /* No PlayerHealthBarFrame in GUI.xml */);
+	pHealthBarFrame->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
 
-	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
+	pHealthBarFrame = DynamicCast<Geometry>(pRoot->GetChildByName("ProbeRobotHealthBarFrame"));
+	WIRE_ASSERT(pHealthBarFrame /* No ProbeRobotHealthBarFrame in GUI.xml */);
+	pHealthBarFrame->Local.SetTranslate(Vector3F(256, GetHeightF()-64.0F, 0));
 
-	// Loading the main input device icon dynamically according to the platform
-	if (System::GetPlatform() == System::PF_WII)
-	{
-		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/wiiMoteIcon.png", false);
-		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, pIcon);
-	}
-	else
-	{
-		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/keyboardIcon.png", false);
-		pMainInputDeviceIcon->GetMaterial()->SetTexture(0, pIcon);
-	}
+	mspGreenHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("GreenHealthBar"));
+	WIRE_ASSERT(mspGreenHealthBar /* No GreenHealthBar in GUI.xml */);
+	mspGreenHealthBar->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
 
-	Geometry* pInputDeviceExtensionIcon = DynamicCast<Geometry>(pRoot->
-		GetChildByName("InputDeviceExtensionIcon"));
-	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
-	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, GetHeightF()-64.0F, 0));
+	mspRedHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("RedHealthBar"));
+	WIRE_ASSERT(mspRedHealthBar /* No RedHealthBar in GUI.xml */);
+	mspRedHealthBar->Local.SetTranslate(Vector3F(256, GetHeightF()-64.0F, 0));
 
-	// Loading the input device extension icon dynamically according to the platform
-	if (System::GetPlatform() == System::PF_WII)
-	{
-		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/nunchukIcon.png", false);
-		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, pIcon);
-	}
-	else
-	{
-		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/mouseIcon.png", false);
-		pInputDeviceExtensionIcon->GetMaterial()->SetTexture(0, pIcon);
-	}
+
+	// Create health monitor
+	mspHealthMonitor = WIRE_NEW HealthMonitor(mspGreenHealthBar, mspRedHealthBar, mspPlayer, mspProbeRobot);
+	pRoot->AttachController(mspHealthMonitor);
 
 	GetRenderer()->BindAll(pRoot);
+
 	return pRoot;
 }
 

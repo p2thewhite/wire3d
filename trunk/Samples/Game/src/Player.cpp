@@ -9,6 +9,7 @@ using namespace Wire;
 Player::Player(Camera* pCamera)
 	:
 	mpNode(NULL),
+	mTotalHealth(100.0f),
 	mHealth(100.0f),
 	mMaxPitch(MathF::PI / 4),
 	mMoveSpeed(2.5f),
@@ -126,9 +127,22 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 }
 
 //----------------------------------------------------------------------------
-void Player::SetHealth(Float health)
+void Player::SetTotalHealth(Float totalHealth)
 {
-	mHealth = health;
+	mTotalHealth = totalHealth;
+	mHealth = mTotalHealth;
+}
+
+//----------------------------------------------------------------------------
+Float Player::GetHealth()
+{
+	return mHealth;
+}
+
+//----------------------------------------------------------------------------
+Float Player::GetTotalHealth()
+{
+	return mTotalHealth;
 }
 
 //----------------------------------------------------------------------------

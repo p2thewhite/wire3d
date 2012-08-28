@@ -8,6 +8,7 @@ using namespace Wire;
 ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 	:
 	mpSpatial(NULL),
+	mTotalHealth(100.0f),
 	mHealth(100.0f),
 	mSpeed(5.0f),
 	mSquaredMaximumPlayerDistance(25.0f)
@@ -122,9 +123,23 @@ void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::SetHealth(Float health)
+void ProbeRobot::SetTotalHealth(Float totalHealth)
 {
-	mHealth = health;
+	mTotalHealth = totalHealth;
+	mHealth = mTotalHealth;
+}
+
+//----------------------------------------------------------------------------
+Float ProbeRobot::GetTotalHealth()
+{
+	return mTotalHealth;
+}
+
+
+//----------------------------------------------------------------------------
+Float ProbeRobot::GetHealth()
+{
+	return mHealth;
 }
 
 //----------------------------------------------------------------------------
