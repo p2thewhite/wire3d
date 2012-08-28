@@ -1,9 +1,10 @@
 #include "CollisionShapeToGeometryConverter.h"
-#include "WireVertexAttributes.h"
-#include "WireVertexBuffer.h"
-#include "WireIndexBuffer.h"
-#include "WireStateWireframe.h"
+
 #include "BulletUtils.h"
+#include "WireIndexBuffer.h"
+#include "WireStandardMesh.h"
+#include "WireStateWireframe.h"
+#include "WireVertexBuffer.h"
 
 //----------------------------------------------------------------------------
 CollisionShapeToGeometryConverter::CollisionShapeToGeometryConverter()
@@ -37,7 +38,8 @@ Geometry* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape, c
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBoxShape, const Color32& rColor)
+Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
+	btBoxShape* pBoxShape, const Color32& rColor)
 {
 	btVector3 scaling = pBoxShape->getLocalScaling();
 	float margin = pBoxShape->getMargin();
@@ -54,91 +56,21 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 	pBoxShape->setMargin(margin);
 
 	Vector3F halfExtents = BulletUtils::Convert(halfExtentsWithoutMargin);
-
-	// Creating the box
-
-	const Vector3F vertices[] =
+	Geometry* pBox = StandardMesh::CreateCube8(4);
+	VertexBuffer* pVertexBuffer = pBox->GetMesh()->GetVertexBuffer();
+	const UInt vertexQuantity = pVertexBuffer->GetQuantity();
+	for (UInt i = 0; i < vertexQuantity; i++)
 	{
-		// side 1
-		Vector3F(-halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F( halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F( halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		// side 2
-		Vector3F( halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		Vector3F( halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		// side 3
-		Vector3F( halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		Vector3F( halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F( halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		Vector3F( halfExtents.X(), -halfExtents.Y(), -halfExtents.Z()),
-		// side 4
-		Vector3F(-halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		Vector3F( halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		Vector3F( halfExtents.X(), -halfExtents.Y(), -halfExtents.Z()),
-		Vector3F(-halfExtents.X(), -halfExtents.Y(), -halfExtents.Z()),
-		// side 5
-		Vector3F( halfExtents.X(), -halfExtents.Y(), -halfExtents.Z()),
-		Vector3F( halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(), -halfExtents.Y(), -halfExtents.Z()),
-		// side 6
-		Vector3F(-halfExtents.X(), -halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(),  halfExtents.Y(),  halfExtents.Z()),
-		Vector3F(-halfExtents.X(),  halfExtents.Y(), -halfExtents.Z()),
-		Vector3F(-halfExtents.X(), -halfExtents.Y(), -halfExtents.Z())
-	};
-
-	const UInt indexes[] =
-	{
-		// side 1
-		0, 1, 2,
-		0, 2, 3,
-		// side 2
-		4, 5, 6,
-		4, 6, 7,
-		// side 3
-		8, 9, 10,
-		8, 10, 11,
-		// side 4
-		12, 14, 13,
-		12, 15, 14,
-		// side 5
-		16, 18, 17,
-		16, 19, 18,
-		// side 6
-		20, 22, 21,
-		20, 23, 22
-	};
-
-	VertexAttributes attributes;
-	attributes.SetPositionChannels(3);
-	attributes.SetColorChannels(3);
-
-	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
-
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, vertexQuantity);
-	WIRE_ASSERT(pVertexBuffer);
-
-	for (UInt i = 0; i < pVertexBuffer->GetQuantity(); i++)
-	{
-		pVertexBuffer->Position3(i) = vertices[i];
-		pVertexBuffer->Color3(i) = rColor;
+		Vector3F position = pVertexBuffer->Position3(i);
+		position.X() *= halfExtents.X();
+		position.Y() *= halfExtents.Y();
+		position.Z() *= halfExtents.Z();
+		pVertexBuffer->Position3(i) = position;
+		pVertexBuffer->Color4(i) = rColor;
 	}
 
-	UInt indexQuantity = sizeof(indexes) / sizeof(UInt);
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indexQuantity);
-	for	(UInt i = 0; i < indexQuantity; i++)
-	{
-		(*pIndexBuffer)[i] = indexes[i];
-	}
+	pBox->GetMesh()->UpdateModelBound();
 
-	Geometry* pBox = WIRE_NEW Geometry(pVertexBuffer, pIndexBuffer);
-	WIRE_ASSERT(pBox);
-
-	// Set wireframe rendering state
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
 	pWireframe->Enabled = true;
 
@@ -148,7 +80,8 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(btSphereShape* pSphereShape, const Color32& rColor)
+Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
+	btSphereShape* pSphereShape, const Color32& rColor)
 {
 	btVector3 scaling = pSphereShape->getLocalScaling();
 	float margin = pSphereShape->getMargin();

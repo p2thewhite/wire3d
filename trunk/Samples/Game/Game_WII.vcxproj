@@ -12,15 +12,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CollisionShapeToGeometryConverter.h" />
-    <ClInclude Include="src\FirstPersonController.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\MaterialFader.h" />
+    <ClInclude Include="src\HealthMonitor.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\ProbeRobot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CollisionShapeToGeometryConverter.cpp" />
-    <ClCompile Include="src\FirstPersonController.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\MaterialFader.cpp" />
+    <ClCompile Include="src\HealthMonitor.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\ProbeRobot.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{30A5849F-209A-4716-8F8D-C5912D9D6EE8}</ProjectGuid>

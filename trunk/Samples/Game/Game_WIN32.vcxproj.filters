@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\MaterialFader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\CollisionShapeToGeometryConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -32,9 +29,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\MaterialFader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\CollisionShapeToGeometryConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
