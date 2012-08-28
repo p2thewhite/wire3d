@@ -4,6 +4,8 @@
 
 using namespace Wire;
 
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Controller);
+
 //----------------------------------------------------------------------------
 ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 	:

@@ -2,8 +2,8 @@
 #define HEALTHMONITOR_H_
 
 #include "WireController.h"
-#include "WireMesh.h"
 #include "WireGeometry.h"
+#include "WireMesh.h"
 #include "Player.h"
 #include "ProbeRobot.h"
 
@@ -11,8 +11,11 @@ using namespace Wire;
 
 class HealthMonitor : public Controller
 {
+	WIRE_DECLARE_RTTI;
+
 public:
-	HealthMonitor(Geometry* pGreenHealthBar, Geometry* pRedHealthBar, Player* pPlayer, ProbeRobot* pProbeRobot);
+	HealthMonitor(Geometry* pGreenHealthBar, Geometry* pRedHealthBar,
+		Player* pPlayer, ProbeRobot* pProbeRobot);
 
 	virtual Bool Update(Double appTime);
 

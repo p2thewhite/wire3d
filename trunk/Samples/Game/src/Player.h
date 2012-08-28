@@ -13,6 +13,8 @@ using namespace Wire;
 
 class Player : public Controller
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	Player(Camera* pCamera);
 
