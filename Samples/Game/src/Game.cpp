@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "Importer.h"
-#include "MaterialFader.h"
 #include "CollisionShapeToGeometryConverter.h"
 
 WIRE_APPLICATION(Game);
@@ -296,8 +295,6 @@ void Game::OnRunning(Double time, Double deltaTime)
 {
 	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
-	mspLogo->UpdateGS(time);
-	mLogoCuller.ComputeVisibleSet(mspLogo);
 	mspGUI->UpdateGS(time);
 	mGUICuller.ComputeVisibleSet(mspGUI);
 	mspScene->UpdateGS(time);
@@ -312,8 +309,6 @@ void Game::OnRunning(Double time, Double deltaTime)
 	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
 	GetRenderer()->SetCamera(mGUICameras[0]);
 	GetRenderer()->DrawScene(mGUICuller.GetVisibleSets());
-	GetRenderer()->SetCamera(mLogoCameras[0]);
-	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
 
 	if (mShowFps)
 	{
@@ -425,6 +420,8 @@ void Game::OnLoading(Double time, Double deltaTime)
 
 	mAppState = AS_RUNNING;
 	pLoading->Culling = Spatial::CULL_ALWAYS;
+
+	mspLogo = NULL; // discard Logo scene graph to free memory
 }
 
 //----------------------------------------------------------------------------
@@ -444,11 +441,6 @@ Node* Game::LoadAndInitializeLoading()
 
 	Spatial* pLogo = pRoot->GetChildByName("Logo");
 	WIRE_ASSERT(pLogo != NULL);
-
-	if (pLogo)
-	{
-		pLogo->AttachController(WIRE_NEW MaterialFader(2.5f));
-	}
 
 	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
 		(GetHeightF() - 256.0F)  * 0.5F, 0));
