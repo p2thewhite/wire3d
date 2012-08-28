@@ -4,8 +4,6 @@
 #include "WireController.h"
 #include "WireCamera.h"
 #include "WireNode.h"
-#include "WireVector2.h"
-#include "WireMatrix34.h"
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
@@ -20,7 +18,9 @@ public:
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pDynamicsWorld);
-	void SetHealth(Float health);
+	void SetTotalHealth(Float health);
+	Float GetHealth();
+	Float GetTotalHealth();
 	void SetHeadHeight(Float headHeight);
 	void SetCharacterWidth(Float characterWidth);
 	void SetCharacterHeight(Float characterHeight);
@@ -39,6 +39,7 @@ public:
 	void TakeDamage(Float damage);
 
 private:
+	Float mTotalHealth;
 	Float mHealth;
 	Float mHeadHeight;
 	Float mMaxPitch;

@@ -3,7 +3,6 @@
 
 #include "WireController.h"
 #include "WireSpatial.h"
-#include "WireMatrix34.h"
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
@@ -18,7 +17,9 @@ public:
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pPhysicsWorld);
-	void SetHealth(Float health);
+	void SetTotalHealth(Float totalHealth);
+	Float GetTotalHealth();
+	Float GetHealth();
 	void SetSpeed(Float speed);
 	void SetMaximumPlayerDistance(Float maximumPlayerDistance);
 	void TakeDamage(Float damage);
@@ -26,6 +27,7 @@ public:
 private:
 	Spatial* mpSpatial;
 	SpatialPtr mspPlayerSpatial;
+	Float mTotalHealth;
 	Float mHealth;
 	Float mSpeed;
 	Float mSquaredMaximumPlayerDistance;
