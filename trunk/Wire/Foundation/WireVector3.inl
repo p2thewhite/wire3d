@@ -321,6 +321,28 @@ void Vector3<Real>::Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW)
 
 //----------------------------------------------------------------------------
 template <class Real>
+Real Vector3<Real>::Distance(const Vector3& rVector) const
+{
+	return Math<Real>::Sqrt(SquaredDistance(rVector));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
+{
+	Vector3<Real> difference = rVector - *this;
+	return difference.mTuple[0] * difference.mTuple[0] + difference.mTuple[1] * difference.mTuple[1] + difference.mTuple[2] * difference.mTuple[2];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::GetAngle(const Vector3& rVector) const
+{
+	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 void Vector3<Real>::GenerateOrthonormalBasis(Vector3& rU, Vector3& rV,
 	Vector3& rW)
 {
