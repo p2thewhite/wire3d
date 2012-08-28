@@ -281,7 +281,8 @@ void Player::UpdateGun()
 	Matrix3F rotationX;
 	rotationX.FromAxisAngle(Vector3F::UNIT_X, weaponPitch);
 	Matrix3F rotationY;
-	rotationY.FromAxisAngle(Vector3F::UNIT_Y, weaponYaw);
+	// FIXME: gun model starts at 90 X rotation, so the Y corresponds to the Z
+	rotationY.FromAxisAngle(Vector3F::UNIT_Z, weaponYaw);
 
 	mpGun->Local.SetRotate(mStartingGunRotation * rotationX * rotationY);
 }
