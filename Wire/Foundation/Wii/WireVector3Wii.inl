@@ -178,6 +178,28 @@ inline Real Vector3<Real>::SquaredLength() const
 
 //----------------------------------------------------------------------------
 template <class Real>
+Real Vector3<Real>::Distance(const Vector3& rVector) const
+{
+	return Math<Real>::Sqrt(SquaredDistance(rVector));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
+{
+	Vector3<Real> difference = rVector - *this;
+	return difference.mTuple.x * difference.mTuple.x + difference.mTuple.y * difference.mTuple.y + difference.mTuple.z * difference.mTuple.z;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::GetAngle(const Vector3& rVector) const
+{
+	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
 const
 {

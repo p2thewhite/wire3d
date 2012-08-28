@@ -59,6 +59,9 @@ public:
 	inline Real SquaredLength() const;
 	inline Real Dot(const Vector3& rVector) const;
 	inline Real Normalize();
+	inline Real Distance(const Vector3& rVector) const;
+	inline Real SquaredDistance(const Vector3& rVector) const;
+	inline Real GetAngle(const Vector3& rVector) const;
 
 	// The cross products are computed using the right-handed rule. Be aware
 	// that some graphics APIs use a left-handed rule. If you have to compute

@@ -1221,10 +1221,259 @@
     <Light Type="Directional" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
   </Node>
   <Node Name="Main Camera" Pos="0, 10, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-    <Camera Fov="60" Near="0.3" Far="1000" />
+    <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
-  <Node Name="Starting Point" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Node Name="Gun" Pos="0.15, -0.35, 0.75" Rot="0.6426445, -0.08925655, -0.7599594, -0.03877031" Scale="1, 1, 1">
+      <Leaf Name="mesh01" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh01">
+          <Vertices Name="mesh01.vtx" LittleEndian="y" />
+          <Indices Name="mesh01.idx" LittleEndian="y" />
+          <Normals Name="mesh01.nm" LittleEndian="y" />
+          <Uv0 Name="mesh01.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh01_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh02" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh02">
+          <Vertices Name="mesh02.vtx" LittleEndian="y" />
+          <Indices Name="mesh02.idx" LittleEndian="y" />
+          <Normals Name="mesh02.nm" LittleEndian="y" />
+          <Uv0 Name="mesh02.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh02_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh03" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh03">
+          <Vertices Name="mesh03.vtx" LittleEndian="y" />
+          <Indices Name="mesh03.idx" LittleEndian="y" />
+          <Normals Name="mesh03.nm" LittleEndian="y" />
+          <Uv0 Name="mesh03.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh03_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh04" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh04">
+          <Vertices Name="mesh04.vtx" LittleEndian="y" />
+          <Indices Name="mesh04.idx" LittleEndian="y" />
+          <Normals Name="mesh04.nm" LittleEndian="y" />
+          <Uv0 Name="mesh04.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh04_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh05" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh05">
+          <Vertices Name="mesh05.vtx" LittleEndian="y" />
+          <Indices Name="mesh05.idx" LittleEndian="y" />
+          <Normals Name="mesh05.nm" LittleEndian="y" />
+          <Uv0 Name="mesh05.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh05_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh06" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh06">
+          <Vertices Name="mesh06.vtx" LittleEndian="y" />
+          <Indices Name="mesh06.idx" LittleEndian="y" />
+          <Normals Name="mesh06.nm" LittleEndian="y" />
+          <Uv0 Name="mesh06.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh06_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh07" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh07">
+          <Vertices Name="mesh07.vtx" LittleEndian="y" />
+          <Indices Name="mesh07.idx" LittleEndian="y" />
+          <Normals Name="mesh07.nm" LittleEndian="y" />
+          <Uv0 Name="mesh07.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh07_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh08" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh08">
+          <Vertices Name="mesh08.vtx" LittleEndian="y" />
+          <Indices Name="mesh08.idx" LittleEndian="y" />
+          <Normals Name="mesh08.nm" LittleEndian="y" />
+          <Uv0 Name="mesh08.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh08_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh09" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh09">
+          <Vertices Name="mesh09.vtx" LittleEndian="y" />
+          <Indices Name="mesh09.idx" LittleEndian="y" />
+          <Normals Name="mesh09.nm" LittleEndian="y" />
+          <Uv0 Name="mesh09.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh09_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh10" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh10">
+          <Vertices Name="mesh10.vtx" LittleEndian="y" />
+          <Indices Name="mesh10.idx" LittleEndian="y" />
+          <Normals Name="mesh10.nm" LittleEndian="y" />
+          <Uv0 Name="mesh10.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh10_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh12" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh12">
+          <Vertices Name="mesh12.vtx" LittleEndian="y" />
+          <Indices Name="mesh12.idx" LittleEndian="y" />
+          <Normals Name="mesh12.nm" LittleEndian="y" />
+          <Uv0 Name="mesh12.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh12_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh13" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh13">
+          <Vertices Name="mesh13.vtx" LittleEndian="y" />
+          <Indices Name="mesh13.idx" LittleEndian="y" />
+          <Normals Name="mesh13.nm" LittleEndian="y" />
+          <Uv0 Name="mesh13.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh13_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh14" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh14">
+          <Vertices Name="mesh14.vtx" LittleEndian="y" />
+          <Indices Name="mesh14.idx" LittleEndian="y" />
+          <Normals Name="mesh14.nm" LittleEndian="y" />
+          <Uv0 Name="mesh14.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh14_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh15" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh15">
+          <Vertices Name="mesh15.vtx" LittleEndian="y" />
+          <Indices Name="mesh15.idx" LittleEndian="y" />
+          <Normals Name="mesh15.nm" LittleEndian="y" />
+          <Uv0 Name="mesh15.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh15_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh16" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh16">
+          <Vertices Name="mesh16.vtx" LittleEndian="y" />
+          <Indices Name="mesh16.idx" LittleEndian="y" />
+          <Normals Name="mesh16.nm" LittleEndian="y" />
+          <Uv0 Name="mesh16.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh16_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh17" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh17">
+          <Vertices Name="mesh17.vtx" LittleEndian="y" />
+          <Indices Name="mesh17.idx" LittleEndian="y" />
+          <Normals Name="mesh17.nm" LittleEndian="y" />
+          <Uv0 Name="mesh17.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh17_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh18" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh18">
+          <Vertices Name="mesh18.vtx" LittleEndian="y" />
+          <Indices Name="mesh18.idx" LittleEndian="y" />
+          <Normals Name="mesh18.nm" LittleEndian="y" />
+          <Uv0 Name="mesh18.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh18_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="mesh19" Pos="0, 0, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+        <Mesh Name="mesh19">
+          <Vertices Name="mesh19.vtx" LittleEndian="y" />
+          <Indices Name="mesh19.idx" LittleEndian="y" />
+          <Normals Name="mesh19.nm" LittleEndian="y" />
+          <Uv0 Name="mesh19.uv0" LittleEndian="y" />
+          <Uv1 Name="mesh19_1_1_0_0.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arskin">
+          <Texture Name="arskin.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+    </Node>
   </Node>
+  <Leaf Name="Probe Robot" Pos="-10, 10, 0" Rot="0.7071068, -0.7071068, 0, 0" Scale="0.03342674, 0.03342674, 0.0254" Static="0">
+    <Mesh Name="Sphere002">
+      <Vertices Name="Sphere002.vtx" LittleEndian="y" />
+      <Indices Name="Sphere002.idx" LittleEndian="y" />
+      <Normals Name="Sphere002.nm" LittleEndian="y" />
+      <Uv0 Name="Sphere002.uv0" LittleEndian="y" />
+      <Uv1 Name="Sphere002_1_1_0_0.uv1" LittleEndian="y" />
+    </Mesh>
+    <Material Name="Probe Robot">
+      <Texture Name="Probe Robot.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="0.588, 0.588, 0.588, 1" />
+    </Material>
+  </Leaf>
   <Skybox Scale="120">
     <PosZ>
       <Texture Name="Front.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />

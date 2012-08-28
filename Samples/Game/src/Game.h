@@ -4,7 +4,8 @@
 
 #include "WireApplication.h"
 
-#include "FirstPersonController.h"
+#include "ProbeRobot.h"
+#include "Player.h"
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
 
@@ -49,7 +50,8 @@ private:
 	UInt mAppState;
 	Bool mShowFps;
 	Vector3F mStartingPoint;
-	FirstPersonController* mpCharacterController;
+	Pointer<ProbeRobot> mspProbeRobot;
+	Pointer<Player> mspPlayer;
 	NodePtr mspLogo;
 	NodePtr mspScene;
 	NodePtr mspGUI;

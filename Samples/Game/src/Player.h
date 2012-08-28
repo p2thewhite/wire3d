@@ -1,11 +1,11 @@
-#ifndef FIRSTPERSONCONTROLLER_H_
-#define FIRSTPERSONCONTROLLER_H_
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 #include "WireController.h"
 #include "WireCamera.h"
 #include "WireNode.h"
-#include "WireQuaternion.h"
 #include "WireVector2.h"
+#include "WireMatrix34.h"
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
@@ -13,15 +13,14 @@
 
 using namespace Wire;
 
-class FirstPersonController : public Controller
+class Player : public Controller
 {
 public:
-	FirstPersonController(const Vector3F& rStartingPosition, Camera* pCamera);
+	Player(Camera* pCamera);
 
 	virtual Bool Update(Double appTime);
-	virtual void Register(btDynamicsWorld* pDynamicsWorld);
-	void UpdateCamera();
-	void MoveCharacterController();
+	void Register(btDynamicsWorld* pDynamicsWorld);
+	void SetHealth(Float health);
 	void SetHeadHeight(Float headHeight);
 	void SetCharacterWidth(Float characterWidth);
 	void SetCharacterHeight(Float characterHeight);
@@ -36,8 +35,11 @@ public:
 	void StrafeRight();
 	void LookAt(const Vector2F& rLookAt);
 	void Jump();
+	void Shoot();
+	void TakeDamage(Float damage);
 
 private:
+	Float mHealth;
 	Float mHeadHeight;
 	Float mMaxPitch;
 	Vector2F mLookUpDeadZone;
@@ -48,18 +50,32 @@ private:
 	Float mStepHeight;
 	Vector3F mLookAt;
 	Vector3F mUp;
-	Vector3F mBack;
-	Vector3F mLeft;
+	Vector3F mForward;
+	Vector3F mRight;
 	Float mPitch;
 	Float mYaw;
 	Float mPitchIncrement;
 	Float mYawIncrement;
+	Matrix3F mRotationX;
+	Matrix3F mRotationY;
+	Matrix3F mStartingGunRotation;
 	Vector3F mMove;
 	Bool mJump;
+	Bool mShoot;
+	Node* mpNode;
+	Spatial* mpGun;
 	CameraPtr mspCamera;
 	btDynamicsWorld* mpPhysicsWorld;
 	btPairCachingGhostObject* mpGhostObject;
-	btKinematicCharacterController* mpPhysicsCharacterController;
+	btKinematicCharacterController* mpPhysicsEntity;
+
+	void InitializeIfNecessary();
+	Vector3F GetPosition();
+	void UpdatePlayer();
+	void UpdateGun();
+	void DoShooting();
+	void UpdateCamera();
+	void MovePhysicsEntity();
 	
 };
 

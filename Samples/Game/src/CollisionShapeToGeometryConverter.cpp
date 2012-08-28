@@ -22,6 +22,10 @@ Geometry* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape, c
 	{
 		return CreateWireframeBox(static_cast<btBoxShape*>(pShape), rColor);
 	}
+	else if (pShape->getShapeType() == SPHERE_SHAPE_PROXYTYPE)
+	{
+		return CreateWireframeSphere(static_cast<btSphereShape*>(pShape), rColor);
+	}
 	else if (pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
 	{
 		return CreateWireframeMesh(static_cast<btBvhTriangleMeshShape*>(pShape), rColor);
@@ -87,7 +91,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 		Vector3F(-halfExtents.X(), -halfExtents.Y(), -halfExtents.Z())
 	};
 
-	const UInt indices[] =
+	const UInt indexes[] =
 	{
 		// side 1
 		0, 1, 2,
@@ -124,11 +128,11 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 		pVertexBuffer->Color3(i) = rColor;
 	}
 
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	UInt indexQuantity = sizeof(indexes) / sizeof(UInt);
 	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
-		(*pIndexBuffer)[i] = indices[i];
+		(*pIndexBuffer)[i] = indexes[i];
 	}
 
 	Geometry* pBox = WIRE_NEW Geometry(pVertexBuffer, pIndexBuffer);
@@ -141,6 +145,80 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(btBoxShape* pBox
 	pBox->AttachState(pWireframe);
 
 	return pBox;
+}
+
+//----------------------------------------------------------------------------
+Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(btSphereShape* pSphereShape, const Color32& rColor)
+{
+	btVector3 scaling = pSphereShape->getLocalScaling();
+	float margin = pSphereShape->getMargin();
+
+	// Reseting scaling and margin to acquire the real half extents
+	pSphereShape->setMargin(0);
+	pSphereShape->setLocalScaling(btVector3(1, 1, 1));
+
+	// TODO: Define as parameters
+	UInt rings = 10;
+	UInt sectors = 10;
+
+	// Restoring previous scaling and margin values
+	pSphereShape->setLocalScaling(scaling);
+	pSphereShape->setMargin(margin);
+
+	// Creating the sphere
+
+	Float R = 1.0f / (Float) (rings - 1);
+	Float S = 1.0f / (Float) (sectors - 1);
+
+	TArray<Vector3F> vertices;
+	for (UInt r = 0; r < rings; r++) {
+		for (UInt s = 0; s < sectors; s++) {
+			Float y = sin(-MathF::HALF_PI + MathF::PI * r * R);
+			Float x = cos(2 * MathF::PI * s * S) * sin(MathF::PI * r * R);
+			Float z = sin(2 * MathF::PI * s * S) * sin(MathF::PI * r * R);
+			vertices.Append(Vector3F(x, y, z));
+		}
+	}
+
+	TArray<UInt> indexes;
+	for (UInt r = 0; r < rings; r++) {
+		for (UInt s = 0; s < sectors; s++) {
+			indexes.Append(r * sectors + s);
+			indexes.Append(r * sectors + (s + 1));
+			indexes.Append((r + 1) * sectors + (s + 1));
+			indexes.Append((r + 1) * sectors + s);
+		}
+	}
+
+	VertexAttributes attributes;
+	attributes.SetPositionChannels(3);
+	attributes.SetColorChannels(3);
+
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, vertices.GetQuantity());
+	WIRE_ASSERT(pVertexBuffer);
+
+	for (UInt i = 0; i < pVertexBuffer->GetQuantity(); i++)
+	{
+		pVertexBuffer->Position3(i) = vertices[i];
+		pVertexBuffer->Color3(i) = rColor;
+	}
+
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(indexes.GetQuantity());
+	for	(UInt i = 0; i < pIndexBuffer->GetQuantity(); i++)
+	{
+		(*pIndexBuffer)[i] = indexes[i];
+	}
+
+	Geometry* pSphere = WIRE_NEW Geometry(pVertexBuffer, pIndexBuffer);
+	WIRE_ASSERT(pSphere);
+
+	// Set wireframe rendering state
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
+	pWireframe->Enabled = true;
+
+	pSphere->AttachState(pWireframe);
+
+	return pSphere;
 }
 
 //----------------------------------------------------------------------------

@@ -8,7 +8,6 @@ WIRE_APPLICATION(Game);
 
 //----------------------------------------------------------------------------
 Game::Game() :
-	mpCharacterController(NULL),
 	mShowColliders(false)
 {
 }
@@ -34,7 +33,7 @@ Bool Game::OnInitialize()
 	mLastTime = System::GetTime();
 	mShowFps = false;
 
-	// frames per second and render statistics debug text
+	// Frames per second and render statistics debug text
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
 	WIRE_ASSERT(mspText);
@@ -85,7 +84,7 @@ void Game::OnInput()
 	static Float oldY = 0;
 	Double time = System::GetTime();
 
-	if (mpCharacterController == NULL)
+	if (mspPlayer == NULL)
 	{
 		return;
 	}
@@ -125,20 +124,20 @@ void Game::OnInput()
 
 		if (pAnalogPad->GetUp() > 0)
 		{
-			mpCharacterController->MoveForward();
+			mspPlayer->MoveForward();
 		}
 		else if (pAnalogPad->GetDown() > 0)
 		{
-			mpCharacterController->MoveBackward();
+			mspPlayer->MoveBackward();
 		}
 
 		if (pAnalogPad->GetRight() > 0)
 		{
-			mpCharacterController->StrafeRight();
+			mspPlayer->StrafeRight();
 		}
 		else if (pAnalogPad->GetLeft() > 0)
 		{
-			mpCharacterController->StrafeLeft();
+			mspPlayer->StrafeLeft();
 		}
 	}
 	else 
@@ -149,20 +148,20 @@ void Game::OnInput()
 
 		if (pDigitalPad->GetUp())
 		{
-			mpCharacterController->MoveForward();
+			mspPlayer->MoveForward();
 		}
 		else if (pDigitalPad->GetDown())
 		{
-			mpCharacterController->MoveBackward();
+			mspPlayer->MoveBackward();
 		}
 
 		if (pDigitalPad->GetLeft())
 		{
-			mpCharacterController->StrafeLeft();
+			mspPlayer->StrafeLeft();
 		}
 		else if (pDigitalPad->GetRight())
 		{
-			mpCharacterController->StrafeRight();
+			mspPlayer->StrafeRight();
 		}
 	}
 
@@ -196,7 +195,7 @@ void Game::OnInput()
 	x -= GetWidthF() * 0.5F;
 	y -= GetHeightF() * 0.5F;
 
-	mpCharacterController->LookAt(Vector2F(x, y));
+	mspPlayer->LookAt(Vector2F(x, y));
 
 	// ---
 	// Processing buttons
@@ -222,10 +221,16 @@ void Game::OnInput()
 		mShowFps = false;
 	}
 
+	// 'A' button makes the player shoot
+	if (pButtons->GetButton(Buttons::BUTTON_A))
+	{
+		mspPlayer->Shoot();
+	}
+
 	// 'B' button makes the player jump
 	if (pButtons->GetButton(Buttons::BUTTON_B))
 	{
-		mpCharacterController->Jump();
+		mspPlayer->Jump();
 	}
 
 	if (pButtons->GetButton(Buttons::BUTTON_1) && (time - lastButton1PressTime) > 0.5)
@@ -245,11 +250,11 @@ void Game::OnInput()
 	// 'Z' button makes the player run
 	if (pButtons->GetButton(Buttons::BUTTON_Z))
 	{
-		mpCharacterController->SetMoveSpeed(10.0f);
+		mspPlayer->SetMoveSpeed(10.0f);
 	}
 	else
 	{
-		mpCharacterController->SetMoveSpeed(5.0f);
+		mspPlayer->SetMoveSpeed(5.0f);
 	}
 }
 
@@ -265,12 +270,11 @@ void Game::ToggleCollidersVisibility()
 
 		if (mShowColliders)
 		{
-			Collider* pColliderController = DynamicCast<Collider>(pColliderNode->GetController(0));
-			WIRE_ASSERT(pColliderController);
+			Collider* pCollider = DynamicCast<Collider>(pColliderNode->GetController(0));
+			WIRE_ASSERT(pCollider);
 
 			// Create proper geometry according to the collider shape
-			Geometry*  pColliderGeometry = CollisionShapeToGeometryConverter::Convert(
-				pColliderController->GetShape(), Color32::GREEN);
+			Geometry*  pColliderGeometry = CollisionShapeToGeometryConverter::Convert(pCollider->GetShape(), Color32::GREEN);
 			if (pColliderGeometry)
 			{
 				pColliderNode->AttachChild(pColliderGeometry);
@@ -322,7 +326,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 //----------------------------------------------------------------------------
 void Game::DrawFPS(Double deltaTime)
 {
-	// set the frustum for the text camera (screenWidth and screenHeight
+	// Set the frustum for the text camera (screenWidth and screenHeight
 	// could have been changed by the user resizing the window)
 	Float screenHeight = static_cast<Float>(GetRenderer()->GetHeight());
 	Float screenWidth = static_cast<Float>(GetRenderer()->GetWidth());
@@ -331,7 +335,7 @@ void Game::DrawFPS(Double deltaTime)
 
 	GetRenderer()->SetCamera(mspTextCamera);
 
-	// set to screen screenWidth (might change any time in window mode)
+	// Set to screen screenWidth (might change any time in window mode)
 	mspText->SetLineWidth(screenWidth);
 	mspText->Clear(Color32::WHITE);
 
@@ -477,7 +481,7 @@ Node* Game::LoadAndInitializeGUI()
 
 	pMainInputDeviceIcon->Local.SetTranslate(Vector3F(0, GetHeightF()-64.0F, 0));
 
-	// loading the main input device icon dynamically according to the platform
+	// Loading the main input device icon dynamically according to the platform
 	if (System::GetPlatform() == System::PF_WII)
 	{
 		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/wiiMoteIcon.png", false);
@@ -494,7 +498,7 @@ Node* Game::LoadAndInitializeGUI()
 	WIRE_ASSERT(pMainInputDeviceIcon != NULL);
 	pInputDeviceExtensionIcon->Local.SetTranslate(Vector3F(64, GetHeightF()-64.0F, 0));
 
-	// loading the input device extension icon dynamically according to the platform
+	// Loading the input device extension icon dynamically according to the platform
 	if (System::GetPlatform() == System::PF_WII)
 	{
 		Texture2D* pIcon = Importer::LoadTexture2D("Data/GUI/nunchukIcon.png", false);
@@ -552,20 +556,27 @@ Node* Game::LoadAndInitializeScene()
 	}
 
 	pScene->GetAllChildrenByNameStartingWith("Collider for", mColliderSpatials);
+	Spatial* pProbeRobotSpatial = DynamicCast<Spatial>(pScene->GetChildByName("Probe Robot"));
+	Spatial* pPlayerSpatial = DynamicCast<Spatial>(pScene->GetChildByName("Player"));
 
-	// Create and configure the character controller
-	mpCharacterController = WIRE_NEW FirstPersonController(mStartingPoint, mSceneCameras[0]);
+	// Create and configure probe robot controller
+	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial);
+	mspProbeRobot->Register(mpPhysicsWorld);
+	mspProbeRobot->SetSpeed(7.5f);
+	mspProbeRobot->SetMaximumPlayerDistance(10.0f);
+	pProbeRobotSpatial->AttachController(mspProbeRobot);
 
-	mpCharacterController->SetLookUpDeadZone(Vector2F(50, 50));
-	mpCharacterController->SetHeadHeight(0.5f);
-	mpCharacterController->SetCharacterHeight(1.5f);
-	mpCharacterController->SetCharacterWidth(0.75f);
-	mpCharacterController->SetStepHeight(0.5f);
-	mpCharacterController->SetMaximumVerticalAngle(45);
-	mpCharacterController->SetMoveSpeed(5.0f);
-	mpCharacterController->Register(mpPhysicsWorld);
-
-	pScene->AttachController(mpCharacterController);
+	// Create and configure player controller
+	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);
+	mspPlayer->SetLookUpDeadZone(Vector2F(50, 50));
+	mspPlayer->SetHeadHeight(0.5f);
+	mspPlayer->SetCharacterHeight(1.5f);
+	mspPlayer->SetCharacterWidth(0.75f);
+	mspPlayer->SetStepHeight(0.5f);
+	mspPlayer->SetMaximumVerticalAngle(45);
+	mspPlayer->SetMoveSpeed(5.0f);
+	mspPlayer->Register(mpPhysicsWorld);
+	pPlayerSpatial->AttachController(mspPlayer);
 
 	GetRenderer()->BindAll(pScene);
 
@@ -590,10 +601,10 @@ void Game::InitializePhysics()
 	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax);
 
 	mpConstraintSolver = WIRE_NEW btSequentialImpulseConstraintSolver();
-	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher,
-		mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
+	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher,	mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
 
 	mpPhysicsWorld->setGravity(btVector3(0, -9.8f, 0));
+	mpPhysicsWorld->getPairCache()->setInternalGhostPairCallback(WIRE_NEW btGhostPairCallback());
 }
 
 //----------------------------------------------------------------------------
