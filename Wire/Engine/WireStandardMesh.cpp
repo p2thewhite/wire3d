@@ -696,11 +696,11 @@ Geometry* StandardMesh::CreateCylinder(Int axisSampleCount,
 		for (i = 0; i < radialSampleCount; i++)
 		{
 			pLocalIndex[0] = i0++;
-			pLocalIndex[1] = i1;
-			pLocalIndex[2] = i2;
+			pLocalIndex[1] = i2;
+			pLocalIndex[2] = i1;
 			pLocalIndex[3] = i1++;
-			pLocalIndex[4] = i3++;
-			pLocalIndex[5] = i2++;
+			pLocalIndex[4] = i2++;
+			pLocalIndex[5] = i3++;
 			pLocalIndex += 6;
 		}
 	}
