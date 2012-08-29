@@ -14,8 +14,8 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Controller);
 Player::Player(Camera* pCamera)
 	:
 	mpNode(NULL),
-	mTotalHealth(100.0f),
-	mHealth(100.0f),
+	mTotalHealth(100.0F),
+	mHealth(100.0F),
 	mMaxPitch(MathF::PI / 4),
 	mMoveSpeed(2.5f),
 	mRotateSpeed(MathF::PI / 9),
@@ -295,7 +295,7 @@ void Player::DoShooting()
 
 	btVector3 rayStart = BulletUtils::Convert(GetPosition());
 	// FIXME: Add max shoot reach field
-	btVector3 rayEnd = rayStart + BulletUtils::Convert(mLookAt * 50.0f);
+	btVector3 rayEnd = rayStart + BulletUtils::Convert(mLookAt * 50.0F);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
@@ -309,7 +309,7 @@ void Player::DoShooting()
 
 		if (pProbeRobotController) 
 		{
-			pProbeRobotController->TakeDamage(1.0f);
+			pProbeRobotController->TakeDamage(1.0F);
 		}
 	}
 

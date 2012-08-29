@@ -55,10 +55,10 @@ Bool SplineCamera::Update(Double appTime)
 	mspCamera->SetFrame(camPos, camMat.GetColumn(0), camMat.GetColumn(1),
 		camMat.GetColumn(2));
 
-	mT += static_cast<Float>(elapsedTime*0.25f);
-	while (mT >= 1.0f)
+	mT += static_cast<Float>(elapsedTime*0.25F);
+	while (mT >= 1.0F)
 	{
-		mT -= 1.0f;
+		mT -= 1.0F;
 		mSplinePointIndex++;
 		if (mSplinePointIndex == mSplinePoints.GetQuantity()-2)
 		{

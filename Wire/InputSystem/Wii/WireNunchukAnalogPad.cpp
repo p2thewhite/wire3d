@@ -28,7 +28,7 @@ NunchukAnalogPad::~NunchukAnalogPad()
 /****************************************************************************/
 Float NunchukAnalogPad::GetY() const
 {
-	static float driftY = 0;
+	static Float driftY = 0;
 
 	if (GetParent()->GetDataBuffer() == NULL)
 	{
@@ -42,30 +42,30 @@ Float NunchukAnalogPad::GetY() const
 		return 0;
 	}
 
-	float y = pData->exp.nunchuk.js.pos.y - pData->exp.nunchuk.js.min.y;
+	Float y = pData->exp.nunchuk.js.pos.y - pData->exp.nunchuk.js.min.y;
 	y -= (pData->exp.nunchuk.js.max.y - pData->exp.nunchuk.js.min.y) * 0.5f;
 
-	if (MathF::FAbs(y) - 100.0f > driftY)
+	if (MathF::FAbs(y) - 100.0F > driftY)
 	{
 		if (y < 0)
 		{
-			driftY = -(y + 100.0f);
+			driftY = -(y + 100.0F);
 		}
 		else
 		{
-			driftY = 100.0f - y;
+			driftY = 100.0F - y;
 		}
 	}
 
-	if (MathF::FAbs(y + driftY) > 100.0f)
+	if (MathF::FAbs(y + driftY) > 100.0F)
 	{
 		driftY = 0;
 	}
 
 	y += driftY;
-	y *= 0.01f;
+	y *= 0.01F;
 
-	if (MathF::FAbs(y) < 0.15f) 
+	if (MathF::FAbs(y) < 0.15F)
 	{
 		y = 0;
 	}
@@ -78,7 +78,7 @@ Float NunchukAnalogPad::GetY() const
 /****************************************************************************/
 Float NunchukAnalogPad::GetX() const
 {
-	static float driftX = 0;
+	static Float driftX = 0;
 
 	if (GetParent()->GetDataBuffer() == NULL)
 	{
@@ -92,30 +92,30 @@ Float NunchukAnalogPad::GetX() const
 		return 0;
 	}
 
-	float x = pData->exp.nunchuk.js.pos.x - pData->exp.nunchuk.js.min.x;
-	x -= (pData->exp.nunchuk.js.max.x - pData->exp.nunchuk.js.min.x) * 0.5f;
+	Float x = pData->exp.nunchuk.js.pos.x - pData->exp.nunchuk.js.min.x;
+	x -= (pData->exp.nunchuk.js.max.x - pData->exp.nunchuk.js.min.x) * 0.5F;
 
-	if (MathF::FAbs(x) - 100.0f > driftX)
+	if (MathF::FAbs(x) - 100.0F > driftX)
 	{
 		if (x < 0)
 		{
-			driftX = -(x + 100.0f);
+			driftX = -(x + 100.0F);
 		}
 		else
 		{
-			driftX = 100.0f - x;
+			driftX = 100.0F - x;
 		}
 	}
 
-	if (MathF::FAbs(x + driftX) > 100.0f)
+	if (MathF::FAbs(x + driftX) > 100.0F)
 	{
 		driftX = 0;
 	}
 
 	x += driftX;
-	x *= 0.01f;
+	x *= 0.01F;
 
-	if (MathF::FAbs(x) < 0.15f) 
+	if (MathF::FAbs(x) < 0.15F)
 	{
 		x = 0;
 	}

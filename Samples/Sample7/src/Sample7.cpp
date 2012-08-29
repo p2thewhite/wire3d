@@ -81,7 +81,7 @@ void Sample7::OnIdle()
 	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspGeometry->States[
 		State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
-	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0f); 
+	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
 	mspGeometry->ActiveIndexCount = pIndexBuffer->GetQuantity();
 	mspGeometry->StartIndex = 0;
 	GetRenderer()->Draw(mspGeometry);
@@ -89,7 +89,7 @@ void Sample7::OnIdle()
 	// render small torus knot
 	mspGeometry->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
 	mspGeometry->World.SetUniformScale(0.18F);
-	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0f);
+	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
 
 	// Use the Geometry's StartIndex and ActiveIndexCount to control what
 	// part of the mesh is being rendered.

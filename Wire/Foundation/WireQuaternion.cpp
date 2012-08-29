@@ -13,7 +13,7 @@ namespace Wire
 template<> const Quaternion<Float> Quaternion<Float>::IDENTITY(
 	1.0F, 0.0F, 0.0F, 0.0F);
 template<> const Quaternion<Float> Quaternion<Float>::ZERO(
-	0.0F, 0.0F, 0.0F, 0.0f);
+	0.0F, 0.0F, 0.0F, 0.0F);
 
 template<> const Quaternion<Double> Quaternion<Double>::IDENTITY(
 	1.0, 0.0, 0.0 ,0.0);

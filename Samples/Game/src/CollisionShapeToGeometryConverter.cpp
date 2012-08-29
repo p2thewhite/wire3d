@@ -100,8 +100,8 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 
 	// Creating the sphere
 
-	Float R = 1.0f / (Float) (rings - 1);
-	Float S = 1.0f / (Float) (sectors - 1);
+	Float R = 1.0F / (Float) (rings - 1);
+	Float S = 1.0F / (Float) (sectors - 1);
 
 	TArray<Vector3F> vertices;
 	for (UInt r = 0; r < rings; r++) {

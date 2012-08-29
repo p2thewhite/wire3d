@@ -128,7 +128,7 @@ void Demo::StateRunning(Double time)
 //----------------------------------------------------------------------------
 void Demo::DrawFPS(Double time)
 {
-	static Double lastTime = 0.0f;
+	static Double lastTime = 0.0F;
 	Double elapsed = time - lastTime;
 	lastTime = time;
 

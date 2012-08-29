@@ -544,9 +544,10 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
-	Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis, const Float radius,
-	const Float height, const UInt uvQuantity, const UInt vertexColorChannels, const Bool useNormals)
+Geometry* StandardMesh::CreateCylinder(Int axisSampleCount,
+	Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis,
+	const Float radius, const Float height, const UInt uvQuantity,
+	const UInt vertexColorChannels, const Bool useNormals)
 {
 	VertexAttributes attr;
 	attr.SetPositionChannels(3);  // channels: X, Y, Z
@@ -574,14 +575,14 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(3 * triangleQuantity);
 
 	// generate geometry
-	Float invRS = 1.0f/(Float)radialSampleCount;
-	Float invASm1 = 1.0f/(Float)(axisSampleCount-1);
-	Float halfHeight = 0.5f*height;
+	Float invRS = 1.0F/(Float)radialSampleCount;
+	Float invASm1 = 1.0F/(Float)(axisSampleCount-1);
+	const Float halfHeight = 0.5F*height;
 
 	// Generate points on the unit circle to be used in computing the mesh
 	// points on a cylinder slice.
-	Float* pSin = new Float[radialSampleCount+1];
-	Float* pCos = new Float[radialSampleCount+1];
+	Float* pSin = WIRE_NEW Float[radialSampleCount+1];
+	Float* pCos = WIRE_NEW Float[radialSampleCount+1];
 	for (Int r = 0; r < radialSampleCount; r++)
 	{
 		Float angle = MathF::TWO_PI*invRS*r;
@@ -604,11 +605,11 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 		Vector3F sliceCenter = rCenter + z*rAxis;
 
 		// compute slice vertices with duplication at end point
-		int iSave = i;
+		Int iSave = i;
 		for (Int r = 0; r < radialSampleCount; r++)
 		{
 			float radialFraction = r * invRS;  // in [0,1)
-			Vector3F normal(pCos[r], pSin[r], 0.0f);
+			Vector3F normal(pCos[r], pSin[r], 0.0F);
 			pVBuffer->Position3(i) = sliceCenter + radius*normal;
 
 			if (attr.HasNormal())
@@ -707,14 +708,16 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 	WIRE_DELETE[] pCos;
 	WIRE_DELETE[] pSin;
 
-	Geometry* pMesh = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	Geometry* pGeometry = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
 	// to use the true information.
-	pMesh->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
-	pMesh->GetMesh()->GetModelBound()->SetRadius(radius);
-	return pMesh;
+	pGeometry->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	Float boundingSphereRadius = MathF::Sqrt(radius * radius +
+		halfHeight * halfHeight);
+	pGeometry->GetMesh()->GetModelBound()->SetRadius(boundingSphereRadius);
+	return pGeometry;
 }
 
 //----------------------------------------------------------------------------
@@ -980,14 +983,14 @@ Geometry* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
 	WIRE_DELETE[] pCos;
 	WIRE_DELETE[] pSin;
 
-	Geometry* pMesh = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	Geometry* pGeometry = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
 	// to use the true information.
-	pMesh->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
-	pMesh->GetMesh()->GetModelBound()->SetRadius(radius);
-	return pMesh;
+	pGeometry->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	pGeometry->GetMesh()->GetModelBound()->SetRadius(radius);
+	return pGeometry;
 }
 
 //----------------------------------------------------------------------------

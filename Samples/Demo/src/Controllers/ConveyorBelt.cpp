@@ -32,9 +32,9 @@ Bool ConveyorBelt::Update(Double appTime)
 	mLastApplicationTime = appTime;
 
 	mOffset -= static_cast<Float>(elapsedTime);
-	if (mOffset < -1.0f)
+	if (mOffset < -1.0F)
 	{
-		mOffset += 1.0f;
+		mOffset += 1.0F;
 	}
 
 	return true;
