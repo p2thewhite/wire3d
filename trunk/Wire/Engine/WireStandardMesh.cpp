@@ -576,7 +576,7 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 	// generate geometry
 	Float invRS = 1.0f/(Float)radialSampleCount;
 	Float invASm1 = 1.0f/(Float)(axisSampleCount-1);
-	Float fHalfHeight = 0.5f*height;
+	Float halfHeight = 0.5f*height;
 
 	// Generate points on the unit circle to be used in computing the mesh
 	// points on a cylinder slice.
@@ -584,7 +584,7 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 	Float* pCos = new Float[radialSampleCount+1];
 	for (Int r = 0; r < radialSampleCount; r++)
 	{
-		Float angle = MathF::TWO_PI * invRS * r;
+		Float angle = MathF::TWO_PI*invRS*r;
 		pCos[r] = MathF::Cos(angle);
 		pSin[r] = MathF::Sin(angle);
 	}
@@ -598,10 +598,10 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 	for (Int a = 0; a < axisSampleCount; a++)
 	{
 		float axisFraction = a*invASm1;  // in [0,1]
-		float z = -fHalfHeight + height*axisFraction;
+		float z = -halfHeight + height*axisFraction;
 
 		// compute center of slice
-		Vector3F sliceCenter = rCenter + z * rAxis;
+		Vector3F sliceCenter = rCenter + z*rAxis;
 
 		// compute slice vertices with duplication at end point
 		int iSave = i;
@@ -703,8 +703,6 @@ Geometry* StandardMesh::CreateCylinder (Int axisSampleCount,
 			pLocalIndex += 6;
 		}
 	}
-
-	WIRE_ASSERT(pLocalIndex == pIBuffer->GetData() + 3*triangleQuantity);
 
 	WIRE_DELETE[] pCos;
 	WIRE_DELETE[] pSin;
