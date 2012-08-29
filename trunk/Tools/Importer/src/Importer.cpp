@@ -781,7 +781,7 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		pCam->SetFrame(cameraLocation, viewDirection, up, right);
 	}
 
-	pCam->SetFrustum(fov, 640.0f / 480.0f , near, far);
+	pCam->SetFrustum(fov, 640.0F / 480.0F , near, far);
 	mpCameras->Append(pCam);
 }
 
@@ -840,7 +840,7 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 		pSpatial->Local.SetRotate(m);
 	}
 
-	if ((s.X() != 1.0f) || (s.Y() != 1.0f) || (s.Z() != 1.0f))
+	if ((s.X() != 1.0F) || (s.Y() != 1.0F) || (s.Z() != 1.0F))
 	{
 		if ((s.X() == s.Y()) && (s.X() == s.Z()))
 		{

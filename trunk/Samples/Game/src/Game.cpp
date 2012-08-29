@@ -250,11 +250,11 @@ void Game::OnInput()
 	// 'Z' button makes the player run
 	if (pButtons->GetButton(Buttons::BUTTON_Z))
 	{
-		mspPlayer->SetMoveSpeed(10.0f);
+		mspPlayer->SetMoveSpeed(10.0F);
 	}
 	else
 	{
-		mspPlayer->SetMoveSpeed(5.0f);
+		mspPlayer->SetMoveSpeed(5.0F);
 	}
 }
 
@@ -534,18 +534,18 @@ Node* Game::LoadAndInitializeScene()
 	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial);
 	mspProbeRobot->Register(mpPhysicsWorld);
 	mspProbeRobot->SetSpeed(7.5f);
-	mspProbeRobot->SetMaximumPlayerDistance(10.0f);
+	mspProbeRobot->SetMaximumPlayerDistance(10.0F);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
 
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);
 	mspPlayer->SetLookUpDeadZone(Vector2F(50, 50));
-	mspPlayer->SetHeadHeight(0.5f);
-	mspPlayer->SetCharacterHeight(1.5f);
-	mspPlayer->SetCharacterWidth(0.75f);
-	mspPlayer->SetStepHeight(0.5f);
+	mspPlayer->SetHeadHeight(0.5F);
+	mspPlayer->SetCharacterHeight(1.5F);
+	mspPlayer->SetCharacterWidth(0.75F);
+	mspPlayer->SetStepHeight(0.5F);
 	mspPlayer->SetMaximumVerticalAngle(45);
-	mspPlayer->SetMoveSpeed(5.0f);
+	mspPlayer->SetMoveSpeed(5.0F);
 	mspPlayer->Register(mpPhysicsWorld);
 	pPlayerSpatial->AttachController(mspPlayer);
 
@@ -574,7 +574,7 @@ void Game::InitializePhysics()
 	mpConstraintSolver = WIRE_NEW btSequentialImpulseConstraintSolver();
 	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher,	mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
 
-	mpPhysicsWorld->setGravity(btVector3(0, -9.8f, 0));
+	mpPhysicsWorld->setGravity(btVector3(0, -9.8F, 0));
 	mpPhysicsWorld->getPairCache()->setInternalGhostPairCallback(WIRE_NEW btGhostPairCallback());
 }
 

@@ -276,7 +276,7 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	z /= far3;
 
 	z = z < 0 ? 0 : z;
-	z = z >= 1.0f ? 1.0f - MathF::ZERO_TOLERANCE : z;
+	z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
 
 	key = static_cast<UInt>(z * (1<<DEPTH));
 	if (pGeometry->States[State::ALPHA] && StaticCast<StateAlpha>(pGeometry->

@@ -10,10 +10,10 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Controller);
 ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 	:
 	mpSpatial(NULL),
-	mTotalHealth(100.0f),
-	mHealth(100.0f),
-	mSpeed(5.0f),
-	mSquaredMaximumPlayerDistance(25.0f)
+	mTotalHealth(100.0F),
+	mHealth(100.0F),
+	mSpeed(5.0F),
+	mSquaredMaximumPlayerDistance(25.0F)
 {
 	WIRE_ASSERT(pPlayerSpatial);
 	mspPlayerSpatial = pPlayerSpatial;
@@ -77,7 +77,7 @@ void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 
 	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
 
-	btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(2.0f, 3.0f);
+	btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(2.0F, 3.0F);
 	mpGhostObject->setCollisionShape(pConvexShape);
 	mpGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 
