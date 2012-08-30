@@ -1224,7 +1224,7 @@
     <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-    <Leaf Name="Gun" Pos="0, -0.5, 0.75" Rot="1, 0, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+    <Leaf Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254" Static="0">
       <Mesh Name="Assault Rifle">
         <Vertices Name="Assault Rifle.vtx" LittleEndian="y" />
         <Indices Name="Assault Rifle.idx" LittleEndian="y" />
@@ -1233,7 +1233,7 @@
         <Uv1 Name="Assault Rifle_1_1_0_0.uv1" LittleEndian="y" />
       </Mesh>
       <Material Name="Assault Rifle">
-        <Texture Name="Assault Rifle.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+        <Texture Name="Assault Rifle.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" Usage="STATIC_DISCARD_ON_BIND" />
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
     </Leaf>
