@@ -47,7 +47,7 @@ private:
 	void DrawFPS(Double deltaTime);
 	void ToggleCollidersVisibility();
 
-	Double mLastTime;
+	Double mLastApplicationTime;
 	UInt mAppState;
 	Bool mShowFps;
 	Vector3F mStartingPoint;

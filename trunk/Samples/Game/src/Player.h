@@ -30,7 +30,8 @@ public:
 	void SetMoveSpeed(Float moveSpeed);
 	void SetRotateSpeed(Float rotateSpeed);
 	void SetLookUpDeadZone(const Vector2F& rLookUpDeadZone);
-	void SetMaximumVerticalAngle(Float maxVerticalAngle);
+	void SetMaximumVerticalAngle(Float maximumVerticalAngle);
+	void SetMaximumShootingDistance(Float maximumShootingDistance);
 	void MoveForward();
 	void MoveBackward();
 	void StrafeLeft();
@@ -44,14 +45,15 @@ private:
 	Float mTotalHealth;
 	Float mHealth;
 	Float mHeadHeight;
-	Float mMaxPitch;
+	Float mMaximumShootingDistance;
+	Float mMaximumVerticalAngle;
 	Vector2F mLookUpDeadZone;
 	Float mMoveSpeed;
 	Float mRotateSpeed;
 	Float mCharacterWidth;
 	Float mCharacterHeight;
 	Float mStepHeight;
-	Vector3F mLookAt;
+	Vector3F mEyeDirection;
 	Vector3F mUp;
 	Vector3F mForward;
 	Vector3F mRight;
@@ -61,7 +63,8 @@ private:
 	Float mYawIncrement;
 	Matrix3F mRotationX;
 	Matrix3F mRotationY;
-	Matrix3F mStartingGunRotation;
+	Matrix3F mGunStartingRotation;
+	Vector2F mLookAt;
 	Vector3F mMove;
 	Bool mJump;
 	Bool mShoot;

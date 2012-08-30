@@ -30,7 +30,7 @@ Bool Game::OnInitialize()
 	}
 
 	mAppState = AS_LOADING;
-	mLastTime = System::GetTime();
+	mLastApplicationTime = System::GetTime();
 	mShowFps = false;
 
 	// Frames per second and render statistics debug text
@@ -55,20 +55,20 @@ void Game::OnTerminate()
 //----------------------------------------------------------------------------
 void Game::OnIdle()
 {
-	Double time = System::GetTime();
-	Double deltaTime = time - mLastTime;
-	mLastTime = time;
+	Double appTime = System::GetTime();
+	Double deltaTime = appTime - mLastApplicationTime;
+	mLastApplicationTime = appTime;
 
 	mLogoCameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
 	switch (mAppState)
 	{
 	case AS_LOADING:
-		OnLoading(time, deltaTime);
+		OnLoading(appTime, deltaTime);
 		break;
 
 	case AS_RUNNING:
-		OnRunning(time, deltaTime);
+		OnRunning(appTime, deltaTime);
 		break;
 
 	default:
@@ -82,7 +82,8 @@ void Game::OnInput()
 	static Double lastButton1PressTime = 0;
 	static Float oldX = 0;
 	static Float oldY = 0;
-	Double time = System::GetTime();
+	Double appTime = System::GetTime();
+	static Bool buttonAReleased = true;
 
 	if (mspPlayer == NULL)
 	{
@@ -224,7 +225,15 @@ void Game::OnInput()
 	// 'A' button makes the player shoot
 	if (pButtons->GetButton(Buttons::BUTTON_A))
 	{
-		mspPlayer->Shoot();
+		if (buttonAReleased) 
+		{
+			mspPlayer->Shoot();
+			buttonAReleased = false;
+		}
+	}
+	else
+	{
+		buttonAReleased = true;
 	}
 
 	// 'B' button makes the player jump
@@ -233,10 +242,10 @@ void Game::OnInput()
 		mspPlayer->Jump();
 	}
 
-	if (pButtons->GetButton(Buttons::BUTTON_1) && (time - lastButton1PressTime) > 0.5)
+	if (pButtons->GetButton(Buttons::BUTTON_1) && (appTime - lastButton1PressTime) > 0.5)
 	{
 		ToggleCollidersVisibility();
-		lastButton1PressTime = time;
+		lastButton1PressTime = appTime;
 	}
 
 	// If there's a nunchuk, start reading its buttons instead
@@ -278,8 +287,6 @@ void Game::ToggleCollidersVisibility()
 			if (pColliderGeometry)
 			{
 				pColliderNode->AttachChild(pColliderGeometry);
-
-				// Update the render state (necessary because of wireframe)
 				pColliderNode->UpdateRS();
 			}
 		}
@@ -545,6 +552,7 @@ Node* Game::LoadAndInitializeScene()
 	mspPlayer->SetCharacterWidth(0.75F);
 	mspPlayer->SetStepHeight(0.5F);
 	mspPlayer->SetMaximumVerticalAngle(45);
+	mspPlayer->SetMaximumShootingDistance(1000.0f);
 	mspPlayer->SetMoveSpeed(5.0F);
 	mspPlayer->Register(mpPhysicsWorld);
 	pPlayerSpatial->AttachController(mspPlayer);

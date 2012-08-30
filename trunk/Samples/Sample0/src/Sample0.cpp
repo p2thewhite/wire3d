@@ -41,7 +41,7 @@ Bool Sample0::OnInitialize()
 	// will happen when Sample0 is being destructed.
 	// Creation of Wire::Geometry objects is explained in detail in Sample1.
 //	mspCube = StandardMesh::CreateCube8(/* number of RGB(A) channels */ 4);
-	mspCube = StandardMesh::CreateCylinder(10, 20, Vector3F::ZERO, Vector3F::UNIT_Y, 0.5f, 2.5f, 0, 4);
+	mspCube = StandardMesh::CreateCylinder(10, 20, Vector3F::ZERO, Vector3F::UNIT_Y, 0.5f, 2.5f, 0, 4, false);
 
 	// Create a camera for rendering
 	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);

@@ -16,7 +16,8 @@ Player::Player(Camera* pCamera)
 	mpNode(NULL),
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
-	mMaxPitch(MathF::PI / 4),
+	mMaximumVerticalAngle(MathF::PI / 4),
+	mMaximumShootingDistance(100.0f),
 	mMoveSpeed(2.5f),
 	mRotateSpeed(MathF::PI / 9),
 	mCharacterWidth(1),
@@ -26,7 +27,9 @@ Player::Player(Camera* pCamera)
 	mPitchIncrement(0),
 	mYawIncrement(0),
 	mMove(Vector3F::ZERO),
-	mJump(false)
+	mLookAt(Vector2F::ZERO),
+	mJump(false),
+	mShoot(false)
 {
 	WIRE_ASSERT(pCamera);
 	mspCamera = pCamera;
@@ -41,16 +44,26 @@ Bool Player::Update(Double appTime)
 
 	// Apply accumulators
 	mMove *= deltaTime;
-	mYaw += (mYawIncrement * deltaTime);
+	mYaw += mYawIncrement * deltaTime;
+
+	if (mYaw > MathF::TWO_PI) 
+	{
+		mYaw = mYaw - MathF::TWO_PI;
+	}
+	else if (mYaw < -MathF::TWO_PI)
+	{
+		mYaw = MathF::TWO_PI - mYaw;
+	}
+
 	mPitch += (mPitchIncrement * deltaTime);
-	mPitch = MathF::Clamp(-mMaxPitch, mPitch, mMaxPitch);
+	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 
 	// Calculate rotation matrices
 	mRotationX.FromAxisAngle(Vector3F::UNIT_X, mPitch);
 	mRotationY.FromAxisAngle(Vector3F::UNIT_Y, mYaw);
 
-	// Calculate up, forward and lookup
-	mLookAt = mRotationY * mRotationX * Vector3F::UNIT_Z;
+	// Calculate up, gunDirection and lookup
+	mEyeDirection = mRotationY * mRotationX * Vector3F::UNIT_Z;
 	mUp = mRotationY * mRotationX * Vector3F::UNIT_Y;
 	mForward = mRotationY * Vector3F::UNIT_Z;
 
@@ -58,9 +71,9 @@ Bool Player::Update(Double appTime)
 	rotation.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
 	mRight = rotation * mForward;
 
+	DoShooting();
 	UpdatePlayerNode();
 	UpdateGunRotation();
-	DoShooting();
 	UpdateCamera();
 	MovePhysicsEntity();
 
@@ -87,7 +100,7 @@ void Player::InitializeIfNecessary()
 	mpGun = mpNode->GetChildByName("Gun");
 	if (mpGun)
 	{
-		mStartingGunRotation = mpGun->World.GetRotate();
+		mGunStartingRotation = mpGun->World.GetRotate();
 	}
 
 	// Set camera position
@@ -189,7 +202,13 @@ void Player::SetLookUpDeadZone(const Vector2F& rLookUpDeadZone)
 //----------------------------------------------------------------------------
 void Player::SetMaximumVerticalAngle(Float maximumVerticalAngle)
 {
-	mMaxPitch = MathF::DEG_TO_RAD * (maximumVerticalAngle);
+	mMaximumVerticalAngle = MathF::DEG_TO_RAD * (maximumVerticalAngle);
+}
+
+//----------------------------------------------------------------------------
+void Player::SetMaximumShootingDistance(Float maximumShootingDistance)
+{
+	mMaximumShootingDistance = maximumShootingDistance;
 }
 
 //----------------------------------------------------------------------------
@@ -231,6 +250,8 @@ void Player::Shoot()
 //----------------------------------------------------------------------------
 void Player::LookAt(const Vector2F& rLookAt)
 {
+	mLookAt = rLookAt;
+
 	if (rLookAt.X() > mLookUpDeadZone.X())
 	{
 		mYawIncrement -= mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
@@ -272,30 +293,40 @@ void Player::UpdateGunRotation()
 		return;
 	}
 
-	// Clamping between -0.5 and 0.5 radians (approx. -30 and 30 degrees)
-	Float weaponPitch = MathF::Clamp(-0.5, mPitch * 0.1f, 0.5);
-	Float weaponYaw = MathF::Clamp(-0.5, mYaw * 0.1f, 0.5);
+	Vector3F lookAtWorldSpace = mspCamera->ScreenToWorldPoint(mLookAt);
+	// Increase the z to a slighter gunRotation
+	lookAtWorldSpace.Z() = 400;
 
-	// Calculate scaled rotations
-	Matrix3F rotationX;
-	rotationX.FromAxisAngle(Vector3F::UNIT_X, weaponPitch);
-	Matrix3F rotationY;
-	rotationY.FromAxisAngle(Vector3F::UNIT_Y, weaponYaw);
+	Vector3F gunDirection = mpGun->Local.GetRotate() * Vector3F::UNIT_Z;
 
-	mpGun->Local.SetRotate(mStartingGunRotation * rotationX * rotationY);
+	// Calculate look gunRotation from look coordinates in world space
+	Vector3F axis = gunDirection.Cross(lookAtWorldSpace);
+	Float angle = gunDirection.GetAngle(lookAtWorldSpace);
+
+	Matrix3F gunRotation;
+	gunRotation.FromAxisAngle(axis, angle);
+	mpGun->Local.SetRotate(mpGun->Local.GetRotate() * gunRotation);
 }
 
 //----------------------------------------------------------------------------
 void Player::DoShooting()
 {
+	// Remove previous ray
+	Spatial* pRay = mpNode->GetChildByName("Ray");
+
+	if (pRay) 
+	{
+		mpNode->DetachChild(pRay);
+	}
+
+	// If not shooting, exit
 	if (!mShoot) 
 	{
 		return;
 	}
 
 	btVector3 rayStart = BulletUtils::Convert(GetPosition());
-	// FIXME: Add max shoot reach field
-	btVector3 rayEnd = rayStart + BulletUtils::Convert(mLookAt * 50.0F);
+	btVector3 rayEnd = rayStart + BulletUtils::Convert(mEyeDirection * mMaximumShootingDistance);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
@@ -303,13 +334,13 @@ void Player::DoShooting()
 	if (hitCallback.hasHit()) 
 	{
 		Vector3F hitPoint = BulletUtils::Convert(hitCallback.m_hitPointWorld);
-		CreateRay(hitPoint.Distance(GetPosition()));
+		CreateRay(GetPosition().Distance(hitPoint));
 
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
 
 		if (pProbeRobotController) 
 		{
-			pProbeRobotController->TakeDamage(1.0F);
+			pProbeRobotController->TakeDamage(5.0F);
 		}
 	}
 
@@ -319,12 +350,20 @@ void Player::DoShooting()
 //----------------------------------------------------------------------------
 void Player::CreateRay(Float size)
 {
+	Geometry* pRay = StandardMesh::CreateCylinder(5, 5, Vector3F::ZERO, Vector3F(0, 0, 1), 0.1f, size, 0, 4, false);
+	pRay->SetName("Ray");
+	mpNode->AttachChild(pRay);
+	mpNode->UpdateRS();
+
+	Vector3F gunEnd = mpGun->Local.GetTranslate() + (mpGun->Local.GetRotate() * Vector3F(0, 0, 1.2f)) * (size * 0.5f);
+	pRay->Local.SetTranslate(gunEnd);
+	pRay->Local.SetRotate(mpGun->Local.GetRotate());
 }
 
 //----------------------------------------------------------------------------
 void Player::UpdateCamera()
 {
-	mspCamera->SetFrame(GetPosition(), mLookAt, mUp, mRight);
+	mspCamera->SetFrame(GetPosition(), mEyeDirection, mUp, mRight);
 }
 
 //----------------------------------------------------------------------------

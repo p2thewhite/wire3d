@@ -60,7 +60,7 @@ public:
 	static Geometry* CreateCylinder(Int axisSampleCount,
 		Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis,
 		const Float radius, const Float height, const UInt uvQuantity,
-		const UInt vertexColorChannels, const Bool useNormals = false);
+		const UInt vertexColorChannels, const Bool open, const Bool useNormals = false);
 
 	// sphere with poles going through z-axis
 	static Geometry* CreateSphere(Int zSampleCount, Int radialSampleCount,
