@@ -545,204 +545,37 @@ Geometry* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 
 //----------------------------------------------------------------------------
 Geometry* StandardMesh::CreateCylinder(Int axisSampleCount,
-	Int radialSampleCount, const Vector3F& rCenter, const Vector3F& rAxis,
-	const Float radius, const Float height, const UInt uvQuantity,
-	const UInt vertexColorChannels, const Bool open, const Bool useNormals)
+	Int radialSampleCount, const Float radius, const Float height,
+	const UInt uvQuantity, const UInt vertexColorChannels,
+	const Bool useNormals)
 {
-	Geometry* pGeometry;
+	Geometry* pGeometry = CreateSphere(axisSampleCount, radialSampleCount,
+		radius, uvQuantity, vertexColorChannels, useNormals);
 
-	if (open)
+	VertexBuffer* pVBuffer = pGeometry->GetMesh()->GetVertexBuffer();
+	Int numVertices = pVBuffer->GetQuantity();
+
+	// Flatten sphere at poles.
+	Float hDiv2 = 0.5f*height;
+	pVBuffer->Position3(numVertices-2)[2] = -hDiv2;  // south pole
+	pVBuffer->Position3(numVertices-1)[2] = +hDiv2;  // north pole
+
+	// Remap z-values to [-h/2,h/2].
+	Float zFactor = 2.0f/(axisSampleCount-1);
+	Float tmp0 = radius*(-1.0f + zFactor);
+	Float tmp1 = 1.0f/(radius*(+1.0f - zFactor));
+	for (Int i = 0; i < numVertices-2; ++i)
 	{
-		VertexAttributes attr;
-		attr.SetPositionChannels(3);  // channels: X, Y, Z
+		Vector3F& rPos = pVBuffer->Position3(i);
+		rPos[2] = hDiv2*(-1.0f + tmp1*(rPos[2] - tmp0));
+		Float adjust = radius*MathF::InvSqrt(rPos[0]*rPos[0] + rPos[1]*rPos[1]);
+		rPos[0] *= adjust;
+		rPos[1] *= adjust;
+	}
 
-		for (UInt unit = 0; unit < uvQuantity; unit++)
-		{
-			attr.SetTCoordChannels(2, unit);	// channels: U, V
-		}
-
-		if (vertexColorChannels > 0)
-		{
-			WIRE_ASSERT(vertexColorChannels == 3 || vertexColorChannels == 4);
-			attr.SetColorChannels(vertexColorChannels);	// RGB(A)
-		}
-
-		if (useNormals)
-		{
-			attr.SetNormalChannels(3);	// channels: X, Y, Z
-		}
-
-		// allocate vertices
-		const Int vertexQuantity = axisSampleCount*(radialSampleCount+1);
-		Int triangleQuantity = 2*(axisSampleCount-1)*radialSampleCount;
-		VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attr, vertexQuantity);
-		IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(3 * triangleQuantity);
-
-		// generate geometry
-		Float invRS = 1.0F/(Float)radialSampleCount;
-		Float invASm1 = 1.0F/(Float)(axisSampleCount-1);
-		const Float halfHeight = 0.5f*height;
-
-		// Generate points on the unit circle to be used in computing the mesh
-		// points on a cylinder slice.
-		Float* pSin = WIRE_NEW Float[radialSampleCount+1];
-		Float* pCos = WIRE_NEW Float[radialSampleCount+1];
-		for (Int r = 0; r < radialSampleCount; r++)
-		{
-			Float angle = MathF::TWO_PI*invRS*r;
-			pCos[r] = MathF::Cos(angle);
-			pSin[r] = MathF::Sin(angle);
-		}
-
-		pSin[radialSampleCount] = pSin[0];
-		pCos[radialSampleCount] = pCos[0];
-
-		const UInt uvChannelCount = attr.GetTCoordChannelQuantity();
-		Int i = 0;
-		// generate the cylinder itself
-		for (Int a = 0; a < axisSampleCount; a++)
-		{
-			float axisFraction = a*invASm1;  // in [0,1]
-			float z = -halfHeight + height*axisFraction;
-
-			// compute center of slice
-			Vector3F sliceCenter = rCenter + z*rAxis;
-
-			// compute slice vertices with duplication at end point
-			Int save = i;
-			for (Int r = 0; r < radialSampleCount; r++)
-			{
-				float radialFraction = r*invRS;  // in [0,1)
-				Vector3F normal(pCos[r], pSin[r], 0.0f);
-				pVBuffer->Position3(i) = sliceCenter + radius*normal;
-
-				if (attr.HasNormal())
-				{
-					normal = pVBuffer->Position3(i);
-					normal.Normalize();
-					pVBuffer->Normal3(i) = normal;
-				}
-
-				if (vertexColorChannels == 3)
-				{
-					Vector3F v = pVBuffer->Position3(i);
-					v.Normalize();
-					pVBuffer->Color3(i) = ColorRGB(v.X(), v.Y(), v.Z());
-				}
-				else if (vertexColorChannels == 4)
-				{
-					Vector3F v = pVBuffer->Position3(i);
-					v.Normalize();
-					pVBuffer->Color4(i) = ColorRGBA(v.X(), v.Y(), v.Z(), 1);
-				}
-
-				if (uvChannelCount > 0)
-				{
-					Vector2F tCoord = Vector2F(radialFraction, axisFraction);
-					for (UInt unit = 0; unit < uvChannelCount; unit++)
-					{
-						if (attr.HasTCoord(unit))
-						{
-							pVBuffer->TCoord2(i, unit) = tCoord;
-						}
-					}
-				}
-
-				i++;
-			}
-
-			pVBuffer->Position3(i) = pVBuffer->Position3(save);
-			if (attr.HasNormal())
-			{
-				pVBuffer->Normal3(i) = pVBuffer->Normal3(save);
-			}
-
-			if (vertexColorChannels == 3)
-			{
-				Vector3F v = pVBuffer->Position3(i);
-				v.Normalize();
-				pVBuffer->Color3(i) = ColorRGB(v.X(), v.Y(), v.Z());
-			}
-			else if (vertexColorChannels == 4)
-			{
-				Vector3F v = pVBuffer->Position3(i);
-				v.Normalize();
-				pVBuffer->Color4(i) = ColorRGBA(v.X(), v.Y(), v.Z(), 1);
-			}
-
-			if (uvChannelCount > 0)
-			{
-				Vector2F tCoord = Vector2F(1.0F, axisFraction);
-				for (UInt unit = 0; unit < uvChannelCount; unit++)
-				{
-					if (attr.HasTCoord(unit))
-					{
-						pVBuffer->TCoord2(i, unit) = tCoord;
-					}
-				}
-			}
-
-			i++;
-		}
-
-		Short rsc = static_cast<Short>(radialSampleCount);
-
-		// generate connectivity
-		UShort* pLocalIndex = pIBuffer->GetData();
-		Short aStart = 0;
-		for (Int a = 0; a < axisSampleCount-1; a++)
-		{
-			Short i0 = aStart;
-			Short i1 = i0 + 1;
-			aStart += rsc + 1;
-			Short i2 = aStart;
-			Short i3 = i2 + 1;
-			for (i = 0; i < radialSampleCount; i++)
-			{
-				pLocalIndex[0] = i0++;
-				pLocalIndex[1] = i1;
-				pLocalIndex[2] = i2;
-				pLocalIndex[3] = i1++;
-				pLocalIndex[4] = i3++;
-				pLocalIndex[5] = i2++;
-				pLocalIndex += 6;
-			}
-		}
-
-		WIRE_DELETE[] pCos;
-		WIRE_DELETE[] pSin;
-
-		pGeometry = WIRE_NEW Geometry(pVBuffer, pIBuffer);
-	} 
-	else 
+	if (useNormals)
 	{
-		pGeometry = CreateSphere(axisSampleCount, radialSampleCount, radius, uvQuantity, vertexColorChannels, useNormals);
-
-		VertexBuffer* pVBuffer = pGeometry->GetMesh()->GetVertexBuffer();
-		Int numVertices = pVBuffer->GetQuantity();
-
-		// Flatten sphere at poles.
-		Float hDiv2 = 0.5f*height;
-		pVBuffer->Position3(numVertices-2)[2] = -hDiv2;  // south pole
-		pVBuffer->Position3(numVertices-1)[2] = +hDiv2;  // north pole
-
-		// Remap z-values to [-h/2,h/2].
-		Float zFactor = 2.0f/(axisSampleCount-1);
-		Float tmp0 = radius*(-1.0f + zFactor);
-		Float tmp1 = 1.0f/(radius*(+1.0f - zFactor));
-		for (Int i = 0; i < numVertices-2; ++i)
-		{
-			Vector3F& rPos = pVBuffer->Position3(i);
-			rPos[2] = hDiv2*(-1.0f + tmp1*(rPos[2] - tmp0));
-			Float adjust = radius*MathF::InvSqrt(rPos[0]*rPos[0] + rPos[1]*rPos[1]);
-			rPos[0] *= adjust;
-			rPos[1] *= adjust;
-		}
-
-		if (useNormals)
-		{
-			pGeometry->GetMesh()->GenerateNormals();
-		}
+		pGeometry->GetMesh()->GenerateNormals();
 	}
 
 	// The duplication of vertices at the seam cause the automatically

@@ -15,9 +15,9 @@ Player::Player(Camera* pCamera)
 	:
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
-	mMaximumShootingDistance(100.0f),
+	mMaximumShootingDistance(100.0F),
 	mMaximumVerticalAngle(MathF::PI / 4),
-	mMoveSpeed(2.5f),
+	mMoveSpeed(2.5F),
 	mRotateSpeed(MathF::PI / 9),
 	mCharacterWidth(1),
 	mCharacterHeight(1),
@@ -350,12 +350,14 @@ void Player::DoShooting()
 //----------------------------------------------------------------------------
 void Player::CreateRay(Float size)
 {
-	Geometry* pRay = StandardMesh::CreateCylinder(5, 5, Vector3F::ZERO, Vector3F(0, 0, 1), 0.1f, size, 0, 4, false);
+	Geometry* pRay = StandardMesh::CreateCylinder(5, 5, 0.1F, size, 0, 4,
+		false);
 	pRay->SetName("Ray");
 	mpNode->AttachChild(pRay);
 	mpNode->UpdateRS();
 
-	Vector3F gunEnd = mpGun->Local.GetTranslate() + (mpGun->Local.GetRotate() * Vector3F(0, 0, 1.2f)) * (size * 0.5f);
+	Vector3F gunEnd = mpGun->Local.GetTranslate() + (mpGun->Local.GetRotate()
+		* Vector3F(0, 0, 1.2F)) * (size * 0.5F);
 	pRay->Local.SetTranslate(gunEnd);
 	pRay->Local.SetRotate(mpGun->Local.GetRotate());
 }
