@@ -681,20 +681,36 @@
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
     </Leaf>
-    <Leaf Name="Doors" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Mesh Name="Doors">
-        <Vertices Name="Doors.vtx" LittleEndian="y" />
-        <Indices Name="Doors.idx" LittleEndian="y" />
-        <Normals Name="Doors.nm" LittleEndian="y" />
-        <Uv0 Name="Doors.uv0" LittleEndian="y" />
-        <Uv1 Name="Doors_0.0429688_0.0429688_0.327146_0.869679.uv1" LittleEndian="y" />
-      </Mesh>
-      <Material Name="flowerpots2_diff_layersTGA_0">
-        <Texture Name="house1_column_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
-    </Leaf>
+    <Node Name="Doors" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Leaf Name="Doors (submesh_0)" Static="1" StartIndex="0" ActiveIndices="252">
+        <Mesh Name="Doors">
+          <Vertices Name="Doors.vtx" LittleEndian="y" />
+          <Indices Name="Doors.idx" LittleEndian="y" />
+          <Normals Name="Doors.nm" LittleEndian="y" />
+          <Uv0 Name="Doors.uv0" LittleEndian="y" />
+          <Uv1 Name="Doors_0.0429688_0.0429688_0.327146_0.869679.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="mainsq_floor_bases_diff_layersTGA_0">
+          <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Doors (submesh_1)" Static="1" StartIndex="252" ActiveIndices="1332">
+        <Mesh Name="Doors">
+          <Vertices Name="Doors.vtx" LittleEndian="y" />
+          <Indices Name="Doors.idx" LittleEndian="y" />
+          <Normals Name="Doors.nm" LittleEndian="y" />
+          <Uv0 Name="Doors.uv0" LittleEndian="y" />
+          <Uv1 Name="Doors_0.0429688_0.0429688_0.327146_0.869679.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="arc01_diff_layersTGA_0">
+          <Texture Name="arc01_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+    </Node>
     <Leaf Name="Eastern Building 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Eastern Building 1">
         <Vertices Name="Eastern Building 1.vtx" LittleEndian="y" />
@@ -793,20 +809,50 @@
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
     </Leaf>
-    <Leaf Name="Ground" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Mesh Name="Ground">
-        <Vertices Name="Ground.vtx" LittleEndian="y" />
-        <Indices Name="Ground.idx" LittleEndian="y" />
-        <Normals Name="Ground.nm" LittleEndian="y" />
-        <Uv0 Name="Ground.uv0" LittleEndian="y" />
-        <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
-      </Mesh>
-      <Material Name="mainsq_floor_small_diff_layersTGA_0">
-        <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
-    </Leaf>
+    <Node Name="Ground" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Leaf Name="Ground (submesh_0)" Static="1" StartIndex="0" ActiveIndices="168">
+        <Mesh Name="Ground">
+          <Vertices Name="Ground.vtx" LittleEndian="y" />
+          <Indices Name="Ground.idx" LittleEndian="y" />
+          <Normals Name="Ground.nm" LittleEndian="y" />
+          <Uv0 Name="Ground.uv0" LittleEndian="y" />
+          <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="mainsq_floor_small_diff_layersTGA_0">
+          <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Ground (submesh_1)" Static="1" StartIndex="168" ActiveIndices="900">
+        <Mesh Name="Ground">
+          <Vertices Name="Ground.vtx" LittleEndian="y" />
+          <Indices Name="Ground.idx" LittleEndian="y" />
+          <Normals Name="Ground.nm" LittleEndian="y" />
+          <Uv0 Name="Ground.uv0" LittleEndian="y" />
+          <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="mainsqr_floor_big_diff3_layersTGA_0">
+          <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+      <Leaf Name="Ground (submesh_2)" Static="1" StartIndex="1068" ActiveIndices="216">
+        <Mesh Name="Ground">
+          <Vertices Name="Ground.vtx" LittleEndian="y" />
+          <Indices Name="Ground.idx" LittleEndian="y" />
+          <Normals Name="Ground.nm" LittleEndian="y" />
+          <Uv0 Name="Ground.uv0" LittleEndian="y" />
+          <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
+        </Mesh>
+        <Material Name="mainsq_floor_bases_diff_layersTGA_0">
+          <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+          <MaterialState Ambient="1, 1, 1, 1" />
+        </Material>
+      </Leaf>
+    </Node>
     <Leaf Name="North Eastern Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="North Eastern Pillar">
         <Vertices Name="North Eastern Pillar.vtx" LittleEndian="y" />
@@ -941,8 +987,8 @@
         <Uv0 Name="Object016.uv0" LittleEndian="y" />
         <Uv1 Name="Object016_0.0263672_0.0263672_0.187945_0.9875.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="flowerpots2_diff_layersTGA_0">
-        <Texture Name="house1_column_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Material Name="mainsq_floor_bases_diff_layersTGA_0">
+        <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
         <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
@@ -1224,30 +1270,28 @@
     <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
-    <Leaf Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254" Static="0">
+    <Leaf Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
       <Mesh Name="Assault Rifle">
         <Vertices Name="Assault Rifle.vtx" LittleEndian="y" />
         <Indices Name="Assault Rifle.idx" LittleEndian="y" />
         <Normals Name="Assault Rifle.nm" LittleEndian="y" />
         <Uv0 Name="Assault Rifle.uv0" LittleEndian="y" />
-        <Uv1 Name="Assault Rifle_1_1_0_0.uv1" LittleEndian="y" />
       </Mesh>
       <Material Name="Assault Rifle">
-        <Texture Name="Assault Rifle.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" Usage="STATIC_DISCARD_ON_BIND" />
+        <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" Usage="STATIC_DISCARD_ON_BIND" />
         <MaterialState Ambient="1, 1, 1, 1" />
       </Material>
     </Leaf>
   </Node>
-  <Leaf Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254" Static="0">
+  <Leaf Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254">
     <Mesh Name="Sphere002">
       <Vertices Name="Sphere002.vtx" LittleEndian="y" />
       <Indices Name="Sphere002.idx" LittleEndian="y" />
       <Normals Name="Sphere002.nm" LittleEndian="y" />
       <Uv0 Name="Sphere002.uv0" LittleEndian="y" />
-      <Uv1 Name="Sphere002_1_1_0_0.uv1" LittleEndian="y" />
     </Mesh>
     <Material Name="Probe Robot">
-      <Texture Name="Probe Robot.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="Probe Robot.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="0.588, 0.588, 0.588, 1" />
     </Material>
   </Leaf>
