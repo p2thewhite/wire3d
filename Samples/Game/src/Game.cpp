@@ -446,9 +446,6 @@ Node* Game::LoadAndInitializeLoading()
 
 	mLogoCuller.SetCamera(mLogoCameras[0]);
 
-	Spatial* pLogo = pRoot->GetChildByName("Logo");
-	WIRE_ASSERT(pLogo != NULL);
-
 	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
 		(GetHeightF() - 256.0F)  * 0.5F, 0));
 

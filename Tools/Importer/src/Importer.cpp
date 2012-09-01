@@ -571,6 +571,21 @@ Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
+UInt Importer::GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName)
+{
+	Char* pFloat = GetValue(pXmlNode, pName);
+	UInt i = 0;
+	if (pFloat)
+	{
+		Int n;
+		n = sscanf(pFloat, "%d", &i);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+	}
+
+	return i;
+}
+
+//----------------------------------------------------------------------------
 Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
 	Char* pBool = GetValue(pXmlNode, pName);
@@ -913,6 +928,12 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 	if (pName)
 	{
 		pGeo->SetName(pName);
+	}
+
+	pGeo->StartIndex = GetUInt(pXmlNode, "StartIndex");
+	if (GetValue(pXmlNode, "ActiveIndices"))
+	{
+		pGeo->ActiveIndexCount = GetUInt(pXmlNode, "ActiveIndices");
 	}
 
 	if (pMaterial)
