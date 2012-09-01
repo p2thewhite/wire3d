@@ -65,6 +65,7 @@ private:
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	UInt GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName,	Bool& rHasValue);
 	ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue);

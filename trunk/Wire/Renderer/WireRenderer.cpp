@@ -877,7 +877,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 
 		UInt vertexSize = pVBPdr->GetVertexSize();
 		UInt vbSize = pVertexBuffer->GetQuantity() * vertexSize;
-		UInt ibSize = pIndexBuffer->GetQuantity() * sizeof(UShort);
+		UInt ibSize = pGeometry->ActiveIndexCount * sizeof(UShort);
 
 		if ((vbSize > mBatchedVertexBuffer->GetBufferSize()) ||
 			(ibSize > mBatchedIndexBuffer->GetBufferSize()) ||
@@ -936,7 +936,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 
 		vertexCount = vertexCount + static_cast<UShort>(pVertexBuffer->
 			GetQuantity());
-		indexCount += pIndexBuffer->GetQuantity();
+		indexCount += pGeometry->ActiveIndexCount;
 	}
 
 	pVBPdr->Unlock();

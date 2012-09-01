@@ -64,7 +64,7 @@ void IndexBuffer::Copy(UShort* pDst, UShort offset, UInt activeIndexCount,
 	{
 		if (pDst != GetData())
 		{
-			const UInt size = activeIndexCount * sizeof(UShort);
+			size_t size = activeIndexCount * sizeof(UShort);
 			System::Memcpy(pDst, size, GetData()+startIndex, size);
 		}
 

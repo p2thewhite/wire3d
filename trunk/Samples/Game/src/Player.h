@@ -64,13 +64,13 @@ private:
 	Matrix3F mRotationX;
 	Matrix3F mRotationY;
 	Matrix3F mGunStartingRotation;
-	Vector2F mLookAt;
 	Vector3F mMove;
-	Bool mJump;
-	Bool mShoot;
+	Vector2F mLookAt;
 	Node* mpNode;
 	Spatial* mpGun;
 	CameraPtr mspCamera;
+	Bool mJump;
+	Bool mShoot;
 	btDynamicsWorld* mpPhysicsWorld;
 	btPairCachingGhostObject* mpGhostObject;
 	btKinematicCharacterController* mpPhysicsEntity;

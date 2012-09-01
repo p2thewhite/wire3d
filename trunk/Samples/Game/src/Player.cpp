@@ -13,11 +13,10 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Controller);
 //----------------------------------------------------------------------------
 Player::Player(Camera* pCamera)
 	:
-	mpNode(NULL),
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
-	mMaximumVerticalAngle(MathF::PI / 4),
 	mMaximumShootingDistance(100.0f),
+	mMaximumVerticalAngle(MathF::PI / 4),
 	mMoveSpeed(2.5f),
 	mRotateSpeed(MathF::PI / 9),
 	mCharacterWidth(1),
@@ -28,6 +27,7 @@ Player::Player(Camera* pCamera)
 	mYawIncrement(0),
 	mMove(Vector3F::ZERO),
 	mLookAt(Vector2F::ZERO),
+	mpNode(NULL),
 	mJump(false),
 	mShoot(false)
 {
