@@ -70,7 +70,7 @@ public:
 		rChildren) const;
 
 	// Traverse the child objects and call their MakeStatic()
-	void MakeStatic(Bool forceStatic = false);
+	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
 
 protected:
 	// geometric updates

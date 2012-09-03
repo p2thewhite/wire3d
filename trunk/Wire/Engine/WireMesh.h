@@ -25,6 +25,8 @@ class Mesh : public Object
 
 public:
 	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer);
+	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
+		UInt startIndex, UInt indexCount);
 
 	inline VertexBuffer* GetVertexBuffer();
 	inline const VertexBuffer* GetVertexBuffer() const;
@@ -35,6 +37,12 @@ public:
 	inline BoundingVolume* GetModelBound();
 	inline const BoundingVolume* GetModelBound() const;
 
+	inline UInt GetStartIndex();
+	void SetStartIndex(UInt startIndex);
+	inline UInt GetIndexCount();
+	void SetIndexCount(UInt indexCount);
+	inline Bool IsDirty();
+
 	void UpdateModelBound();
 	void GenerateNormals(Bool ignoreHardEdges = false);
 
@@ -42,6 +50,10 @@ private:
 	Pointer<VertexBuffer> mspVertexBuffer;
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<BoundingVolume> mspModelBound;
+
+	UInt mStartIndex;
+	UInt mIndexCount;
+	Bool mIsDirty;
 };
 
 typedef Pointer<Mesh> MeshPtr;

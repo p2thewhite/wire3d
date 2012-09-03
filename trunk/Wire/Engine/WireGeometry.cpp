@@ -280,8 +280,17 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 }
 
 //----------------------------------------------------------------------------
-void Geometry::MakeStatic(Bool forceStatic)
+void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
+	VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer();
+	Bool isShared = pVertexBuffer->GetReferences() > 1 ||
+		mspMesh->GetReferences() > 1;
+
+	if (isShared && !duplicateShared)
+	{
+		return;
+	}
+
 	if (forceStatic)
 	{
 		WorldIsCurrent = true;
@@ -293,7 +302,6 @@ void Geometry::MakeStatic(Bool forceStatic)
 		return;
 	}
 
-	VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer();
 	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
 	if (!rAttr.HasPosition() && !rAttr.HasNormal())
 	{
@@ -302,10 +310,11 @@ void Geometry::MakeStatic(Bool forceStatic)
 
 	// if the vertex buffer is shared, we duplicate it to apply the World
 	// transformation
-	if (pVertexBuffer->GetReferences() > 1 || mspMesh->GetReferences() > 1)
+	if (isShared)
 	{
 		pVertexBuffer = WIRE_NEW VertexBuffer(mspMesh->GetVertexBuffer());
-		mspMesh = WIRE_NEW Mesh(pVertexBuffer, mspMesh->GetIndexBuffer());
+		mspMesh = WIRE_NEW Mesh(pVertexBuffer, mspMesh->GetIndexBuffer(),
+			mspMesh->GetStartIndex(), mspMesh->GetIndexCount());
 	}
 
 	pVertexBuffer->ApplyForward(World, pVertexBuffer->GetData());

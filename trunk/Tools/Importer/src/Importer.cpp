@@ -60,7 +60,16 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCame
 
 	mMaterials.RemoveAll();
 	mMaterialStates.RemoveAll();
-	mMeshes.RemoveAll();
+	while (mMeshes.GetQuantity() > 0)
+	{
+		THashTable<String, TArray<MeshPtr>* >::Iterator it(&mMeshes);
+		String key;
+		TArray<MeshPtr>** pMeshEntry = it.GetFirst(&key);
+		WIRE_ASSERT(pMeshEntry);
+		WIRE_DELETE *pMeshEntry;
+		mMeshes.Remove(key);
+	}
+
 	mTextures.RemoveAll();
 
 	pRoot->UpdateRS();
@@ -573,12 +582,12 @@ Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 UInt Importer::GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	Char* pFloat = GetValue(pXmlNode, pName);
+	Char* pUInt = GetValue(pXmlNode, pName);
 	UInt i = 0;
-	if (pFloat)
+	if (pUInt)
 	{
 		Int n;
-		n = sscanf(pFloat, "%d", &i);
+		n = sscanf(pUInt, "%d", &i);
 		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
 	}
 
@@ -890,6 +899,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 {
 	Mesh* pMesh = NULL;
 	Material* pMaterial = NULL;
+	UInt subMeshIndex = GetUInt(pXmlNode, "SubMeshIndex");
 
 	if (pXmlNode->first_node())
 	{
@@ -898,7 +908,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		{
 			if (Is("Mesh", pChild->name()))
 			{
-				pMesh = ParseMesh(pChild);
+				pMesh = ParseMesh(pChild, subMeshIndex);
 			}
 			else if (Is("Material", pChild->name()))
 			{
@@ -1338,7 +1348,7 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
+Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
@@ -1347,11 +1357,12 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	Mesh** pValue = mMeshes.Find(pName);
+	TArray<MeshPtr>** pValue = mMeshes.Find(pName);
 	if (pValue)
 	{
 		WIRE_ASSERT(*pValue);
-		return *pValue;
+		WIRE_ASSERT(subMeshIndex < (*pValue)->GetQuantity());
+		return (**pValue)[subMeshIndex];
 	}
 
 	Char* pVerticesFileName = NULL;
@@ -1418,9 +1429,33 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 		isIndexBufferBigEndian, indexBufferUsage);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
-	mMeshes.Insert(pName, pMesh);
+	TArray<MeshPtr>* pSubMeshes = WIRE_NEW TArray<MeshPtr>;
+	pSubMeshes->Append(pMesh);
 
-	return pMesh;
+	for (rapidxml::xml_node<>* pSubNode = pXmlNode->first_node();
+		pSubNode; pSubNode = pSubNode->next_sibling())
+	{
+		if (Is("SubMeshes", pSubNode->name()))
+		{
+			for (rapidxml::xml_node<>* pChild = pSubNode->first_node();
+				pChild;	pChild = pChild->next_sibling())
+			{
+				WIRE_ASSERT(HasValue(pChild, "Index"));
+				UInt i = GetUInt(pChild, "Index");
+				WIRE_ASSERT(HasValue(pChild, "StartIndex"));
+				UInt startIndex = GetUInt(pChild, "StartIndex");
+				WIRE_ASSERT(HasValue(pChild, "IndexCount"));
+				UInt indexCount = GetUInt(pChild, "IndexCount");
+
+				Mesh* pSubMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer,
+					startIndex, indexCount);
+				pSubMeshes->SetElement(i, pSubMesh);
+			}
+		}
+	}
+
+	mMeshes.Insert(pName, pSubMeshes);
+	return (*pSubMeshes)[subMeshIndex];
 }
 
 //----------------------------------------------------------------------------

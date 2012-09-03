@@ -682,8 +682,12 @@
       </Material>
     </Leaf>
     <Node Name="Doors" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Leaf Name="Doors (submesh_0)" Static="1" StartIndex="0" ActiveIndices="252">
+      <Leaf Name="Doors (submesh_0)" Static="1" SubMeshIndex="0" StartIndex="0" ActiveIndices="252">
         <Mesh Name="Doors">
+          <SubMeshes>
+            <SubMesh Index="0" StartIndex="0" IndexCount="252" />
+            <SubMesh Index="1" StartIndex="252" IndexCount="1332" />
+          </SubMeshes>
           <Vertices Name="Doors.vtx" LittleEndian="y" />
           <Indices Name="Doors.idx" LittleEndian="y" />
           <Normals Name="Doors.nm" LittleEndian="y" />
@@ -696,8 +700,12 @@
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Doors (submesh_1)" Static="1" StartIndex="252" ActiveIndices="1332">
+      <Leaf Name="Doors (submesh_1)" Static="1" SubMeshIndex="1" StartIndex="252" ActiveIndices="1332">
         <Mesh Name="Doors">
+          <SubMeshes>
+            <SubMesh Index="0" StartIndex="0" IndexCount="252" />
+            <SubMesh Index="1" StartIndex="252" IndexCount="1332" />
+          </SubMeshes>
           <Vertices Name="Doors.vtx" LittleEndian="y" />
           <Indices Name="Doors.idx" LittleEndian="y" />
           <Normals Name="Doors.nm" LittleEndian="y" />
@@ -810,8 +818,13 @@
       </Material>
     </Leaf>
     <Node Name="Ground" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Leaf Name="Ground (submesh_0)" Static="1" StartIndex="0" ActiveIndices="168">
+      <Leaf Name="Ground (submesh_0)" Static="1" SubMeshIndex="0" StartIndex="0" ActiveIndices="168">
         <Mesh Name="Ground">
+          <SubMeshes>
+            <SubMesh Index="0" StartIndex="0" IndexCount="168" />
+            <SubMesh Index="1" StartIndex="168" IndexCount="900" />
+            <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
+          </SubMeshes>
           <Vertices Name="Ground.vtx" LittleEndian="y" />
           <Indices Name="Ground.idx" LittleEndian="y" />
           <Normals Name="Ground.nm" LittleEndian="y" />
@@ -824,8 +837,13 @@
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Ground (submesh_1)" Static="1" StartIndex="168" ActiveIndices="900">
+      <Leaf Name="Ground (submesh_1)" Static="1" SubMeshIndex="1" StartIndex="168" ActiveIndices="900">
         <Mesh Name="Ground">
+          <SubMeshes>
+            <SubMesh Index="0" StartIndex="0" IndexCount="168" />
+            <SubMesh Index="1" StartIndex="168" IndexCount="900" />
+            <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
+          </SubMeshes>
           <Vertices Name="Ground.vtx" LittleEndian="y" />
           <Indices Name="Ground.idx" LittleEndian="y" />
           <Normals Name="Ground.nm" LittleEndian="y" />
@@ -838,8 +856,13 @@
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Ground (submesh_2)" Static="1" StartIndex="1068" ActiveIndices="216">
+      <Leaf Name="Ground (submesh_2)" Static="1" SubMeshIndex="2" StartIndex="1068" ActiveIndices="216">
         <Mesh Name="Ground">
+          <SubMeshes>
+            <SubMesh Index="0" StartIndex="0" IndexCount="168" />
+            <SubMesh Index="1" StartIndex="168" IndexCount="900" />
+            <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
+          </SubMeshes>
           <Vertices Name="Ground.vtx" LittleEndian="y" />
           <Indices Name="Ground.idx" LittleEndian="y" />
           <Normals Name="Ground.nm" LittleEndian="y" />

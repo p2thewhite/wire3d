@@ -42,10 +42,45 @@ SphereBV::~SphereBV()
 
 
 //----------------------------------------------------------------------------
-void SphereBV::ComputeFromData(const VertexBuffer* pVBuffer)
+void SphereBV::ComputeFrom(const VertexBuffer* pVBuffer)
 {
 	if (pVBuffer)
 	{
+		UInt quantity = pVBuffer->GetQuantity();
+
+		mSphere.Center = Vector3F::ZERO;
+		mSphere.Radius = 0.0F;
+
+		for (UInt i = 0; i < quantity; i++)
+		{
+			mSphere.Center += pVBuffer->Position3(i);
+		}
+
+		mSphere.Center /= static_cast<Float>(quantity);
+
+		for (UInt i = 0; i < quantity; i++)
+		{
+			Vector3F diff = pVBuffer->Position3(i) - mSphere.Center;
+			Float radiusSqr = diff.SquaredLength();
+			if (radiusSqr > mSphere.Radius)
+			{
+				mSphere.Radius = radiusSqr;
+			}
+		}
+
+		mSphere.Radius = MathF::Sqrt(mSphere.Radius);
+	}
+}
+
+//----------------------------------------------------------------------------
+void SphereBV::ComputeFrom(const VertexBuffer* pVBuffer, const IndexBuffer*
+	pIndexBuffer, UInt startIndex, UInt indexCount)
+{
+	WIRE_ASSERT((startIndex + indexCount) < pIndexBuffer->GetQuantity());
+
+	if (pVBuffer && pIndexBuffer && indexCount > 0)
+	{
+		// TODO: use indices
 		UInt quantity = pVBuffer->GetQuantity();
 
 		mSphere.Center = Vector3F::ZERO;

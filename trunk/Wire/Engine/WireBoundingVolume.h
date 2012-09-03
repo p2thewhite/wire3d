@@ -10,7 +10,7 @@
 #ifndef WIREBOUNDINGVOLUME_H
 #define WIREBOUNDINGVOLUME_H
 
-#include "WireObject.h"
+#include "WireIndexBuffer.h"
 #include "WirePlane3.h"
 #include "WireTransformation.h"
 #include "WireVector3.h"
@@ -39,7 +39,11 @@ public:
 	virtual Float GetRadius() const = 0;
 
 	// Compute a bounding volume that contains all the points.
-	virtual void ComputeFromData(const VertexBuffer* pVBuffer) = 0;
+	virtual void ComputeFrom(const VertexBuffer* pVBuffer) = 0;
+
+	// Compute a bounding volume that contains only indexed points
+	virtual void ComputeFrom(const VertexBuffer* pVBuffer, const IndexBuffer*
+		pIndexBuffer, UInt startIndex, UInt indexCount) = 0;
 
 	// Transform the bounding volume (model-to-world conversion).
 	virtual void TransformBy(const Transformation& rTransform,

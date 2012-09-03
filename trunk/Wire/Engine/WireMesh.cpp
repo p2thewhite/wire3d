@@ -21,17 +21,59 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 	:
 	mspVertexBuffer(pVertexBuffer),
 	mspIndexBuffer(pIndexBuffer),
-	mspModelBound(BoundingVolume::Create())
+	mspModelBound(BoundingVolume::Create()),
+	mIsDirty(false)
 {
 	WIRE_ASSERT(mspVertexBuffer);
 	WIRE_ASSERT(mspIndexBuffer);
+
+	mStartIndex = 0;
+	mIndexCount = mspIndexBuffer->GetQuantity();
+
 	UpdateModelBound();
+}
+
+//----------------------------------------------------------------------------
+Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
+	UInt startIndex, UInt indexCount)
+	:
+	mspVertexBuffer(pVertexBuffer),
+	mspIndexBuffer(pIndexBuffer),
+	mspModelBound(BoundingVolume::Create()),
+	mStartIndex(startIndex),
+	mIndexCount(indexCount),
+	mIsDirty(false)
+{
+	WIRE_ASSERT(mspVertexBuffer);
+	WIRE_ASSERT(mspIndexBuffer);
+
+	UpdateModelBound();
+}
+
+//----------------------------------------------------------------------------
+void Mesh::SetStartIndex(UInt startIndex)
+{
+	if (mStartIndex != startIndex)
+	{
+		mStartIndex = startIndex;
+		mIsDirty = true;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Mesh::SetIndexCount(UInt indexCount)
+{
+	if (mIndexCount != indexCount)
+	{
+		mIndexCount = indexCount;
+		mIsDirty = true;
+	}
 }
 
 //----------------------------------------------------------------------------
 void Mesh::UpdateModelBound()
 {
-	mspModelBound->ComputeFromData(mspVertexBuffer);
+	mspModelBound->ComputeFrom(mspVertexBuffer);
 }
 
 //----------------------------------------------------------------------------

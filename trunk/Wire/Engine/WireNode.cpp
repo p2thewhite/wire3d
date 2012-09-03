@@ -348,7 +348,7 @@ void Node::GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*
 }
 
 //----------------------------------------------------------------------------
-void Node::MakeStatic(Bool forceStatic)
+void Node::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
@@ -356,14 +356,14 @@ void Node::MakeStatic(Bool forceStatic)
 		Node* pNode = DynamicCast<Node>(pChild);
 		if (pNode)
 		{
-			pNode->MakeStatic(forceStatic);
+			pNode->MakeStatic(forceStatic, duplicateShared);
 		}
 		else
 		{
 			Geometry* pGeometry = DynamicCast<Geometry>(pChild);
 			if (pGeometry)
 			{
-				pGeometry->MakeStatic(forceStatic);
+				pGeometry->MakeStatic(forceStatic, duplicateShared);
 			}
 		}
 	}

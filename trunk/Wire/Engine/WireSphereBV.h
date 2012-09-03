@@ -35,7 +35,11 @@ public:
 	inline const Sphere3F& GetSphere() const;
 
 	// Compute a sphere that contains all the points.
-	virtual void ComputeFromData(const VertexBuffer* pVBuffer);
+	virtual void ComputeFrom(const VertexBuffer* pVBuffer);
+
+	// Compute a sphere that contains only indexed points
+	virtual void ComputeFrom(const VertexBuffer* pVBuffer, const IndexBuffer*
+		pIndexBuffer, UInt startIndex, UInt indexCount);
 
 	// Transform the sphere (model-to-world conversion).
 	virtual void TransformBy(const Transformation& rTransform,
