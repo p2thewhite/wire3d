@@ -253,9 +253,8 @@ private:
 		PdrVertexBuffer* const pVBPdr, UShort vertexCount, UInt indexCount);
 
 	// The main entry point to drawing in the derived-class renderers
-	void DrawElements(UInt activeIndexCount, UInt indexOffset);
-	void DrawElements(UInt vertexCount, UInt activeIndexCount,
-		UInt indexOffset);
+	void DrawElements(UInt indexCount, UInt startIndex);
+	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex);
 
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;

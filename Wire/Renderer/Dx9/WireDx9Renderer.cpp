@@ -325,12 +325,12 @@ void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt activeIndexCount, UInt startIndex)
+void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 {
 	WIRE_ASSERT(mspVertexBuffer);
 	WIRE_ASSERT(mspIndexBuffer);
 
-	const UInt triangleCount = activeIndexCount/3;
+	const UInt triangleCount = indexCount/3;
 	const UInt vertexCount = mspVertexBuffer->GetQuantity();
 	mStatistics.DrawCalls++;
 	mStatistics.Triangles += triangleCount;
@@ -343,10 +343,10 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt startIndex)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt vertexCount, UInt activeIndexCount,
+void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	UInt startIndex)
 {
-	const UInt triangleCount = activeIndexCount/3;
+	const UInt triangleCount = indexCount/3;
 	mStatistics.DrawCalls++;
 	mStatistics.Triangles += triangleCount;
 

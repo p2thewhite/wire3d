@@ -272,7 +272,7 @@ public class Unity3DExporter : EditorWindow
         int submeshCount = mesh.subMeshCount;
         for (int i = 0; i < submeshCount; i++)
         {
-            int activeIndices = mesh.GetTriangles(i).Length;
+            int indexCount = mesh.GetTriangles(i).Length;
             int startIndex = 0;
             for (int j = 0; j < i; j++)
             {
@@ -281,7 +281,8 @@ public class Unity3DExporter : EditorWindow
 
             string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
             outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" + isStatic +
-                " StartIndex=\"" + startIndex + "\" ActiveIndices=\"" + activeIndices + "\">");
+                " SubMeshIndex=\"" + i + "\"" +
+                " StartIndex=\"" + startIndex + "\" ActiveIndices=\"" + indexCount + "\">");
             WriteMesh(mesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
 
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
@@ -719,6 +720,23 @@ public class Unity3DExporter : EditorWindow
 
 		prefix = mMeshAssetNameToMeshName [meshName];
 		outFile.WriteLine (indent + "<Mesh Name=\"" + prefix + "\">");
+
+        if (mesh.subMeshCount > 1)
+        {
+            outFile.WriteLine (indent + "  <SubMeshes>");
+
+            int startIndex = 0;
+            
+            for (int i = 0; i < mesh.subMeshCount; i++)
+            {
+                int indexCount = mesh.GetTriangles(i).Length;
+                outFile.WriteLine (indent + "    " + "<SubMesh Index=\"" + i + "\" StartIndex=\"" + startIndex +
+                    "\" IndexCount=\"" + indexCount + "\" />");
+                startIndex += indexCount;
+            }
+
+            outFile.WriteLine (indent + "  </SubMeshes>");
+        }
 
 		char le = BitConverter.IsLittleEndian ? 'y' : 'n';
 

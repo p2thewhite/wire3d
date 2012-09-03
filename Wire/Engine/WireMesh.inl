@@ -41,3 +41,21 @@ inline const BoundingVolume* Mesh::GetModelBound() const
 {
 	return mspModelBound;
 }
+
+//----------------------------------------------------------------------------
+inline UInt Mesh::GetStartIndex()
+{
+	return mStartIndex;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Mesh::GetIndexCount()
+{
+	return mIndexCount;
+}
+
+//----------------------------------------------------------------------------
+inline Bool Mesh::IsDirty()
+{
+	return mIsDirty;
+}

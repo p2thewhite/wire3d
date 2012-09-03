@@ -20,9 +20,14 @@ Texture2D::Texture2D(Image2D* pImage, UsageType usage)
 	:
 	Buffer(usage),
 	mspImage(pImage),
-	mFilterType(FT_LINEAR_LINEAR),
+	mFilterType(FT_LINEAR),
 	mAnisotropy(1.0F)
 {
+	if (pImage && pImage->HasMipmaps())
+	{
+		mFilterType = FT_LINEAR_LINEAR;
+	}
+
 	mWarpType[0] = WT_CLAMP;
 	mWarpType[1] = WT_CLAMP;
 }

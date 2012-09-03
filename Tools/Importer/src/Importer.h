@@ -9,6 +9,7 @@
 #include "WireCamera.h"
 #include "WireColorRGBA.h"
 #include "WireGeometry.h"
+#include "WireMesh.h"
 #include "WireNode.h"
 #include "WireNodeSkybox.h"
 #include "WireString.h"
@@ -78,7 +79,7 @@ private:
 	Text* ParseText(rapidxml::xml_node<>* pXmlNode);
 	NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
-	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
+	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
 	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
@@ -105,7 +106,7 @@ private:
 
 	THashTable<String, Material*> mMaterials;
 	THashTable<Material*, TArray<State*> > mMaterialStates;
-	THashTable<String, Mesh*> mMeshes;
+	THashTable<String, TArray<MeshPtr>* > mMeshes;
 	THashTable<String, Texture2D*> mTextures;
 	TArray<Spatial*> mStaticSpatials;
 	TArray<Collider*> mColliders;

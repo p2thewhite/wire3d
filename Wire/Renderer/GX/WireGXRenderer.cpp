@@ -221,10 +221,10 @@ void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
+void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 {
 	mStatistics.DrawCalls++;
-	mStatistics.Triangles += activeIndexCount/3;
+	mStatistics.Triangles += indexCount/3;
 
 	mpData->IsFrameBufferDirty = true;
 
@@ -261,7 +261,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
 		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-			GetBuffer(), activeIndexCount, indexOffset);
+			GetBuffer(), indexCount, startIndex);
 	}
 	else
 	{
@@ -270,8 +270,8 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
 
-		Bool isStatic = ((indexOffset == 0) && 
-			(activeIndexCount == rIBuffer.GetQuantity()));
+		Bool isStatic = ((startIndex == 0) && 
+			(indexCount == rIBuffer.GetQuantity()));
 
 		if (pEntry)
 		{
@@ -291,7 +291,7 @@ void Renderer::DrawElements(UInt activeIndexCount, UInt indexOffset)
 		else
 		{
 			mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-				GetBuffer(), activeIndexCount, indexOffset);
+				GetBuffer(), indexCount, startIndex);
 		}
 	}
 }
