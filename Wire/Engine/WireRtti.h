@@ -39,15 +39,16 @@ private:
 //----------------------------------------------------------------------------
 #define WIRE_DECLARE_RTTI                                                    \
 public:                                                                      \
-	static const Rtti TYPE;                                                  \
-	inline virtual const Rtti& GetType() const { return TYPE; }
+	static const Wire::Rtti TYPE;                                            \
+	inline virtual const Wire::Rtti& GetType() const { return TYPE; }
 
 //----------------------------------------------------------------------------
 #define WIRE_IMPLEMENT_RTTI(nsName, className, baseClassName)                \
-	const Rtti className::TYPE(#nsName"."#className, &baseClassName::TYPE)
+	const Wire::Rtti className::TYPE(#nsName"."#className,                   \
+		&baseClassName::TYPE)
 
 //----------------------------------------------------------------------------
 #define WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(className, baseClassName)           \
-	const Rtti className::TYPE(#className, &baseClassName::TYPE)
+	const Wire::Rtti className::TYPE(#className, &baseClassName::TYPE)
 
 #endif

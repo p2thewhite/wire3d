@@ -5,6 +5,8 @@
 #include "WireStandardMesh.h"
 #include "WireVertexBuffer.h"
 
+using namespace Wire;
+
 //----------------------------------------------------------------------------
 Cursors::Cursors()
 {

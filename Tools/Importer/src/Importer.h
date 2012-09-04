@@ -21,8 +21,6 @@
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
 
-using namespace Wire;
-
 struct FT_FaceRec_;
 
 class Importer
@@ -35,6 +33,7 @@ public:
 		UInt NodeCount;
 		UInt TextureCount;
 		UInt MaterialCount;
+		UInt MeshCount;
 		UInt VertexBufferCount;
 		UInt IndexBufferCount;
 		UInt ColliderCount;
@@ -44,72 +43,80 @@ public:
 		Bool materialsWithEqualNamesAreIdentical = true,
 		Bool prepareForStaticBatching = true);
 
-	Node* LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCameras = NULL,
+	Wire::Node* LoadSceneFromXml(const Char* pFilename,
+		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
 		btDynamicsWorld* pPhysicsWorld = NULL);
 
-	static Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool hasMipmaps);
-	static Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
-	static Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps);
-	static Text* CreateText(const Char* pFilename, UInt width, UInt height, UInt maxLength = 4000);
+	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize,
+		Bool hasMipmaps);
+	static Wire::Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
+	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps);
+	static Wire::Text* CreateText(const Char* pFilename, UInt width,
+		UInt height, UInt maxLength = 4000);
 
 	const Statistics* GetStatistics();
 
 private:
 	static Char* Load(const Char* pFilename, Int& rSize);
-	static void InitializeStaticSpatials(TArray<Spatial*>& rSpatials, Bool prepareForStaticBatching);
-	static void RegisterColliders(TArray<Collider*>& rColliders, btDynamicsWorld* pPhysicsWorld);
+	static void InitializeStaticSpatials(Wire::TArray<Wire::SpatialPtr>&
+		rSpatials, Bool prepareForStaticBatching);
+	static void RegisterColliders(Wire::TArray<Collider*>& rColliders,
+		btDynamicsWorld* pPhysicsWorld);
 
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	void Free32(Float* pFloats);
 
-	void Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent);
+	void Traverse(rapidxml::xml_node<>* pXmlNode, Wire::Node* pParent);
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	UInt GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
-	ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char* pName,	Bool& rHasValue);
-	ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rHasValue);
+	Wire::ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode,
+		const Char* pName, Bool& rHasValue);
+	Wire::ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode,
+		const Char* pName, Bool& rHasValue);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
-	Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
+	Wire::Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
 
-	Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
-	Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
-	Text* ParseText(rapidxml::xml_node<>* pXmlNode);
-	NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
-	Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
-	Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
-	Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
-	Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Material::BlendMode& blendMode);
-	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
-	State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
-	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial);
+	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
+	Wire::Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
+	Wire::Text* ParseText(rapidxml::xml_node<>* pXmlNode);
+	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
+	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
+	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
+	Wire::Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
+	Wire::Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Wire::Material::BlendMode& blendMode);
+	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseComponent(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseLight(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	Wire::State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
+	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
+		Wire::Spatial* pSpatial);
 
-	void UpdateGS(Spatial* pSpatial);
+	void UpdateGS(Wire::Spatial* pSpatial);
 	void ResetStatistics();
 
-	IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian,
-		Buffer::UsageType indexBufferUsage);
-	VertexBuffer* LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian,
-		Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian,
-		Char* pColorsName, Bool isColorsBigEndian, TArray<Char*>& rUvSetNames,
-		TArray<Bool>& rUvBigEndian);
+	Wire::IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian,
+		Wire::Buffer::UsageType indexBufferUsage);
+	Wire::VertexBuffer* LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian,
+		Wire::Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian,
+		Char* pColorsName, Bool isColorsBigEndian, Wire::TArray<Char*>& rUvSetNames,
+		Wire::TArray<Bool>& rUvBigEndian);
 
 	const Char* mpPath;
-	TArray<CameraPtr>* mpCameras;
+	Wire::TArray<Wire::CameraPtr>* mpCameras;
 
-	THashTable<String, Material*> mMaterials;
-	THashTable<Material*, TArray<State*> > mMaterialStates;
-	THashTable<String, TArray<MeshPtr>* > mMeshes;
-	THashTable<String, Texture2D*> mTextures;
-	TArray<Spatial*> mStaticSpatials;
-	TArray<Collider*> mColliders;
+	Wire::THashTable<Wire::String, Wire::MaterialPtr> mMaterials;
+	Wire::THashTable<Wire::Material*, Wire::TArray<Wire::StatePtr> > mMaterialStates;
+	Wire::THashTable<Wire::String, Wire::TArray<Wire::MeshPtr> > mMeshes;
+	Wire::THashTable<Wire::String, Wire::Texture2DPtr> mTextures;
+	Wire::TArray<Wire::SpatialPtr> mStaticSpatials;
+	Wire::TArray<Collider*> mColliders;
 
 	Bool mMaterialsWithEqualNamesAreIdentical;
 	Bool mPrepareForStaticBatching;

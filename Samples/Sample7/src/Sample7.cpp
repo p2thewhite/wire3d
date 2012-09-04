@@ -82,8 +82,8 @@ void Sample7::OnIdle()
 		State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
 	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
-	mspGeometry->ActiveIndexCount = pIndexBuffer->GetQuantity();
-	mspGeometry->StartIndex = 0;
+	pMesh->SetIndexCount(pIndexBuffer->GetQuantity());
+	pMesh->SetStartIndex(0);
 	GetRenderer()->Draw(mspGeometry);
 
 	// render small torus knot
@@ -105,17 +105,17 @@ void Sample7::OnIdle()
 	
 	if (isExpanding)
 	{
-		mspGeometry->ActiveIndexCount = (segmentCount + 1) * s_ShapeCount*6;
-		mspGeometry->StartIndex = 0;
+		pMesh->SetIndexCount((segmentCount + 1) * s_ShapeCount*6);
+		pMesh->SetStartIndex(0);
 	}
 	else
 	{
-		mspGeometry->StartIndex = segmentCount * s_ShapeCount*6;
-		mspGeometry->ActiveIndexCount = pIndexBuffer->GetQuantity() - 
-			mspGeometry->StartIndex;
+		pMesh->SetStartIndex(segmentCount * s_ShapeCount*6);
+		pMesh->SetIndexCount(pIndexBuffer->GetQuantity() -
+			pMesh->GetStartIndex());
 	}
 
-	WIRE_ASSERT(mspGeometry->ActiveIndexCount <= pIndexBuffer->GetQuantity());
+	WIRE_ASSERT(pMesh->GetIndexCount() <= pIndexBuffer->GetQuantity());
 	GetRenderer()->Draw(mspGeometry);
 
 	GetRenderer()->PostDraw();

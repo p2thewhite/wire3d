@@ -60,16 +60,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCame
 
 	mMaterials.RemoveAll();
 	mMaterialStates.RemoveAll();
-	while (mMeshes.GetQuantity() > 0)
-	{
-		THashTable<String, TArray<MeshPtr>* >::Iterator it(&mMeshes);
-		String key;
-		TArray<MeshPtr>** pMeshEntry = it.GetFirst(&key);
-		WIRE_ASSERT(pMeshEntry);
-		WIRE_DELETE *pMeshEntry;
-		mMeshes.Remove(key);
-	}
-
+	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
 
 	pRoot->UpdateRS();
@@ -417,6 +408,7 @@ void Importer::ResetStatistics()
 	mStatistics.NodeCount = 0;
 	mStatistics.TextureCount = 0;
 	mStatistics.MaterialCount = 0;
+	mStatistics.MeshCount = 0;
 	mStatistics.VertexBufferCount = 0;
 	mStatistics.IndexBufferCount = 0;
 	mStatistics.ColliderCount = 0;
@@ -940,15 +932,9 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		pGeo->SetName(pName);
 	}
 
-	pGeo->StartIndex = GetUInt(pXmlNode, "StartIndex");
-	if (GetValue(pXmlNode, "ActiveIndices"))
-	{
-		pGeo->ActiveIndexCount = GetUInt(pXmlNode, "ActiveIndices");
-	}
-
 	if (pMaterial)
 	{
-		TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+		TArray<StatePtr>* pStateList = mMaterialStates.Find(pMaterial);
 		if (pStateList)
 		{
 			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
@@ -1357,12 +1343,12 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		return NULL;
 	}
 
-	TArray<MeshPtr>** pValue = mMeshes.Find(pName);
+	TArray<MeshPtr>* pValue = mMeshes.Find(pName);
 	if (pValue)
 	{
-		WIRE_ASSERT(*pValue);
-		WIRE_ASSERT(subMeshIndex < (*pValue)->GetQuantity());
-		return (**pValue)[subMeshIndex];
+		WIRE_ASSERT(pValue);
+		WIRE_ASSERT(subMeshIndex < pValue->GetQuantity());
+		return (*pValue)[subMeshIndex];
 	}
 
 	Char* pVerticesFileName = NULL;
@@ -1429,8 +1415,9 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		isIndexBufferBigEndian, indexBufferUsage);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
-	TArray<MeshPtr>* pSubMeshes = WIRE_NEW TArray<MeshPtr>;
-	pSubMeshes->Append(pMesh);
+	mStatistics.MeshCount++;
+	TArray<MeshPtr> pSubMeshes; // = WIRE_NEW TArray<MeshPtr>;
+	pSubMeshes.Append(pMesh);
 
 	for (rapidxml::xml_node<>* pSubNode = pXmlNode->first_node();
 		pSubNode; pSubNode = pSubNode->next_sibling())
@@ -1449,13 +1436,18 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 
 				Mesh* pSubMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer,
 					startIndex, indexCount);
-				pSubMeshes->SetElement(i, pSubMesh);
+				pSubMeshes.SetElement(i, pSubMesh);
+
+				if (i > 0)
+				{
+					mStatistics.MeshCount++;
+				}
 			}
 		}
 	}
 
 	mMeshes.Insert(pName, pSubMeshes);
-	return (*pSubMeshes)[subMeshIndex];
+	return pSubMeshes[subMeshIndex];
 }
 
 //----------------------------------------------------------------------------
@@ -1470,7 +1462,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 
 	if (mMaterialsWithEqualNamesAreIdentical)
 	{
-		Material** pValue = mMaterials.Find(pName);
+		MaterialPtr* pValue = mMaterials.Find(pName);
 		if (pValue)
 		{
 			WIRE_ASSERT(*pValue);
@@ -1502,7 +1494,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 				State* pState = ParseRenderStates(pChild);
 				if (pState)
 				{
-					TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+					TArray<StatePtr>* pStateList = mMaterialStates.Find(pMaterial);
 					if (pStateList)
 					{
 						for (UInt i = 0; i < pStateList->GetQuantity(); i++)
@@ -1518,7 +1510,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 					}
 					else
 					{
-						TArray<State*> stateList;
+						TArray<StatePtr> stateList;
 						stateList.Append(pState);
 						mMaterialStates.Insert(pMaterial, stateList);
 					}
@@ -1529,7 +1521,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 
 	if (pMaterial->GetTextureQuantity() == 0)
 	{
-		TArray<State*>* pStateList = mMaterialStates.Find(pMaterial);
+		TArray<StatePtr>* pStateList = mMaterialStates.Find(pMaterial);
 		if (pStateList)
 		{
 			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
@@ -1561,7 +1553,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		return NULL;
 	}
 
-	Texture2D** pValue = mTextures.Find(pName);
+	Texture2DPtr* pValue = mTextures.Find(pName);
 	if (pValue)
 	{
 		WIRE_ASSERT(*pValue);
@@ -1673,7 +1665,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 }
 
 //----------------------------------------------------------------------------
-void Importer::InitializeStaticSpatials(TArray<Spatial*>& rSpatials,
+void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 	Bool prepareForStaticBatching)
 {
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)

@@ -77,7 +77,9 @@ public class Unity3DExporter : EditorWindow
 		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
 		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
 		
-		return (meshFilter != null) && (meshRenderer != null && meshRenderer.enabled) && transform.GetChildCount () == 0;
+		return (meshFilter != null && meshFilter.sharedMesh != null) &&
+            (meshRenderer != null && meshRenderer.enabled) &&
+            transform.GetChildCount () == 0;
 	}
 	
 	private static void GenerateAABBFromVertices (Vector3[] vertices, out Vector3 aabbMin, out Vector3 aabbMax)
@@ -247,7 +249,7 @@ public class Unity3DExporter : EditorWindow
 
         if (exportSubmeshes)
         {
-            WriteSubmeshes(transform.gameObject, outFile, indent + "  ");
+            WriteSubLeafs(transform.gameObject, outFile, indent + "  ");
         }
         else
         {
@@ -258,7 +260,7 @@ public class Unity3DExporter : EditorWindow
         outFile.WriteLine(indent + "</" + xmlNodeName + ">");       
 	}
 
-    private void WriteSubmeshes(GameObject gameObject, StreamWriter outFile, string indent)
+    private void WriteSubLeafs(GameObject gameObject, StreamWriter outFile, string indent)
     {
         MeshFilter meshFilter = gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
@@ -272,17 +274,9 @@ public class Unity3DExporter : EditorWindow
         int submeshCount = mesh.subMeshCount;
         for (int i = 0; i < submeshCount; i++)
         {
-            int indexCount = mesh.GetTriangles(i).Length;
-            int startIndex = 0;
-            for (int j = 0; j < i; j++)
-            {
-                startIndex += mesh.GetTriangles(j).Length;
-            }
-
             string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
             outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" + isStatic +
-                " SubMeshIndex=\"" + i + "\"" +
-                " StartIndex=\"" + startIndex + "\" ActiveIndices=\"" + indexCount + "\">");
+                " SubMeshIndex=\"" + i + "\">");
             WriteMesh(mesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
 
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
@@ -308,7 +302,7 @@ public class Unity3DExporter : EditorWindow
 			}
     	
 			for (int i = 0; i < transform.GetChildCount(); i++) {
-				ExportTraverse (transform.GetChild (i), outFile, indent + "  ");
+				Traverse (transform.GetChild (i), outFile, indent + "  ");
 			}
 		}
     	
@@ -380,7 +374,7 @@ public class Unity3DExporter : EditorWindow
 		return texture;
 	}
 
-	private void ExportTraverse (Transform transform, StreamWriter outFile, string indent)
+	private void Traverse (Transform transform, StreamWriter outFile, string indent)
 	{
 		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
 			return;
@@ -415,7 +409,7 @@ public class Unity3DExporter : EditorWindow
             WriteStateFog (outFile, indent);
 
 			foreach (Transform transform in GetRootTransforms ()) {
-				ExportTraverse (transform, outFile, indent);
+				Traverse (transform, outFile, indent);
 			}
 	
 			WriteSkybox (outFile, indent);

@@ -37,6 +37,8 @@ public:
 	inline BoundingVolume* GetModelBound();
 	inline const BoundingVolume* GetModelBound() const;
 
+	// Control over which continuous part of the mesh is rendered.
+	// Default values render the entire mesh.
 	inline UInt GetStartIndex();
 	void SetStartIndex(UInt startIndex);
 	inline UInt GetIndexCount();

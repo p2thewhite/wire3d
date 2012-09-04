@@ -704,7 +704,7 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
-		DrawElements(pGeometry->ActiveIndexCount, pGeometry->StartIndex);
+		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
 
 		Disable(pGeometry->GetMaterial());
 		Disable(pMesh->GetVertexBuffer());
@@ -721,7 +721,7 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
-		DrawElements(pGeometry->ActiveIndexCount, pGeometry->StartIndex);
+		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
 	}
 }
 
@@ -872,12 +872,13 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 	for (UInt i = min; i < max; i++)
 	{
 		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i].Object);
-		VertexBuffer* pVertexBuffer = pGeometry->GetMesh()->GetVertexBuffer();
-		IndexBuffer* pIndexBuffer = pGeometry->GetMesh()->GetIndexBuffer();
+		Mesh* pMesh = pGeometry->GetMesh();
+		VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer();
+		IndexBuffer* pIndexBuffer = pMesh->GetIndexBuffer();
 
 		UInt vertexSize = pVBPdr->GetVertexSize();
 		UInt vbSize = pVertexBuffer->GetQuantity() * vertexSize;
-		UInt ibSize = pGeometry->ActiveIndexCount * sizeof(UShort);
+		UInt ibSize = pMesh->GetIndexCount() * sizeof(UShort);
 
 		if ((vbSize > mBatchedVertexBuffer->GetBufferSize()) ||
 			(ibSize > mBatchedIndexBuffer->GetBufferSize()) ||
@@ -927,7 +928,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 		pVertexBuffer->ApplyForward(pGeometry->World, static_cast<Float*>(
 			pVBRaw));
 		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), vertexCount,
-			pGeometry->ActiveIndexCount, pGeometry->StartIndex);
+			pMesh->GetIndexCount(), pMesh->GetStartIndex());
 
 		pVBRaw = reinterpret_cast<void*>(vbSize + reinterpret_cast<UInt>(
 			pVBRaw));
@@ -936,7 +937,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 
 		vertexCount = vertexCount + static_cast<UShort>(pVertexBuffer->
 			GetQuantity());
-		indexCount += pGeometry->ActiveIndexCount;
+		indexCount += pMesh->GetIndexCount();
 	}
 
 	pVBPdr->Unlock();
