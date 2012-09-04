@@ -3,14 +3,12 @@
 #define COLLIDER_H__
 
 #include "WireController.h"
-#include "WireVector3.h"
-
 #include "btBulletDynamicsCommon.h"
 
-using namespace Wire;
-
-class Collider : public Controller
+class Collider : public Wire::Controller
 {
+	WIRE_DECLARE_RTTI;
+
 public:
 	Collider(btCollisionShape* pShape);
 	~Collider();
@@ -21,11 +19,9 @@ public:
 	}
 
 	virtual void Register(btDynamicsWorld* pPhysicsWorld);
-	virtual Bool Update(Double appTime);
 
 private:
 	btCollisionShape* mpShape;
-
 };
 
 #endif

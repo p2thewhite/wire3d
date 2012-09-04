@@ -297,11 +297,11 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt vertexCount, UInt activeIndexCount,
-	UInt indexOffset)
+void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
+	UInt startIndex)
 {
 	mStatistics.DrawCalls++;
-	mStatistics.Triangles += activeIndexCount/3;
+	mStatistics.Triangles += indexCount/3;
 
 	mpData->IsFrameBufferDirty = true;
 
@@ -336,12 +336,12 @@ void Renderer::DrawElements(UInt vertexCount, UInt activeIndexCount,
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
 		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-			GetBuffer(), activeIndexCount, indexOffset);
+			GetBuffer(), indexCount, startIndex);
 	}
 	else
 	{
 		mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->GetBuffer(),
-			activeIndexCount, indexOffset);
+			indexCount, startIndex);
 	}
 }
 
@@ -660,11 +660,11 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 
 //----------------------------------------------------------------------------
 void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
-	rElements, const UShort* const pIndices, UInt activeIndexCount,
-	UInt indexOffset)
+	rElements, const UShort* const pIndices, UInt indexCount,
+	UInt startIndex)
 {
-	GXBegin(GX_TRIANGLES, GX_VTXFMT0, activeIndexCount);
-	for (UInt i = indexOffset; i < (indexOffset+activeIndexCount); i++)
+	GXBegin(GX_TRIANGLES, GX_VTXFMT0, indexCount);
+	for (UInt i = startIndex; i < (startIndex+indexCount); i++)
 	{
 		UShort index = pIndices[i];
 
@@ -707,10 +707,10 @@ void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 
 //----------------------------------------------------------------------------
 void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
-	VertexElement>& rElements, const UShort* const pIBuffer,
-	UInt activeIndexCount, UInt indexOffset)
+	VertexElement>& rElements, const UShort* const pIBuffer, UInt indexCount,
+	UInt startIndex)
 {
-	UInt indexCount = (activeIndexCount / 3) * 3;
+	indexCount = (indexCount / 3) * 3;
 	if (indexCount == 0)
 	{
 		return;
@@ -718,7 +718,7 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
 
 	GXBegin(GX_LINES, GX_VTXFMT0, indexCount * 2);
 
-	for (UInt i = indexOffset; i < (indexOffset+indexCount); i += 3)
+	for (UInt i = startIndex; i < (startIndex+indexCount); i += 3)
 	{
 		for (UInt k = 0; k < 3; k++)
 		{

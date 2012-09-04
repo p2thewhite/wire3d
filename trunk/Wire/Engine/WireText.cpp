@@ -70,7 +70,8 @@ Text::~Text()
 void Text::Clear()
 {
 	Culling = CULL_ALWAYS;
-	ActiveIndexCount = 0;
+	WIRE_ASSERT(GetMesh());
+	GetMesh()->SetIndexCount(0);
 	mPenX = 0.0F;
 	mPenY = 0.0F;
 }
@@ -134,7 +135,7 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 	WIRE_ASSERT(pVertexBuffer && pVertexBuffer->GetAttributes().HasTCoord());
 	IndexBuffer* pIndexBuffer = GetMesh()->GetIndexBuffer();
 	WIRE_ASSERT(pIndexBuffer);
-	const UInt offset = ActiveIndexCount/6;
+	const UInt offset = GetMesh()->GetIndexCount()/6;
 
 	const UInt maxLength = pVertexBuffer->GetQuantity() / 4;
 	UInt indexCount = 0;
@@ -203,7 +204,7 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 		Culling = CULL_NEVER;
 	}
 
-	ActiveIndexCount += indexCount*6;
+	GetMesh()->SetIndexCount(GetMesh()->GetIndexCount() + indexCount*6);
 	mIsPdrBufferOutOfDate = true;
 
 	mPenX = x;
@@ -228,16 +229,17 @@ void Text::Update(Renderer* pRenderer)
 	}
 
 	VertexBuffer* pVertexBuffer = GetMesh()->GetVertexBuffer();
+	const UInt indexCount = GetMesh()->GetIndexCount();
 	if (pRenderer->GetResource(pVertexBuffer))
 	{
-		WIRE_ASSERT(ActiveIndexCount % 6 == 0);
-		pRenderer->Update(pVertexBuffer, ActiveIndexCount/6*4);
+		WIRE_ASSERT(indexCount % 6 == 0);
+		pRenderer->Update(pVertexBuffer, indexCount/6*4);
 	}
 
 	IndexBuffer* pIndexBuffer = GetMesh()->GetIndexBuffer();
 	if (pRenderer->GetResource(pIndexBuffer))
 	{
-		pRenderer->Update(pIndexBuffer, ActiveIndexCount);
+		pRenderer->Update(pIndexBuffer, indexCount);
 	}
 
 	mIsPdrBufferOutOfDate = false;

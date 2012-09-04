@@ -42,10 +42,10 @@ public:
 
 	// GX rendering specific functions
 	void Draw(const TArray<PdrVertexBuffer::VertexElement>& rElements,
-		const UShort* const pIBuffer, UInt activeIndexCount, UInt indexOffset);
+		const UShort* const pIBuffer, UInt indexCount, UInt startIndex);
 	void DrawWireframe(const TArray<PdrVertexBuffer::VertexElement>&
-		rElements, const UShort* const pIBuffer, UInt activeIndexCount,
-		UInt indexOffset);
+		rElements, const UShort* const pIBuffer, UInt indexCount,
+		UInt startIndex);
 
 	// internally used by System::Assert
 	void* GetFramebuffer();

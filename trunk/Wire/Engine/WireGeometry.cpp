@@ -59,8 +59,6 @@ Geometry::~Geometry()
 //----------------------------------------------------------------------------
 void Geometry::Init()
 {
-	ActiveIndexCount = mspMesh->GetIndexBuffer()->GetQuantity();
-	StartIndex = 0;
 	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(State*));
 	StateSetID = System::MAX_UINT;
 }

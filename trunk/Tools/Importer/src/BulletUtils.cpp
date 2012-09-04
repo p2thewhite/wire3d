@@ -1,4 +1,5 @@
 #include "BulletUtils.h"
+
 #include "WireVertexBuffer.h"
 #include "WireIndexBuffer.h"
 
@@ -47,7 +48,8 @@ btTriangleIndexVertexArray* BulletUtils::Convert(Mesh* pMesh)
 		pVertexBase[i] = pVertexBufferData[i];
 	}
 
-	btTriangleIndexVertexArray* pTriangleIndexVertexArray = WIRE_NEW btTriangleIndexVertexArray();
+	btTriangleIndexVertexArray* pTriangleIndexVertexArray =
+		WIRE_NEW btTriangleIndexVertexArray();
 
 	// Creating bullet mesh description struct
 
@@ -81,15 +83,19 @@ Mesh* BulletUtils::Convert(btTriangleMeshShape* pTriangleMeshShape)
 	int numberOfTriangles;
 	PHY_ScalarType indicesType;
 
-	pTriangleMeshShape->getMeshInterface()->getLockedVertexIndexBase(&pVertexBase, numberOfVertices, type, stride, &pIndexBase, indexStride, numberOfTriangles, indicesType);
+	pTriangleMeshShape->getMeshInterface()->getLockedVertexIndexBase(
+		&pVertexBase, numberOfVertices, type, stride, &pIndexBase,
+		indexStride, numberOfTriangles, indicesType);
 
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, numberOfVertices);
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes,
+		numberOfVertices);
 	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(numberOfTriangles * 3);
 
 	for (Int i = 0; i < numberOfVertices; i += 3)
 	{
 		float* pVertexData = (float*)pVertexBase;
-		pVertexBuffer->Position3(i) = Vector3F(pVertexData[i], pVertexData[i + 1], pVertexData[i + 2]);
+		pVertexBuffer->Position3(i) = Vector3F(
+			pVertexData[i], pVertexData[i + 1], pVertexData[i + 2]);
 	}
 
 	for (Int i = 0; i < numberOfTriangles; i++)
@@ -100,7 +106,6 @@ Mesh* BulletUtils::Convert(btTriangleMeshShape* pTriangleMeshShape)
 	}
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
-
 	pMesh->GenerateNormals();
 
 	return pMesh;

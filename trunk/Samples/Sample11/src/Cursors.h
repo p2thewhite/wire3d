@@ -7,8 +7,6 @@
 #include "WireNode.h"
 #include "WireStateAlpha.h"
 
-using namespace Wire;
-
 class Cursors
 {
 public:
@@ -24,14 +22,14 @@ public:
 
 	void SetCursor(Float x, Float y, CursorMode mode = CM_POINTING,
 		UInt playerNo = 0, Float zRollInRadian = 0);
-	Node* GetRoot();
+	Wire::Node* GetRoot();
 
 private:
 	void InitCursors();
-	Geometry* CreateCursor(Float uOffset, Float vOffset);
+	Wire::Geometry* CreateCursor(Float uOffset, Float vOffset);
 
-	NodePtr mspCursors;
-	MaterialPtr mspMaterial;
+	Wire::NodePtr mspCursors;
+	Wire::MaterialPtr mspMaterial;
 
 	static const unsigned char s_Png[];
 	static const int s_PngSize;
