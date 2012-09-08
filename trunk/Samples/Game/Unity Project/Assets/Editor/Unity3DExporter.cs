@@ -16,13 +16,21 @@ public class Unity3DExporter : EditorWindow
 	private bool mDiscardTexturesOnBind = true;
 	private string m2ndTextureName;
 	private string mPath = "../Data/Scene";
-	private List<string> mMeshAssetsProcessed;
+
+    private List<string> mMeshAssetsProcessed;
 	private Dictionary<string, string> mMeshAssetNameToMeshName;
 	private Dictionary<string, int> mMeshNameToCount;
-	private List<string> mTextureAssetsProcessed;
+
+    private List<string> mTextureAssetsProcessed;
 	private Dictionary<string, string> mTextureAssetNameToTextureName;
 	private Dictionary<string, int> mTextureNameToCount;
-	private float mSkyboxScale = 120.0f;
+
+    private List<string> mMaterialAssetsProcessed;
+    private Dictionary<string, string> mMaterialAssetNameToMaterialName;
+    private Dictionary<string, int> mMaterialNameToCount;
+   
+    private float mSkyboxScale = 120.0f;
+    private bool mWriteNamesOnly;
 
 	private struct Statistics
 	{
@@ -78,8 +86,7 @@ public class Unity3DExporter : EditorWindow
 		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
 		
 		return (meshFilter != null && meshFilter.sharedMesh != null) &&
-            (meshRenderer != null && meshRenderer.enabled) &&
-            transform.GetChildCount () == 0;
+            (meshRenderer != null && meshRenderer.enabled);
 	}
 	
 	private static void GenerateAABBFromVertices (Vector3[] vertices, out Vector3 aabbMin, out Vector3 aabbMax)
@@ -111,13 +118,16 @@ public class Unity3DExporter : EditorWindow
 	
 	private static void GenerateBoxColliderTraverse (Transform transform)
 	{
-		if (IsLeaf (transform)) {
+		if (IsLeaf (transform))
+        {
 			GenerateBoxCollider (transform);
-		} else {
-			if (transform.GetChildCount () > 0) {
-				for (int i = 0; i < transform.GetChildCount(); i++) {
-					GenerateBoxColliderTraverse (transform.GetChild (i));
-				}
+		}
+
+		if (transform.GetChildCount () > 0)
+        {
+			for (int i = 0; i < transform.GetChildCount(); i++)
+            {
+				GenerateBoxColliderTraverse (transform.GetChild (i));
 			}
 		}
 	}
@@ -166,7 +176,7 @@ public class Unity3DExporter : EditorWindow
 		mIgnoreUnderscore = GUILayout.Toggle (mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
 
 		if (RenderSettings.skybox != null) {
-			mSkyboxScale = EditorGUILayout.FloatField ("Skybox Scale factor", mSkyboxScale);
+			mSkyboxScale = EditorGUILayout.FloatField ("Skybox Size", mSkyboxScale);
 		}
 		
 		// ---
@@ -193,9 +203,15 @@ public class Unity3DExporter : EditorWindow
 				mMeshAssetsProcessed = new List<string> ();
 				mMeshAssetNameToMeshName = new Dictionary<string, string> ();
 				mMeshNameToCount = new Dictionary<string, int> ();
+
 				mTextureAssetsProcessed = new List<string> ();
 				mTextureAssetNameToTextureName = new Dictionary<string, string> ();
 				mTextureNameToCount = new Dictionary<string, int> ();
+
+                mMaterialAssetsProcessed = new List<string>();
+                mMaterialAssetNameToMaterialName = new Dictionary<string, string>();
+                mMaterialNameToCount = new Dictionary<string, int>();
+
 				mStatistics = new Statistics ();
 				Export ();
 				if (!mExportXmlOnly) {
@@ -253,7 +269,7 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
-            WriteMesh(meshFilter.sharedMesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
+            WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent + "  ");
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterial, outFile, indent + "  ");
         }
 
@@ -277,7 +293,7 @@ public class Unity3DExporter : EditorWindow
             string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
             outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" + isStatic +
                 " SubMeshIndex=\"" + i + "\">");
-            WriteMesh(mesh, outFile, indent + "  ", meshRenderer.lightmapTilingOffset);
+            WriteMesh(mesh, meshRenderer.lightmapTilingOffset, outFile, indent + "  ");
 
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
             outFile.WriteLine(indent + "</Leaf>");
@@ -286,18 +302,16 @@ public class Unity3DExporter : EditorWindow
 
 	private void WriteNode (Transform transform, StreamWriter outFile, string indent)
 	{
-		GameObject gameObject = transform.gameObject;
-		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
-		MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer> ();
-		
 		outFile.WriteLine (indent + "<Node Name=\"" + transform.gameObject.name + "\" " + GetTransformAsString (transform) + ">");
     	
 		WriteCamera (transform.gameObject, outFile, indent);
 		WriteLight (transform.gameObject, outFile, indent);
 		WriteCollider (transform.gameObject, outFile, indent);
     	
-		if (transform.GetChildCount () > 0) {
-			if ((meshFilter != null) && (meshRenderer != null)) {
+		if (transform.GetChildCount () > 0)
+        {
+			if (IsLeaf(transform))
+            {
 				WriteLeaf (transform, outFile, indent + "  ", false);
 			}
     	
@@ -376,13 +390,17 @@ public class Unity3DExporter : EditorWindow
 
 	private void Traverse (Transform transform, StreamWriter outFile, string indent)
 	{
-		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_")) {
+		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_"))
+        {
 			return;
 		}
       	
-		if (IsLeaf (transform)) {
+		if (IsLeaf (transform) && transform.GetChildCount() == 0)
+        {
 			WriteLeaf (transform, outFile, indent);
-		} else {
+		}
+        else
+        {
 			WriteNode (transform, outFile, indent);
 		}
 	}
@@ -401,7 +419,11 @@ public class Unity3DExporter : EditorWindow
         
 		StreamWriter outFile = new StreamWriter (mPath + unitySceneName + ".xml");
 		try {
-			GameObject root = new GameObject ("Root");
+            mWriteNamesOnly = false;
+//             WriteAssets(outFile);
+//             mWriteNamesOnly = true;
+
+            GameObject root = new GameObject ("Root");
 			outFile.WriteLine ("<Node Name=\"" + root.name + "\" " + GetTransformAsString (root.transform) + ">");
 			DestroyImmediate (root);
 			string indent = "  ";
@@ -430,6 +452,55 @@ public class Unity3DExporter : EditorWindow
                "Rot=\"" + rotation.w + ", " + rotation.x + ", " + (-rotation.y) + ", " + (-rotation.z) + "\" " +
                "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
 	}
+
+    private void WriteAssets(StreamWriter outFile)
+    {
+        outFile.WriteLine("<Assets>");
+        string indent = "  ";
+
+        WriteAssets(outFile, indent, true, false);
+        WriteAssets(outFile, indent, false, true);
+
+        outFile.WriteLine("</Assets>");
+    }
+
+    private void WriteAssets(StreamWriter outFile, string indent, bool writeMeshes, bool writeMaterials)
+    {
+        Stack<Transform> stack = new Stack<Transform>();
+        foreach (Transform transform in GetRootTransforms())
+        {
+            stack.Push(transform);
+        }
+
+        while (stack.Count > 0)
+        {
+            Transform t = stack.Pop();
+            for (int i = t.GetChildCount()-1; i >= 0; i--)
+            {
+                stack.Push(t.GetChild(i));
+            }
+
+            if (IsLeaf(t))
+            {
+                MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
+                MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
+                if (meshFilter == null || meshRenderer == null)
+                {
+                    continue;
+                }
+
+                if (writeMeshes)
+                {
+                    WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent);
+                }
+
+                if (writeMaterials)
+                {
+                    WriteMaterial(meshRenderer, meshRenderer.sharedMaterial, outFile, indent);
+                }
+            }
+        }
+    }
 
     private void WriteStateFog (StreamWriter outFile, string indent)
     {
@@ -532,7 +603,24 @@ public class Unity3DExporter : EditorWindow
 			lightMapIndex = "_" + meshRenderer.lightmapIndex;
 		}
 
-		outFile.WriteLine (indent + "<Material Name=\"" + material.name + lightMapIndex + "\">");      
+        string materialName = material.name + "_" + lightMapIndex + "_" + material.GetInstanceID().ToString("X8");
+        bool alreadyProcessed = true;
+        if (!mMaterialAssetsProcessed.Contains(materialName))
+        {
+            mMaterialAssetsProcessed.Add(materialName);
+            mMaterialAssetNameToMaterialName.Add(materialName, GetUniqueName(material.name, mMaterialNameToCount));
+            alreadyProcessed = false;
+        }
+
+        if (mWriteNamesOnly || alreadyProcessed)
+        {
+            outFile.WriteLine(indent + "<Material Name=\"" + material.name + lightMapIndex + "\" />");
+            return;
+        }
+        else
+        {
+            outFile.WriteLine(indent + "<Material Name=\"" + material.name + lightMapIndex + "\">");
+        }
 
 		Texture2D texture = material.mainTexture as Texture2D;
 		WriteTexture (texture, outFile, indent);
@@ -693,7 +781,7 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private void WriteMesh (Mesh mesh, StreamWriter outFile, string indent, Vector4 lightmapTilingOffset)
+	private void WriteMesh (Mesh mesh, Vector4 lightmapTilingOffset, StreamWriter outFile, string indent)
 	{
 		if (mesh == null) {
 			return;
@@ -713,7 +801,14 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		prefix = mMeshAssetNameToMeshName [meshName];
-		outFile.WriteLine (indent + "<Mesh Name=\"" + prefix + "\">");
+
+        if (mWriteNamesOnly || alreadyProcessed)
+        {
+            outFile.WriteLine(indent + "<Mesh Name=\"" + prefix + "\" />");
+            return;
+        }
+
+        outFile.WriteLine(indent + "<Mesh Name=\"" + prefix + "\">");
 
         if (mesh.subMeshCount > 1)
         {

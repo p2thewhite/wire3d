@@ -23,16 +23,17 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-Importer::Importer(const Char* pPath, Bool materialsWithEqualNamesAreIdentical, 
-	Bool prepareForStaticBatching) : mpPath(pPath), mStaticSpatials(0, 100), 
-	mMaterialsWithEqualNamesAreIdentical(materialsWithEqualNamesAreIdentical),
-	mPrepareForStaticBatching(prepareForStaticBatching)
+Importer::Importer(const Char* pPath, Options* pOptions)
+	:
+	mpPath(pPath),
+	mStaticSpatials(0, 100)
 {
+	mpOptions = pOptions ? pOptions : &mDefaultOptions;
 }
 
 //----------------------------------------------------------------------------
-Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCameras, 
-	btDynamicsWorld* pPhysicsWorld)
+Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
+	pCameras, btDynamicsWorld* pPhysicsWorld)
 {
 	ResetStatistics();
 	mpCameras = pCameras;
@@ -54,7 +55,15 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCame
 	doc.parse<0>(pXmlNullTerminated);
 	Node* pRoot = WIRE_NEW Node;
 	pRoot->SetName(pFilename);
-	Traverse(doc.first_node(), pRoot);
+
+	if (doc.first_node())
+	{
+		for (rapidxml::xml_node<>* pChild = doc.first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			Traverse(pChild, pRoot);
+		}
+	}
 
 	WIRE_DELETE[] pXmlNullTerminated;
 
@@ -68,7 +77,9 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>* pCame
 	if (mStaticSpatials.GetQuantity() > 0)
 	{
 		pRoot->UpdateGS();
-		InitializeStaticSpatials(mStaticSpatials, mPrepareForStaticBatching);
+		InitializeStaticSpatials(mStaticSpatials, mpOptions->
+			PrepareSceneForStaticBatching, mpOptions->
+			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching);
 		mStaticSpatials.RemoveAll();
 	}
 
@@ -417,6 +428,28 @@ void Importer::ResetStatistics()
 //----------------------------------------------------------------------------
 void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
+	if (Is("Assets", pXmlNode->name()))
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+				pChild = pChild->next_sibling())
+			{
+				if (Is("Mesh", pChild->name()))
+				{
+					ParseMesh(pChild);
+				}
+				else if (Is("Material", pChild->name()))
+				{
+					ParseMaterial(pChild);
+				}
+			}
+		}
+
+		return;
+	}
+
 	if (Is("Skybox", pXmlNode->name()))
 	{
 		NodeSkybox* pSkybox = ParseSkybox(pXmlNode);
@@ -1460,7 +1493,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	if (mMaterialsWithEqualNamesAreIdentical)
+	if (mpOptions->MaterialsWithEqualNamesAreIdentical)
 	{
 		MaterialPtr* pValue = mMaterials.Find(pName);
 		if (pValue)
@@ -1666,19 +1699,21 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 
 //----------------------------------------------------------------------------
 void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
-	Bool prepareForStaticBatching)
+	Bool prepareSceneForStaticBatching,
+	Bool duplicateSharedMeshesWhenPreparingSceneForStaticBatching)
 {
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
 	{
 		WIRE_ASSERT(rSpatials[i]);
 		rSpatials[i]->WorldIsCurrent = true;
 		rSpatials[i]->WorldBoundIsCurrent = true;
-		if (prepareForStaticBatching)
+		if (prepareSceneForStaticBatching)
 		{
 			Geometry* pGeo = DynamicCast<Geometry>(rSpatials[i]);
 			if (pGeo)
 			{
-				pGeo->MakeStatic();
+				pGeo->MakeStatic(true,
+					duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
 			}
 		}
 	}
