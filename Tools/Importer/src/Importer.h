@@ -27,6 +27,20 @@ class Importer
 {
 
 public:
+	struct Options
+	{
+		Options()
+			:
+			MaterialsWithEqualNamesAreIdentical(true),
+			PrepareSceneForStaticBatching(true),
+			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(true)
+			{}
+			 
+		Bool MaterialsWithEqualNamesAreIdentical;
+		Bool PrepareSceneForStaticBatching;
+		Bool DuplicateSharedMeshesWhenPreparingSceneForStaticBatching;
+	};
+
 	struct Statistics
 	{
 		UInt GeometryCount;
@@ -39,9 +53,7 @@ public:
 		UInt ColliderCount;
 	};
 
-	Importer(const Char* pPath = "",
-		Bool materialsWithEqualNamesAreIdentical = true,
-		Bool prepareForStaticBatching = true);
+	Importer(const Char* pPath = "", Options* pOptions = NULL);
 
 	Wire::Node* LoadSceneFromXml(const Char* pFilename,
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
@@ -59,7 +71,8 @@ public:
 private:
 	static Char* Load(const Char* pFilename, Int& rSize);
 	static void InitializeStaticSpatials(Wire::TArray<Wire::SpatialPtr>&
-		rSpatials, Bool prepareForStaticBatching);
+		rSpatials, Bool prepareSceneForStaticBatching,
+		Bool duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
 	static void RegisterColliders(Wire::TArray<Collider*>& rColliders,
 		btDynamicsWorld* pPhysicsWorld);
 
@@ -118,9 +131,9 @@ private:
 	Wire::TArray<Wire::SpatialPtr> mStaticSpatials;
 	Wire::TArray<Collider*> mColliders;
 
-	Bool mMaterialsWithEqualNamesAreIdentical;
-	Bool mPrepareForStaticBatching;
 	Statistics mStatistics;
+	Options mDefaultOptions;
+	Options* mpOptions;
 };
 
 #endif

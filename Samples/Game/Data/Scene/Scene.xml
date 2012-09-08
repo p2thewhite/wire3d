@@ -325,11 +325,7 @@
         <Uv0 Name="Column 2.uv0" LittleEndian="y" />
         <Uv1 Name="Column 2_0.0146484_0.0146484_0.160495_0.938146.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 3" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 3">
@@ -339,11 +335,7 @@
         <Uv0 Name="Column 3.uv0" LittleEndian="y" />
         <Uv1 Name="Column 3_0.0146484_0.0146484_0.160777_0.932261.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 4" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 4">
@@ -353,11 +345,7 @@
         <Uv0 Name="Column 4.uv0" LittleEndian="y" />
         <Uv1 Name="Column 4_0.0146484_0.0146484_0.192704_0.919565.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 5" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 5">
@@ -367,11 +355,7 @@
         <Uv0 Name="Column 5.uv0" LittleEndian="y" />
         <Uv1 Name="Column 5_0.0146484_0.0146484_0.160495_0.926401.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 6" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 6">
@@ -381,11 +365,7 @@
         <Uv0 Name="Column 6.uv0" LittleEndian="y" />
         <Uv1 Name="Column 6_0.0146484_0.0146484_0.161387_0.912729.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 7" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 7">
@@ -395,11 +375,7 @@
         <Uv0 Name="Column 7.uv0" LittleEndian="y" />
         <Uv1 Name="Column 7_0.0146484_0.0146484_0.192422_0.913706.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 8" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 8">
@@ -409,11 +385,7 @@
         <Uv0 Name="Column 8.uv0" LittleEndian="y" />
         <Uv1 Name="Column 8_0.0146484_0.0146484_0.192478_0.907846.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 9" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 9">
@@ -423,11 +395,7 @@
         <Uv0 Name="Column 9.uv0" LittleEndian="y" />
         <Uv1 Name="Column 9_0.0146484_0.0146484_0.19245_0.901961.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 10" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 10">
@@ -437,11 +405,7 @@
         <Uv0 Name="Column 10.uv0" LittleEndian="y" />
         <Uv1 Name="Column 10_0.0146484_0.0146484_0.192704_0.931258.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 11" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 11">
@@ -451,11 +415,7 @@
         <Uv0 Name="Column 11.uv0" LittleEndian="y" />
         <Uv1 Name="Column 11_0.0146484_0.0146484_0.192704_0.925398.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 12" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 12">
@@ -465,11 +425,7 @@
         <Uv0 Name="Column 12.uv0" LittleEndian="y" />
         <Uv1 Name="Column 12_0.0361328_0.0361328_0.295974_0.856987.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 13" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 13">
@@ -479,11 +435,7 @@
         <Uv0 Name="Column 13.uv0" LittleEndian="y" />
         <Uv1 Name="Column 13_0.0361328_0.0361328_0.245615_0.763302.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 14" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 14">
@@ -493,11 +445,7 @@
         <Uv0 Name="Column 14.uv0" LittleEndian="y" />
         <Uv1 Name="Column 14_0.0361328_0.0361328_0.964572_0.868771.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 15" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 15">
@@ -507,11 +455,7 @@
         <Uv0 Name="Column 15.uv0" LittleEndian="y" />
         <Uv1 Name="Column 15_0.0361328_0.0361328_0.392654_0.762326.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 16" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 16">
@@ -521,11 +465,7 @@
         <Uv0 Name="Column 16.uv0" LittleEndian="y" />
         <Uv1 Name="Column 16_0.0361328_0.0361328_0.964919_0.00555472.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 17" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 17">
@@ -535,11 +475,7 @@
         <Uv0 Name="Column 17.uv0" LittleEndian="y" />
         <Uv1 Name="Column 17_0.0361328_0.0361328_0.962966_0.831727.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 18" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 18">
@@ -563,11 +499,7 @@
         <Uv0 Name="Column 19.uv0" LittleEndian="y" />
         <Uv1 Name="Column 19_0.0253906_0.0253906_0.367608_0.954665.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 20" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 20">
@@ -577,11 +509,7 @@
         <Uv0 Name="Column 20.uv0" LittleEndian="y" />
         <Uv1 Name="Column 20_0.0253906_0.0253906_0.370723_0.974574.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 21" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 21">
@@ -591,11 +519,7 @@
         <Uv0 Name="Column 21.uv0" LittleEndian="y" />
         <Uv1 Name="Column 21_0.0253906_0.0253906_0.366631_0.969094.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 22" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 22">
@@ -605,11 +529,7 @@
         <Uv0 Name="Column 22.uv0" LittleEndian="y" />
         <Uv1 Name="Column 22_0.0253906_0.0253906_0.152111_0.948173.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 23" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 23">
@@ -619,11 +539,7 @@
         <Uv0 Name="Column 23.uv0" LittleEndian="y" />
         <Uv1 Name="Column 23_0.0253906_0.0253906_0.370572_0.952677.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 24" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 24">
@@ -633,11 +549,7 @@
         <Uv0 Name="Column 24.uv0" LittleEndian="y" />
         <Uv1 Name="Column 24_0.0253906_0.0253906_0.297708_0.945462.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 25" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 25">
@@ -647,11 +559,7 @@
         <Uv0 Name="Column 25.uv0" LittleEndian="y" />
         <Uv1 Name="Column 25_0.0361328_0.0361328_0.961366_0.813368.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 26" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 26">
@@ -661,11 +569,7 @@
         <Uv0 Name="Column 26.uv0" LittleEndian="y" />
         <Uv1 Name="Column 26_0.0361328_0.0361328_0.962343_-0.0116986.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Column 27" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Column 27">
@@ -675,14 +579,10 @@
         <Uv0 Name="Column 27.uv0" LittleEndian="y" />
         <Uv1 Name="Column 27_0.0361328_0.0361328_0.961433_0.851388.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_column_diff_layerstga_0">
-        <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_column_diff_layerstga_0" />
     </Leaf>
     <Node Name="Doors" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Leaf Name="Doors (submesh_0)" Static="1" SubMeshIndex="0" >
+      <Leaf Name="Doors (submesh_0)" Static="1" SubMeshIndex="0">
         <Mesh Name="Doors">
           <SubMeshes>
             <SubMesh Index="0" StartIndex="0" IndexCount="252" />
@@ -700,18 +600,8 @@
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Doors (submesh_1)" Static="1" SubMeshIndex="1" >
-        <Mesh Name="Doors">
-          <SubMeshes>
-            <SubMesh Index="0" StartIndex="0" IndexCount="252" />
-            <SubMesh Index="1" StartIndex="252" IndexCount="1332" />
-          </SubMeshes>
-          <Vertices Name="Doors.vtx" LittleEndian="y" />
-          <Indices Name="Doors.idx" LittleEndian="y" />
-          <Normals Name="Doors.nm" LittleEndian="y" />
-          <Uv0 Name="Doors.uv0" LittleEndian="y" />
-          <Uv1 Name="Doors_0.0429688_0.0429688_0.327146_0.869679.uv1" LittleEndian="y" />
-        </Mesh>
+      <Leaf Name="Doors (submesh_1)" Static="1" SubMeshIndex="1">
+        <Mesh Name="Doors" />
         <Material Name="arc01_diff_layersTGA_0">
           <Texture Name="arc01_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
           <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
@@ -741,11 +631,7 @@
         <Uv0 Name="Eastern Building 2.uv0" LittleEndian="y" />
         <Uv1 Name="Eastern Building 2_0.238281_0.238281_0.729187_-0.0347921.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="passage_diff_layersTGA_0">
-        <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="passage_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Eastern Building 3" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Eastern Building 3">
@@ -755,11 +641,7 @@
         <Uv0 Name="Eastern Building 3.uv0" LittleEndian="y" />
         <Uv1 Name="Eastern Building 3_0.267578_0.267578_0.56943_0.0504899.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house6_diff_layerstga_0">
-        <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house6_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Eastern Stairs" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Eastern Stairs">
@@ -811,14 +693,10 @@
         <Uv0 Name="Fountain.uv0" LittleEndian="y" />
         <Uv1 Name="Fountain_0.120117_0.120117_0.815589_0.882775.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="stairs_diff_layersTGA_0">
-        <Texture Name="stairs_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="stairs_diff_layersTGA_0" />
     </Leaf>
     <Node Name="Ground" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
-      <Leaf Name="Ground (submesh_0)" Static="1" SubMeshIndex="0" >
+      <Leaf Name="Ground (submesh_0)" Static="1" SubMeshIndex="0">
         <Mesh Name="Ground">
           <SubMeshes>
             <SubMesh Index="0" StartIndex="0" IndexCount="168" />
@@ -837,43 +715,17 @@
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Ground (submesh_1)" Static="1" SubMeshIndex="1" >
-        <Mesh Name="Ground">
-          <SubMeshes>
-            <SubMesh Index="0" StartIndex="0" IndexCount="168" />
-            <SubMesh Index="1" StartIndex="168" IndexCount="900" />
-            <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
-          </SubMeshes>
-          <Vertices Name="Ground.vtx" LittleEndian="y" />
-          <Indices Name="Ground.idx" LittleEndian="y" />
-          <Normals Name="Ground.nm" LittleEndian="y" />
-          <Uv0 Name="Ground.uv0" LittleEndian="y" />
-          <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
-        </Mesh>
+      <Leaf Name="Ground (submesh_1)" Static="1" SubMeshIndex="1">
+        <Mesh Name="Ground" />
         <Material Name="mainsqr_floor_big_diff3_layersTGA_0">
           <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
           <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
           <MaterialState Ambient="1, 1, 1, 1" />
         </Material>
       </Leaf>
-      <Leaf Name="Ground (submesh_2)" Static="1" SubMeshIndex="2" >
-        <Mesh Name="Ground">
-          <SubMeshes>
-            <SubMesh Index="0" StartIndex="0" IndexCount="168" />
-            <SubMesh Index="1" StartIndex="168" IndexCount="900" />
-            <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
-          </SubMeshes>
-          <Vertices Name="Ground.vtx" LittleEndian="y" />
-          <Indices Name="Ground.idx" LittleEndian="y" />
-          <Normals Name="Ground.nm" LittleEndian="y" />
-          <Uv0 Name="Ground.uv0" LittleEndian="y" />
-          <Uv1 Name="Ground_0.570313_0.570313_-0.00772513_-0.0106973.uv1" LittleEndian="y" />
-        </Mesh>
-        <Material Name="mainsq_floor_bases_diff_layersTGA_0">
-          <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-          <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-          <MaterialState Ambient="1, 1, 1, 1" />
-        </Material>
+      <Leaf Name="Ground (submesh_2)" Static="1" SubMeshIndex="2">
+        <Mesh Name="Ground" />
+        <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
       </Leaf>
     </Node>
     <Leaf Name="North Eastern Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
@@ -912,11 +764,7 @@
         <Uv0 Name="North Western Pillar.uv0" LittleEndian="y" />
         <Uv1 Name="North Western Pillar_0.0859375_0.0859375_0.388179_0.782167.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column_diff_layersTGA_0">
-        <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Northern Building 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Northern Building 1">
@@ -968,11 +816,7 @@
         <Uv0 Name="Northern Ornament 2.uv0" LittleEndian="y" />
         <Uv1 Name="Northern Ornament 2_0.0205078_0.0205078_0.964121_-0.0139028.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="wall_deco1_diff_layersTGA_0">
-        <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="wall_deco1_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Northern Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Northern Tomb">
@@ -982,11 +826,7 @@
         <Uv0 Name="Northern Tomb.uv0" LittleEndian="y" />
         <Uv1 Name="Northern Tomb_0.0390625_0.0390625_0.390291_0.784844.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column2_diff_layersTGA_0">
-        <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object002" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object002">
@@ -996,11 +836,7 @@
         <Uv0 Name="Object002.uv0" LittleEndian="y" />
         <Uv1 Name="Object002_0.0820313_0.0820313_0.849114_-0.0456618.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="passage_diff_layersTGA_0">
-        <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="passage_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object016" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object016">
@@ -1010,11 +846,7 @@
         <Uv0 Name="Object016.uv0" LittleEndian="y" />
         <Uv1 Name="Object016_0.0263672_0.0263672_0.187945_0.9875.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsq_floor_bases_diff_layersTGA_0">
-        <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object074" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object074">
@@ -1024,11 +856,7 @@
         <Uv0 Name="Object074.uv0" LittleEndian="y" />
         <Uv1 Name="Object074_0.0820313_0.0820313_0.196362_0.729302.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object075" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object075">
@@ -1038,11 +866,7 @@
         <Uv0 Name="Object075.uv0" LittleEndian="y" />
         <Uv1 Name="Object075_0.0585938_0.0585938_0.143774_0.913724.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object076" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object076">
@@ -1052,11 +876,7 @@
         <Uv0 Name="Object076.uv0" LittleEndian="y" />
         <Uv1 Name="Object076_0.0625_0.0625_0.838304_-0.0487381.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object077" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object077">
@@ -1066,11 +886,7 @@
         <Uv0 Name="Object077.uv0" LittleEndian="y" />
         <Uv1 Name="Object077_0.0878906_0.0878906_0.769779_-0.0689372.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object078" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object078">
@@ -1080,11 +896,7 @@
         <Uv0 Name="Object078.uv0" LittleEndian="y" />
         <Uv1 Name="Object078_0.0556641_0.0556641_0.160476_0.914992.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Object079" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Object079">
@@ -1094,11 +906,7 @@
         <Uv0 Name="Object079.uv0" LittleEndian="y" />
         <Uv1 Name="Object079_0.0556641_0.0556641_0.368582_0.918898.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house2_diff_layersTGA_0">
-        <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Sourthern Stairs" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Sourthern Stairs">
@@ -1108,11 +916,7 @@
         <Uv0 Name="Sourthern Stairs.uv0" LittleEndian="y" />
         <Uv1 Name="Sourthern Stairs_0.125_0.125_0.6437_0.000153844.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="stairs_diff_layersTGA_0">
-        <Texture Name="stairs_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="stairs_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="South Eastern Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="South Eastern Pillar">
@@ -1122,11 +926,7 @@
         <Uv0 Name="South Eastern Pillar.uv0" LittleEndian="y" />
         <Uv1 Name="South Eastern Pillar_0.0859375_0.0859375_0.813052_0.833925.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column_diff_layersTGA_0">
-        <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="South Western Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="South Western Pillar">
@@ -1136,11 +936,7 @@
         <Uv0 Name="South Western Pillar.uv0" LittleEndian="y" />
         <Uv1 Name="South Western Pillar_0.0859375_0.0859375_0.307124_0.830018.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column_diff_layersTGA_0">
-        <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Southern Building" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Southern Building">
@@ -1164,11 +960,7 @@
         <Uv0 Name="Southern Tomb.uv0" LittleEndian="y" />
         <Uv1 Name="Southern Tomb_0.0390625_0.0390625_0.900057_0.808588.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column2_diff_layersTGA_0">
-        <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Southern Wall" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Southern Wall">
@@ -1206,11 +998,7 @@
         <Uv0 Name="Western Building 2.uv0" LittleEndian="y" />
         <Uv1 Name="Western Building 2_0.325195_0.325195_0.675715_0.187902.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="house1_diff_layerstga_0">
-        <Texture Name="house1_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="house1_diff_layerstga_0" />
     </Leaf>
     <Leaf Name="Western Ornament 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Western Ornament 1">
@@ -1220,11 +1008,7 @@
         <Uv0 Name="Western Ornament 1.uv0" LittleEndian="y" />
         <Uv1 Name="Western Ornament 1_0.015625_0.015625_0.191716_0.937227.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="wall_deco1_diff_layersTGA_0">
-        <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="wall_deco1_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Western Ornament 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Western Ornament 2">
@@ -1234,11 +1018,7 @@
         <Uv0 Name="Western Ornament 2.uv0" LittleEndian="y" />
         <Uv1 Name="Western Ornament 2_0.015625_0.015625_0.161443_0.918727.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="wall_deco1_diff_layersTGA_0">
-        <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="wall_deco1_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Western Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Western Tomb">
@@ -1248,11 +1028,7 @@
         <Uv0 Name="Western Tomb.uv0" LittleEndian="y" />
         <Uv1 Name="Western Tomb_0.0390625_0.0390625_0.916058_0.839531.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_column2_diff_layersTGA_0">
-        <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Western Wall" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Western Wall">
@@ -1262,11 +1038,7 @@
         <Uv0 Name="Western Wall.uv0" LittleEndian="y" />
         <Uv1 Name="Western Wall_0.25293_0.25293_0.560342_-0.000395058.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="mainsquare_wall_diff_layersTGA_0">
-        <Texture Name="mainsquare_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="mainsquare_wall_diff_layersTGA_0" />
     </Leaf>
     <Leaf Name="Western Window" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
       <Mesh Name="Western Window">
@@ -1276,11 +1048,7 @@
         <Uv0 Name="Western Window.uv0" LittleEndian="y" />
         <Uv1 Name="Western Window_0.0478516_0.0478516_0.816348_0.908398.uv1" LittleEndian="y" />
       </Mesh>
-      <Material Name="airvent_diff_0">
-        <Texture Name="airvent_diff.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
-        <MaterialState Ambient="1, 1, 1, 1" />
-      </Material>
+      <Material Name="airvent_diff_0" />
     </Leaf>
   </Node>
   <Node Name="Directional Light Blue" Pos="0, 10, 0" Rot="0.1481229, 0.1481228, 0.8752192, 0.4360169" Scale="1, 1, 1">
