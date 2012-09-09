@@ -395,6 +395,42 @@ Float* Importer::Load32(const Char* pFilename, Int& rSize, Bool isBigEndian)
 }
 
 //----------------------------------------------------------------------------
+UShort* Importer::Load16(const Char* pFilename, Int& rSize, Bool isBigEndian)
+{
+	WIRE_ASSERT(pFilename);
+	if (!pFilename)
+	{
+		return NULL;
+	}
+
+	String path = String(mpPath) + String(pFilename);
+	Char* pBuffer = Load(static_cast<const Char*>(path), rSize);
+	if (!pBuffer)
+	{
+		return NULL;
+	}
+
+	UShort* pBuffer16 = reinterpret_cast<UShort*>(pBuffer);
+	if (System::IsBigEndian() != isBigEndian)
+	{
+		if (!pBuffer16 || (rSize & 1) != 0)
+		{
+			WIRE_ASSERT(false);
+			return NULL;
+		}
+
+		for (Int i = 0; i < rSize; i+=2)
+		{
+			UChar i0 = pBuffer[i+0];
+			pBuffer[i+0] = pBuffer[i+1];
+			pBuffer[i+1] = i0;
+		}
+	}
+
+	return pBuffer16;
+}
+
+//----------------------------------------------------------------------------
 void Importer::Free32(Float* pFloats)
 {
 	if (!pFloats)
@@ -544,7 +580,7 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 			Char* pValue = attr->value();
 			if (pValue)
 			{
-				if (*pValue == 'y')
+				if (*pValue == 'y' || *pValue == '1')
 				{
 					return false;
 				}
@@ -553,6 +589,28 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool Importer::Is16Bit(rapidxml::xml_node<>* pXmlNode)
+{
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (Is("16bit", attr->name()))
+		{
+			Char* pValue = attr->value();
+			if (pValue)
+			{
+				if (*pValue == '1')
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 //----------------------------------------------------------------------------
@@ -1393,6 +1451,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 	Bool isIndexBufferBigEndian = true;
 	Bool isNormalsBigEndian = true;
 	Bool isColorsBigEndian = true;
+	Bool isIndexBuffer16Bit = false;
 	TArray<Bool> uvBigEndian(8,8);
 	Buffer::UsageType vertexBufferUsage = Buffer::UT_STATIC;
 	Buffer::UsageType indexBufferUsage = Buffer::UT_STATIC;
@@ -1411,6 +1470,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 			pIndicesFileName = GetValue(pChild, "Name");
 			isIndexBufferBigEndian = IsBigEndian(pChild);
 			indexBufferUsage = GetUsageType(pChild);
+			isIndexBuffer16Bit = Is16Bit(pChild);
 		}
 		else if (!pNormalsFileName && Is("Normals", pChild->name()))
 		{
@@ -1445,7 +1505,7 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		uvBigEndian);
 
 	IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(pIndicesFileName,
-		isIndexBufferBigEndian, indexBufferUsage);
+		isIndexBufferBigEndian, indexBufferUsage, isIndexBuffer16Bit);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	mStatistics.MeshCount++;
@@ -1857,9 +1917,25 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 
 //----------------------------------------------------------------------------
 IndexBuffer* Importer::LoadIndexBufferFromFile(Char* pFileName, Bool
-	isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage)
+	isIndexBufferBigEndian, Buffer::UsageType indexBufferUsage, Bool is16Bit)
 {
 	Int indicesSize;
+
+	if (is16Bit)
+	{
+		UShort* pIndices = Load16(pFileName, indicesSize,
+			isIndexBufferBigEndian);
+		if (!pIndices)
+		{
+			return NULL;
+		}
+
+		IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(pIndices,
+			indicesSize/sizeof(UShort), indexBufferUsage);
+		mStatistics.IndexBufferCount++;
+		return pIndexBuffer;
+	}
+
 	UInt* pIndices = reinterpret_cast<UInt*>(Load32(pFileName, indicesSize,
 		isIndexBufferBigEndian));
 	if (!pIndices)

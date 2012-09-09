@@ -77,6 +77,7 @@ private:
 		btDynamicsWorld* pPhysicsWorld);
 
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
+	UShort* Load16(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	void Free32(Float* pFloats);
 
 	void Traverse(rapidxml::xml_node<>* pXmlNode, Wire::Node* pParent);
@@ -90,6 +91,7 @@ private:
 	Wire::ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode,
 		const Char* pName, Bool& rHasValue);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
+	Bool Is16Bit(rapidxml::xml_node<>* pXmlNode);
 	Wire::Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
 
@@ -115,7 +117,7 @@ private:
 	void ResetStatistics();
 
 	Wire::IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian,
-		Wire::Buffer::UsageType indexBufferUsage);
+		Wire::Buffer::UsageType indexBufferUsage, Bool is16Bit);
 	Wire::VertexBuffer* LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian,
 		Wire::Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian,
 		Char* pColorsName, Bool isColorsBigEndian, Wire::TArray<Char*>& rUvSetNames,
