@@ -14,6 +14,7 @@ public class Unity3DExporter : EditorWindow
 	private bool mExportStateMaterial = true;
 	private bool mDontGenerateMipmapsForLightmaps = true;
 	private bool mDiscardTexturesOnBind = true;
+    private bool mWriteDataAsBigEndian;
 	private string m2ndTextureName;
 	private string mPath = "../Data/Scene";
 
@@ -184,9 +185,17 @@ public class Unity3DExporter : EditorWindow
 
 		mShowAdvancedSettings = EditorGUILayout.Foldout (mShowAdvancedSettings, "Advanced Settings");
 		if (mShowAdvancedSettings) {
-			mExportStateMaterial = GUILayout.Toggle (mExportStateMaterial, new GUIContent ("Try to export StateMaterial from Shader", "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
-			mDontGenerateMipmapsForLightmaps = GUILayout.Toggle (mDontGenerateMipmapsForLightmaps, "Do not generate Mipmaps for Lightmaps");
-			mDiscardTexturesOnBind = GUILayout.Toggle (mDiscardTexturesOnBind, new GUIContent ("Flag textures as 'Discard on bind'", "Textures that are not discarded at bind time can be bound multiple times, but at the cost of double ram usage per texture."));
+			mExportStateMaterial = GUILayout.Toggle (mExportStateMaterial, new GUIContent (
+                "Try to export StateMaterial from Shader",
+                "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
+			mDontGenerateMipmapsForLightmaps = GUILayout.Toggle (mDontGenerateMipmapsForLightmaps,
+                "Do not generate Mipmaps for Lightmaps");
+			mDiscardTexturesOnBind = GUILayout.Toggle (mDiscardTexturesOnBind, new GUIContent (
+                "Flag textures as 'Discard on bind'",
+                "Textures that are not discarded at bind time can be bound multiple times, but at the cost of double ram usage per texture."));
+            mWriteDataAsBigEndian = GUILayout.Toggle(mWriteDataAsBigEndian, new GUIContent(
+                "Write data as big endian",
+                "PC uses little endian. Wii uses big endian. Byte order will be rearranged by the Importer if necessary. Thus favoring a particular order gives a slight speedup when importing data on that particular platform."));
 			GUILayout.Label ("Use property names:");
 			m2ndTextureName = EditorGUILayout.TextField ("- 2nd Texture ", m2ndTextureName ?? string.Empty);
 		}
@@ -603,23 +612,26 @@ public class Unity3DExporter : EditorWindow
 			lightMapIndex = "_" + meshRenderer.lightmapIndex;
 		}
 
-        string materialName = material.name + "_" + lightMapIndex + "_" + material.GetInstanceID().ToString("X8");
+        string materialName = material.name + lightMapIndex;
+        string materialAssetName = materialName + "_" + material.GetInstanceID().ToString("X8");
         bool alreadyProcessed = true;
-        if (!mMaterialAssetsProcessed.Contains(materialName))
+        if (!mMaterialAssetsProcessed.Contains(materialAssetName))
         {
-            mMaterialAssetsProcessed.Add(materialName);
-            mMaterialAssetNameToMaterialName.Add(materialName, GetUniqueName(material.name, mMaterialNameToCount));
+            mMaterialAssetsProcessed.Add(materialAssetName);
+            mMaterialAssetNameToMaterialName.Add(materialAssetName, GetUniqueName(materialName, mMaterialNameToCount));
             alreadyProcessed = false;
         }
 
+        materialName = mMaterialAssetNameToMaterialName[materialAssetName];
+
         if (mWriteNamesOnly || alreadyProcessed)
         {
-            outFile.WriteLine(indent + "<Material Name=\"" + material.name + lightMapIndex + "\" />");
+            outFile.WriteLine(indent + "<Material Name=\"" + materialName + "\" />");
             return;
         }
         else
         {
-            outFile.WriteLine(indent + "<Material Name=\"" + material.name + lightMapIndex + "\">");
+            outFile.WriteLine(indent + "<Material Name=\"" + materialName + "\">");
         }
 
 		Texture2D texture = material.mainTexture as Texture2D;
@@ -790,25 +802,25 @@ public class Unity3DExporter : EditorWindow
 		string lightmapPostfix = "_" + lightmapTilingOffset.x + "_" + lightmapTilingOffset.y +
             "_" + lightmapTilingOffset.z + "_" + lightmapTilingOffset.w;
 
-		string prefix = mesh.name + "_" + mesh.GetInstanceID ().ToString ("X8");
-		string meshName = prefix + lightmapPostfix;
-
+        string meshName = mesh.name;
+        string meshAssetName = meshName + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
 		bool alreadyProcessed = true;
-		if (!mMeshAssetsProcessed.Contains (meshName)) {
-			mMeshAssetsProcessed.Add (meshName);
-			mMeshAssetNameToMeshName.Add (meshName, GetUniqueName (mesh.name, mMeshNameToCount));
+        if (!mMeshAssetsProcessed.Contains(meshAssetName))
+        {
+            mMeshAssetsProcessed.Add(meshAssetName);
+            mMeshAssetNameToMeshName.Add(meshAssetName, GetUniqueName(meshName, mMeshNameToCount));
 			alreadyProcessed = false;
 		}
 
-		prefix = mMeshAssetNameToMeshName [meshName];
+        meshName = mMeshAssetNameToMeshName[meshAssetName];
 
         if (mWriteNamesOnly || alreadyProcessed)
         {
-            outFile.WriteLine(indent + "<Mesh Name=\"" + prefix + "\" />");
+            outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\" />");
             return;
         }
 
-        outFile.WriteLine(indent + "<Mesh Name=\"" + prefix + "\">");
+        outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\">");
 
         if (mesh.subMeshCount > 1)
         {
@@ -827,47 +839,47 @@ public class Unity3DExporter : EditorWindow
             outFile.WriteLine (indent + "  </SubMeshes>");
         }
 
-		char le = BitConverter.IsLittleEndian ? 'y' : 'n';
+		string le = mWriteDataAsBigEndian ? string.Empty : " LittleEndian=\"y\"";
 
-		string vtxName = prefix + ".vtx";
-		outFile.WriteLine (indent + "  <Vertices Name=\"" + vtxName + "\" LittleEndian=\"" + le + "\" />");
+        string vtxName = mesh.name + ".vtx";
+		outFile.WriteLine (indent + "  <Vertices Name=\"" + vtxName + "\"" + le + " />");
 		if (!alreadyProcessed) {
 			SaveVector3s (mesh.vertices, vtxName);
 		}
 
-		string idxName = prefix + ".idx";
-		outFile.WriteLine (indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"" + le + "\" />");
+        string idxName = mesh.name + ".idx";
+		outFile.WriteLine (indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"y\" />");
 		if (!alreadyProcessed) {
 			SaveIndices (mesh.triangles, idxName);
 		}
 
 		if (mesh.normals.Length > 0) {
-			string nmName = prefix + ".nm";
-			outFile.WriteLine (indent + "  <Normals Name=\"" + nmName + "\" LittleEndian=\"" + le + "\" />");
+            string nmName = mesh.name + ".nm";
+			outFile.WriteLine (indent + "  <Normals Name=\"" + nmName + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector3s (mesh.normals, nmName);
 			}
 		}
 
 		if (mesh.colors.Length > 0) {
-			string colName = prefix + ".col";
-			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\" LittleEndian=\"" + le + "\" />");
+            string colName = mesh.name + ".col";
+			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveColors (mesh.colors, colName);
 			}
 		}
 
 		if (mesh.uv.Length > 0) {
-			string uv0Name = prefix + ".uv0";
-			outFile.WriteLine (indent + "  <Uv0 Name=\"" + uv0Name + "\" LittleEndian=\"" + le + "\" />");
+            string uv0Name = mesh.name + ".uv0";
+			outFile.WriteLine (indent + "  <Uv0 Name=\"" + uv0Name + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector2s (mesh.uv, uv0Name, new Vector4 (1, 1, 0, 0));
 			}
 		}
 
 		if (mesh.uv2.Length > 0) {
-			string uv1Name = prefix + lightmapPostfix + ".uv1";
-			outFile.WriteLine (indent + "  <Uv1 Name=\"" + uv1Name + "\" LittleEndian=\"" + le + "\" />");
+            string uv1Name = meshName + lightmapPostfix + ".uv1";
+			outFile.WriteLine (indent + "  <Uv1 Name=\"" + uv1Name + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector2s (mesh.uv2, uv1Name, lightmapTilingOffset);
 			}
@@ -885,11 +897,15 @@ public class Unity3DExporter : EditorWindow
 		FileStream fileStream = new FileStream (mPath + "/" + name, FileMode.Create);
 		BinaryWriter binaryWriter = new BinaryWriter (fileStream);
 
-		for (int i = 0; i < vectors.Length; i++) {
-			binaryWriter.Write (-vectors [i].x);
-			binaryWriter.Write (vectors [i].y);
-			binaryWriter.Write (vectors [i].z);
-		}
+		for (int i = 0; i < vectors.Length; i++)
+        {
+            Vector3 vec = vectors[i];
+            vec.x = -vec.x;
+
+            WriteFloat(vec.x, binaryWriter);
+            WriteFloat(vec.y, binaryWriter);
+            WriteFloat(vec.z, binaryWriter);
+        }
 
 		binaryWriter.Close ();
 		fileStream.Close ();
@@ -907,10 +923,13 @@ public class Unity3DExporter : EditorWindow
 		Vector2 scale = new Vector2 (lightmapTilingOffset.x, lightmapTilingOffset.y);
 		Vector2 offset = new Vector2 (lightmapTilingOffset.z, lightmapTilingOffset.w);
 
-		for (int i = 0; i < vectors.Length; i++) {
+		for (int i = 0; i < vectors.Length; i++)
+        {
 			Vector2 uv = offset + new Vector2 (scale.x * vectors [i].x, scale.y * vectors [i].y);
-			binaryWriter.Write (uv.x);
-			binaryWriter.Write (1.0f - uv.y); // OpenGL vs DirectX convention
+            uv.y = 1.0f - uv.y; // OpenGL vs DirectX convention
+
+            WriteFloat(uv.x, binaryWriter);
+            WriteFloat(uv.y, binaryWriter);
 		}
 
 		binaryWriter.Close ();
@@ -926,18 +945,34 @@ public class Unity3DExporter : EditorWindow
 		FileStream fileStream = new FileStream (mPath + "/" + name, FileMode.Create);
 		BinaryWriter binaryWriter = new BinaryWriter (fileStream);
 
-		for (int i = 0; i < colors.Length; i++) {
-			binaryWriter.Write (colors [i].r);
-			binaryWriter.Write (colors [i].g);
-			binaryWriter.Write (colors [i].b);
-			binaryWriter.Write (colors [i].a);
+		for (int i = 0; i < colors.Length; i++)
+        {
+            WriteFloat(colors[i].r, binaryWriter);
+            WriteFloat(colors[i].g, binaryWriter);
+            WriteFloat(colors[i].b, binaryWriter);
+            WriteFloat(colors[i].a, binaryWriter);
 		}
 
 		binaryWriter.Close ();
 		fileStream.Close ();       
 	}
 
-	private void SaveIndices (int[] indices, string name)
+    private void WriteFloat(float f, BinaryWriter writer)
+    {
+        if ((BitConverter.IsLittleEndian && mWriteDataAsBigEndian) ||
+            (!BitConverter.IsLittleEndian && !mWriteDataAsBigEndian))
+        {
+            byte[] x = BitConverter.GetBytes(f);
+            Array.Reverse(x);
+            writer.Write(x);
+        }
+        else
+        {
+            writer.Write(f);
+        }
+    }
+
+    private void SaveIndices(int[] indices, string name)
 	{
 		if (mExportXmlOnly) {
 			return;
