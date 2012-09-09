@@ -839,7 +839,7 @@ public class Unity3DExporter : EditorWindow
             outFile.WriteLine (indent + "  </SubMeshes>");
         }
 
-		string le = mWriteDataAsBigEndian ? string.Empty : " LittleEndian=\"y\"";
+		string le = mWriteDataAsBigEndian ? string.Empty : " LittleEndian=\"1\"";
 
         string vtxName = mesh.name + ".vtx";
 		outFile.WriteLine (indent + "  <Vertices Name=\"" + vtxName + "\"" + le + " />");
@@ -847,10 +847,27 @@ public class Unity3DExporter : EditorWindow
 			SaveVector3s (mesh.vertices, vtxName);
 		}
 
+        bool is16Bit = true;
+        int[] triangles = mesh.triangles;
+        foreach (int i in triangles)
+        {
+            if (i > 65535)
+            {
+                is16Bit = false;
+                break;
+            }
+        }
+
+        if (!is16Bit)
+        {
+            Debug.LogError("Mesh '" + mesh.name + "' uses 32bit indices.");
+        }
+
+        string is16BitString = is16Bit ? " 16bit=\"1\"" : string.Empty;
         string idxName = mesh.name + ".idx";
-		outFile.WriteLine (indent + "  <Indices Name=\"" + idxName + "\" LittleEndian=\"y\" />");
+        outFile.WriteLine(indent + "  <Indices Name=\"" + idxName + "\"" + le + is16BitString + " />");
 		if (!alreadyProcessed) {
-			SaveIndices (mesh.triangles, idxName);
+            SaveIndices(mesh.triangles, idxName, is16Bit);
 		}
 
 		if (mesh.normals.Length > 0) {
@@ -972,7 +989,7 @@ public class Unity3DExporter : EditorWindow
         }
     }
 
-    private void SaveIndices(int[] indices, string name)
+    private void SaveIndices(int[] indices, string name, bool is16Bit)
 	{
 		if (mExportXmlOnly) {
 			return;
@@ -981,9 +998,41 @@ public class Unity3DExporter : EditorWindow
 		FileStream fileStream = new FileStream (mPath + "/" + name, FileMode.Create);
 		BinaryWriter binaryWriter = new BinaryWriter (fileStream);
 
-		for (int i = 0; i < indices.Length; i++) {
-			binaryWriter.Write (indices [i]);
-		}
+        if (is16Bit)
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                ushort s = (ushort)indices[i];
+                if ((BitConverter.IsLittleEndian && mWriteDataAsBigEndian) ||
+                    (!BitConverter.IsLittleEndian && !mWriteDataAsBigEndian))
+                {
+                    byte[] x = BitConverter.GetBytes(s);
+                    Array.Reverse(x);
+                    binaryWriter.Write(x);
+                }
+                else
+                {
+                    binaryWriter.Write(s);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if ((BitConverter.IsLittleEndian && mWriteDataAsBigEndian) ||
+                    (!BitConverter.IsLittleEndian && !mWriteDataAsBigEndian))
+                {
+                    byte[] x = BitConverter.GetBytes(indices[i]);
+                    Array.Reverse(x);
+                    binaryWriter.Write(x);
+                }
+                else
+                {
+                    binaryWriter.Write(indices[i]);
+                }
+            }
+        }
 
 		binaryWriter.Close ();
 		fileStream.Close ();
