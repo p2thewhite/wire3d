@@ -51,29 +51,47 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 }
 
 //----------------------------------------------------------------------------
-void Mesh::SetStartIndex(UInt startIndex)
+void Mesh::SetStartIndex(UInt startIndex, Bool updateModelBound)
 {
 	if (mStartIndex != startIndex)
 	{
 		mStartIndex = startIndex;
 		mIsDirty = true;
+
+		if (updateModelBound)
+		{
+			UpdateModelBound();
+		}
 	}
 }
 
 //----------------------------------------------------------------------------
-void Mesh::SetIndexCount(UInt indexCount)
+void Mesh::SetIndexCount(UInt indexCount, Bool updateModelBound)
 {
 	if (mIndexCount != indexCount)
 	{
 		mIndexCount = indexCount;
 		mIsDirty = true;
+
+		if (updateModelBound)
+		{
+			UpdateModelBound();
+		}
 	}
 }
 
 //----------------------------------------------------------------------------
 void Mesh::UpdateModelBound()
 {
-	mspModelBound->ComputeFrom(mspVertexBuffer);
+	if ((mStartIndex == 0) && (mIndexCount == mspIndexBuffer->GetQuantity()))
+	{
+		mspModelBound->ComputeFrom(mspVertexBuffer);
+	}
+	else
+	{
+		mspModelBound->ComputeFrom(mspVertexBuffer, mspIndexBuffer,
+			mStartIndex, mIndexCount);
+	}
 }
 
 //----------------------------------------------------------------------------

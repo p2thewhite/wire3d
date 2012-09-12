@@ -39,11 +39,11 @@ public:
 	virtual Float GetRadius() const = 0;
 
 	// Compute a bounding volume that contains all the points.
-	virtual void ComputeFrom(const VertexBuffer* pVBuffer) = 0;
+	virtual void ComputeFrom(const VertexBuffer* pVertexBuffer) = 0;
 
 	// Compute a bounding volume that contains only indexed points
-	virtual void ComputeFrom(const VertexBuffer* pVBuffer, const IndexBuffer*
-		pIndexBuffer, UInt startIndex, UInt indexCount) = 0;
+	virtual void ComputeFrom(const VertexBuffer* pVertexBuffer,	const
+		IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount) = 0;
 
 	// Transform the bounding volume (model-to-world conversion).
 	virtual void TransformBy(const Transformation& rTransform,

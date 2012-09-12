@@ -11,6 +11,7 @@
 #define WIREPDRRENDERERDATA_H
 
 #include "WireMatrix4.h"
+#include "WireTArray.h"
 #include <d3d9.h>
 
 namespace Wire
@@ -31,12 +32,71 @@ public:
 
 	Matrix4F ViewMatrix;
 
- 	static const DWORD ALPHA_SRC_BLEND[];
- 	static const DWORD ALPHA_DST_BLEND[];
- 	static const DWORD CULL_TYPE[];
- 	static const DWORD FOG_DENSITY[];
- 	static const DWORD ZBUFFER_COMPARE[];
- 	static const DWORD TEX_MIN_FILTER[];
+	struct StateAlpha
+	{
+		StateAlpha() : IsValid(false) {}
+		static const DWORD ALPHA_SRC_BLEND[];
+		static const DWORD ALPHA_DST_BLEND[];	
+		DWORD SRCBLEND;
+		DWORD DESTBLEND;
+		DWORD BLENDFACTOR;
+		DWORD ALPHABLENDENABLE;
+		Bool IsValid;
+	} AlphaState;
+
+	struct StateCull
+	{
+		StateCull() : IsValid(false) {}
+		static const DWORD CULL_TYPE[];
+		DWORD CULLMODE;
+		Bool IsValid;
+	} CullState;
+
+	struct StateFog
+	{
+		StateFog() : IsValid(false) {}
+		static const DWORD FOG_DENSITY[];
+		DWORD FOGENABLE;
+		DWORD FOGSTART;
+		DWORD FOGEND;
+		DWORD FOGCOLOR;
+		DWORD FOGDENSITY;
+		DWORD FOGVERTEXMODE;
+		Bool IsValid;
+	} FogState;
+
+	struct StateTextureStage
+	{
+		StateTextureStage() : IsValid(false) {}
+		DWORD COLOROP;
+		DWORD COLORARG0;
+		DWORD COLORARG1;
+		DWORD COLORARG2;
+		DWORD ALPHAOP;
+		DWORD ALPHAARG0;
+		DWORD ALPHAARG1;
+		DWORD ALPHAARG2;
+		Bool IsValid;
+	};
+	TArray<StateTextureStage> TextureStageStates;
+
+	struct StateWireframe
+	{
+		StateWireframe() : IsValid(false) {}
+		DWORD FILLMODE;
+		Bool IsValid;
+	} WireframeState;
+
+	struct StateZBuffer
+	{
+		StateZBuffer() : IsValid(false) {}
+		static const DWORD ZBUFFER_COMPARE[];
+		DWORD ZFUNC;
+		DWORD ZWRITEENABLE;
+		Bool IsValid;
+	} ZBufferState;
+
+	static const DWORD TEX_MIN_FILTER[];
  	static const DWORD TEX_MIP_FILTER[];
  	static const DWORD TEX_WRAP_MODE[];
 	static const DWORD TEX_BLEND[];

@@ -466,23 +466,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
 	if (Is("Assets", pXmlNode->name()))
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
-		{
-			for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-				pChild = pChild->next_sibling())
-			{
-				if (Is("Mesh", pChild->name()))
-				{
-					ParseMesh(pChild);
-				}
-				else if (Is("Material", pChild->name()))
-				{
-					ParseMaterial(pChild);
-				}
-			}
-		}
-
+		ParseAssets(pXmlNode);
 		return;
 	}
 
@@ -744,6 +728,35 @@ void Importer::UpdateGS(Spatial* pSpatial)
 	else
 	{
 		pSpatial->UpdateGS();
+	}
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
+{
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
+	{
+		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+			pChild = pChild->next_sibling())
+		{
+			if (Is("Meshes", pChild->name()))
+			{
+				for (rapidxml::xml_node<>* pMesh = pChild->first_node();
+					pMesh; pMesh = pMesh->next_sibling())
+				{
+					ParseMesh(pMesh);
+				}
+			}
+			else if (Is("Materials", pChild->name()))
+			{
+				for (rapidxml::xml_node<>* pMaterial = pChild->first_node();
+					pMaterial; pMaterial = pMaterial->next_sibling())
+				{
+					ParseMaterial(pMaterial);
+				}
+			}
+		}
 	}
 }
 
@@ -1434,12 +1447,15 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		return NULL;
 	}
 
-	TArray<MeshPtr>* pValue = mMeshes.Find(pName);
-	if (pValue)
+	if (mpOptions->AssetsWithEqualNamesAreIdentical)
 	{
-		WIRE_ASSERT(pValue);
-		WIRE_ASSERT(subMeshIndex < pValue->GetQuantity());
-		return (*pValue)[subMeshIndex];
+		TArray<MeshPtr>* pValue = mMeshes.Find(pName);
+		if (pValue)
+		{
+			WIRE_ASSERT(pValue);
+			WIRE_ASSERT(subMeshIndex < pValue->GetQuantity());
+			return (*pValue)[subMeshIndex];
+		}
 	}
 
 	Char* pVerticesFileName = NULL;
@@ -1553,7 +1569,7 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	if (mpOptions->MaterialsWithEqualNamesAreIdentical)
+	if (mpOptions->AssetsWithEqualNamesAreIdentical)
 	{
 		MaterialPtr* pValue = mMaterials.Find(pName);
 		if (pValue)
@@ -1646,11 +1662,14 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		return NULL;
 	}
 
-	Texture2DPtr* pValue = mTextures.Find(pName);
-	if (pValue)
+	if (mpOptions->AssetsWithEqualNamesAreIdentical)
 	{
-		WIRE_ASSERT(*pValue);
-		return *pValue;
+		Texture2DPtr* pValue = mTextures.Find(pName);
+		if (pValue)
+		{
+			WIRE_ASSERT(*pValue);
+			return *pValue;
+		}
 	}
 
 	UInt mipmapCount = 1;

@@ -12,7 +12,8 @@
 
 using namespace Wire;
 
-const DWORD PdrRendererData::FOG_DENSITY[StateFog::DF_QUANTITY] = 
+const DWORD PdrRendererData::StateFog::FOG_DENSITY[Wire::StateFog::
+	DF_QUANTITY] = 
 {
 	D3DFOG_LINEAR,  // StateFog::DF_LINEAR
 	D3DFOG_EXP,     // StateFog::DF_EXP
@@ -27,27 +28,74 @@ void Renderer::SetState(StateFog* pState)
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
+
+	PdrRendererData::StateFog& state = mpData->FogState;
+	if (!state.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_FOGENABLE, &state.FOGENABLE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_FOGSTART, &state.FOGSTART);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_FOGEND, &state.FOGEND);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_FOGCOLOR, &state.FOGCOLOR);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_FOGDENSITY, &state.FOGDENSITY);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_FOGVERTEXMODE, &state.
+			FOGVERTEXMODE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		state.IsValid = true;
+	}
+
 	if (pState->Enabled)
 	{
-		hr = rDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.FOGENABLE != TRUE)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGENABLE = TRUE;
+		}
 
-		hr = rDevice->SetRenderState(D3DRS_FOGSTART, *((DWORD*)(&pState->
-			Start)));
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD fogStart = *((DWORD*)(&pState->Start));
+		if (state.FOGSTART != fogStart)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGSTART, fogStart);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGSTART = fogStart;
+		}
 
-		hr = rDevice->SetRenderState(D3DRS_FOGEND, *((DWORD*)(&pState->End)));
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD fogEnd = *((DWORD*)(&pState->End));
+		if (state.FOGEND != fogEnd)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGEND, fogEnd);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGEND = fogEnd;
+		}
 
 		D3DCOLOR fogColor = D3DCOLOR_COLORVALUE(pState->Color.R(),
 			pState->Color.G(), pState->Color.B(), 1.0F);
-		hr = rDevice->SetRenderState(D3DRS_FOGCOLOR, fogColor);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.FOGCOLOR != fogColor)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGCOLOR, fogColor);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGCOLOR = fogColor;
+		}
 
 		Float density = 1.0F;
-		hr = rDevice->SetRenderState(D3DRS_FOGDENSITY,
-			*((DWORD*)(&density)));
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD dDensity = *((DWORD*)(&density));
+		if (state.FOGDENSITY != dDensity)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGDENSITY, dDensity);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGDENSITY = dDensity;
+		}
 
 //		if (pState->ApplyFunction == StateFog::AF_PER_PIXEL)
 // 		{
@@ -57,14 +105,24 @@ void Renderer::SetState(StateFog* pState)
 // 		}
 // 		else
 // 		{
-			hr = rDevice->SetRenderState(D3DRS_FOGVERTEXMODE,
-				PdrRendererData::FOG_DENSITY[pState->DensityFunc]);    
-			WIRE_ASSERT(SUCCEEDED(hr));
+			DWORD densityFunc = PdrRendererData::StateFog::FOG_DENSITY[
+				pState->DensityFunc];
+			if (state.FOGVERTEXMODE != densityFunc)
+			{
+				hr = rDevice->SetRenderState(D3DRS_FOGVERTEXMODE,
+					densityFunc);    
+				WIRE_ASSERT(SUCCEEDED(hr));
+				state.FOGVERTEXMODE = densityFunc;
+			}
 // 		}
 	}
 	else
 	{
-		hr = rDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.FOGENABLE != FALSE)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FOGENABLE = FALSE;
+		}
 	}   
 }
