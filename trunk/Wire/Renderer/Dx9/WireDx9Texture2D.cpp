@@ -23,7 +23,8 @@ const D3DFORMAT PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_QUANTITY] =
 	D3DFMT_A4R4G4B4,	// Image2D::FM_RGBA4444
 };
 
-const DWORD PdrRendererData::TEX_MIN_FILTER[Texture2D::FT_QUANTITY] =
+const DWORD PdrRendererData::StateSampler::TEX_MIN_FILTER[Texture2D::
+	FT_QUANTITY] =
 {
 	D3DTEXF_POINT,  // Texture2D::FT_NEAREST
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR
@@ -33,7 +34,8 @@ const DWORD PdrRendererData::TEX_MIN_FILTER[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-const DWORD PdrRendererData::TEX_MIP_FILTER[Texture2D::FT_QUANTITY] =
+const DWORD PdrRendererData::StateSampler::TEX_MIP_FILTER[Texture2D::
+	FT_QUANTITY] =
 {
 	D3DTEXF_NONE,   // Texture2D::FT_NEAREST
 	D3DTEXF_NONE,   // Texture2D::FT_LINEAR
@@ -43,7 +45,8 @@ const DWORD PdrRendererData::TEX_MIP_FILTER[Texture2D::FT_QUANTITY] =
 	D3DTEXF_LINEAR, // Texture2D::FT_LINEAR_LINEAR
 };
 
-const DWORD PdrRendererData::TEX_WRAP_MODE[Texture2D::WT_QUANTITY] =
+const DWORD PdrRendererData::StateSampler::TEX_WRAP_MODE[Texture2D::
+	WT_QUANTITY] =
 {
 	D3DTADDRESS_CLAMP,      // Texture2D::WT_CLAMP
 	D3DTADDRESS_WRAP,       // Texture2D::WT_REPEAT
@@ -210,32 +213,85 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 		anisotropy = 1.0F;
 	}
 
-	hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
-		static_cast<DWORD>(anisotropy));
-	WIRE_ASSERT(SUCCEEDED(hr));
+	PdrRendererData::StateSampler& rState = pRenderer->GetRendererData()->
+		SamplerStates[unit];
+
+	if (!rState.IsValid)
+	{
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_MAXANISOTROPY, &rState.
+			MAXANISOTROPY);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_MAGFILTER, &rState.
+			MAGFILTER);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_MINFILTER, &rState.
+			MINFILTER);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_MIPFILTER, &rState.
+			MIPFILTER);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_BORDERCOLOR, &rState.
+			BORDERCOLOR);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_ADDRESSU, &rState.
+			ADDRESSU);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetSamplerState(unit, D3DSAMP_ADDRESSV, &rState.
+			ADDRESSV);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		rState.IsValid = true;
+	}
+
+	DWORD dAnisotropy = static_cast<DWORD>(anisotropy);
+	if (rState.MAXANISOTROPY != dAnisotropy)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY,
+			dAnisotropy);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.MAXANISOTROPY = dAnisotropy;
+	}
 
 	// Set the filter mode.
 	Texture2D::FilterType filterType = pTexture->GetFilterType();
 	if (filterType == Texture2D::FT_NEAREST)
 	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
-			D3DTEXF_POINT);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (rState.MAGFILTER != D3DTEXF_POINT)
+		{
+			hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+				D3DTEXF_POINT);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			rState.MAGFILTER = D3DTEXF_POINT;
+		}
 	}
 	else
 	{
 		if (pData->SupportsMagFAniso && (1.0F < anisotropy &&
 			anisotropy <= pRenderer->GetMaxAnisotropy()))
 		{
-			hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
-				D3DTEXF_ANISOTROPIC);
-			WIRE_ASSERT(SUCCEEDED(hr));
+			if (rState.MAGFILTER != D3DTEXF_ANISOTROPIC)
+			{
+				hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+					D3DTEXF_ANISOTROPIC);
+				WIRE_ASSERT(SUCCEEDED(hr));
+				rState.MAGFILTER = D3DTEXF_ANISOTROPIC;
+			}
 		}
 		else
 		{
-			hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
-				D3DTEXF_LINEAR);
-			WIRE_ASSERT(SUCCEEDED(hr));
+			if (rState.MAGFILTER != D3DTEXF_LINEAR)
+			{
+				hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER,
+					D3DTEXF_LINEAR);
+				WIRE_ASSERT(SUCCEEDED(hr));
+				rState.MAGFILTER = D3DTEXF_LINEAR;
+			}
 		}
 	}
 
@@ -243,34 +299,63 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 	if (pData->SupportsMinFAniso && (1.0F < anisotropy &&
 		anisotropy <= pRenderer->GetMaxAnisotropy()))
 	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
-			D3DTEXF_ANISOTROPIC);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (rState.MINFILTER != D3DTEXF_ANISOTROPIC)
+		{
+			hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
+				D3DTEXF_ANISOTROPIC);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			rState.MINFILTER = D3DTEXF_ANISOTROPIC;
+		}
 	}
 	else
 	{
-		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER,
-			PdrRendererData::TEX_MIN_FILTER[filterType]);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD minFilter = PdrRendererData::StateSampler::TEX_MIN_FILTER[
+			filterType];
+		if (rState.MINFILTER != minFilter)
+		{
+			hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER, minFilter);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			rState.MINFILTER = minFilter;
+		}
 	}
 
-	hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER,
-		PdrRendererData::TEX_MIP_FILTER[filterType]);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	DWORD mipFilter = PdrRendererData::StateSampler::TEX_MIP_FILTER[
+		filterType];
+	if (rState.MIPFILTER != mipFilter)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER, mipFilter);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.MIPFILTER = mipFilter;
+	}
 
 	// Set the border color (for clamp to border).
 	const ColorRGBA borderColor(ColorRGBA::BLACK); //pTexture->GetBorderColor();
-	hr = rDevice->SetSamplerState(unit, D3DSAMP_BORDERCOLOR,
-		D3DCOLOR_COLORVALUE(borderColor.R(), borderColor.G(), borderColor.B(),
-		borderColor.A()));
-	WIRE_ASSERT(SUCCEEDED(hr));
+	DWORD dColor = D3DCOLOR_COLORVALUE(borderColor.R(), borderColor.G(),
+		borderColor.B(), borderColor.A());
+	if (rState.BORDERCOLOR != dColor)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_BORDERCOLOR, dColor);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.BORDERCOLOR = dColor;
+	}
 
-	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU,
-		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)]);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV,
-		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)]);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	DWORD uWrap = PdrRendererData::StateSampler::TEX_WRAP_MODE[pTexture->
+		GetWrapType(0)];
+	if (rState.ADDRESSU != uWrap)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU, uWrap);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.ADDRESSU = uWrap;
+	}
+
+	DWORD vWrap = PdrRendererData::StateSampler::TEX_WRAP_MODE[pTexture->
+		GetWrapType(1)];
+	if (rState.ADDRESSV != vWrap)
+	{
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV, vWrap);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.ADDRESSV = vWrap;
+	}
 
 	hr = rDevice->SetTexture(unit, mpBuffer);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -281,8 +366,24 @@ void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	WIRE_ASSERT(SUCCEEDED(hr));
+
+	// TODO: move TextureStageState disabling where suitable
+	PdrRendererData::StateTextureStage& rState = pRenderer->GetRendererData()->
+		TextureStageStates[unit];
+	if (!rState.IsValid)
+	{
+		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLOROP, &rState.
+			COLOROP);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+
+	if (rState.COLOROP != D3DTOP_DISABLE)
+	{
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP,
+			D3DTOP_DISABLE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.COLOROP = D3DTOP_DISABLE;
+	}
 
 	hr = rDevice->SetTexture(unit, 0);
 	WIRE_ASSERT(SUCCEEDED(hr));

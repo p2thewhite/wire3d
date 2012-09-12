@@ -65,9 +65,35 @@ public:
 		Bool IsValid;
 	} FogState;
 
+	struct StateLight
+	{
+		StateLight() : IsValid(false) {}
+		DWORD AMBIENT;
+		DWORD LIGHTING;
+		Bool IsValid;
+	} LightState;
+
+	struct StateSampler
+	{
+		StateSampler() : IsValid(false) {}
+		static const DWORD TEX_MIN_FILTER[];
+		static const DWORD TEX_MIP_FILTER[];
+		static const DWORD TEX_WRAP_MODE[];
+		DWORD MAXANISOTROPY;
+		DWORD MAGFILTER;
+		DWORD MINFILTER;
+		DWORD MIPFILTER;
+		DWORD BORDERCOLOR;
+		DWORD ADDRESSU;
+		DWORD ADDRESSV;
+		Bool IsValid;
+	};
+	TArray<StateSampler> SamplerStates;
+
 	struct StateTextureStage
 	{
 		StateTextureStage() : IsValid(false) {}
+		static const DWORD TEX_BLEND[];
 		DWORD COLOROP;
 		DWORD COLORARG0;
 		DWORD COLORARG1;
@@ -96,11 +122,7 @@ public:
 		Bool IsValid;
 	} ZBufferState;
 
-	static const DWORD TEX_MIN_FILTER[];
- 	static const DWORD TEX_MIP_FILTER[];
- 	static const DWORD TEX_WRAP_MODE[];
-	static const DWORD TEX_BLEND[];
- 	static const D3DFORMAT IMAGE2D_FORMAT[];
+	static const D3DFORMAT IMAGE2D_FORMAT[];
 	static const DWORD BUFFER_LOCKING[];
 	static const D3DPOOL POOLS[];
 	static const DWORD USAGES[];

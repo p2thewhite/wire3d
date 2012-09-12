@@ -103,12 +103,35 @@ void Renderer::EnableLighting(const ColorRGB& rAmbient)
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
+	PdrRendererData::StateLight& rState = mpData->LightState;
+	if (!rState.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_AMBIENT, &rState.AMBIENT);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_LIGHTING, &rState.LIGHTING);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		rState.IsValid = true;
+	}
+
 	DWORD ambientColor = D3DCOLOR_COLORVALUE(rAmbient.R(), rAmbient.G(),
 		rAmbient.B(), 1.0F);
-	rDevice->SetRenderState(D3DRS_AMBIENT, ambientColor);
 
-	hr = rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	if (rState.AMBIENT != ambientColor)
+	{
+		hr = rDevice->SetRenderState(D3DRS_AMBIENT, ambientColor);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.AMBIENT = ambientColor;
+	}
+
+	if (rState.LIGHTING != TRUE)
+	{
+		hr = rDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.LIGHTING = TRUE;
+	}
+
 // 	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
 // 	WIRE_ASSERT(SUCCEEDED(hr));
 }
@@ -119,8 +142,25 @@ void Renderer::DisableLighting()
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
-	hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	PdrRendererData::StateLight& rState = mpData->LightState;
+	if (!rState.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_AMBIENT, &rState.AMBIENT);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_LIGHTING, &rState.LIGHTING);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		rState.IsValid = true;
+	}
+
+	if (rState.LIGHTING != FALSE)
+	{
+		hr = rDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.LIGHTING = FALSE;
+	}
+
 // 	hr = rDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
 // 	WIRE_ASSERT(SUCCEEDED(hr));
 }

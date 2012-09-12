@@ -34,17 +34,18 @@ void Renderer::SetState(StateZBuffer* pState)
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
-	PdrRendererData::StateZBuffer& state = mpData->ZBufferState;
+	PdrRendererData::StateZBuffer& rState = mpData->ZBufferState;
 
-	if (!state.IsValid)
+	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_ZFUNC, &state.ZFUNC);
+		hr = rDevice->GetRenderState(D3DRS_ZFUNC, &rState.ZFUNC);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_ZWRITEENABLE, &state.ZWRITEENABLE);
+		hr = rDevice->GetRenderState(D3DRS_ZWRITEENABLE, &rState.
+			ZWRITEENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		state.IsValid = true;
+		rState.IsValid = true;
 	}
 
 	if (pState->Enabled)
@@ -52,39 +53,39 @@ void Renderer::SetState(StateZBuffer* pState)
 		DWORD zFunc = PdrRendererData::StateZBuffer::ZBUFFER_COMPARE[
 			pState->Compare];
 
-		if (state.ZFUNC != zFunc)
+		if (rState.ZFUNC != zFunc)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ZFUNC, zFunc);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ZFUNC = zFunc;
+			rState.ZFUNC = zFunc;
 		}
 	}
 	else
 	{
-		if (state.ZFUNC != D3DCMP_ALWAYS)
+		if (rState.ZFUNC != D3DCMP_ALWAYS)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ZFUNC = D3DCMP_ALWAYS;
+			rState.ZFUNC = D3DCMP_ALWAYS;
 		}
 	}
 
 	if (pState->Writable)
 	{
-		if (state.ZWRITEENABLE != TRUE)
+		if (rState.ZWRITEENABLE != TRUE)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ZWRITEENABLE = TRUE;
+			rState.ZWRITEENABLE = TRUE;
 		}
 	}
 	else
 	{
-		if (state.ZWRITEENABLE != FALSE)
+		if (rState.ZWRITEENABLE != FALSE)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ZWRITEENABLE = FALSE;
+			rState.ZWRITEENABLE = FALSE;
 		}
 	}
 }
