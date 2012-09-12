@@ -47,68 +47,68 @@ void Renderer::SetState(StateAlpha* pState)
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
-	PdrRendererData::StateAlpha& state = mpData->AlphaState;
+	PdrRendererData::StateAlpha& rState = mpData->AlphaState;
 
-	if (!state.IsValid)
+	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &state.
+		hr = rDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &rState.
 			ALPHABLENDENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_SRCBLEND, &state.SRCBLEND);
+		hr = rDevice->GetRenderState(D3DRS_SRCBLEND, &rState.SRCBLEND);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_DESTBLEND, &state.DESTBLEND);
+		hr = rDevice->GetRenderState(D3DRS_DESTBLEND, &rState.DESTBLEND);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_BLENDFACTOR, &state.
+		hr = rDevice->GetRenderState(D3DRS_BLENDFACTOR, &rState.
 			ALPHABLENDENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		state.IsValid = true;
+		rState.IsValid = true;
 	}
 
 	if (pState->BlendEnabled)
 	{
-		if (state.ALPHABLENDENABLE != TRUE)
+		if (rState.ALPHABLENDENABLE != TRUE)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ALPHABLENDENABLE = TRUE;
+			rState.ALPHABLENDENABLE = TRUE;
 		}
 
 		DWORD srcBlend = PdrRendererData::StateAlpha::ALPHA_SRC_BLEND[
 			pState->SrcBlend];
-		if (state.SRCBLEND != srcBlend)
+		if (rState.SRCBLEND != srcBlend)
 		{
 			hr = rDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.SRCBLEND = srcBlend;
+			rState.SRCBLEND = srcBlend;
 		}
 
 		DWORD dstBlend = PdrRendererData::StateAlpha::ALPHA_DST_BLEND[
 			pState->DstBlend];
-		if (state.DESTBLEND != dstBlend)
+		if (rState.DESTBLEND != dstBlend)
 		{
 			hr = rDevice->SetRenderState(D3DRS_DESTBLEND, dstBlend);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.DESTBLEND = dstBlend;
+			rState.DESTBLEND = dstBlend;
 		}
 
-		if (state.BLENDFACTOR != 0)
+		if (rState.BLENDFACTOR != 0)
 		{
 			hr = rDevice->SetRenderState(D3DRS_BLENDFACTOR, 0);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.BLENDFACTOR = 0;
+			rState.BLENDFACTOR = 0;
 		}
 	}
 	else
 	{
-		if (state.ALPHABLENDENABLE != FALSE)
+		if (rState.ALPHABLENDENABLE != FALSE)
 		{
 			hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.ALPHABLENDENABLE = FALSE;
+			rState.ALPHABLENDENABLE = FALSE;
 		}
 	}
 }

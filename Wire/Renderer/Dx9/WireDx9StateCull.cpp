@@ -29,34 +29,34 @@ void Renderer::SetState(StateCull* pState)
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
 
-	PdrRendererData::StateCull& state = mpData->CullState;
+	PdrRendererData::StateCull& rState = mpData->CullState;
 
-	if (!state.IsValid)
+	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_CULLMODE, &state.CULLMODE);
+		hr = rDevice->GetRenderState(D3DRS_CULLMODE, &rState.CULLMODE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		state.IsValid = true;
+		rState.IsValid = true;
 	}
 
 	if (pState->Enabled)
 	{
 		DWORD cullMode = PdrRendererData::StateCull::CULL_TYPE[pState->
 			CullFace];
-		if (state.CULLMODE != cullMode)
+		if (rState.CULLMODE != cullMode)
 		{
 			hr = rDevice->SetRenderState(D3DRS_CULLMODE, cullMode);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.CULLMODE = cullMode;
+			rState.CULLMODE = cullMode;
 		}
 	}
 	else
 	{
-		if (state.CULLMODE != D3DCULL_NONE)
+		if (rState.CULLMODE != D3DCULL_NONE)
 		{
 			hr = rDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 			WIRE_ASSERT(SUCCEEDED(hr));
-			state.CULLMODE = D3DCULL_NONE;
+			rState.CULLMODE = D3DCULL_NONE;
 		}
 	}
 }
