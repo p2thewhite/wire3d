@@ -42,25 +42,25 @@ SphereBV::~SphereBV()
 
 
 //----------------------------------------------------------------------------
-void SphereBV::ComputeFrom(const VertexBuffer* pVBuffer)
+void SphereBV::ComputeFrom(const VertexBuffer* pVertexBuffer)
 {
-	if (pVBuffer)
+	if (pVertexBuffer)
 	{
-		UInt quantity = pVBuffer->GetQuantity();
+		UInt quantity = pVertexBuffer->GetQuantity();
 
 		mSphere.Center = Vector3F::ZERO;
 		mSphere.Radius = 0.0F;
 
 		for (UInt i = 0; i < quantity; i++)
 		{
-			mSphere.Center += pVBuffer->Position3(i);
+			mSphere.Center += pVertexBuffer->Position3(i);
 		}
 
 		mSphere.Center /= static_cast<Float>(quantity);
 
 		for (UInt i = 0; i < quantity; i++)
 		{
-			Vector3F diff = pVBuffer->Position3(i) - mSphere.Center;
+			Vector3F diff = pVertexBuffer->Position3(i) - mSphere.Center;
 			Float radiusSqr = diff.SquaredLength();
 			if (radiusSqr > mSphere.Radius)
 			{
@@ -73,33 +73,56 @@ void SphereBV::ComputeFrom(const VertexBuffer* pVBuffer)
 }
 
 //----------------------------------------------------------------------------
-void SphereBV::ComputeFrom(const VertexBuffer* pVBuffer, const IndexBuffer*
-	pIndexBuffer, UInt startIndex, UInt indexCount)
+void SphereBV::ComputeFrom(const VertexBuffer* pVertexBuffer,
+	const IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount)
 {
-	WIRE_ASSERT((startIndex + indexCount) < pIndexBuffer->GetQuantity());
+	WIRE_ASSERT((startIndex + indexCount) <= pIndexBuffer->GetQuantity());
 
-	if (pVBuffer && pIndexBuffer && indexCount > 0)
+	if (pVertexBuffer && pIndexBuffer && indexCount > 0)
 	{
-		// TODO: use indices
-		UInt quantity = pVBuffer->GetQuantity();
+		UInt quantity = pVertexBuffer->GetQuantity();
+
+		TArray<Bool> vertexUsed(quantity);
+		vertexUsed.SetQuantity(quantity);
+		for (UInt i = 0; i < quantity; i++)
+		{
+			vertexUsed[i] = false;
+		}
+
+		const IndexBuffer& rIndexBuffer = *pIndexBuffer;
+		const UInt lastIndex = startIndex+indexCount;
+		for (UInt i = startIndex; i < lastIndex; i++)
+		{
+			UShort j = rIndexBuffer[i];
+			vertexUsed[j] = true;
+		}
+
 
 		mSphere.Center = Vector3F::ZERO;
 		mSphere.Radius = 0.0F;
 
+		UInt usedQuantity = 0;
 		for (UInt i = 0; i < quantity; i++)
 		{
-			mSphere.Center += pVBuffer->Position3(i);
+			if (vertexUsed[i])
+			{
+				usedQuantity++;
+				mSphere.Center += pVertexBuffer->Position3(i);
+			}
 		}
 
-		mSphere.Center /= static_cast<Float>(quantity);
+		mSphere.Center /= static_cast<Float>(usedQuantity);
 
 		for (UInt i = 0; i < quantity; i++)
 		{
-			Vector3F diff = pVBuffer->Position3(i) - mSphere.Center;
-			Float radiusSqr = diff.SquaredLength();
-			if (radiusSqr > mSphere.Radius)
+			if (vertexUsed[i])
 			{
-				mSphere.Radius = radiusSqr;
+				Vector3F diff = pVertexBuffer->Position3(i) - mSphere.Center;
+				Float radiusSqr = diff.SquaredLength();
+				if (radiusSqr > mSphere.Radius)
+				{
+					mSphere.Radius = radiusSqr;
+				}
 			}
 		}
 

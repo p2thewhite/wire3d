@@ -20,14 +20,33 @@ void Renderer::SetState(StateWireframe* pState)
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
+
+	PdrRendererData::StateWireframe& state = mpData->WireframeState;
+
+	if (!state.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_FILLMODE, &state.FILLMODE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		state.IsValid = true;
+	}
+
     if (pState->Enabled)
     {
-        hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
-        WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.FILLMODE != D3DFILL_WIREFRAME)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FILLMODE = D3DFILL_WIREFRAME;
+		}
     }
     else
     {
-        hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-        WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.FILLMODE != D3DFILL_SOLID)
+		{
+			hr = rDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.FILLMODE = D3DFILL_SOLID;
+		}
     }
 }

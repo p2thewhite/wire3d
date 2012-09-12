@@ -12,7 +12,8 @@
 
 using namespace Wire;
 
-const DWORD PdrRendererData::ALPHA_SRC_BLEND[StateAlpha::SBM_QUANTITY] =
+const DWORD PdrRendererData::StateAlpha::ALPHA_SRC_BLEND[Wire::StateAlpha::
+	SBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // StateAlpha::SBM_ZERO
 	D3DBLEND_ONE,           // StateAlpha::SBM_ONE
@@ -24,7 +25,8 @@ const DWORD PdrRendererData::ALPHA_SRC_BLEND[StateAlpha::SBM_QUANTITY] =
 	D3DBLEND_INVDESTALPHA,  // StateAlpha::SBM_ONE_MINUS_DST_ALPHA
 };
 
-const DWORD PdrRendererData::ALPHA_DST_BLEND[StateAlpha::DBM_QUANTITY] =
+const DWORD PdrRendererData::StateAlpha::ALPHA_DST_BLEND[Wire::StateAlpha::
+	DBM_QUANTITY] =
 {
 	D3DBLEND_ZERO,          // StateAlpha::DBM_ZERO
 	D3DBLEND_ONE,           // StateAlpha::DBM_ONE
@@ -44,24 +46,69 @@ void Renderer::SetState(StateAlpha* pState)
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
+
+	PdrRendererData::StateAlpha& state = mpData->AlphaState;
+
+	if (!state.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &state.
+			ALPHABLENDENABLE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_SRCBLEND, &state.SRCBLEND);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_DESTBLEND, &state.DESTBLEND);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		hr = rDevice->GetRenderState(D3DRS_BLENDFACTOR, &state.
+			ALPHABLENDENABLE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		state.IsValid = true;
+	}
+
 	if (pState->BlendEnabled)
 	{
-		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.ALPHABLENDENABLE != TRUE)
+		{
+			hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.ALPHABLENDENABLE = TRUE;
+		}
 
-		DWORD srcBlend = PdrRendererData::ALPHA_SRC_BLEND[pState->SrcBlend];
-		DWORD dstBlend = PdrRendererData::ALPHA_DST_BLEND[pState->DstBlend];
+		DWORD srcBlend = PdrRendererData::StateAlpha::ALPHA_SRC_BLEND[
+			pState->SrcBlend];
+		if (state.SRCBLEND != srcBlend)
+		{
+			hr = rDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.SRCBLEND = srcBlend;
+		}
 
-		hr = rDevice->SetRenderState(D3DRS_SRCBLEND, srcBlend);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		hr = rDevice->SetRenderState(D3DRS_DESTBLEND, dstBlend);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		hr = rDevice->SetRenderState(D3DRS_BLENDFACTOR, 0);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD dstBlend = PdrRendererData::StateAlpha::ALPHA_DST_BLEND[
+			pState->DstBlend];
+		if (state.DESTBLEND != dstBlend)
+		{
+			hr = rDevice->SetRenderState(D3DRS_DESTBLEND, dstBlend);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.DESTBLEND = dstBlend;
+		}
+
+		if (state.BLENDFACTOR != 0)
+		{
+			hr = rDevice->SetRenderState(D3DRS_BLENDFACTOR, 0);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.BLENDFACTOR = 0;
+		}
 	}
 	else
 	{
-		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.ALPHABLENDENABLE != FALSE)
+		{
+			hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.ALPHABLENDENABLE = FALSE;
+		}
 	}
 }

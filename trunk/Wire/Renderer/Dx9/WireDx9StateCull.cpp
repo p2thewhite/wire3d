@@ -12,7 +12,8 @@
 
 using namespace Wire;
 
-const DWORD PdrRendererData::CULL_TYPE[StateCull::CM_QUANTITY] = 
+const DWORD PdrRendererData::StateCull::CULL_TYPE[Wire::StateCull::
+	CM_QUANTITY] = 
 {
 	D3DCULL_NONE,
 	D3DCULL_CCW,  // StateCull::CM_FRONT(front CCW -> cull backface CCW in DX)
@@ -27,15 +28,35 @@ void Renderer::SetState(StateCull* pState)
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
+
+	PdrRendererData::StateCull& state = mpData->CullState;
+
+	if (!state.IsValid)
+	{
+		hr = rDevice->GetRenderState(D3DRS_CULLMODE, &state.CULLMODE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+
+		state.IsValid = true;
+	}
+
 	if (pState->Enabled)
 	{
-		hr = rDevice->SetRenderState(D3DRS_CULLMODE,
-			PdrRendererData::CULL_TYPE[pState->CullFace]);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		DWORD cullMode = PdrRendererData::StateCull::CULL_TYPE[pState->
+			CullFace];
+		if (state.CULLMODE != cullMode)
+		{
+			hr = rDevice->SetRenderState(D3DRS_CULLMODE, cullMode);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.CULLMODE = cullMode;
+		}
 	}
 	else
 	{
-		hr = rDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		WIRE_ASSERT(SUCCEEDED(hr));
+		if (state.CULLMODE != D3DCULL_NONE)
+		{
+			hr = rDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+			WIRE_ASSERT(SUCCEEDED(hr));
+			state.CULLMODE = D3DCULL_NONE;
+		}
 	}
 }

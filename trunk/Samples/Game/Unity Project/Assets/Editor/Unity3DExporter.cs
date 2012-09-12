@@ -14,7 +14,7 @@ public class Unity3DExporter : EditorWindow
 	private bool mExportStateMaterial = true;
 	private bool mDontGenerateMipmapsForLightmaps = true;
 	private bool mDiscardTexturesOnBind = true;
-    private bool mWriteDataAsBigEndian;
+    private bool mWriteDataAsBigEndian = true;
 	private string m2ndTextureName;
 	private string mPath = "../Data/Scene";
 
@@ -31,7 +31,6 @@ public class Unity3DExporter : EditorWindow
     private Dictionary<string, int> mMaterialNameToCount;
    
     private float mSkyboxScale = 120.0f;
-    private bool mWriteNamesOnly;
 
 	private struct Statistics
 	{
@@ -428,9 +427,7 @@ public class Unity3DExporter : EditorWindow
         
 		StreamWriter outFile = new StreamWriter (mPath + unitySceneName + ".xml");
 		try {
-            mWriteNamesOnly = false;
-//             WriteAssets(outFile);
-//             mWriteNamesOnly = true;
+            WriteAssets(outFile);
 
             GameObject root = new GameObject ("Root");
 			outFile.WriteLine ("<Node Name=\"" + root.name + "\" " + GetTransformAsString (root.transform) + ">");
@@ -465,10 +462,15 @@ public class Unity3DExporter : EditorWindow
     private void WriteAssets(StreamWriter outFile)
     {
         outFile.WriteLine("<Assets>");
-        string indent = "  ";
 
+        string indent = "    ";
+        outFile.WriteLine("  <Meshes>");
         WriteAssets(outFile, indent, true, false);
+        outFile.WriteLine("  </Meshes>");
+
+        outFile.WriteLine("  <Materials>");
         WriteAssets(outFile, indent, false, true);
+        outFile.WriteLine("  </Materials>");
 
         outFile.WriteLine("</Assets>");
     }
@@ -500,12 +502,23 @@ public class Unity3DExporter : EditorWindow
 
                 if (writeMeshes)
                 {
-                    WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent);
+                    string meshAssetName = GetMeshAssetName(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset);
+                    if (!mMeshAssetsProcessed.Contains(meshAssetName))
+                    {
+                        WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent);
+                    }
                 }
 
                 if (writeMaterials)
                 {
-                    WriteMaterial(meshRenderer, meshRenderer.sharedMaterial, outFile, indent);
+                    foreach (Material material in meshRenderer.sharedMaterials)
+                    {
+                        string materialAssetName = GetMaterialAssetName(material, meshRenderer);
+                        if (!mMaterialAssetsProcessed.Contains(materialAssetName))
+                        {
+                            WriteMaterial(meshRenderer, material, outFile, indent);
+                        }
+                    }
                 }
             }
         }
@@ -601,19 +614,30 @@ public class Unity3DExporter : EditorWindow
             camera.nearClipPlane + "\" Far=\"" + camera.farClipPlane + "\" />");
 	}
 
-	private void WriteMaterial (MeshRenderer meshRenderer, Material material, StreamWriter outFile, string indent)
+    private string GetMaterialName(Material material, MeshRenderer meshRenderer)
+    {
+        string lightMapIndex = string.Empty;
+        if (meshRenderer.lightmapIndex != -1)
+        {
+            lightMapIndex = "_" + meshRenderer.lightmapIndex;
+        }
+
+        return material.name + lightMapIndex;
+    }
+
+    private string GetMaterialAssetName(Material material, MeshRenderer meshRenderer)
+    {
+        return GetMaterialName(material, meshRenderer) + "_" + material.GetInstanceID().ToString("X8");
+    }
+
+    private void WriteMaterial (MeshRenderer meshRenderer, Material material, StreamWriter outFile, string indent)
 	{
 		if (material == null) {
 			return;
 		}
 
-		string lightMapIndex = string.Empty;
-		if (meshRenderer.lightmapIndex != -1) {
-			lightMapIndex = "_" + meshRenderer.lightmapIndex;
-		}
-
-        string materialName = material.name + lightMapIndex;
-        string materialAssetName = materialName + "_" + material.GetInstanceID().ToString("X8");
+        string materialName = GetMaterialName(material, meshRenderer);
+        string materialAssetName = GetMaterialAssetName(material, meshRenderer);
         bool alreadyProcessed = true;
         if (!mMaterialAssetsProcessed.Contains(materialAssetName))
         {
@@ -624,7 +648,7 @@ public class Unity3DExporter : EditorWindow
 
         materialName = mMaterialAssetNameToMaterialName[materialAssetName];
 
-        if (mWriteNamesOnly || alreadyProcessed)
+        if (alreadyProcessed)
         {
             outFile.WriteLine(indent + "<Material Name=\"" + materialName + "\" />");
             return;
@@ -793,17 +817,22 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
+    private string GetMeshAssetName(Mesh mesh, Vector4 lightmapTilingOffset)
+    {
+        string lightmapPostfix = "_" + lightmapTilingOffset.x + "_" + lightmapTilingOffset.y + "_" +
+            lightmapTilingOffset.z + "_" + lightmapTilingOffset.w;
+
+        return mesh.name + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
+    }
+
 	private void WriteMesh (Mesh mesh, Vector4 lightmapTilingOffset, StreamWriter outFile, string indent)
 	{
 		if (mesh == null) {
 			return;
 		}
 
-		string lightmapPostfix = "_" + lightmapTilingOffset.x + "_" + lightmapTilingOffset.y +
-            "_" + lightmapTilingOffset.z + "_" + lightmapTilingOffset.w;
-
         string meshName = mesh.name;
-        string meshAssetName = meshName + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
+        string meshAssetName = GetMeshAssetName(mesh, lightmapTilingOffset);
 		bool alreadyProcessed = true;
         if (!mMeshAssetsProcessed.Contains(meshAssetName))
         {
@@ -814,7 +843,7 @@ public class Unity3DExporter : EditorWindow
 
         meshName = mMeshAssetNameToMeshName[meshAssetName];
 
-        if (mWriteNamesOnly || alreadyProcessed)
+        if (alreadyProcessed)
         {
             outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\" />");
             return;
@@ -841,7 +870,7 @@ public class Unity3DExporter : EditorWindow
 
 		string le = mWriteDataAsBigEndian ? string.Empty : " LittleEndian=\"1\"";
 
-        string vtxName = mesh.name + ".vtx";
+        string vtxName = meshName + ".vtx";
 		outFile.WriteLine (indent + "  <Vertices Name=\"" + vtxName + "\"" + le + " />");
 		if (!alreadyProcessed) {
 			SaveVector3s (mesh.vertices, vtxName);
@@ -864,14 +893,14 @@ public class Unity3DExporter : EditorWindow
         }
 
         string is16BitString = is16Bit ? " 16bit=\"1\"" : string.Empty;
-        string idxName = mesh.name + ".idx";
+        string idxName = meshName + ".idx";
         outFile.WriteLine(indent + "  <Indices Name=\"" + idxName + "\"" + le + is16BitString + " />");
 		if (!alreadyProcessed) {
             SaveIndices(mesh.triangles, idxName, is16Bit);
 		}
 
 		if (mesh.normals.Length > 0) {
-            string nmName = mesh.name + ".nm";
+            string nmName = meshName + ".nm";
 			outFile.WriteLine (indent + "  <Normals Name=\"" + nmName + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector3s (mesh.normals, nmName);
@@ -879,7 +908,7 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		if (mesh.colors.Length > 0) {
-            string colName = mesh.name + ".col";
+            string colName = meshName + ".col";
 			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveColors (mesh.colors, colName);
@@ -887,7 +916,7 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		if (mesh.uv.Length > 0) {
-            string uv0Name = mesh.name + ".uv0";
+            string uv0Name = meshName + ".uv0";
 			outFile.WriteLine (indent + "  <Uv0 Name=\"" + uv0Name + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector2s (mesh.uv, uv0Name, new Vector4 (1, 1, 0, 0));
@@ -895,7 +924,7 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		if (mesh.uv2.Length > 0) {
-            string uv1Name = meshName + lightmapPostfix + ".uv1";
+            string uv1Name = meshName + ".uv1";
 			outFile.WriteLine (indent + "  <Uv1 Name=\"" + uv1Name + "\"" + le + " />");
 			if (!alreadyProcessed) {
 				SaveVector2s (mesh.uv2, uv1Name, lightmapTilingOffset);

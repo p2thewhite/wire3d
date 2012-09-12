@@ -95,6 +95,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxTextureWidth = deviceCaps.MaxTextureWidth;
 	mMaxTextureHeight = deviceCaps.MaxTextureHeight;
 	mTexture2Ds.SetQuantity(deviceCaps.MaxTextureBlendStages);
+	mpData->TextureStageStates.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	UInt maxLights = deviceCaps.MaxActiveLights;
 	mLights.SetQuantity(maxLights <= 0 ? 8 : maxLights);
 
@@ -628,5 +629,10 @@ void PdrRendererData::ResetDevice()
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
+	AlphaState.IsValid = false;
+	CullState.IsValid = false;
+	FogState.IsValid = false;
+	WireframeState.IsValid = false;
+	ZBufferState.IsValid = false;
 	rRenderer.Set(rRenderer.mspStates);
 }

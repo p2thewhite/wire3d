@@ -31,12 +31,12 @@ public:
 	{
 		Options()
 			:
-			MaterialsWithEqualNamesAreIdentical(true),
+			AssetsWithEqualNamesAreIdentical(true),
 			PrepareSceneForStaticBatching(true),
 			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(true)
 			{}
 			 
-		Bool MaterialsWithEqualNamesAreIdentical;
+		Bool AssetsWithEqualNamesAreIdentical;
 		Bool PrepareSceneForStaticBatching;
 		Bool DuplicateSharedMeshesWhenPreparingSceneForStaticBatching;
 	};
@@ -95,6 +95,7 @@ private:
 	Wire::Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
 
+	void ParseAssets(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Wire::Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
 	Wire::Text* ParseText(rapidxml::xml_node<>* pXmlNode);
