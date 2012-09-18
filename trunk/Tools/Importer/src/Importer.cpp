@@ -9,6 +9,7 @@
 #include "WireImage2D.h"
 #include "WireLight.h"
 #include "WireMesh.h"
+#include "WireNodeLight.h"
 #include "WireQuaternion.h"
 #include "WireStandardMesh.h"
 #include "WireStateAlpha.h"
@@ -71,6 +72,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mMaterialStates.RemoveAll();
 	mMeshes.RemoveAll();
 	mTextures.RemoveAll();
+	mLights.RemoveAll();
 
 	pRoot->UpdateRS();
 
@@ -541,16 +543,7 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
-	{
-		if (Is(pName, attr->name()))
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return GetValue(pXmlNode, pName) != NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -730,7 +723,7 @@ void Importer::UpdateGS(Spatial* pSpatial)
 		pSpatial->UpdateGS();
 	}
 }
-
+ 
 //----------------------------------------------------------------------------
 void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 {
@@ -754,6 +747,14 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 					pMaterial; pMaterial = pMaterial->next_sibling())
 				{
 					ParseMaterial(pMaterial);
+				}
+			}
+			else if (Is("Lights", pChild->name()))
+			{
+				for (rapidxml::xml_node<>* pLight = pChild->first_node();
+					pLight; pLight = pLight->next_sibling())
+				{
+					ParseLight(pLight);
 				}
 			}
 		}
@@ -824,9 +825,21 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 }
 
 //----------------------------------------------------------------------------
-void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 {
-	UpdateGS(pSpatial);
+	Char* pName = GetValue(pXmlNode, "Name");
+	if (pName)
+	{
+		if (mpOptions->AssetsWithEqualNamesAreIdentical)
+		{
+			LightPtr* pValue = mLights.Find(pName);
+			if (pValue)
+			{
+				WIRE_ASSERT(*pValue);
+				return *pValue;
+			}
+		}
+	}
 
 	Char* pType = GetValue(pXmlNode, "Type");
 	WIRE_ASSERT(pType);
@@ -856,7 +869,6 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	}
 
 	pLight->Type = lt;
-	pLight->Position = pSpatial->World.GetTranslate();
 	Bool hasValue;
 	ColorRGB ambient = GetColorRGB(pXmlNode, "Ambient", hasValue); 
 	if (hasValue)
@@ -870,7 +882,12 @@ void Importer::ParseLight(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		pLight->Color = color;
 	}
 
-	pSpatial->AttachLight(pLight);
+	if (pName)
+	{
+		mLights.Insert(pName, pLight);
+	}
+
+	return pLight;
 }
 
 //----------------------------------------------------------------------------
@@ -973,10 +990,33 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 	}
 }
 
-//----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
-	Node* pNode = WIRE_NEW Node;
+	Node* pNode = NULL;
+
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
+	{
+		if (Is("LightNode", pChild->name()))
+		{
+			pNode = WIRE_NEW NodeLight;
+			ParseComponents(pChild, pNode);
+			WIRE_ASSERT(pNode->GetLightQuantity() == 1);
+			Light* pLight = pNode->GetLight();
+			NodeLight* pLightNode = DynamicCast<NodeLight>(pNode);
+			WIRE_ASSERT(pLightNode);
+			pLightNode->SetLight(pLight);
+			pNode->DetachLight(pLight);
+			break;
+		}
+	}
+
+	if (!pNode)
+	{
+		pNode = WIRE_NEW Node;
+	}
+
 	mStatistics.NodeCount++;
 
 	Char* pName = GetValue(pXmlNode, "Name");
@@ -1198,7 +1238,11 @@ void Importer::ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial*
 	}
 	else if (Is("Light", pXmlNode->name()))
 	{
-		ParseLight(pXmlNode, pSpatial);
+		Light* pLight =	ParseLight(pXmlNode);
+		if (pLight)
+		{
+			pSpatial->AttachLight(pLight);
+		}
 	}
 	else if (Is("Collider", pXmlNode->name()))
 	{
@@ -1210,13 +1254,10 @@ void Importer::ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial*
 void Importer::ParseComponents(rapidxml::xml_node<>* pXmlNode, Spatial*
 	pSpatial)
 {
-	if (pXmlNode->first_node())
+	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
+		pChild = pChild->next_sibling())
 	{
-		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
-			pChild = pChild->next_sibling())
-		{
-			ParseComponent(pChild, pSpatial);
-		}
+		ParseComponent(pChild, pSpatial);
 	}
 }
 
