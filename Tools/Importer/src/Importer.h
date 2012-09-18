@@ -108,7 +108,7 @@ private:
 	void ParseComponent(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
-	void ParseLight(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	Wire::Light* ParseLight(rapidxml::xml_node<>* pXmlNode);
 	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	Wire::State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
 	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
@@ -131,6 +131,7 @@ private:
 	Wire::THashTable<Wire::Material*, Wire::TArray<Wire::StatePtr> > mMaterialStates;
 	Wire::THashTable<Wire::String, Wire::TArray<Wire::MeshPtr> > mMeshes;
 	Wire::THashTable<Wire::String, Wire::Texture2DPtr> mTextures;
+	Wire::THashTable<Wire::String, Wire::LightPtr> mLights;
 	Wire::TArray<Wire::SpatialPtr> mStaticSpatials;
 	Wire::TArray<Collider*> mColliders;
 
