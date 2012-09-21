@@ -10,13 +10,13 @@
 #ifndef WIREIMAGE_H
 #define WIREIMAGE_H
 
-#include "WireObject.h"
+#include "WireBuffer.h"
 #include "WireMain.h"
 
 namespace Wire
 {
 
-class Image2D : public Object
+class Image2D : public Buffer
 {
 	WIRE_DECLARE_RTTI;
 	WIRE_DECLARE_INITIALIZE;
@@ -36,7 +36,7 @@ public:
 	// deleting the input array.
 
 	Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
-		Bool createMipmaps = true);
+		Bool createMipmaps = true, UsageType usage = Buffer::UT_STATIC);
 	virtual ~Image2D();
 
 	// Pointer to the image (i.e. mipmap level 0)
@@ -64,6 +64,9 @@ public:
 	// Number of pixels across all mipmap levels
 	UInt GetTotalQuantity() const;
 
+	// Release the raw buffer and replace it with a 2x2 default image
+	void Discard();
+
 	inline static void RGB888ToRGB565(UChar* pSrc888, UChar* pDst565);
 	inline static void RGBA8888ToRGBA4444(UChar* pRGBA8888, UChar* pDst4444);
 	inline static void RGB565ToRGB888(UChar* pSrc565, UChar* pDst888);
@@ -80,6 +83,10 @@ private:
 	static Pointer<Image2D> s_spDefault;
 	static Pointer<Image2D> s_spDefaultWithAlpha;
 	static const UChar s_ImageBpp[];
+
+	static const UChar s_Default[];
+	static const UChar s_DefaultWithAlpha[];
+
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];

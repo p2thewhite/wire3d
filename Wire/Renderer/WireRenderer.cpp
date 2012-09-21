@@ -476,14 +476,7 @@ PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
 
 		if (pTexture->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
 		{
-			if (pTexture->GetImage()->HasAlpha())
-			{
-				pT->SetImage(Image2D::GetDefaultWithAlpha());
-			}
-			else
-			{
-				pT->SetImage(Image2D::GetDefault());
-			}
+			pT->GetImage()->Discard();
 		}
 
 		return pPdrTexture;
