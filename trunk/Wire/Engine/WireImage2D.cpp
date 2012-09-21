@@ -10,7 +10,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, Image2D, Object);
+WIRE_IMPLEMENT_RTTI(Wire, Image2D, Buffer);
 WIRE_IMPLEMENT_INITIALIZE(Image2D);
 WIRE_IMPLEMENT_TERMINATE(Image2D);
 
@@ -25,6 +25,18 @@ const UChar Image2D::s_ImageBpp[] =
 Image2DPtr Image2D::s_spDefault;
 Image2DPtr Image2D::s_spDefaultWithAlpha;
 
+const UChar Image2D::s_Default[] =
+{
+	0xFF, 0xFF, 0xFF,  0xFF, 0x00, 0x00,
+	0xFF, 0x00, 0x00,  0xFF, 0xFF, 0xFF
+};
+
+const UChar Image2D::s_DefaultWithAlpha[] =
+{
+	0xFF, 0xFF, 0xFF, 0x7F,  0xFF, 0x00, 0x00, 0x7F,
+	0xFF, 0x00, 0x00, 0x7F,  0xFF, 0xFF, 0xFF, 0x7F
+};
+
 //----------------------------------------------------------------------------
 void Image2D::Initialize()
 {
@@ -32,46 +44,12 @@ void Image2D::Initialize()
 	const UInt height = 2;
 
 	FormatMode format = FM_RGB888;
-	UChar* const pRawImage = WIRE_NEW UChar[width * height * 
-		Image2D::GetBytesPerPixel(format)];
-	pRawImage[0] = 0xFF;
-	pRawImage[1] = 0xFF;
-	pRawImage[2] = 0xFF;
-	pRawImage[3*1+0] = 0xFF;
-	pRawImage[3*1+1] = 0x00;
-	pRawImage[3*1+2] = 0x00;
-	pRawImage[3*2+0] = 0xFF;
-	pRawImage[3*2+1] = 0x00;
-	pRawImage[3*2+2] = 0x00;
-	pRawImage[3*3+0] = 0xFF;
-	pRawImage[3*3+1] = 0xFF;
-	pRawImage[3*3+2] = 0xFF;
-	s_spDefault = WIRE_NEW Image2D(format, width, height, pRawImage,
-		false);
+	s_spDefault = WIRE_NEW Image2D(format, width, height,
+		const_cast<UChar*>(s_Default), false);
 
 	format = FM_RGBA8888;
-	UChar* const pRawImageAlpha = WIRE_NEW UChar[width * height * 
-		Image2D::GetBytesPerPixel(format)];
-
-	pRawImageAlpha[0] = 0xFF;
-	pRawImageAlpha[1] = 0xFF;
-	pRawImageAlpha[2] = 0xFF;
-	pRawImageAlpha[3] = 0x7F;
-	pRawImageAlpha[4*1+0] = 0xFF;
-	pRawImageAlpha[4*1+1] = 0x00;
-	pRawImageAlpha[4*1+2] = 0x00;
-	pRawImageAlpha[4*1+3] = 0x7F;
-	pRawImageAlpha[4*2+0] = 0xFF;
-	pRawImageAlpha[4*2+1] = 0x00;
-	pRawImageAlpha[4*2+2] = 0x00;
-	pRawImageAlpha[4*2+3] = 0x7F;
-	pRawImageAlpha[4*3+0] = 0xFF;
-	pRawImageAlpha[4*3+1] = 0xFF;
-	pRawImageAlpha[4*3+2] = 0xFF;
-	pRawImageAlpha[4*3+3] = 0x7F;
-
 	s_spDefaultWithAlpha = WIRE_NEW Image2D(format, width, height,
-		pRawImageAlpha, false);
+		const_cast<UChar*>(s_DefaultWithAlpha), false);
 }
 
 //----------------------------------------------------------------------------
@@ -83,8 +61,9 @@ void Image2D::Terminate()
 
 //----------------------------------------------------------------------------
 Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
-	Bool createMipmaps)
+	Bool createMipmaps, UsageType usage)
 	:
+	Buffer(usage),
 	mFormat(format),
 	mpData(pData),
 	mHasMipmaps(createMipmaps)
@@ -104,7 +83,7 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 //----------------------------------------------------------------------------
 Image2D::~Image2D()
 {
-	WIRE_DELETE[] mpData;
+	Discard();
 }
 
 //----------------------------------------------------------------------------
@@ -538,6 +517,30 @@ void Image2D::CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 			default:
 				WIRE_ASSERT(false);
 			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Image2D::Discard()
+{
+	if (mpData != s_Default && mpData != s_DefaultWithAlpha)
+	{
+		WIRE_DELETE[] mpData;
+
+		mBound[0] = 2;
+		mBound[1] = 2;
+		mHasMipmaps = false;
+
+		if (HasAlpha())
+		{
+			mpData = const_cast<UChar*>(s_DefaultWithAlpha);
+			mFormat = FM_RGBA8888;
+		}
+		else
+		{
+			mpData = const_cast<UChar*>(s_Default);
+			mFormat = FM_RGB888;
 		}
 	}
 }

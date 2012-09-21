@@ -95,7 +95,8 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 }
 
 //----------------------------------------------------------------------------
-Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
+Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps,
+	Buffer::UsageType usage)
 {
 	Int pngSize;
 	UChar* pPNG = reinterpret_cast<UChar*>(Load(pFilename, pngSize));
@@ -104,16 +105,17 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps)
 		return NULL;
 	}
 
-	Image2D* pImage2D = DecodePNG(pPNG, pngSize, hasMipmaps);
+	Image2D* pImage2D = DecodePNG(pPNG, pngSize, hasMipmaps, usage);
 	WIRE_DELETE[] pPNG;
 
 	return pImage2D;
 }
 
 //----------------------------------------------------------------------------
-Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps)
+Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps,
+	Buffer::UsageType usage)
 {
-	Image2D* pImage = LoadPNG(pFilename, hasMipmaps);
+	Image2D* pImage = LoadPNG(pFilename, hasMipmaps, usage);
 	if (!pImage)
 	{
 		return NULL;
@@ -125,7 +127,8 @@ Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps)
 }
 
 //----------------------------------------------------------------------------
-Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize, Bool hasMipmaps)
+Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
+	Bool hasMipmaps, Buffer::UsageType usage)
 {
 	std::vector<UChar> rawImage;
 	ULong width;
@@ -133,19 +136,22 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize, Bool hasMipmaps)
 	PicoPNG::decodePNG(rawImage, width, height, pPNG, pngSize, false);
 
 	Bool hasAlpha = (rawImage.size() / (height*width)) == 4;
-	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 : Image2D::FM_RGB888;
+	Image2D::FormatMode format = hasAlpha ? Image2D::FM_RGBA8888 :
+		Image2D::FM_RGB888;
 
 	size_t size = Image2D::GetBytesPerPixel(format) * width*height;
 	UChar* pDst = WIRE_NEW UChar[size];
 	System::Memcpy(pDst, size, &(rawImage[0]), size);
 
-	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst, hasMipmaps);
+	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst,
+		hasMipmaps, usage);
 
 	return pImage;
 }
 
 //----------------------------------------------------------------------------
-Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height, UInt maxLength)
+Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
+	UInt maxLength)
 {
 	// Init FreeType lib and font
 	Int fileSize;
@@ -1787,7 +1793,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 
 	String path = String(mpPath) + String(pName);
 	Image2D* pImage = LoadPNG(static_cast<const Char*>(path),
-		(mipmapCount > 1));
+		(mipmapCount > 1), usage);
 	if (!pImage)
 	{
 		return NULL;

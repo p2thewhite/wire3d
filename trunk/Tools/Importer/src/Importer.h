@@ -59,10 +59,12 @@ public:
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
 		btDynamicsWorld* pPhysicsWorld = NULL);
 
-	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize,
-		Bool hasMipmaps);
-	static Wire::Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps);
-	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps);
+	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool hasMipmaps,
+		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
+	static Wire::Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps,
+		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
+	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps,
+		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
 	static Wire::Text* CreateText(const Char* pFilename, UInt width,
 		UInt height, UInt maxLength = 4000);
 
