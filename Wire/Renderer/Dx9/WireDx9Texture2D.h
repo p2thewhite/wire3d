@@ -18,13 +18,14 @@ struct IDirect3DTexture9;
 namespace Wire
 {
 
+class Image2D;
 class Renderer;
 class Texture2D;
 
 class PdrTexture2D
 {
 public:
-	PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture);
+	PdrTexture2D(Renderer* pRenderer, const Image2D* pImage);
 	~PdrTexture2D();
 
 	void Enable(Renderer* pRenderer, const Texture2D* pTexture, UInt unit);

@@ -23,11 +23,13 @@ public:
 	static Real ASin(Real value);
 	static Real ATan(Real value);
     static Real ATan2(Real y, Real x);
+	static Real Ceil(Real value);
 	static Real Cos(Real value);
 	static Real FAbs(Real value);
 	static Real Floor(Real value);
 	static Real FMod(Real x, Real y);
-	static Real InvSqrt (Real value);
+	static Real InvSqrt(Real value);
+	static Real Round(Real value);
 	static Real Sin(Real value);
 	static Real Sqrt(Real value);
 	static Real Tan(Real value);

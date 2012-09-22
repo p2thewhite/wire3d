@@ -64,7 +64,7 @@ void Renderer::Terminate()
 
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
-	DestroyAll(mTexture2DMap);
+	DestroyAll(mImage2DMap);
 	DestroyBatchingBuffers();
 
 	s_pRenderer = NULL;
@@ -142,7 +142,7 @@ void Renderer::BindAll(const Spatial* pSpatial)
 		{
 			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 			{
-				s_pRenderer->Bind(pMaterial->GetTexture(i));
+				s_pRenderer->Bind(pMaterial->GetTexture(i)->GetImage());
 			}
 		}
 	}
@@ -180,7 +180,7 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 		{
 			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 			{
-				s_pRenderer->Unbind(pMaterial->GetTexture(i));
+				s_pRenderer->Unbind(pMaterial->GetTexture(i)->GetImage());
 			}
 		}
 	}
@@ -456,27 +456,21 @@ PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
+PdrTexture2D* Renderer::Bind(const Image2D* pImage)
 {
-	WIRE_ASSERT(pTexture);
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	WIRE_ASSERT(pImage);
+	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 
 	if (!pValue)
 	{
-		Texture2D* pT = const_cast<Texture2D*>(pTexture);
-		if (!pTexture->GetImage())
-		{
-			pT->SetImage(Image2D::GetDefaultWithAlpha());
-		}
-
-		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pTexture);
-		mTexture2DMap.Insert(pTexture, pPdrTexture);
+		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pImage);
+		mImage2DMap.Insert(pImage, pPdrTexture);
 		mStatistics.TextureCount++;
 		mStatistics.TextureTotalSize += pPdrTexture->GetBufferSize();
 
-		if (pTexture->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
+		if (pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
 		{
-			pT->GetImage()->Discard();
+			const_cast<Image2D*>(pImage)->Discard();
 		}
 
 		return pPdrTexture;
@@ -486,25 +480,25 @@ PdrTexture2D* Renderer::Bind(const Texture2D* pTexture)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Unbind(const Texture2D* pTexture)
+void Renderer::Unbind(const Image2D* pImage)
 {
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 
 	if (pValue)
 	{
 		mStatistics.TextureCount--;
 		mStatistics.TextureTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
-		mTexture2DMap.Remove(pTexture);
+		mImage2DMap.Remove(pImage);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::UnbindAll(const Texture2D* pTexture)
+void Renderer::UnbindAll(const Image2D* pImage)
 {
 	if (s_pRenderer)
 	{
-		s_pRenderer->Unbind(pTexture);
+		s_pRenderer->Unbind(pImage);
 	}
 }
 
@@ -514,14 +508,17 @@ void Renderer::Enable(const Texture2D* pTexture, UInt unit)
 	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
 	WIRE_ASSERT(mTexture2Ds[unit] == NULL /* Disable previous first */);
 	WIRE_ASSERT(pTexture);
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	const Image2D* pImage = pTexture->GetImage();
+	WIRE_ASSERT(pImage);
+
+	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 	if (pValue)
 	{
 		(*pValue)->Enable(this, pTexture, unit);
 	}
 	else
 	{
-		PdrTexture2D* pPdrTexture =	Bind(pTexture);
+		PdrTexture2D* pPdrTexture =	Bind(pImage);
 		pPdrTexture->Enable(this, pTexture, unit);
 	}
 
@@ -534,7 +531,10 @@ void Renderer::Disable(const Texture2D* pTexture, UInt unit)
 	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
 	WIRE_ASSERT(mTexture2Ds[unit] == pTexture /* This Tex is not enabled */);
 	WIRE_ASSERT(pTexture);
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	const Image2D* pImage = pTexture->GetImage();
+	WIRE_ASSERT(pImage);
+
+	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 	if (pValue)
 	{
 		(*pValue)->Disable(this, unit);
@@ -563,9 +563,9 @@ void Renderer::Set(const Texture2D* pTexture, UInt unit)
 }
 
 //----------------------------------------------------------------------------
-PdrTexture2D* Renderer::GetResource(const Texture2D* pTexture)
+PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 {
-	PdrTexture2D** pValue = mTexture2DMap.Find(pTexture);
+	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 
 	if (pValue)
 	{
@@ -606,12 +606,12 @@ void Renderer::DestroyAll(VertexBufferMap& rVertexBufferMap)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAll(Texture2DMap& rTexture2DMap)
+void Renderer::DestroyAll(Image2DMap& rTexture2DMap)
 {
 	while (rTexture2DMap.GetQuantity() > 0)
 	{
-		Texture2DMap::Iterator it(&rTexture2DMap);
-		const Texture2D* pKey = NULL;
+		Image2DMap::Iterator it(&rTexture2DMap);
+		const Image2D* pKey = NULL;
 		it.GetFirst(&pKey);
 		WIRE_ASSERT(pKey);
 		Unbind(pKey);

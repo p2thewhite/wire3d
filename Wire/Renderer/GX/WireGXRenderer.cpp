@@ -38,7 +38,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxTextureHeight(1024),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
-	mTexture2DMap(256),
+	mImage2DMap(256),
 	mSupportsStaticBatching(false),
 	mSupportsDynamicBatching(false)
 {

@@ -65,6 +65,13 @@ Real Math<Real>::ATan2(Real y, Real x)
 
 //----------------------------------------------------------------------------
 template <class Real>
+Real Math<Real>::Ceil(Real value)
+{
+	return static_cast<Real>(ceil(static_cast<Double>(value)));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Real Math<Real>::Cos(Real value)
 {
 	return static_cast<Real>(cos(static_cast<Double>(value)));
@@ -97,6 +104,13 @@ template <class Real>
 Real Math<Real>::InvSqrt(Real value)
 {
 	return static_cast<Real>(1.0/sqrt(static_cast<Double>(value)));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Math<Real>::Round(Real value)
+{
+	return (value > 0) ? Floor(value + 0.5) : Ceil(value - 0.5);
 }
 
 //----------------------------------------------------------------------------

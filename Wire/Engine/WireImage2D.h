@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREIMAGE_H
-#define WIREIMAGE_H
+#ifndef WIREIMAGE2D_H
+#define WIREIMAGE2D_H
 
 #include "WireBuffer.h"
 #include "WireMain.h"

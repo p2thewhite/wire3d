@@ -1799,7 +1799,7 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 		return NULL;
 	}
 
-	Texture2D* pTexture = WIRE_NEW Texture2D(pImage, usage);
+	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	mStatistics.TextureCount++;
 	if (mipmapCount == 1)
 	{

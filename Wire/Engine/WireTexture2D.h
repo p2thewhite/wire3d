@@ -7,17 +7,17 @@
 // that agreement.
 
 #pragma once
-#ifndef WIRETEXTURE_H
-#define WIRETEXTURE_H
+#ifndef WIRETEXTURE2D_H
+#define WIRETEXTURE2D_H
 
-#include "WireBuffer.h"
+#include "WireObject.h"
 
 namespace Wire
 {
 
 class Image2D;
 
-class Texture2D : public Buffer
+class Texture2D : public Object
 {
 	WIRE_DECLARE_RTTI;
 
@@ -41,7 +41,7 @@ public:
 		WT_QUANTITY
 	};
 
-	Texture2D(Image2D* pImage, UsageType usage = Buffer::UT_STATIC);
+	Texture2D(Image2D* pImage);
 	virtual ~Texture2D();
 
 	inline Image2D* GetImage();

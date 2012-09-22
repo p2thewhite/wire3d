@@ -13,12 +13,11 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, Texture2D, Buffer);
+WIRE_IMPLEMENT_RTTI(Wire, Texture2D, Object);
 
 //----------------------------------------------------------------------------
-Texture2D::Texture2D(Image2D* pImage, UsageType usage)
+Texture2D::Texture2D(Image2D* pImage)
 	:
-	Buffer(usage),
 	mspImage(pImage),
 	mFilterType(FT_LINEAR),
 	mAnisotropy(1.0F)
@@ -37,7 +36,10 @@ Texture2D::~Texture2D()
 {
 	// Inform all renderers using this texture that it is being destroyed.
 	// This allows the renderer to free up any associated resources.
-    Renderer::UnbindAll(this);
+	if (mspImage)
+	{
+		Renderer::UnbindAll(mspImage);
+	}
 }
 
 //----------------------------------------------------------------------------

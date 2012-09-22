@@ -30,7 +30,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxAnisotropy(1.0F),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
-	mTexture2DMap(256),
+	mImage2DMap(256),
 	mSupportsStaticBatching(true),
 	mSupportsDynamicBatching(true)
 {
@@ -592,10 +592,10 @@ void PdrRendererData::ResetDevice()
 	Renderer& rRenderer = *mpRenderer;
 	TArray<const IndexBuffer*> saveIndexBuffers;
 	TArray<const VertexBuffer*> saveVertexBuffers;
-	TArray<const Texture2D*> saveTexture2Ds;
+	TArray<const Image2D*> saveTexture2Ds;
 	DestroyResources(rRenderer.mIndexBufferMap, saveIndexBuffers);
 	DestroyResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
-	DestroyNonManagedResources(rRenderer.mTexture2DMap, saveTexture2Ds);
+	DestroyNonManagedResources(rRenderer.mImage2DMap, saveTexture2Ds);
 	
 	UInt batchingSize = 0;
 	if (rRenderer.mBatchedIndexBuffer)
