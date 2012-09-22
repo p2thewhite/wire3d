@@ -42,9 +42,8 @@ const UChar PdrRendererData::TEX_WRAP_MODE[Texture2D::WT_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
+PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 {
-	const Image2D* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
 	UInt bpp = pImage->GetBytesPerPixel();
@@ -111,9 +110,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
 	const UChar usesMipmaps = pImage->HasMipmaps() ? GX_TRUE : GX_FALSE;
 	GXInitTexObj(&mTexObj, mpBuffer, width, height,
-		PdrRendererData::IMAGE2D_FORMAT[format],
-		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(0)],
-		PdrRendererData::TEX_WRAP_MODE[pTexture->GetWrapType(1)],
+		PdrRendererData::IMAGE2D_FORMAT[format], GX_REPEAT, GX_REPEAT,
 		usesMipmaps);
 }
 

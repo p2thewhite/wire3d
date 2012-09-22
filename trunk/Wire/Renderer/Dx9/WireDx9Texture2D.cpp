@@ -54,10 +54,9 @@ const DWORD PdrRendererData::StateSampler::TEX_WRAP_MODE[Texture2D::
 };
 
 //----------------------------------------------------------------------------
-PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
+PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 {
 	// Copy the image data from system memory to video memory.
-	const Image2D* pImage = pTexture->GetImage();
 	WIRE_ASSERT(pImage);
 
 	// Windows stores BGR (lowest byte to highest byte), but Wire stores RGB.
@@ -142,8 +141,8 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Texture2D* pTexture)
 		}
 	}
 
-	const Bool isStatic = (pTexture->GetUsage() == Buffer::UT_STATIC) ||
-		(pTexture->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND);
+	const Bool isStatic = (pImage->GetUsage() == Buffer::UT_STATIC) ||
+		(pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND);
 	const D3DPOOL pool = isStatic ?	D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
 	const UInt mipmapCount = pImage->GetMipmapCount();
 	const DWORD usage = 0;

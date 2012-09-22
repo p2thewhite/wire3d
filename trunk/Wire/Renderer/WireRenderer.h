@@ -141,13 +141,13 @@ public:
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// 2D texture management
-	PdrTexture2D* Bind(const Texture2D* pTexture);
-	void Unbind(const Texture2D* pTexture);
-	static void UnbindAll(const Texture2D* pTexture);
+	PdrTexture2D* Bind(const Image2D* pImage);
+	void Unbind(const Image2D* pImage);
+	static void UnbindAll(const Image2D* pImage);
 	void Enable(const Texture2D* pTexture, UInt unit = 0);
 	void Disable(const Texture2D* pTexture, UInt unit = 0);
 	void Set(const Texture2D* pTexture, UInt unit = 0);
-	PdrTexture2D* GetResource(const Texture2D* pTexture);
+	PdrTexture2D* GetResource(const Image2D* pTexture);
 
 	// Material management
 	void Enable(const Material* pMaterial);
@@ -258,13 +258,13 @@ private:
 
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
-	typedef THashTable<const Texture2D*, PdrTexture2D*> Texture2DMap;
+	typedef THashTable<const Image2D*, PdrTexture2D*> Image2DMap;
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
 	void DestroyAll(IndexBufferMap& rIndexBufferMap);
 	void DestroyAll(VertexBufferMap& rVertexBufferMap);
- 	void DestroyAll(Texture2DMap& rTexture2DMap);
+ 	void DestroyAll(Image2DMap& rTexture2DMap);
 
 	void DestroyBatchingBuffers();
 
@@ -298,7 +298,7 @@ private:
 	
 	IndexBufferMap mIndexBufferMap;
 	VertexBufferMap mVertexBufferMap;
-	Texture2DMap mTexture2DMap;
+	Image2DMap mImage2DMap;
 
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	PdrVertexBuffer* mBatchedVertexBuffer;

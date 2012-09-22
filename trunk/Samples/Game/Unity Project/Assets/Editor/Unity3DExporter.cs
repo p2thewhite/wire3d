@@ -43,12 +43,12 @@ public class Unity3DExporter : EditorWindow
 		public int TexturesTotalSizeOnDisk;
 		public int TexturesTotalSizeInRam;
 
-		public void Print ()
+		public void Print()
 		{
-			Debug.Log ("---> Export Statistics <---\n");
-			Debug.Log ("Textures: " + TexturesCount + " (Lightmaps: " + LightmapsCount + ")\n");
-			Debug.Log ("Textures total size on disk: " + (TexturesTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
-			Debug.Log ("Textures (including mipmaps) total size in RAM: " + (TexturesTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
+			Debug.Log("---> Export Statistics <---\n");
+			Debug.Log("Textures: " + TexturesCount + " (Lightmaps: " + LightmapsCount + ")\n");
+			Debug.Log("Textures total size on disk: " + (TexturesTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
+			Debug.Log("Textures (including mipmaps) total size in RAM: " + (TexturesTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
 		}
 	}
 
@@ -253,7 +253,7 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private void WriteLeaf (Transform transform, StreamWriter outFile, string indent, bool isLeaf = true)
+	private void WriteLeaf(Transform transform, StreamWriter outFile, string indent, bool isLeaf = true)
 	{
         GameObject go = transform.gameObject;
         MeshFilter meshFilter = go.GetComponent<MeshFilter>();
@@ -281,7 +281,7 @@ public class Unity3DExporter : EditorWindow
         {
 			WriteCamera (go.GetComponent<Camera>(), outFile, indent);
 
-            bool isLightmapped = go.isStatic && meshRenderer.lightmapIndex < 254;
+            bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
             if (!isLightmapped)
             {
                 List<Light> lights = GetLightsForLayer(go.layer);
@@ -291,7 +291,7 @@ public class Unity3DExporter : EditorWindow
                 }
             }
 
-            WriteCollider (go, outFile, indent);
+            WriteCollider(go, outFile, indent);
 		}
 
         if (exportSubmeshes)
@@ -716,9 +716,10 @@ public class Unity3DExporter : EditorWindow
         return GetMaterialName(material, meshRenderer) + "_" + material.GetInstanceID().ToString("X8");
     }
 
-    private void WriteMaterial (MeshRenderer meshRenderer, Material material, StreamWriter outFile, string indent)
+    private void WriteMaterial(MeshRenderer meshRenderer, Material material, StreamWriter outFile, string indent)
 	{
-		if (material == null) {
+		if (material == null)
+        {
 			return;
 		}
 
@@ -745,40 +746,45 @@ public class Unity3DExporter : EditorWindow
         }
 
 		Texture2D texture = material.mainTexture as Texture2D;
-		WriteTexture (texture, outFile, indent);
+		WriteTexture(texture, outFile, indent);
 
-		if (!string.IsNullOrEmpty (m2ndTextureName) && material.HasProperty (m2ndTextureName)) {
-			Texture2D _2ndTexture = material.GetTexture (m2ndTextureName) as Texture2D;
-			WriteTexture (_2ndTexture, outFile, indent);
+		if (!string.IsNullOrEmpty(m2ndTextureName) && material.HasProperty(m2ndTextureName))
+        {
+			Texture2D _2ndTexture = material.GetTexture(m2ndTextureName) as Texture2D;
+			WriteTexture(_2ndTexture, outFile, indent);
 		}
 
-		if (meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254) {
-			Texture2D lightmap = LightmapSettings.lightmaps [meshRenderer.lightmapIndex].lightmapFar;
-			WriteTexture (lightmap, outFile, indent, true);               
+		if (meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254)
+        {
+			Texture2D lightmap = LightmapSettings.lightmaps[meshRenderer.lightmapIndex].lightmapFar;
+			WriteTexture(lightmap, outFile, indent, true);               
 		}
 
-		WriteMaterialState (material, outFile, indent);
+		WriteMaterialState(material, outFile, indent);
 
-		outFile.WriteLine (indent + "</Material>");
+		outFile.WriteLine(indent + "</Material>");
 	}
 
-	private void WriteMaterialState (Material materialState, StreamWriter outFile, string indent)
+	private void WriteMaterialState(Material materialState, StreamWriter outFile, string indent)
 	{
-		if (mExportStateMaterial == false) {
+		if (mExportStateMaterial == false)
+        {
 			return;
 		}
 
-		if (materialState.HasProperty ("_Color")) {
-			Color color = materialState.GetColor ("_Color");
+		if (materialState.HasProperty("_Color"))
+        {
+			Color color = materialState.GetColor("_Color");
 			
 			outFile.WriteLine (indent + "  " + "<MaterialState Ambient=\"" +
                 color.r + ", " + color.g + ", " + color.b + ", " + color.a + "\" />");
 		}
 	}
 
-	private void WriteTexture (Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false)
+	private void WriteTexture(Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false)
 	{
-		if (texture == null) {
+		if (texture == null)
+        {
 			return;
 		}
 
@@ -797,22 +803,33 @@ public class Unity3DExporter : EditorWindow
             "\" FilterMode=\"" + texture.filterMode + "\" AnisoLevel=\"" + texture.anisoLevel +
             "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + mipmapCount + "\" ";
 
-		if (mDiscardTexturesOnBind) {
+		if (mDiscardTexturesOnBind)
+        {
 			textureXmlNode += "Usage=\"STATIC_DISCARD_ON_BIND\" ";
 		}
 
 		textureXmlNode += "/>";
 
 		outFile.WriteLine (textureXmlNode);
-		
-		if (mExportXmlOnly) {
-			return;
-		}
+
+        if (!alreadyProcessed)
+        {
+            SaveImage(texture, isLightmap);
+        }
+    }
+
+    private void SaveImage(Texture2D texture, bool isLightmap)
+    {
+        if (mExportXmlOnly)
+        {
+            return;
+        }
 
         string assetPath = AssetDatabase.GetAssetPath(texture);
 		TextureImporter textureImporter = AssetImporter.GetAtPath (assetPath) as TextureImporter;
-		if (textureImporter == null) {
-			Debug.Log ("Error getting TextureImporter for '" + texture.name + "'");
+		if (textureImporter == null)
+        {
+			Debug.Log("Error getting TextureImporter for '" + texture.name + "'");
 			return;
 		}
 
@@ -821,83 +838,88 @@ public class Unity3DExporter : EditorWindow
 
 		bool needsReimport = false;
 
-		if (wasReadable == false) {
+		if (wasReadable == false)
+        {
 			needsReimport = true;
 			textureImporter.isReadable = true;
 		}
 
-		if (texture.format == TextureFormat.DXT1) {
+		if (texture.format == TextureFormat.DXT1)
+        {
 			needsReimport = true;
 			textureImporter.textureFormat = TextureImporterFormat.RGB24;
 		}
 
-		if (texture.format == TextureFormat.DXT5 || texture.format == TextureFormat.RGBA32) {
+		if (texture.format == TextureFormat.DXT5 || texture.format == TextureFormat.RGBA32)
+        {
 			needsReimport = true;
 			textureImporter.textureFormat = TextureImporterFormat.ARGB32;
 		}
 
-		if (!alreadyProcessed) {
-			if (needsReimport) {
-				AssetDatabase.ImportAsset (assetPath);
-			}
+		if (needsReimport)
+        {
+			AssetDatabase.ImportAsset (assetPath);
 		}
 
-		if (!alreadyProcessed) {
-			int bpp = textureImporter.DoesSourceTextureHaveAlpha () ? 4 : 3;
-			bpp = isLightmap ? 3 : bpp;
+        string texName = mTextureToName[texture] + ".png";
+        int mipmapCount = (mDontGenerateMipmapsForLightmaps && isLightmap) ? 1 : texture.mipmapCount;
+        int bpp = textureImporter.DoesSourceTextureHaveAlpha() ? 4 : 3;
+		bpp = isLightmap ? 3 : bpp;
 
-			mStatistics.TexturesTotalSizeInRam += GetSizeFromLevelOfMipmaps (mipmapCount, texture) * bpp;
-			mStatistics.TexturesCount++;
+		mStatistics.TexturesTotalSizeInRam += GetSizeFromLevelOfMipmaps (mipmapCount, texture) * bpp;
+		mStatistics.TexturesCount++;
 
-			if (!isLightmap) {
-				Byte[] bytes = texture.EncodeToPNG ();
-				File.WriteAllBytes (mPath + "/" + texName, bytes);
-				mStatistics.TexturesTotalSizeOnDisk += bytes.Length;
-			} else {
-				if (texture.format == TextureFormat.ARGB32) {
-					Color32[] texSrc = texture.GetPixels32 ();
+		if (!isLightmap)
+        {
+			Byte[] bytes = texture.EncodeToPNG();
+			File.WriteAllBytes (mPath + "/" + texName, bytes);
+			mStatistics.TexturesTotalSizeOnDisk += bytes.Length;
+		}
+        else
+        {
+			if (texture.format == TextureFormat.ARGB32)
+            {
+				Color32[] texSrc = texture.GetPixels32 ();
 
-					Texture2D texRGB = new Texture2D (texture.width, texture.height, TextureFormat.RGB24, false);
-					Color32[] texDst = texRGB.GetPixels32 ();
+				Texture2D texRGB = new Texture2D (texture.width, texture.height, TextureFormat.RGB24, false);
+				Color32[] texDst = texRGB.GetPixels32 ();
 
-					for (int k = 0; k < texSrc.Length; k++) {
-						float[] c = new float[4];
-						c [0] = texSrc [k].a / 255.0f;
-						c [1] = (texSrc [k].r / 255.0f) * 8.0f * c [0];
-						c [2] = (texSrc [k].g / 255.0f) * 8.0f * c [0];
-						c [3] = (texSrc [k].b / 255.0f) * 8.0f * c [0];
+				for (int k = 0; k < texSrc.Length; k++) {
+					float[] c = new float[4];
+					c [0] = texSrc [k].a / 255.0f;
+					c [1] = (texSrc [k].r / 255.0f) * 8.0f * c [0];
+					c [2] = (texSrc [k].g / 255.0f) * 8.0f * c [0];
+					c [3] = (texSrc [k].b / 255.0f) * 8.0f * c [0];
 
-						c [1] = c [1] > 1.0f ? 1.0f : c [1];
-						c [2] = c [2] > 1.0f ? 1.0f : c [2];
-						c [3] = c [3] > 1.0f ? 1.0f : c [3];
+					c [1] = c [1] > 1.0f ? 1.0f : c [1];
+					c [2] = c [2] > 1.0f ? 1.0f : c [2];
+					c [3] = c [3] > 1.0f ? 1.0f : c [3];
 
-						texDst [k].a = 255;// (byte)(c[0] * 255.0f);
-						texDst [k].r = (byte)(c [1] * 255.0f);
-						texDst [k].g = (byte)(c [2] * 255.0f);
-						texDst [k].b = (byte)(c [3] * 255.0f);
-					}
-
-					texRGB.SetPixels32 (texDst);
-					texRGB.Apply ();
-
-					Byte[] bytes = texRGB.EncodeToPNG ();
-					File.WriteAllBytes (mPath + "/" + texName, bytes);
-					mStatistics.LightmapsCount++;
-					mStatistics.LightmapsTotalSizeOnDisk += bytes.Length;
-					mStatistics.TexturesTotalSizeOnDisk += bytes.Length;
-					mStatistics.LightmapsTotalSizeInRam += GetSizeFromLevelOfMipmaps (mipmapCount, texture) * bpp;
-				} else {
-					Debug.Log ("Lightmap '" + texture.name + "'could not be read as ARGB32.");
+					texDst [k].a = 255;// (byte)(c[0] * 255.0f);
+					texDst [k].r = (byte)(c [1] * 255.0f);
+					texDst [k].g = (byte)(c [2] * 255.0f);
+					texDst [k].b = (byte)(c [3] * 255.0f);
 				}
+
+				texRGB.SetPixels32 (texDst);
+				texRGB.Apply();
+
+				Byte[] bytes = texRGB.EncodeToPNG();
+				File.WriteAllBytes (mPath + "/" + texName, bytes);
+				mStatistics.LightmapsCount++;
+				mStatistics.LightmapsTotalSizeOnDisk += bytes.Length;
+				mStatistics.TexturesTotalSizeOnDisk += bytes.Length;
+				mStatistics.LightmapsTotalSizeInRam += GetSizeFromLevelOfMipmaps (mipmapCount, texture) * bpp;
+			} else {
+				Debug.Log ("Lightmap '" + texture.name + "'could not be read as ARGB32.");
 			}
 		}
 
-		if (needsReimport) {
+		if (needsReimport)
+        {
 			textureImporter.isReadable = wasReadable;
 			textureImporter.textureFormat = wasFormat;
-			if (!alreadyProcessed) {
-				AssetDatabase.ImportAsset (assetPath);
-			}
+			AssetDatabase.ImportAsset (assetPath);
 		}
 	}
 
