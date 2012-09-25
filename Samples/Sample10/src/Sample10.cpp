@@ -117,7 +117,7 @@ void Sample10::OnIdle()
 
 	pCuller->ComputeVisibleSet(mspRoot);
 
-	GetRenderer()->ResetStatistics();
+	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 	GetRenderer()->DrawScene(pCuller->GetVisibleSets());
@@ -366,12 +366,13 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
 		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
 	Float kb = 1024.0F;
-	const Renderer::Statistics* pStats = Renderer::GetStatistics();
+	const RendererStatistics* pStats = GetRenderer()->GetStatistics();
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->DrawCalls, pStats->Triangles, pStats->BatchedStatic,
-		pStats->BatchedDynamic, pStats->VBOCount, pStats->VBOTotalSize/kb,
-		pStats->IBOCount, pStats->IBOTotalSize/kb, pStats->TextureCount,
-		pStats->TextureTotalSize/(kb*kb));
+		pStats->GetDrawCalls(), pStats->GetTriangles(), pStats->
+		GetBatchedStatic(), pStats->GetBatchedDynamic(), pStats->
+		GetVBOCount(), pStats->GetVBOTotalSize()/kb, pStats->GetIBOCount(),
+		pStats->GetIBOTotalSize()/kb, pStats->GetTextureCount(), pStats->
+		GetTextureTotalSize()/(kb*kb));
 	mspText->SetColor(Color32::WHITE);
 	mspText->Append(text);
 

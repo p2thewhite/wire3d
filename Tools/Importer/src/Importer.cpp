@@ -1700,13 +1700,46 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 
 //----------------------------------------------------------------------------
 Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
-	Material::BlendMode& blendMode)
+	Material::BlendMode& rBlendMode)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
 	{
 		WIRE_ASSERT(false /* No Texture filename found */);
 		return NULL;
+	}
+
+	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
+		attr = attr->next_attribute())
+	{
+		if (Is("BlendMode", attr->name()))
+		{
+			if (Is("Replace", attr->value()))
+			{
+				rBlendMode = Material::BM_REPLACE;
+				break;
+			}
+			else if (Is("Modulate", attr->value()))
+			{
+				rBlendMode = Material::BM_MODULATE;
+				break;
+			}
+			else if (Is("Pass", attr->value()))
+			{
+				rBlendMode = Material::BM_PASS;
+				break;
+			}
+			else if (Is("Blend", attr->value()))
+			{
+				rBlendMode = Material::BM_BLEND;
+				break;
+			}
+			else if (Is("Decal", attr->value()))
+			{
+				rBlendMode = Material::BM_DECAL;
+				break;
+			}
+		}
 	}
 
 	if (mpOptions->AssetsWithEqualNamesAreIdentical)
@@ -1764,29 +1797,6 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 			else if (Is("Clamp", attr->value()))
 			{
 				warp = Texture2D::WT_CLAMP;
-			}
-		}
-		else if (Is("BlendMode", attr->name()))
-		{
-			if (Is("Replace", attr->value()))
-			{
-				blendMode = Material::BM_REPLACE;
-			}
-			else if (Is("Modulate", attr->value()))
-			{
-				blendMode = Material::BM_MODULATE;
-			}
-			else if (Is("Pass", attr->value()))
-			{
-				blendMode = Material::BM_PASS;
-			}
-			else if (Is("Blend", attr->value()))
-			{
-				blendMode = Material::BM_BLEND;
-			}
-			else if (Is("Decal", attr->value()))
-			{
-				blendMode = Material::BM_DECAL;
 			}
 		}
 	}

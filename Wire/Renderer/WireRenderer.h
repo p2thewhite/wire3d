@@ -12,6 +12,7 @@
 
 #include "WireColorRGBA.h"
 #include "WireMaterial.h"
+#include "WireRendererStatistics.h"
 #include "WireSmartPointer.h"
 #include "WireStateAlpha.h"
 #include "WireStateCull.h"
@@ -204,27 +205,7 @@ public:
 	void Disable(const TArray<Pointer<Light> >& rLights);
 	void Set(const TArray<Pointer<Light> >& rLights);
 
-	// Drawing and Renderer bound memory statistics
-	struct Statistics
-	{
-		// accumulated number of draw calls and triangles drawn since last
-		// ResetStatistics()
-		UInt DrawCalls;
-		UInt BatchedStatic;
-		UInt BatchedDynamic;
-		UInt Triangles;
-
-		// number of buffers and their total size bound to the Renderer
-		UInt VBOCount;
-		UInt VBOTotalSize;
-		UInt IBOCount;
-		UInt IBOTotalSize;
-		UInt TextureCount;
-		UInt TextureTotalSize;
-	};
-
-	inline static const Statistics* GetStatistics();
-	void ResetStatistics();
+	inline RendererStatistics* GetStatistics();
 
 	// The platform-dependent constructor must call this function first before
 	// doing any of its own work.
@@ -307,7 +288,7 @@ private:
 	Bool mSupportsStaticBatching;
 	Bool mSupportsDynamicBatching;
 
-	Statistics mStatistics;
+	RendererStatistics mStatistics;
 };
 
 #include "WireRenderer.inl"

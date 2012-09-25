@@ -707,6 +707,14 @@ public class Unity3DExporter : EditorWindow
         {
             lightMapIndex = "_" + meshRenderer.lightmapIndex;
         }
+        else
+        {
+            List<Light> lights = GetLightsForLayer(meshRenderer.gameObject.layer);
+            if (lights.Count > 0)
+            {
+                lightMapIndex = "_lit";
+            }
+        }
 
         return material.name + lightMapIndex;
     }
@@ -746,7 +754,20 @@ public class Unity3DExporter : EditorWindow
         }
 
 		Texture2D texture = material.mainTexture as Texture2D;
-		WriteTexture(texture, outFile, indent);
+
+        bool usesLightmap = meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254;
+        bool isRealtimeLit = false;
+        if (!usesLightmap)
+        {
+            List<Light> lights = GetLightsForLayer(meshRenderer.gameObject.layer);
+            if (lights.Count > 0)
+            {
+                isRealtimeLit = true;
+            }
+        }
+
+     
+        WriteTexture(texture, outFile, indent, false, isRealtimeLit);
 
 		if (!string.IsNullOrEmpty(m2ndTextureName) && material.HasProperty(m2ndTextureName))
         {
@@ -754,7 +775,7 @@ public class Unity3DExporter : EditorWindow
 			WriteTexture(_2ndTexture, outFile, indent);
 		}
 
-		if (meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254)
+        if (usesLightmap)
         {
 			Texture2D lightmap = LightmapSettings.lightmaps[meshRenderer.lightmapIndex].lightmapFar;
 			WriteTexture(lightmap, outFile, indent, true);               
@@ -781,7 +802,7 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private void WriteTexture(Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false)
+	private void WriteTexture(Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false, bool isRealtimeLit = false)
 	{
 		if (texture == null)
         {
@@ -802,6 +823,11 @@ public class Unity3DExporter : EditorWindow
 		string textureXmlNode = indent + "  <Texture Name=\"" + texName +
             "\" FilterMode=\"" + texture.filterMode + "\" AnisoLevel=\"" + texture.anisoLevel +
             "\" WrapMode=\"" + texture.wrapMode + "\" Mipmaps=\"" + mipmapCount + "\" ";
+
+        if (isRealtimeLit)
+        {
+            textureXmlNode += "BlendMode=\"Modulate\" ";
+        }
 
 		if (mDiscardTexturesOnBind)
         {

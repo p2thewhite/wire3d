@@ -223,8 +223,8 @@ void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 {
-	mStatistics.DrawCalls++;
-	mStatistics.Triangles += indexCount/3;
+	mStatistics.mDrawCalls++;
+	mStatistics.mTriangles += indexCount/3;
 
 	mpData->IsFrameBufferDirty = true;
 
@@ -300,8 +300,8 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	UInt startIndex)
 {
-	mStatistics.DrawCalls++;
-	mStatistics.Triangles += indexCount/3;
+	mStatistics.mDrawCalls++;
+	mStatistics.mTriangles += indexCount/3;
 
 	mpData->IsFrameBufferDirty = true;
 

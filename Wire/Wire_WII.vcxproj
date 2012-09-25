@@ -202,6 +202,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Renderer\GX\WireGXTexture2D.h" />
     <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h" />
     <ClInclude Include="Renderer\WireRenderer.h" />
+    <ClInclude Include="Renderer\WireRendererStatistics.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
@@ -268,6 +269,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <None Include="Renderer\GX\WireGXIndexBuffer.inl" />
     <None Include="Renderer\GX\WireGXVertexBuffer.inl" />
     <None Include="Renderer\WireRenderer.inl" />
+    <None Include="Renderer\WireRendererStatistics.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
@@ -418,6 +420,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Renderer\GX\WireGXTexture2D.cpp" />
     <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp" />
     <ClCompile Include="Renderer\WireRenderer.cpp" />
+    <ClCompile Include="Renderer\WireRendererStatistics.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
