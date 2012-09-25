@@ -310,7 +310,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 	// Update physics simulation
 	UpdatePhysics(deltaTime);
 
-	GetRenderer()->ResetStatistics();
+	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mSceneCameras[0]);
 	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
@@ -347,28 +347,28 @@ void Game::DrawFPS(Double deltaTime)
 
 	const UInt textArraySize = 1000;
 	Char text[textArraySize];
-	UInt fps = static_cast<UInt>(1 / deltaTime);
+	UInt fps = static_cast<UInt>(MathD::Round(1 / deltaTime));
 	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
 				  "%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
 				  "IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
 
 	Float kb = 1024.0F;
 
-	const Renderer::Statistics* pStatistics = Renderer::GetStatistics();
+	const RendererStatistics* pStatistics = GetRenderer()->GetStatistics();
 	System::Sprintf(text, 
 					textArraySize, 
 					static_cast<const Char*>(msg1), 
 					fps,
-					pStatistics->DrawCalls, 
-					pStatistics->Triangles, 
-					pStatistics->BatchedStatic,
-					pStatistics->BatchedDynamic, 
-					pStatistics->VBOCount, 
-					pStatistics->VBOTotalSize / kb,
-					pStatistics->IBOCount, 
-					pStatistics->IBOTotalSize / kb, 
-					pStatistics->TextureCount,
-					pStatistics->TextureTotalSize / (kb * kb));
+					pStatistics->GetDrawCalls(), 
+					pStatistics->GetTriangles(), 
+					pStatistics->GetBatchedStatic(),
+					pStatistics->GetBatchedDynamic(), 
+					pStatistics->GetVBOCount(), 
+					pStatistics->GetVBOTotalSize() / kb,
+					pStatistics->GetIBOCount(), 
+					pStatistics->GetIBOTotalSize() / kb, 
+					pStatistics->GetTextureCount(),
+					pStatistics->GetTextureTotalSize() / (kb * kb));
 
 	mspText->SetColor(Color32::WHITE);
 	mspText->Append(text);

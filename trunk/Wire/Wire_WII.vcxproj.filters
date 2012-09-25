@@ -507,6 +507,9 @@
     <ClInclude Include="InputSystem\WireNunchuk.h">
       <Filter>InputSystem\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\WireRendererStatistics.h">
+      <Filter>Renderer\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -694,6 +697,9 @@
     </None>
     <None Include="Renderer\Dx9\WireDx9VertexBuffer.inl">
       <Filter>Renderer\Platforms\Dx9\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\WireRendererStatistics.inl">
+      <Filter>Renderer\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1068,6 +1074,9 @@
     </ClCompile>
     <ClCompile Include="InputSystem\WireNunchuk.cpp">
       <Filter>InputSystem\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\WireRendererStatistics.cpp">
+      <Filter>Renderer\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

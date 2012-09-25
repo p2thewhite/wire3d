@@ -151,9 +151,9 @@ inline void Renderer::SetDynamicBatchingThreshold(UInt threshold)
 }
 
 //----------------------------------------------------------------------------
-inline const Renderer::Statistics* Renderer::GetStatistics()
+inline RendererStatistics* Renderer::GetStatistics()
 {
-	return s_pRenderer ? &s_pRenderer->mStatistics : NULL;
+	return &mStatistics;
 }
 
 //----------------------------------------------------------------------------

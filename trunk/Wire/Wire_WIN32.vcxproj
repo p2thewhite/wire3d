@@ -215,6 +215,7 @@
     <ClInclude Include="Renderer\GX\WireGXTexture2D.h" />
     <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h" />
     <ClInclude Include="Renderer\WireRenderer.h" />
+    <ClInclude Include="Renderer\WireRendererStatistics.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\WireGeometry.inl" />
@@ -279,6 +280,7 @@
     <None Include="Renderer\GX\WireGXIndexBuffer.inl" />
     <None Include="Renderer\GX\WireGXVertexBuffer.inl" />
     <None Include="Renderer\WireRenderer.inl" />
+    <None Include="Renderer\WireRendererStatistics.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\WireCullerSorting.cpp" />
@@ -485,6 +487,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Renderer\WireRenderer.cpp" />
+    <ClCompile Include="Renderer\WireRendererStatistics.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

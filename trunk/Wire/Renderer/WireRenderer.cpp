@@ -45,13 +45,13 @@ void Renderer::Initialize(UInt width, UInt height)
 	mStaticBatchingThreshold = 0;
 	mDynamicBatchingThreshold = 0;
 
-	ResetStatistics();
-	mStatistics.VBOCount = 0;
-	mStatistics.VBOTotalSize = 0;
-	mStatistics.IBOCount = 0;
-	mStatistics.IBOTotalSize = 0;
-	mStatistics.TextureCount = 0;
-	mStatistics.TextureTotalSize = 0;
+	mStatistics.Reset();
+	mStatistics.mVBOCount = 0;
+	mStatistics.mVBOTotalSize = 0;
+	mStatistics.mIBOCount = 0;
+	mStatistics.mIBOTotalSize = 0;
+	mStatistics.mTextureCount = 0;
+	mStatistics.mTextureTotalSize = 0;
 
 	s_pRenderer = this;
 }
@@ -197,8 +197,8 @@ PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
 		PdrIndexBuffer* pPdrIndexBuffer = WIRE_NEW PdrIndexBuffer(this,
 			pIndexBuffer);
 		mIndexBufferMap.Insert(pIndexBuffer, pPdrIndexBuffer);
-		mStatistics.IBOCount++;
-		mStatistics.IBOTotalSize += pPdrIndexBuffer->GetBufferSize();
+		mStatistics.mIBOCount++;
+		mStatistics.mIBOTotalSize += pPdrIndexBuffer->GetBufferSize();
 		return pPdrIndexBuffer;
 	}
 
@@ -212,8 +212,8 @@ void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
 
 	if (pValue)
 	{
-		mStatistics.IBOCount--;
-		mStatistics.IBOTotalSize -= (*pValue)->GetBufferSize();
+		mStatistics.mIBOCount--;
+		mStatistics.mIBOTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mIndexBufferMap.Remove(pIndexBuffer);
 	}
@@ -332,8 +332,8 @@ PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
 		PdrVertexBuffer* pPdrVertexBuffer = WIRE_NEW PdrVertexBuffer(this,
 			pVertexBuffer);
 		mVertexBufferMap.Insert(pVertexBuffer, pPdrVertexBuffer);
-		mStatistics.VBOCount++;
-		mStatistics.VBOTotalSize += pPdrVertexBuffer->GetBufferSize();
+		mStatistics.mVBOCount++;
+		mStatistics.mVBOTotalSize += pPdrVertexBuffer->GetBufferSize();
 		return pPdrVertexBuffer;
 	}
 
@@ -347,8 +347,8 @@ void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 
 	if (pValue)
 	{
-		mStatistics.VBOCount--;
-		mStatistics.VBOTotalSize -= (*pValue)->GetBufferSize();
+		mStatistics.mVBOCount--;
+		mStatistics.mVBOTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mVertexBufferMap.Remove(pVertexBuffer);
 	}
@@ -465,8 +465,8 @@ PdrTexture2D* Renderer::Bind(const Image2D* pImage)
 	{
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pImage);
 		mImage2DMap.Insert(pImage, pPdrTexture);
-		mStatistics.TextureCount++;
-		mStatistics.TextureTotalSize += pPdrTexture->GetBufferSize();
+		mStatistics.mTextureCount++;
+		mStatistics.mTextureTotalSize += pPdrTexture->GetBufferSize();
 
 		if (pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
 		{
@@ -486,8 +486,8 @@ void Renderer::Unbind(const Image2D* pImage)
 
 	if (pValue)
 	{
-		mStatistics.TextureCount--;
-		mStatistics.TextureTotalSize -= (*pValue)->GetBufferSize();
+		mStatistics.mTextureCount--;
+		mStatistics.mTextureTotalSize -= (*pValue)->GetBufferSize();
 		WIRE_DELETE *pValue;
 		mImage2DMap.Remove(pImage);
 	}
@@ -889,7 +889,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 				continue;
 			}
 
-			mStatistics.BatchedStatic++;
+			mStatistics.mBatchedStatic++;
 		}
 		else
 		{
@@ -899,7 +899,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 				continue;
 			}
 
-			mStatistics.BatchedDynamic++;
+			mStatistics.mBatchedDynamic++;
 		}
 
 		if ((vbSize+vertexCount*vertexSize) > mBatchedVertexBuffer->
@@ -1186,15 +1186,6 @@ void Renderer::Set(const TArray<Pointer<Light> >& rLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::ResetStatistics()
-{
-	mStatistics.DrawCalls = 0;
-	mStatistics.Triangles = 0;
-	mStatistics.BatchedStatic = 0;
-	mStatistics.BatchedDynamic = 0;
-}
-
-//----------------------------------------------------------------------------
 void Renderer::CreateBatchingBuffers(UInt size)
 {
 	DestroyBatchingBuffers();
@@ -1206,13 +1197,13 @@ void Renderer::CreateBatchingBuffers(UInt size)
 
 	mBatchedIndexBuffer = WIRE_NEW PdrIndexBuffer(this, size,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
-	mStatistics.IBOCount++;
-	mStatistics.IBOTotalSize += mBatchedIndexBuffer->GetBufferSize();
+	mStatistics.mIBOCount++;
+	mStatistics.mIBOTotalSize += mBatchedIndexBuffer->GetBufferSize();
 
 	mBatchedVertexBuffer = WIRE_NEW PdrVertexBuffer(this, size,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
-	mStatistics.VBOCount++;
-	mStatistics.VBOTotalSize += mBatchedVertexBuffer->GetBufferSize();
+	mStatistics.mVBOCount++;
+	mStatistics.mVBOTotalSize += mBatchedVertexBuffer->GetBufferSize();
 }
 
 //----------------------------------------------------------------------------
@@ -1220,16 +1211,16 @@ void Renderer::DestroyBatchingBuffers()
 {
 	if (mBatchedIndexBuffer)
 	{
-		mStatistics.IBOCount--;
-		mStatistics.IBOTotalSize -= mBatchedIndexBuffer->GetBufferSize();
+		mStatistics.mIBOCount--;
+		mStatistics.mIBOTotalSize -= mBatchedIndexBuffer->GetBufferSize();
 		WIRE_DELETE mBatchedIndexBuffer;
 		mBatchedIndexBuffer = NULL;
 	}
 
 	if (mBatchedVertexBuffer)
 	{
-		mStatistics.VBOCount--;
-		mStatistics.VBOTotalSize += mBatchedVertexBuffer->GetBufferSize();
+		mStatistics.mVBOCount--;
+		mStatistics.mVBOTotalSize += mBatchedVertexBuffer->GetBufferSize();
 		WIRE_DELETE mBatchedVertexBuffer;
 		mBatchedVertexBuffer = NULL;
 	}
