@@ -30,7 +30,6 @@ Bool Demo::OnInitialize()
 	mShowFps = false;
 
 	// frames per second and render statistics debug text
-	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->BindAll(mspText);
@@ -116,53 +115,18 @@ void Demo::StateRunning(Double time)
 	GetRenderer()->SetCamera(mLogoCameras[0]);
 	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
 
-	if (mShowFps)
-	{
-		DrawFPS(time);
-	}
-
-	GetRenderer()->PostDraw();
-	GetRenderer()->DisplayBackBuffer();
-}
-
-//----------------------------------------------------------------------------
-void Demo::DrawFPS(Double time)
-{
 	static Double lastTime = 0.0F;
 	Double elapsed = time - lastTime;
 	lastTime = time;
 
-	// set the frustum for the text camera (screenWidth and screenHeight
-	// could have been changed by the user resizing the window)
-	mspTextCamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
-	GetRenderer()->SetCamera(mspTextCamera);
+	if (mShowFps)
+	{
+		Float fps = static_cast<Float>(1.0 / elapsed);
+		GetRenderer()->GetStatistics()->Draw(mspText, fps);		
+	}
 
-	// set to screen width (might change any time in window mode)
-	mspText->SetLineWidth(GetWidthF());
-	mspText->Clear(Color32::WHITE);
-	// Text uses OpenGL convention of (0,0) being left bottom of window
-	mspText->SetPen(0, GetHeightF()-mspText->GetFontHeight()-32.0F);
-
-	const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
-	UInt fps = static_cast<UInt>(1/elapsed);
-	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
-		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
-		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
-	Float kb = 1024.0F;
-	const RendererStatistics* pStats = GetRenderer()->GetStatistics();
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->GetDrawCalls(), pStats->GetTriangles(), pStats->
-		GetBatchedStatic(), pStats->GetBatchedDynamic(), pStats->
-		GetVBOCount(), pStats->GetVBOTotalSize()/kb, pStats->GetIBOCount(),
-		pStats->GetIBOTotalSize()/kb, pStats->GetTextureCount(), pStats->
-		GetTextureTotalSize()/(kb*kb));
-	mspText->SetColor(Color32::WHITE);
-	mspText->Append(text);
-
-	mspText->Update(GetRenderer());
-	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(mspText);
+	GetRenderer()->PostDraw();
+	GetRenderer()->DisplayBackBuffer();
 }
 
 //----------------------------------------------------------------------------

@@ -69,6 +69,7 @@
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
     <TargetName>Game</TargetName>
+    <LibraryPath>$(DXSDK_DIR)\Lib;$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

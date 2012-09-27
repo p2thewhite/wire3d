@@ -40,9 +40,7 @@ private:
 	Double mLastTime;
 	UInt mAppState;
 
-	// frames per second debug text
-	void DrawFPS(Double time);
-	CameraPtr mspTextCamera;
+	// Renderer statistics debug text
 	TextPtr mspText;
 	Bool mShowFps;
 };

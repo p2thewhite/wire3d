@@ -10,17 +10,20 @@
 #ifndef WIRERENDERERSTATISTICS_H
 #define WIRERENDERERSTATISTICS_H
 
-#include "WireTypes.h"
+#include "WireCamera.h"
 
 namespace Wire
 {
 
+class Renderer;
 class Text;
 
 class RendererStatistics
 {
 public:
+
 	// Drawing and Renderer bound memory statistics
+	RendererStatistics();
 
 	// accumulated number of draw calls and triangles drawn since last Reset()
 	inline UInt GetDrawCalls() const;
@@ -37,9 +40,18 @@ public:
 	inline UInt GetTextureTotalSize() const;
 
 	void Reset();
-//	void ToText(Text* pText);
+	void AppendToText(Text* pText);
+	void AppendToText(Text* pText, Float fps, Bool useAverageFps = true);
+
+	// NOTE: If a Camera is supplied, Text layout is omitted and should be
+	// handled by the caller. Draw() requires that Renderer::PreDraw() has
+	// been called beforehand.
+	void Draw(Text* pText, Float fps, Bool useAverageFps = true,
+		Camera* pCamera = NULL);
 
 private:
+	Int AverageFps(Float currentFps);
+
 	// accumulated number of draw calls and triangles drawn since last
 	// Reset()
 	UInt mDrawCalls;
@@ -56,6 +68,17 @@ private:
 	UInt mTextureTotalSize;
 
 	friend class Renderer;
+
+	Renderer* mpRenderer;
+	CameraPtr mspCamera;
+
+	enum
+	{
+		FPS_SAMPLE_QUANTITY = 10
+	};
+
+	Float mFpsSamples[FPS_SAMPLE_QUANTITY];
+	UInt mFpsSamplesIndex;
 };
 
 #include "WireRendererStatistics.inl"
