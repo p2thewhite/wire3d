@@ -7,6 +7,12 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline Camera* Renderer::GetCamera() const
+{
+	return mspCamera;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetHeight() const
 {
 	return mHeight;

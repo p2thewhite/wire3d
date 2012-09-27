@@ -270,6 +270,7 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
 
+		// TODO: consider dirty flag from Mesh
 		Bool isStatic = ((startIndex == 0) && 
 			(indexCount == rIBuffer.GetQuantity()));
 

@@ -45,6 +45,7 @@ void Renderer::Initialize(UInt width, UInt height)
 	mStaticBatchingThreshold = 0;
 	mDynamicBatchingThreshold = 0;
 
+	mStatistics.mpRenderer = this;
 	mStatistics.Reset();
 	mStatistics.mVBOCount = 0;
 	mStatistics.mVBOTotalSize = 0;

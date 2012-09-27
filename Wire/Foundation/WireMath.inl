@@ -110,7 +110,8 @@ Real Math<Real>::InvSqrt(Real value)
 template <class Real>
 Real Math<Real>::Round(Real value)
 {
-	return (value > 0) ? Floor(value + 0.5) : Ceil(value - 0.5);
+	return (value > 0) ? Floor(static_cast<Real>(value + 0.5)) :
+		Ceil(static_cast<Real>(value - 0.5));
 }
 
 //----------------------------------------------------------------------------

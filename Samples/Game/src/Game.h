@@ -44,7 +44,6 @@ private:
 	void RegisterStaticCollider(const Collider* pCollider);
 	void UpdatePhysics(Double deltaTime);
 	void TerminatePhysics();
-	void DrawFPS(Double deltaTime);
 	void ToggleCollidersVisibility();
 
 	Double mLastApplicationTime;
@@ -66,7 +65,6 @@ private:
 	SpatialPtr mspCrosshair;
 	GeometryPtr mspGreenHealthBar;
 	GeometryPtr mspRedHealthBar;
-	CameraPtr mspTextCamera;
 	TextPtr mspText;
 	Bool mShowColliders;
 	TArray<Spatial*> mColliderSpatials;

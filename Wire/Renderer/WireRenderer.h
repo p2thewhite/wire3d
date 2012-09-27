@@ -164,6 +164,7 @@ public:
 
 	// Apply camera changes to platform specific renderer.
 	void SetCamera(Camera* pCamera);
+	Camera* GetCamera() const;
 	void OnFrameChange();
 	void OnViewportChange();
 
