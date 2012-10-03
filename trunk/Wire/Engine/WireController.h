@@ -27,13 +27,13 @@ public:
 	virtual ~Controller();
 
 	// the controlled object
-	inline SceneObject* GetObject() const;
+	inline SceneObject* GetSceneObject() const;
 
 	// geometric update called by UpdateGS()
 	virtual Bool Update(Double appTime);
 
 	// update called by culler only when the controlled object is visible
-	virtual Bool RenderUpdate(const Camera* pCamera);
+	virtual Bool OnGetVisibleUpdate(const Camera* pCamera);
 
 protected:
 	// construction (abstract base class)
@@ -41,11 +41,11 @@ protected:
 
 	// the controlled scene object
 	friend class SceneObject;
-	inline void SetObject(SceneObject* pObject);
+	inline void SetSceneObject(SceneObject* pObject);
 
 	// Regular pointer used for controlled object to avoid circular smart
 	// pointers between controller and object.
-	SceneObject* mpObject;
+	SceneObject* mpSceneObject;
 
 	Double mLastApplicationTime;
 };

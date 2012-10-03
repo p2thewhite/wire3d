@@ -10,8 +10,6 @@
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
 
-using namespace Wire;
-
 class Game : public WIREAPPLICATION
 {
 	WIRE_DECLARE_INITIALIZE;
@@ -35,11 +33,11 @@ private:
 
 	void OnLoading(Double time, Double deltaTime);
 	void OnRunning(Double time, Double deltaTime);
-	Node* LoadAndInitializeLoading();
-	Node* LoadAndInitializeScene();
-	Node* LoadAndInitializeGUI();
+	Wire::Node* LoadAndInitializeLoading();
+	Wire::Node* LoadAndInitializeScene();
+	Wire::Node* LoadAndInitializeGUI();
 
-	void MoveCrosshairTo(const Vector2F& rScreenPoint);
+	void MoveCrosshairTo(const Wire::Vector2F& rScreenPoint);
 	void InitializePhysics();
 	void RegisterStaticCollider(const Collider* pCollider);
 	void UpdatePhysics(Double deltaTime);
@@ -49,25 +47,25 @@ private:
 	Double mLastApplicationTime;
 	UInt mAppState;
 	Bool mShowFps;
-	Vector3F mStartingPoint;
-	Pointer<ProbeRobot> mspProbeRobot;
-	Pointer<Player> mspPlayer;
-	Pointer<HealthMonitor> mspHealthMonitor;
-	NodePtr mspLogo;
-	NodePtr mspScene;
-	NodePtr mspGUI;
-	TArray<CameraPtr> mLogoCameras;
-	TArray<CameraPtr> mSceneCameras;
-	TArray<CameraPtr> mGUICameras;
-	Culler mLogoCuller;
-	CullerSorting mSceneCuller;
-	Culler mGUICuller;
-	SpatialPtr mspCrosshair;
-	GeometryPtr mspGreenHealthBar;
-	GeometryPtr mspRedHealthBar;
-	TextPtr mspText;
+	Wire::Vector3F mStartingPoint;
+	Wire::Pointer<ProbeRobot> mspProbeRobot;
+	Wire::Pointer<Player> mspPlayer;
+	Wire::Pointer<HealthMonitor> mspHealthMonitor;
+	Wire::NodePtr mspLogo;
+	Wire::NodePtr mspScene;
+	Wire::NodePtr mspGUI;
+	Wire::TArray<Wire::CameraPtr> mLogoCameras;
+	Wire::TArray<Wire::CameraPtr> mSceneCameras;
+	Wire::TArray<Wire::CameraPtr> mGUICameras;
+	Wire::Culler mLogoCuller;
+	Wire::CullerSorting mSceneCuller;
+	Wire::Culler mGUICuller;
+	Wire::SpatialPtr mspCrosshair;
+	Wire::GeometryPtr mspGreenHealthBar;
+	Wire::GeometryPtr mspRedHealthBar;
+	Wire::TextPtr mspText;
 	Bool mShowColliders;
-	TArray<Spatial*> mColliderSpatials;
+	Wire::TArray<Wire::Spatial*> mColliderSpatials;
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
 	btBroadphaseInterface* mpOverlappingPairCache;

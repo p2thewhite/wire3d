@@ -17,7 +17,7 @@ WIRE_IMPLEMENT_RTTI(Wire, Controller, Object);
 //----------------------------------------------------------------------------
 Controller::Controller()
 {
-	mpObject = NULL;
+	mpSceneObject = NULL;
 	mLastApplicationTime = -MathD::MAX_REAL;
 }
 
@@ -39,7 +39,7 @@ Bool Controller::Update(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-Bool Controller::RenderUpdate(const Camera* /*pCamera*/)
+Bool Controller::OnGetVisibleUpdate(const Camera* /*pCamera*/)
 {
 	return false;
 }

@@ -37,7 +37,7 @@ public:
  	void DetachAllControllers();
 
 	Bool UpdateControllers(Double appTime);
-	Bool RenderUpdateControllers(const Camera* pCamera);
+	Bool OnGetVisibleUpdateControllers(const Camera* pCamera);
 
 protected:
 	SceneObject();

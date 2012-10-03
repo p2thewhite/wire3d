@@ -41,9 +41,9 @@ Bool ConveyorBelt::Update(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-Bool ConveyorBelt::RenderUpdate(const Camera*)
+Bool ConveyorBelt::OnGetVisibleUpdate(const Camera*)
 {
-	Geometry* pGeo = DynamicCast<Geometry>(mpObject);
+	Geometry* pGeo = DynamicCast<Geometry>(mpSceneObject);
 	if (!mspVertexBufferCopy || !pGeo)
 	{
 		return false;

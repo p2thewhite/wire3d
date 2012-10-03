@@ -23,7 +23,7 @@ void Collider::Register(btDynamicsWorld* pPhysicsWorld)
 {
 	WIRE_ASSERT(pPhysicsWorld);
 
-	Spatial* pSpatial = DynamicCast<Spatial>(mpObject);
+	Spatial* pSpatial = DynamicCast<Spatial>(mpSceneObject);
 	WIRE_ASSERT(pSpatial);
 
 	// Setting position

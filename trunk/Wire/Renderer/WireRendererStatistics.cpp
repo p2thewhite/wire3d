@@ -60,8 +60,8 @@ void RendererStatistics::AppendToText(Text* pText, Float fps,
 {
 	const UInt textArraySize = 32;
 	Char text[textArraySize];
-	Int roundedFps = useAverageFps ? AverageFps(fps) : static_cast<Int>(
-		MathF::Round(fps)); 
+	fps = useAverageFps ? AverageFps(fps) : fps;
+	Int roundedFps = static_cast<Int>(MathF::Round(fps)); 
 
 	System::Sprintf(text, textArraySize, "FPS: %d\n", roundedFps);
 	pText->Append(text);
@@ -105,11 +105,11 @@ void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
 }
 
 //----------------------------------------------------------------------------
-Int RendererStatistics::AverageFps(Float currentFps)
+Float RendererStatistics::AverageFps(Float currentFps)
 {
 	WIRE_ASSERT(mFpsSamplesIndex < FPS_SAMPLE_QUANTITY);
 
-	mFpsSamples[mFpsSamplesIndex] = MathF::Round(currentFps);
+	mFpsSamples[mFpsSamplesIndex] = currentFps;
 	Float averageFps = 0;
 	for (UInt i = 0; i < FPS_SAMPLE_QUANTITY; i++)
 	{
@@ -122,6 +122,5 @@ Int RendererStatistics::AverageFps(Float currentFps)
 		mFpsSamplesIndex = 0;
 	}
 
-	averageFps /= FPS_SAMPLE_QUANTITY;
-	return static_cast<Int>(MathF::Round(averageFps));
+	return averageFps /= FPS_SAMPLE_QUANTITY;
 }

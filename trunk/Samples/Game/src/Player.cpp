@@ -94,7 +94,7 @@ void Player::InitializeIfNecessary()
 		return;
 	}
 
-	mpNode = DynamicCast<Node>(GetObject());
+	mpNode = DynamicCast<Node>(GetSceneObject());
 	WIRE_ASSERT(mpNode);
 
 	mpGun = mpNode->GetChildByName("Gun");
@@ -301,7 +301,7 @@ void Player::UpdateGunRotation()
 
 	// Calculate look gunRotation from look coordinates in world space
 	Vector3F axis = gunDirection.Cross(lookAtWorldSpace);
-	Float angle = gunDirection.GetAngle(lookAtWorldSpace);
+	Float angle = gunDirection.Angle(lookAtWorldSpace);
 
 	Matrix3F gunRotation;
 	gunRotation.FromAxisAngle(axis, angle);
