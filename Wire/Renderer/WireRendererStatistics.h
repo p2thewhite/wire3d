@@ -50,7 +50,7 @@ public:
 		Camera* pCamera = NULL);
 
 private:
-	Int AverageFps(Float currentFps);
+	Float AverageFps(Float currentFps);
 
 	// accumulated number of draw calls and triangles drawn since last
 	// Reset()

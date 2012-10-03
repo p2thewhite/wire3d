@@ -7,13 +7,13 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void Controller::SetObject(SceneObject* pObject)
+inline void Controller::SetSceneObject(SceneObject* pObject)
 {
-	mpObject = pObject;
+	mpSceneObject = pObject;
 }
 
 //----------------------------------------------------------------------------
-inline SceneObject* Controller::GetObject() const
+inline SceneObject* Controller::GetSceneObject() const
 {
-	return mpObject;
+	return mpSceneObject;
 }

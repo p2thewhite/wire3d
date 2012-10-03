@@ -1,5 +1,5 @@
-#ifndef PROBEROBOTCONTROLLER_H_
-#define PROBEROBOTCONTROLLER_H_
+#ifndef PROBEROBOTCONTROLLER_H
+#define PROBEROBOTCONTROLLER_H
 
 #include "WireController.h"
 #include "WireSpatial.h"
@@ -8,45 +8,38 @@
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 
-using namespace Wire;
-
-class ProbeRobot : public Controller
+class ProbeRobot : public Wire::Controller
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	ProbeRobot(Spatial* pPlayerSpatial);
+	ProbeRobot(Wire::Spatial* pPlayerSpatial);
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pPhysicsWorld);
 	void SetTotalHealth(Float totalHealth);
 	Float GetTotalHealth();
 	Float GetHealth();
-	void SetSpeed(Float speed);
-	void SetMaximumPlayerDistance(Float maximumPlayerDistance);
 	void TakeDamage(Float damage);
 
 private:
-	Spatial* mpSpatial;
-	SpatialPtr mspPlayerSpatial;
-	Float mTotalHealth;
-	Float mHealth;
-	Float mSpeed;
-	Float mSquaredMaximumPlayerDistance;
-	Vector3F mMove;
-	Matrix3F mRotation;
-	btDynamicsWorld* mpPhysicsWorld;
-	btPairCachingGhostObject* mpGhostObject;
-	btKinematicCharacterController* mpPhysicsEntity;
-
-	void InitializeIfNecessary();
 	Float GetDeltaTime(Double appTime);
 	void CalculateMovementAndRotation(Float deltaTime);
-	Vector3F GetPosition();
+	Wire::Vector3F GetPosition();
 	void UpdateModel();
 	void MovePhysicsEntity();
 	void Die();
 
+	Wire::SpatialPtr mspPlayerSpatial;
+	Float mTotalHealth;
+	Float mHealth;
+	Float mSpeed;
+	Float mMaximumPlayerDistanceSquared;
+	Wire::Vector3F mMove;
+	Wire::Matrix3F mRotation;
+
+	btPairCachingGhostObject* mpGhostObject;
+	btKinematicCharacterController* mpPhysicsEntity;
 };
 
 #endif

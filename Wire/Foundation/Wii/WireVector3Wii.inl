@@ -111,6 +111,68 @@ Bool Vector3<Real>::operator!= (const Vector3& rVector) const
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
+	const
+{
+	Vector3 result;
+	VECAdd(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
+		mTuple), &result.mTuple);
+	return result;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
+	const
+{
+	Vector3 result;
+	VECSubtract(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
+		mTuple), &result.mTuple);
+	return result;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
+{
+	Vector3 result;
+	VECScale(const_cast<Vec*>(&mTuple), &result.mTuple, scalar);
+	return result;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
+{
+	Vector3 quot;
+
+	if (scalar != static_cast<Real>(0.0))
+	{
+		Real invScalar = (static_cast<Real>(1.0)) / scalar;
+		VECScale(const_cast<Vec*>(&mTuple), &quot.mTuple, invScalar);
+	}
+	else
+	{
+		quot.mTuple.x = Math<Real>::MAX_REAL;
+		quot.mTuple.y = Math<Real>::MAX_REAL;
+		quot.mTuple.z = Math<Real>::MAX_REAL;
+	}
+
+	return quot;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::operator- () const
+{
+	return Vector3(
+		-mTuple.x,
+		-mTuple.y,
+		-mTuple.z);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 inline Vector3<Real>& Vector3<Real>::operator+= (const Vector3& rVector)
 {
 	VECAdd(&mTuple, const_cast<Vec*>(&rVector.mTuple), &mTuple);
@@ -178,100 +240,6 @@ inline Real Vector3<Real>::SquaredLength() const
 
 //----------------------------------------------------------------------------
 template <class Real>
-Real Vector3<Real>::Distance(const Vector3& rVector) const
-{
-	return Math<Real>::Sqrt(SquaredDistance(rVector));
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
-{
-	Vector3<Real> difference = rVector - *this;
-	return difference.mTuple.x * difference.mTuple.x + difference.mTuple.y * difference.mTuple.y + difference.mTuple.z * difference.mTuple.z;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::GetAngle(const Vector3& rVector) const
-{
-	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& rVector)
-const
-{
-	Vector3 result;
-	VECAdd(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
-		mTuple), &result.mTuple);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator- (const Vector3& rVector)
-const
-{
-	Vector3 result;
-	VECSubtract(const_cast<Vec*>(&mTuple), const_cast<Vec*>(&rVector.
-		mTuple), &result.mTuple);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator* (Real scalar) const
-{
-	Vector3 result;
-	VECScale(const_cast<Vec*>(&mTuple), &result.mTuple, scalar);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator/ (Real scalar) const
-{
-	Vector3 quot;
-
-	if (scalar != static_cast<Real>(0.0))
-	{
-		Real invScalar = (static_cast<Real>(1.0)) / scalar;
-		VECScale(const_cast<Vec*>(&mTuple), &quot.mTuple, invScalar);
-	}
-	else
-	{
-		quot.mTuple.x = Math<Real>::MAX_REAL;
- 		quot.mTuple.y = Math<Real>::MAX_REAL;
- 		quot.mTuple.z = Math<Real>::MAX_REAL;
-	}
-
-	return quot;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::operator- () const
-{
-	return Vector3(
-		-mTuple.x,
-		-mTuple.y,
-		-mTuple.z);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
-{
-	Vector3 result;
-	VECCrossProduct(const_cast<Vec*>(&mTuple), 
-		const_cast<Vec*>(&rVector.mTuple), &result.mTuple);
-	return result;
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 {
 	return VECDotProduct(const_cast<Vec*>(&mTuple), 
@@ -300,6 +268,64 @@ inline Real Vector3<Real>::Normalize()
 	}
 
 	return length;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Bool Vector3<Real>::IsNormalized() const
+{
+	Real length = SquaredLength();
+
+	return
+		(length < (static_cast<Real>(1.0) + Math<Real>::ZERO_TOLERANCE)) &&
+		(length > (static_cast<Real>(1.0) - Math<Real>::ZERO_TOLERANCE));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::Distance(const Vector3& rVector) const
+{
+	Vector3<Real> difference(
+		rVector.mTuple.x - mTuple.x,
+		rVector.mTuple.y - mTuple.y,
+		rVector.mTuple.z - mTuple.z);
+
+	return Math<Real>::Sqrt(
+		difference.mTuple.x * difference.mTuple.x +
+		difference.mTuple.y * difference.mTuple.y +
+		difference.mTuple.z * difference.mTuple.z);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
+{
+	Vector3<Real> difference(
+		rVector.mTuple.x - mTuple.x,
+		rVector.mTuple.y - mTuple.y,
+		rVector.mTuple.z - mTuple.z);
+
+	return
+		difference.mTuple.x * difference.mTuple.x +
+		difference.mTuple.y * difference.mTuple.y +
+		difference.mTuple.z * difference.mTuple.z;
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::Angle(const Vector3& rVector) const
+{
+	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
+{
+	Vector3 result;
+	VECCrossProduct(const_cast<Vec*>(&mTuple), 
+		const_cast<Vec*>(&rVector.mTuple), &result.mTuple);
+	return result;
 }
 
 //----------------------------------------------------------------------------

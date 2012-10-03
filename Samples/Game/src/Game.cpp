@@ -5,6 +5,8 @@
 
 WIRE_APPLICATION(Game);
 
+using namespace Wire;
+
 //----------------------------------------------------------------------------
 Game::Game() 
 	:
@@ -484,10 +486,8 @@ Node* Game::LoadAndInitializeScene()
 
 	// Create and configure probe robot controller
 	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial);
-	mspProbeRobot->Register(mpPhysicsWorld);
-	mspProbeRobot->SetSpeed(7.5f);
-	mspProbeRobot->SetMaximumPlayerDistance(10.0F);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
+	mspProbeRobot->Register(mpPhysicsWorld);
 
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);

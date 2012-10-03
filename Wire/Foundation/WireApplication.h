@@ -90,10 +90,10 @@ protected:
 //----------------------------------------------------------------------------
 #ifdef WIRE_WIN
 #include "Dx9/WireDx9Application.h"
-#define WIREAPPLICATION Dx9Application
+#define WIREAPPLICATION Wire::Dx9Application
 #else
 #include "Wii/WireGXApplication.h"
-#define WIREAPPLICATION GXApplication
+#define WIREAPPLICATION Wire::GXApplication
 #endif
 
 #endif

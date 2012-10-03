@@ -46,7 +46,7 @@ void SceneObject::AttachController(Controller* pController)
 	}
 
 	// Bind the controller to the object.
-	pController->SetObject(this);
+	pController->SetSceneObject(this);
 
 	// Controller not in current list, add it.
 	mControllers.Append(pController);
@@ -60,7 +60,7 @@ void SceneObject::DetachController(Controller* pController)
 		if (pController == mControllers[i])
 		{
 			// Unbind the controller from the object.
-			pController->SetObject(NULL);
+			pController->SetSceneObject(NULL);
 
 			// Remove the controller from the list.
 			mControllers.RemoveAt(i);
@@ -77,7 +77,7 @@ void SceneObject::DetachAllControllers()
 	{
 		// Unbind the controller from the object.
 		Controller* pController = mControllers[i];
-		pController->SetObject(NULL);
+		pController->SetSceneObject(NULL);
 	}
 
 	mControllers.RemoveAll();
@@ -100,13 +100,13 @@ Bool SceneObject::UpdateControllers(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-Bool SceneObject::RenderUpdateControllers(const Camera* pCamera)
+Bool SceneObject::OnGetVisibleUpdateControllers(const Camera* pCamera)
 {
 	Bool wasUpdated = false;
 	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
 	{
 		Controller* pController = mControllers[i];
-		if (pController->RenderUpdate(pCamera))
+		if (pController->OnGetVisibleUpdate(pCamera))
 		{
 			wasUpdated = true;
 		}

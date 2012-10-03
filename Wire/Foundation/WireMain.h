@@ -72,7 +72,7 @@ Bool classname::RegisterInitialize()                                         \
 {                                                                            \
 	if (!s_InitializeRegistered)                                             \
 	{                                                                        \
-		Main::AddInitializer(classname::Initialize);                         \
+		Wire::Main::AddInitializer(classname::Initialize);                   \
 		s_InitializeRegistered = true;                                       \
 	}                                                                        \
                                                                              \
@@ -104,18 +104,18 @@ void classname::Initialize()                                                 \
                                                                              \
 Int main(Int argc, Char** argv)                                              \
 {                                                                            \
-	Main::Initialize();                                                      \
+	Wire::Main::Initialize();                                                \
                                                                              \
-	Application* pApplication = Application::GetApplication();               \
+	Wire::Application* pApplication = Wire::Application::GetApplication();   \
 	if (pApplication)                                                        \
 	{                                                                        \
 		pApplication->Main(argc, argv);                                      \
 		                                                                     \
 		WIRE_DELETE pApplication;                                            \
-		Application::SetApplication(NULL);                                   \
+		Wire::Application::SetApplication(NULL);                             \
 	}                                                                        \
                                                                              \
-	Main::Terminate();                                                       \
+	Wire::Main::Terminate();                                                 \
                                                                              \
 	return 0;                                                                \
 }                                                                            \

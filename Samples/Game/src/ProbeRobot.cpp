@@ -9,11 +9,10 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Controller);
 //----------------------------------------------------------------------------
 ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 	:
-	mpSpatial(NULL),
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
-	mSpeed(5.0F),
-	mSquaredMaximumPlayerDistance(25.0F)
+	mSpeed(7.5F),
+	mMaximumPlayerDistanceSquared(100.0F)
 {
 	WIRE_ASSERT(pPlayerSpatial);
 	mspPlayerSpatial = pPlayerSpatial;
@@ -23,8 +22,6 @@ ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
 Bool ProbeRobot::Update(Double appTime)
 {
 	Float deltaTime = GetDeltaTime(appTime);
-
-	InitializeIfNecessary();
 
 	if (mHealth <= 0)
 	{
@@ -42,30 +39,14 @@ Bool ProbeRobot::Update(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::InitializeIfNecessary()
-{
-	if (mpSpatial) 
-	{
-		return;
-	}
-
-	mpSpatial = DynamicCast<Spatial>(GetObject());
-	WIRE_ASSERT(mpSpatial);
-
-	// Set physics entity position
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(BulletUtils::Convert(mpSpatial->Local.GetTranslate()));
-	mpGhostObject->setWorldTransform(transform);
-}
-
-//----------------------------------------------------------------------------
 void ProbeRobot::Die()
 {
 	// DEBUG:
 	//System::Print("Probe robot has died\n");
 
-	mpSpatial->DetachController(this);
+	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
+	WIRE_ASSERT(pSpatial);
+	pSpatial->DetachController(this);
 	mpGhostObject->setUserPointer(NULL);
 }
 
@@ -73,7 +54,10 @@ void ProbeRobot::Die()
 void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 {
 	WIRE_ASSERT(pPhysicsWorld);
-	mpPhysicsWorld = pPhysicsWorld;
+	if (!pPhysicsWorld)
+	{
+		return;
+	}
 
 	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
 
@@ -85,11 +69,22 @@ void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 	mpGhostObject->setUserPointer(this);
 
 	// Create physics entity
-	mpPhysicsEntity = WIRE_NEW btKinematicCharacterController(mpGhostObject, pConvexShape, 0.35f);
+	mpPhysicsEntity = WIRE_NEW btKinematicCharacterController(mpGhostObject,
+		pConvexShape, 0.35f);
 
 	// Collide only with static objects (for now)
-	mpPhysicsWorld->addCollisionObject(mpGhostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter);
-	mpPhysicsWorld->addAction(mpPhysicsEntity);
+	pPhysicsWorld->addCollisionObject(mpGhostObject,
+		btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter |
+		btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter);
+	pPhysicsWorld->addAction(mpPhysicsEntity);
+
+	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
+	WIRE_ASSERT(pSpatial);
+	// Set physics entity position
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(BulletUtils::Convert(pSpatial->Local.GetTranslate()));
+	mpGhostObject->setWorldTransform(transform);
 }
 
 //----------------------------------------------------------------------------
@@ -105,23 +100,10 @@ Float ProbeRobot::GetTotalHealth()
 	return mTotalHealth;
 }
 
-
 //----------------------------------------------------------------------------
 Float ProbeRobot::GetHealth()
 {
 	return mHealth;
-}
-
-//----------------------------------------------------------------------------
-void ProbeRobot::SetSpeed(Float speed)
-{
-	mSpeed = speed;
-}
-
-//----------------------------------------------------------------------------
-void ProbeRobot::SetMaximumPlayerDistance(Float maximumPlayerDistance)
-{
-	mSquaredMaximumPlayerDistance = maximumPlayerDistance * maximumPlayerDistance;
 }
 
 //----------------------------------------------------------------------------
@@ -134,8 +116,10 @@ Vector3F ProbeRobot::GetPosition()
 //----------------------------------------------------------------------------
 void ProbeRobot::UpdateModel()
 {
-	mpSpatial->Local.SetTranslate(GetPosition());
-	mpSpatial->Local.SetRotate(mRotation);
+	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
+	WIRE_ASSERT(pSpatial);
+	pSpatial->Local.SetTranslate(GetPosition());
+	pSpatial->Local.SetRotate(mRotation);
 }
 
 //----------------------------------------------------------------------------
@@ -158,12 +142,13 @@ void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 {
 	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
 	Vector3F probeRobotPosition = GetPosition();
-	Float squaredDistance = MathF::FAbs(playerPosition.SquaredDistance(probeRobotPosition));
+	Float squaredDistance = MathF::FAbs(playerPosition.SquaredDistance(
+		probeRobotPosition));
 
 	Vector3F direction = playerPosition - probeRobotPosition;
 	direction.Normalize();
 
-	Float angle = direction.GetAngle(Vector3F::UNIT_Z);
+	Float angle = direction.Angle(Vector3F::UNIT_Z);
 
 	// Correcting angle sign
 	if (playerPosition.Cross(probeRobotPosition).Z() < 0)
@@ -173,7 +158,7 @@ void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 
 	mRotation.FromAxisAngle(Vector3F::UNIT_Y, angle);
 
-	if (squaredDistance > mSquaredMaximumPlayerDistance)
+	if (squaredDistance > mMaximumPlayerDistanceSquared)
 	{
 		mMove = direction * mSpeed * deltaTime;
 	}

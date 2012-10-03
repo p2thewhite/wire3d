@@ -21,7 +21,7 @@ LogoFader::LogoFader()
 //----------------------------------------------------------------------------
 Bool LogoFader::Update(Double appTime)
 {
-	Spatial* pSpatial = DynamicCast<Spatial>(mpObject);
+	Spatial* pSpatial = DynamicCast<Spatial>(mpSceneObject);
 
 	if (!pSpatial || (appTime == -MathD::MAX_REAL))
 	{

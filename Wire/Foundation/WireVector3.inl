@@ -248,16 +248,6 @@ inline Real Vector3<Real>::SquaredLength() const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
-{
-	return Vector3(
-		mTuple[1]*rVector.mTuple[2] - mTuple[2]*rVector.mTuple[1],
-		mTuple[2]*rVector.mTuple[0] - mTuple[0]*rVector.mTuple[2],
-		mTuple[0]*rVector.mTuple[1] - mTuple[1]*rVector.mTuple[0]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Real Vector3<Real>::Dot(const Vector3& rVector) const
 {
 	return
@@ -292,6 +282,64 @@ inline Real Vector3<Real>::Normalize()
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Bool Vector3<Real>::IsNormalized() const
+{
+	Real length = SquaredLength();
+
+	return
+		(length < (static_cast<Real>(1.0) + Math<Real>::ZERO_TOLERANCE)) &&
+		(length > (static_cast<Real>(1.0) - Math<Real>::ZERO_TOLERANCE));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::Distance(const Vector3& rVector) const
+{
+	Vector3<Real> difference(
+		rVector.mTuple[0] - mTuple[0],
+		rVector.mTuple[1] - mTuple[1],
+		rVector.mTuple[2] - mTuple[2]);
+
+	return Math<Real>::Sqrt(
+		difference.mTuple[0] * difference.mTuple[0] +
+		difference.mTuple[1] * difference.mTuple[1] +
+		difference.mTuple[2] * difference.mTuple[2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
+{
+	Vector3<Real> difference(
+		rVector.mTuple[0] - mTuple[0],
+		rVector.mTuple[1] - mTuple[1],
+		rVector.mTuple[2] - mTuple[2]);
+
+	return
+		difference.mTuple[0] * difference.mTuple[0] +
+		difference.mTuple[1] * difference.mTuple[1] +
+		difference.mTuple[2] * difference.mTuple[2];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Real Vector3<Real>::Angle(const Vector3& rVector) const
+{
+	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
+{
+	return Vector3(
+		mTuple[1]*rVector.mTuple[2] - mTuple[2]*rVector.mTuple[1],
+		mTuple[2]*rVector.mTuple[0] - mTuple[0]*rVector.mTuple[2],
+		mTuple[0]*rVector.mTuple[1] - mTuple[1]*rVector.mTuple[0]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 void Vector3<Real>::Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW)
 {
 	// If the input vectors are v0, v1, and v2, then the Gram-Schmidt
@@ -317,28 +365,6 @@ void Vector3<Real>::Orthonormalize(Vector3& rU, Vector3& rV, Vector3& rW)
 	dot0 = rU.Dot(rW);
 	rW -= dot0*rU + dot1*rV;
 	rW.Normalize();
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::Distance(const Vector3& rVector) const
-{
-	return Math<Real>::Sqrt(SquaredDistance(rVector));
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
-{
-	Vector3<Real> difference = rVector - *this;
-	return difference.mTuple[0] * difference.mTuple[0] + difference.mTuple[1] * difference.mTuple[1] + difference.mTuple[2] * difference.mTuple[2];
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::GetAngle(const Vector3& rVector) const
-{
-	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
 }
 
 //----------------------------------------------------------------------------
