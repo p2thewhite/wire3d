@@ -301,12 +301,12 @@ void Game::ToggleCollidersVisibility()
 //----------------------------------------------------------------------------
 void Game::OnRunning(Double time, Double deltaTime)
 {
-	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
-
-	mspGUI->UpdateGS(time);
-	mGUICuller.ComputeVisibleSet(mspGUI);
 	mspScene->UpdateGS(time);
 	mSceneCuller.ComputeVisibleSet(mspScene);
+
+	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
+	mspGUI->UpdateGS(time);
+	mGUICuller.ComputeVisibleSet(mspGUI);
 
 	// Update physics simulation
 	UpdatePhysics(deltaTime);
@@ -315,6 +315,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mSceneCameras[0]);
 	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
+
 	GetRenderer()->SetCamera(mGUICameras[0]);
 	GetRenderer()->DrawScene(mGUICuller.GetVisibleSets());
 
@@ -363,16 +364,16 @@ void Game::OnLoading(Double time, Double deltaTime)
 		return;
 	}
 
-	mspScene = LoadAndInitializeScene();
-	if (!mspScene)
-	{
-		WIRE_ASSERT(false /* Could not load scene.xml */);
-	}
-
 	mspGUI = LoadAndInitializeGUI();
 	if (!mspGUI)
 	{
 		WIRE_ASSERT(false /* Could not load GUI.xml */);
+	}
+
+	mspScene = LoadAndInitializeScene();
+	if (!mspScene)
+	{
+		WIRE_ASSERT(false /* Could not load scene.xml */);
 	}
 
 	mAppState = AS_RUNNING;
@@ -431,8 +432,8 @@ Node* Game::LoadAndInitializeGUI()
 	mspRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
 
 	// Create health monitor
-	mspHealthMonitor = WIRE_NEW HealthMonitor(mspGreenHealthBar, mspRedHealthBar, mspPlayer, mspProbeRobot);
-	pRoot->AttachController(mspHealthMonitor);
+// 	mspHealthMonitor = WIRE_NEW HealthMonitor(mspGreenHealthBar, mspRedHealthBar, mspPlayer, mspProbeRobot);
+// 	pRoot->AttachController(mspHealthMonitor);
 
 	GetRenderer()->BindAll(pRoot);
 
@@ -485,7 +486,7 @@ Node* Game::LoadAndInitializeScene()
 	Spatial* pPlayerSpatial = DynamicCast<Spatial>(pScene->GetChildByName("Player"));
 
 	// Create and configure probe robot controller
-	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial);
+	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, mspRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
 	mspProbeRobot->Register(mpPhysicsWorld);
 

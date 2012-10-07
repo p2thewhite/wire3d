@@ -16,9 +16,10 @@ WIRE_IMPLEMENT_RTTI(Wire, Controller, Object);
 
 //----------------------------------------------------------------------------
 Controller::Controller()
+	:
+	mpSceneObject(NULL),
+	mLastApplicationTime(-MathD::MAX_REAL)
 {
-	mpSceneObject = NULL;
-	mLastApplicationTime = -MathD::MAX_REAL;
 }
 
 //----------------------------------------------------------------------------
