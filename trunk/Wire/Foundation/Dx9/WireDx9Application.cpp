@@ -133,6 +133,7 @@ Int Dx9Application::GetWindowID() const
 {
 	return mWindowID;
 }
+
 //----------------------------------------------------------------------------
 Int Dx9Application::Main(Int, Char*[])
 {

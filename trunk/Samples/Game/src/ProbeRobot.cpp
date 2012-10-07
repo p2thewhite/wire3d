@@ -7,21 +7,31 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Controller);
 
 //----------------------------------------------------------------------------
-ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial)
+ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
 	:
+	mspPlayerSpatial(pPlayerSpatial),
+	mspHealthBar(pHealthBar),
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
 	mSpeed(7.5F),
 	mMaximumPlayerDistanceSquared(100.0F)
 {
-	WIRE_ASSERT(pPlayerSpatial);
-	mspPlayerSpatial = pPlayerSpatial;
+	WIRE_ASSERT(mspPlayerSpatial);
+	WIRE_ASSERT(mspHealthBar);
+
+	mHealthBarScale = mspHealthBar->Local.GetScale();
 }
 
 //----------------------------------------------------------------------------
 Bool ProbeRobot::Update(Double appTime)
 {
-	Float deltaTime = GetDeltaTime(appTime);
+	Float elapsedTime = static_cast<Float>(appTime - mLastApplicationTime);
+	if (mLastApplicationTime == -MathD::MAX_REAL)
+	{
+		elapsedTime = 0.0F;
+	}
+
+	mLastApplicationTime = appTime;
 
 	if (mHealth <= 0)
 	{
@@ -29,11 +39,13 @@ Bool ProbeRobot::Update(Double appTime)
 		return true;
 	}
 
-	CalculateMovementAndRotation(deltaTime);
-	UpdateModel();
-	MovePhysicsEntity();
+	CalculateMovementAndRotation(elapsedTime);
 
-	mMove = Vector3F::ZERO;
+	// update the red health bar
+	Float healthRatio = mHealth / mTotalHealth;
+	Vector3F healthBarScale = mHealthBarScale;
+	healthBarScale.X() = MathF::Max(healthBarScale.X() * healthRatio, 0.0001F);
+	mspHealthBar->Local.SetScale(healthBarScale);
 
 	return true;
 }
@@ -88,47 +100,6 @@ void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::SetTotalHealth(Float totalHealth)
-{
-	mTotalHealth = totalHealth;
-	mHealth = mTotalHealth;
-}
-
-//----------------------------------------------------------------------------
-Float ProbeRobot::GetTotalHealth()
-{
-	return mTotalHealth;
-}
-
-//----------------------------------------------------------------------------
-Float ProbeRobot::GetHealth()
-{
-	return mHealth;
-}
-
-//----------------------------------------------------------------------------
-Vector3F ProbeRobot::GetPosition()
-{
-	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
-	return Vector3F(origin.x(), origin.y(), origin.z());
-}
-
-//----------------------------------------------------------------------------
-void ProbeRobot::UpdateModel()
-{
-	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
-	WIRE_ASSERT(pSpatial);
-	pSpatial->Local.SetTranslate(GetPosition());
-	pSpatial->Local.SetRotate(mRotation);
-}
-
-//----------------------------------------------------------------------------
-void ProbeRobot::MovePhysicsEntity()
-{
-	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(mMove));
-}
-
-//----------------------------------------------------------------------------
 void ProbeRobot::TakeDamage(Float damage)
 {
 	// DEBUG:
@@ -140,10 +111,11 @@ void ProbeRobot::TakeDamage(Float damage)
 //----------------------------------------------------------------------------
 void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 {
+	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
+	const Vector3F probeRobotPosition(origin.x(), origin.y(), origin.z());
+
 	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
-	Vector3F probeRobotPosition = GetPosition();
-	Float squaredDistance = MathF::FAbs(playerPosition.SquaredDistance(
-		probeRobotPosition));
+	Float squaredDistance = playerPosition.SquaredDistance(probeRobotPosition);
 
 	Vector3F direction = playerPosition - probeRobotPosition;
 	direction.Normalize();
@@ -156,28 +128,20 @@ void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 		angle = -angle;
 	}
 
-	mRotation.FromAxisAngle(Vector3F::UNIT_Y, angle);
+	Matrix3F rotation(Vector3F::UNIT_Y, angle);
+	Vector3F move = Vector3F::ZERO;
 
 	if (squaredDistance > mMaximumPlayerDistanceSquared)
 	{
-		mMove = direction * mSpeed * deltaTime;
+		move = direction * mSpeed * deltaTime;
 	}
-}
 
-//----------------------------------------------------------------------------
-Float ProbeRobot::GetDeltaTime(Double appTime)
-{
-	static Double lastApplicationTime = 0;
-	Float deltaTime;
+	// update the scene object
+	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
+	WIRE_ASSERT(pSpatial);
+	pSpatial->Local.SetTranslate(probeRobotPosition);
+	pSpatial->Local.SetRotate(rotation);
 
-	if (lastApplicationTime == 0) 
-	{
-		deltaTime = 0;
-	} 
-	else 
-	{
-		deltaTime = (Float)(appTime - lastApplicationTime);
-	}
-	lastApplicationTime = appTime;
-	return deltaTime;
+	// update the physics object
+	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(move));
 }

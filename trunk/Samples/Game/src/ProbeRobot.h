@@ -13,30 +13,24 @@ class ProbeRobot : public Wire::Controller
 	WIRE_DECLARE_RTTI;
 
 public:
-	ProbeRobot(Wire::Spatial* pPlayerSpatial);
+	ProbeRobot(Wire::Spatial* pPlayerSpatial, Wire::Spatial* pHealthBar);
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pPhysicsWorld);
-	void SetTotalHealth(Float totalHealth);
-	Float GetTotalHealth();
-	Float GetHealth();
 	void TakeDamage(Float damage);
 
 private:
-	Float GetDeltaTime(Double appTime);
 	void CalculateMovementAndRotation(Float deltaTime);
-	Wire::Vector3F GetPosition();
-	void UpdateModel();
-	void MovePhysicsEntity();
 	void Die();
 
 	Wire::SpatialPtr mspPlayerSpatial;
+	Wire::SpatialPtr mspHealthBar;
+	Wire::Vector3F mHealthBarScale;
+
 	Float mTotalHealth;
 	Float mHealth;
 	Float mSpeed;
 	Float mMaximumPlayerDistanceSquared;
-	Wire::Vector3F mMove;
-	Wire::Matrix3F mRotation;
 
 	btPairCachingGhostObject* mpGhostObject;
 	btKinematicCharacterController* mpPhysicsEntity;

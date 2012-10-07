@@ -1,4 +1,8 @@
 <Assets>
+  <Lights>
+      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.2662745, 0.3019608, 0.2635294" />
+      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
+  </Lights>
   <Meshes>
     <Mesh Name="Sphere002">
       <Vertices Name="Sphere002.vtx" />
@@ -478,12 +482,12 @@
     </Mesh>
   </Meshes>
   <Materials>
-    <Material Name="Probe Robot">
-      <Texture Name="Probe Robot.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" Usage="STATIC_DISCARD_ON_BIND" />
+    <Material Name="Probe Robot_lit">
+      <Texture Name="Probe Robot.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="0.588, 0.588, 0.588, 1" />
     </Material>
-    <Material Name="Assault Rifle">
-      <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" Usage="STATIC_DISCARD_ON_BIND" />
+    <Material Name="Assault Rifle_lit">
+      <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house1_column_diff_layerstga_0">
@@ -1161,23 +1165,31 @@
     </Leaf>
   </Node>
   <Node Name="Directional Light Blue" Pos="0, 10, 0" Rot="0.1481229, 0.1481228, 0.8752192, 0.4360169" Scale="1, 1, 1">
-    <Light Type="Directional" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.2662745, 0.3019608, 0.2635294" />
+    <LightNode>
+      <Light Name="Directional Light Blue" />
+    </LightNode>
   </Node>
   <Node Name="Directional Light Yellow" Pos="0, 10, 0" Rot="0.8473976, 0.4317706, -0.2753362, 0.1402908" Scale="1, 1, 1">
-    <Light Type="Directional" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
+    <LightNode>
+      <Light Name="Directional Light Yellow" />
+    </LightNode>
   </Node>
   <Node Name="Main Camera" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
     <Leaf Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
       <Mesh Name="Assault Rifle" />
-      <Material Name="Assault Rifle" />
+      <Material Name="Assault Rifle_lit" />
     </Leaf>
   </Node>
   <Leaf Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254">
+    <Light Name="Directional Light Blue" />
+    <Light Name="Directional Light Yellow" />
     <Mesh Name="Sphere002" />
-    <Material Name="Probe Robot" />
+    <Material Name="Probe Robot_lit" />
   </Leaf>
   <Skybox Scale="120">
     <PosZ>

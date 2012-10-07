@@ -25,13 +25,13 @@ HealthMonitor::HealthMonitor(Geometry* pGreenHealthBar, Geometry* pRedHealthBar,
 //----------------------------------------------------------------------------
 Bool HealthMonitor::Update(Double appTime)
 {
-	Float healthRatio = mspProbeRobot->GetHealth() / mspProbeRobot->GetTotalHealth();
-	Vector3F healthBarScale = mRedHealthBarScale;
-	healthBarScale.X() = MathF::Max(healthBarScale.X() * healthRatio, 0.0001F);
-	mspRedHealthBar->Local.SetScale(healthBarScale);
+// 	Float healthRatio = mspProbeRobot->GetHealth() / mspProbeRobot->GetTotalHealth();
+// 	Vector3F healthBarScale = mRedHealthBarScale;
+// 	healthBarScale.X() = MathF::Max(healthBarScale.X() * healthRatio, 0.0001F);
+// 	mspRedHealthBar->Local.SetScale(healthBarScale);
 
-	healthRatio = mspPlayer->GetHealth() / mspPlayer->GetTotalHealth();
-	healthBarScale = mGreenHealthBarScale;
+	Float healthRatio = mspPlayer->GetHealth() / mspPlayer->GetTotalHealth();
+	Vector3F healthBarScale = mGreenHealthBarScale;
 	healthBarScale.X() = MathF::Max(healthBarScale.X() * healthRatio, 0.0001F);
 	mspGreenHealthBar->Local.SetScale(healthBarScale);
 

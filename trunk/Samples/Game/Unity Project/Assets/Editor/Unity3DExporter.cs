@@ -605,7 +605,7 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteLightNode(Light light, StreamWriter outFile, string indent)
     {
-        if (light == null)
+        if (light == null || !light.enabled)
         {
             return;
         }
@@ -640,8 +640,14 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
+            string direction = string.Empty;
+            if (light.type != LightType.Point)
+            {
+                direction = " Direction=\"0, 0, 1\"";
+            }
+
 		    outFile.WriteLine (indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
-			    "\" Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
+                "\"" + direction + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
 			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\" />");
         }
 	}
