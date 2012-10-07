@@ -874,6 +874,15 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
+	Char* pCol = GetValue(pXmlNode, "Direction");
+	if (pCol)
+	{
+		Vector3F& rDir = pLight->Direction;
+		Int n;
+		n = sscanf(pCol, "%f, %f, %f", &rDir.X(), &rDir.Y(), &rDir.Z());
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+	}
+
 	pLight->Type = lt;
 	Bool hasValue;
 	ColorRGB ambient = GetColorRGB(pXmlNode, "Ambient", hasValue); 
@@ -999,28 +1008,22 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 //---------------------------------------------------------------------------
 Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
-	Node* pNode = NULL;
+	Node* pNode = WIRE_NEW Node;
 
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())
 	{
 		if (Is("LightNode", pChild->name()))
 		{
-			pNode = WIRE_NEW NodeLight;
 			ParseComponents(pChild, pNode);
 			WIRE_ASSERT(pNode->GetLightQuantity() == 1);
 			Light* pLight = pNode->GetLight();
-			NodeLight* pLightNode = DynamicCast<NodeLight>(pNode);
-			WIRE_ASSERT(pLightNode);
+			NodeLight* pLightNode = WIRE_NEW NodeLight;
 			pLightNode->SetLight(pLight);
 			pNode->DetachLight(pLight);
+			pNode->AttachChild(pLightNode);
 			break;
 		}
-	}
-
-	if (!pNode)
-	{
-		pNode = WIRE_NEW Node;
 	}
 
 	mStatistics.NodeCount++;
@@ -1673,23 +1676,6 @@ Material* Importer::ParseMaterial(rapidxml::xml_node<>* pXmlNode)
 				}
 			}
 		}
-	}
-
-	if (pMaterial->GetTextureQuantity() == 0)
-	{
-		TArray<StatePtr>* pStateList = mMaterialStates.Find(pMaterial);
-		if (pStateList)
-		{
-			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
-			{
-				WIRE_DELETE (*pStateList)[i];
-			}
-
-			mMaterialStates.Remove(pMaterial);
-		}
-
-		WIRE_DELETE pMaterial;
-		return NULL;
 	}
 
 	mMaterials.Insert(pName, pMaterial);
