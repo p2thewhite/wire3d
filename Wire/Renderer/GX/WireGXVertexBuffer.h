@@ -48,7 +48,6 @@ public:
 
 	inline UInt GetBufferSize() const;
 
-	inline void SetDeclaration(Renderer* pRenderer);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 	inline UInt GetVertexSize() const;
@@ -60,9 +59,11 @@ private:
 		usage);
 	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 
-	TArray<VertexElement> mDeclaration;
 	void* mpBuffer;
 	UInt mBufferSize;
+
+	inline void SetDeclaration(Renderer* pRenderer);
+	TArray<VertexElement> mDeclaration;
 	UChar mVertexSize;
 };
 

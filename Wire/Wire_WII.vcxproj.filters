@@ -510,6 +510,12 @@
     <ClInclude Include="Renderer\WireRendererStatistics.h">
       <Filter>Renderer\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXVertexAttributes.h">
+      <Filter>Renderer\Platforms\GX\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9VertexAttributes.h">
+      <Filter>Renderer\Platforms\Dx9\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -700,6 +706,12 @@
     </None>
     <None Include="Renderer\WireRendererStatistics.inl">
       <Filter>Renderer\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\GX\WireGXVertexAttributes.inl">
+      <Filter>Renderer\Platforms\GX\Inline Files</Filter>
+    </None>
+    <None Include="Renderer\Dx9\WireDx9VertexAttributes.inl">
+      <Filter>Renderer\Platforms\Dx9\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1077,6 +1089,12 @@
     </ClCompile>
     <ClCompile Include="Renderer\WireRendererStatistics.cpp">
       <Filter>Renderer\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXVertexAttributes.cpp">
+      <Filter>Renderer\Platforms\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9VertexAttributes.cpp">
+      <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

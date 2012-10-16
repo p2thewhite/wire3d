@@ -12,6 +12,7 @@
 
 #include "WireBuffer.h"
 #include "WireDx9RendererData.h"
+#include "WireDx9VertexAttributes.h"
 #include "WireRenderer.h"
 
 namespace Wire
@@ -39,7 +40,6 @@ public:
 
 	inline UInt GetBufferSize() const;
 
-	inline void SetDeclaration(Renderer* pRenderer);
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
 	inline UInt GetVertexSize() const;
@@ -52,8 +52,8 @@ private:
 	IDirect3DVertexBuffer9* mpBuffer;
 	UInt mBufferSize;
 
-	IDirect3DVertexDeclaration9* mpDeclaration;
-	UInt mVertexSize;
+	inline void SetDeclaration(Renderer* pRenderer);
+	PdrVertexAttributes* mpPdrVertexAttributes;
 };
 
 #include "WireDx9VertexBuffer.inl"
