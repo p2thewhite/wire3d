@@ -8,6 +8,7 @@
 
 #include "WireDx9VertexBuffer.h"
 
+#include "WireDx9VertexAttributes.h"
 #include "WireVertexBuffer.h"
 
 using namespace Wire;
@@ -16,11 +17,10 @@ using namespace Wire;
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	pVertexBuffer)
 	:
-	mpDeclaration(NULL),
-	mVertexSize(0)
+	mpPdrVertexAttributes(NULL)
 {
 	CreateDeclaration(pRenderer, pVertexBuffer->GetAttributes());
-	CreateBuffer(pRenderer, mVertexSize * pVertexBuffer->GetQuantity(),
+	CreateBuffer(pRenderer, GetVertexSize() * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
 	// Copy the vertex buffer data from system memory to video memory.
@@ -31,8 +31,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
 	Buffer::UsageType usage)
 	:
-	mpDeclaration(NULL),
-	mVertexSize(0)
+	mpPdrVertexAttributes(NULL)
 {
 	CreateBuffer(pRenderer, size, usage);
 }
@@ -41,9 +40,9 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
 PdrVertexBuffer::~PdrVertexBuffer()
 {
 	mpBuffer->Release();
-	if (mpDeclaration)
+	if (mpPdrVertexAttributes)
 	{
-		mpDeclaration->Release();
+		WIRE_DELETE mpPdrVertexAttributes;
 	}
 }
 
@@ -65,78 +64,13 @@ void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 void PdrVertexBuffer::CreateDeclaration(Renderer* pRenderer, const
 	VertexAttributes& rAttributes)
 {
-	if (mpDeclaration)
+	if (mpPdrVertexAttributes)
 	{
-		mpDeclaration->Release();
+		WIRE_DELETE mpPdrVertexAttributes;
 	}
 
-	mVertexSize = 0;
-
-	TArray<D3DVERTEXELEMENT9> elements(8);
-	D3DVERTEXELEMENT9 element;
-	element.Stream = 0;
-	element.Method = D3DDECLMETHOD_DEFAULT;
-
-	UInt channels = 0;
-
-	if (rAttributes.GetPositionChannels() > 0)
-	{
-		channels = rAttributes.GetPositionChannels();
-		element.Offset = static_cast<WORD>(mVertexSize);
-		mVertexSize += channels * sizeof(Float);
-		element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels - 1);
-		element.Usage = D3DDECLUSAGE_POSITION;
-		element.UsageIndex = 0;
-		elements.Append(element);
-	}
-
-	if (rAttributes.GetNormalChannels() > 0)
-	{
-		channels = rAttributes.GetNormalChannels();
-		element.Offset = static_cast<WORD>(mVertexSize);
-		mVertexSize += channels * sizeof(Float);
-		element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels - 1);
-		element.Usage = D3DDECLUSAGE_NORMAL;
-		element.UsageIndex = 0;
-		elements.Append(element);
-	}
-
-	for (UInt unit = 0; unit < rAttributes.GetColorChannelQuantity(); unit++)
-	{
-		if (rAttributes.GetColorChannels(unit) > 0)
-		{
-			element.Offset = static_cast<WORD>(mVertexSize);
-			mVertexSize += sizeof(DWORD);
-			element.Type = D3DDECLTYPE_D3DCOLOR;
-			element.Usage = D3DDECLUSAGE_COLOR;
-			element.UsageIndex = static_cast<BYTE>(unit);
-			elements.Append(element);
-		}
-	}
-
-	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
-	{
-		channels = rAttributes.GetTCoordChannels(unit);
-		if (channels > 0)
-		{
-			element.Offset = static_cast<WORD>(mVertexSize);
-			mVertexSize += channels * sizeof(Float);
-			element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels-1);
-			element.Usage = D3DDECLUSAGE_TEXCOORD;
-			element.UsageIndex = static_cast<BYTE>(unit);
-			elements.Append(element);
-		}
-	}
-
-	WIRE_ASSERT(channels > 0);
-
-	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
-	elements.Append(sentinel);
-
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-	HRESULT hr;
-	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpDeclaration);
-	WIRE_ASSERT(SUCCEEDED(hr));
+	mpPdrVertexAttributes = WIRE_NEW PdrVertexAttributes(pRenderer,
+		rAttributes);
 }
 
 //----------------------------------------------------------------------------
@@ -149,20 +83,20 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
-	WIRE_ASSERT(mVertexSize > 0);
-	WIRE_ASSERT(mBufferSize == (mVertexSize * pVertexBuffer->GetQuantity()));
-	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+	WIRE_ASSERT(GetVertexSize() > 0);
+	WIRE_ASSERT(mBufferSize == (GetVertexSize() * pVertexBuffer->GetQuantity()));
+	WIRE_ASSERT(GetVertexSize() == pVertexBuffer->GetAttributes().
 		GetChannelQuantity()*sizeof(Float));
 	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
 
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
 	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(lockingMode)) +
-		offset * mVertexSize;
+		offset * GetVertexSize();
 
-	size_t size = count * mVertexSize;
+	size_t size = count * GetVertexSize();
 	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
-		GetData()) + offset * mVertexSize;
+		GetData()) + offset * GetVertexSize();
 	System::Memcpy(pBuffer, size, pDst, size);
 
 	Unlock();
