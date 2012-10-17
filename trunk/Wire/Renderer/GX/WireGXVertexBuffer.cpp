@@ -11,6 +11,7 @@
 #include "WireEffect.h"
 #include "WireGeometry.h"
 #include "WireGXRendererData.h"
+#include "WireGXVertexAttributes.h"
 #include "WireLight.h"
 #include "WireMesh.h"
 #include "WireRenderer.h"
@@ -22,10 +23,10 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	:
-	mVertexSize(0)
+	mpPdrVertexAttributes(NULL)
 {
 	CreateDeclaration(NULL, pVertexBuffer->GetAttributes());
-	CreateBuffer(NULL, mVertexSize * pVertexBuffer->GetQuantity(),
+	CreateBuffer(NULL, GetVertexSize() * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
 	Update(pVertexBuffer);
@@ -35,7 +36,7 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, UInt size, Buffer::UsageType
 	usage)
 	:
-	mVertexSize(0)
+	mpPdrVertexAttributes(NULL)
 {
 	CreateBuffer(NULL, size, usage);
 }
@@ -59,61 +60,12 @@ void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
 	rAttributes)
 {
-	mDeclaration.SetQuantity(0);
-	VertexElement element;
-	mVertexSize = 0;
-
-	UInt channels = rAttributes.GetPositionChannels();
-	if (channels > 0)
+	if (mpPdrVertexAttributes)
 	{
-		WIRE_ASSERT(channels == 3);
-		element.Offset = mVertexSize;
-		mVertexSize += channels * sizeof(Float);
-		element.Attr = GX_VA_POS;
-		element.CompCnt = GX_POS_XYZ;
-		element.CompType = GX_F32;
-		mDeclaration.Append(element);
+		WIRE_DELETE mpPdrVertexAttributes;
 	}
 
-	channels = rAttributes.GetNormalChannels();
-	if (channels > 0)
-	{
-		WIRE_ASSERT(channels == 3);
-		element.Offset = mVertexSize;
-		mVertexSize += channels * sizeof(Float);
-		element.Attr = GX_VA_NRM;
-		element.CompCnt = GX_NRM_XYZ;
-		element.CompType = GX_F32;
-		mDeclaration.Append(element);
-	}
-
-	for (UInt unit = 0; unit < rAttributes.GetColorChannelQuantity(); unit++)
-	{
-		if (rAttributes.GetColorChannels(unit) > 0)
-		{
-			element.Offset = mVertexSize;
-			mVertexSize += sizeof(UInt);
-			element.Attr = GX_VA_CLR0 + unit;
-			element.CompCnt = GX_CLR_RGBA;
-			element.CompType = GX_RGBA8;
-			mDeclaration.Append(element);
-		}
-	}
-
-	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
-	{
-		channels = rAttributes.GetTCoordChannels(unit);
-		if (channels > 0)
-		{
-			WIRE_ASSERT(channels == 2);
-			element.Offset = mVertexSize;
-			mVertexSize += channels * sizeof(Float);
-			element.Attr = GX_VA_TEX0 + unit;
-			element.CompCnt = GX_TEX_ST;
-			element.CompType = GX_F32;
-			mDeclaration.Append(element);
-		}
-	}
+	mpPdrVertexAttributes = WIRE_NEW PdrVertexAttributes(NULL, rAttributes);
 }
 
 //----------------------------------------------------------------------------
@@ -126,15 +78,15 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
-	WIRE_ASSERT(mBufferSize == mVertexSize * pVertexBuffer->GetQuantity());
-	WIRE_ASSERT(mVertexSize == pVertexBuffer->GetAttributes().
+	WIRE_ASSERT(mBufferSize == GetVertexSize() * pVertexBuffer->GetQuantity());
+	WIRE_ASSERT(GetVertexSize() == pVertexBuffer->GetAttributes().
 		GetChannelQuantity()*sizeof(Float));
 
 	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(Buffer::LM_WRITE_ONLY)) +
-		offset * mVertexSize;
-	size_t size = count * mVertexSize;
+		offset * GetVertexSize();
+	size_t size = count * GetVertexSize();
 	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
-		GetData()) + offset * mVertexSize;
+		GetData()) + offset * GetVertexSize();
 	System::Memcpy(pBuffer, size, pDst, size);
 	Unlock();
 }
@@ -143,7 +95,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
 	SetDeclaration(pRenderer);
-	SetBuffer(pRenderer, mVertexSize);
+	SetBuffer(pRenderer, GetVertexSize());
 
 	pRenderer->GetRendererData()->PdrVBuffer = this;
 }

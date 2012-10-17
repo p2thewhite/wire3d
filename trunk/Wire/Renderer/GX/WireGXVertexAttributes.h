@@ -10,7 +10,6 @@
 #ifndef WIREGXVERTEXATTRIBUTES_H
 #define WIREGXVERTEXATTRIBUTES_H
 
-#include "WireGXRendererData.h"
 #include "WireRenderer.h"
 #include "WireVertexAttributes.h"
 
@@ -20,14 +19,6 @@ namespace Wire
 class PdrVertexAttributes
 {
 public:
-	PdrVertexAttributes(Renderer* pRenderer, const VertexAttributes&
-		rVertexAttributes);
-
-	inline void Enable(Renderer* pRenderer);
-
-	inline UInt GetVertexSize() const;
-
-private:
 	struct VertexElement
 	{
 		UInt Offset;
@@ -36,6 +27,20 @@ private:
 		UChar CompType;
 	};
 
+	PdrVertexAttributes(Renderer* pRenderer, const VertexAttributes&
+		rVertexAttributes);
+
+	inline void Enable(Renderer* pRenderer);
+
+	inline UInt GetVertexSize() const;
+
+	// TODO: review
+	inline const TArray<PdrVertexAttributes::VertexElement>& GetDeclaration() const
+	{
+		return mDeclaration;
+	}
+
+private:
 	TArray<VertexElement> mDeclaration;
 	UChar mVertexSize;
 };

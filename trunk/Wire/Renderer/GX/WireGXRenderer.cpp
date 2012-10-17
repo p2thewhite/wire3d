@@ -660,7 +660,7 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
+void PdrRendererData::Draw(const TArray<PdrVertexAttributes::VertexElement>&
 	rElements, const UShort* const pIndices, UInt indexCount,
 	UInt startIndex)
 {
@@ -707,7 +707,7 @@ void PdrRendererData::Draw(const TArray<PdrVertexBuffer::VertexElement>&
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::DrawWireframe(const TArray<PdrVertexBuffer::
+void PdrRendererData::DrawWireframe(const TArray<PdrVertexAttributes::
 	VertexElement>& rElements, const UShort* const pIBuffer, UInt indexCount,
 	UInt startIndex)
 {

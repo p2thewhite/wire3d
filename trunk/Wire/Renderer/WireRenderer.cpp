@@ -66,6 +66,7 @@ void Renderer::Terminate()
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
 	DestroyAll(mImage2DMap);
+	DestroyAll(mVertexAttributesMap);
 	DestroyBatchingBuffers();
 
 	s_pRenderer = NULL;
@@ -326,6 +327,8 @@ PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
 {
 	WIRE_ASSERT(pVertexBuffer);
+	Bind(&pVertexBuffer->GetAttributes());
+
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 
 	if (!pValue)
@@ -376,11 +379,14 @@ void Renderer::Enable(const VertexBuffer* pVertexBuffer)
 	}
 	else
 	{
-		PdrVertexBuffer* pPdrVertexBuffer =	Bind(pVertexBuffer);
+		PdrVertexBuffer* pPdrVertexBuffer = Bind(pVertexBuffer);
 		pPdrVertexBuffer->Enable(this);
 	}
 
 	mspVertexBuffer = const_cast<VertexBuffer*>(pVertexBuffer);
+
+// TODO:
+//	Enable(&pVertexBuffer->GetAttributes());
 }
 
 //----------------------------------------------------------------------------
@@ -448,6 +454,7 @@ void Renderer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 {
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
+
 	if (pValue)
 	{
 		return *pValue;
@@ -577,6 +584,46 @@ PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 }
 
 //----------------------------------------------------------------------------
+PdrVertexAttributes* Renderer::Bind(const VertexAttributes* pVertexAttributes)
+{
+	WIRE_ASSERT(pVertexAttributes);
+	const UInt key = pVertexAttributes->GetKey();
+	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+
+	if (!pValue)
+	{
+		PdrVertexAttributes* pPdrVertexAttributes =
+			WIRE_NEW PdrVertexAttributes(this, *pVertexAttributes);
+		mVertexAttributesMap.Insert(key, pPdrVertexAttributes);
+		return pPdrVertexAttributes;
+	}
+
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const VertexAttributes* pVertexAttributes)
+{
+// TODO:
+//	WIRE_ASSERT(mspVertexBuffer == NULL /* Disable the previous VB first. */);
+	WIRE_ASSERT(pVertexAttributes);
+	const UInt key = pVertexAttributes->GetKey();
+	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+	if (pValue)
+	{
+		(*pValue)->Enable(this);
+	}
+	else
+	{
+		PdrVertexAttributes* pPdrVertexAttributes = Bind(pVertexAttributes);
+		pPdrVertexAttributes->Enable(this);
+	}
+
+// TODO:
+//	mspVertexBuffer = const_cast<VertexBuffer*>(pVertexBuffer);
+}
+
+//----------------------------------------------------------------------------
 void Renderer::DestroyAll(IndexBufferMap& rIndexBufferMap)
 {
 	while (rIndexBufferMap.GetQuantity() > 0)
@@ -619,6 +666,25 @@ void Renderer::DestroyAll(Image2DMap& rTexture2DMap)
 	}
 
 	WIRE_ASSERT(rTexture2DMap.GetQuantity() == 0);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DestroyAll(VertexAttributesMap& rVertexAttributesMap)
+{
+	while (rVertexAttributesMap.GetQuantity() > 0)
+	{
+		VertexAttributesMap::Iterator it(&rVertexAttributesMap);
+		UInt key;
+		PdrVertexAttributes** pValue = it.GetFirst(&key);
+
+		if (pValue)
+		{
+			WIRE_DELETE *pValue;
+			rVertexAttributesMap.Remove(key);
+		}
+	}
+
+	WIRE_ASSERT(rVertexAttributesMap.GetQuantity() == 0);
 }
 
 //----------------------------------------------------------------------------

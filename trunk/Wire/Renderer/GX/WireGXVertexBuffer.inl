@@ -23,34 +23,32 @@ inline void PdrVertexBuffer::Unlock()
 inline void PdrVertexBuffer::SetBuffer(Renderer*, UInt vertexSize)
 {
 	WIRE_ASSERT(vertexSize > 0);
-	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
+	WIRE_ASSERT(mpPdrVertexAttributes);
+
+	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
+		mpPdrVertexAttributes->GetDeclaration();
+
+	for (UInt i = 0; i < rDeclaration.GetQuantity(); i++)
 	{
-		void* pArray = reinterpret_cast<void*>((mDeclaration[i].Offset +
+		void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
 			reinterpret_cast<UInt>(mpBuffer)));
-		GXSetArray(mDeclaration[i].Attr, pArray, vertexSize);
+		GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
 	}
 }
 
 //----------------------------------------------------------------------------
 inline void PdrVertexBuffer::SetDeclaration(Renderer*)
 {
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-
-	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
-	{
-		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
-		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
-			CompCnt, mDeclaration[i].CompType, 0);
-	}
+	WIRE_ASSERT(mpPdrVertexAttributes);
+	mpPdrVertexAttributes->Enable(NULL);
 }
 
 //----------------------------------------------------------------------------
-inline const TArray<PdrVertexBuffer::VertexElement>&
+inline const TArray<PdrVertexAttributes::VertexElement>&
 PdrVertexBuffer::GetDeclaration() const
 {
-	return mDeclaration;
+	WIRE_ASSERT(mpPdrVertexAttributes);
+	return mpPdrVertexAttributes->GetDeclaration();
 }
 
 //----------------------------------------------------------------------------
@@ -62,5 +60,6 @@ inline UInt PdrVertexBuffer::GetBufferSize() const
 //----------------------------------------------------------------------------
 inline UInt PdrVertexBuffer::GetVertexSize() const
 {
-	return mVertexSize;
+	WIRE_ASSERT(mpPdrVertexAttributes);
+	return mpPdrVertexAttributes->GetVertexSize();
 }

@@ -12,26 +12,18 @@
 
 #include "WireBuffer.h"
 #include "WireTArray.h"
+#include "WireGXVertexAttributes.h"
 
 namespace Wire
 {
 
 class PdrDisplayList;
 class Renderer;
-class VertexAttributes;
 class VertexBuffer;
 
 class PdrVertexBuffer
 {
 public:
-	struct VertexElement
-	{
-		UInt Offset;
-		UChar Attr;
-		UChar CompCnt;
-		UChar CompType;
-	};
-
 	PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer* pVertexBuffer);
 	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
@@ -52,7 +44,7 @@ public:
 		rAttributes);
 	inline UInt GetVertexSize() const;
 
-	inline const TArray<VertexElement>& GetDeclaration() const;
+	inline const TArray<PdrVertexAttributes::VertexElement>& GetDeclaration() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
@@ -63,8 +55,7 @@ private:
 	UInt mBufferSize;
 
 	inline void SetDeclaration(Renderer* pRenderer);
-	TArray<VertexElement> mDeclaration;
-	UChar mVertexSize;
+	PdrVertexAttributes* mpPdrVertexAttributes;
 };
 
 #include "WireGXVertexBuffer.inl"
