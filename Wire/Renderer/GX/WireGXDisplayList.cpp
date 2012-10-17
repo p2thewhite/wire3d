@@ -17,7 +17,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
 	const PdrIndexBuffer& rIBuffer, UInt indexCount, 
-	const TArray<PdrVertexBuffer::VertexElement>& rElements)
+	const TArray<PdrVertexAttributes::VertexElement>& rElements)
 {
 	// Note that the display-list buffer area must be forced out of
 	// the CPU cache since it will be written using the write-gather pipe

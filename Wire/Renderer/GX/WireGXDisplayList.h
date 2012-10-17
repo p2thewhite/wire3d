@@ -11,7 +11,7 @@
 #define WIREGXDISPLAYLIST_H
 
 #include "WireGXIndexBuffer.h"
-#include "WireGXVertexBuffer.h"
+#include "WireGXVertexAttributes.h"
 #include "WireTArray.h"
 
 namespace Wire
@@ -24,7 +24,7 @@ class PdrDisplayList : public Object
 public:
 	PdrDisplayList(PdrRendererData* pRendererData, const PdrIndexBuffer&
 		rIBuffer, UInt indexCount,
-		const TArray<PdrVertexBuffer::VertexElement>& rElements);
+		const TArray<PdrVertexAttributes::VertexElement>& rElements);
 	~PdrDisplayList();
 
 	inline void Draw();

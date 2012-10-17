@@ -41,9 +41,9 @@ public:
 		UInt& rTilesXCount, UShort &rWidth);
 
 	// GX rendering specific functions
-	void Draw(const TArray<PdrVertexBuffer::VertexElement>& rElements,
+	void Draw(const TArray<PdrVertexAttributes::VertexElement>& rElements,
 		const UShort* const pIBuffer, UInt indexCount, UInt startIndex);
-	void DrawWireframe(const TArray<PdrVertexBuffer::VertexElement>&
+	void DrawWireframe(const TArray<PdrVertexAttributes::VertexElement>&
 		rElements, const UShort* const pIBuffer, UInt indexCount,
 		UInt startIndex);
 
