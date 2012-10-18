@@ -941,6 +941,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\Renderer\GX\WireGXVertexAttributes.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Renderer\GX\WireGXVertexBuffer.h"
 							>
 						</File>
@@ -993,6 +997,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\Renderer\GX\WireGXVertexAttributes.cpp"
+							>
+						</File>
+						<File
 							RelativePath=".\Renderer\GX\WireGXVertexBuffer.cpp"
 							>
 						</File>
@@ -1006,6 +1014,10 @@
 						</File>
 						<File
 							RelativePath=".\Renderer\GX\WireGXIndexBuffer.inl"
+							>
+						</File>
+						<File
+							RelativePath=".\Renderer\GX\WireGXVertexAttributes.inl"
 							>
 						</File>
 						<File
