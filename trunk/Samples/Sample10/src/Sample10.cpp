@@ -109,7 +109,7 @@ void Sample10::OnIdle()
 
 	Float angle = static_cast<Float>(MathD::FMod(time, MathD::TWO_PI));
 	Float sinus = MathF::Sin(angle); 
-	Float d = 5.0F + 1.0F * sinus;
+	Float d = 6.0F;
 	Vector3F camPos(sinus*d, sinus*d, MathF::Cos(angle)*d);
 	mspCamera->LookAt(camPos, Vector3F::ZERO, Vector3F::UNIT_Y);
 	mCuller.SetCamera(mspCamera);
@@ -142,13 +142,13 @@ Node* Sample10::CreateScene()
 	const UInt zCount = 5;
 	Bool useA = true;
 
-	Float z = static_cast<Float>(zCount)*-0.5F;
+	Float z = static_cast<Float>(zCount-1)*-0.5F;
 	for (UInt k = 0; k < yCount; k++)
 	{
-		Float y = static_cast<Float>(yCount)*-0.5F;
+		Float y = static_cast<Float>(yCount-1)*-0.5F;
 		for (UInt j = 0; j < yCount; j++)
 		{
-			Float x = static_cast<Float>(xCount)*-0.5F;
+			Float x = static_cast<Float>(xCount-1)*-0.5F;
 			for (UInt i = 0; i < xCount; i++)
 			{
 				Spatial* pGeo = useA ? CreateGeometryA() : CreateGeometryB();

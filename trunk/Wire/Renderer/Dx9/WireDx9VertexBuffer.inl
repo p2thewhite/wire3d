@@ -10,7 +10,6 @@
 inline void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
 	SetBuffer(pRenderer, mpPdrVertexAttributes->GetVertexSize());
-	SetDeclaration(pRenderer);
 }
 
 //----------------------------------------------------------------------------
@@ -62,11 +61,4 @@ inline void PdrVertexBuffer::SetDeclaration(Renderer* pRenderer)
 inline UInt PdrVertexBuffer::GetBufferSize() const
 {
 	return mBufferSize;
-}
-
-//----------------------------------------------------------------------------
-inline UInt PdrVertexBuffer::GetVertexSize() const
-{
-	WIRE_ASSERT(mpPdrVertexAttributes);
-	return mpPdrVertexAttributes->GetVertexSize();
 }

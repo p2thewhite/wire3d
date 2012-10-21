@@ -111,6 +111,12 @@ inline UInt VertexAttributes::GetTCoordOffset(UInt unit) const
 }
 
 //----------------------------------------------------------------------------
+inline UInt VertexAttributes::GetVertexSize() const
+{
+	return mChannelQuantity * sizeof(Float);
+}
+
+//----------------------------------------------------------------------------
 inline UInt VertexAttributes::GetKey() const
 {
 	return mKey;

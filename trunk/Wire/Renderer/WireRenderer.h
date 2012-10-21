@@ -146,6 +146,8 @@ public:
 	// Vertex attributes management
 	PdrVertexAttributes* Bind(const VertexAttributes* pVertexAttributes);
 	void Enable(const VertexAttributes* pVertexAttributes);
+	void Set(const VertexAttributes* pVertexAttributes);
+	PdrVertexAttributes* GetResource(const VertexAttributes* pVertexAttributes);
 	
 	// 2D texture management
 	PdrTexture2D* Bind(const Image2D* pImage);

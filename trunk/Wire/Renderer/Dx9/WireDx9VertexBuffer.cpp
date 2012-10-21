@@ -19,8 +19,10 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	:
 	mpPdrVertexAttributes(NULL)
 {
-	CreateDeclaration(pRenderer, pVertexBuffer->GetAttributes());
-	CreateBuffer(pRenderer, GetVertexSize() * pVertexBuffer->GetQuantity(),
+	const VertexAttributes& rAttributes = pVertexBuffer->GetAttributes();
+	CreateDeclaration(pRenderer, rAttributes);
+	const UInt vertexSize = rAttributes.GetVertexSize();
+	CreateBuffer(pRenderer, vertexSize * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
 	// Copy the vertex buffer data from system memory to video memory.
@@ -83,20 +85,20 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
-	WIRE_ASSERT(GetVertexSize() > 0);
-	WIRE_ASSERT(mBufferSize == (GetVertexSize() * pVertexBuffer->GetQuantity()));
-	WIRE_ASSERT(GetVertexSize() == pVertexBuffer->GetAttributes().
-		GetChannelQuantity()*sizeof(Float));
 	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
+
+	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
+	WIRE_ASSERT(vertexSize > 0);
+	WIRE_ASSERT(mBufferSize == (vertexSize * pVertexBuffer->GetQuantity()));
 
 	Buffer::LockingMode lockingMode = pVertexBuffer->GetUsage() ==
 		Buffer::UT_STATIC ? Buffer::LM_READ_WRITE : Buffer::LM_WRITE_ONLY;
-	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(lockingMode)) +
-		offset * GetVertexSize();
+	const UInt rawOffset = offset * vertexSize;
+	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(lockingMode)) + rawOffset;
 
-	size_t size = count * GetVertexSize();
+	size_t size = count * vertexSize;
 	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
-		GetData()) + offset * GetVertexSize();
+		GetData()) + rawOffset;
 	System::Memcpy(pBuffer, size, pDst, size);
 
 	Unlock();

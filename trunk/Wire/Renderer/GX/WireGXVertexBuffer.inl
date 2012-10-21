@@ -56,10 +56,3 @@ inline UInt PdrVertexBuffer::GetBufferSize() const
 {
 	return mBufferSize;
 }
-
-//----------------------------------------------------------------------------
-inline UInt PdrVertexBuffer::GetVertexSize() const
-{
-	WIRE_ASSERT(mpPdrVertexAttributes);
-	return mpPdrVertexAttributes->GetVertexSize();
-}

@@ -46,6 +46,7 @@ public:
 	inline UInt GetNormalOffset() const;
 	inline UInt GetTCoordOffset(UInt unit = 0) const;
 
+	inline UInt GetVertexSize() const;
 	inline UInt GetKey() const;
 
 private:
