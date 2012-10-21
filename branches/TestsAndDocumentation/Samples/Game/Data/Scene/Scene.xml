@@ -1,0 +1,1215 @@
+<Assets>
+  <Lights>
+      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.2662745, 0.3019608, 0.2635294" />
+      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
+  </Lights>
+  <Meshes>
+    <Mesh Name="Sphere002">
+      <Vertices Name="Sphere002.vtx" />
+      <Indices Name="Sphere002.idx" 16bit="1" />
+      <Normals Name="Sphere002.nm" />
+      <Uv0 Name="Sphere002.uv0" />
+    </Mesh>
+    <Mesh Name="Assault Rifle">
+      <Vertices Name="Assault Rifle.vtx" />
+      <Indices Name="Assault Rifle.idx" 16bit="1" />
+      <Normals Name="Assault Rifle.nm" />
+      <Uv0 Name="Assault Rifle.uv0" />
+    </Mesh>
+    <Mesh Name="Column 1">
+      <Vertices Name="Column 1.vtx" />
+      <Indices Name="Column 1.idx" 16bit="1" />
+      <Normals Name="Column 1.nm" />
+      <Uv0 Name="Column 1.uv0" />
+      <Uv1 Name="Column 1.uv1" />
+    </Mesh>
+    <Mesh Name="Column 2">
+      <Vertices Name="Column 2.vtx" />
+      <Indices Name="Column 2.idx" 16bit="1" />
+      <Normals Name="Column 2.nm" />
+      <Uv0 Name="Column 2.uv0" />
+      <Uv1 Name="Column 2.uv1" />
+    </Mesh>
+    <Mesh Name="Column 3">
+      <Vertices Name="Column 3.vtx" />
+      <Indices Name="Column 3.idx" 16bit="1" />
+      <Normals Name="Column 3.nm" />
+      <Uv0 Name="Column 3.uv0" />
+      <Uv1 Name="Column 3.uv1" />
+    </Mesh>
+    <Mesh Name="Column 4">
+      <Vertices Name="Column 4.vtx" />
+      <Indices Name="Column 4.idx" 16bit="1" />
+      <Normals Name="Column 4.nm" />
+      <Uv0 Name="Column 4.uv0" />
+      <Uv1 Name="Column 4.uv1" />
+    </Mesh>
+    <Mesh Name="Column 5">
+      <Vertices Name="Column 5.vtx" />
+      <Indices Name="Column 5.idx" 16bit="1" />
+      <Normals Name="Column 5.nm" />
+      <Uv0 Name="Column 5.uv0" />
+      <Uv1 Name="Column 5.uv1" />
+    </Mesh>
+    <Mesh Name="Column 6">
+      <Vertices Name="Column 6.vtx" />
+      <Indices Name="Column 6.idx" 16bit="1" />
+      <Normals Name="Column 6.nm" />
+      <Uv0 Name="Column 6.uv0" />
+      <Uv1 Name="Column 6.uv1" />
+    </Mesh>
+    <Mesh Name="Column 7">
+      <Vertices Name="Column 7.vtx" />
+      <Indices Name="Column 7.idx" 16bit="1" />
+      <Normals Name="Column 7.nm" />
+      <Uv0 Name="Column 7.uv0" />
+      <Uv1 Name="Column 7.uv1" />
+    </Mesh>
+    <Mesh Name="Column 8">
+      <Vertices Name="Column 8.vtx" />
+      <Indices Name="Column 8.idx" 16bit="1" />
+      <Normals Name="Column 8.nm" />
+      <Uv0 Name="Column 8.uv0" />
+      <Uv1 Name="Column 8.uv1" />
+    </Mesh>
+    <Mesh Name="Column 9">
+      <Vertices Name="Column 9.vtx" />
+      <Indices Name="Column 9.idx" 16bit="1" />
+      <Normals Name="Column 9.nm" />
+      <Uv0 Name="Column 9.uv0" />
+      <Uv1 Name="Column 9.uv1" />
+    </Mesh>
+    <Mesh Name="Column 10">
+      <Vertices Name="Column 10.vtx" />
+      <Indices Name="Column 10.idx" 16bit="1" />
+      <Normals Name="Column 10.nm" />
+      <Uv0 Name="Column 10.uv0" />
+      <Uv1 Name="Column 10.uv1" />
+    </Mesh>
+    <Mesh Name="Column 11">
+      <Vertices Name="Column 11.vtx" />
+      <Indices Name="Column 11.idx" 16bit="1" />
+      <Normals Name="Column 11.nm" />
+      <Uv0 Name="Column 11.uv0" />
+      <Uv1 Name="Column 11.uv1" />
+    </Mesh>
+    <Mesh Name="Column 12">
+      <Vertices Name="Column 12.vtx" />
+      <Indices Name="Column 12.idx" 16bit="1" />
+      <Normals Name="Column 12.nm" />
+      <Uv0 Name="Column 12.uv0" />
+      <Uv1 Name="Column 12.uv1" />
+    </Mesh>
+    <Mesh Name="Column 13">
+      <Vertices Name="Column 13.vtx" />
+      <Indices Name="Column 13.idx" 16bit="1" />
+      <Normals Name="Column 13.nm" />
+      <Uv0 Name="Column 13.uv0" />
+      <Uv1 Name="Column 13.uv1" />
+    </Mesh>
+    <Mesh Name="Column 14">
+      <Vertices Name="Column 14.vtx" />
+      <Indices Name="Column 14.idx" 16bit="1" />
+      <Normals Name="Column 14.nm" />
+      <Uv0 Name="Column 14.uv0" />
+      <Uv1 Name="Column 14.uv1" />
+    </Mesh>
+    <Mesh Name="Column 15">
+      <Vertices Name="Column 15.vtx" />
+      <Indices Name="Column 15.idx" 16bit="1" />
+      <Normals Name="Column 15.nm" />
+      <Uv0 Name="Column 15.uv0" />
+      <Uv1 Name="Column 15.uv1" />
+    </Mesh>
+    <Mesh Name="Column 16">
+      <Vertices Name="Column 16.vtx" />
+      <Indices Name="Column 16.idx" 16bit="1" />
+      <Normals Name="Column 16.nm" />
+      <Uv0 Name="Column 16.uv0" />
+      <Uv1 Name="Column 16.uv1" />
+    </Mesh>
+    <Mesh Name="Column 17">
+      <Vertices Name="Column 17.vtx" />
+      <Indices Name="Column 17.idx" 16bit="1" />
+      <Normals Name="Column 17.nm" />
+      <Uv0 Name="Column 17.uv0" />
+      <Uv1 Name="Column 17.uv1" />
+    </Mesh>
+    <Mesh Name="Column 18">
+      <Vertices Name="Column 18.vtx" />
+      <Indices Name="Column 18.idx" 16bit="1" />
+      <Normals Name="Column 18.nm" />
+      <Uv0 Name="Column 18.uv0" />
+      <Uv1 Name="Column 18.uv1" />
+    </Mesh>
+    <Mesh Name="Column 19">
+      <Vertices Name="Column 19.vtx" />
+      <Indices Name="Column 19.idx" 16bit="1" />
+      <Normals Name="Column 19.nm" />
+      <Uv0 Name="Column 19.uv0" />
+      <Uv1 Name="Column 19.uv1" />
+    </Mesh>
+    <Mesh Name="Column 20">
+      <Vertices Name="Column 20.vtx" />
+      <Indices Name="Column 20.idx" 16bit="1" />
+      <Normals Name="Column 20.nm" />
+      <Uv0 Name="Column 20.uv0" />
+      <Uv1 Name="Column 20.uv1" />
+    </Mesh>
+    <Mesh Name="Column 21">
+      <Vertices Name="Column 21.vtx" />
+      <Indices Name="Column 21.idx" 16bit="1" />
+      <Normals Name="Column 21.nm" />
+      <Uv0 Name="Column 21.uv0" />
+      <Uv1 Name="Column 21.uv1" />
+    </Mesh>
+    <Mesh Name="Column 22">
+      <Vertices Name="Column 22.vtx" />
+      <Indices Name="Column 22.idx" 16bit="1" />
+      <Normals Name="Column 22.nm" />
+      <Uv0 Name="Column 22.uv0" />
+      <Uv1 Name="Column 22.uv1" />
+    </Mesh>
+    <Mesh Name="Column 23">
+      <Vertices Name="Column 23.vtx" />
+      <Indices Name="Column 23.idx" 16bit="1" />
+      <Normals Name="Column 23.nm" />
+      <Uv0 Name="Column 23.uv0" />
+      <Uv1 Name="Column 23.uv1" />
+    </Mesh>
+    <Mesh Name="Column 24">
+      <Vertices Name="Column 24.vtx" />
+      <Indices Name="Column 24.idx" 16bit="1" />
+      <Normals Name="Column 24.nm" />
+      <Uv0 Name="Column 24.uv0" />
+      <Uv1 Name="Column 24.uv1" />
+    </Mesh>
+    <Mesh Name="Column 25">
+      <Vertices Name="Column 25.vtx" />
+      <Indices Name="Column 25.idx" 16bit="1" />
+      <Normals Name="Column 25.nm" />
+      <Uv0 Name="Column 25.uv0" />
+      <Uv1 Name="Column 25.uv1" />
+    </Mesh>
+    <Mesh Name="Column 26">
+      <Vertices Name="Column 26.vtx" />
+      <Indices Name="Column 26.idx" 16bit="1" />
+      <Normals Name="Column 26.nm" />
+      <Uv0 Name="Column 26.uv0" />
+      <Uv1 Name="Column 26.uv1" />
+    </Mesh>
+    <Mesh Name="Column 27">
+      <Vertices Name="Column 27.vtx" />
+      <Indices Name="Column 27.idx" 16bit="1" />
+      <Normals Name="Column 27.nm" />
+      <Uv0 Name="Column 27.uv0" />
+      <Uv1 Name="Column 27.uv1" />
+    </Mesh>
+    <Mesh Name="Doors">
+      <SubMeshes>
+        <SubMesh Index="0" StartIndex="0" IndexCount="252" />
+        <SubMesh Index="1" StartIndex="252" IndexCount="1332" />
+      </SubMeshes>
+      <Vertices Name="Doors.vtx" />
+      <Indices Name="Doors.idx" 16bit="1" />
+      <Normals Name="Doors.nm" />
+      <Uv0 Name="Doors.uv0" />
+      <Uv1 Name="Doors.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Building 1">
+      <Vertices Name="Eastern Building 1.vtx" />
+      <Indices Name="Eastern Building 1.idx" 16bit="1" />
+      <Normals Name="Eastern Building 1.nm" />
+      <Uv0 Name="Eastern Building 1.uv0" />
+      <Uv1 Name="Eastern Building 1.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Building 2">
+      <Vertices Name="Eastern Building 2.vtx" />
+      <Indices Name="Eastern Building 2.idx" 16bit="1" />
+      <Normals Name="Eastern Building 2.nm" />
+      <Uv0 Name="Eastern Building 2.uv0" />
+      <Uv1 Name="Eastern Building 2.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Building 3">
+      <Vertices Name="Eastern Building 3.vtx" />
+      <Indices Name="Eastern Building 3.idx" 16bit="1" />
+      <Normals Name="Eastern Building 3.nm" />
+      <Uv0 Name="Eastern Building 3.uv0" />
+      <Uv1 Name="Eastern Building 3.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Stairs">
+      <Vertices Name="Eastern Stairs.vtx" />
+      <Indices Name="Eastern Stairs.idx" 16bit="1" />
+      <Normals Name="Eastern Stairs.nm" />
+      <Uv0 Name="Eastern Stairs.uv0" />
+      <Uv1 Name="Eastern Stairs.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Tomb">
+      <Vertices Name="Eastern Tomb.vtx" />
+      <Indices Name="Eastern Tomb.idx" 16bit="1" />
+      <Normals Name="Eastern Tomb.nm" />
+      <Uv0 Name="Eastern Tomb.uv0" />
+      <Uv1 Name="Eastern Tomb.uv1" />
+    </Mesh>
+    <Mesh Name="Eastern Window">
+      <Vertices Name="Eastern Window.vtx" />
+      <Indices Name="Eastern Window.idx" 16bit="1" />
+      <Normals Name="Eastern Window.nm" />
+      <Uv0 Name="Eastern Window.uv0" />
+      <Uv1 Name="Eastern Window.uv1" />
+    </Mesh>
+    <Mesh Name="Fountain">
+      <Vertices Name="Fountain.vtx" />
+      <Indices Name="Fountain.idx" 16bit="1" />
+      <Normals Name="Fountain.nm" />
+      <Uv0 Name="Fountain.uv0" />
+      <Uv1 Name="Fountain.uv1" />
+    </Mesh>
+    <Mesh Name="Ground">
+      <SubMeshes>
+        <SubMesh Index="0" StartIndex="0" IndexCount="168" />
+        <SubMesh Index="1" StartIndex="168" IndexCount="900" />
+        <SubMesh Index="2" StartIndex="1068" IndexCount="216" />
+      </SubMeshes>
+      <Vertices Name="Ground.vtx" />
+      <Indices Name="Ground.idx" 16bit="1" />
+      <Normals Name="Ground.nm" />
+      <Uv0 Name="Ground.uv0" />
+      <Uv1 Name="Ground.uv1" />
+    </Mesh>
+    <Mesh Name="North Eastern Pillar">
+      <Vertices Name="North Eastern Pillar.vtx" />
+      <Indices Name="North Eastern Pillar.idx" 16bit="1" />
+      <Normals Name="North Eastern Pillar.nm" />
+      <Uv0 Name="North Eastern Pillar.uv0" />
+      <Uv1 Name="North Eastern Pillar.uv1" />
+    </Mesh>
+    <Mesh Name="North Wall">
+      <Vertices Name="North Wall.vtx" />
+      <Indices Name="North Wall.idx" 16bit="1" />
+      <Normals Name="North Wall.nm" />
+      <Uv0 Name="North Wall.uv0" />
+      <Uv1 Name="North Wall.uv1" />
+    </Mesh>
+    <Mesh Name="North Western Pillar">
+      <Vertices Name="North Western Pillar.vtx" />
+      <Indices Name="North Western Pillar.idx" 16bit="1" />
+      <Normals Name="North Western Pillar.nm" />
+      <Uv0 Name="North Western Pillar.uv0" />
+      <Uv1 Name="North Western Pillar.uv1" />
+    </Mesh>
+    <Mesh Name="Northern Building 1">
+      <Vertices Name="Northern Building 1.vtx" />
+      <Indices Name="Northern Building 1.idx" 16bit="1" />
+      <Normals Name="Northern Building 1.nm" />
+      <Uv0 Name="Northern Building 1.uv0" />
+      <Uv1 Name="Northern Building 1.uv1" />
+    </Mesh>
+    <Mesh Name="Northern Building 2">
+      <Vertices Name="Northern Building 2.vtx" />
+      <Indices Name="Northern Building 2.idx" 16bit="1" />
+      <Normals Name="Northern Building 2.nm" />
+      <Uv0 Name="Northern Building 2.uv0" />
+      <Uv1 Name="Northern Building 2.uv1" />
+    </Mesh>
+    <Mesh Name="Northern Ornament 1">
+      <Vertices Name="Northern Ornament 1.vtx" />
+      <Indices Name="Northern Ornament 1.idx" 16bit="1" />
+      <Normals Name="Northern Ornament 1.nm" />
+      <Uv0 Name="Northern Ornament 1.uv0" />
+      <Uv1 Name="Northern Ornament 1.uv1" />
+    </Mesh>
+    <Mesh Name="Northern Ornament 2">
+      <Vertices Name="Northern Ornament 2.vtx" />
+      <Indices Name="Northern Ornament 2.idx" 16bit="1" />
+      <Normals Name="Northern Ornament 2.nm" />
+      <Uv0 Name="Northern Ornament 2.uv0" />
+      <Uv1 Name="Northern Ornament 2.uv1" />
+    </Mesh>
+    <Mesh Name="Northern Tomb">
+      <Vertices Name="Northern Tomb.vtx" />
+      <Indices Name="Northern Tomb.idx" 16bit="1" />
+      <Normals Name="Northern Tomb.nm" />
+      <Uv0 Name="Northern Tomb.uv0" />
+      <Uv1 Name="Northern Tomb.uv1" />
+    </Mesh>
+    <Mesh Name="Object002">
+      <Vertices Name="Object002.vtx" />
+      <Indices Name="Object002.idx" 16bit="1" />
+      <Normals Name="Object002.nm" />
+      <Uv0 Name="Object002.uv0" />
+      <Uv1 Name="Object002.uv1" />
+    </Mesh>
+    <Mesh Name="Object016">
+      <Vertices Name="Object016.vtx" />
+      <Indices Name="Object016.idx" 16bit="1" />
+      <Normals Name="Object016.nm" />
+      <Uv0 Name="Object016.uv0" />
+      <Uv1 Name="Object016.uv1" />
+    </Mesh>
+    <Mesh Name="Object074">
+      <Vertices Name="Object074.vtx" />
+      <Indices Name="Object074.idx" 16bit="1" />
+      <Normals Name="Object074.nm" />
+      <Uv0 Name="Object074.uv0" />
+      <Uv1 Name="Object074.uv1" />
+    </Mesh>
+    <Mesh Name="Object075">
+      <Vertices Name="Object075.vtx" />
+      <Indices Name="Object075.idx" 16bit="1" />
+      <Normals Name="Object075.nm" />
+      <Uv0 Name="Object075.uv0" />
+      <Uv1 Name="Object075.uv1" />
+    </Mesh>
+    <Mesh Name="Object076">
+      <Vertices Name="Object076.vtx" />
+      <Indices Name="Object076.idx" 16bit="1" />
+      <Normals Name="Object076.nm" />
+      <Uv0 Name="Object076.uv0" />
+      <Uv1 Name="Object076.uv1" />
+    </Mesh>
+    <Mesh Name="Object077">
+      <Vertices Name="Object077.vtx" />
+      <Indices Name="Object077.idx" 16bit="1" />
+      <Normals Name="Object077.nm" />
+      <Uv0 Name="Object077.uv0" />
+      <Uv1 Name="Object077.uv1" />
+    </Mesh>
+    <Mesh Name="Object078">
+      <Vertices Name="Object078.vtx" />
+      <Indices Name="Object078.idx" 16bit="1" />
+      <Normals Name="Object078.nm" />
+      <Uv0 Name="Object078.uv0" />
+      <Uv1 Name="Object078.uv1" />
+    </Mesh>
+    <Mesh Name="Object079">
+      <Vertices Name="Object079.vtx" />
+      <Indices Name="Object079.idx" 16bit="1" />
+      <Normals Name="Object079.nm" />
+      <Uv0 Name="Object079.uv0" />
+      <Uv1 Name="Object079.uv1" />
+    </Mesh>
+    <Mesh Name="Sourthern Stairs">
+      <Vertices Name="Sourthern Stairs.vtx" />
+      <Indices Name="Sourthern Stairs.idx" 16bit="1" />
+      <Normals Name="Sourthern Stairs.nm" />
+      <Uv0 Name="Sourthern Stairs.uv0" />
+      <Uv1 Name="Sourthern Stairs.uv1" />
+    </Mesh>
+    <Mesh Name="South Eastern Pillar">
+      <Vertices Name="South Eastern Pillar.vtx" />
+      <Indices Name="South Eastern Pillar.idx" 16bit="1" />
+      <Normals Name="South Eastern Pillar.nm" />
+      <Uv0 Name="South Eastern Pillar.uv0" />
+      <Uv1 Name="South Eastern Pillar.uv1" />
+    </Mesh>
+    <Mesh Name="South Western Pillar">
+      <Vertices Name="South Western Pillar.vtx" />
+      <Indices Name="South Western Pillar.idx" 16bit="1" />
+      <Normals Name="South Western Pillar.nm" />
+      <Uv0 Name="South Western Pillar.uv0" />
+      <Uv1 Name="South Western Pillar.uv1" />
+    </Mesh>
+    <Mesh Name="Southern Building">
+      <Vertices Name="Southern Building.vtx" />
+      <Indices Name="Southern Building.idx" 16bit="1" />
+      <Normals Name="Southern Building.nm" />
+      <Uv0 Name="Southern Building.uv0" />
+      <Uv1 Name="Southern Building.uv1" />
+    </Mesh>
+    <Mesh Name="Southern Tomb">
+      <Vertices Name="Southern Tomb.vtx" />
+      <Indices Name="Southern Tomb.idx" 16bit="1" />
+      <Normals Name="Southern Tomb.nm" />
+      <Uv0 Name="Southern Tomb.uv0" />
+      <Uv1 Name="Southern Tomb.uv1" />
+    </Mesh>
+    <Mesh Name="Southern Wall">
+      <Vertices Name="Southern Wall.vtx" />
+      <Indices Name="Southern Wall.idx" 16bit="1" />
+      <Normals Name="Southern Wall.nm" />
+      <Uv0 Name="Southern Wall.uv0" />
+      <Uv1 Name="Southern Wall.uv1" />
+    </Mesh>
+    <Mesh Name="Western Building 1">
+      <Vertices Name="Western Building 1.vtx" />
+      <Indices Name="Western Building 1.idx" 16bit="1" />
+      <Normals Name="Western Building 1.nm" />
+      <Uv0 Name="Western Building 1.uv0" />
+      <Uv1 Name="Western Building 1.uv1" />
+    </Mesh>
+    <Mesh Name="Western Building 2">
+      <Vertices Name="Western Building 2.vtx" />
+      <Indices Name="Western Building 2.idx" 16bit="1" />
+      <Normals Name="Western Building 2.nm" />
+      <Uv0 Name="Western Building 2.uv0" />
+      <Uv1 Name="Western Building 2.uv1" />
+    </Mesh>
+    <Mesh Name="Western Ornament 1">
+      <Vertices Name="Western Ornament 1.vtx" />
+      <Indices Name="Western Ornament 1.idx" 16bit="1" />
+      <Normals Name="Western Ornament 1.nm" />
+      <Uv0 Name="Western Ornament 1.uv0" />
+      <Uv1 Name="Western Ornament 1.uv1" />
+    </Mesh>
+    <Mesh Name="Western Ornament 2">
+      <Vertices Name="Western Ornament 2.vtx" />
+      <Indices Name="Western Ornament 2.idx" 16bit="1" />
+      <Normals Name="Western Ornament 2.nm" />
+      <Uv0 Name="Western Ornament 2.uv0" />
+      <Uv1 Name="Western Ornament 2.uv1" />
+    </Mesh>
+    <Mesh Name="Western Tomb">
+      <Vertices Name="Western Tomb.vtx" />
+      <Indices Name="Western Tomb.idx" 16bit="1" />
+      <Normals Name="Western Tomb.nm" />
+      <Uv0 Name="Western Tomb.uv0" />
+      <Uv1 Name="Western Tomb.uv1" />
+    </Mesh>
+    <Mesh Name="Western Wall">
+      <Vertices Name="Western Wall.vtx" />
+      <Indices Name="Western Wall.idx" 16bit="1" />
+      <Normals Name="Western Wall.nm" />
+      <Uv0 Name="Western Wall.uv0" />
+      <Uv1 Name="Western Wall.uv1" />
+    </Mesh>
+    <Mesh Name="Western Window">
+      <Vertices Name="Western Window.vtx" />
+      <Indices Name="Western Window.idx" 16bit="1" />
+      <Normals Name="Western Window.nm" />
+      <Uv0 Name="Western Window.uv0" />
+      <Uv1 Name="Western Window.uv1" />
+    </Mesh>
+  </Meshes>
+  <Materials>
+    <Material Name="Probe Robot_lit">
+      <Texture Name="Probe Robot.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="9" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="0.588, 0.588, 0.588, 1" />
+    </Material>
+    <Material Name="Assault Rifle_lit">
+      <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house1_column_diff_layerstga_0">
+      <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house6_diff_layerstga_0">
+      <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsq_floor_bases_diff_layersTGA_0">
+      <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="arc01_diff_layersTGA_0">
+      <Texture Name="arc01_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="passage_diff_layersTGA_0">
+      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="stairs_diff_layersTGA_0">
+      <Texture Name="stairs_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsquare_column2_diff_layersTGA_0">
+      <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="airvent_diff_0">
+      <Texture Name="airvent_diff.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsq_floor_small_diff_layersTGA_0">
+      <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsqr_floor_big_diff3_layersTGA_0">
+      <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsquare_column_diff_layersTGA_0">
+      <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house2_diff_layersTGA_0">
+      <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house1_diff_layerstga_0">
+      <Texture Name="house1_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house4_diff_layersTGA_0">
+      <Texture Name="house4_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="wall_deco1_diff_layersTGA_0">
+      <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="passage_diff_layersTGA_1">
+      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-1.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsquare_wall_diff_layersTGA_0">
+      <Texture Name="mainsquare_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="house7_diff_layersTGA_0">
+      <Texture Name="house2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+  </Materials>
+</Assets>
+<Node Name="Root" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+  <FogState Enabled="1" Color="0.5921569, 0.7333333, 0.5686275" Start="0" End="300" Mode="EXPSQR" />
+  <Node Name="Colliders" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Node Name="Collider for Column 1" Pos="-8.910089, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494316, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 2" Pos="-4.022929, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494321, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 3" Pos="0.9347175, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494309, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 4" Pos="5.868589, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494321, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 5" Pos="10.81103, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494307, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 6" Pos="15.74489, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494297, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 7" Pos="20.67514, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494297, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 8" Pos="25.609, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494316, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 9" Pos="30.56141, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494297, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 10" Pos="35.49528, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494316, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 11" Pos="40.42929, 7.5, -72.22499" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.7494278, 5, 0.7494278" />
+    </Node>
+    <Node Name="Collider for Column 12" Pos="-37.51536, 8.2, -33.60355" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 13" Pos="-37.51536, 8.481933, -25.78058" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 7.046554, 2" />
+    </Node>
+    <Node Name="Collider for Column 14" Pos="-37.51536, 8.481933, -18.00697" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 7.046554, 2" />
+    </Node>
+    <Node Name="Collider for Column 15" Pos="-37.51536, 8.2, -10.0554" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 16" Pos="-37.51536, 8.2, -2.449232" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 17" Pos="-37.51536, 8.2, 5.393307" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 18" Pos="46.40652, 7.66655, -12.23803" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.359941, 1.50154" />
+    </Node>
+    <Node Name="Collider for Column 19" Pos="46.40652, 7.65045, -6.859371" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.501544" />
+    </Node>
+    <Node Name="Collider for Column 20" Pos="46.40652, 7.65045, -1.476119" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.501544" />
+    </Node>
+    <Node Name="Collider for Column 21" Pos="46.40652, 7.65045, 3.896408" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.501544" />
+    </Node>
+    <Node Name="Collider for Column 22" Pos="46.40652, 7.65045, 9.268936" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.501547" />
+    </Node>
+    <Node Name="Collider for Column 23" Pos="46.40652, 7.65045, 14.64146" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.50154" />
+    </Node>
+    <Node Name="Collider for Column 24" Pos="46.40652, 7.65045, 20.01398" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.16819, 5.327739, 1.501549" />
+    </Node>
+    <Node Name="Collider for Column 25" Pos="-54.58144, 8.2, 5.393307" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 26" Pos="-48.64951, 8.2, 5.393307" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Column 27" Pos="-42.93632, 8.2, 5.393307" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2, 6.4, 2" />
+    </Node>
+    <Node Name="Collider for Doors" Pos="-2.95639E-05, 9.691204, 18.85264" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="9.766867, 5.074593, 0.6746407" />
+    </Node>
+    <Node Name="Collider for Eastern Building 1" Pos="50.68404, 15.37782, -84.03005" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="8.191002, 21.07069, 8.190979" />
+    </Node>
+    <Node Name="Collider for Eastern Building 2 (North)" Pos="49.41477, 15.23038, -27.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="12.71072, 21.61729, 27.7" />
+    </Node>
+    <Node Name="Collider for Eastern Building 2 (South)" Pos="51.5, 15.23038, -56.5" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="8.3, 21.61729, 30.1" />
+    </Node>
+    <Node Name="Collider for Eastern Building 3" Pos="53.2, 22.4, 3.748385" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="16.6, 23, 34.1" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (1)" Pos="38.8, 8.518629, -28.58608" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.3, 7.288703, 24.00212" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (2)" Pos="41.21, 5.15, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.8, 0.35, 22.4" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (3)" Pos="41.24, 5.5, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 21" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (4)" Pos="41.24, 5.85, -28.67" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 19.6" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (5)" Pos="41.24, 6.2, -29" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 17.6" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (6)" Pos="41.24, 6.55, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 16.6" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (7)" Pos="41.24, 6.9, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 15.4" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (8)" Pos="41.24, 7.25, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 14.1" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (9)" Pos="41.24, 7.6, -28.6" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 12.4" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (10)" Pos="41.24, 7.95, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 10.8" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (11)" Pos="41.24, 8.3, -28.64" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 10.07" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (12)" Pos="41.24, 8.65, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 8.75" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (13)" Pos="41.24, 9, -28.7" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 7.3" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (14)" Pos="41.24, 9.35, -28.8" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 6" />
+    </Node>
+    <Node Name="Collider for Eastern Stairs (15)" Pos="41.24, 9.7, -28.8" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="3.9, 0.35, 4" />
+    </Node>
+    <Node Name="Collider for Eastern Tomb" Pos="18.15073, 6.011418, -23.63658" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.889589, 2.193216, 7.19112" />
+    </Node>
+    <Node Name="Collider for Eastern Window" Pos="26.87593, 12.49293, 21.38869" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.409021, 8.460966, 1.457329" />
+    </Node>
+    <Node Name="Collider for Fountain (1)" Pos="0, 5.07, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="20.6307, 0.1, 20.6307" />
+    </Node>
+    <Node Name="Collider for Fountain (2)" Pos="0, 5.33, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="17.83, 0.35, 17.96" />
+    </Node>
+    <Node Name="Collider for Fountain (3)" Pos="0, 5.66, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="16.5, 0.35, 16.7" />
+    </Node>
+    <Node Name="Collider for Fountain (4)" Pos="0, 5.95, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="15.3, 0.32, 15.5" />
+    </Node>
+    <Node Name="Collider for Fountain (5)" Pos="0, 6.28, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="13.9, 0.36, 14.19" />
+    </Node>
+    <Node Name="Collider for Fountain (6)" Pos="0, 7.01, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="10, 1.2, 10" />
+    </Node>
+    <Node Name="Collider for Fountain (7)" Pos="0, 7.6, -23.65023" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="1.68, 1.6, 2.14" />
+    </Node>
+    <Node Name="Collider for Ground" Pos="-2.488575, 4.834459, -35.52983" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="114.1659, 0.3926039, 119.1431" />
+    </Node>
+    <Node Name="Collider for North Eastern Pillar" Pos="17.56022, 15.98359, -41.30874" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.28529, 22.05539, 6.285282" />
+    </Node>
+    <Node Name="Collider for North Wall" Pos="1.061594, 12.77554, -97.70872" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="51.20039, 15.90566, 9.194145" />
+    </Node>
+    <Node Name="Collider for North Western Pillar" Pos="-17.47567, 15.98359, -41.30874" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.285281, 22.05539, 6.285282" />
+    </Node>
+    <Node Name="Collider for Northern Building 1" Pos="-40.39596, 16.60042, -97.34807" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="32.94284, 23.54395, 21.38577" />
+    </Node>
+    <Node Name="Collider for Northern Building 2 (Lower)" Pos="15.7543, 8.2, -84.3" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="50.1, 6.25, 17.2" />
+    </Node>
+    <Node Name="Collider for Northern Building 2 (Upper)" Pos="15.7543, 23.1, -83.01181" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="52.59677, 26, 22.37" />
+    </Node>
+    <Node Name="Collider for Northern Ornament 1" Pos="7.391493, 22.04415, 19.00666" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.114805, 11.5635, 0.4785004" />
+    </Node>
+    <Node Name="Collider for Northern Ornament 2" Pos="-7.444077, 22.04415, 19.00666" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.114805, 11.5635, 0.4785004" />
+    </Node>
+    <Node Name="Collider for Northern Tomb" Pos="0, 6.011418, -41.20383" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="7.191124, 2.193216, 2.889591" />
+    </Node>
+    <Node Name="Collider for Object016" Pos="32.24255, 4.791835, 3.755066" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="5.48214, 0, 5.350082" />
+    </Node>
+    <Node Name="Collider for Object074" Pos="-47.60173, 15.77563, -37.02843" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.8802414, 21.8945, 6.208233" />
+    </Node>
+    <Node Name="Collider for Object075" Pos="-55.40659, 15.77563, -84.04155" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.880249, 21.8945, 6.452354" />
+    </Node>
+    <Node Name="Collider for Object076" Pos="43.30439, 12.78204, -84.31756" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="9.158203, 15.70313, 2.205322" />
+    </Node>
+    <Node Name="Collider for Object077" Pos="50.91581, 12.78204, -75.77429" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.205322, 15.70313, 9.158203" />
+    </Node>
+    <Node Name="Collider for Object078" Pos="52.14269, 14.98275, -13.19368" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.8802376, 20.14718, 6.208231" />
+    </Node>
+    <Node Name="Collider for Object079" Pos="52.14269, 14.98275, 22.44847" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.8802376, 20.14718, 6.208229" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (1)" Pos="0, 5.083, 15.05" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="38.07, 0.165, 13.2" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (2)" Pos="0, 5.265, 15.25" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="37.43, 0.2, 12.9" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (5)" Pos="0, 5.88, 15.8" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="35.6, 0.2, 11.9" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (4)" Pos="0, 5.68, 15.65" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="36.22, 0.2, 12.29" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (3)" Pos="0, 5.465, 15.45" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="36.8, 0.2, 12.6" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (6)" Pos="0, 6.08, 16" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="35, 0.2, 11.6" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (7)" Pos="0, 6.28, 16.2" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="34.4, 0.2, 11.3" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (8)" Pos="0, 6.48, 16.3" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="33.79, 0.2, 10.8" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (9)" Pos="0, 6.68, 16.45" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="33.16, 0.2, 10.4" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (10)" Pos="0, 6.88, 16.71" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="32.55, 0.2, 10.2" />
+    </Node>
+    <Node Name="Collider for Sourthern Stairs (11)" Pos="0, 7.08, 16.86" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="31.95, 0.2, 9.8" />
+    </Node>
+    <Node Name="Collider for South Eastern Pillar" Pos="17.56022, 15.98359, -5.536584" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.28529, 22.05539, 6.285285" />
+    </Node>
+    <Node Name="Collider for South Western Pillar" Pos="-17.72328, 15.98359, -5.589886" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.28529, 22.05539, 6.285285" />
+    </Node>
+    <Node Name="Collider for Southern Building (Behind)" Pos="0, 37.74085, 27.5" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="25.1, 67.35164, 13.7" />
+    </Node>
+    <Node Name="Collider for Southern Building (Front)" Pos="0, 37.74085, 19.85" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="21.9, 67.35164, 2" />
+    </Node>
+    <Node Name="Collider for Southern Tomb" Pos="0, 6.011418, -5.675186" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="7.191124, 2.193216, 2.889588" />
+    </Node>
+    <Node Name="Collider for Southern Wall (Left)" Pos="10, 20, 22.6" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="104.3, 30.00002, 3.27" />
+    </Node>
+    <Node Name="Collider for Southern Wall (In Between)" Pos="-42.9, 20, 17" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.5, 30, 10.8" />
+    </Node>
+    <Node Name="Collider for Southern Wall (Right)" Pos="-53, 20, 12.78" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="18, 30, 2.5" />
+    </Node>
+    <Node Name="Collider for Western Building 1" Pos="-50.9, 19.17618, -60.33698" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="20.6, 28.81022, 43.54035" />
+    </Node>
+    <Node Name="Collider for Western Building 2 (Upper)" Pos="-47.58213, 24.5, -13.66149" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="25.62226, 26, 42.28049" />
+    </Node>
+    <Node Name="Collider for Western Building 2 (Lower)" Pos="-50.9, 8.2, -17.2" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="17.6, 6.3, 34.6" />
+    </Node>
+    <Node Name="Collider for Western Ornament 1" Pos="42.99295, 21.34039, -28.64652" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.5296402, 3.84478, 2.494061" />
+    </Node>
+    <Node Name="Collider for Western Ornament 2" Pos="47.46095, 10.60906, -63.8404" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="0.5296478, 3.844779, 2.494072" />
+    </Node>
+    <Node Name="Collider for Western Tomb" Pos="-17.54782, 6.011418, -23.63658" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.889591, 2.193216, 7.19112" />
+    </Node>
+    <Node Name="Collider for Western Wall" Pos="-60.8, 20.00237, -28" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="2.4, 29.99528, 80" />
+    </Node>
+    <Node Name="Collider for Western Window" Pos="-27.106, 12.49293, 21.38869" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+      <Collider Shape="Box" IsTrigger="False" Center="0, 0, 0" Size="6.409021, 8.460966, 1.457329" />
+    </Node>
+  </Node>
+  <Node Name="Courtyard" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Leaf Name="Column 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 1" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 2" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 3" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 3" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 4" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 4" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 5" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 5" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 6" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 6" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 7" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 7" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 8" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 8" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 9" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 9" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 10" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 10" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 11" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 11" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 12" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 12" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 13" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 13" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 14" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 14" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 15" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 15" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 16" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 16" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 17" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 17" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 18" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 18" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 19" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 19" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 20" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 20" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 21" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 21" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 22" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 22" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 23" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 23" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 24" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 24" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 25" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 25" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 26" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 26" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Column 27" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Column 27" />
+      <Material Name="house1_column_diff_layerstga_0" />
+    </Leaf>
+    <Node Name="Doors" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Leaf Name="Doors (submesh_0)" Static="1" SubMeshIndex="0">
+        <Mesh Name="Doors" />
+        <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
+      </Leaf>
+      <Leaf Name="Doors (submesh_1)" Static="1" SubMeshIndex="1">
+        <Mesh Name="Doors" />
+        <Material Name="arc01_diff_layersTGA_0" />
+      </Leaf>
+    </Node>
+    <Leaf Name="Eastern Building 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Building 1" />
+      <Material Name="passage_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Eastern Building 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Building 2" />
+      <Material Name="passage_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Eastern Building 3" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Building 3" />
+      <Material Name="house6_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Eastern Stairs" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Stairs" />
+      <Material Name="stairs_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Eastern Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Tomb" />
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Eastern Window" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Eastern Window" />
+      <Material Name="airvent_diff_0" />
+    </Leaf>
+    <Leaf Name="Fountain" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Fountain" />
+      <Material Name="stairs_diff_layersTGA_0" />
+    </Leaf>
+    <Node Name="Ground" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Leaf Name="Ground (submesh_0)" Static="1" SubMeshIndex="0">
+        <Mesh Name="Ground" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_0" />
+      </Leaf>
+      <Leaf Name="Ground (submesh_1)" Static="1" SubMeshIndex="1">
+        <Mesh Name="Ground" />
+        <Material Name="mainsqr_floor_big_diff3_layersTGA_0" />
+      </Leaf>
+      <Leaf Name="Ground (submesh_2)" Static="1" SubMeshIndex="2">
+        <Mesh Name="Ground" />
+        <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
+      </Leaf>
+    </Node>
+    <Leaf Name="North Eastern Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="North Eastern Pillar" />
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="North Wall" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="North Wall" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="North Western Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="North Western Pillar" />
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Northern Building 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Northern Building 1" />
+      <Material Name="house1_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Northern Building 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Northern Building 2" />
+      <Material Name="house4_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Northern Ornament 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Northern Ornament 1" />
+      <Material Name="wall_deco1_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Northern Ornament 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Northern Ornament 2" />
+      <Material Name="wall_deco1_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Northern Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Northern Tomb" />
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object002" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object002" />
+      <Material Name="passage_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object016" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object016" />
+      <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object074" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object074" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object075" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object075" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object076" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object076" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object077" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object077" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object078" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object078" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Object079" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Object079" />
+      <Material Name="house2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Sourthern Stairs" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Sourthern Stairs" />
+      <Material Name="stairs_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="South Eastern Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="South Eastern Pillar" />
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="South Western Pillar" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="South Western Pillar" />
+      <Material Name="mainsquare_column_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Southern Building" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Southern Building" />
+      <Material Name="passage_diff_layersTGA_1" />
+    </Leaf>
+    <Leaf Name="Southern Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Southern Tomb" />
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Southern Wall" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Southern Wall" />
+      <Material Name="mainsquare_wall_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Building 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Building 1" />
+      <Material Name="house7_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Building 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Building 2" />
+      <Material Name="house1_diff_layerstga_0" />
+    </Leaf>
+    <Leaf Name="Western Ornament 1" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Ornament 1" />
+      <Material Name="wall_deco1_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Ornament 2" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Ornament 2" />
+      <Material Name="wall_deco1_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Tomb" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Tomb" />
+      <Material Name="mainsquare_column2_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Wall" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Wall" />
+      <Material Name="mainsquare_wall_diff_layersTGA_0" />
+    </Leaf>
+    <Leaf Name="Western Window" Pos="0, 0, 0" Rot="1, 2.185569E-08, 0, 0" Scale="1, 1, 1" Static="1">
+      <Mesh Name="Western Window" />
+      <Material Name="airvent_diff_0" />
+    </Leaf>
+  </Node>
+  <Node Name="Directional Light Blue" Pos="0, 10, 0" Rot="0.1481229, 0.1481228, 0.8752192, 0.4360169" Scale="1, 1, 1">
+    <LightNode>
+      <Light Name="Directional Light Blue" />
+    </LightNode>
+  </Node>
+  <Node Name="Directional Light Yellow" Pos="0, 10, 0" Rot="0.8473976, 0.4317706, -0.2753362, 0.1402908" Scale="1, 1, 1">
+    <LightNode>
+      <Light Name="Directional Light Yellow" />
+    </LightNode>
+  </Node>
+  <Node Name="Main Camera" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Camera Fov="60" Near="0.01" Far="1000" />
+  </Node>
+  <Node Name="Player" Pos="0, 10, -50" Rot="1, 0, 0, 0" Scale="1, 1, 1">
+    <Leaf Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Assault Rifle" />
+      <Material Name="Assault Rifle_lit" />
+    </Leaf>
+  </Node>
+  <Leaf Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254">
+    <Light Name="Directional Light Blue" />
+    <Light Name="Directional Light Yellow" />
+    <Mesh Name="Sphere002" />
+    <Material Name="Probe Robot_lit" />
+  </Leaf>
+  <Skybox Scale="120">
+    <PosZ>
+      <Texture Name="Front.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </PosZ>
+    <NegZ>
+      <Texture Name="Back.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </NegZ>
+    <PosX>
+      <Texture Name="Right.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </PosX>
+    <NegX>
+      <Texture Name="Left.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </NegX>
+    <PosY>
+      <Texture Name="Top.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </PosY>
+    <NegY>
+      <Texture Name="Bottom.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+    </NegY>
+  <FogState Enabled="0" />
+  </Skybox>
+</Node>
