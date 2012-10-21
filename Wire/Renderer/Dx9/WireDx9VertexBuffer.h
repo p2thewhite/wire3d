@@ -42,7 +42,6 @@ public:
 
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
-	inline UInt GetVertexSize() const;
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType

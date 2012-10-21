@@ -25,8 +25,10 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 	:
 	mpPdrVertexAttributes(NULL)
 {
-	CreateDeclaration(NULL, pVertexBuffer->GetAttributes());
-	CreateBuffer(NULL, GetVertexSize() * pVertexBuffer->GetQuantity(),
+	const VertexAttributes& rAttributes = pVertexBuffer->GetAttributes();
+	CreateDeclaration(NULL, rAttributes);
+	const UInt vertexSize = rAttributes.GetVertexSize();
+	CreateBuffer(NULL, vertexSize * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
 	Update(pVertexBuffer);
@@ -78,15 +80,18 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
-	WIRE_ASSERT(mBufferSize == GetVertexSize() * pVertexBuffer->GetQuantity());
-	WIRE_ASSERT(GetVertexSize() == pVertexBuffer->GetAttributes().
-		GetChannelQuantity()*sizeof(Float));
+	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
+
+	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
+	WIRE_ASSERT(vertexSize > 0);
+	WIRE_ASSERT(mBufferSize == (vertexSize * pVertexBuffer->GetQuantity()));
+	const UInt rawOffset = offset * vertexSize;
 
 	UChar* pBuffer = reinterpret_cast<UChar*>(Lock(Buffer::LM_WRITE_ONLY)) +
-		offset * GetVertexSize();
-	size_t size = count * GetVertexSize();
+		rawOffset;
+	size_t size = count * vertexSize;
 	const UChar* pDst = reinterpret_cast<const UChar*>(pVertexBuffer->
-		GetData()) + offset * GetVertexSize();
+		GetData()) + rawOffset;
 	System::Memcpy(pBuffer, size, pDst, size);
 	Unlock();
 }
@@ -94,8 +99,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer)
 {
-	SetDeclaration(pRenderer);
-	SetBuffer(pRenderer, GetVertexSize());
+	SetBuffer(pRenderer, mpPdrVertexAttributes->GetVertexSize());
 
 	pRenderer->GetRendererData()->PdrVBuffer = this;
 }

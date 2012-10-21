@@ -42,7 +42,6 @@ public:
 
 	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
 		rAttributes);
-	inline UInt GetVertexSize() const;
 
 	inline const TArray<PdrVertexAttributes::VertexElement>& GetDeclaration() const;
 
