@@ -68,7 +68,7 @@ void Renderer::Terminate()
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
 	DestroyAll(mImage2DMap);
-	DestroyAll(mVertexAttributesMap);
+	DestroyAll(mVertexFormatMap);
 	DestroyBatchingBuffers();
 
 	s_pRenderer = NULL;
@@ -583,18 +583,18 @@ PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 }
 
 //----------------------------------------------------------------------------
-PdrVertexAttributes* Renderer::Bind(const VertexAttributes* pVertexAttributes)
+PdrVertexFormat* Renderer::Bind(const VertexAttributes* pVertexAttributes)
 {
 	WIRE_ASSERT(pVertexAttributes);
 	const UInt key = pVertexAttributes->GetKey();
-	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
 
 	if (!pValue)
 	{
-		PdrVertexAttributes* pPdrVertexAttributes =
-			WIRE_NEW PdrVertexAttributes(this, *pVertexAttributes);
-		mVertexAttributesMap.Insert(key, pPdrVertexAttributes);
-		return pPdrVertexAttributes;
+		PdrVertexFormat* pPdrVertexFormat = WIRE_NEW PdrVertexFormat(this,
+			*pVertexAttributes);
+		mVertexFormatMap.Insert(key, pPdrVertexFormat);
+		return pPdrVertexFormat;
 	}
 
 	return *pValue;
@@ -605,15 +605,15 @@ void Renderer::Enable(const VertexAttributes* pVertexAttributes)
 {
 	WIRE_ASSERT(pVertexAttributes);
 	const UInt key = pVertexAttributes->GetKey();
-	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
 	if (pValue)
 	{
 		(*pValue)->Enable(this);
 	}
 	else
 	{
-		PdrVertexAttributes* pPdrVertexAttributes = Bind(pVertexAttributes);
-		pPdrVertexAttributes->Enable(this);
+		PdrVertexFormat* pPdrVertexFormat = Bind(pVertexAttributes);
+		pPdrVertexFormat->Enable(this);
 	}
 
 	mVertexAttributeKey = key;
@@ -624,7 +624,7 @@ void Renderer::Disable(const VertexAttributes* pVertexAttributes)
 {
 	WIRE_ASSERT(pVertexAttributes);
 	const UInt key = pVertexAttributes->GetKey();
-	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
 	if (pValue)
 	{
 		(*pValue)->Disable(this);
@@ -644,7 +644,7 @@ void Renderer::Set(const VertexAttributes* pVertexAttributes)
 	{
 		if (mVertexAttributeKey != 0)
 		{
-			PdrVertexAttributes** pValue = mVertexAttributesMap.Find(
+			PdrVertexFormat** pValue = mVertexFormatMap.Find(
 				mVertexAttributeKey);
 			if (pValue)
 			{
@@ -661,12 +661,12 @@ void Renderer::Set(const VertexAttributes* pVertexAttributes)
 }
 
 //----------------------------------------------------------------------------
-PdrVertexAttributes* Renderer::GetResource(const VertexAttributes*
+PdrVertexFormat* Renderer::GetResource(const VertexAttributes*
 	pVertexAttributes)
 {
 	WIRE_ASSERT(pVertexAttributes);
 	const UInt key = pVertexAttributes->GetKey();
-	PdrVertexAttributes** pValue = mVertexAttributesMap.Find(key);
+	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
 
 	if (pValue)
 	{
@@ -722,22 +722,22 @@ void Renderer::DestroyAll(Image2DMap& rTexture2DMap)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAll(VertexAttributesMap& rVertexAttributesMap)
+void Renderer::DestroyAll(VertexFormatMap& rVertexFormatMap)
 {
-	while (rVertexAttributesMap.GetQuantity() > 0)
+	while (rVertexFormatMap.GetQuantity() > 0)
 	{
-		VertexAttributesMap::Iterator it(&rVertexAttributesMap);
+		VertexFormatMap::Iterator it(&rVertexFormatMap);
 		UInt key;
-		PdrVertexAttributes** pValue = it.GetFirst(&key);
+		PdrVertexFormat** pValue = it.GetFirst(&key);
 
 		if (pValue)
 		{
 			WIRE_DELETE *pValue;
-			rVertexAttributesMap.Remove(key);
+			rVertexFormatMap.Remove(key);
 		}
 	}
 
-	WIRE_ASSERT(rVertexAttributesMap.GetQuantity() == 0);
+	WIRE_ASSERT(rVertexFormatMap.GetQuantity() == 0);
 }
 
 //----------------------------------------------------------------------------
@@ -980,7 +980,7 @@ void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 		Object)->GetMesh()->GetVertexBuffer()->GetAttributes();
 	const UInt vertexSize = rAttributes.GetVertexSize();
 
- 	const PdrVertexAttributes* pPdrVF = GetResource(&rAttributes);
+ 	const PdrVertexFormat* pPdrVF = GetResource(&rAttributes);
  	if (!pPdrVF)
  	{
  		pPdrVF = Bind(&rAttributes);

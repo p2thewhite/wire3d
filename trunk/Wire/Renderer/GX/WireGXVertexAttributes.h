@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREGXVERTEXATTRIBUTES_H
-#define WIREGXVERTEXATTRIBUTES_H
+#ifndef WIREGXVERTEXFORMAT_H
+#define WIREGXVERTEXFORMAT_H
 
 #include "WireRenderer.h"
 #include "WireVertexAttributes.h"
@@ -16,7 +16,7 @@
 namespace Wire
 {
 
-class PdrVertexAttributes
+class PdrVertexFormat
 {
 public:
 	struct VertexElement
@@ -27,18 +27,16 @@ public:
 		UChar CompType;
 	};
 
-	PdrVertexAttributes(Renderer* pRenderer, const VertexAttributes&
+	PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
 		rVertexAttributes);
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
 
-	inline UInt GetVertexSize() const;
 	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
 	TArray<VertexElement> mDeclaration;
-	UChar mVertexSize;
 };
 
 #include "WireGXVertexAttributes.inl"

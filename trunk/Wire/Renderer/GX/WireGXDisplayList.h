@@ -24,7 +24,7 @@ class PdrDisplayList : public Object
 public:
 	PdrDisplayList(PdrRendererData* pRendererData, const PdrIndexBuffer&
 		rIBuffer, UInt indexCount,
-		const TArray<PdrVertexAttributes::VertexElement>& rElements);
+		const TArray<PdrVertexFormat::VertexElement>& rElements);
 	~PdrDisplayList();
 
 	inline void Draw();

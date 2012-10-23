@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREDX9VERTEXATTRIBUTES_H
-#define WIREDX9VERTEXATTRIBUTES_H
+#ifndef WIREDX9VERTEXFORMAT_H
+#define WIREDX9VERTEXFORMAT_H
 
 #include "WireDx9RendererData.h"
 #include "WireRenderer.h"
@@ -19,21 +19,18 @@ namespace Wire
 
 class Renderer;
 
-class PdrVertexAttributes
+class PdrVertexFormat
 {
 public:
-	PdrVertexAttributes(Renderer* pRenderer, const VertexAttributes&
+	PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
 		rVertexAttributes);
-	~PdrVertexAttributes();
+	~PdrVertexFormat();
 
 	inline void Enable(Renderer* pRenderer);
 	inline void Disable(Renderer* pRenderer);
 
-	inline UInt GetVertexSize() const;
-
 private:
 	IDirect3DVertexDeclaration9* mpDeclaration;
-	UInt mVertexSize;
 };
 
 #include "WireDx9VertexAttributes.inl"

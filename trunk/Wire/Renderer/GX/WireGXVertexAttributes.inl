@@ -7,13 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline UInt PdrVertexAttributes::GetVertexSize() const
-{
-	return mVertexSize;
-}
-
-//----------------------------------------------------------------------------
-inline const TArray<PdrVertexAttributes::VertexElement>& PdrVertexAttributes::
+inline const TArray<PdrVertexFormat::VertexElement>& PdrVertexFormat::
 	GetDeclaration() const
 {
 	return mDeclaration;

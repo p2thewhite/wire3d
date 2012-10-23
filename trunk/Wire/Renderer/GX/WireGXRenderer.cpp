@@ -257,10 +257,10 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 	WIRE_ASSERT(pPdrVBuffer);
 	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
-	const PdrVertexAttributes* const pPdrVFormat = mpData->PdrVFormat;
+	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
 	WIRE_ASSERT(pPdrVFormat);
-	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
-		pPdrVFormat->GetDeclaration();
+	const TArray<PdrVertexFormat::VertexElement>& rDeclaration = pPdrVFormat->
+		GetDeclaration();
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
@@ -337,10 +337,10 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	WIRE_ASSERT(pPdrVBuffer);
 	const PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
-	const PdrVertexAttributes* const pPdrVFormat = mpData->PdrVFormat;
+	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
 	WIRE_ASSERT(pPdrVFormat);
-	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
-		pPdrVFormat->GetDeclaration();
+	const TArray<PdrVertexFormat::VertexElement>& rDeclaration = pPdrVFormat->
+		GetDeclaration();
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
@@ -669,7 +669,7 @@ void PdrRendererData::GetTileCount(UInt& rTilesYCount, UShort& rHeight,
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::Draw(const TArray<PdrVertexAttributes::VertexElement>&
+void PdrRendererData::Draw(const TArray<PdrVertexFormat::VertexElement>&
 	rElements, const UShort* const pIndices, UInt indexCount,
 	UInt startIndex)
 {
@@ -716,7 +716,7 @@ void PdrRendererData::Draw(const TArray<PdrVertexAttributes::VertexElement>&
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::DrawWireframe(const TArray<PdrVertexAttributes::
+void PdrRendererData::DrawWireframe(const TArray<PdrVertexFormat::
 	VertexElement>& rElements, const UShort* const pIBuffer, UInt indexCount,
 	UInt startIndex)
 {

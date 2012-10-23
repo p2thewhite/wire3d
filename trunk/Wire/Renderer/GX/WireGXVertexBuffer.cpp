@@ -82,7 +82,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize)
 	// the vertex format needs to be set by the Renderer beforehand
 	WIRE_ASSERT(pRenderer->GetRendererData()->PdrVFormat);
 
-	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
+	const TArray<PdrVertexFormat::VertexElement>& rDeclaration =
 		pRenderer->GetRendererData()->PdrVFormat->GetDeclaration();
 
 	for (UInt i = 0; i < rDeclaration.GetQuantity(); i++)
