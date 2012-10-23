@@ -12,7 +12,7 @@
 
 #include "WireBuffer.h"
 #include "WireDx9RendererData.h"
-#include "WireDx9VertexAttributes.h"
+#include "WireDx9VertexFormat.h"
 #include "WireRenderer.h"
 
 namespace Wire

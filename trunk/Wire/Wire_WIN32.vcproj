@@ -626,7 +626,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\Dx9\WireDx9VertexAttributes.h"
+							RelativePath=".\Renderer\Dx9\WireDx9VertexFormat.h"
 							>
 						</File>
 						<File
@@ -682,7 +682,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\Dx9\WireDx9VertexAttributes.cpp"
+							RelativePath=".\Renderer\Dx9\WireDx9VertexFormat.cpp"
 							>
 						</File>
 						<File
@@ -698,7 +698,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\Dx9\WireDx9VertexAttributes.inl"
+							RelativePath=".\Renderer\Dx9\WireDx9VertexFormat.inl"
 							>
 						</File>
 						<File
@@ -734,7 +734,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.h"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.h"
 							>
 						</File>
 						<File
@@ -966,7 +966,7 @@
 							</FileConfiguration>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.cpp"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.cpp"
 							>
 							<FileConfiguration
 								Name="Debug|Win32"
@@ -1018,7 +1018,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.inl"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.inl"
 							>
 						</File>
 						<File

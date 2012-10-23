@@ -11,7 +11,7 @@
 #define WIREGXDISPLAYLIST_H
 
 #include "WireGXIndexBuffer.h"
-#include "WireGXVertexAttributes.h"
+#include "WireGXVertexFormat.h"
 #include "WireTArray.h"
 
 namespace Wire

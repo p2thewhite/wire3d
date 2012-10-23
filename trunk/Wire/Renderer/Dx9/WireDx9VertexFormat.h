@@ -33,7 +33,7 @@ private:
 	IDirect3DVertexDeclaration9* mpDeclaration;
 };
 
-#include "WireDx9VertexAttributes.inl"
+#include "WireDx9VertexFormat.inl"
 
 }
 

@@ -8,7 +8,7 @@
 
 #include "WireDx9VertexBuffer.h"
 
-#include "WireDx9VertexAttributes.h"
+#include "WireDx9VertexFormat.h"
 #include "WireVertexBuffer.h"
 
 using namespace Wire;

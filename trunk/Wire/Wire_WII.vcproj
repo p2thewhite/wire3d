@@ -941,7 +941,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.h"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.h"
 							>
 						</File>
 						<File
@@ -997,7 +997,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.cpp"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.cpp"
 							>
 						</File>
 						<File
@@ -1017,7 +1017,7 @@
 							>
 						</File>
 						<File
-							RelativePath=".\Renderer\GX\WireGXVertexAttributes.inl"
+							RelativePath=".\Renderer\GX\WireGXVertexFormat.inl"
 							>
 						</File>
 						<File
