@@ -30,15 +30,11 @@ public:
 	PdrVertexAttributes(Renderer* pRenderer, const VertexAttributes&
 		rVertexAttributes);
 
-	inline void Enable(Renderer* pRenderer);
+	void Enable(Renderer* pRenderer);
+	void Disable(Renderer* pRenderer);
 
 	inline UInt GetVertexSize() const;
-
-	// TODO: review
-	inline const TArray<PdrVertexAttributes::VertexElement>& GetDeclaration() const
-	{
-		return mDeclaration;
-	}
+	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
 	TArray<VertexElement> mDeclaration;

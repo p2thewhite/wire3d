@@ -16,12 +16,9 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 	pVertexBuffer)
-	:
-	mpPdrVertexAttributes(NULL)
 {
-	const VertexAttributes& rAttributes = pVertexBuffer->GetAttributes();
-	CreateDeclaration(pRenderer, rAttributes);
-	const UInt vertexSize = rAttributes.GetVertexSize();
+	WIRE_ASSERT(pVertexBuffer);
+	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 	CreateBuffer(pRenderer, vertexSize * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
@@ -32,8 +29,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, const VertexBuffer*
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
 	Buffer::UsageType usage)
-	:
-	mpPdrVertexAttributes(NULL)
 {
 	CreateBuffer(pRenderer, size, usage);
 }
@@ -42,10 +37,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer* pRenderer, UInt size,
 PdrVertexBuffer::~PdrVertexBuffer()
 {
 	mpBuffer->Release();
-	if (mpPdrVertexAttributes)
-	{
-		WIRE_DELETE mpPdrVertexAttributes;
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -60,19 +51,6 @@ void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 	hr = rDevice->CreateVertexBuffer(mBufferSize, d3dUsage, 0, pool,
 		&mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::CreateDeclaration(Renderer* pRenderer, const
-	VertexAttributes& rAttributes)
-{
-	if (mpPdrVertexAttributes)
-	{
-		WIRE_DELETE mpPdrVertexAttributes;
-	}
-
-	mpPdrVertexAttributes = WIRE_NEW PdrVertexAttributes(pRenderer,
-		rAttributes);
 }
 
 //----------------------------------------------------------------------------

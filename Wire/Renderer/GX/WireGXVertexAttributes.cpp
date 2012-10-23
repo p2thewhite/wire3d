@@ -8,6 +8,8 @@
 
 #include "WireGXVertexAttributes.h"
 
+#include "WireGXRendererData.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
@@ -69,4 +71,29 @@ PdrVertexAttributes::PdrVertexAttributes(Renderer*, const VertexAttributes&
 			mDeclaration.Append(element);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexAttributes::Enable(Renderer* pRenderer)
+{
+	// setup the vertex descriptor
+	// tells the flipper to expect direct data
+	GXClearVtxDesc();
+
+	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
+	{
+		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
+		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
+			CompCnt, mDeclaration[i].CompType, 0);
+	}
+
+	WIRE_ASSERT(pRenderer);
+	pRenderer->GetRendererData()->PdrVFormat = this;
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexAttributes::Disable(Renderer* pRenderer)
+{
+	WIRE_ASSERT(pRenderer);
+	pRenderer->GetRendererData()->PdrVFormat = NULL;
 }

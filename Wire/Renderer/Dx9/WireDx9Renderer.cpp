@@ -589,6 +589,7 @@ void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
 //----------------------------------------------------------------------------
 void PdrRendererData::ResetDevice()
 {
+	WIRE_ASSERT(mpRenderer);
 	Renderer& rRenderer = *mpRenderer;
 	TArray<const IndexBuffer*> saveIndexBuffers;
 	TArray<const VertexBuffer*> saveVertexBuffers;
@@ -623,6 +624,7 @@ void PdrRendererData::ResetDevice()
 	hr = D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	UsesRenormalizeNormals = false;
+	rRenderer.mVertexAttributeKey = 0;
 
 	for (UInt i = 0; i < rRenderer.mLights.GetQuantity(); i++)
 	{

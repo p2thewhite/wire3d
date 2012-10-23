@@ -16,6 +16,11 @@ inline void PdrVertexAttributes::Enable(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
+inline void PdrVertexAttributes::Disable(Renderer*)
+{
+}
+
+//----------------------------------------------------------------------------
 inline UInt PdrVertexAttributes::GetVertexSize() const
 {
 	return mVertexSize;

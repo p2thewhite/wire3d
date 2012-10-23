@@ -8,12 +8,6 @@
 
 #include "WireGXVertexBuffer.h"
 
-#include "WireEffect.h"
-#include "WireGeometry.h"
-#include "WireGXRendererData.h"
-#include "WireGXVertexAttributes.h"
-#include "WireLight.h"
-#include "WireMesh.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>
@@ -22,12 +16,9 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
-	:
-	mpPdrVertexAttributes(NULL)
 {
-	const VertexAttributes& rAttributes = pVertexBuffer->GetAttributes();
-	CreateDeclaration(NULL, rAttributes);
-	const UInt vertexSize = rAttributes.GetVertexSize();
+	WIRE_ASSERT(pVertexBuffer);
+	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 	CreateBuffer(NULL, vertexSize * pVertexBuffer->GetQuantity(),
 		pVertexBuffer->GetUsage());
 
@@ -37,8 +28,6 @@ PdrVertexBuffer::PdrVertexBuffer(Renderer*, const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 PdrVertexBuffer::PdrVertexBuffer(Renderer*, UInt size, Buffer::UsageType
 	usage)
-	:
-	mpPdrVertexAttributes(NULL)
 {
 	CreateBuffer(NULL, size, usage);
 }
@@ -50,24 +39,12 @@ PdrVertexBuffer::~PdrVertexBuffer()
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
+void PdrVertexBuffer::CreateBuffer(Renderer*, UInt size,
 	Buffer::UsageType usage)
 {
 	mBufferSize = size;
 	mpBuffer = memalign(32, mBufferSize);
 	WIRE_ASSERT(mpBuffer);
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::CreateDeclaration(Renderer*, const VertexAttributes&
-	rAttributes)
-{
-	if (mpPdrVertexAttributes)
-	{
-		WIRE_DELETE mpPdrVertexAttributes;
-	}
-
-	mpPdrVertexAttributes = WIRE_NEW PdrVertexAttributes(NULL, rAttributes);
 }
 
 //----------------------------------------------------------------------------
@@ -80,6 +57,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer)
 void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
+	WIRE_ASSERT(pVertexBuffer);
 	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
 
 	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
@@ -97,15 +75,22 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Enable(Renderer* pRenderer)
+void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize)
 {
-	SetBuffer(pRenderer, mpPdrVertexAttributes->GetVertexSize());
+	WIRE_ASSERT(vertexSize > 0);
+	WIRE_ASSERT(pRenderer);
+	// the vertex format needs to be set by the Renderer beforehand
+	WIRE_ASSERT(pRenderer->GetRendererData()->PdrVFormat);
+
+	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
+		pRenderer->GetRendererData()->PdrVFormat->GetDeclaration();
+
+	for (UInt i = 0; i < rDeclaration.GetQuantity(); i++)
+	{
+		void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
+			reinterpret_cast<UInt>(mpBuffer)));
+		GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
+	}
 
 	pRenderer->GetRendererData()->PdrVBuffer = this;
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexBuffer::Disable(Renderer* pRenderer)
-{
-	pRenderer->GetRendererData()->PdrVBuffer = NULL;
 }

@@ -28,7 +28,7 @@ public:
 	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
 
-	inline void Enable(Renderer* pRenderer);
+	inline void Enable(Renderer* pRenderer, UInt vertexSize);
 	inline void Disable(Renderer* pRenderer);
 
 	inline void* Lock(Buffer::LockingMode mode);
@@ -36,23 +36,16 @@ public:
 
 	void Update(const VertexBuffer* pVertexBuffer);
  	void Update(const VertexBuffer* pVertexBuffer, UInt count,
- 		UInt offset = 0);
+		UInt offset = 0);
 
 	inline UInt GetBufferSize() const;
-
-	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
-		rAttributes);
 
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 
 	IDirect3DVertexBuffer9* mpBuffer;
 	UInt mBufferSize;
-
-	inline void SetDeclaration(Renderer* pRenderer);
-	PdrVertexAttributes* mpPdrVertexAttributes;
 };
 
 #include "WireDx9VertexBuffer.inl"

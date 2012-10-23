@@ -27,6 +27,7 @@ public:
 	~PdrVertexAttributes();
 
 	inline void Enable(Renderer* pRenderer);
+	inline void Disable(Renderer* pRenderer);
 
 	inline UInt GetVertexSize() const;
 

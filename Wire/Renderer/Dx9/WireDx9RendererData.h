@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREPDRRENDERERDATA_H
-#define WIREPDRRENDERERDATA_H
+#ifndef WIREDX9RENDERERDATA_H
+#define WIREDX9RENDERERDATA_H
 
 #include "WireMatrix4.h"
 #include "WireTArray.h"
