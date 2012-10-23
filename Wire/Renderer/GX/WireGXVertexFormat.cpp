@@ -6,7 +6,7 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-#include "WireGXVertexAttributes.h"
+#include "WireGXVertexFormat.h"
 
 #include "WireGXRendererData.h"
 

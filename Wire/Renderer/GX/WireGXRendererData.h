@@ -11,7 +11,7 @@
 #define WIREGXRENDERERDATA_H
 
 #include "WireMatrix34.h"
-#include "WireGXVertexAttributes.h"
+#include "WireGXVertexFormat.h"
 
 namespace Wire
 {

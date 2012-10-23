@@ -6,7 +6,7 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-#include "WireDx9VertexAttributes.h"
+#include "WireDx9VertexFormat.h"
 
 #include "WireRenderer.h"
 

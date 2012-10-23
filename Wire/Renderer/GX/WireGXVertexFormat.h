@@ -39,7 +39,7 @@ private:
 	TArray<VertexElement> mDeclaration;
 };
 
-#include "WireGXVertexAttributes.inl"
+#include "WireGXVertexFormat.inl"
 
 }
 

@@ -207,15 +207,15 @@
     <ClInclude Include="Renderer\Dx9\WireDx9RendererData.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9RendererInput.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9Texture2D.h" />
-    <ClInclude Include="Renderer\Dx9\WireDx9VertexAttributes.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9VertexBuffer.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9VertexFormat.h" />
     <ClInclude Include="Renderer\GX\WireGXDisplayList.h" />
     <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h" />
     <ClInclude Include="Renderer\GX\WireGXRendererData.h" />
     <ClInclude Include="Renderer\GX\WireGXRendererInput.h" />
     <ClInclude Include="Renderer\GX\WireGXTexture2D.h" />
-    <ClInclude Include="Renderer\GX\WireGXVertexAttributes.h" />
     <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h" />
+    <ClInclude Include="Renderer\GX\WireGXVertexFormat.h" />
     <ClInclude Include="Renderer\WireRenderer.h" />
     <ClInclude Include="Renderer\WireRendererStatistics.h" />
   </ItemGroup>
@@ -277,12 +277,12 @@
     <None Include="Engine\WireVisibleObject.inl" />
     <None Include="Engine\WireVisibleSet.inl" />
     <None Include="Renderer\Dx9\WireDx9IndexBuffer.inl" />
-    <None Include="Renderer\Dx9\WireDx9VertexAttributes.inl" />
     <None Include="Renderer\Dx9\WireDx9VertexBuffer.inl" />
+    <None Include="Renderer\Dx9\WireDx9VertexFormat.inl" />
     <None Include="Renderer\GX\WireGXDisplayList.inl" />
     <None Include="Renderer\GX\WireGXIndexBuffer.inl" />
-    <None Include="Renderer\GX\WireGXVertexAttributes.inl" />
     <None Include="Renderer\GX\WireGXVertexBuffer.inl" />
+    <None Include="Renderer\GX\WireGXVertexFormat.inl" />
     <None Include="Renderer\WireRenderer.inl" />
     <None Include="Renderer\WireRendererStatistics.inl" />
   </ItemGroup>
@@ -441,8 +441,8 @@
     <ClCompile Include="Renderer\Dx9\WireDx9StateWireframe.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9StateZBuffer.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp" />
-    <ClCompile Include="Renderer\Dx9\WireDx9VertexAttributes.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9VertexFormat.cpp" />
     <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -487,11 +487,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Renderer\GX\WireGXVertexAttributes.cpp">
+    <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp">
+    <ClCompile Include="Renderer\GX\WireGXVertexFormat.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
