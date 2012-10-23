@@ -7,6 +7,12 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline void PdrVertexBuffer::Disable(Renderer* pRenderer)
+{
+	pRenderer->GetRendererData()->PdrVBuffer = NULL;
+}
+
+//----------------------------------------------------------------------------
 inline void* PdrVertexBuffer::Lock(Buffer::LockingMode)
 {
 	return mpBuffer;
@@ -17,38 +23,6 @@ inline void PdrVertexBuffer::Unlock()
 {
 	DCStoreRange(mpBuffer, mBufferSize);
 	GXInvalidateVtxCache();
-}
-
-//----------------------------------------------------------------------------
-inline void PdrVertexBuffer::SetBuffer(Renderer*, UInt vertexSize)
-{
-	WIRE_ASSERT(vertexSize > 0);
-	WIRE_ASSERT(mpPdrVertexAttributes);
-
-	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
-		mpPdrVertexAttributes->GetDeclaration();
-
-	for (UInt i = 0; i < rDeclaration.GetQuantity(); i++)
-	{
-		void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
-			reinterpret_cast<UInt>(mpBuffer)));
-		GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
-	}
-}
-
-//----------------------------------------------------------------------------
-inline void PdrVertexBuffer::SetDeclaration(Renderer*)
-{
-	WIRE_ASSERT(mpPdrVertexAttributes);
-	mpPdrVertexAttributes->Enable(NULL);
-}
-
-//----------------------------------------------------------------------------
-inline const TArray<PdrVertexAttributes::VertexElement>&
-PdrVertexBuffer::GetDeclaration() const
-{
-	WIRE_ASSERT(mpPdrVertexAttributes);
-	return mpPdrVertexAttributes->GetDeclaration();
 }
 
 //----------------------------------------------------------------------------

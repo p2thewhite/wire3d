@@ -11,13 +11,12 @@
 #define WIREGXVERTEXBUFFER_H
 
 #include "WireBuffer.h"
+#include "WireGXRendererData.h"
 #include "WireTArray.h"
-#include "WireGXVertexAttributes.h"
 
 namespace Wire
 {
 
-class PdrDisplayList;
 class Renderer;
 class VertexBuffer;
 
@@ -28,8 +27,8 @@ public:
 	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
 
-	void Enable(Renderer* pRenderer);
-	void Disable(Renderer* pRenderer);
+	void Enable(Renderer* pRenderer, UInt vertexSize);
+	inline void Disable(Renderer* pRenderer);
 
 	inline void* Lock(Buffer::LockingMode mode);
 	inline void Unlock();
@@ -40,21 +39,12 @@ public:
 
 	inline UInt GetBufferSize() const;
 
-	void CreateDeclaration(Renderer* pRenderer, const VertexAttributes&
-		rAttributes);
-
-	inline const TArray<PdrVertexAttributes::VertexElement>& GetDeclaration() const;
-
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-	inline void SetBuffer(Renderer* pRenderer, UInt vertexSize);
 
 	void* mpBuffer;
 	UInt mBufferSize;
-
-	inline void SetDeclaration(Renderer* pRenderer);
-	PdrVertexAttributes* mpPdrVertexAttributes;
 };
 
 #include "WireGXVertexBuffer.inl"

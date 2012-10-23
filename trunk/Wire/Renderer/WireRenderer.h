@@ -146,6 +146,7 @@ public:
 	// Vertex attributes management
 	PdrVertexAttributes* Bind(const VertexAttributes* pVertexAttributes);
 	void Enable(const VertexAttributes* pVertexAttributes);
+	void Disable(const VertexAttributes* pVertexAttributes);
 	void Set(const VertexAttributes* pVertexAttributes);
 	PdrVertexAttributes* GetResource(const VertexAttributes* pVertexAttributes);
 	
@@ -267,6 +268,7 @@ private:
 	Pointer<VertexBuffer> mspVertexBuffer;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	TArray<Pointer<Light> > mLights;
+	UInt mVertexAttributeKey;
 
 	// The camera for establishing the view frustum
 	Pointer<Camera> mspCamera;

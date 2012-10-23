@@ -253,15 +253,19 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 
 	WIRE_ASSERT(mspIndexBuffer);
 	const IndexBuffer& rIBuffer = *mspIndexBuffer;
-	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
+	const PdrVertexBuffer* const pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);
-	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;
+	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
+	const PdrVertexAttributes* const pPdrVFormat = mpData->PdrVFormat;
+	WIRE_ASSERT(pPdrVFormat);
+	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
+		pPdrVFormat->GetDeclaration();
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
-		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-			GetBuffer(), indexCount, startIndex);
+		mpData->DrawWireframe(rDeclaration, pPdrIBuffer->GetBuffer(),
+			indexCount, startIndex);
 	}
 	else
 	{
@@ -281,7 +285,7 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 		else if ((rIBuffer.GetUsage() == Buffer::UT_STATIC) && isStatic)
 		{
 			pDisplayList = WIRE_NEW PdrDisplayList(mpData, *pPdrIBuffer,
-				rIBuffer.GetQuantity(), pPdrVBuffer->GetDeclaration());
+				rIBuffer.GetQuantity(), rDeclaration);
 			pPdrIBuffer->GetDisplayLists().Insert(key, pDisplayList);
 		}
 
@@ -291,8 +295,8 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 		}
 		else
 		{
-			mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-				GetBuffer(), indexCount, startIndex);
+			mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
+				startIndex);
 		}
 	}
 }
@@ -329,20 +333,24 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	PdrVertexBuffer* pPdrVBuffer = mpData->PdrVBuffer;
+	const PdrVertexBuffer* const pPdrVBuffer = mpData->PdrVBuffer;
 	WIRE_ASSERT(pPdrVBuffer);
-	PdrIndexBuffer* pPdrIBuffer = mpData->PdrIBuffer;
+	const PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
+	const PdrVertexAttributes* const pPdrVFormat = mpData->PdrVFormat;
+	WIRE_ASSERT(pPdrVFormat);
+	const TArray<PdrVertexAttributes::VertexElement>& rDeclaration =
+		pPdrVFormat->GetDeclaration();
 
 	if (GetStateWireframe() && GetStateWireframe()->Enabled)
 	{
-		mpData->DrawWireframe(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->
-			GetBuffer(), indexCount, startIndex);
+		mpData->DrawWireframe(rDeclaration, pPdrIBuffer->GetBuffer(),
+			indexCount, startIndex);
 	}
 	else
 	{
-		mpData->Draw(pPdrVBuffer->GetDeclaration(), pPdrIBuffer->GetBuffer(),
-			indexCount, startIndex);
+		mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
+			startIndex);
 	}
 }
 
@@ -442,6 +450,7 @@ PdrRendererData::PdrRendererData()
 	RMode(NULL),
 	PdrVBuffer(NULL),
 	PdrIBuffer(NULL),
+	PdrVFormat(NULL),
 	FrameBufferIndex(0),
 	IsFrameBufferDirty(false),
 	UseVSync(true),

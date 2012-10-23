@@ -7,22 +7,14 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void PdrVertexAttributes::Enable(Renderer* pRenderer)
-{
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-
-	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
-	{
-		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
-		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
-			CompCnt, mDeclaration[i].CompType, 0);
-	}
-}
-
-//----------------------------------------------------------------------------
 inline UInt PdrVertexAttributes::GetVertexSize() const
 {
 	return mVertexSize;
+}
+
+//----------------------------------------------------------------------------
+inline const TArray<PdrVertexAttributes::VertexElement>& PdrVertexAttributes::
+	GetDeclaration() const
+{
+	return mDeclaration;
 }

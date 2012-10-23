@@ -7,19 +7,17 @@
 // that agreement.
 
 #pragma once
-#ifndef WIREPDRRENDERERDATA_H
-#define WIREPDRRENDERERDATA_H
+#ifndef WIREGXRENDERERDATA_H
+#define WIREGXRENDERERDATA_H
 
 #include "WireMatrix34.h"
-#include "WireGXVertexBuffer.h"
+#include "WireGXVertexAttributes.h"
 
 namespace Wire
 {
 
 class Image2D;
-class IndexBuffer;
 class PdrIndexBuffer;
-class VertexBuffer;
 
 class PdrRendererData
 {
@@ -58,6 +56,7 @@ public:
 
 	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
+	PdrVertexAttributes* PdrVFormat;
 
 	GXColor ClearColor;
 
