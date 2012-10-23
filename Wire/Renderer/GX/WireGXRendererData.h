@@ -39,9 +39,9 @@ public:
 		UInt& rTilesXCount, UShort &rWidth);
 
 	// GX rendering specific functions
-	void Draw(const TArray<PdrVertexAttributes::VertexElement>& rElements,
+	void Draw(const TArray<PdrVertexFormat::VertexElement>& rElements,
 		const UShort* const pIBuffer, UInt indexCount, UInt startIndex);
-	void DrawWireframe(const TArray<PdrVertexAttributes::VertexElement>&
+	void DrawWireframe(const TArray<PdrVertexFormat::VertexElement>&
 		rElements, const UShort* const pIBuffer, UInt indexCount,
 		UInt startIndex);
 
@@ -56,7 +56,7 @@ public:
 
 	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
-	PdrVertexAttributes* PdrVFormat;
+	PdrVertexFormat* PdrVFormat;
 
 	GXColor ClearColor;
 

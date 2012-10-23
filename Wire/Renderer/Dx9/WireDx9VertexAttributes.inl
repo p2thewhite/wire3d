@@ -7,7 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void PdrVertexAttributes::Enable(Renderer* pRenderer)
+inline void PdrVertexFormat::Enable(Renderer* pRenderer)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
@@ -16,12 +16,6 @@ inline void PdrVertexAttributes::Enable(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
-inline void PdrVertexAttributes::Disable(Renderer*)
+inline void PdrVertexFormat::Disable(Renderer*)
 {
-}
-
-//----------------------------------------------------------------------------
-inline UInt PdrVertexAttributes::GetVertexSize() const
-{
-	return mVertexSize;
 }

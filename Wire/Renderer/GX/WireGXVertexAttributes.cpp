@@ -13,19 +13,18 @@
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-PdrVertexAttributes::PdrVertexAttributes(Renderer*, const VertexAttributes&
+PdrVertexFormat::PdrVertexFormat(Renderer*, const VertexAttributes&
 	rAttributes)
-	:
-	mVertexSize(0)
 {
 	VertexElement element;
+	UInt vertexSize = 0;
 
 	UInt channels = rAttributes.GetPositionChannels();
 	if (channels > 0)
 	{
 		WIRE_ASSERT(channels == 3);
-		element.Offset = mVertexSize;
-		mVertexSize += channels * sizeof(Float);
+		element.Offset = vertexSize;
+		vertexSize += channels * sizeof(Float);
 		element.Attr = GX_VA_POS;
 		element.CompCnt = GX_POS_XYZ;
 		element.CompType = GX_F32;
@@ -36,8 +35,8 @@ PdrVertexAttributes::PdrVertexAttributes(Renderer*, const VertexAttributes&
 	if (channels > 0)
 	{
 		WIRE_ASSERT(channels == 3);
-		element.Offset = mVertexSize;
-		mVertexSize += channels * sizeof(Float);
+		element.Offset = vertexSize;
+		vertexSize += channels * sizeof(Float);
 		element.Attr = GX_VA_NRM;
 		element.CompCnt = GX_NRM_XYZ;
 		element.CompType = GX_F32;
@@ -48,8 +47,8 @@ PdrVertexAttributes::PdrVertexAttributes(Renderer*, const VertexAttributes&
 	{
 		if (rAttributes.GetColorChannels(unit) > 0)
 		{
-			element.Offset = mVertexSize;
-			mVertexSize += sizeof(UInt);
+			element.Offset = vertexSize;
+			vertexSize += sizeof(UInt);
 			element.Attr = GX_VA_CLR0 + unit;
 			element.CompCnt = GX_CLR_RGBA;
 			element.CompType = GX_RGBA8;
@@ -63,18 +62,20 @@ PdrVertexAttributes::PdrVertexAttributes(Renderer*, const VertexAttributes&
 		if (channels > 0)
 		{
 			WIRE_ASSERT(channels == 2);
-			element.Offset = mVertexSize;
-			mVertexSize += channels * sizeof(Float);
+			element.Offset = vertexSize;
+			vertexSize += channels * sizeof(Float);
 			element.Attr = GX_VA_TEX0 + unit;
 			element.CompCnt = GX_TEX_ST;
 			element.CompType = GX_F32;
 			mDeclaration.Append(element);
 		}
 	}
+
+	WIRE_ASSERT(vertexSize == rAttributes.GetVertexSize());
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexAttributes::Enable(Renderer* pRenderer)
+void PdrVertexFormat::Enable(Renderer* pRenderer)
 {
 	// setup the vertex descriptor
 	// tells the flipper to expect direct data
@@ -92,7 +93,7 @@ void PdrVertexAttributes::Enable(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexAttributes::Disable(Renderer* pRenderer)
+void PdrVertexFormat::Disable(Renderer* pRenderer)
 {
 	WIRE_ASSERT(pRenderer);
 	pRenderer->GetRendererData()->PdrVFormat = NULL;

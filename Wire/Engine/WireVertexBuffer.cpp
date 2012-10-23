@@ -149,13 +149,13 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 	}
 
 	// TODO: optimize for dynamic runtime batching
-	const VertexAttributes& rIAttr = mAttributes;
+	const VertexAttributes& rAttr = mAttributes;
 	const Vector3F& translate = rTransformation.GetTranslate();
 	const Matrix34F& rotate = rTransformation.GetMatrix();
 
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
-		if (rIAttr.GetPositionChannels() == 3)
+		if (rAttr.GetPositionChannels() == 3)
 		{
 			const Float* const pPosition = GetPosition(i);
 			Vector3F v(pPosition[0], pPosition[1], pPosition[2]);
@@ -177,13 +177,13 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 		{
 			WIRE_ASSERT(false /* implement transform for non 3d pos? */);
 			const Float* const pPosition = GetPosition(i);
-			for (UInt k = 0; k < rIAttr.GetPositionChannels(); k++)
+			for (UInt k = 0; k < rAttr.GetPositionChannels(); k++)
 			{
 				*pDst++ = pPosition[k];
 			}
 		}
 
-		if (rIAttr.GetNormalChannels() == 3)
+		if (rAttr.GetNormalChannels() == 3)
 		{
 			const Float* const pNormal = GetNormal(i);
 			Vector3F n(pNormal[0], pNormal[1], pNormal[2]);
@@ -201,29 +201,29 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 			*pDst++ = n.Y();
 			*pDst++ = n.Z();
 		}
-		else if (rIAttr.GetNormalChannels() > 0)
+		else if (rAttr.GetNormalChannels() > 0)
 		{
 			const Float* const pNormal = GetNormal(i);
-			for (UInt k = 0; k < rIAttr.GetNormalChannels(); k++)
+			for (UInt k = 0; k < rAttr.GetNormalChannels(); k++)
 			{
 				*pDst++ = pNormal[k];
 			}
 		}
 
-		UInt colorChannelQuantity = rIAttr.GetColorChannelQuantity();
+		UInt colorChannelQuantity = rAttr.GetColorChannelQuantity();
 		for (UInt unit = 0; unit < colorChannelQuantity; unit++)
 		{
-			if (rIAttr.GetColorChannels(unit) > 0)
+			if (rAttr.GetColorChannels(unit) > 0)
 			{
 				UInt* pColor = reinterpret_cast<UInt*>(GetColor(i, unit));
 				*(reinterpret_cast<UInt*>(pDst++)) = *pColor;
 			}
 		}
 
-		UInt tCoordChannelQuantity = rIAttr.GetTCoordChannelQuantity();
+		UInt tCoordChannelQuantity = rAttr.GetTCoordChannelQuantity();
 		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
 		{
-			UInt channels = rIAttr.GetTCoordChannels(unit);
+			UInt channels = rAttr.GetTCoordChannels(unit);
 			if (channels > 0)
 			{
 				const Float* const pTCoords = GetTCoord(i, unit);
