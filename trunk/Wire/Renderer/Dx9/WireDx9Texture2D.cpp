@@ -365,25 +365,6 @@ void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-
-	// TODO: move TextureStageState disabling where suitable
-	PdrRendererData::StateTextureStage& rState = pRenderer->GetRendererData()->
-		TextureStageStates[unit];
-	if (!rState.IsValid)
-	{
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLOROP, &rState.
-			COLOROP);
-		WIRE_ASSERT(SUCCEEDED(hr));
-	}
-
-	if (rState.COLOROP != D3DTOP_DISABLE)
-	{
-		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP,
-			D3DTOP_DISABLE);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		rState.COLOROP = D3DTOP_DISABLE;
-	}
-
 	hr = rDevice->SetTexture(unit, 0);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }

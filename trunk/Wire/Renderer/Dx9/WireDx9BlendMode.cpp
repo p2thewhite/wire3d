@@ -42,7 +42,7 @@ const DWORD PdrRendererData::StateTextureStage::TEX_BLEND[
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetBlendMode(Material::BlendMode blendMode, UInt unit,
+void Renderer::EnableTextureStage(Material::BlendMode blendMode, UInt unit,
 	Bool hasAlpha)
 {
 	IDirect3DDevice9*& rDevice = GetRendererData()->D3DDevice;
@@ -176,5 +176,29 @@ void Renderer::SetBlendMode(Material::BlendMode blendMode, UInt unit,
 				rState.ALPHAARG0 = alphaA0;
 			}
 		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DisableTextureStage(UInt unit)
+{
+	IDirect3DDevice9*& rDevice = GetRendererData()->D3DDevice;
+	HRESULT hr;
+
+	PdrRendererData::StateTextureStage& rState = GetRendererData()->
+		TextureStageStates[unit];
+	if (!rState.IsValid)
+	{
+		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLOROP, &rState.
+			COLOROP);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+
+	if (rState.COLOROP != D3DTOP_DISABLE)
+	{
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP,
+			D3DTOP_DISABLE);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		rState.COLOROP = D3DTOP_DISABLE;
 	}
 }

@@ -215,6 +215,7 @@ public:
 	void Disable(const TArray<Pointer<Light> >& rLights);
 	void Set(const TArray<Pointer<Light> >& rLights);
 
+	// Draw call and bound resources' memory statistics
 	inline RendererStatistics* GetStatistics();
 
 	// The platform-dependent constructor must call this function first before
@@ -233,8 +234,10 @@ public:
 	};
 
 private:
-	void SetBlendMode(Material::BlendMode blendMode, UInt unit = 0,
+	// Fixed function texture stage management
+	void EnableTextureStage(Material::BlendMode blendMode, UInt unit = 0,
 		Bool hasAlpha = true);
+	void DisableTextureStage(UInt unit = 0);
 
 	void SetWorldTransformation(Transformation& rWorld, Bool usesNormals);
 

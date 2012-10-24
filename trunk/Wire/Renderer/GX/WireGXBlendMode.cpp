@@ -22,8 +22,13 @@ const UChar PdrRendererData::TEX_BLEND[Material::BM_QUANTITY] =
 };
 
 //----------------------------------------------------------------------------
-void Renderer::SetBlendMode(Material::BlendMode blendMode, UInt unit,
+void Renderer::EnableTextureStage(Material::BlendMode blendMode, UInt unit,
 	Bool hasAlpha)
 {
 	GXSetTevOp(GX_TEVSTAGE0 + unit, PdrRendererData::TEX_BLEND[blendMode]);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::DisableTextureStage(UInt)
+{
 }
