@@ -1008,7 +1008,7 @@
     <ClCompile Include="Renderer\WireRenderer.cpp">
       <Filter>Renderer\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp">
+    <ClCompile Include="Renderer\GX\WireGXTextureStage.cpp">
       <Filter>Renderer\Platforms\GX\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\GX\WireGXDisplayList.cpp">
@@ -1044,7 +1044,7 @@
     <ClCompile Include="Renderer\GX\WireGXVertexBuffer.cpp">
       <Filter>Renderer\Platforms\GX\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\Dx9\WireDx9BlendMode.cpp">
+    <ClCompile Include="Renderer\Dx9\WireDx9TextureStage.cpp">
       <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp">

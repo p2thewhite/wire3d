@@ -638,7 +638,7 @@
 						Name="Source Files"
 						>
 						<File
-							RelativePath=".\Renderer\Dx9\WireDx9BlendMode.cpp"
+							RelativePath=".\Renderer\Dx9\WireDx9TextureStage.cpp"
 							>
 						</File>
 						<File
@@ -746,7 +746,7 @@
 						Name="Source Files"
 						>
 						<File
-							RelativePath=".\Renderer\GX\WireGXBlendMode.cpp"
+							RelativePath=".\Renderer\GX\WireGXTextureStage.cpp"
 							>
 							<FileConfiguration
 								Name="Debug|Win32"

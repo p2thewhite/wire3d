@@ -430,7 +430,7 @@
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
-    <ClCompile Include="Renderer\Dx9\WireDx9BlendMode.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9TextureStage.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9Light.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9Renderer.cpp" />
@@ -443,7 +443,7 @@
     <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9VertexFormat.cpp" />
-    <ClCompile Include="Renderer\GX\WireGXBlendMode.cpp">
+    <ClCompile Include="Renderer\GX\WireGXTextureStage.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
