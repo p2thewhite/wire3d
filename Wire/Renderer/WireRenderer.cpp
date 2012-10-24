@@ -751,8 +751,8 @@ void Renderer::Enable(const Material* pMaterial)
 	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 	{
 		Enable(pMaterial->GetTexture(i), i);
-		SetBlendMode(pMaterial->GetBlendMode(i), i, pMaterial->GetTexture(i)->
-			GetImage()->HasAlpha());
+		EnableTextureStage(pMaterial->GetBlendMode(i), i, pMaterial->
+			GetTexture(i)->GetImage()->HasAlpha());
 	}
 
 	mspMaterial = const_cast<Material*>(pMaterial);
@@ -768,6 +768,7 @@ void Renderer::Disable(const Material* pMaterial)
 
 	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 	{
+		DisableTextureStage(i);
 		Disable(pMaterial->GetTexture(i), i);
 	}
 
