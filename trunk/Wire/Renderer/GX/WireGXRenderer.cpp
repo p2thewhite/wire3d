@@ -31,7 +31,8 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
-	mVertexBuffers(16, 0), // TODO: max streams (i.e. GXArrays)
+	mVertexBuffers(16, 0),
+	mVertexFormatKeys(16, 0),
 	mTexture2Ds(8, 0),
 	mLights(PdrRendererData::MAXLIGHTS, 0),
 	mMaxAnisotropy(4.0F),
@@ -76,6 +77,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	SetClearColor(rInput.BackgroundColor);
 
 	mVertexBuffers.SetQuantity(16);
+	mVertexFormatKeys.SetQuantity(16);
 	mTexture2Ds.SetQuantity(8);
 	mLights.SetQuantity(PdrRendererData::MAXLIGHTS);
 
@@ -255,8 +257,7 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 
 	WIRE_ASSERT(mspIndexBuffer);
 	const IndexBuffer& rIBuffer = *mspIndexBuffer;
-	const PdrVertexBuffer* const pPdrVBuffer = mpData->PdrVBuffer;
-	WIRE_ASSERT(pPdrVBuffer);
+	WIRE_ASSERT(mpData->PdrVBuffer);
 	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
 	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
@@ -271,8 +272,9 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 	}
 	else
 	{
-		WIRE_ASSERT(mspVertexBuffer);
-		const UInt key = mspVertexBuffer->GetAttributes().GetKey();
+		// TODO
+		WIRE_ASSERT(mVertexBuffers[0]);
+		const UInt key = mVertexBuffers[0]->GetAttributes().GetKey();
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
 
@@ -335,8 +337,7 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	const PdrVertexBuffer* const pPdrVBuffer = mpData->PdrVBuffer;
-	WIRE_ASSERT(pPdrVBuffer);
+	WIRE_ASSERT(mpData->PdrVBuffer);
 	const PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
 	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;

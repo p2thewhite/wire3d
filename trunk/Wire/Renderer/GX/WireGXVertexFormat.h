@@ -26,6 +26,7 @@ public:
 		UChar Attr;
 		UChar CompCnt;
 		UChar CompType;
+		UChar StreamIndex;
 	};
 
 	PdrVertexFormat(Renderer* pRenderer, const TArray<Pointer<VertexBuffer> >&
@@ -37,7 +38,7 @@ public:
 	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
-	void AddAttributes(const VertexAttributes &rAttributes);
+	void AddAttributes(UInt streamIndex, const VertexAttributes& rAttributes);
 
 	TArray<VertexElement> mDeclaration;
 };

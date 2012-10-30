@@ -76,9 +76,12 @@ void Renderer::ReleaseResources()
 		Disable(mspIndexBuffer);
 	}
 
-	if (mspVertexBuffer)
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
-		Disable(mspVertexBuffer);
+		if (mVertexBuffers[i])
+		{
+			Disable(mVertexBuffers[i], i);
+		}
 	}
 
 	if (mspMaterial)
@@ -363,11 +366,11 @@ void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const VertexBuffer* pVertexBuffer)
+void Renderer::Enable(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 {
-	// TODO
-	UInt streamIndex = 0;
-	WIRE_ASSERT(mspVertexBuffer == NULL /* Disable the previous VB first. */);
+	/* Disable the previous VB first. */
+	WIRE_ASSERT(mVertexBuffers[streamIndex] == NULL);
+
 	WIRE_ASSERT(pVertexBuffer);
 	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
@@ -381,19 +384,19 @@ void Renderer::Enable(const VertexBuffer* pVertexBuffer)
 		pPdrVertexBuffer->Enable(this, vertexSize, streamIndex);
 	}
 
-	mspVertexBuffer = const_cast<VertexBuffer*>(pVertexBuffer);
+	mVertexBuffers[streamIndex] = const_cast<VertexBuffer*>(pVertexBuffer);
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const VertexBuffer* pVertexBuffer)
+void Renderer::Disable(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 {
+	/* This VB is not enabled */
+	WIRE_ASSERT(mVertexBuffers[streamIndex] == pVertexBuffer);
+
 	WIRE_ASSERT(pVertexBuffer);
-	WIRE_ASSERT(mspVertexBuffer == pVertexBuffer /* This VB is not enabled */);
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 	if (pValue)
 	{
-		// TODO
-		UInt streamIndex = 0;
 		(*pValue)->Disable(this, streamIndex);
 	}
 	else
@@ -401,20 +404,20 @@ void Renderer::Disable(const VertexBuffer* pVertexBuffer)
 		WIRE_ASSERT(false); // Vertex buffer is not bound
 	}
 
-	mspVertexBuffer = NULL;
+	mVertexBuffers[streamIndex] = NULL;
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const VertexBuffer* pVertexBuffer)
+void Renderer::Set(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 {
-	if (mspVertexBuffer != pVertexBuffer)
+	if (mVertexBuffers[streamIndex] != pVertexBuffer)
 	{
-		if (mspVertexBuffer)
+		if (mVertexBuffers[streamIndex])
 		{
-			Disable(mspVertexBuffer);
+			Disable(mVertexBuffers[streamIndex], streamIndex);
 		}
 
-		Enable(pVertexBuffer);
+		Enable(pVertexBuffer, streamIndex);
 	}
 }
 
@@ -583,6 +586,10 @@ PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 //----------------------------------------------------------------------------
 PdrVertexFormat* Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
 {
+// 	const UInt streamCount = rVertexBuffers.GetQuantity();
+// 	TArray<UInt>& rBoundVertexFormatKeys = mVertexFormatKeys[streamCount];
+// 	void* pBoundVertexFormatKey = NULL;
+
 	// TODO
 	WIRE_ASSERT(rVertexBuffers.GetQuantity() == 1);
 	const UInt key = rVertexBuffers[0]->GetAttributes().GetKey();
@@ -623,6 +630,7 @@ void Renderer::Enable(const TArray<VertexBufferPtr>& rVertexBuffers)
 //----------------------------------------------------------------------------
 void Renderer::Disable(const VertexAttributes* pVertexAttributes)
 {
+	// TODO
 	WIRE_ASSERT(pVertexAttributes);
 	const UInt key = pVertexAttributes->GetKey();
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
@@ -821,14 +829,16 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Enable(pGeometry->Lights);
 		Enable(pMesh->GetIndexBuffer());
 		Enable(pMesh->GetVertexBuffers());
-		Enable(pMesh->GetVertexBuffer());
+		// TODO
+		Enable(pMesh->GetVertexBuffer(), 0);
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
 		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
 
 		Disable(pGeometry->GetMaterial());
-		Disable(pMesh->GetVertexBuffer());
+		// TODO
+		Disable(pMesh->GetVertexBuffer(), 0);
 		Disable(&(pMesh->GetVertexBuffer()->GetAttributes()));
 		Disable(pMesh->GetIndexBuffer());
 		Disable(pGeometry->Lights);
@@ -840,7 +850,8 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Set(pGeometry->Lights);
 		Set(pMesh->GetIndexBuffer());
 		Set(pMesh->GetVertexBuffers());
-		Set(pMesh->GetVertexBuffer());
+		// TODO
+		Set(pMesh->GetVertexBuffer(), 0);
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
@@ -1086,10 +1097,13 @@ void Renderer::Draw(Geometry* pUseStateFrom, PdrIndexBuffer* const pIBPdr,
 {
 	Set(pUseStateFrom->States);
 	Set(pUseStateFrom->Lights);
-	if (mspVertexBuffer)
+
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
-		Disable(mspVertexBuffer);
-		mspVertexBuffer = NULL;
+		if (mVertexBuffers[i])
+		{
+			Disable(mVertexBuffers[i], i);
+		}
 	}
 
 	if (mspIndexBuffer)

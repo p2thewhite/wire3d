@@ -52,11 +52,11 @@ PdrVertexFormat::~PdrVertexFormat()
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexFormat::AddAttributes(UInt stream, const VertexAttributes&
+void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 	rAttributes, TArray<D3DVERTEXELEMENT9> &elements) 
 {
 	D3DVERTEXELEMENT9 element;
-	element.Stream = static_cast<WORD>(stream);
+	element.Stream = static_cast<WORD>(streamIndex);
 	element.Method = D3DDECLMETHOD_DEFAULT;
 
 	UInt channels = 0;

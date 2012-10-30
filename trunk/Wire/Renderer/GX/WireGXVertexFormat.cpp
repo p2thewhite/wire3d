@@ -27,7 +27,7 @@ PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
 			break;
 		}
 
-		AddAttributes(rVertexBuffers[i]->GetAttributes());
+		AddAttributes(i, rVertexBuffers[i]->GetAttributes());
 	}
 }
 
@@ -57,9 +57,11 @@ void PdrVertexFormat::Disable(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexFormat::AddAttributes(const VertexAttributes &rAttributes)
+void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
+	rAttributes)
 {
 	VertexElement element;
+	element.StreamIndex = streamIndex;
 	UInt vertexSize = 0;
 
 	UInt channels = rAttributes.GetPositionChannels();

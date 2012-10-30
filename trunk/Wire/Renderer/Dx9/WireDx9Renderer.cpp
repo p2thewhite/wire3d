@@ -27,6 +27,8 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool isFullscreen, Bool useVSync)
 	:
+	mVertexBuffers(16, 16),
+	mVertexFormatKeys(16, 16),
 	mMaxAnisotropy(1.0F),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
@@ -94,7 +96,9 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	mMaxTextureWidth = deviceCaps.MaxTextureWidth;
 	mMaxTextureHeight = deviceCaps.MaxTextureHeight;
-	mVertexBuffers.SetQuantity(deviceCaps.MaxStreams);
+	UInt maxStreams = deviceCaps.MaxStreams > 16 ? 16 : deviceCaps.MaxStreams;
+	mVertexBuffers.SetQuantity(maxStreams);
+	mVertexFormatKeys.SetQuantity(maxStreams);
 	mTexture2Ds.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	mpData->SamplerStates.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	mpData->TextureStageStates.SetQuantity(deviceCaps.MaxTextureBlendStages);
@@ -330,11 +334,12 @@ void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 {
-	WIRE_ASSERT(mspVertexBuffer);
-	WIRE_ASSERT(mspIndexBuffer);
+	// TODO
+	WIRE_ASSERT(mVertexBuffers[0]);
+	const UInt vertexCount = mVertexBuffers[0]->GetQuantity();
 
+	WIRE_ASSERT(mspIndexBuffer);
 	const UInt triangleCount = indexCount/3;
-	const UInt vertexCount = mspVertexBuffer->GetQuantity();
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += triangleCount;
 
