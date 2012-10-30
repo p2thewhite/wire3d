@@ -19,12 +19,14 @@ WIRE_IMPLEMENT_RTTI(Wire, Mesh, Object);
 //----------------------------------------------------------------------------
 Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 	:
-	mspVertexBuffer(pVertexBuffer),
+	mspVertexBuffers(1, 1),
 	mspIndexBuffer(pIndexBuffer),
 	mspModelBound(BoundingVolume::Create()),
 	mIsDirty(false)
 {
-	WIRE_ASSERT(mspVertexBuffer);
+	WIRE_ASSERT(pVertexBuffer);
+	mspVertexBuffers.Append(pVertexBuffer);
+
 	WIRE_ASSERT(mspIndexBuffer);
 
 	mStartIndex = 0;
@@ -37,14 +39,16 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 	UInt startIndex, UInt indexCount)
 	:
-	mspVertexBuffer(pVertexBuffer),
+	mspVertexBuffers(1, 1),
 	mspIndexBuffer(pIndexBuffer),
 	mspModelBound(BoundingVolume::Create()),
 	mStartIndex(startIndex),
 	mIndexCount(indexCount),
 	mIsDirty(false)
 {
-	WIRE_ASSERT(mspVertexBuffer);
+	WIRE_ASSERT(pVertexBuffer);
+	mspVertexBuffers.Append(pVertexBuffer);
+
 	WIRE_ASSERT(mspIndexBuffer);
 
 	UpdateModelBound();
@@ -83,26 +87,49 @@ void Mesh::SetIndexCount(UInt indexCount, Bool updateModelBound)
 //----------------------------------------------------------------------------
 void Mesh::UpdateModelBound()
 {
+	VertexBuffer* pPositions = NULL;
+	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
+	{
+		if (mspVertexBuffers[i]->GetAttributes().HasPosition())
+		{
+			pPositions = mspVertexBuffers[i];
+			break;
+		}
+	}
+
+	WIRE_ASSERT(pPositions);
+
 	if ((mStartIndex == 0) && (mIndexCount == mspIndexBuffer->GetQuantity()))
 	{
-		mspModelBound->ComputeFrom(mspVertexBuffer);
+		mspModelBound->ComputeFrom(pPositions);
 	}
 	else
 	{
-		mspModelBound->ComputeFrom(mspVertexBuffer, mspIndexBuffer,
-			mStartIndex, mIndexCount);
+		mspModelBound->ComputeFrom(pPositions, mspIndexBuffer, mStartIndex,
+			mIndexCount);
 	}
 }
 
 //----------------------------------------------------------------------------
 void Mesh::GenerateNormals(Bool ignoreHardEdges)
 {
-	if (!mspVertexBuffer || !mspIndexBuffer)
+	VertexBuffer* pPositions = NULL;
+	VertexBuffer* pNormals = NULL;
+	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
 	{
-		return;
+		const VertexAttributes& rAttr = mspVertexBuffers[i]->GetAttributes();
+		if (rAttr.HasPosition())
+		{
+			pPositions = mspVertexBuffers[i];		
+		}
+
+		if (rAttr.GetNormalChannels() == 3)
+		{
+			pNormals = mspVertexBuffers[i];
+		}
 	}
 
-	if (mspVertexBuffer->GetAttributes().GetNormalChannels() != 3)
+	if (!pPositions || !mspIndexBuffer || !pNormals)
 	{
 		return;
 	}
@@ -110,8 +137,8 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 	UShort* const pIndices = mspIndexBuffer->GetData();
 
 	// collect the triangles each vertex is part of
-	TArray<TArray<UInt> > buckets(mspVertexBuffer->GetQuantity());
-	buckets.SetQuantity(mspVertexBuffer->GetQuantity());
+	TArray<TArray<UInt> > buckets(pPositions->GetQuantity());
+	buckets.SetQuantity(pPositions->GetQuantity());
 
 	UInt triIndex = 0;
 	for (UInt i = 0; i < mspIndexBuffer->GetQuantity(); i += 3)
@@ -124,12 +151,12 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 
 	if (ignoreHardEdges)
 	{
-		for (UInt j = 0; j < mspVertexBuffer->GetQuantity(); j++)
+		for (UInt j = 0; j < pPositions->GetQuantity(); j++)
 		{
-			const Vector3F& vertex = mspVertexBuffer->Position3(j);
-			for (UInt i = j+1; i < mspVertexBuffer->GetQuantity(); i++)
+			const Vector3F& vertex = pPositions->Position3(j);
+			for (UInt i = j+1; i < pPositions->GetQuantity(); i++)
 			{
-				if (vertex == mspVertexBuffer->Position3(i))
+				if (vertex == pPositions->Position3(i))
 				{
 					UInt origCount = buckets[j].GetQuantity();
 					for (UInt k = 0; k < buckets[i].GetQuantity(); k++)
@@ -150,10 +177,10 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 	TArray<Vector3F> faceNormals(mspIndexBuffer->GetQuantity()/3);
 	for (UInt i = 0; i < mspIndexBuffer->GetQuantity(); i +=3)
 	{
-		Vector3F v1 = mspVertexBuffer->Position3(pIndices[i+1]) -
-			mspVertexBuffer->Position3(pIndices[i]);
-		Vector3F v2 = mspVertexBuffer->Position3(pIndices[i+2]) -
-			mspVertexBuffer->Position3(pIndices[i+1]);
+		Vector3F v1 = pPositions->Position3(pIndices[i+1]) - pPositions->
+			Position3(pIndices[i]);
+		Vector3F v2 = pPositions->Position3(pIndices[i+2]) - pPositions->
+			Position3(pIndices[i+1]);
 
 		Vector3F normal = v2.Cross(v1);
 		normal.Normalize();
@@ -180,6 +207,6 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 			normal = Vector3F::UNIT_X;
 		}
 
-		mspVertexBuffer->Normal3(i) = normal;
+		pNormals->Normal3(i) = normal;
 	}
 }

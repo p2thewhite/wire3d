@@ -18,18 +18,22 @@ namespace Wire
 {
 
 class Renderer;
+class VertexBuffer;
 
 class PdrVertexFormat
 {
 public:
-	PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
-		rVertexAttributes);
+	PdrVertexFormat(Renderer* pRenderer, const TArray<Pointer<VertexBuffer> >&
+		rVertexBuffers);
 	~PdrVertexFormat();
 
 	inline void Enable(Renderer* pRenderer);
 	inline void Disable(Renderer* pRenderer);
 
 private:
+	void AddAttributes(UInt stream, const VertexAttributes &rAttributes,
+		TArray<D3DVERTEXELEMENT9> &elements);
+
 	IDirect3DVertexDeclaration9* mpDeclaration;
 };
 

@@ -49,6 +49,12 @@ inline UInt Renderer::GetMaxTextureHeight() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxVertexStreams() const
+{
+	return mVertexBuffers.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetMaxLights() const
 {
 	return mLights.GetQuantity();

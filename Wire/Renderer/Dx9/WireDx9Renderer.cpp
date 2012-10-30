@@ -94,6 +94,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 
 	mMaxTextureWidth = deviceCaps.MaxTextureWidth;
 	mMaxTextureHeight = deviceCaps.MaxTextureHeight;
+	mVertexBuffers.SetQuantity(deviceCaps.MaxStreams);
 	mTexture2Ds.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	mpData->SamplerStates.SetQuantity(deviceCaps.MaxTextureBlendStages);
 	mpData->TextureStageStates.SetQuantity(deviceCaps.MaxTextureBlendStages);

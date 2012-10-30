@@ -7,15 +7,29 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline VertexBuffer* Mesh::GetVertexBuffer()
+inline VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex)
 {
-	return mspVertexBuffer;
+	WIRE_ASSERT(streamIndex < mspVertexBuffers.GetQuantity());
+	return mspVertexBuffers[streamIndex];
 }
 
 //----------------------------------------------------------------------------
-inline const VertexBuffer* Mesh::GetVertexBuffer() const
+inline const VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex) const
 {
-	return mspVertexBuffer;
+	WIRE_ASSERT(streamIndex < mspVertexBuffers.GetQuantity());
+	return mspVertexBuffers[streamIndex];
+}
+
+//----------------------------------------------------------------------------
+inline TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers()
+{
+	return mspVertexBuffers;
+}
+
+//----------------------------------------------------------------------------
+inline const TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers() const
+{
+	return mspVertexBuffers;
 }
 
 //----------------------------------------------------------------------------

@@ -75,8 +75,11 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 }
 
 //----------------------------------------------------------------------------
-void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize)
+void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
+	UInt steamIndex)
 {
+	// TODO: support vertex format
+
 	WIRE_ASSERT(vertexSize > 0);
 	WIRE_ASSERT(pRenderer);
 	// the vertex format needs to be set by the Renderer beforehand

@@ -9,12 +9,55 @@
 #include "WireGXVertexFormat.h"
 
 #include "WireGXRendererData.h"
+#include "WireVertexBuffer.h"
+
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-PdrVertexFormat::PdrVertexFormat(Renderer*, const VertexAttributes&
-	rAttributes)
+PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
+	VertexBufferPtr>& rVertexBuffers)
+{
+	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
+	{
+		if (i >= pRenderer->GetMaxVertexStreams())
+		{
+			/* More vertex buffers defined than streams supported*/
+			WIRE_ASSERT(false);
+			break;
+		}
+
+		AddAttributes(rVertexBuffers[i]->GetAttributes());
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexFormat::Enable(Renderer* pRenderer)
+{
+	// setup the vertex descriptor
+	// tells the flipper to expect direct data
+	GXClearVtxDesc();
+
+	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
+	{
+		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
+		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
+			CompCnt, mDeclaration[i].CompType, 0);
+	}
+
+	WIRE_ASSERT(pRenderer);
+	pRenderer->GetRendererData()->PdrVFormat = this;
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexFormat::Disable(Renderer* pRenderer)
+{
+	WIRE_ASSERT(pRenderer);
+	pRenderer->GetRendererData()->PdrVFormat = NULL;
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexFormat::AddAttributes(const VertexAttributes &rAttributes)
 {
 	VertexElement element;
 	UInt vertexSize = 0;
@@ -72,29 +115,4 @@ PdrVertexFormat::PdrVertexFormat(Renderer*, const VertexAttributes&
 	}
 
 	WIRE_ASSERT(vertexSize == rAttributes.GetVertexSize());
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexFormat::Enable(Renderer* pRenderer)
-{
-	// setup the vertex descriptor
-	// tells the flipper to expect direct data
-	GXClearVtxDesc();
-
-	for (UInt i = 0; i < mDeclaration.GetQuantity(); i++)
-	{
-		GXSetVtxDesc(mDeclaration[i].Attr, GX_INDEX16);
-		GXSetVtxAttrFmt(GX_VTXFMT0, mDeclaration[i].Attr, mDeclaration[i].
-			CompCnt, mDeclaration[i].CompType, 0);
-	}
-
-	WIRE_ASSERT(pRenderer);
-	pRenderer->GetRendererData()->PdrVFormat = this;
-}
-
-//----------------------------------------------------------------------------
-void PdrVertexFormat::Disable(Renderer* pRenderer)
-{
-	WIRE_ASSERT(pRenderer);
-	pRenderer->GetRendererData()->PdrVFormat = NULL;
 }
