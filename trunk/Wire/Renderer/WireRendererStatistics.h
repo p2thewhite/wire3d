@@ -67,6 +67,9 @@ private:
 	UInt mTextureCount;
 	UInt mTextureTotalSize;
 
+	// total number of vertex formats used
+	UInt mVertexFormats;
+
 	friend class Renderer;
 
 	Renderer* mpRenderer;

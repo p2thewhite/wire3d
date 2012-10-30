@@ -11,10 +11,11 @@
 #define WIREGXVERTEXFORMAT_H
 
 #include "WireRenderer.h"
-#include "WireVertexAttributes.h"
 
 namespace Wire
 {
+
+class VertexBuffer;
 
 class PdrVertexFormat
 {
@@ -27,8 +28,8 @@ public:
 		UChar CompType;
 	};
 
-	PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
-		rVertexAttributes);
+	PdrVertexFormat(Renderer* pRenderer, const TArray<Pointer<VertexBuffer> >&
+		rVertexBuffers);
 
 	void Enable(Renderer* pRenderer);
 	void Disable(Renderer* pRenderer);
@@ -36,6 +37,8 @@ public:
 	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
+	void AddAttributes(const VertexAttributes &rAttributes);
+
 	TArray<VertexElement> mDeclaration;
 };
 

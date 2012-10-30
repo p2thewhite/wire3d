@@ -76,6 +76,7 @@ public:
 	inline UInt GetMaxTextureStages() const;
 	inline UInt GetMaxTextureWidth() const;
 	inline UInt GetMaxTextureHeight() const;
+	inline UInt GetMaxVertexStreams() const;
 
 	inline UInt GetMaxLights() const;
 
@@ -144,10 +145,11 @@ public:
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// Vertex format management
-	PdrVertexFormat* Bind(const VertexAttributes* pVertexAttributes);
-	void Enable(const VertexAttributes* pVertexAttributes);
+	PdrVertexFormat* Bind(const TArray<Pointer<VertexBuffer> >&
+		rVertexBuffers);
+	void Enable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	void Disable(const VertexAttributes* pVertexAttributes);
-	void Set(const VertexAttributes* pVertexAttributes);
+	void Set(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	PdrVertexFormat* GetResource(const VertexAttributes* pVertexAttributes);
 	
 	// 2D texture management
@@ -269,6 +271,7 @@ private:
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<Material> mspMaterial;
 	Pointer<VertexBuffer> mspVertexBuffer;
+	TArray<Pointer<VertexBuffer> > mVertexBuffers;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	TArray<Pointer<Light> > mLights;
 	UInt mVertexAttributeKey;

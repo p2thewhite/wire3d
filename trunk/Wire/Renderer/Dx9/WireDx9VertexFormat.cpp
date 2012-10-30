@@ -9,18 +9,54 @@
 #include "WireDx9VertexFormat.h"
 
 #include "WireRenderer.h"
+#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
-	rAttributes)
+PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
+	VertexBufferPtr>& rVertexBuffers)
 	:
 	mpDeclaration(NULL)
 {
 	TArray<D3DVERTEXELEMENT9> elements(8);
+	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
+	{
+		if (i >= pRenderer->GetMaxVertexStreams())
+		{
+			/* More vertex buffers supplied than streams supported */
+			WIRE_ASSERT(false);
+			break;
+		}
+
+		AddAttributes(i, rVertexBuffers[i]->GetAttributes(), elements);
+	}
+
+	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
+	elements.Append(sentinel);
+
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	HRESULT hr;
+	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpDeclaration);
+	WIRE_ASSERT(SUCCEEDED(hr));
+	WIRE_ASSERT(mpDeclaration);
+}
+
+//----------------------------------------------------------------------------
+PdrVertexFormat::~PdrVertexFormat()
+{
+	if (mpDeclaration)
+	{
+		mpDeclaration->Release();
+	}
+}
+
+//----------------------------------------------------------------------------
+void PdrVertexFormat::AddAttributes(UInt stream, const VertexAttributes&
+	rAttributes, TArray<D3DVERTEXELEMENT9> &elements) 
+{
 	D3DVERTEXELEMENT9 element;
-	element.Stream = 0;
+	element.Stream = static_cast<WORD>(stream);
 	element.Method = D3DDECLMETHOD_DEFAULT;
 
 	UInt channels = 0;
@@ -77,22 +113,4 @@ PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const VertexAttributes&
 
 	WIRE_ASSERT(channels > 0);
 	WIRE_ASSERT(vertexSize == rAttributes.GetVertexSize());
-
-	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
-	elements.Append(sentinel);
-
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-	HRESULT hr;
-	hr = rDevice->CreateVertexDeclaration(&elements[0], &mpDeclaration);
-	WIRE_ASSERT(SUCCEEDED(hr));
-	WIRE_ASSERT(mpDeclaration);
-}
-
-//----------------------------------------------------------------------------
-PdrVertexFormat::~PdrVertexFormat()
-{
-	if (mpDeclaration)
-	{
-		mpDeclaration->Release();
-	}
 }

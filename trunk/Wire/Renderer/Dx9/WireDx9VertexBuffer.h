@@ -28,8 +28,9 @@ public:
 	PdrVertexBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType usage);
 	~PdrVertexBuffer();
 
-	inline void Enable(Renderer* pRenderer, UInt vertexSize);
-	inline void Disable(Renderer* pRenderer);
+	inline void Enable(Renderer* pRenderer, UInt vertexSize,
+		UInt streamIndex);
+	inline void Disable(Renderer* pRenderer, UInt streamIndex);
 
 	inline void* Lock(Buffer::LockingMode mode);
 	inline void Unlock();

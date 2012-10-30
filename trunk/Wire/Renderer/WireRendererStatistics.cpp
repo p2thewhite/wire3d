@@ -18,7 +18,14 @@ using namespace Wire;
 RendererStatistics::RendererStatistics()
 	:
 	mpRenderer(NULL),
-	mFpsSamplesIndex(0)
+	mFpsSamplesIndex(0),
+	mVBOCount(0),
+	mVBOTotalSize(0),
+	mIBOCount(0),
+	mIBOTotalSize(0),
+	mTextureCount(0),
+	mTextureTotalSize(0),
+	mVertexFormats(0)
 {
 	for (UInt i = 0; i < FPS_SAMPLE_QUANTITY; i++)
 	{
@@ -41,15 +48,15 @@ void RendererStatistics::AppendToText(Text* pText)
 	const UInt textArraySize = 256;
 	Char text[textArraySize];
 	const Char msg[] = "Draw Calls: %d, Triangles: %d\nBatched Static: "
-		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
-		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB, VFs: "
+		"%d\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
 
 	const Float kb = 1024.0F;
 
 	System::Sprintf(text, textArraySize, msg, mDrawCalls, mTriangles, 
 		mBatchedStatic, mBatchedDynamic, mVBOCount, mVBOTotalSize / kb,
-		mIBOCount, mIBOTotalSize / kb, mTextureCount, mTextureTotalSize /
-		(kb * kb));
+		mVertexFormats, mIBOCount, mIBOTotalSize / kb, mTextureCount,
+		mTextureTotalSize / (kb * kb));
 
 	pText->Append(text);
 }

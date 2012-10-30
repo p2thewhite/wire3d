@@ -7,21 +7,22 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize)
+inline void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
+	UInt streamIndex)
 {
 	WIRE_ASSERT(vertexSize > 0);
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->SetStreamSource(0, mpBuffer, 0, vertexSize);
+	hr = rDevice->SetStreamSource(streamIndex, mpBuffer, 0, vertexSize);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 
 //----------------------------------------------------------------------------
-inline void PdrVertexBuffer::Disable(Renderer* pRenderer)
+inline void PdrVertexBuffer::Disable(Renderer* pRenderer, UInt streamIndex)
 {
 	HRESULT hr;
-	hr = pRenderer->GetRendererData()->D3DDevice->SetStreamSource(
-		0, NULL, 0, 0);
+	hr = pRenderer->GetRendererData()->D3DDevice->SetStreamSource(streamIndex,
+		NULL, 0, 0);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

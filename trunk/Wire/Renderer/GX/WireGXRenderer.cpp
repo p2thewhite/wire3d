@@ -31,6 +31,7 @@ using namespace Wire;
 Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	Bool, Bool useVSync)
 	:
+	mVertexBuffers(16, 0), // TODO: max streams (i.e. GXArrays)
 	mTexture2Ds(8, 0),
 	mLights(PdrRendererData::MAXLIGHTS, 0),
 	mMaxAnisotropy(4.0F),
@@ -74,6 +75,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	// clears the bg to color and clears the z buffer
 	SetClearColor(rInput.BackgroundColor);
 
+	mVertexBuffers.SetQuantity(16);
 	mTexture2Ds.SetQuantity(8);
 	mLights.SetQuantity(PdrRendererData::MAXLIGHTS);
 
