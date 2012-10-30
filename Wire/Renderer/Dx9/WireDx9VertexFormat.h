@@ -31,7 +31,7 @@ public:
 	inline void Disable(Renderer* pRenderer);
 
 private:
-	void AddAttributes(UInt stream, const VertexAttributes &rAttributes,
+	void AddAttributes(UInt streamIndex, const VertexAttributes &rAttributes,
 		TArray<D3DVERTEXELEMENT9> &elements);
 
 	IDirect3DVertexDeclaration9* mpDeclaration;

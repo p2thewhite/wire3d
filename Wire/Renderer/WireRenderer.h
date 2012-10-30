@@ -136,9 +136,9 @@ public:
 	PdrVertexBuffer* Bind(const VertexBuffer* pVertexBuffer);
 	void Unbind(const VertexBuffer* pVertexBuffer);
 	static void UnbindAll(const VertexBuffer* pVertexBuffer);
-	void Enable(const VertexBuffer* pVertexBuffer);
-	void Disable(const VertexBuffer* pVertexBuffer);
-	void Set(const VertexBuffer* pIndexBuffer);
+	void Enable(const VertexBuffer* pVertexBuffer, UInt streamIndex);
+	void Disable(const VertexBuffer* pVertexBuffer, UInt streamIndex);
+	void Set(const VertexBuffer* pIndexBuffer, UInt streamIndex);
 	void Update(const VertexBuffer* pVertexBuffer);
 	void Update(const VertexBuffer* pVertexBuffer, UInt count,
 		UInt offset = 0);
@@ -270,8 +270,8 @@ private:
 	StatePtr mspStates[State::MAX_STATE_TYPE];
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<Material> mspMaterial;
-	Pointer<VertexBuffer> mspVertexBuffer;
 	TArray<Pointer<VertexBuffer> > mVertexBuffers;
+	TArray<TArray<UInt> > mVertexFormatKeys;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	TArray<Pointer<Light> > mLights;
 	UInt mVertexAttributeKey;

@@ -76,10 +76,8 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 
 //----------------------------------------------------------------------------
 void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
-	UInt steamIndex)
+	UInt streamIndex)
 {
-	// TODO: support vertex format
-
 	WIRE_ASSERT(vertexSize > 0);
 	WIRE_ASSERT(pRenderer);
 	// the vertex format needs to be set by the Renderer beforehand
@@ -90,9 +88,12 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
 
 	for (UInt i = 0; i < rDeclaration.GetQuantity(); i++)
 	{
-		void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
-			reinterpret_cast<UInt>(mpBuffer)));
-		GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
+		if (rDeclaration[i].StreamIndex == streamIndex)
+		{
+			void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
+				reinterpret_cast<UInt>(mpBuffer)));
+			GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
+		}
 	}
 
 	pRenderer->GetRendererData()->PdrVBuffer = this;

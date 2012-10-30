@@ -17,15 +17,15 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 RendererStatistics::RendererStatistics()
 	:
-	mpRenderer(NULL),
-	mFpsSamplesIndex(0),
 	mVBOCount(0),
 	mVBOTotalSize(0),
 	mIBOCount(0),
 	mIBOTotalSize(0),
 	mTextureCount(0),
 	mTextureTotalSize(0),
-	mVertexFormats(0)
+	mVertexFormats(0),
+	mpRenderer(NULL),
+	mFpsSamplesIndex(0)
 {
 	for (UInt i = 0; i < FPS_SAMPLE_QUANTITY; i++)
 	{
