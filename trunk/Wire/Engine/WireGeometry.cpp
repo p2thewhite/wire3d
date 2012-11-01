@@ -280,6 +280,12 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 //----------------------------------------------------------------------------
 void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
+	// TODO
+	if (mspMesh->GetVertexBuffers().GetQuantity() > 1)
+	{
+		return;
+	}
+
 	VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer();
 	Bool isShared = pVertexBuffer->GetReferences() > 1 ||
 		mspMesh->GetReferences() > 1;

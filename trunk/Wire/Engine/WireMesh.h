@@ -50,6 +50,7 @@ public:
 
 	void UpdateModelBound();
 	void GenerateNormals(Bool ignoreHardEdges = false);
+	Bool HasNormal() const;
 
 private:
 	TArray<Pointer<VertexBuffer> > mspVertexBuffers;

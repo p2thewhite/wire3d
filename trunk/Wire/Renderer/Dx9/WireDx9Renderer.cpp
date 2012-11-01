@@ -630,7 +630,7 @@ void PdrRendererData::ResetDevice()
 	hr = D3DDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	UsesRenormalizeNormals = false;
-	rRenderer.mVertexAttributeKey = 0;
+	rRenderer.mVertexFormatKey = 0;
 
 	for (UInt i = 0; i < rRenderer.mLights.GetQuantity(); i++)
 	{
