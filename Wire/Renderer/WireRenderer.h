@@ -148,9 +148,10 @@ public:
 	PdrVertexFormat* Bind(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 	void Enable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	void Disable(const VertexAttributes* pVertexAttributes);
+	void Disable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	void Set(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	PdrVertexFormat* GetResource(const VertexAttributes* pVertexAttributes);
+	PdrVertexFormat* GetResource(const TArray<Pointer<VertexBuffer> >&
+		rVertexBuffers);
 	
 	// 2D texture management
 	PdrTexture2D* Bind(const Image2D* pImage);
@@ -242,6 +243,8 @@ private:
 	void DisableTextureStage(UInt unit = 0);
 
 	void SetWorldTransformation(Transformation& rWorld, Bool usesNormals);
+	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
+		rVertexBuffers);
 
 	void BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
 	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
@@ -274,7 +277,7 @@ private:
 	TArray<TArray<UInt> > mVertexFormatKeys;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	TArray<Pointer<Light> > mLights;
-	UInt mVertexAttributeKey;
+	UInt mVertexFormatKey;
 
 	// The camera for establishing the view frustum
 	Pointer<Camera> mspCamera;

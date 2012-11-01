@@ -272,9 +272,7 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 	}
 	else
 	{
-		// TODO
-		WIRE_ASSERT(mVertexBuffers[0]);
-		const UInt key = mVertexBuffers[0]->GetAttributes().GetKey();
+		const UInt key = mVertexFormatKey;
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
 

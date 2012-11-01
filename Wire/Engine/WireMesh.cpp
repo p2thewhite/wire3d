@@ -210,3 +210,17 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 		pNormals->Normal3(i) = normal;
 	}
 }
+
+//----------------------------------------------------------------------------
+Bool Mesh::HasNormal() const
+{
+	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
+	{
+		if (mspVertexBuffers[i]->GetAttributes().HasNormal())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
