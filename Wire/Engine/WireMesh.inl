@@ -9,27 +9,27 @@
 //----------------------------------------------------------------------------
 inline VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex)
 {
-	WIRE_ASSERT(streamIndex < mspVertexBuffers.GetQuantity());
-	return mspVertexBuffers[streamIndex];
+	WIRE_ASSERT(streamIndex < mVertexBuffers.GetQuantity());
+	return mVertexBuffers[streamIndex];
 }
 
 //----------------------------------------------------------------------------
 inline const VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex) const
 {
-	WIRE_ASSERT(streamIndex < mspVertexBuffers.GetQuantity());
-	return mspVertexBuffers[streamIndex];
+	WIRE_ASSERT(streamIndex < mVertexBuffers.GetQuantity());
+	return mVertexBuffers[streamIndex];
 }
 
 //----------------------------------------------------------------------------
 inline TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers()
 {
-	return mspVertexBuffers;
+	return mVertexBuffers;
 }
 
 //----------------------------------------------------------------------------
 inline const TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers() const
 {
-	return mspVertexBuffers;
+	return mVertexBuffers;
 }
 
 //----------------------------------------------------------------------------

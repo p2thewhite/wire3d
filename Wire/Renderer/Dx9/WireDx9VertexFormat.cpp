@@ -86,7 +86,8 @@ void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 
 	for (UInt unit = 0; unit < rAttributes.GetColorChannelQuantity(); unit++)
 	{
-		if (rAttributes.GetColorChannels(unit) > 0)
+		channels = rAttributes.GetColorChannels(unit);
+		if (channels > 0)
 		{
 			element.Offset = static_cast<WORD>(vertexSize);
 			vertexSize += sizeof(DWORD);

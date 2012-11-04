@@ -30,6 +30,7 @@ class Camera;
 class Geometry;
 class IndexBuffer;
 class Light;
+class Mesh;
 class PdrIndexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
@@ -167,6 +168,11 @@ public:
 	void Disable(const Material* pMaterial);
 	void Set(const Material* pMaterial);
 
+	// Mesh management
+	void Enable(const Mesh* pMesh);
+ 	void Disable(const Mesh* pMesh);
+ 	void Set(const Mesh* pMesh);
+
 	// Support for predraw and postdraw semantics.
 	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
@@ -209,10 +215,11 @@ public:
 	void Enable(StatePtr spStates[]);
 	void Disable(StatePtr spStates[]);
 
-	// Immediate Light state handling
+	// Fixed function immediate light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
 	void EnableLighting(const ColorRGB& rAmbient = ColorRGB::BLACK);
 	void DisableLighting();
+
 	// Renderer light state handling
 	void Enable(const TArray<Pointer<Light> >& rLights);
 	void Disable(const TArray<Pointer<Light> >& rLights);
@@ -273,6 +280,7 @@ private:
 	StatePtr mspStates[State::MAX_STATE_TYPE];
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<Material> mspMaterial;
+	Pointer<Mesh> mspMesh;
 	TArray<Pointer<VertexBuffer> > mVertexBuffers;
 	TArray<TArray<UInt> > mVertexFormatKeys;
 	TArray<Pointer<Texture2D> > mTexture2Ds;

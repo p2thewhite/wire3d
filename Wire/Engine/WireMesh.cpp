@@ -19,39 +19,40 @@ WIRE_IMPLEMENT_RTTI(Wire, Mesh, Object);
 //----------------------------------------------------------------------------
 Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 	:
-	mspVertexBuffers(1, 1),
-	mspIndexBuffer(pIndexBuffer),
-	mspModelBound(BoundingVolume::Create()),
-	mIsDirty(false)
+	mVertexBuffers(1, 1)
 {
-	WIRE_ASSERT(pVertexBuffer);
-	mspVertexBuffers.Append(pVertexBuffer);
-
-	WIRE_ASSERT(mspIndexBuffer);
-
-	mStartIndex = 0;
-	mIndexCount = mspIndexBuffer->GetQuantity();
-
-	UpdateModelBound();
+	InitVertexBuffer(pVertexBuffer);
+	Init(pIndexBuffer, 0, pIndexBuffer->GetQuantity());
 }
 
 //----------------------------------------------------------------------------
 Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 	UInt startIndex, UInt indexCount)
 	:
-	mspVertexBuffers(1, 1),
-	mspIndexBuffer(pIndexBuffer),
-	mspModelBound(BoundingVolume::Create()),
-	mStartIndex(startIndex),
-	mIndexCount(indexCount),
-	mIsDirty(false)
+	mVertexBuffers(1, 1)
 {
-	WIRE_ASSERT(pVertexBuffer);
-	mspVertexBuffers.Append(pVertexBuffer);
+	InitVertexBuffer(pVertexBuffer);
+	Init(pIndexBuffer, startIndex, indexCount);
+}
 
-	WIRE_ASSERT(mspIndexBuffer);
+//----------------------------------------------------------------------------
+Mesh::Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
+	pIndexBuffer)
+	:
+	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
+{
+	InitVertexBuffers(rVertexBuffers);
+	Init(pIndexBuffer, 0, pIndexBuffer->GetQuantity());
+}
 
-	UpdateModelBound();
+//----------------------------------------------------------------------------
+Mesh::Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
+	pIndexBuffer, UInt startIndex, UInt indexCount)
+	:
+	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
+{
+	InitVertexBuffers(rVertexBuffers);
+	Init(pIndexBuffer, startIndex, indexCount);
 }
 
 //----------------------------------------------------------------------------
@@ -88,11 +89,11 @@ void Mesh::SetIndexCount(UInt indexCount, Bool updateModelBound)
 void Mesh::UpdateModelBound()
 {
 	VertexBuffer* pPositions = NULL;
-	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
-		if (mspVertexBuffers[i]->GetAttributes().HasPosition())
+		if (mVertexBuffers[i]->GetAttributes().HasPosition())
 		{
-			pPositions = mspVertexBuffers[i];
+			pPositions = mVertexBuffers[i];
 			break;
 		}
 	}
@@ -115,17 +116,17 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 {
 	VertexBuffer* pPositions = NULL;
 	VertexBuffer* pNormals = NULL;
-	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
-		const VertexAttributes& rAttr = mspVertexBuffers[i]->GetAttributes();
+		const VertexAttributes& rAttr = mVertexBuffers[i]->GetAttributes();
 		if (rAttr.HasPosition())
 		{
-			pPositions = mspVertexBuffers[i];		
+			pPositions = mVertexBuffers[i];		
 		}
 
 		if (rAttr.GetNormalChannels() == 3)
 		{
-			pNormals = mspVertexBuffers[i];
+			pNormals = mVertexBuffers[i];
 		}
 	}
 
@@ -214,13 +215,61 @@ void Mesh::GenerateNormals(Bool ignoreHardEdges)
 //----------------------------------------------------------------------------
 Bool Mesh::HasNormal() const
 {
-	for (UInt i = 0; i < mspVertexBuffers.GetQuantity(); i++)
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
-		if (mspVertexBuffers[i]->GetAttributes().HasNormal())
+		if (mVertexBuffers[i]->GetAttributes().HasNormal())
 		{
 			return true;
 		}
 	}
 
 	return false;
+}
+
+//----------------------------------------------------------------------------
+Bool Mesh::HasColor() const
+{
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	{
+		if (mVertexBuffers[i]->GetAttributes().HasColor())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+void Mesh::Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount)
+{
+	WIRE_ASSERT(pIndexBuffer);
+	mspIndexBuffer = pIndexBuffer;
+	mStartIndex = startIndex;
+	mIndexCount = indexCount;
+	mIsDirty = false;
+	mspModelBound = BoundingVolume::Create();
+	UpdateModelBound();
+}
+
+//----------------------------------------------------------------------------
+void Mesh::InitVertexBuffer(VertexBuffer* pVertexBuffer)
+{
+	WIRE_ASSERT(pVertexBuffer);
+	mVertexBuffers.Append(pVertexBuffer);
+}
+
+//----------------------------------------------------------------------------
+void Mesh::InitVertexBuffers(TArray<Pointer<VertexBuffer> >& rVertexBuffers)
+{
+	WIRE_ASSERT(rVertexBuffers.GetQuantity() > 0);
+	WIRE_ASSERT(rVertexBuffers[0]);
+
+	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
+	{
+		WIRE_ASSERT(rVertexBuffers[i]);
+		WIRE_ASSERT(rVertexBuffers[i]->GetQuantity() == rVertexBuffers[0]->
+			GetQuantity());
+		mVertexBuffers.Append(rVertexBuffers[i]);
+	}
 }

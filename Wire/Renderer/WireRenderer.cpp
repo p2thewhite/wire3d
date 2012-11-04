@@ -109,6 +109,8 @@ void Renderer::ReleaseResources()
 	{
 		mspStates[i] = NULL;
 	}
+
+	mspMesh = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -840,6 +842,57 @@ void Renderer::Set(const Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Enable(const Mesh* pMesh)
+{
+	WIRE_ASSERT(pMesh);
+
+	Enable(pMesh->GetIndexBuffer());
+	Enable(pMesh->GetVertexBuffers());
+
+	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+	{
+		Enable(pMesh->GetVertexBuffer(i), i);
+	}
+
+	mspMesh = const_cast<Mesh*>(pMesh);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const Mesh* pMesh)
+{
+	WIRE_ASSERT(pMesh);
+
+	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+	{
+		Disable(pMesh->GetVertexBuffer(i), i);
+	}
+
+	Disable(pMesh->GetVertexBuffers());
+	Disable(pMesh->GetIndexBuffer());
+
+	mspMesh = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const Mesh* pMesh)
+{
+	WIRE_ASSERT(pMesh);
+
+	if (mspMesh != pMesh)
+	{
+		Set(pMesh->GetIndexBuffer());
+		Set(pMesh->GetVertexBuffers());
+
+		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+		{
+			Set(pMesh->GetVertexBuffer(), i);
+		}
+
+		mspMesh = const_cast<Mesh*>(pMesh);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 {
 	WIRE_ASSERT(pGeometry && pGeometry->GetMesh());
@@ -863,28 +916,14 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 	{
 		Enable(pGeometry->States);
 		Enable(pGeometry->Lights);
-		Enable(pMesh->GetIndexBuffer());
-		Enable(pMesh->GetVertexBuffers());
-
-		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-		{
-			Enable(pMesh->GetVertexBuffer(), i);
-		}
-
+		Enable(pMesh);
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
 		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
 
 		Disable(pGeometry->GetMaterial());
-
-		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-		{
-			Disable(pMesh->GetVertexBuffer(), i);
-		}
-
-		Disable(pMesh->GetVertexBuffers());
-		Disable(pMesh->GetIndexBuffer());
+		Disable(pMesh);
 		Disable(pGeometry->Lights);
 		Disable(pGeometry->States);
 	}
@@ -892,14 +931,7 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 	{
 		Set(pGeometry->States);
 		Set(pGeometry->Lights);
-		Set(pMesh->GetIndexBuffer());
-		Set(pMesh->GetVertexBuffers());
-
-		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-		{
-			Set(pMesh->GetVertexBuffer(), i);
-		}
-
+		Set(pMesh);
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);

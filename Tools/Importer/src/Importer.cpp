@@ -1068,7 +1068,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		return NULL;
 	}
 
-	if (pMesh->GetVertexBuffer()->GetAttributes().HasColor())
+	if (pMesh->HasColor())
 	{
 		if (pMaterial && pMaterial->GetTextureQuantity() > 0)
 		{
