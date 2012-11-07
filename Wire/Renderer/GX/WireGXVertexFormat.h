@@ -38,7 +38,8 @@ public:
 	inline const TArray<VertexElement>& GetDeclaration() const;
 
 private:
-	void AddAttributes(UInt streamIndex, const VertexAttributes& rAttributes);
+	void AddAttributes(UInt streamIndex, const VertexAttributes& rAttributes,
+		UInt& rColorsCount, UInt& rUvSetCount);
 
 	TArray<VertexElement> mDeclaration;
 };

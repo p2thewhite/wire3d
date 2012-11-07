@@ -32,7 +32,8 @@ public:
 
 private:
 	void AddAttributes(UInt streamIndex, const VertexAttributes &rAttributes,
-		TArray<D3DVERTEXELEMENT9> &elements);
+		TArray<D3DVERTEXELEMENT9> &elements, UInt& rColorsCount,
+		UInt& rUvSetCount);
 
 	IDirect3DVertexDeclaration9* mpDeclaration;
 };

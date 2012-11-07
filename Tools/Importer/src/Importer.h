@@ -33,12 +33,14 @@ public:
 			:
 			AssetsWithEqualNamesAreIdentical(true),
 			PrepareSceneForStaticBatching(true),
-			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(true)
+			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(true),
+			CreateInterleavedVertexBuffers(true)
 			{}
 			 
 		Bool AssetsWithEqualNamesAreIdentical;
 		Bool PrepareSceneForStaticBatching;
 		Bool DuplicateSharedMeshesWhenPreparingSceneForStaticBatching;
+		Bool CreateInterleavedVertexBuffers;
 	};
 
 	struct Statistics
@@ -104,6 +106,10 @@ private:
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
+	Wire::VertexBuffer* ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode);
+	void ParseVertexBuffers(rapidxml::xml_node<>* pXmlNode, Wire::TArray<
+		Wire::VertexBuffer*>& rVertexBuffers);
+	Wire::IndexBuffer* ParseIndexBuffer(rapidxml::xml_node<>* pXmlNode);
 	Wire::Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Wire::Material::BlendMode& blendMode);
 	void ParseTransformation(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
@@ -125,6 +131,8 @@ private:
 		Wire::Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian,
 		Char* pColorsName, Bool isColorsBigEndian, Wire::TArray<Char*>& rUvSetNames,
 		Wire::TArray<Bool>& rUvBigEndian);
+	Wire::VertexBuffer* LoadVertexBuffer(Char* pFileName, Bool isBigEndian,
+		Wire::Buffer::UsageType usage, Wire::VertexAttributes& rAttributes);
 
 	const Char* mpPath;
 	Wire::TArray<Wire::CameraPtr>* mpCameras;

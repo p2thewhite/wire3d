@@ -36,8 +36,7 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
-	pIndexBuffer)
+Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
 {
@@ -46,8 +45,8 @@ Mesh::Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
-	pIndexBuffer, UInt startIndex, UInt indexCount)
+Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
+	UInt startIndex, UInt indexCount)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
 {
@@ -260,7 +259,7 @@ void Mesh::InitVertexBuffer(VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-void Mesh::InitVertexBuffers(TArray<Pointer<VertexBuffer> >& rVertexBuffers)
+void Mesh::InitVertexBuffers(TArray<VertexBuffer*>& rVertexBuffers)
 {
 	WIRE_ASSERT(rVertexBuffers.GetQuantity() > 0);
 	WIRE_ASSERT(rVertexBuffers[0]);

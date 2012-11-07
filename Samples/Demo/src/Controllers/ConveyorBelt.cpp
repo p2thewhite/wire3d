@@ -7,17 +7,26 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 ConveyorBelt::ConveyorBelt(Geometry* pGeometry, Renderer* pRenderer)
 	:
+	mpRenderer(pRenderer),
 	mOffset(0)
 {
-	if (!pGeometry)
+	if (!pGeometry || !pGeometry->GetMesh())
 	{
 		return;
 	}
 
-	mpRenderer = pRenderer;
+	Mesh* pMesh = pGeometry->GetMesh();
+	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+	{
+		VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer(i);
+		if (pVertexBuffer->GetAttributes().HasTCoord())
+		{
+			mspVertexBufferCopy = WIRE_NEW VertexBuffer(pVertexBuffer);
+			break;
+		}
+	}
 
-	VertexBuffer* pVBuffer = pGeometry->GetMesh()->GetVertexBuffer();
-	mspVertexBufferCopy = WIRE_NEW VertexBuffer(pVBuffer);
+	WIRE_ASSERT(mspVertexBufferCopy);
 }
 
 //----------------------------------------------------------------------------
@@ -44,12 +53,28 @@ Bool ConveyorBelt::Update(Double appTime)
 Bool ConveyorBelt::OnGetVisibleUpdate(const Camera*)
 {
 	Geometry* pGeo = DynamicCast<Geometry>(mpSceneObject);
-	if (!mspVertexBufferCopy || !pGeo)
+	if (!mspVertexBufferCopy || !pGeo || !pGeo->GetMesh())
 	{
 		return false;
 	}
 
-	VertexBuffer* pVertexBuffer = pGeo->GetMesh()->GetVertexBuffer();
+	VertexBuffer* pVertexBuffer = NULL;
+	Mesh* pMesh = pGeo->GetMesh();
+	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+	{
+		if (pMesh->GetVertexBuffer(i)->GetAttributes().HasTCoord())
+		{
+			pVertexBuffer = pMesh->GetVertexBuffer(i);
+			break;
+		}
+	}
+
+	WIRE_ASSERT(pVertexBuffer);
+	if (!pVertexBuffer)
+	{
+		return false;
+	}
+
 	for (UInt i = 0; i < mspVertexBufferCopy->GetQuantity(); i++)
 	{
 		Vector2F vec2 = mspVertexBufferCopy->TCoord2(i);

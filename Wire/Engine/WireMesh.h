@@ -28,10 +28,9 @@ public:
 	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer);
 	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 		UInt startIndex, UInt indexCount);
-	Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
-		pIndexBuffer);
-	Mesh(TArray<Pointer<VertexBuffer> >& rVertexBuffers, IndexBuffer*
-		pIndexBuffer, UInt startIndex, UInt indexCount);
+	Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer);
+	Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
+		UInt startIndex, UInt indexCount);
 
 	inline VertexBuffer* GetVertexBuffer(UInt streamIndex = 0);
 	inline const VertexBuffer* GetVertexBuffer(UInt streamIndex = 0) const;
@@ -61,7 +60,7 @@ public:
 private:
 	void Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount);
 	void InitVertexBuffer(VertexBuffer* pVertexBuffer);
-	void InitVertexBuffers(TArray<Pointer<VertexBuffer> >& rVertexBuffers);
+	void InitVertexBuffers(TArray<VertexBuffer*>& rVertexBuffers);
 
 	TArray<Pointer<VertexBuffer> > mVertexBuffers;
 	Pointer<IndexBuffer> mspIndexBuffer;
