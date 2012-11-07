@@ -18,6 +18,9 @@ using namespace Wire;
 PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
 	VertexBufferPtr>& rVertexBuffers)
 {
+	UInt colorsCount = 0;
+	UInt uvSetCount = 0;
+
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		if (i >= pRenderer->GetMaxVertexStreams())
@@ -27,7 +30,8 @@ PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
 			break;
 		}
 
-		AddAttributes(i, rVertexBuffers[i]->GetAttributes());
+		AddAttributes(i, rVertexBuffers[i]->GetAttributes(), colorsCount,
+			uvSetCount);
 	}
 }
 
@@ -58,7 +62,7 @@ void PdrVertexFormat::Disable(Renderer* pRenderer)
 
 //----------------------------------------------------------------------------
 void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
-	rAttributes)
+	rAttributes, UInt& rColorsCount, UInt& rUvSetCount)
 {
 	VertexElement element;
 	element.StreamIndex = streamIndex;
@@ -95,12 +99,14 @@ void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 		{
 			element.Offset = vertexSize;
 			vertexSize += sizeof(UInt);
-			element.Attr = GX_VA_CLR0 + unit;
+			element.Attr = GX_VA_CLR0 + unit + rColorsCount;
 			element.CompCnt = GX_CLR_RGBA;
 			element.CompType = GX_RGBA8;
 			mDeclaration.Append(element);
 		}
 	}
+
+	rColorsCount += rAttributes.GetColorChannelQuantity();
 
 	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
 	{
@@ -110,12 +116,14 @@ void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 			WIRE_ASSERT(channels == 2);
 			element.Offset = vertexSize;
 			vertexSize += channels * sizeof(Float);
-			element.Attr = GX_VA_TEX0 + unit;
+			element.Attr = GX_VA_TEX0 + unit + rUvSetCount;
 			element.CompCnt = GX_TEX_ST;
 			element.CompType = GX_F32;
 			mDeclaration.Append(element);
 		}
 	}
+
+	rUvSetCount += rAttributes.GetTCoordChannelQuantity();
 
 	WIRE_ASSERT(vertexSize == rAttributes.GetVertexSize());
 }

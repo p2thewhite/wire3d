@@ -137,7 +137,12 @@ void Renderer::BindAll(const Spatial* pSpatial)
 		if (pMesh)
 		{
 			s_pRenderer->Bind(pMesh->GetIndexBuffer());
-			s_pRenderer->Bind(pMesh->GetVertexBuffer());
+
+			for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+			{
+				s_pRenderer->Bind(pMesh->GetVertexBuffer(i));
+			}
+
 			s_pRenderer->Bind(pMesh->GetVertexBuffers());
 		}
 
@@ -176,7 +181,11 @@ void Renderer::UnbindAll(const Spatial* pSpatial)
 		if (pMesh)
 		{
 			s_pRenderer->Unbind(pMesh->GetIndexBuffer());
-			s_pRenderer->Unbind(pMesh->GetVertexBuffer());
+
+			for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+			{
+				s_pRenderer->Unbind(pMesh->GetVertexBuffer(i));
+			}
 		}
 
 		const Material* pMaterial = pGeometry->GetMaterial();
@@ -885,7 +894,7 @@ void Renderer::Set(const Mesh* pMesh)
 
 		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 		{
-			Set(pMesh->GetVertexBuffer(), i);
+			Set(pMesh->GetVertexBuffer(i), i);
 		}
 
 		mspMesh = const_cast<Mesh*>(pMesh);

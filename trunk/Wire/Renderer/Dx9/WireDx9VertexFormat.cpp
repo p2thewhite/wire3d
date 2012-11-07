@@ -20,6 +20,9 @@ PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
 	mpDeclaration(NULL)
 {
 	TArray<D3DVERTEXELEMENT9> elements(8);
+	UInt colorsCount = 0;
+	UInt uvSetCount = 0;
+
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		if (i >= pRenderer->GetMaxVertexStreams())
@@ -29,7 +32,8 @@ PdrVertexFormat::PdrVertexFormat(Renderer* pRenderer, const TArray<
 			break;
 		}
 
-		AddAttributes(i, rVertexBuffers[i]->GetAttributes(), elements);
+		AddAttributes(i, rVertexBuffers[i]->GetAttributes(), elements,
+			colorsCount, uvSetCount);
 	}
 
 	D3DVERTEXELEMENT9 sentinel = D3DDECL_END();
@@ -53,7 +57,8 @@ PdrVertexFormat::~PdrVertexFormat()
 
 //----------------------------------------------------------------------------
 void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
-	rAttributes, TArray<D3DVERTEXELEMENT9> &elements) 
+	rAttributes, TArray<D3DVERTEXELEMENT9> &elements, UInt& rColorsCount,
+	UInt& rUvSetCount) 
 {
 	D3DVERTEXELEMENT9 element;
 	element.Stream = static_cast<WORD>(streamIndex);
@@ -93,10 +98,12 @@ void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 			vertexSize += sizeof(DWORD);
 			element.Type = D3DDECLTYPE_D3DCOLOR;
 			element.Usage = D3DDECLUSAGE_COLOR;
-			element.UsageIndex = static_cast<BYTE>(unit);
-			elements.Append(element);
+			element.UsageIndex = static_cast<BYTE>(unit + rColorsCount);
+			elements.Append(element);		
 		}
 	}
+
+	rColorsCount += rAttributes.GetColorChannelQuantity();
 
 	for (UInt unit = 0; unit < rAttributes.GetTCoordChannelQuantity(); unit++)
 	{
@@ -107,10 +114,12 @@ void PdrVertexFormat::AddAttributes(UInt streamIndex, const VertexAttributes&
 			vertexSize += channels * sizeof(Float);
 			element.Type = static_cast<BYTE>(D3DDECLTYPE_FLOAT1 + channels-1);
 			element.Usage = D3DDECLUSAGE_TEXCOORD;
-			element.UsageIndex = static_cast<BYTE>(unit);
+			element.UsageIndex = static_cast<BYTE>(unit + rUvSetCount);
 			elements.Append(element);
 		}
 	}
+
+	rUvSetCount += rAttributes.GetTCoordChannelQuantity();
 
 	WIRE_ASSERT(channels > 0);
 	WIRE_ASSERT(vertexSize == rAttributes.GetVertexSize());
