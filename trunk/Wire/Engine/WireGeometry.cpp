@@ -280,15 +280,14 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 //----------------------------------------------------------------------------
 void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
-	// TODO
-	if (mspMesh->GetVertexBuffers().GetQuantity() > 1)
-	{
-		return;
-	}
+	VertexBuffer* const pPositions = mspMesh->GetPositionBuffer();
+	WIRE_ASSERT(pPositions);
+	VertexBuffer* const pNormals = mspMesh->GetNormalBuffer();
 
-	VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer();
-	Bool isShared = pVertexBuffer->GetReferences() > 1 ||
-		mspMesh->GetReferences() > 1;
+	Bool isMeshShared = mspMesh->GetReferences() > 1;
+	Bool isPositionShared = pPositions->GetReferences() > 1;
+	Bool isNormalShared = pNormals && pNormals->GetReferences() > 1;
+	Bool isShared = isMeshShared ||isPositionShared || isNormalShared;
 
 	if (isShared && !duplicateShared)
 	{
@@ -306,22 +305,41 @@ void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 		return;
 	}
 
-	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
-	if (!rAttr.HasPosition() && !rAttr.HasNormal())
-	{
-		return;
-	}
-
-	// if the vertex buffer is shared, we duplicate it to apply the World
-	// transformation
+	// if the mesh or a vertex buffer containing positions or normals is
+	// shared, we duplicate it to apply the World transformation
 	if (isShared)
 	{
-		pVertexBuffer = WIRE_NEW VertexBuffer(mspMesh->GetVertexBuffer());
-		mspMesh = WIRE_NEW Mesh(pVertexBuffer, mspMesh->GetIndexBuffer(),
+		TArray<VertexBuffer*> vertexBuffers;
+		for (UInt i = 0; i < mspMesh->GetVertexBuffers().GetQuantity(); i++)
+		{
+			VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer(i);
+			if (pVertexBuffer == pPositions)
+			{
+				if (isMeshShared || isPositionShared)
+				{
+					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);		
+				}
+			}
+			else if (pVertexBuffer == pNormals)
+			{
+				if (isMeshShared || isNormalShared)
+				{
+					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);
+				}
+			}
+
+			vertexBuffers.Append(pVertexBuffer);
+		}
+
+		mspMesh = WIRE_NEW Mesh(vertexBuffers, mspMesh->GetIndexBuffer(),
 			mspMesh->GetStartIndex(), mspMesh->GetIndexCount());
 	}
 
-	pVertexBuffer->ApplyForward(World, pVertexBuffer->GetData());
+	pPositions->ApplyForward(World, pPositions->GetData());
+	if (pNormals && (pPositions != pNormals))
+	{
+		pNormals->ApplyForward(World, pNormals->GetData());
+	}
 
 	World.MakeIdentity();
 	mspMesh->UpdateModelBound();
