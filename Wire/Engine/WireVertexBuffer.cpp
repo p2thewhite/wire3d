@@ -173,7 +173,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 			*pDst++ = v.Y();
 			*pDst++ = v.Z();
 		}
-		else
+		else if (rAttr.GetPositionChannels() > 0)
 		{
 			WIRE_ASSERT(false /* implement transform for non 3d pos? */);
 			const Float* const pPosition = GetPosition(i);

@@ -55,6 +55,62 @@ Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
 }
 
 //----------------------------------------------------------------------------
+VertexBuffer* Mesh::GetPositionBuffer()
+{
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	{
+		if (mVertexBuffers[i]->GetAttributes().HasPosition())
+		{
+			return mVertexBuffers[i];
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+const VertexBuffer* Mesh::GetPositionBuffer() const
+{
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	{
+		if (mVertexBuffers[i]->GetAttributes().HasPosition())
+		{
+			return mVertexBuffers[i];
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+VertexBuffer* Mesh::GetNormalBuffer()
+{
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	{
+		if (mVertexBuffers[i]->GetAttributes().HasNormal())
+		{
+			return mVertexBuffers[i];
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+const VertexBuffer* Mesh::GetNormalBuffer() const
+{
+	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	{
+		if (mVertexBuffers[i]->GetAttributes().HasNormal())
+		{
+			return mVertexBuffers[i];
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
 void Mesh::SetStartIndex(UInt startIndex, Bool updateModelBound)
 {
 	if (mStartIndex != startIndex)
@@ -87,16 +143,7 @@ void Mesh::SetIndexCount(UInt indexCount, Bool updateModelBound)
 //----------------------------------------------------------------------------
 void Mesh::UpdateModelBound()
 {
-	VertexBuffer* pPositions = NULL;
-	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
-	{
-		if (mVertexBuffers[i]->GetAttributes().HasPosition())
-		{
-			pPositions = mVertexBuffers[i];
-			break;
-		}
-	}
-
+	VertexBuffer* pPositions = GetPositionBuffer();
 	WIRE_ASSERT(pPositions);
 
 	if ((mStartIndex == 0) && (mIndexCount == mspIndexBuffer->GetQuantity()))
@@ -113,23 +160,14 @@ void Mesh::UpdateModelBound()
 //----------------------------------------------------------------------------
 void Mesh::GenerateNormals(Bool ignoreHardEdges)
 {
-	VertexBuffer* pPositions = NULL;
-	VertexBuffer* pNormals = NULL;
-	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
+	VertexBuffer* pPositions = GetPositionBuffer();
+	if (!pPositions)
 	{
-		const VertexAttributes& rAttr = mVertexBuffers[i]->GetAttributes();
-		if (rAttr.HasPosition())
-		{
-			pPositions = mVertexBuffers[i];		
-		}
-
-		if (rAttr.GetNormalChannels() == 3)
-		{
-			pNormals = mVertexBuffers[i];
-		}
+		return;
 	}
 
-	if (!pPositions || !mspIndexBuffer || !pNormals)
+	VertexBuffer* pNormals = GetNormalBuffer();
+	if (!pNormals)
 	{
 		return;
 	}

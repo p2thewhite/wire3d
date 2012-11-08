@@ -36,6 +36,10 @@ public:
 	inline const VertexBuffer* GetVertexBuffer(UInt streamIndex = 0) const;
 	inline TArray<Pointer<VertexBuffer> >& GetVertexBuffers();
 	inline const TArray<Pointer<VertexBuffer> >& GetVertexBuffers() const;
+	VertexBuffer* GetPositionBuffer();
+	const VertexBuffer* GetPositionBuffer() const;
+	VertexBuffer* GetNormalBuffer();
+	const VertexBuffer* GetNormalBuffer() const;
 
 	inline IndexBuffer* GetIndexBuffer();
 	inline const IndexBuffer* GetIndexBuffer() const;
