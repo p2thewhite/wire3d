@@ -54,7 +54,6 @@ public:
 	void* FrameBuffer[2];
 	GXRenderModeObj* RMode;
 
-	PdrVertexBuffer* PdrVBuffer;
 	PdrIndexBuffer* PdrIBuffer;
 	PdrVertexFormat* PdrVFormat;
 

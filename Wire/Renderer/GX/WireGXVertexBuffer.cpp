@@ -8,6 +8,7 @@
 
 #include "WireGXVertexBuffer.h"
 
+#include "WireGXRendererData.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>
@@ -95,6 +96,4 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
 			GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
 		}
 	}
-
-	pRenderer->GetRendererData()->PdrVBuffer = this;
 }

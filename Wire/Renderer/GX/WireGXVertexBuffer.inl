@@ -7,9 +7,8 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void PdrVertexBuffer::Disable(Renderer* pRenderer, UInt)
+inline void PdrVertexBuffer::Disable(Renderer*, UInt)
 {
-	pRenderer->GetRendererData()->PdrVBuffer = NULL;
 }
 
 //----------------------------------------------------------------------------

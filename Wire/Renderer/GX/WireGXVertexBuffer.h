@@ -11,7 +11,6 @@
 #define WIREGXVERTEXBUFFER_H
 
 #include "WireBuffer.h"
-#include "WireGXRendererData.h"
 #include "WireTArray.h"
 
 namespace Wire

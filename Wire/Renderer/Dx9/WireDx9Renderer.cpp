@@ -301,9 +301,10 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
+void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 	usesNormals)
 {
+	// TODO: this is only necessary for fixed function pipeline, clean up
 	Bool needsRenormalization = usesNormals ? true : false;
 	if (rWorld.IsUniformScale())
 	{
@@ -605,6 +606,8 @@ void PdrRendererData::ResetDevice()
 	DestroyNonManagedResources(rRenderer.mImage2DMap, saveTexture2Ds);
 	
 	UInt batchingSize = 0;
+	const UInt maxVertexStreamsToBatch = rRenderer.mBatchedVertexBuffers.
+		GetQuantity();
 	if (rRenderer.mBatchedIndexBuffer)
 	{
 		batchingSize = rRenderer.mBatchedIndexBuffer->GetBufferSize();
@@ -616,7 +619,7 @@ void PdrRendererData::ResetDevice()
 	WIRE_ASSERT(SUCCEEDED(hr));
 	IsDeviceLost = false;
 
-	rRenderer.CreateBatchingBuffers(batchingSize);
+	rRenderer.CreateBatchingBuffers(batchingSize, maxVertexStreamsToBatch);
 
 	RecreateResources(&rRenderer, saveIndexBuffers);
 	RecreateResources(&rRenderer, saveVertexBuffers);

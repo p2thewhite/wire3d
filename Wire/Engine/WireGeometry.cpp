@@ -335,10 +335,12 @@ void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 			mspMesh->GetStartIndex(), mspMesh->GetIndexCount());
 	}
 
-	pPositions->ApplyForward(World, pPositions->GetData());
-	if (pNormals && (pPositions != pNormals))
+	VertexBuffer* const pUniquePositions = mspMesh->GetPositionBuffer();
+	pUniquePositions->ApplyForward(World, pUniquePositions->GetData());
+	VertexBuffer* const pUniqueNormals = mspMesh->GetNormalBuffer();
+	if (pUniqueNormals && (pUniquePositions != pUniqueNormals))
 	{
-		pNormals->ApplyForward(World, pNormals->GetData());
+		pUniqueNormals->ApplyForward(World, pUniqueNormals->GetData());
 	}
 
 	World.MakeIdentity();
