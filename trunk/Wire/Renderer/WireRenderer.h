@@ -59,7 +59,7 @@ public:
 		Bool useEffect = true);
 
 	// Batching
-	void CreateBatchingBuffers(UInt size);
+	void CreateBatchingBuffers(UInt size, UInt maxVertexStreams = 6);
 	inline Bool UsesBatching() const;
 
 	inline Bool SupportsStaticBatching() const;
@@ -249,14 +249,16 @@ private:
 		Bool hasAlpha = true);
 	void DisableTextureStage(UInt unit = 0);
 
-	void SetWorldTransformation(Transformation& rWorld, Bool usesNormals);
+	void SetWorldTransformation(const Transformation& rWorld,
+		Bool usesNormals);
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
 	void BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
 	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
 	void Draw(Geometry* pUseStateFrom, PdrIndexBuffer* const pIBPdr,
-		PdrVertexBuffer* const pVBPdr, UShort vertexCount, UInt indexCount);
+		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
+		UInt indexCount);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt indexCount, UInt startIndex);
@@ -313,7 +315,8 @@ private:
 	VertexFormatMap mVertexFormatMap;
 
 	PdrIndexBuffer* mBatchedIndexBuffer;
-	PdrVertexBuffer* mBatchedVertexBuffer;
+	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
+	TArray<void*> mRawBatchedVertexBuffers;
 	UInt mStaticBatchingThreshold;
 	UInt mDynamicBatchingThreshold;
 	Bool mSupportsStaticBatching;

@@ -148,11 +148,70 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 		}
 	}
 
-	// TODO: optimize for dynamic runtime batching
 	const VertexAttributes& rAttr = mAttributes;
 	const Vector3F& translate = rTransformation.GetTranslate();
 	const Matrix34F& rotate = rTransformation.GetMatrix();
+	const Vector3F& scale = rTransformation.GetScale();
 
+	// positions only vertex buffer
+	if (rAttr.GetPositionChannels() == rAttr.GetChannelQuantity())
+	{
+		WIRE_ASSERT(rAttr.GetPositionChannels() == 3);
+		const Float* pPosition = GetData();
+		for (UInt i = 0; i < GetQuantity(); i++)
+		{
+			Vector3F v;
+			v.X() = *pPosition++;
+			v.Y() = *pPosition++;
+			v.Z() = *pPosition++;
+			if (rTransformation.IsRSMatrix())
+			{
+				v.X() *= scale.X();
+				v.Y() *= scale.Y();
+				v.Z() *= scale.Z();
+			}
+
+			v = rotate * v + translate;
+
+			*pDst++ = v.X();
+			*pDst++ = v.Y();
+			*pDst++ = v.Z();
+		}
+
+		return;
+	}
+
+	// normals only vertex buffer
+	if (rAttr.GetNormalChannels() == rAttr.GetChannelQuantity())
+	{
+		WIRE_ASSERT(rAttr.GetNormalChannels() == 3);
+		const Float* pNormal = GetData();
+		for (UInt i = 0; i < GetQuantity(); i++)
+		{
+			Vector3F n;
+			n.X() = *pNormal++;
+			n.Y() = *pNormal++;
+			n.Z() = *pNormal++;
+
+			if (rTransformation.IsRSMatrix())
+			{
+				n.X() *= scale.X();
+				n.Y() *= scale.Y();
+				n.Z() *= scale.Z();
+			}
+
+			n = rotate * n;
+
+			*pDst++ = n.X();
+			*pDst++ = n.Y();
+			*pDst++ = n.Z();
+		}
+
+		return;
+	}
+
+	// TODO: optimize
+	// interleaved vertex buffer
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
 		if (rAttr.GetPositionChannels() == 3)
@@ -162,9 +221,9 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 
 			if (rTransformation.IsRSMatrix())
 			{
-				const Vector3F& scale = rTransformation.GetScale();
-				v = Vector3F(scale.X() * v.X(), scale.Y() * v.Y(),
-					scale.Z() * v.Z());
+				v.X() *= scale.X();
+				v.Y() *= scale.Y();
+				v.Z() *= scale.Z();
 			}
 
 			v = rotate * v + translate;
@@ -173,14 +232,10 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 			*pDst++ = v.Y();
 			*pDst++ = v.Z();
 		}
-		else if (rAttr.GetPositionChannels() > 0)
+		else
 		{
-			WIRE_ASSERT(false /* implement transform for non 3d pos? */);
-			const Float* const pPosition = GetPosition(i);
-			for (UInt k = 0; k < rAttr.GetPositionChannels(); k++)
-			{
-				*pDst++ = pPosition[k];
-			}
+			/* implement transform for non 3d? */
+			WIRE_ASSERT(rAttr.GetPositionChannels() == 0);
 		}
 
 		if (rAttr.GetNormalChannels() == 3)
@@ -190,9 +245,9 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 
 			if (rTransformation.IsRSMatrix())
 			{
-				const Vector3F& scale = rTransformation.GetScale();
-				n = Vector3F(scale.X() * n.X(), scale.Y() * n.Y(),
-					scale.Z() * n.Z());
+				n.X() *= scale.X();
+				n.Y() *= scale.Y();
+				n.Z() *= scale.Z();
 			}
 
 			n = rotate * n;
@@ -201,13 +256,10 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 			*pDst++ = n.Y();
 			*pDst++ = n.Z();
 		}
-		else if (rAttr.GetNormalChannels() > 0)
+		else
 		{
-			const Float* const pNormal = GetNormal(i);
-			for (UInt k = 0; k < rAttr.GetNormalChannels(); k++)
-			{
-				*pDst++ = pNormal[k];
-			}
+			/* implement transform for non 3d? */
+			WIRE_ASSERT(rAttr.GetNormalChannels() == 0);
 		}
 
 		UInt colorChannelQuantity = rAttr.GetColorChannelQuantity();
@@ -223,14 +275,16 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 		UInt tCoordChannelQuantity = rAttr.GetTCoordChannelQuantity();
 		for (UInt unit = 0; unit < tCoordChannelQuantity; unit++)
 		{
-			UInt channels = rAttr.GetTCoordChannels(unit);
-			if (channels > 0)
+			if (rAttr.GetTCoordChannels(unit) == 2)
 			{
-				const Float* const pTCoords = GetTCoord(i, unit);
-				for (UInt k = 0; k < channels; k++)
-				{
-					*pDst++ = pTCoords[k];
-				}
+				const Float* pTCoords = GetTCoord(i, unit);
+				*pDst++ = *pTCoords++;
+				*pDst++ = *pTCoords++;
+			}
+			else
+			{
+				/* implement transform for non 2d UVs? */
+				WIRE_ASSERT(false);
 			}
 		}
 	}

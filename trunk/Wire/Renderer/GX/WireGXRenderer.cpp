@@ -206,7 +206,7 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(Transformation& rWorld, Bool
+void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 	usesNormals)
 {
 	Matrix34F model;
@@ -255,9 +255,6 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	WIRE_ASSERT(mspIndexBuffer);
-	const IndexBuffer& rIBuffer = *mspIndexBuffer;
-	WIRE_ASSERT(mpData->PdrVBuffer);
 	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
 	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
@@ -275,6 +272,9 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 		const UInt key = mVertexFormatKey;
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
+
+		WIRE_ASSERT(mspIndexBuffer);
+		const IndexBuffer& rIBuffer = *mspIndexBuffer;
 
 		// TODO: consider dirty flag from Mesh
 		Bool isStatic = ((startIndex == 0) && 
@@ -335,8 +335,7 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 	}
 
-	WIRE_ASSERT(mpData->PdrVBuffer);
-	const PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
+	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
 	WIRE_ASSERT(pPdrIBuffer);
 	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
 	WIRE_ASSERT(pPdrVFormat);
@@ -449,7 +448,6 @@ PdrRendererData::PdrRendererData()
 	:
 	FifoBuffer(NULL),
 	RMode(NULL),
-	PdrVBuffer(NULL),
 	PdrIBuffer(NULL),
 	PdrVFormat(NULL),
 	FrameBufferIndex(0),
