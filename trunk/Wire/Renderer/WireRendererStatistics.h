@@ -25,19 +25,23 @@ public:
 	// Drawing and Renderer bound memory statistics
 	RendererStatistics();
 
-	// accumulated number of draw calls and triangles drawn since last Reset()
+	// accumulated number of draw calls, triangles, etc. since last Reset()
 	inline UInt GetDrawCalls() const;
+	inline UInt GetBatchCount() const;
 	inline UInt GetBatchedStatic() const;
 	inline UInt GetBatchedDynamic() const;
 	inline UInt GetTriangles() const;
 
 	// number of buffers and their total size bound to the Renderer
 	inline UInt GetVBOCount() const;
-	inline UInt GetVBOTotalSize() const;
+	inline UInt GetVBOsSize() const;
 	inline UInt GetIBOCount() const;
-	inline UInt GetIBOTotalSize() const;
+	inline UInt GetIBOsSize() const;
 	inline UInt GetTextureCount() const;
-	inline UInt GetTextureTotalSize() const;
+	inline UInt GetTexturesSize() const;
+	inline UInt GetBatchVBOCount() const;
+	inline UInt GetBatchVBOsSize() const;
+	inline UInt GetVertexFormatCount() const;
 
 	void Reset();
 	void AppendToText(Text* pText);
@@ -55,20 +59,25 @@ private:
 	// accumulated number of draw calls and triangles drawn since last
 	// Reset()
 	UInt mDrawCalls;
+	UInt mBatchCount;
 	UInt mBatchedStatic;
 	UInt mBatchedDynamic;
 	UInt mTriangles;
 
 	// number of buffers and their total size bound to the Renderer
 	UInt mVBOCount;
-	UInt mVBOTotalSize;
+	UInt mVBOsSize;
 	UInt mIBOCount;
-	UInt mIBOTotalSize;
+	UInt mIBOsSize;
 	UInt mTextureCount;
-	UInt mTextureTotalSize;
+	UInt mTexturesSize;
+	UInt mBatchVBOCount;
+	UInt mBatchVBOsSize;
+	UInt mBatchedVBOData;
+	UInt mBatchedIBOData;
 
 	// total number of vertex formats used
-	UInt mVertexFormats;
+	UInt mVertexFormatCount;
 
 	friend class Renderer;
 

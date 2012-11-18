@@ -74,11 +74,11 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mTextures.RemoveAll();
 	mLights.RemoveAll();
 
+	pRoot->UpdateGS();
 	pRoot->UpdateRS();
 
 	if (mStaticSpatials.GetQuantity() > 0)
 	{
-		pRoot->UpdateGS();
 		InitializeStaticSpatials(mStaticSpatials, mpOptions->
 			PrepareSceneForStaticBatching, mpOptions->
 			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching);
@@ -976,31 +976,34 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 			if (st != 0)
 			{
 				mStaticSpatials.Append(pSpatial);
+				pSpatial->WorldIsCurrent = true;
 			}
 		}
 	}
 
+	Transformation& rTrafo = pSpatial->WorldIsCurrent ? pSpatial->World :
+		pSpatial->Local;
 	if ((t.X() != 0) || (t.Y() != 0) || (t.Z() != 0))
 	{
-		pSpatial->Local.SetTranslate(t);
+		rTrafo.SetTranslate(t);
 	}
 
 	if ((r.W() != 1) || (r.X() != 0) || (r.Y() != 0) || (r.Z() != 0))
 	{
 		Matrix3F m;
 		r.ToRotationMatrix(m);
-		pSpatial->Local.SetRotate(m);
+		rTrafo.SetRotate(m);
 	}
 
 	if ((s.X() != 1.0F) || (s.Y() != 1.0F) || (s.Z() != 1.0F))
 	{
 		if ((s.X() == s.Y()) && (s.X() == s.Z()))
 		{
-			pSpatial->Local.SetUniformScale(s.X());
+			rTrafo.SetUniformScale(s.X());
 		}
 		else
 		{
-			pSpatial->Local.SetScale(s);
+			rTrafo.SetScale(s);
 		}
 	}
 }
@@ -1891,7 +1894,8 @@ void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
 	{
 		WIRE_ASSERT(rSpatials[i]);
-		rSpatials[i]->WorldIsCurrent = true;
+		WIRE_ASSERT(rSpatials[i]->WorldIsCurrent);
+		rSpatials[i]->UpdateBS();
 		rSpatials[i]->WorldBoundIsCurrent = true;
 		if (prepareSceneForStaticBatching)
 		{

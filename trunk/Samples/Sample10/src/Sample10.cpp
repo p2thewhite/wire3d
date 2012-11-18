@@ -370,9 +370,9 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
 		pStats->GetDrawCalls(), pStats->GetTriangles(), pStats->
 		GetBatchedStatic(), pStats->GetBatchedDynamic(), pStats->
-		GetVBOCount(), pStats->GetVBOTotalSize()/kb, pStats->GetIBOCount(),
-		pStats->GetIBOTotalSize()/kb, pStats->GetTextureCount(), pStats->
-		GetTextureTotalSize()/(kb*kb));
+		GetVBOCount(), pStats->GetVBOsSize()/kb, pStats->GetIBOCount(),
+		pStats->GetIBOsSize()/kb, pStats->GetTextureCount(), pStats->
+		GetTexturesSize()/(kb*kb));
 	mspText->SetColor(Color32::WHITE);
 	mspText->Append(text);
 

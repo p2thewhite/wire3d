@@ -18,12 +18,16 @@ using namespace Wire;
 RendererStatistics::RendererStatistics()
 	:
 	mVBOCount(0),
-	mVBOTotalSize(0),
+	mVBOsSize(0),
 	mIBOCount(0),
-	mIBOTotalSize(0),
+	mIBOsSize(0),
 	mTextureCount(0),
-	mTextureTotalSize(0),
-	mVertexFormats(0),
+	mTexturesSize(0),
+	mBatchVBOCount(0),
+	mBatchVBOsSize(0),
+	mBatchedVBOData(0),
+	mBatchedIBOData(0),
+	mVertexFormatCount(0),
 	mpRenderer(NULL),
 	mFpsSamplesIndex(0)
 {
@@ -37,26 +41,54 @@ RendererStatistics::RendererStatistics()
 void RendererStatistics::Reset()
 {
 	mDrawCalls = 0;
-	mTriangles = 0;
+	mBatchCount = 0;
 	mBatchedStatic = 0;
 	mBatchedDynamic = 0;
+	mTriangles = 0;
+	mBatchedVBOData = 0;
+	mBatchedIBOData = 0;
 }
 
 //----------------------------------------------------------------------------
 void RendererStatistics::AppendToText(Text* pText)
 {
-	const UInt textArraySize = 256;
+	const UInt textArraySize = 512;
 	Char text[textArraySize];
-	const Char msg[] = "Draw Calls: %d, Triangles: %d\nBatched Static: "
-		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB, VFs: "
-		"%d\nIBOs: %d, IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
-
 	const Float kb = 1024.0F;
+	const Float mb = kb * kb;
 
-	System::Sprintf(text, textArraySize, msg, mDrawCalls, mTriangles, 
-		mBatchedStatic, mBatchedDynamic, mVBOCount, mVBOTotalSize / kb,
-		mVertexFormats, mIBOCount, mIBOTotalSize / kb, mTextureCount,
-		mTextureTotalSize / (kb * kb));
+	if (mBatchVBOCount > 0)
+	{
+		const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
+			"Batched Static: %d, Batched Dynamic: %d, Batches: %d\n"
+			"Batched IBO Data: %.2f KB, Batched VBO Data: %.2f KB\n"
+			"BatchVBOs: %d, BatchVBOSize: %.2f KB\n"
+			"VBOs: %d, VBOsSize: %.2f KB, VertexFormats: %d\n"
+			"IBOs: %d, IBOsSize: %.2f KB\n"
+			"Textures: %d, TexturesSize: %.2f MB";
+
+		System::Sprintf(text, textArraySize, msg,
+			mDrawCalls, mTriangles, 
+			mBatchedStatic, mBatchedDynamic, mBatchCount,
+			mBatchedIBOData / kb, mBatchedVBOData / kb,
+			mBatchVBOCount, mBatchVBOsSize / kb,
+			mVBOCount, mVBOsSize / kb, mVertexFormatCount, 
+			mIBOCount, mIBOsSize / kb,
+			mTextureCount, mTexturesSize / mb);
+	}
+	else
+	{
+		const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
+			"VBOs: %d, VBOsSize: %.2f KB, VFs: %d\n"
+			"IBOs: %d, IBOsSize: %.2f KB\n"
+			"Textures: %d, TexturesSize: %.2f MB";
+
+		System::Sprintf(text, textArraySize, msg,
+			mDrawCalls, mTriangles, 
+			mVBOCount, mVBOsSize / kb, mVertexFormatCount,
+			mIBOCount, mIBOsSize / kb,
+			mTextureCount, mTexturesSize / mb);
+	}
 
 	pText->Append(text);
 }
