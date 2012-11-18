@@ -14,7 +14,8 @@ public class Unity3DExporter : EditorWindow
 	private bool mExportStateMaterial = true;
 	private bool mDontGenerateMipmapsForLightmaps = true;
 	private bool mDiscardTexturesOnBind = true;
-    private bool mWriteDataAsBigEndian;
+    private bool mWriteDataAsBigEndian = true;
+    private bool mCombineStaticMeshes = true;
 	private string m2ndTextureName;
 	private string mPath;
 
@@ -47,8 +48,8 @@ public class Unity3DExporter : EditorWindow
 		{
 			Debug.Log("---> Export Statistics <---\n");
 			Debug.Log("Textures: " + TexturesCount + " (Lightmaps: " + LightmapsCount + ")\n");
-			Debug.Log("Textures total size on disk: " + (TexturesTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
-			Debug.Log("Textures (including mipmaps) total size in RAM: " + (TexturesTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeInRam / (1024.0f * 1024.0f)).ToString ("F2") + " MB)\n");
+            Debug.Log("Textures total size in RAM: " + (TexturesTotalSizeInRam / (1024.0f * 1024.0f)).ToString("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeInRam / (1024.0f * 1024.0f)).ToString("F2") + " MB)\n"); 
+            Debug.Log("Textures total size on disk: " + (TexturesTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString("F2") + " MB (Lightmaps: " + (LightmapsTotalSizeOnDisk / (1024.0f * 1024.0f)).ToString("F2") + " MB)\n");
 		}
 	}
 
@@ -84,107 +85,222 @@ public class Unity3DExporter : EditorWindow
 	}
 	
 
-	protected void OnDestroy ()
+	protected void OnDestroy()
 	{
 		mIsWindowOpen = false;
 	}
 
-	protected virtual void OnGUI ()
+	protected virtual void OnGUI()
 	{
-		EditorGUILayout.BeginHorizontal ();
-		EditorGUIUtility.LookLikeControls ();
-		mPath = EditorGUILayout.TextField ("Save to directory:", mPath ?? string.Empty);
-		EditorGUILayout.EndHorizontal ();
+        ShowSaveDialog();
+		GUILayout.Space(10);
 
-		bool dirExists = Directory.Exists (mPath);
+        ShowSettingsDialog();
+		GUILayout.Space(10);
 
-		if (!dirExists && !string.IsNullOrEmpty (mPath)) {
-			GUILayout.Label ("Specified path '" + mPath + "' does not exist.");
-		}
-		
-		// ---
-		GUILayout.Space (10);
+        ShowAdvancedSettingsDialog();
+		GUILayout.Space(20);
 
-		mExportXmlOnly = GUILayout.Toggle (mExportXmlOnly, new GUIContent ("Export scene XML file only", "Textures, meshes, etc. will not be exported."));
-		mIgnoreUnderscore = GUILayout.Toggle (mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
-
-		if (RenderSettings.skybox != null) {
-			mSkyboxScale = EditorGUILayout.FloatField ("Skybox Size", mSkyboxScale);
-		}
-		
-		// ---
-		GUILayout.Space (10);
-
-		mShowAdvancedSettings = EditorGUILayout.Foldout (mShowAdvancedSettings, "Advanced Settings");
-		if (mShowAdvancedSettings) {
-			mExportStateMaterial = GUILayout.Toggle (mExportStateMaterial, new GUIContent (
-                "Try to export StateMaterial from Shader",
-                "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
-			mDontGenerateMipmapsForLightmaps = GUILayout.Toggle (mDontGenerateMipmapsForLightmaps,
-                "Do not generate Mipmaps for Lightmaps");
-			mDiscardTexturesOnBind = GUILayout.Toggle (mDiscardTexturesOnBind, new GUIContent (
-                "Flag textures as 'Discard on bind'",
-                "Textures that are not discarded at bind time can be bound multiple times, but at the cost of double ram usage per texture."));
-            mWriteDataAsBigEndian = GUILayout.Toggle(mWriteDataAsBigEndian, new GUIContent(
-                "Write data as big endian",
-                "PC uses little endian. Wii uses big endian. Byte order will be rearranged by the Importer if necessary. Thus favoring a particular order gives a slight speedup when importing data on that particular platform."));
-			GUILayout.Label ("Use property names:");
-			m2ndTextureName = EditorGUILayout.TextField ("- 2nd Texture ", m2ndTextureName ?? string.Empty);
-		}
-		
-		// ---
-		GUILayout.Space (20);
-		
-		if (dirExists && !string.IsNullOrEmpty (mPath)) {
-			if (GUILayout.Button ("Export")) {
-				if (mPath [mPath.Length - 1] != '/' && mPath [mPath.Length - 1] != '\\') {
-					mPath = mPath + '/';
-				}
-
-				mMeshAssetsProcessed = new List<string> ();
-				mMeshAssetNameToMeshName = new Dictionary<string, string> ();
-				mMeshNameToCount = new Dictionary<string, int> ();
-
-				mTextureToName = new Dictionary<Texture2D, string> ();
-				mTextureNameToCount = new Dictionary<string, int> ();
-
-                mMaterialAssetsProcessed = new List<string>();
-                mMaterialAssetNameToMaterialName = new Dictionary<string, string>();
-                mMaterialNameToCount = new Dictionary<string, int>();
-
-                mLightToName = new Dictionary<Light, string>();
-                mLightNameToCount = new Dictionary<string, int>();
-
-				mStatistics = new Statistics ();
-				Export ();
-				if (!mExportXmlOnly) {
-					mStatistics.Print ();
-				}
-			}
-		}	
+        ShowExportDialog();
 	}
 
-	private static string GetUniqueName (string originalName, Dictionary<string, int> context)
+    private void ShowSaveDialog()
+    {
+        EditorGUILayout.BeginHorizontal();
+        EditorGUIUtility.LookLikeControls();
+        mPath = EditorGUILayout.TextField("Save to directory:", mPath ?? string.Empty);
+        EditorGUILayout.EndHorizontal();
+
+        if (string.IsNullOrEmpty(mPath) || !Directory.Exists(mPath))
+        {
+            Color c = GUI.contentColor;
+            GUI.contentColor = new Color(1, 1, 0.1f);
+            if (string.IsNullOrEmpty(mPath))
+            {
+                GUILayout.Label("Enter a destination path for saving the exported data.");
+            }
+            else
+            {
+                GUILayout.Label("Specified path '" + mPath + "' does not exist.");
+            }
+
+            GUI.contentColor = c;
+        }
+    }
+    
+    private void ShowSettingsDialog()
+    {
+        mExportXmlOnly = GUILayout.Toggle(mExportXmlOnly, new GUIContent("Export scene XML file only", "Textures, meshes, etc. will not be exported."));
+        mIgnoreUnderscore = GUILayout.Toggle(mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
+
+        if (RenderSettings.skybox != null)
+        {
+            mSkyboxScale = EditorGUILayout.FloatField("Skybox Size", mSkyboxScale);
+        }
+    }
+
+    private void ShowAdvancedSettingsDialog()
+    {
+        mShowAdvancedSettings = EditorGUILayout.Foldout(mShowAdvancedSettings, "Advanced Settings");
+        if (!mShowAdvancedSettings)
+        {
+            return;
+        }
+
+        mCombineStaticMeshes = GUILayout.Toggle(mCombineStaticMeshes, new GUIContent(
+            "Combine static meshes",
+            "Prepares static meshes for drawcall batching."));
+        mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, new GUIContent(
+            "Try to export StateMaterial from shader",
+            "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
+        mDontGenerateMipmapsForLightmaps = GUILayout.Toggle(mDontGenerateMipmapsForLightmaps, new GUIContent(
+            "Do not generate mipmaps for lightmaps",
+            "Reduces size of lightmaps by 33%"));
+        mDiscardTexturesOnBind = GUILayout.Toggle(mDiscardTexturesOnBind, new GUIContent(
+            "Flag textures as 'discard on bind'",
+            "Textures that are not discarded at bind time can be bound multiple times, but at the cost of double ram usage per texture."));
+        mWriteDataAsBigEndian = GUILayout.Toggle(mWriteDataAsBigEndian, new GUIContent(
+            "Write data as big endian",
+            "PC uses little endian. Wii uses big endian. Byte order will be rearranged by the Importer if necessary. Thus favoring a particular order gives a slight speedup when importing data on that particular platform."));
+        GUILayout.Label("Use property names:");
+        m2ndTextureName = EditorGUILayout.TextField("- 2nd Texture ", m2ndTextureName ?? string.Empty);
+    }
+
+    private void ShowExportDialog()
+    {
+        if ((Directory.Exists(mPath) && !string.IsNullOrEmpty(mPath)) == false)
+        {
+            return;
+        }
+
+        if (GUILayout.Button("Export"))
+        {
+            if (mPath[mPath.Length - 1] != '/' && mPath[mPath.Length - 1] != '\\')
+            {
+                mPath = mPath + '/';
+            }
+
+            mMeshAssetsProcessed = new List<string>();
+            mMeshAssetNameToMeshName = new Dictionary<string, string>();
+            mMeshNameToCount = new Dictionary<string, int>();
+
+            mTextureToName = new Dictionary<Texture2D, string>();
+            mTextureNameToCount = new Dictionary<string, int>();
+
+            mMaterialAssetsProcessed = new List<string>();
+            mMaterialAssetNameToMaterialName = new Dictionary<string, string>();
+            mMaterialNameToCount = new Dictionary<string, int>();
+
+            mLightToName = new Dictionary<Light, string>();
+            mLightNameToCount = new Dictionary<string, int>();
+
+            mStatistics = new Statistics();
+
+            Dictionary<MeshFilter, Mesh> backupMeshFilterToMesh = null;
+            if (mCombineStaticMeshes)
+            {
+                CombineStaticMeshes(out backupMeshFilterToMesh);
+            }
+
+            Export();
+
+            if (mCombineStaticMeshes)
+            {
+                UncombineStaticMeshes(backupMeshFilterToMesh);
+            }
+
+            if (!mExportXmlOnly)
+            {
+                mStatistics.Print();
+            }
+        }
+    }
+
+    private static void CombineStaticMeshes(out Dictionary<MeshFilter, Mesh> backupMeshFilterToMesh)
+    {
+        backupMeshFilterToMesh = new Dictionary<MeshFilter, Mesh>();
+        List<Transform> roots = GetRootTransforms();
+
+        foreach (Transform root in roots)
+        {
+            Stack<Transform> stack = new Stack<Transform>();
+            stack.Push(root);
+            List<GameObject> gos = new List<GameObject>();
+
+            while (stack.Count > 0)
+            {
+                Transform t = stack.Pop();
+                if (t.gameObject.isStatic)
+                {
+                    gos.Add(t.gameObject);
+                }
+
+                for (int i = t.GetChildCount()-1; i >= 0; i--)
+                {
+                    stack.Push(t.GetChild(i));
+                }
+            }
+
+            foreach (GameObject go in gos)
+            {
+                MeshFilter mf = go.GetComponent<MeshFilter>();
+                if (mf != null)
+                {
+                    backupMeshFilterToMesh.Add(mf, mf.sharedMesh);
+                }
+            }
+
+            StaticBatchingUtility.Combine(gos.ToArray(), root.gameObject);
+        }
+    }
+
+    private static void UncombineStaticMeshes(Dictionary<MeshFilter, Mesh> backupMeshFilterToMesh)
+    {
+        if (backupMeshFilterToMesh == null)
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<MeshFilter, Mesh> pair in backupMeshFilterToMesh)
+        {
+            pair.Key.sharedMesh = pair.Value;
+            if (pair.Key.sharedMesh != null)
+            {
+                MeshRenderer mr = pair.Key.gameObject.GetComponent<MeshRenderer>();
+                if (mr == null)
+                {
+                    continue;
+                }
+
+                SerializedObject so = new SerializedObject(mr);
+                SerializedProperty sp = so.FindProperty("m_SubsetIndices");
+                if (sp != null && sp.isArray)
+                {
+                    sp.arraySize = 0;
+                    so.ApplyModifiedProperties();
+                }
+            }
+        }
+    }
+
+	private static string GetUniqueName(string originalName, Dictionary<string, int> context)
 	{
-		int nameUsageCount;
-		if (context.ContainsKey (originalName)) {
-			nameUsageCount = context [originalName];
-		} else {
-			nameUsageCount = 0;
-		}
+        int nameUsageCount = context.ContainsKey(originalName) ? context[originalName] : 0;
+		context[originalName] = ++nameUsageCount;
 
-		context [originalName] = ++nameUsageCount;
-
-		if (nameUsageCount > 1) {
+		if (nameUsageCount > 1)
+        {
             string newName = originalName + "_" + nameUsageCount + "_(renamed)";
             Debug.LogWarning("Renaming '" + originalName + "' to '" + newName + "'");
 			return newName;
-		} else {
+		}
+        else
+        {
 			return originalName;
 		}
 	}
 
-	private void WriteLeaf(Transform transform, StreamWriter outFile, string indent, bool isLeaf = true)
+	private void WriteLeaf(Transform transform, StreamWriter outFile, string indent, bool isGameObjectLeaf = true)
 	{
         GameObject go = transform.gameObject;
         MeshFilter meshFilter = go.GetComponent<MeshFilter>();
@@ -194,23 +310,43 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 
-        string isStatic = go.isStatic ? " Static=\"1\"" : "";
-
+        string subMeshIdx = "";
         int submeshCount = meshFilter.sharedMesh.subMeshCount;
-        bool exportSubmeshes = submeshCount > 1 ? true : false;       
-        string xmlNodeName = exportSubmeshes ? "Node" : "Leaf";
+        bool isCombined = false;
 
-        string transformString = "Pos=\"0, 0, 0\" Rot=\"1, 0, 0, 0\" Scale=\"1, 1, 1\"";
-        if (isLeaf)
+        SerializedObject so = new SerializedObject(meshRenderer);
+        SerializedProperty sp = so.FindProperty("m_SubsetIndices");
+        if (sp != null && sp.isArray)
         {
-            transformString = GetTransformAsString(transform);
+            if (sp.arraySize > 0)
+            {
+                submeshCount = sp.arraySize;
+                int idx = sp.GetArrayElementAtIndex(0).intValue;
+                subMeshIdx = " SubMeshIndex=\"" + idx + "\"";
+                isCombined = true;
+            }
         }
 
-        outFile.WriteLine(indent + "<" + xmlNodeName + " Name=\"" + go.name + "\" " + transformString + isStatic + ">");
-
-		if (isLeaf)
+        bool exportSubmeshes = submeshCount > 1 ? true : false;
+        string xmlNodeName = "Leaf";
+        if (exportSubmeshes)
         {
-			WriteCamera (go.GetComponent<Camera>(), outFile, indent);
+            xmlNodeName = "Node";
+            subMeshIdx = "";
+        }
+
+        string transformString = "";
+        if (isGameObjectLeaf && !isCombined)
+        {
+            transformString = " " + GetTransformAsString(transform, go.isStatic);
+        }
+
+        string isStatic = go.isStatic ? " Static=\"1\"" : "";
+        outFile.WriteLine(indent + "<" + xmlNodeName + " Name=\"" + go.name + "\"" + transformString + subMeshIdx + isStatic + ">");
+
+        if (isGameObjectLeaf)
+        {
+			WriteCamera(go.GetComponent<Camera>(), outFile, indent);
 
             bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
             if (!isLightmapped)
@@ -231,7 +367,7 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
-            WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent + "  ");
+            WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent + "  ");
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterial, outFile, indent + "  ");
         }
 
@@ -265,41 +401,77 @@ public class Unity3DExporter : EditorWindow
         }
 
         Mesh mesh = meshFilter.sharedMesh;
-        int submeshCount = mesh.subMeshCount;
-        for (int i = 0; i < submeshCount; i++)
+        string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
+        
+        SerializedObject so = new SerializedObject(meshRenderer);
+        SerializedProperty sp = so.FindProperty("m_SubsetIndices");
+        if (sp != null && sp.isArray)
         {
-            string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
-            outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" + isStatic +
-                " SubMeshIndex=\"" + i + "\">");
-            WriteMesh(mesh, meshRenderer.lightmapTilingOffset, outFile, indent + "  ");
+            if (sp.arraySize != 0)
+            {
+                for (int j = 0; j < sp.arraySize; j++)
+                {
+                    int i = sp.GetArrayElementAtIndex(j).intValue;
+                    outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + "\"" +
+                        " SubMeshIndex=\"" + i + "\"" + isStatic + ">");
+                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
+                    WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[j], outFile, indent + "  ");
+                    outFile.WriteLine(indent + "</Leaf>");
+                }
+            }
+            else
+            {
+                int submeshCount = mesh.subMeshCount;
+                for (int i = 0; i < submeshCount; i++)
+                {
+                    outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" +
+                        " SubMeshIndex=\"" + i + "\"" + isStatic + ">");
+                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
 
-            WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
-            outFile.WriteLine(indent + "</Leaf>");
+                    WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
+                    outFile.WriteLine(indent + "</Leaf>");
+                }
+            }
         }
     }
 
-	private void WriteNode (Transform transform, StreamWriter outFile, string indent)
+	private void WriteNode(Transform transform, StreamWriter outFile, string indent)
 	{
         GameObject go = transform.gameObject;
-		outFile.WriteLine (indent + "<Node Name=\"" + transform.gameObject.name + "\" " + GetTransformAsString (transform) + ">");
+
+        string trafo = GetTransformAsString(transform, go.isStatic);
+        string isStatic = "";
+        if (go.isStatic)
+        {
+            if (!trafo.Equals(""))
+            {
+                isStatic += " ";
+            }
+
+            isStatic += "Static=\"1\"";
+        }
+
+        outFile.WriteLine(indent + "<Node Name=\"" + transform.gameObject.name + "\" " +
+             trafo + isStatic + ">");
     	
-		WriteCamera (go.GetComponent<Camera>(), outFile, indent);
-		WriteLightNode (go.GetComponent<Light>(), outFile, indent);
-		WriteCollider (go, outFile, indent);
+		WriteCamera(go.GetComponent<Camera>(), outFile, indent);
+		WriteLightNode(go.GetComponent<Light>(), outFile, indent);
+		WriteCollider(go, outFile, indent);
     	
 		if (transform.GetChildCount () > 0)
         {
 			if (IsLeaf(transform))
             {
-				WriteLeaf (transform, outFile, indent + "  ", false);
+				WriteLeaf(transform, outFile, indent + "  ", false);
 			}
     	
-			for (int i = 0; i < transform.GetChildCount(); i++) {
-				Traverse (transform.GetChild (i), outFile, indent + "  ");
+			for (int i = 0; i < transform.GetChildCount(); i++)
+            {
+				Traverse(transform.GetChild (i), outFile, indent + "  ");
 			}
 		}
     	
-		outFile.WriteLine (indent + "</Node>");
+		outFile.WriteLine(indent + "</Node>");
 	}
 
 	private void WriteSkybox (StreamWriter outFile, string indent)
@@ -367,20 +539,20 @@ public class Unity3DExporter : EditorWindow
 		return texture;
 	}
 
-	private void Traverse (Transform transform, StreamWriter outFile, string indent)
+	private void Traverse(Transform transform, StreamWriter outFile, string indent)
 	{
-		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith ("_"))
+		if (mIgnoreUnderscore && transform.gameObject.name.StartsWith("_"))
         {
 			return;
 		}
       	
-		if (IsLeaf (transform) && transform.GetChildCount() == 0)
+		if (IsLeaf(transform) && transform.GetChildCount() == 0)
         {
-			WriteLeaf (transform, outFile, indent);
+			WriteLeaf(transform, outFile, indent);
 		}
         else
         {
-			WriteNode (transform, outFile, indent);
+			WriteNode(transform, outFile, indent);
 		}
 	}
 	
@@ -400,8 +572,8 @@ public class Unity3DExporter : EditorWindow
 		try {
             WriteAssets(outFile);
 
-            GameObject root = new GameObject ("Root");
-			outFile.WriteLine ("<Node Name=\"" + root.name + "\" " + GetTransformAsString (root.transform) + ">");
+            GameObject root = new GameObject(unitySceneName);
+			outFile.WriteLine ("<Node Name=\"" + root.name + "\">");
 			DestroyImmediate (root);
 			string indent = "  ";
 
@@ -419,15 +591,47 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private string GetTransformAsString (Transform transform)
+	private string GetTransformAsString(Transform transform, bool useWorldTransform = false)
 	{
 		Vector3 position = transform.localPosition;
 		Quaternion rotation = transform.localRotation;
 		Vector3 scale = transform.localScale;
-		
-		return "Pos=\"" + (-position.x) + ", " + position.y + ", " + position.z + "\" " +
-               "Rot=\"" + rotation.w + ", " + rotation.x + ", " + (-rotation.y) + ", " + (-rotation.z) + "\" " +
-               "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
+
+        if (useWorldTransform)
+        {
+            position = transform.position;
+            rotation = transform.rotation;
+            scale = transform.lossyScale;
+        }
+
+        string trafo = "";
+
+        if (position.x != 0.0f || position.y != 0.0f || position.z != 0.0f)
+        {
+            trafo += "Pos=\"" + (-position.x) + ", " + position.y + ", " + position.z + "\"";
+        }
+
+        if (rotation.w != 1.0f || rotation.x != 0.0f || rotation.y != 0.0f || rotation.z != 0.0f)
+        {
+            if (!trafo.Equals(""))
+            {
+                trafo += " ";
+            }
+
+            trafo += "Rot=\"" + rotation.w + ", " + rotation.x + ", " + (-rotation.y) + ", " + (-rotation.z) + "\"";
+        }
+
+        if (scale.x != 1.0f || scale.y != 1.0f || scale.z != 1.0f)
+        {
+            if (!trafo.Equals(""))
+            {
+                trafo += " ";
+            }
+
+            trafo += "Scale=\"" + scale.x + ", " + scale.y + ", " + scale.z + "\"";
+        }
+
+        return trafo;
 	}
 
     private void WriteAssets(StreamWriter outFile)
@@ -494,10 +698,10 @@ public class Unity3DExporter : EditorWindow
 
                 if (writeMeshes)
                 {
-                    string meshAssetName = GetMeshAssetName(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset);
+                    string meshAssetName = GetMeshAssetName(meshFilter.sharedMesh, GetLightmapTilingOffset(meshRenderer));
                     if (!mMeshAssetsProcessed.Contains(meshAssetName))
                     {
-                        WriteMesh(meshFilter.sharedMesh, meshRenderer.lightmapTilingOffset, outFile, indent);
+                        WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent);
                     }
                 }
 
@@ -514,6 +718,23 @@ public class Unity3DExporter : EditorWindow
                 }
             }
         }
+    }
+
+    private Vector4 GetLightmapTilingOffset(MeshRenderer meshRenderer)
+    {
+        // combined meshes already have lightmap tiling and offset applied
+        Vector4 lightmapTilingOffset = meshRenderer.lightmapTilingOffset;
+        SerializedObject so = new SerializedObject(meshRenderer);
+        SerializedProperty sp = so.FindProperty("m_SubsetIndices");
+        if (sp != null && sp.isArray)
+        {
+            if (sp.arraySize != 0)
+            {
+                lightmapTilingOffset = new Vector4(1, 1, 0, 0);
+            }
+        }
+
+        return lightmapTilingOffset;
     }
 
     private void WriteStateFog (StreamWriter outFile, string indent)
@@ -536,7 +757,7 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteLightNode(Light light, StreamWriter outFile, string indent)
     {
-        if (light == null)
+        if (light == null || !light.enabled)
         {
             return;
         }
@@ -571,8 +792,14 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
+            string direction = string.Empty;
+            if (light.type != LightType.Point)
+            {
+                direction = " Direction=\"0, 0, 1\"";
+            }
+
 		    outFile.WriteLine (indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
-			    "\" Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
+                "\"" + direction + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
 			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\" />");
         }
 	}
@@ -888,19 +1115,23 @@ public class Unity3DExporter : EditorWindow
         return mesh.name + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
     }
 
-	private void WriteMesh (Mesh mesh, Vector4 lightmapTilingOffset, StreamWriter outFile, string indent)
+	private void WriteMesh(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent)
 	{
-		if (mesh == null) {
+		if (mesh == null)
+        {
 			return;
 		}
 
+        Vector4 lightmapTilingOffset = GetLightmapTilingOffset(meshRenderer);
         string meshName = mesh.name;
         string meshAssetName = GetMeshAssetName(mesh, lightmapTilingOffset);
 		bool alreadyProcessed = true;
         if (!mMeshAssetsProcessed.Contains(meshAssetName))
         {
             mMeshAssetsProcessed.Add(meshAssetName);
-            mMeshAssetNameToMeshName.Add(meshAssetName, GetUniqueName(meshName, mMeshNameToCount));
+            string uniqueMeshName = GetUniqueName(meshName, mMeshNameToCount);
+            uniqueMeshName = uniqueMeshName.Replace("root:", "root");
+            mMeshAssetNameToMeshName.Add(meshAssetName, uniqueMeshName);
 			alreadyProcessed = false;
 		}
 

@@ -13,6 +13,12 @@ inline UInt RendererStatistics::GetDrawCalls() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetBatchCount() const
+{
+	return mBatchCount;
+}
+
+//----------------------------------------------------------------------------
 inline UInt RendererStatistics::GetBatchedStatic() const
 {
 	return mBatchedStatic;
@@ -38,9 +44,9 @@ inline UInt RendererStatistics::GetVBOCount() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt RendererStatistics::GetVBOTotalSize() const
+inline UInt RendererStatistics::GetVBOsSize() const
 {
-	return mVBOTotalSize;
+	return mVBOsSize;
 }
 
 //----------------------------------------------------------------------------
@@ -50,9 +56,9 @@ inline UInt RendererStatistics::GetIBOCount() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt RendererStatistics::GetIBOTotalSize() const
+inline UInt RendererStatistics::GetIBOsSize() const
 {
-	return mIBOTotalSize;
+	return mIBOsSize;
 }
 
 //----------------------------------------------------------------------------
@@ -62,7 +68,25 @@ inline UInt RendererStatistics::GetTextureCount() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt RendererStatistics::GetTextureTotalSize() const
+inline UInt RendererStatistics::GetTexturesSize() const
 {
-	return mTextureTotalSize;
+	return mTexturesSize;
+}
+
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetBatchVBOCount() const
+{
+	return mBatchVBOCount;
+}
+
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetBatchVBOsSize() const
+{
+	return mBatchVBOsSize;
+}
+
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetVertexFormatCount() const
+{
+	return mVertexFormatCount;
 }

@@ -9,7 +9,8 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Collider, Controller);
 
 //----------------------------------------------------------------------------
 Collider::Collider(btCollisionShape* pShape)
-	: mpShape(pShape)
+	:
+	mpShape(pShape)
 {
 }
 

@@ -30,7 +30,7 @@ Bool Demo::OnInitialize()
 	mShowFps = false;
 
 	// frames per second and render statistics debug text
-	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
+	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->BindAll(mspText);
 
