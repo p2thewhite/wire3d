@@ -225,7 +225,7 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt indexCount, UInt startIndex)
+void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
 {
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += indexCount/3;
@@ -269,6 +269,13 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 	}
 	else
 	{
+		if (!mspIndexBuffer)
+		{
+			mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
+				startIndex);
+			return;
+		}
+
 		const UInt key = mVertexFormatKey;
 		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
 		PdrDisplayList* pDisplayList = NULL;
@@ -300,57 +307,6 @@ void Renderer::DrawElements(UInt indexCount, UInt startIndex)
 			mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
 				startIndex);
 		}
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
-	UInt startIndex)
-{
-	mStatistics.mDrawCalls++;
-	mStatistics.mTriangles += indexCount/3;
-
-	mpData->IsFrameBufferDirty = true;
-
-	GXSetNumChans(1);
-
-	Bool hasTextures = false;
-	if (mspMaterial)
-	{
-		UInt textureCount = mspMaterial->GetTextureQuantity();
-		if (textureCount > 0)
-		{
-			hasTextures = true;
-			GXSetNumTexGens(textureCount);
-			GXSetNumTevStages(textureCount);
-		}
-	}
-
-	if (!hasTextures)
-	{
-		GXSetNumTexGens(0);
-		GXSetNumTevStages(1);
-		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD_NULL, GX_TEXMAP_NULL,
-			GX_COLOR0A0);
-		GXSetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
-	}
-
-	PdrIndexBuffer* const pPdrIBuffer = mpData->PdrIBuffer;
-	WIRE_ASSERT(pPdrIBuffer);
-	const PdrVertexFormat* const pPdrVFormat = mpData->PdrVFormat;
-	WIRE_ASSERT(pPdrVFormat);
-	const TArray<PdrVertexFormat::VertexElement>& rDeclaration = pPdrVFormat->
-		GetDeclaration();
-
-	if (GetStateWireframe() && GetStateWireframe()->Enabled)
-	{
-		mpData->DrawWireframe(rDeclaration, pPdrIBuffer->GetBuffer(),
-			indexCount, startIndex);
-	}
-	else
-	{
-		mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
-			startIndex);
 	}
 }
 

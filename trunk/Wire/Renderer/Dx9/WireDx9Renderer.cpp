@@ -305,8 +305,8 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 	usesNormals)
 {
 	// TODO: this is only necessary for fixed function pipeline, clean up
-	Bool needsRenormalization = usesNormals ? true : false;
-	if (rWorld.IsUniformScale())
+	Bool needsRenormalization = usesNormals;
+	if (usesNormals && rWorld.IsUniformScale())
 	{
 		if (rWorld.GetUniformScale() == 1.0F)
 		{
@@ -329,25 +329,6 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 	rWorld.GetHomogeneous(world);
 	hr = rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
 		&world));
-	WIRE_ASSERT(SUCCEEDED(hr));
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt indexCount, UInt startIndex)
-{
-	// TODO
-	WIRE_ASSERT(mVertexBuffers[0]);
-	const UInt vertexCount = mVertexBuffers[0]->GetQuantity();
-
-	WIRE_ASSERT(mspIndexBuffer);
-	const UInt triangleCount = indexCount/3;
-	mStatistics.mDrawCalls++;
-	mStatistics.mTriangles += triangleCount;
-
-	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
-	HRESULT hr;
-	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
-		startIndex, triangleCount);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

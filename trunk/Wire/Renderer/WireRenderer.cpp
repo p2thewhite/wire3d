@@ -17,7 +17,6 @@
 #include "WireMesh.h"
 #include "WireNode.h"
 #include "WireTexture2D.h"
-#include "WireVertexBuffer.h"
 #include "WireVisibleSet.h"
 
 #ifdef WIRE_WII
@@ -928,7 +927,8 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Enable(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
-		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
+		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
+			pMesh->GetStartIndex());
 
 		Disable(pGeometry->GetMaterial());
 		Disable(pMesh);
@@ -943,7 +943,8 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 		Set(pGeometry->GetMaterial());
 
 		SetWorldTransformation(pGeometry->World, usesNormals);
-		DrawElements(pMesh->GetIndexCount(), pMesh->GetStartIndex());
+		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
+			pMesh->GetStartIndex());
 	}
 }
 
@@ -1026,66 +1027,87 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		return;
 	}
 
-	if (mStaticBatchingThreshold > 0 || mDynamicBatchingThreshold > 0)
-	{
-		while (min < max)
-		{
-			UInt idx = min;
-			for (; idx < max-1; idx++)
-			{
-				const UInt maxStreams = mBatchedVertexBuffers.GetQuantity();
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx].Object));
-				Geometry* pA = StaticCast<Geometry>(pVisible[idx].Object);
-				Mesh* pMeshA = pA->GetMesh();
-				WIRE_ASSERT(pMeshA);
-				if (pMeshA->GetVertexBuffers().GetQuantity() > maxStreams)
-				{
-					break;
-				}
-
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx+1].Object));
-				Geometry* pB = StaticCast<Geometry>(pVisible[idx+1].Object);
-				Mesh* pMeshB = pB->GetMesh();
-				WIRE_ASSERT(pMeshB);
-				if (pMeshB->GetVertexBuffers().GetQuantity() > maxStreams)
-				{
-					break;
-				}
-
-				if (pA->GetMaterial() != pB->GetMaterial() ||
-					pA->StateSetID != pB->StateSetID)
-				{
-					break;
-				}
-
-				UInt vA = GetVertexFormatKey(pMeshA->GetVertexBuffers());
-				UInt vB = GetVertexFormatKey(pMeshB->GetVertexBuffers());
-				if ((vA != vB))
-				{
-					break;
-				}
-			}
-
-			if (idx > min)
-			{
-				BatchAndDraw(pVisible, min, idx+1);
-			}
-			else
-			{
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[min].Object));
-				Draw(StaticCast<Geometry>(pVisible[min].Object), false, true);
-			}
-
-			min = idx+1;
-		}
-	}
-	else
+	if (mStaticBatchingThreshold == 0 && mDynamicBatchingThreshold == 0)
 	{
 		for (UInt i = min; i < max; i++)
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
 			Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
 		}
+
+		return;
+	}
+
+	while (min < max)
+	{
+		UInt idx = min;
+		const UInt maxStreams = mBatchedVertexBuffers.GetQuantity();
+		Bool hasIdenticalVBs = true;
+
+		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx].Object));
+		Geometry* pA = StaticCast<Geometry>(pVisible[idx].Object);
+		Mesh* pMeshA = pA->GetMesh();
+		WIRE_ASSERT(pMeshA);
+		UInt vA = GetVertexFormatKey(pMeshA->GetVertexBuffers());
+
+		for (; idx < max-1; idx++)
+		{
+			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx+1].Object));
+			Geometry* pB = StaticCast<Geometry>(pVisible[idx+1].Object);
+			Mesh* pMeshB = pB->GetMesh();
+			WIRE_ASSERT(pMeshB);
+
+			if (pA->GetMaterial() != pB->GetMaterial() ||
+				pA->StateSetID != pB->StateSetID)
+			{
+				break;
+			}
+
+			TArray<VertexBufferPtr>& rVBOsB = pMeshB->GetVertexBuffers();
+			UInt vB = GetVertexFormatKey(rVBOsB);
+			if ((vA != vB))
+			{
+				break;
+			}
+
+			Bool hadIdenticalVBs = hasIdenticalVBs;
+			for (UInt i = 0; i < rVBOsB.GetQuantity(); i++)
+			{
+				const VertexBufferPtr* pVBOsA = pMeshA->GetVertexBuffers().
+					GetArray();
+				if (rVBOsB[i] != pVBOsA[i])
+				{
+					hasIdenticalVBs = false;
+					break;
+				}
+			}
+
+			if (hadIdenticalVBs && !hasIdenticalVBs && (idx > min))
+			{
+				hasIdenticalVBs = true;
+				break;
+			}
+
+			if (!hasIdenticalVBs && rVBOsB.GetQuantity() > maxStreams)
+			{
+				break;
+			}
+
+  			pA = pB;
+  			vA = vB;
+		}
+
+		if (idx > min)
+		{
+			BatchAndDraw(pVisible, min, idx+1);
+		}
+		else
+		{
+			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[min].Object));
+			Draw(StaticCast<Geometry>(pVisible[min].Object), false, true);
+		}
+
+		min = idx+1;
 	}
 }
 

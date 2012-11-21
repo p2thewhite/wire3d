@@ -57,7 +57,8 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float kb = 1024.0F;
 	const Float mb = kb * kb;
 
-	if (mBatchVBOCount > 0)
+	WIRE_ASSERT(mpRenderer);
+	if (mpRenderer->UsesBatching())
 	{
 		const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
 			"Batched Static: %d, Batched Dynamic: %d, Batches: %d\n"
