@@ -57,19 +57,26 @@ inline const BoundingVolume* Mesh::GetModelBound() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Mesh::GetStartIndex()
+inline UInt Mesh::GetVertexQuantity() const
+{
+	WIRE_ASSERT(mVertexBuffers.GetQuantity() > 0);
+	return mVertexBuffers[0]->GetQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline UInt Mesh::GetStartIndex() const
 {
 	return mStartIndex;
 }
 
 //----------------------------------------------------------------------------
-inline UInt Mesh::GetIndexCount()
+inline UInt Mesh::GetIndexCount() const
 {
 	return mIndexCount;
 }
 
 //----------------------------------------------------------------------------
-inline Bool Mesh::IsDirty()
+inline Bool Mesh::IsDirty() const
 {
 	return mIsDirty;
 }

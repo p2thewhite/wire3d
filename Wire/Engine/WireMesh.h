@@ -10,15 +10,14 @@
 #ifndef WIREMESH_H
 #define WIREMESH_H
 
-#include "WireObject.h"
 #include "WireTArray.h"
+#include "WireVertexBuffer.h"
 
 namespace Wire
 {
 
 class BoundingVolume;
 class IndexBuffer;
-class VertexBuffer;
 
 class Mesh : public Object
 {
@@ -47,13 +46,15 @@ public:
 	inline BoundingVolume* GetModelBound();
 	inline const BoundingVolume* GetModelBound() const;
 
+	inline UInt GetVertexQuantity() const;
+
 	// Control over which continuous part of the mesh is rendered.
 	// Default values render the entire mesh.
-	inline UInt GetStartIndex();
+	inline UInt GetStartIndex() const;
 	void SetStartIndex(UInt startIndex, Bool updateModelBound = false);
-	inline UInt GetIndexCount();
+	inline UInt GetIndexCount() const;
 	void SetIndexCount(UInt indexCount, Bool updateModelBound = false);
-	inline Bool IsDirty();
+	inline Bool IsDirty() const;
 
 	void UpdateModelBound();
 	void GenerateNormals(Bool ignoreHardEdges = false);
