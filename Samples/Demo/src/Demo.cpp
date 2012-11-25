@@ -201,7 +201,11 @@ Node* Demo::LoadAndInitLogo()
 //----------------------------------------------------------------------------
 Node* Demo::LoadAndInitScene()
 {
-	Importer importer("Data/");
+	// Override default import options
+	Importer::Options options;
+	options.PrepareSceneForStaticBatching = true;
+	options.DuplicateSharedMeshesWhenPreparingSceneForStaticBatching = true;
+	Importer importer("Data/", &options);
 	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
 	if (!pScene)
 	{

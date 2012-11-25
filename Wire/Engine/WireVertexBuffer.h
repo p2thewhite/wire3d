@@ -28,6 +28,9 @@ public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity,
 		UsageType usage = UT_STATIC);
 	VertexBuffer(const VertexBuffer* pVertexBuffer);
+	// takes ownership of pData
+	VertexBuffer(Float* pData, const VertexAttributes& rAttributes,
+		UInt vertexQuantity, UsageType usage = UT_STATIC);
 	virtual ~VertexBuffer();
 
 	inline UInt GetQuantity() const;

@@ -1929,52 +1929,44 @@ Bool Importer::Is(const Char* pSrc, const Char* pDst)
 
 //----------------------------------------------------------------------------
 VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
-	isBigEndian, Buffer::UsageType usage, VertexAttributes& rAttributes)
+	isBigEndian, Buffer::UsageType usage, VertexAttributes& rVA)
 {
 	Int size;
 	Float* const pChannel = Load32(pFileName, size, isBigEndian);
 
-	// TODO: map loaded buffer into vertexbuffer
-	Float* pTempChannel = pChannel;
-	UInt count = rAttributes.HasTCoord() ? 2 : 3;
-	count = rAttributes.HasColor() ? 4 : count;
-	count = size/(count*sizeof(Float));
+	if (rVA.HasPosition())
+	{
+		WIRE_ASSERT(rVA.GetChannelQuantity() == rVA.GetPositionChannels());
+	}
 
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(rAttributes, count,
-		usage);
+	if (rVA.HasNormal())
+	{
+		WIRE_ASSERT(rVA.GetChannelQuantity() ==	rVA.GetNormalChannels());
+	}
+
+	if (rVA.HasTCoord())
+	{
+		WIRE_ASSERT(rVA.GetChannelQuantity() == rVA.GetTCoordChannels());
+	}
+
+	
+	VertexBuffer* pVertexBuffer = NULL;
 	mStatistics.VertexBufferCount++;
 
-	for (UInt i = 0; i < count; i++)
+	if (!rVA.HasColor())
 	{
-		if (rAttributes.HasPosition())
+		const UInt count = size/(rVA.GetChannelQuantity()*sizeof(Float));
+		pVertexBuffer = WIRE_NEW VertexBuffer(pChannel, rVA, count, usage);
+	}
+	else
+	{
+		const UInt count = size/(4*sizeof(Float));
+		pVertexBuffer = WIRE_NEW VertexBuffer(rVA, count, usage);
+
+		Float* pTempChannel = pChannel;
+		for (UInt i = 0; i < count; i++)
 		{
-			WIRE_ASSERT(rAttributes.GetChannelQuantity() == rAttributes.
-				GetPositionChannels());
-
-			Vector3F v;
-			v.X() = *pTempChannel++;
-			v.Y() = *pTempChannel++;
-			v.Z() = *pTempChannel++;
-			pVertexBuffer->Position3(i) = v;
-			continue;
-		}
-
-		if (rAttributes.HasNormal())
-		{
-			WIRE_ASSERT(rAttributes.GetChannelQuantity() ==	rAttributes.
-				GetNormalChannels());
-
-			Vector3F n;
-			n.X() = *pTempChannel++;
-			n.Y() = *pTempChannel++;
-			n.Z() = *pTempChannel++;
-			pVertexBuffer->Normal3(i) = n;
-			continue;
-		}
-
-		if (rAttributes.HasColor())
-		{
-			WIRE_ASSERT(rAttributes.GetChannelQuantity() == 1);
+			WIRE_ASSERT(rVA.GetChannelQuantity() == 1);
 
 			ColorRGBA c;
 			c.R() = *pTempChannel++;
@@ -1982,21 +1974,11 @@ VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
 			c.B() = *pTempChannel++;
 			c.A() = *pTempChannel++;
 			pVertexBuffer->Color4(i) = c;
-			continue;
 		}
 
-		if (rAttributes.HasTCoord())
-		{
-			WIRE_ASSERT(rAttributes.GetTCoordChannels() == rAttributes.
-				GetChannelQuantity());
-			Vector2F uv;
-			uv.X() = *pTempChannel++;
-			uv.Y() = *pTempChannel++;
-			pVertexBuffer->TCoord2(i) = uv;
-		}
+		Free32(pChannel);
 	}
 
-	Free32(pChannel);
 	return pVertexBuffer;
 }
 
