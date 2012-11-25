@@ -15,7 +15,7 @@ public class Unity3DExporter : EditorWindow
 	private bool mDontGenerateMipmapsForLightmaps = true;
 	private bool mDiscardTexturesOnBind = true;
     private bool mWriteDataAsBigEndian = true;
-    private bool mCombineStaticMeshes = true;
+    private bool mCombineStaticMeshes = false;
 	private string m2ndTextureName;
 	private string mPath;
 
