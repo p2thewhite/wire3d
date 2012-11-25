@@ -41,6 +41,18 @@ VertexBuffer::VertexBuffer(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
+VertexBuffer::VertexBuffer(Float* pData, const VertexAttributes& rAttributes,
+	UInt vertexQuantity, UsageType usage)
+	:
+	Buffer(usage),
+	mAttributes(rAttributes),
+	mVertexQuantity(vertexQuantity)
+{
+	WIRE_ASSERT(vertexQuantity < 65536 /* only 16bit indices on Wii */);
+	mpChannel = pData;
+}
+
+//----------------------------------------------------------------------------
 VertexBuffer::~VertexBuffer()
 {
 	// Inform all renderers using this vertex buffer that it is being

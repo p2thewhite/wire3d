@@ -841,10 +841,23 @@ void Renderer::Set(const Material* pMaterial)
 	{
 		if (mspMaterial)
 		{
-			Disable(mspMaterial);
+			for (UInt i = 0; i < mspMaterial->GetTextureQuantity(); i++)
+			{
+				DisableTextureStage(i);
+			}
 		}
 
-		Enable(pMaterial);
+		if (pMaterial)
+		{
+			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+			{
+				Set(pMaterial->GetTexture(i), i);
+				EnableTextureStage(pMaterial->GetBlendMode(i), i, pMaterial->
+					GetTexture(i)->GetImage()->HasAlpha());
+			}
+		}
+
+		mspMaterial = const_cast<Material*>(pMaterial);
 	}
 }
 
