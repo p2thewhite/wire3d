@@ -32,8 +32,8 @@ public:
 		Options()
 			:
 			AssetsWithEqualNamesAreIdentical(true),
-			PrepareSceneForStaticBatching(true),
-			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(true),
+			PrepareSceneForStaticBatching(false),
+			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(false),
 			CreateInterleavedVertexBuffers(true)
 			{}
 			 
