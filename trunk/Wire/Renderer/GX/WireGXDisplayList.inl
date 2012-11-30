@@ -11,3 +11,9 @@ inline void PdrDisplayList::Draw()
 {
 	GXCallDisplayList(mpData, mSize);
 }
+
+//----------------------------------------------------------------------------
+inline UInt PdrDisplayList::GetBufferSize() const
+{
+	return mBufferSize;
+}

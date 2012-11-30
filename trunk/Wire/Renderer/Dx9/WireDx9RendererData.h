@@ -18,12 +18,16 @@ namespace Wire
 {
 
 class Renderer;
+class Text;
 
 class PdrRendererData
 {
 public:
 	PdrRendererData(Renderer* pRenderer);
 	void ResetDevice();
+
+	// Platform dependent renderer statistics
+	void AppendStatistics(Text*) {}
 
 	// Platform-dependent data
 	IDirect3D9* D3D;

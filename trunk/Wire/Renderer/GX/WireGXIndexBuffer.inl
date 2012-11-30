@@ -48,9 +48,3 @@ inline const UShort* PdrIndexBuffer::GetBuffer() const
 {
 	return mpBuffer;
 }
-
-//----------------------------------------------------------------------------
-inline TMap<UInt, PdrDisplayList*>& PdrIndexBuffer::GetDisplayLists()
-{
-	return mDisplayLists;
-}

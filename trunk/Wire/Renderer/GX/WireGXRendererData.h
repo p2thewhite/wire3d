@@ -17,7 +17,10 @@ namespace Wire
 {
 
 class Image2D;
+class Mesh;
+class PdrDisplayList;
 class PdrIndexBuffer;
+class Text;
 
 class PdrRendererData
 {
@@ -45,6 +48,9 @@ public:
 		rElements, const UShort* const pIBuffer, UInt indexCount,
 		UInt startIndex);
 
+	// Platform dependent renderer statistics (e.g. display lists allocated)
+	void AppendStatistics(Text* pText);
+
 	// internally used by System::Assert
 	void* GetFramebuffer();
 	void SetFramebufferIndex(UInt i);
@@ -56,6 +62,8 @@ public:
 
 	PdrIndexBuffer* PdrIBuffer;
 	PdrVertexFormat* PdrVFormat;
+
+	THashTable<const Mesh*, PdrDisplayList*> DisplayListMap;
 
 	GXColor ClearColor;
 
@@ -79,6 +87,15 @@ public:
 	static const UChar TEX_WRAP_MODE[];
 	static const UChar TEX_BLEND[];
 	static const UChar IMAGE2D_FORMAT[];
+
+	struct Statistics
+	{
+		Statistics() : DisplayListCount(0), DisplayListsSize(0) {}
+		UInt DisplayListCount;
+		UInt DisplayListsSize;
+	};
+
+	Statistics Statistics;
 };
 
 }

@@ -238,6 +238,16 @@ void Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Bind(const Mesh*)
+{
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const Mesh*)
+{
+}
+
+//----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
 	// Reset state cache (state is not preserved outside Begin/EndScene()),

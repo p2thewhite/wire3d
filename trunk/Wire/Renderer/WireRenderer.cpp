@@ -142,6 +142,8 @@ void Renderer::BindAll(const Spatial* pSpatial)
 			}
 
 			s_pRenderer->Bind(pMesh->GetVertexBuffers());
+
+			s_pRenderer->Bind(pMesh); // Binds display lists on Wii
 		}
 
 		const Material* pMaterial = pGeometry->GetMaterial();
@@ -862,6 +864,15 @@ void Renderer::Set(const Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::UnbindAll(const Mesh* pMesh)
+{
+	if (s_pRenderer)
+	{
+		s_pRenderer->Unbind(pMesh);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::Enable(const Mesh* pMesh)
 {
 	WIRE_ASSERT(pMesh);
@@ -1076,7 +1087,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 				break;
 			}
 
-			TArray<VertexBufferPtr>& rVBOsB = pMeshB->GetVertexBuffers();
+			const TArray<VertexBufferPtr>& rVBOsB = pMeshB->GetVertexBuffers();
 			UInt vB = GetVertexFormatKey(rVBOsB);
 			if ((vA != vB))
 			{
@@ -1128,7 +1139,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 void Renderer::BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max)
 {
 	Geometry* pGeometry = StaticCast<Geometry>(pVisible[min].Object);
-	TArray<VertexBufferPtr>& rVertexBuffers = pGeometry->GetMesh()->
+	const TArray<VertexBufferPtr>& rVertexBuffers = pGeometry->GetMesh()->
 		GetVertexBuffers();
 	Bind(rVertexBuffers);
  	
@@ -1292,7 +1303,7 @@ void Renderer::Draw(Geometry* pUseStateFrom, PdrIndexBuffer* const pIBPdr,
 	pIBPdr->Enable(this);
 
 	Mesh* const pMesh = pUseStateFrom->GetMesh();
-	TArray<VertexBufferPtr>& rVertexBuffers = pMesh->GetVertexBuffers();
+	const TArray<VertexBufferPtr>& rVertexBuffers = pMesh->GetVertexBuffers();
 	Set(pMesh->GetVertexBuffers());
 
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)

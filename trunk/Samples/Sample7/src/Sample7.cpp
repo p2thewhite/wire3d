@@ -19,6 +19,12 @@ Bool Sample7::OnInitialize()
 	// create a cube with a dynamic vertex buffer
 	mspGeometry = CreateGeometry();
 
+	// We are using different parts of the same index-/vertexbuffers for 2
+	// objects, therefore we duplicate the initial mesh (i.e. share the
+	// buffers), to have control about what part of the mesh is being used.
+	mspMeshA = mspGeometry->GetMesh();
+	mspMeshB = WIRE_NEW Mesh(mspMeshA);
+
 	// Bind the geometry to the renderer, i.e. create hardware buffer objects.
 	// This would happen automatically when the geometry is rendered for the
 	// first time. However we want to dynamically fill the vertex buffer each
@@ -53,7 +59,8 @@ void Sample7::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime*0.5F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	Mesh* pMesh = mspGeometry->GetMesh();
+	mspGeometry->SetMesh(mspMeshA);
+	Mesh* pMesh = mspMeshA;
 	IndexBuffer* pIndexBuffer = pMesh->GetIndexBuffer();
 
 	// animate the positions of the PQ torus knot
@@ -87,6 +94,8 @@ void Sample7::OnIdle()
 	GetRenderer()->Draw(mspGeometry);
 
 	// render small torus knot
+	mspGeometry->SetMesh(mspMeshB);
+	pMesh = mspMeshB;
 	mspGeometry->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
 	mspGeometry->World.SetUniformScale(0.18F);
 	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
