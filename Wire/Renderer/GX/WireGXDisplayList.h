@@ -23,15 +23,18 @@ class PdrDisplayList : public Object
 {
 public:
 	PdrDisplayList(PdrRendererData* pRendererData, const PdrIndexBuffer&
-		rIBuffer, UInt indexCount,
+		rIBuffer, UInt indexCount, UInt startIndex,
 		const TArray<PdrVertexFormat::VertexElement>& rElements);
 	~PdrDisplayList();
 
 	inline void Draw();
 
+	inline UInt GetBufferSize() const;
+
 private:
 	void* mpData;
 	UInt mSize;
+	UInt mBufferSize;
 };
 
 typedef Pointer<PdrDisplayList> PdrDisplayListPtr;

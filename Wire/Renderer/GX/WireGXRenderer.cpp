@@ -21,6 +21,7 @@
 #include "WireLight.h"
 #include "WireMatrix4.h"
 #include "WireMesh.h"
+#include "WireText.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset 
@@ -192,6 +193,46 @@ void Renderer::DisplayBackBuffer()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::Bind(const Mesh* pMesh)
+{
+	WIRE_ASSERT(pMesh);
+
+	PdrDisplayList** pValue = mpData->DisplayListMap.Find(pMesh);
+
+	if (!pValue)
+	{
+		const IndexBuffer* pIBuffer = pMesh->GetIndexBuffer();
+
+		if ((pIBuffer->GetUsage() == Buffer::UT_STATIC) && !pMesh->IsDirty())
+		{
+			PdrIndexBuffer* pPdrIBuffer = Bind(pIBuffer);
+			PdrVertexFormat* pPdrVFormat = Bind(pMesh->GetVertexBuffers());
+			PdrDisplayList* pDisplayList = WIRE_NEW PdrDisplayList(mpData,
+				*pPdrIBuffer, pMesh->GetIndexCount(), pMesh->GetStartIndex(),
+				pPdrVFormat->GetDeclaration());
+			mpData->DisplayListMap.Insert(pMesh, pDisplayList);
+			mpData->Statistics.DisplayListCount++;
+			mpData->Statistics.DisplayListsSize += pDisplayList->
+				GetBufferSize();
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const Mesh* pMesh)
+{
+	PdrDisplayList** pValue = mpData->DisplayListMap.Find(pMesh);
+
+	if (pValue)
+	{
+		mpData->Statistics.DisplayListCount--;
+		mpData->Statistics.DisplayListsSize -= (*pValue)->GetBufferSize();
+		WIRE_DELETE *pValue;
+		mpData->DisplayListMap.Remove(pMesh);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 {
 	mClearColor = rClearColor;
@@ -269,24 +310,18 @@ void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
 	}
 	else
 	{
-		if (!mspIndexBuffer)
+		if (!mspIndexBuffer || !mspMesh)
 		{
 			mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
 				startIndex);
 			return;
 		}
 
-		const UInt key = mVertexFormatKey;
-		PdrDisplayList** pEntry = pPdrIBuffer->GetDisplayLists().Find(key);
+		PdrDisplayList** pEntry = mpData->DisplayListMap.Find(mspMesh);
 		PdrDisplayList* pDisplayList = NULL;
-
-		WIRE_ASSERT(mspIndexBuffer);
 		const IndexBuffer& rIBuffer = *mspIndexBuffer;
 
-		// TODO: consider dirty flag from Mesh
-		Bool isStatic = ((startIndex == 0) && 
-			(indexCount == rIBuffer.GetQuantity()));
-
+		Bool isStatic = !mspMesh->IsDirty();
 		if (pEntry)
 		{
 			pDisplayList = *pEntry;
@@ -294,8 +329,11 @@ void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
 		else if ((rIBuffer.GetUsage() == Buffer::UT_STATIC) && isStatic)
 		{
 			pDisplayList = WIRE_NEW PdrDisplayList(mpData, *pPdrIBuffer,
-				rIBuffer.GetQuantity(), rDeclaration);
-			pPdrIBuffer->GetDisplayLists().Insert(key, pDisplayList);
+				indexCount, startIndex, rDeclaration);
+			mpData->DisplayListMap.Insert(mspMesh, pDisplayList);
+			mpData->Statistics.DisplayListCount++;
+			mpData->Statistics.DisplayListsSize += pDisplayList->
+				GetBufferSize();
 		}
 
 		if (pDisplayList && isStatic)
@@ -304,6 +342,15 @@ void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
 		}
 		else
 		{
+			if (pDisplayList)
+			{
+				mpData->Statistics.DisplayListCount--;
+				mpData->Statistics.DisplayListsSize -= pDisplayList->
+					GetBufferSize();
+				WIRE_DELETE pDisplayList;
+				mpData->DisplayListMap.Remove(mspMesh);
+			}
+
 			mpData->Draw(rDeclaration, pPdrIBuffer->GetBuffer(), indexCount,
 				startIndex);
 		}
@@ -777,6 +824,27 @@ void Renderer::SetState(StateWireframe* pState)
 void Renderer::Resize(UInt, UInt)
 {
 	// nothing to do, window resizing not supported
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::AppendStatistics(Text* pText)
+{
+	if (Statistics.DisplayListCount == 0)
+	{
+		return;
+	}
+
+	WIRE_ASSERT(pText);
+	const UInt textArraySize = 128;
+	Char text[textArraySize];
+	const Float kb = 1024.0F;
+
+	const Char msg[] = "\nDisplayLists: %d, DisplayListsSize: %.2f KB";
+
+	System::Sprintf(text, textArraySize, msg, Statistics.DisplayListCount,
+		Statistics.DisplayListsSize / kb);
+
+	pText->Append(text);
 }
 
 // internally used by System::Assert

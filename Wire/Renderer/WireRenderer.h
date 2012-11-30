@@ -169,6 +169,9 @@ public:
 	void Set(const Material* pMaterial);
 
 	// Mesh management
+	void Bind(const Mesh* pMesh);
+	void Unbind(const Mesh* pMesh);
+	static void UnbindAll(const Mesh* pMesh);
 	void Enable(const Mesh* pMesh);
  	void Disable(const Mesh* pMesh);
  	void Set(const Mesh* pMesh);
@@ -177,7 +180,8 @@ public:
 	Bool PreDraw(Camera* pCamera = NULL);
 	void PostDraw();
 
-	// Disable all the active resources and release their references.
+	// Release all references to non renderer owned resources (disables all
+	// actively used resources in the renderer).
 	void ReleaseResources();
 
 	// Apply camera changes to platform specific renderer.

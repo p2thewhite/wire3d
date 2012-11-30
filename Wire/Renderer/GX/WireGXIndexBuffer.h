@@ -44,13 +44,9 @@ public:
 	inline UShort* GetBuffer();
 	inline const UShort* GetBuffer() const;
 
-	inline TMap<UInt, PdrDisplayList*>& GetDisplayLists();
-
 private:
 	void CreateBuffer(Renderer* pRenderer, UInt size, Buffer::UsageType
 		usage);
-
-	TMap<UInt, PdrDisplayList*> mDisplayLists;
 
 	UShort* mpBuffer;
 	UInt mBufferSize;

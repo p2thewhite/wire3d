@@ -21,12 +21,6 @@ inline const VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex) const
 }
 
 //----------------------------------------------------------------------------
-inline TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers()
-{
-	return mVertexBuffers;
-}
-
-//----------------------------------------------------------------------------
 inline const TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers() const
 {
 	return mVertexBuffers;

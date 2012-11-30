@@ -33,15 +33,7 @@ PdrIndexBuffer::PdrIndexBuffer(Renderer*, UInt size, Buffer::UsageType usage)
 //----------------------------------------------------------------------------
 PdrIndexBuffer::~PdrIndexBuffer()
 {
-	TArray<TMap<UInt, PdrDisplayList*>::MapElement>* pArray = mDisplayLists.
-		GetArray();
-
-	for (UInt i = 0; i < pArray->GetQuantity(); i++)
-	{
-		WIRE_DELETE (*pArray)[i].Value;
-	}
-
-	WIRE_DELETE[] mpBuffer;
+	free(mpBuffer);	// allocated using memalign, not using new
 }
 
 //----------------------------------------------------------------------------

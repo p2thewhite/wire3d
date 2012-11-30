@@ -23,6 +23,8 @@ private:
 
 	CameraPtr mspCamera;
 	GeometryPtr mspGeometry;
+	MeshPtr mspMeshA;
+	MeshPtr mspMeshB;
 
 	Float mAngle;
 	Double mLastTime;

@@ -27,6 +27,7 @@ class VertexBuffer : public Buffer
 public:
 	VertexBuffer(const VertexAttributes& rAttributes, UInt vertexQuantity,
 		UsageType usage = UT_STATIC);
+	// Deep copy of pVertexBuffer
 	VertexBuffer(const VertexBuffer* pVertexBuffer);
 	// takes ownership of pData
 	VertexBuffer(Float* pData, const VertexAttributes& rAttributes,

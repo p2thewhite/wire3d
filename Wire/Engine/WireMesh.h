@@ -30,10 +30,12 @@ public:
 	Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer);
 	Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
 		UInt startIndex, UInt indexCount);
+	// shallow copy of pMesh (shared index- and vertexbuffers)
+	Mesh(const Mesh* pMesh);
+	virtual ~Mesh();
 
 	inline VertexBuffer* GetVertexBuffer(UInt streamIndex = 0);
 	inline const VertexBuffer* GetVertexBuffer(UInt streamIndex = 0) const;
-	inline TArray<Pointer<VertexBuffer> >& GetVertexBuffers();
 	inline const TArray<Pointer<VertexBuffer> >& GetVertexBuffers() const;
 	VertexBuffer* GetPositionBuffer();
 	const VertexBuffer* GetPositionBuffer() const;

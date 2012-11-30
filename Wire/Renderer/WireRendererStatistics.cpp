@@ -12,6 +12,12 @@
 #include "WireRenderer.h"
 #include "WireText.h"
 
+#ifdef WIRE_WII
+#include "WireGXRendererData.h"
+#else
+#include "WireDx9RendererData.h"
+#endif
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
@@ -92,6 +98,9 @@ void RendererStatistics::AppendToText(Text* pText)
 	}
 
 	pText->Append(text);
+
+ 	PdrRendererData* pRendererData = mpRenderer->GetRendererData();
+ 	pRendererData->AppendStatistics(pText);
 }
 
 //----------------------------------------------------------------------------

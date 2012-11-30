@@ -10,6 +10,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
+#include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 
 using namespace Wire;
@@ -52,6 +53,28 @@ Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
 {
 	InitVertexBuffers(rVertexBuffers);
 	Init(pIndexBuffer, startIndex, indexCount);
+}
+
+//----------------------------------------------------------------------------
+Mesh::Mesh(const Mesh* pMesh)
+{
+	WIRE_ASSERT(pMesh);
+	for (UInt i = 0; i < pMesh->mVertexBuffers.GetQuantity(); i++)
+	{
+		mVertexBuffers.Append(pMesh->mVertexBuffers[i]);
+	}
+
+	Init(pMesh->mspIndexBuffer, pMesh->GetStartIndex(), pMesh->
+		GetIndexCount());
+}
+
+//----------------------------------------------------------------------------
+Mesh::~Mesh()
+{
+	// Inform all renderers using this mesh that it is being destroyed.
+	// This allows the renderer to free up any associated resources.
+	// (i.e. display lists on the Wii)
+	Renderer::UnbindAll(this);
 }
 
 //----------------------------------------------------------------------------
