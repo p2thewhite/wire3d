@@ -114,6 +114,9 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	const UInt frameBufferIndex = mpData->FrameBufferIndex;
 	GXCopyDisp(mpData->FrameBuffer[frameBufferIndex], GX_TRUE);
 
+	GXInvalidateVtxCache();
+	GXInvalidateTexAll();
+
 	// StartVI
 	VIConfigure(rRMode);
 	VISetNextFrameBuffer(mpData->FrameBuffer[frameBufferIndex]);
@@ -144,8 +147,7 @@ Bool Renderer::PreDraw(Camera* pCamera)
 {
 	SetCamera(pCamera);
 
-	// Invalidate texture cache in GP
-	GXInvalidateTexAll();
+	GXInvalidateVtxCache();
 
 	return true;
 }
@@ -339,6 +341,7 @@ void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
 		if (pDisplayList && isStatic)
 		{
 			pDisplayList->Draw();
+			mpData->Statistics.DrawCallsUsingDisplayLists++;
 		}
 		else
 		{
@@ -839,12 +842,20 @@ void PdrRendererData::AppendStatistics(Text* pText)
 	Char text[textArraySize];
 	const Float kb = 1024.0F;
 
-	const Char msg[] = "\nDisplayLists: %d, DisplayListsSize: %.2f KB";
+	const Char msg[] = "\nDraw Calls using DisplayLists: %d\nDisplayLists: %d"
+		", DisplayListsSize: %.2f KB";
 
-	System::Sprintf(text, textArraySize, msg, Statistics.DisplayListCount,
-		Statistics.DisplayListsSize / kb);
+	System::Sprintf(text, textArraySize, msg,
+		Statistics.DrawCallsUsingDisplayLists,
+		Statistics.DisplayListCount, Statistics.DisplayListsSize / kb);
 
 	pText->Append(text);
+}
+
+//----------------------------------------------------------------------------
+void PdrRendererData::ResetStatistics()
+{
+	Statistics.DrawCallsUsingDisplayLists = 0;
 }
 
 // internally used by System::Assert

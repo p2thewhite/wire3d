@@ -35,6 +35,8 @@ private:
 	static const UInt s_Q = 2;
 	TArray<TArray<UInt> > mBuckets;
 
+	TextPtr mspText;
+
 	Double mSegmentCount;
 	Bool mIsExpanding;
 };

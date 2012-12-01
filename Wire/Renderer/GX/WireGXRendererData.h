@@ -50,6 +50,7 @@ public:
 
 	// Platform dependent renderer statistics (e.g. display lists allocated)
 	void AppendStatistics(Text* pText);
+	void ResetStatistics();
 
 	// internally used by System::Assert
 	void* GetFramebuffer();
@@ -90,9 +91,11 @@ public:
 
 	struct Statistics
 	{
-		Statistics() : DisplayListCount(0), DisplayListsSize(0) {}
+		Statistics() : DisplayListCount(0), DisplayListsSize(0),
+			DrawCallsUsingDisplayLists(0) {}
 		UInt DisplayListCount;
 		UInt DisplayListsSize;
+		UInt DrawCallsUsingDisplayLists;
 	};
 
 	Statistics Statistics;

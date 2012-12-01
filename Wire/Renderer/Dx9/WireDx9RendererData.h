@@ -28,6 +28,7 @@ public:
 
 	// Platform dependent renderer statistics
 	void AppendStatistics(Text*) {}
+	void ResetStatistics() {}
 
 	// Platform-dependent data
 	IDirect3D9* D3D;

@@ -53,6 +53,11 @@ void RendererStatistics::Reset()
 	mTriangles = 0;
 	mBatchedVBOData = 0;
 	mBatchedIBOData = 0;
+
+	if (mpRenderer && mpRenderer->GetRendererData())
+	{
+		mpRenderer->GetRendererData()->ResetStatistics();
+	}
 }
 
 //----------------------------------------------------------------------------

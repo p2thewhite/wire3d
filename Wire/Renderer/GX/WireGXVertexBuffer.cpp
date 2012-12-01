@@ -59,7 +59,7 @@ void PdrVertexBuffer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
 	WIRE_ASSERT(pVertexBuffer);
-	WIRE_ASSERT(count <= pVertexBuffer->GetQuantity());
+	WIRE_ASSERT((offset + count) <= pVertexBuffer->GetQuantity());
 
 	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 	WIRE_ASSERT(vertexSize > 0);
