@@ -48,6 +48,7 @@ void PdrIndexBuffer::CreateBuffer(Renderer* pRenderer, UInt size,
 //----------------------------------------------------------------------------
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 {
+	WIRE_ASSERT(pIndexBuffer);
 	Update(pIndexBuffer, pIndexBuffer->GetQuantity(), 0);
 }
 
@@ -55,9 +56,12 @@ void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer)
 void PdrIndexBuffer::Update(const IndexBuffer* pIndexBuffer, UInt count,
 	UInt offset)
 {
+	WIRE_ASSERT(pIndexBuffer);
+	WIRE_ASSERT((offset + count) <= pIndexBuffer->GetQuantity());
+
 	size_t size = count * sizeof(UShort);
 	UShort* pBuffer = reinterpret_cast<UShort*>(Lock(Buffer::LM_WRITE_ONLY)) +
 		offset;
-	System::Memcpy(pBuffer, size, pIndexBuffer->GetData()+offset, size);
+	System::Memcpy(pBuffer, size, (pIndexBuffer->GetData()+offset), size);
 	Unlock();
 }

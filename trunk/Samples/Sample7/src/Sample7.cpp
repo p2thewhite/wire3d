@@ -46,6 +46,9 @@ Bool Sample7::OnInitialize()
 	mLastTime = System::GetTime();
 	mIsExpanding = true;
 	mSegmentCount = 0;
+
+	mspText = StandardMesh::CreateText();
+
 	return true;
 }
 
@@ -77,6 +80,7 @@ void Sample7::OnIdle()
 	// recalculate the model bounds since the positions of the mesh changed.
 //	mspGeometry->UpdateModelBound();
 
+	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
 
@@ -89,8 +93,6 @@ void Sample7::OnIdle()
 		State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
 	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
-	pMesh->SetIndexCount(pIndexBuffer->GetQuantity());
-	pMesh->SetStartIndex(0);
 	GetRenderer()->Draw(mspGeometry);
 
 	// render small torus knot
@@ -124,8 +126,10 @@ void Sample7::OnIdle()
 			pMesh->GetStartIndex());
 	}
 
-	WIRE_ASSERT(pMesh->GetIndexCount() <= pIndexBuffer->GetQuantity());
 	GetRenderer()->Draw(mspGeometry);
+
+	Float fps = static_cast<Float>(1.0 / elapsedTime);
+	GetRenderer()->GetStatistics()->Draw(mspText, fps);
 
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();

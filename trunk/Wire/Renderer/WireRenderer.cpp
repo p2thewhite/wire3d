@@ -36,6 +36,7 @@ Renderer* Renderer::s_pRenderer = NULL;
 //----------------------------------------------------------------------------
 void Renderer::Initialize(UInt width, UInt height)
 {
+	mpData = NULL;
 	mWidth = width;
 	mHeight = height;
 
@@ -942,6 +943,9 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
 	}
 
 	Mesh* pMesh = pGeometry->GetMesh();
+	WIRE_ASSERT((pMesh->GetStartIndex() + pMesh->GetIndexCount()) <= pMesh->
+		GetIndexBuffer()->GetQuantity());
+
 	Bool usesNormals = pMesh->HasNormal();
 	if (restoreState)
 	{
