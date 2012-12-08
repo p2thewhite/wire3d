@@ -105,7 +105,7 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 //----------------------------------------------------------------------------
 inline Bool Renderer::UsesBatching() const
 {
-	return mStaticBatchingThreshold > 0 || mDynamicBatchingThreshold > 0;
+	return mIndexBatchingThreshold > 0 || mVertexBatchingThreshold > 0;
 }
 
 //----------------------------------------------------------------------------
@@ -117,13 +117,13 @@ inline Bool Renderer::SupportsStaticBatching() const
 //----------------------------------------------------------------------------
 inline Bool Renderer::UsesStaticBatching() const
 {
-	return mStaticBatchingThreshold > 0;
+	return mIndexBatchingThreshold > 0;
 }
 
 //----------------------------------------------------------------------------
 inline UInt Renderer::GetStaticBatchingThreshold() const
 {
-	return mStaticBatchingThreshold;
+	return mIndexBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ inline void Renderer::SetStaticBatchingThreshold(UInt threshold)
 {
 	if (mSupportsStaticBatching)
 	{
-		mStaticBatchingThreshold = threshold;
+		mIndexBatchingThreshold = threshold;
 	}
 }
 
@@ -144,13 +144,13 @@ inline Bool Renderer::SupportsDynamicBatching() const
 //----------------------------------------------------------------------------
 inline Bool Renderer::UsesDynamicBatching() const
 {
-	return mDynamicBatchingThreshold > 0;
+	return mVertexBatchingThreshold > 0;
 }
 
 //----------------------------------------------------------------------------
 inline UInt Renderer::GetDynamicBatchingThreshold() const
 {
-	return mDynamicBatchingThreshold;
+	return mVertexBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ inline void Renderer::SetDynamicBatchingThreshold(UInt threshold)
 {
 	if (mSupportsDynamicBatching)
 	{
-		mDynamicBatchingThreshold = threshold;
+		mVertexBatchingThreshold = threshold;
 	}
 }
 
