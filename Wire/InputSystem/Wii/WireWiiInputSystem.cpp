@@ -64,7 +64,7 @@ WiiInputDataBuffer* WiiInputSystem::GetChannelDataBuffer(UInt channel)
 
 	if (pValue == NULL)
 	{
-		WiiInputDataBuffer* pDataBuffer = WIRE_NEW WiiInputDataBuffer();
+		WiiInputDataBuffer* pDataBuffer = WIRE_NEW WiiInputDataBuffer;
 		mDataBufferByChannel.Insert(channel, pDataBuffer);
 		return pDataBuffer;
 	}

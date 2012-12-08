@@ -16,8 +16,8 @@ using namespace Wire;
 
 Win32InputSystem::Win32InputSystem()
 {
-	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer();
-	mpBackBuffer = WIRE_NEW Win32InputDataBuffer();
+	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer;
+	mpBackBuffer = WIRE_NEW Win32InputDataBuffer;
 }
 
 Win32InputSystem::~Win32InputSystem()
@@ -47,7 +47,7 @@ Bool Win32InputSystem::DiscoverDevices()
 		return false;
 	}
 
-	Win32EmulatedWiiMote* pEmulatedWiiMote = WIRE_NEW Win32EmulatedWiiMote();
+	Win32EmulatedWiiMote* pEmulatedWiiMote = WIRE_NEW Win32EmulatedWiiMote;
 	AddDevice(pEmulatedWiiMote);
 	pEmulatedWiiMote->SetUp();
 

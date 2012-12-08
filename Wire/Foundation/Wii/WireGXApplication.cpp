@@ -50,7 +50,7 @@ Int GXApplication::Main(Int argumentQuantity, Char* arguments[])
 	input.BackgroundColor = mBackgroundColor;
 	mpRenderer = WIRE_NEW Renderer(input, 0, 0, mIsFullscreen, mUseVSync);
 
-	mpInputSystem = WIRE_NEW WiiInputSystem();
+	mpInputSystem = WIRE_NEW WiiInputSystem;
 
 	if (s_pApplication->OnInitialize())
 	{

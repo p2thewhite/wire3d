@@ -71,7 +71,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
 
 	pBox->GetMesh()->UpdateModelBound();
 
-	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 
 	pBox->AttachState(pWireframe);
@@ -146,7 +146,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 	WIRE_ASSERT(pSphere);
 
 	// Set wireframe rendering state
-	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 
 	pSphere->AttachState(pWireframe);
@@ -165,7 +165,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeMesh(
 	pGeometry->GetMesh()->GenerateNormals();
 
 	// Set wireframe rendering state
-	StateWireframe* pWireframe = WIRE_NEW StateWireframe();
+	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 
 	pGeometry->AttachState(pWireframe);

@@ -258,11 +258,15 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void BatchAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
 	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
-	void Draw(Geometry* pUseStateFrom, PdrIndexBuffer* const pIBPdr,
+	void BatchAllAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
+	void BatchIndicesAndDraw(VisibleObject* const pVisible, UInt min,
+		UInt max);
+	void DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
 		UInt indexCount);
+	void DrawBatched(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
+		UInt indexCount, Bool hasNormals);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex);
@@ -320,8 +324,8 @@ private:
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
 	TArray<void*> mRawBatchedVertexBuffers;
-	UInt mStaticBatchingThreshold;
-	UInt mDynamicBatchingThreshold;
+	UInt mIndexBatchingThreshold;
+	UInt mVertexBatchingThreshold;
 	Bool mSupportsStaticBatching;
 	Bool mSupportsDynamicBatching;
 

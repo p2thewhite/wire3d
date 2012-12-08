@@ -51,7 +51,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	mWhitespaceWidth = mCharSizes[' '].Z();
 	mLineWidth = MathF::MAX_REAL;
 
-	Material* pMaterial = WIRE_NEW Material();
+	Material* pMaterial = WIRE_NEW Material;
 	pMaterial->AddTexture(pFontTexture);
 	SetMaterial(pMaterial);
 

@@ -47,7 +47,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 {
 	Initialize(width, height);
 
-	mpData = WIRE_NEW PdrRendererData();
+	mpData = WIRE_NEW PdrRendererData;
 	WIRE_ASSERT(mpData);
 
 	mpData->UseVSync = useVSync;

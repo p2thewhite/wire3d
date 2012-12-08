@@ -34,7 +34,7 @@ public:
 			AssetsWithEqualNamesAreIdentical(true),
 			PrepareSceneForStaticBatching(false),
 			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(false),
-			CreateInterleavedVertexBuffers(true)
+			CreateInterleavedVertexBuffers(false)
 			{}
 			 
 		Bool AssetsWithEqualNamesAreIdentical;

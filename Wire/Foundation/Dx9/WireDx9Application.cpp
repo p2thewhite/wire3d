@@ -183,7 +183,7 @@ Int Dx9Application::Main(Int, Char*[])
 	mpRenderer = WIRE_NEW Renderer(input, mWidth, mHeight, mIsFullscreen, mUseVSync);
 	mpRenderer->SetClearColor(mBackgroundColor);
 
-	mpInputSystem = WIRE_NEW Win32InputSystem();
+	mpInputSystem = WIRE_NEW Win32InputSystem;
 
 	if (s_pApplication->OnInitialize())
 	{

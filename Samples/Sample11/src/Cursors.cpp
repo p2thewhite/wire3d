@@ -68,7 +68,7 @@ Node* Cursors::GetRoot()
 void Cursors::InitCursors()
 {
 	mspCursors = WIRE_NEW Node;
-	StateAlpha *pCursorsAlpha = WIRE_NEW StateAlpha();
+	StateAlpha *pCursorsAlpha = WIRE_NEW StateAlpha;
 	pCursorsAlpha->BlendEnabled = true;
 	mspCursors->AttachState(pCursorsAlpha);
 
