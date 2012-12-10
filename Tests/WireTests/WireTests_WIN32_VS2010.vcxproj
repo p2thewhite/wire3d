@@ -70,13 +70,13 @@
     <ClCompile Include="TestCases\Win32\Win32EmulatedWiiMoteTest.cpp" />
     <ClCompile Include="TestCases\Win32\Win32InputDataBufferTest.cpp" />
     <ClCompile Include="TestCases\Win32\Win32InputSystemTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedAnalogPadTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedButtonsTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedDigitalPadTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedIRTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedShakeTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedSwingTest.cpp" />
-    <ClCompile Include="TestCases\Win32\Win32MappedTiltTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedAnalogPadTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedButtonsTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedDigitalPadTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedIRTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedShakeTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedSwingTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedTiltTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Stubs\Win32\WireWin32InputSystemStub.h" />

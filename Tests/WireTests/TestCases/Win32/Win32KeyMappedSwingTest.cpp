@@ -8,19 +8,19 @@
 namespace Wire
 {
 
-class Win32MappedSwingTest : public ::testing::Test
+class Win32KeyMappedSwingTest : public ::testing::Test
 {
 protected:
 	InputDeviceStub mInputDevice;
 	Win32KeyMappedSwing mWin32KeyMappedSwing;
 	Win32InputDataBuffer* mpWin32InputDataBuffer;
 
-	Win32MappedSwingTest()
+	Win32KeyMappedSwingTest()
 		: mWin32KeyMappedSwing(&mInputDevice)
 	{
 	}
 
-	virtual ~Win32MappedSwingTest()
+	virtual ~Win32KeyMappedSwingTest()
 	{
 	}
 
@@ -37,7 +37,7 @@ protected:
 
 };
 
-TEST_F(Win32MappedSwingTest, should_not_map_any_direction)
+TEST_F(Win32KeyMappedSwingTest, should_not_map_any_direction)
 {
 	mpWin32InputDataBuffer->SetMouseY(100);
 	mpWin32InputDataBuffer->SetMouseX(100);

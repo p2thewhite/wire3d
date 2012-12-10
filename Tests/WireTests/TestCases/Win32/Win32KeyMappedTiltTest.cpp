@@ -8,19 +8,19 @@
 namespace Wire
 {
 
-class Win32MappedTiltTest : public ::testing::Test
+class Win32KeyMappedTiltTest : public ::testing::Test
 {
 protected:
 	InputDeviceStub mInputDevice;
 	Win32KeyMappedTilt mWin32KeyMappedTilt;
 	Win32InputDataBuffer* mpWin32InputDataBuffer;
 
-	Win32MappedTiltTest()
+	Win32KeyMappedTiltTest()
 		: mWin32KeyMappedTilt(&mInputDevice)
 	{
 	}
 
-	virtual ~Win32MappedTiltTest()
+	virtual ~Win32KeyMappedTiltTest()
 	{
 	}
 
@@ -37,13 +37,13 @@ protected:
 
 };
 
-TEST_F(Win32MappedTiltTest, should_map_negative_mouse_wheel_to_left_direction)
+TEST_F(Win32KeyMappedTiltTest, should_map_negative_mouse_wheel_to_left_direction)
 {
 	mpWin32InputDataBuffer->IncrementMouseWheel(-100.0f);
 	ASSERT_EQ(100.0f, mWin32KeyMappedTilt.GetLeft());
 }
 
-TEST_F(Win32MappedTiltTest, should_map_positive_mouse_wheel_to_right_direction)
+TEST_F(Win32KeyMappedTiltTest, should_map_positive_mouse_wheel_to_right_direction)
 {
 	mpWin32InputDataBuffer->IncrementMouseWheel(100.0f);
 	ASSERT_EQ(100.0f, mWin32KeyMappedTilt.GetRight());

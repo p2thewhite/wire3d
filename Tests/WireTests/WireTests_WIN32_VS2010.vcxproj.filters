@@ -72,27 +72,6 @@
     <ClCompile Include="TestCases\Win32\Win32InputSystemTest.cpp">
       <Filter>TestCases\Platforms\Win32\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedAnalogPadTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedButtonsTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedDigitalPadTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedIRTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedShakeTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedSwingTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedTiltTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestCases\InputCapabilityTest.cpp">
       <Filter>TestCases\Source Files</Filter>
     </ClCompile>
@@ -167,6 +146,27 @@
     </ClCompile>
     <ClCompile Include="Stubs\Win32\WireWin32InputSystemStub.cpp">
       <Filter>Stubs\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedAnalogPadTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedButtonsTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedDigitalPadTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedIRTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedShakeTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedSwingTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedTiltTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
