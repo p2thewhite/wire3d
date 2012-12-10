@@ -22,6 +22,39 @@
     <Filter Include="TestCases\Platforms\Win32\Source Files">
       <UniqueIdentifier>{c1eb09e4-4e7c-4f65-9234-fc7306a2a207}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{5dc86349-a13f-47e5-96f4-3c6fd9e323e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Header Files">
+      <UniqueIdentifier>{01076856-1998-4804-8248-1256bba50795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Source Files">
+      <UniqueIdentifier>{81df32e5-127c-4919-a082-56951730c9e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs">
+      <UniqueIdentifier>{a2353b33-0d99-40ad-86a6-36d2c90e93dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Header Files">
+      <UniqueIdentifier>{53e6c581-44e0-4f99-85e2-dcba337e5865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Source Files">
+      <UniqueIdentifier>{f6f718b0-f465-4fba-b08d-42f2279d7fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms">
+      <UniqueIdentifier>{9177bd2e-4065-4d00-b427-8b193ebcfb8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Wii">
+      <UniqueIdentifier>{eaacf7d9-2671-4b3c-866f-398e75d6e493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32">
+      <UniqueIdentifier>{4accd8e7-a6fa-4714-94bf-fd13bd5c07c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32\Header Files">
+      <UniqueIdentifier>{443702a0-cbec-461a-840c-dfeaf46b0f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32\Source Files">
+      <UniqueIdentifier>{02a4082d-6e42-4ffc-a144-582dd9511a14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestCases\TestRunner.cpp">
@@ -117,5 +150,46 @@
     <ClCompile Include="TestCases\Wii\NunchukTiltTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Stubs\WireInputDeviceExtensionStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireMainInputDeviceStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputCapabilityStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputSystemStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputDeviceStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\Win32\WireWin32InputSystemStub.cpp">
+      <Filter>Stubs\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Stubs\WireInputSystemStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireMainInputDeviceStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDeviceExtensionStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputCapabilityStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDeviceStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDataBufferStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\Win32\WireWin32InputSystemStub.h">
+      <Filter>Stubs\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

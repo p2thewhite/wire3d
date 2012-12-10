@@ -81,6 +81,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{0763894C-2474-416E-888F-316773E5D2E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WireTests", "Tests\WireTests\WireTests_WIN32_VS2010.vcxproj", "{927AE4F5-B26F-4A91-B418-5D61FEFCA2B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0895837-1F40-4F57-8F36-1DF861114254} = {B0895837-1F40-4F57-8F36-1DF861114254}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
