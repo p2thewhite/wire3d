@@ -27,7 +27,7 @@ public:
 	virtual Bool DiscoverDevices();
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
-private:
+protected:
 	Win32InputDataBuffer* mpFrontInputDataBuffer;
 	Win32InputDataBuffer* mpBackInputDataBuffer;
 
