@@ -27,21 +27,18 @@ public:
 	MainInputDevice();
 	virtual ~MainInputDevice();
 
-	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
-
-	void AddExtension(InputDeviceExtension* pInputDevice);
-	const InputDeviceExtension* GetExtension(const Rtti& rExtensionType) const;
-	Bool HasExtension(const Rtti& rExtensionType) const;
-
-	const TArray<Pointer<InputDeviceExtension> >& GetExtensions() const;
-	void RemoveAllExtensions();
-	UInt GetExtensionsCount() const;
-
-	Bool HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
+	void AddExtension(InputDeviceExtension* pExtension);
 	const InputCapability* GetCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
+	const InputDeviceExtension* GetExtension(const Rtti& rExtensionType) const;
+	const TArray<Pointer<InputDeviceExtension> >& GetExtensions() const;
+	Bool HasExtension(const Rtti& rExtensionType) const;
+	void RemoveAllExtensions();
+	Bool HasCapability(const Rtti& rCapabilityType, Bool lookupExtensions) const;
+	virtual void SetInputDataBuffer(const InputDataBuffer* pInputDataBuffer);
 
 private:
 	TArray<Pointer<InputDeviceExtension> > mExtensions;
+
 };
 
 typedef Pointer<MainInputDevice> MainInputDevicePtr;

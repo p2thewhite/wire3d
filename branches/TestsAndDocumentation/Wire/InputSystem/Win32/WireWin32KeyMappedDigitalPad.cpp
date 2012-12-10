@@ -25,20 +25,20 @@ Win32KeyMappedDigitalPad::~Win32KeyMappedDigitalPad()
 
 Bool Win32KeyMappedDigitalPad::GetDown() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_DOWN);
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_DOWN);
 }
 
 Bool Win32KeyMappedDigitalPad::GetLeft() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_LEFT);
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_LEFT);
 }
 
 Bool Win32KeyMappedDigitalPad::GetRight() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_RIGHT);
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_RIGHT);
 }
 
 Bool Win32KeyMappedDigitalPad::GetUp() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_UP);
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_UP);
 }

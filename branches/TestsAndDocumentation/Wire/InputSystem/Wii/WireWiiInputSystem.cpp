@@ -20,7 +20,7 @@ const UInt WiiInputSystem::LAST_CHANNEL = MAXIMUM_NUMBER_OF_CHANNELS - 1;
 UInt WiiInputSystem::s_mEventCounter = 0;
 
 WiiInputSystem::WiiInputSystem() :
-	mDataBufferByChannel(16),
+	mInputDataBufferByChannel(16),
 	mChanged(false)
 {
 	PAD_Init();
@@ -32,7 +32,7 @@ WiiInputSystem::WiiInputSystem() :
 
 WiiInputSystem::~WiiInputSystem()
 {
-	THashTable<Int, WiiInputDataBuffer*>::Iterator it(&mDataBufferByChannel);
+	THashTable<Int, WiiInputDataBuffer*>::Iterator it(&mInputDataBufferByChannel);
 	Int key;
 	for (WiiInputDataBuffer** pValue = it.GetFirst(&key); pValue; pValue = it.GetNext(&key))
 	{
@@ -43,7 +43,7 @@ WiiInputSystem::~WiiInputSystem()
 	WPAD_Shutdown();
 }
 
-void WiiInputSystem::AfterDevicesDiscovery()
+void WiiInputSystem::ConfigureConnectedChannels()
 {
 	Application* pApp = Application::GetApplication();
 	WIRE_ASSERT(pApp /* Application is not instantiated */);
@@ -58,14 +58,14 @@ void WiiInputSystem::AfterDevicesDiscovery()
 	}
 }
 
-WiiInputDataBuffer* WiiInputSystem::GetChannelDataBuffer(UInt channel)
+WiiInputDataBuffer* WiiInputSystem::GetChannelInputDataBuffer(UInt channel)
 {
-	WiiInputDataBuffer** pValue = mDataBufferByChannel.Find(channel);
+	WiiInputDataBuffer** pValue = mInputDataBufferByChannel.Find(channel);
 
 	if (pValue == NULL)
 	{
 		WiiInputDataBuffer* pDataBuffer = WIRE_NEW WiiInputDataBuffer();
-		mDataBufferByChannel.Insert(channel, pDataBuffer);
+		mInputDataBufferByChannel.Insert(channel, pDataBuffer);
 		return pDataBuffer;
 	}
 
@@ -82,16 +82,16 @@ void WiiInputSystem::Capture()
 		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
 
 		UInt channel = pWiiMote->GetChannel();
-		WiiInputDataBuffer* pChannelDataBuffer = GetChannelDataBuffer(channel);
+		WiiInputDataBuffer* pChannelDataBuffer = GetChannelInputDataBuffer(channel);
 		pChannelDataBuffer->SetData(WPAD_Data(channel));
-		pWiiMote->SetDataBuffer(pChannelDataBuffer);
+		pWiiMote->SetInputDataBuffer(pChannelDataBuffer);
 	}
 }
 
 Bool WiiInputSystem::DiscoverDevices()
 {
-	Bool hasChanged = DoDevicesDiscovery();
-	AfterDevicesDiscovery();
+	Bool hasChanged = PollChannelsForChange();
+	ConfigureConnectedChannels();
 	return hasChanged;
 }
 
@@ -111,12 +111,12 @@ WiiMote* WiiInputSystem::GetWiiMoteByChannel(UInt channel)
 	return NULL;
 }
 
-Bool WiiInputSystem::DoDevicesDiscovery()
+Bool WiiInputSystem::PollChannelsForChange()
 {
 	WiiMote* pWiiMote;
 	for (UInt channel = FIRST_CHANNEL; channel <= LAST_CHANNEL; channel++)
 	{
-		Bool isConnected = GetChannelConnectionStatus(channel);
+		Bool isConnected = IsChannelCorrectlyConnected(channel);
 		Bool wasConnected = mChannelsConnectionStatus[channel];
 
 		if (isConnected)
@@ -134,7 +134,7 @@ Bool WiiInputSystem::DoDevicesDiscovery()
 
 				AddDevice(pWiiMote);
 
-				DiscoverExpansions(pWiiMote);
+				DiscoverWiiMoteExpansions(pWiiMote);
 
 				mChanged = true;
 			}
@@ -146,7 +146,7 @@ Bool WiiInputSystem::DoDevicesDiscovery()
 			}
 
 			// probe channel for new WiiMote expansions
-			DiscoverExpansions(pWiiMote);
+			DiscoverWiiMoteExpansions(pWiiMote);
 		}
 
 		// if the channel was connected but is not connected anymore,
@@ -171,7 +171,7 @@ Bool WiiInputSystem::DoDevicesDiscovery()
 	return hasChanged;
 }
 
-void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
+void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 {
 	expansion_t data;
 	WPAD_Expansion(pWiiMote->GetChannel(), &data);
@@ -183,7 +183,7 @@ void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
 	{
 	case WPAD_EXP_NONE:
 		// if there was no extension already, exit
-		if (pWiiMote->GetExtensionsCount() == 0)
+		if (pWiiMote->GetExtensions().GetQuantity() == 0)
 		{
 			return;
 		}
@@ -219,7 +219,7 @@ void WiiInputSystem::DiscoverExpansions(WiiMote* pWiiMote)
 	mChanged = true;
 }
 
-Bool WiiInputSystem::GetChannelConnectionStatus(UInt channel)
+Bool WiiInputSystem::IsChannelCorrectlyConnected(UInt channel)
 {
 	UInt type;
 	return (WPAD_Probe(channel, &type) == WPAD_ERR_NONE);

@@ -29,6 +29,7 @@ protected:
 
 private:
 	MainInputDevice* mpMainInputDevice;
+
 };
 
 typedef Pointer<InputDeviceExtension> InputDeviceExtensionPtr;

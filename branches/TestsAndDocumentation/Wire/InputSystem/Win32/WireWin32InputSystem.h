@@ -25,14 +25,14 @@ public:
 
 	virtual void Capture();
 	virtual Bool DiscoverDevices();
-
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
 private:
-	void SwapBuffers();
+	Win32InputDataBuffer* mpFrontInputDataBuffer;
+	Win32InputDataBuffer* mpBackInputDataBuffer;
 
-	Win32InputDataBuffer* mpFrontBuffer;
-	Win32InputDataBuffer* mpBackBuffer;
+	void SwapInputDataBuffers();
+
 };
 
 }

@@ -29,31 +29,31 @@ Bool Win32KeyMappedButtons::GetButton(Button button) const
 	{
 	case BUTTON_A:
 		// left mouse button
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_LBUTTON);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_LBUTTON);
 	case BUTTON_B:
 		// right mouse button
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_RBUTTON);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_RBUTTON);
 	case BUTTON_C:
 		// 'c' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x43);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(0x43);
 	case BUTTON_HOME:
 		// 'esc' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ESCAPE);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_ESCAPE);
 	case BUTTON_MINUS:
 		// '-' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_SUBTRACT);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_SUBTRACT);
 	case BUTTON_PLUS:
 		// '+' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ADD);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(VK_ADD);
 	case BUTTON_Z:
 		// 'z' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x5A);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(0x5A);
 	case BUTTON_1:
 		// '1' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x31);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(0x31);
 	case BUTTON_2:
 		// '2' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x32);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetKey(0x32);
 	}
 
 	return false;

@@ -24,6 +24,7 @@ public:
 	virtual ~Nunchuk();
 
 	virtual void SetUp() = 0;
+
 };
 
 }

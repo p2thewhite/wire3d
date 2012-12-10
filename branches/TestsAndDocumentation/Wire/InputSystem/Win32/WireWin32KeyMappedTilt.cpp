@@ -34,10 +34,10 @@ Float Win32KeyMappedTilt::GetForward() const
 
 Float Win32KeyMappedTilt::GetLeft() const
 {
-	return -static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseWheel();
+	return -static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetMouseWheel();
 }
 
 Float Win32KeyMappedTilt::GetRight() const
 {
-	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetMouseWheel();
+	return static_cast<const Win32InputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetMouseWheel();
 }

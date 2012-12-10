@@ -32,14 +32,14 @@ Bool InputDevice::HasCapability(const Rtti& rCapabilityType) const
 	return GetCapability(rCapabilityType) != NULL;
 }
 
-const InputDataBuffer* InputDevice::GetDataBuffer() const
+const InputDataBuffer* InputDevice::GetInputDataBuffer() const
 {
-	return mpDataBuffer;
+	return mpInputDataBuffer;
 }
 
-void InputDevice::SetDataBuffer(const InputDataBuffer* pDataBuffer)
+void InputDevice::SetInputDataBuffer(const InputDataBuffer* pDataBuffer)
 {
-	mpDataBuffer = pDataBuffer;
+	mpInputDataBuffer = pDataBuffer;
 }
 
 const InputCapability* InputDevice::GetCapability(const Rtti& rCapabilityType) const
