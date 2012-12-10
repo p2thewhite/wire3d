@@ -25,12 +25,12 @@ WiiMoteTilt::~WiiMoteTilt()
 
 Float WiiMoteTilt::GetBackward() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{
@@ -42,12 +42,12 @@ Float WiiMoteTilt::GetBackward() const
 
 Float WiiMoteTilt::GetForward() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{
@@ -59,12 +59,12 @@ Float WiiMoteTilt::GetForward() const
 
 Float WiiMoteTilt::GetLeft() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{
@@ -76,12 +76,12 @@ Float WiiMoteTilt::GetLeft() const
 
 Float WiiMoteTilt::GetRight() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{

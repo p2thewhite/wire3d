@@ -29,9 +29,9 @@ public:
 	virtual Float GetUp() const;
 
 private:
-
 	Float GetX() const;
 	Float GetY() const;
+
 };
 
 }

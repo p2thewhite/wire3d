@@ -16,25 +16,25 @@ using namespace Wire;
 
 Win32InputSystem::Win32InputSystem()
 {
-	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer();
-	mpBackBuffer = WIRE_NEW Win32InputDataBuffer();
+	mpFrontInputDataBuffer = WIRE_NEW Win32InputDataBuffer();
+	mpBackInputDataBuffer = WIRE_NEW Win32InputDataBuffer();
 }
 
 Win32InputSystem::~Win32InputSystem()
 {
-	WIRE_DELETE mpFrontBuffer;
-	WIRE_DELETE mpBackBuffer;
+	WIRE_DELETE mpFrontInputDataBuffer;
+	WIRE_DELETE mpBackInputDataBuffer;
 }
 
 void Win32InputSystem::Capture()
 {
 	// Swap input data buffers
-	SwapBuffers();
+	SwapInputDataBuffers();
 
 	// Update the current data buffer on each input device
 	for (UInt i = 0; i < mDevices.GetQuantity(); i++)
 	{
-		mDevices[i]->SetDataBuffer(mpFrontBuffer);
+		mDevices[i]->SetInputDataBuffer(mpFrontInputDataBuffer);
 	}
 }
 
@@ -62,13 +62,13 @@ Bool Win32InputSystem::DiscoverDevices()
 /**
  * FIXME: needs thread safety!!!
  */
-void Win32InputSystem::SwapBuffers()
+void Win32InputSystem::SwapInputDataBuffers()
 {
-	Win32InputDataBuffer* pOldFrontBuffer = mpFrontBuffer;
-	mpFrontBuffer = mpBackBuffer;
-	mpBackBuffer = pOldFrontBuffer;
+	Win32InputDataBuffer* pOldFrontBuffer = mpFrontInputDataBuffer;
+	mpFrontInputDataBuffer = mpBackInputDataBuffer;
+	mpBackInputDataBuffer = pOldFrontBuffer;
 
-	mpBackBuffer->CopyFrom(mpFrontBuffer);
+	mpBackInputDataBuffer->CopyFrom(mpFrontInputDataBuffer);
 }
 
 Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter)
@@ -80,40 +80,40 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 	switch (messageType)
 	{
 	case WM_MBUTTONDOWN:
-		mpBackBuffer->SetKeyDown(VK_MBUTTON);
+		mpBackInputDataBuffer->SetKeyDown(VK_MBUTTON);
 		return true;
 	case WM_MBUTTONUP:
-		mpBackBuffer->SetKeyUp(VK_MBUTTON);
+		mpBackInputDataBuffer->SetKeyUp(VK_MBUTTON);
 		return true;
 	case WM_RBUTTONDOWN:
-		mpBackBuffer->SetKeyDown(VK_RBUTTON);
+		mpBackInputDataBuffer->SetKeyDown(VK_RBUTTON);
 		return true;
 	case WM_RBUTTONUP:
-		mpBackBuffer->SetKeyUp(VK_RBUTTON);
+		mpBackInputDataBuffer->SetKeyUp(VK_RBUTTON);
 		return true;
 	case WM_LBUTTONDOWN:
-		mpBackBuffer->SetKeyDown(VK_LBUTTON);
+		mpBackInputDataBuffer->SetKeyDown(VK_LBUTTON);
 		return true;
 	case WM_LBUTTONUP:
-		mpBackBuffer->SetKeyUp(VK_LBUTTON);
+		mpBackInputDataBuffer->SetKeyUp(VK_LBUTTON);
 		return true;
 	case WM_MOUSEWHEEL:
 		mouseWheelDelta = GET_WHEEL_DELTA_WPARAM(wordParameter);
-		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/WHEEL_DELTA);
+		mpBackInputDataBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
 		x = GET_X_LPARAM(longParameter); 
 		y = GET_Y_LPARAM(longParameter);
 
-		mpBackBuffer->SetMouseX(static_cast<Float>(x));
-		mpBackBuffer->SetMouseY(static_cast<Float>(y));
+		mpBackInputDataBuffer->SetMouseX(static_cast<Float>(x));
+		mpBackInputDataBuffer->SetMouseY(static_cast<Float>(y));
 
 		return true;
 	case WM_KEYDOWN:
-		mpBackBuffer->SetKeyDown((UInt) wordParameter);
+		mpBackInputDataBuffer->SetKeyDown((UInt) wordParameter);
 		return true;
 	case WM_KEYUP:
-		mpBackBuffer->SetKeyUp((UInt) wordParameter);
+		mpBackInputDataBuffer->SetKeyUp((UInt) wordParameter);
 		return true;
 	}
 

@@ -32,24 +32,23 @@ public:
 	virtual Bool DiscoverDevices();
 
 private:
-	Bool DoDevicesDiscovery();
-	void AfterDevicesDiscovery();
-
 	static const UInt FIRST_CHANNEL;
 	static const UInt LAST_CHANNEL;
 
 	static UInt s_mEventCounter;
 
-	THashTable<Int, WiiInputDataBuffer*> mDataBufferByChannel;
+	static void ReadWPADPendingEventsCallback(Int channel, const WPADData* pData);
+
+	THashTable<Int, WiiInputDataBuffer*> mInputDataBufferByChannel;
 	Bool mChannelsConnectionStatus[MAXIMUM_NUMBER_OF_CHANNELS];
 	Bool mChanged;
 
-	void DiscoverExpansions(WiiMote* pWiiMote);
-	Bool GetChannelConnectionStatus(UInt channel);
+	void ConfigureConnectedChannels();
+	void DiscoverWiiMoteExpansions(WiiMote* pWiiMote);
+	WiiInputDataBuffer* GetChannelInputDataBuffer(UInt channel);
 	WiiMote* GetWiiMoteByChannel(UInt channel);
-	WiiInputDataBuffer* GetChannelDataBuffer(UInt channel);
-
-	static void ReadWPADPendingEventsCallback(Int channel, const WPADData* pData);
+	Bool IsChannelCorrectlyConnected(UInt channel);
+	Bool PollChannelsForChange();
 
 };
 

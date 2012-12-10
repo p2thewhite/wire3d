@@ -27,21 +27,21 @@ public:
 	InputDevice();
 	virtual ~InputDevice();
 
-	const InputDataBuffer* GetDataBuffer() const;
-	virtual void SetDataBuffer(const InputDataBuffer* pInputData);
-
-	Bool HasCapability(const Rtti& rCapabilityType) const;
 	const TArray<Pointer<InputCapability> >& GetCapabilities() const;
 	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
+	const InputDataBuffer* GetInputDataBuffer() const;
+	virtual void SetInputDataBuffer(const InputDataBuffer* pInputDataBuffer);
+	Bool HasCapability(const Rtti& rCapabilityType) const;
 	virtual void SetUp() = 0;
 
 protected:
-	void RegisterCapability(InputCapability* pInputCapability);
-
 	TArray<Pointer<InputCapability> > mCapabilities;
 
+	void RegisterCapability(InputCapability* pInputCapability);
+
 private:
-	const InputDataBuffer* mpDataBuffer;
+	const InputDataBuffer* mpInputDataBuffer;
+
 };
 
 typedef Pointer<InputDevice> InputDevicePtr;

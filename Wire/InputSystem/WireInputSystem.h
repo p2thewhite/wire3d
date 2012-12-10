@@ -33,13 +33,12 @@ public:
 
 	virtual void Capture() = 0;
 	virtual Bool DiscoverDevices() = 0;
-
+	const InputDevice* GetDevice(UInt index) const;
 	const InputDeviceExtension* GetDeviceExtension(UInt index) const;
 	UInt GetDeviceExtensionsCount() const;
+	UInt GetDevicesCount() const;
 	const MainInputDevice* GetMainDevice(UInt index) const;
 	UInt GetMainDevicesCount() const;
-	const InputDevice* GetDevice(UInt index) const;
-	UInt GetDevicesCount() const;
 
 protected:
 	TArray<InputDevicePtr> mDevices;
@@ -48,6 +47,7 @@ protected:
 
 	void AddDevice(InputDevice* pInputDevice);
 	void RemoveDevice(InputDevice* pInputDevice);
+
 };
 
 }

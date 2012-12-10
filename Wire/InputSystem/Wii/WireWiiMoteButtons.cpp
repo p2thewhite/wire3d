@@ -26,12 +26,12 @@ WiiMoteButtons::~WiiMoteButtons()
 
 Bool WiiMoteButtons::GetButton(Button button) const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{

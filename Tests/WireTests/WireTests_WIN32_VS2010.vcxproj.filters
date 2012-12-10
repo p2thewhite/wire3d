@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="TestCases">
+      <UniqueIdentifier>{13405109-fcf1-4d3b-bf43-00c86b78f5ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Source Files">
+      <UniqueIdentifier>{393b60eb-2c63-4f2a-8fb8-fed23252d153}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms">
+      <UniqueIdentifier>{b9a24dc6-4cae-4bdb-bc45-c9f5a9c8f0e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms\Wii">
+      <UniqueIdentifier>{d3405280-1ce8-4327-8ac6-86c7d3e1f856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms\Wii\Source Files">
+      <UniqueIdentifier>{444e7daa-7632-436f-b40e-0b0a3006652b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms\Win32">
+      <UniqueIdentifier>{a06c3045-52fe-44c9-9206-3df2c4bb0ed2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms\Win32\Source Files">
+      <UniqueIdentifier>{c1eb09e4-4e7c-4f65-9234-fc7306a2a207}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestCases\TestRunner.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32EmulatedNunchukTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32EmulatedWiiMoteTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32InputDataBufferTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32InputSystemTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedAnalogPadTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedButtonsTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedDigitalPadTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedIRTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedShakeTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedSwingTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32MappedTiltTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\InputCapabilityTest.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\InputDeviceTest.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\InputSystemTest.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\InputDeviceExtensionTest.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\MainInputDeviceTest.cpp">
+      <Filter>TestCases\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukAnalogPadTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukButtonTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiInputDataBufferTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiInputSystemTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteButtonTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteDigitalPadTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteIRTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteShakeTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteSwingTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteTiltTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiNunchukTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukShakeTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukTiltTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

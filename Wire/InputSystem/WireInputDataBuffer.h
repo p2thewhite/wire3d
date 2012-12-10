@@ -15,9 +15,10 @@ namespace Wire
 
 class InputDataBuffer
 {
-public:
+protected:
 	InputDataBuffer();
 	virtual ~InputDataBuffer();
+
 };
 
 }

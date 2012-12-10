@@ -10,10 +10,73 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestCases\InputCapabilityTest.cpp" />
+    <ClCompile Include="TestCases\InputDeviceExtensionTest.cpp" />
+    <ClCompile Include="TestCases\InputDeviceTest.cpp" />
+    <ClCompile Include="TestCases\InputSystemTest.cpp" />
+    <ClCompile Include="TestCases\MainInputDeviceTest.cpp" />
+    <ClCompile Include="TestCases\TestRunner.cpp" />
+    <ClCompile Include="TestCases\Wii\NunchukAnalogPadTest.cpp">
+      <DeploymentContent>false</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukButtonTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukShakeTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukTiltTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiInputDataBufferTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiInputSystemTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteButtonTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteDigitalPadTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteIRTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteShakeTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteSwingTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiMoteTiltTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Wii\WiiNunchukTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32EmulatedNunchukTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32EmulatedWiiMoteTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32InputDataBufferTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32InputSystemTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedAnalogPadTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedButtonsTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedDigitalPadTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedIRTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedShakeTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedSwingTest.cpp" />
+    <ClCompile Include="TestCases\Win32\Win32MappedTiltTest.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{927AE4F5-B26F-4A91-B418-5D61FEFCA2B3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WireTests</RootNamespace>
+    <ProjectName>WireTests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,12 +104,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)d</TargetName>
+    <TargetName>$(ProjectName)_WIN32d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_WIN32</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,10 +154,6 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Wire.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\InputSystemTest.cpp" />
-    <ClCompile Include="src\TestRunner.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

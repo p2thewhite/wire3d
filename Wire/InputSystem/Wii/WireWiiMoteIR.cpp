@@ -26,12 +26,12 @@ WiiMoteIR::~WiiMoteIR()
 
 Float WiiMoteIR::GetBackward() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -43,12 +43,12 @@ Float WiiMoteIR::GetBackward() const
 
 Float WiiMoteIR::GetDown() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -60,12 +60,12 @@ Float WiiMoteIR::GetDown() const
 
 Float WiiMoteIR::GetForward() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -77,12 +77,12 @@ Float WiiMoteIR::GetForward() const
 
 Float WiiMoteIR::GetLeft() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -94,12 +94,12 @@ Float WiiMoteIR::GetLeft() const
 
 Float WiiMoteIR::GetRight() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -111,12 +111,12 @@ Float WiiMoteIR::GetRight() const
 
 Float WiiMoteIR::GetUp() const
 {
-	if (GetParent()->GetDataBuffer() == NULL)
+	if (GetParent()->GetInputDataBuffer() == NULL)
 	{
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetDataBuffer())->GetData();
+	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{

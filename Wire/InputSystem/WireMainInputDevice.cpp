@@ -22,13 +22,13 @@ MainInputDevice::~MainInputDevice()
 {
 }
 
-void MainInputDevice::SetDataBuffer(const InputDataBuffer* pInputData)
+void MainInputDevice::SetInputDataBuffer(const InputDataBuffer* pInputDataBuffer)
 {
-	InputDevice::SetDataBuffer(pInputData);
+	InputDevice::SetInputDataBuffer(pInputDataBuffer);
 
 	for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 	{
-		mExtensions[i]->SetDataBuffer(pInputData);
+		mExtensions[i]->SetInputDataBuffer(pInputDataBuffer);
 	}
 }
 
@@ -63,11 +63,6 @@ const TArray<Pointer<InputDeviceExtension> >& MainInputDevice::GetExtensions() c
 void MainInputDevice::RemoveAllExtensions()
 {
 	mExtensions.RemoveAll();
-}
-
-UInt MainInputDevice::GetExtensionsCount() const
-{
-	return mExtensions.GetQuantity();
 }
 
 Bool MainInputDevice::HasCapability(const Rtti& rCapabilityType,
