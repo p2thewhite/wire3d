@@ -112,7 +112,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIRE_WII;_DEBUG;WIRE_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\Renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\InputSystem\Wii;..\..\Wire\Renderer</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExceptionHandling>Sync</ExceptionHandling>

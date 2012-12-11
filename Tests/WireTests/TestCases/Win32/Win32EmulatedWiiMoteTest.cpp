@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include <Win32/WireWin32EmulatedWiiMote.h>
+#include <WireWin32EmulatedWiiMote.h>
 #include <WireDigitalPad.h>
 #include <WireButtons.h>
 #include <WireIR.h>
