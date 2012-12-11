@@ -40,13 +40,13 @@ protected:
 TEST_F(Win32KeyMappedTiltTest, should_map_negative_mouse_wheel_to_left_direction)
 {
 	mpWin32InputDataBuffer->IncrementMouseWheel(-100.0f);
-	ASSERT_EQ(100.0f, mWin32KeyMappedTilt.GetLeft());
+	ASSERT_FLOAT_EQ(100.0f, mWin32KeyMappedTilt.GetLeft());
 }
 
 TEST_F(Win32KeyMappedTiltTest, should_map_positive_mouse_wheel_to_right_direction)
 {
 	mpWin32InputDataBuffer->IncrementMouseWheel(100.0f);
-	ASSERT_EQ(100.0f, mWin32KeyMappedTilt.GetRight());
+	ASSERT_FLOAT_EQ(100.0f, mWin32KeyMappedTilt.GetRight());
 }
 
 }

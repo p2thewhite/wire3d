@@ -2,25 +2,73 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="TestCases">
-      <UniqueIdentifier>{0d49db68-ee1c-475b-9bc2-33e1951ad4d3}</UniqueIdentifier>
+      <UniqueIdentifier>{42a64a2c-34d3-4564-a4e1-05ba5ca95745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{3f84ff84-7c61-4f90-8473-b2b89e673e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs">
+      <UniqueIdentifier>{c5115f22-88ab-466d-93a1-18a52e832832}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestCases\Source Files">
-      <UniqueIdentifier>{f75c0fb7-c0f0-4582-afa2-cc19233606ef}</UniqueIdentifier>
+      <UniqueIdentifier>{ea2b469a-0b51-43af-876b-ecbc0f1734e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestCases\Platforms">
-      <UniqueIdentifier>{a117700b-3e53-40cd-9e6a-7a4c91df4c83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TestCases\Platforms\Win32">
-      <UniqueIdentifier>{8aab1249-19ec-4232-8216-87fad989d550}</UniqueIdentifier>
+      <UniqueIdentifier>{582a0bfd-ef15-489b-aec0-ea87b85220ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestCases\Platforms\Wii">
-      <UniqueIdentifier>{1b635a79-d16a-403e-b918-f328a7d9bc1c}</UniqueIdentifier>
+      <UniqueIdentifier>{9fb51acc-6f84-43c9-ac59-dc2f398943d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TestCases\Platforms\Win32">
+      <UniqueIdentifier>{6bca63b5-6a10-4f20-8360-730ae86ce6af}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestCases\Platforms\Wii\Source Files">
-      <UniqueIdentifier>{74f2e708-d364-4c7b-b749-7a4bfbd035e0}</UniqueIdentifier>
+      <UniqueIdentifier>{dc129a8d-0539-4a87-834e-49c10356f907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Header Files">
+      <UniqueIdentifier>{cc482088-b3de-49c7-bcdc-c6ee74d77e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Source Files">
+      <UniqueIdentifier>{45fedbf3-dab7-417c-8259-840de0042cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms">
+      <UniqueIdentifier>{1cfc15d0-112e-4d6f-9e9f-ab6e927cf893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Wii">
+      <UniqueIdentifier>{67471d38-5556-40e6-a692-9a547684fa02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32">
+      <UniqueIdentifier>{fed60924-44b3-47b0-a1ba-58a3a25f4b5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32\Header Files">
+      <UniqueIdentifier>{84a6de8f-8b8e-436c-a573-1d127de87b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stubs\Platforms\Win32\Source Files">
+      <UniqueIdentifier>{57f0df88-1444-4037-9766-6915609ed0fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Source Files">
+      <UniqueIdentifier>{41a27dfd-8723-4f97-8bef-00aae6f2a82b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Header Files">
+      <UniqueIdentifier>{6118e437-da9b-429e-b648-8ad79d0d0720}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms">
+      <UniqueIdentifier>{d747984c-b2a1-4e8e-8536-c58d12b4849b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Wii">
+      <UniqueIdentifier>{339cf7d7-e536-490d-aff4-0ac55f87d1c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Win32">
+      <UniqueIdentifier>{6b060e90-d9d7-415a-8bc7-f41dfcf5b421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Wii\Header Files">
+      <UniqueIdentifier>{ec367301-6a3b-48e1-8d2d-63af96962fb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Wii\Source Files">
+      <UniqueIdentifier>{d985796b-c99b-491c-9c2c-7a35486ff218}</UniqueIdentifier>
     </Filter>
     <Filter Include="TestCases\Platforms\Win32\Source Files">
-      <UniqueIdentifier>{a614637f-4f23-4c6d-927d-f795f721c7c5}</UniqueIdentifier>
+      <UniqueIdentifier>{83aad3b2-5062-494d-90e3-f1b051ee15df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -42,25 +90,13 @@
     <ClCompile Include="TestCases\TestRunner.cpp">
       <Filter>TestCases\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCases\Wii\NunchukAnalogPadTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Wii\NunchukButtonTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestCases\Wii\NunchukShakeTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestCases\Wii\NunchukTiltTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCases\Wii\WiiInputDataBufferTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestCases\Wii\WiiInputSystemTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Wii\WiiMoteButtonTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestCases\Wii\WiiMoteDigitalPadTest.cpp">
@@ -84,7 +120,28 @@
     <ClCompile Include="TestCases\Wii\WiiNunchukTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Stubs\WireInputCapabilityStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputDeviceExtensionStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputDeviceStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireInputSystemStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\WireMainInputDeviceStub.cpp">
+      <Filter>Stubs\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stubs\Win32\WireWin32InputSystemStub.cpp">
+      <Filter>Stubs\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="TestCases\Win32\Win32EmulatedNunchukTest.cpp">
+      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedTiltTest.cpp">
       <Filter>TestCases\Platforms\Win32\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestCases\Win32\Win32EmulatedWiiMoteTest.cpp">
@@ -114,8 +171,40 @@
     <ClCompile Include="TestCases\Win32\Win32KeyMappedSwingTest.cpp">
       <Filter>TestCases\Platforms\Win32\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32KeyMappedTiltTest.cpp">
-      <Filter>TestCases\Platforms\Win32\Source Files</Filter>
+    <ClCompile Include="TestCases\Wii\WiiMoteButtonsTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestCases\Wii\NunchukButtonsTest.cpp">
+      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mocks\Wii\WireWPADWrapperMock.h">
+      <Filter>Mocks\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputCapabilityStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDataBufferStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDeviceExtensionStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputDeviceStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireInputSystemStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\WireMainInputDeviceStub.h">
+      <Filter>Stubs\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stubs\Win32\WireWin32InputSystemStub.h">
+      <Filter>Stubs\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mocks\WireApplicationMock.h">
+      <Filter>Mocks\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

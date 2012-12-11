@@ -46,6 +46,24 @@
     <Filter Include="Stubs\Platforms\Win32\Source Files">
       <UniqueIdentifier>{02a4082d-6e42-4ffc-a144-582dd9511a14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{e68b475a-48c8-41fe-9dcb-d6ec8480bc56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Header Files">
+      <UniqueIdentifier>{959a5566-8e43-47ac-ad89-826a9e7d013a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms">
+      <UniqueIdentifier>{b7bec007-3fd8-4857-8d0b-beacfa5c7704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Wii">
+      <UniqueIdentifier>{fce02f45-5c09-4d9f-90d3-5cce667f8efd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Win32">
+      <UniqueIdentifier>{3199004c-e92e-4388-bb2a-8c95e8e9b47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks\Platforms\Wii\Header Files">
+      <UniqueIdentifier>{59b4cc9b-92a6-4164-a27e-6a94b5350e44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestCases\TestRunner.cpp">
@@ -78,13 +96,7 @@
     <ClCompile Include="TestCases\MainInputDeviceTest.cpp">
       <Filter>TestCases\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestCases\Wii\NunchukAnalogPadTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestCases\Wii\NunchukButtonTest.cpp">
-      <Filter>TestCases\Platforms\Wii\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCases\Wii\WiiInputDataBufferTest.cpp">
       <Filter>TestCases\Platforms\Wii\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestCases\Wii\WiiInputSystemTest.cpp">
@@ -181,6 +193,12 @@
     </ClInclude>
     <ClInclude Include="Stubs\Win32\WireWin32InputSystemStub.h">
       <Filter>Stubs\Platforms\Win32\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mocks\Wii\WireWPADWrapperMock.h">
+      <Filter>Mocks\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mocks\WireApplicationMock.h">
+      <Filter>Mocks\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
