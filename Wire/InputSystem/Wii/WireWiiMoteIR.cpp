@@ -31,7 +31,7 @@ Float WiiMoteIR::GetBackward() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -48,7 +48,7 @@ Float WiiMoteIR::GetDown() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -65,7 +65,7 @@ Float WiiMoteIR::GetForward() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -82,7 +82,7 @@ Float WiiMoteIR::GetLeft() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -99,7 +99,7 @@ Float WiiMoteIR::GetRight() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -116,7 +116,7 @@ Float WiiMoteIR::GetUp() const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (!IsValid(pData)) 
 	{
@@ -126,7 +126,7 @@ Float WiiMoteIR::GetUp() const
 	return pData->ir.y;
 }
 
-Bool WiiMoteIR::IsValid(const WPADData* pData) const
+Bool WiiMoteIR::IsValid(const WPADWrapperData* pData) const
 {
 	if (pData == NULL) return false;
 	else return pData->ir.valid;

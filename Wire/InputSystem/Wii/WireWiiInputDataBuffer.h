@@ -11,7 +11,7 @@
 #define WIREWIIINPUTDATABUFFER_H
 
 #include "WireInputDataBuffer.h"
-#include <wiiuse/wpad.h>
+#include "WireWPADWrapper.h"
 
 namespace Wire
 {
@@ -22,10 +22,10 @@ public:
 	WiiInputDataBuffer();
 	virtual ~WiiInputDataBuffer();
 
-	void SetData(WPADData* pData);
-	const WPADData* GetData() const;
+	void SetData(WPADWrapperData* pData);
+	const WPADWrapperData* GetData() const;
 private:
-	WPADData* mpData;
+	WPADWrapperData* mpData;
 };
 
 }

@@ -31,7 +31,7 @@ Bool WiiMoteButtons::GetButton(Button button) const
 		return false;
 	}
 
-	const WPADData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
 
 	if (pData == NULL)
 	{
@@ -41,25 +41,25 @@ Bool WiiMoteButtons::GetButton(Button button) const
 	switch (button)
 	{
 	case BUTTON_A:
-		return (pData->btns_h & WPAD_BUTTON_A) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_A) != 0;
 
 	case BUTTON_B:
-		return (pData->btns_h & WPAD_BUTTON_B) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_B) != 0;
 
 	case BUTTON_1:
-		return (pData->btns_h & WPAD_BUTTON_1) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_1) != 0;
 
 	case BUTTON_2:
-		return (pData->btns_h & WPAD_BUTTON_2) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_2) != 0;
 
 	case BUTTON_MINUS:
-		return (pData->btns_h & WPAD_BUTTON_MINUS) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_MINUS) != 0;
 
 	case BUTTON_PLUS:
-		return (pData->btns_h & WPAD_BUTTON_PLUS) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_PLUS) != 0;
 
 	case BUTTON_HOME:
-		return (pData->btns_h & WPAD_BUTTON_HOME) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_HOME) != 0;
 
 	case BUTTON_Z:
 	case BUTTON_C:
