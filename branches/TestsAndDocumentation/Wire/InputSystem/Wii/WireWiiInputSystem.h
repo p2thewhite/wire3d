@@ -11,10 +11,10 @@
 #define WIREWIIINPUTSYSTEM_H
 
 #include "WireInputSystem.h"
-#include "WireTHashTable.h"
 #include "WireWiiInputDataBuffer.h"
 #include "WireWiiMote.h"
-#include <wiiuse/wpad.h>
+#include "WireWPADWrapper.h"
+#include "WireTHashTable.h"
 
 #define MAXIMUM_NUMBER_OF_CHANNELS 4
 
@@ -28,6 +28,8 @@ public:
 	WiiInputSystem();
 	virtual ~WiiInputSystem();
 
+	static void SetWPADWrapper(WPADWrapper* pWPADWrapper);
+
 	virtual void Capture();
 	virtual Bool DiscoverDevices();
 
@@ -36,6 +38,7 @@ private:
 	static const UInt LAST_CHANNEL;
 
 	static UInt s_mEventCounter;
+	static WPADWrapper* s_mpWPADWrapper;
 
 	static void ReadWPADPendingEventsCallback(Int channel, const WPADData* pData);
 

@@ -11,6 +11,7 @@
 #define WIREWIIMOTEIR_H
 
 #include "WireIR.h"
+#include "WireWPADWrapper.h"
 
 namespace Wire
 {
@@ -31,7 +32,7 @@ public:
 	virtual Float GetUp() const;
 
 private:
-	Bool IsValid(const WPADData* pData) const;
+	Bool IsValid(const WPADWrapperData* pData) const;
 
 };
 

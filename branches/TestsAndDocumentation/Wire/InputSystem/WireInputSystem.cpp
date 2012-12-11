@@ -1,7 +1,7 @@
 // Wire3D by Pedro Boechat (pboechat@gmail.com)
 // http://wire3d.googlecode.com
 // Copyright(c) 2009-2012. All rights reserved.
-// 
+//
 // The Wire3D source code is supplied under the terms of the LGPL and
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
@@ -51,12 +51,13 @@ UInt InputSystem::GetDevicesCount() const
 void InputSystem::AddDevice(InputDevice* pDevice)
 {
 	mDevices.Append(pDevice);
-	
+
 	if (pDevice->IsDerived(MainInputDevice::TYPE))
 	{
 		MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
 		mMainDevices.Append(pMainDevice);
 		const TArray<Pointer<InputDeviceExtension> >& rExtensions = pMainDevice->GetExtensions();
+
 		for (UInt i = 0; i < rExtensions.GetQuantity(); i++)
 		{
 			AddDevice(rExtensions[i]);
@@ -77,6 +78,7 @@ void InputSystem::RemoveDevice(InputDevice* pDevice)
 		MainInputDevice* pMainDevice = DynamicCast<MainInputDevice>(pDevice);
 		mMainDevices.Remove(pMainDevice);
 		const TArray<Pointer<InputDeviceExtension> >& rExtensions = pMainDevice->GetExtensions();
+
 		for (UInt i = 0; i < rExtensions.GetQuantity(); i++)
 		{
 			RemoveDevice(rExtensions[i]);

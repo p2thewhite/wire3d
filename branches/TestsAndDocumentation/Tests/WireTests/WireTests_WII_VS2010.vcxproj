@@ -43,25 +43,25 @@
     <ClCompile Include="TestCases\Win32\Win32InputSystemTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedAnalogPadTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedAnalogPadTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedButtonsTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedButtonsTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedDigitalPadTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedDigitalPadTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedIRTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedIRTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedShakeTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedShakeTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedSwingTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedSwingTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="TestCases\Win32\Win32MappedTiltTest.cpp">
+    <ClCompile Include="TestCases\Win32\Win32KeyMappedTiltTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>

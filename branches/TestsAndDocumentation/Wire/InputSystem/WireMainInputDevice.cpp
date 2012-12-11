@@ -1,7 +1,7 @@
 // Wire3D by Pedro Boechat (pboechat@gmail.com)
 // http://wire3d.googlecode.com
 // Copyright(c) 2009-2012. All rights reserved.
-// 
+//
 // The Wire3D source code is supplied under the terms of the LGPL and
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
@@ -66,13 +66,13 @@ void MainInputDevice::RemoveAllExtensions()
 }
 
 Bool MainInputDevice::HasCapability(const Rtti& rCapabilityType,
-	Bool lookupExtensions) const
+									Bool lookupExtensions) const
 {
 	return GetCapability(rCapabilityType, lookupExtensions) != NULL;
 }
 
 const InputCapability* MainInputDevice::GetCapability(const Rtti& rCapabilityType,
-	Bool lookupExtensions) const
+		Bool lookupExtensions) const
 {
 	const InputCapability* pInputCapability = InputDevice::GetCapability(rCapabilityType);
 
@@ -81,6 +81,7 @@ const InputCapability* MainInputDevice::GetCapability(const Rtti& rCapabilityTyp
 		for (UInt i = 0; i < mExtensions.GetQuantity(); i++)
 		{
 			pInputCapability = mExtensions[i]->GetCapability(rCapabilityType);
+
 			if (pInputCapability)
 			{
 				return pInputCapability;

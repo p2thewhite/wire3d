@@ -22,15 +22,6 @@
     <Filter Include="TestCases\Platforms\Win32\Source Files">
       <UniqueIdentifier>{c1eb09e4-4e7c-4f65-9234-fc7306a2a207}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mocks">
-      <UniqueIdentifier>{5dc86349-a13f-47e5-96f4-3c6fd9e323e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mocks\Header Files">
-      <UniqueIdentifier>{01076856-1998-4804-8248-1256bba50795}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mocks\Source Files">
-      <UniqueIdentifier>{81df32e5-127c-4919-a082-56951730c9e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Stubs">
       <UniqueIdentifier>{a2353b33-0d99-40ad-86a6-36d2c90e93dc}</UniqueIdentifier>
     </Filter>

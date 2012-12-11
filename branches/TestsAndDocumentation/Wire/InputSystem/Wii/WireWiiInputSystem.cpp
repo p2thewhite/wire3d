@@ -11,10 +11,10 @@
 #include "WireApplication.h"
 #include "WireWiiNunchuk.h"
 #include "WireWiiMote.h"
-#include <wiiuse/wpad.h>
 
 using namespace Wire;
 
+WPADWrapper* WiiInputSystem::s_mpWPADWrapper = 0;
 const UInt WiiInputSystem::FIRST_CHANNEL = 0;
 const UInt WiiInputSystem::LAST_CHANNEL = MAXIMUM_NUMBER_OF_CHANNELS - 1;
 UInt WiiInputSystem::s_mEventCounter = 0;
@@ -23,8 +23,7 @@ WiiInputSystem::WiiInputSystem() :
 	mInputDataBufferByChannel(16),
 	mChanged(false)
 {
-	PAD_Init();
-	WPAD_Init();
+	s_mpWPADWrapper->Init();
 
 	// reset channel status
 	System::Memset(mChannelsConnectionStatus, false, MAXIMUM_NUMBER_OF_CHANNELS);
@@ -40,7 +39,7 @@ WiiInputSystem::~WiiInputSystem()
 		WIRE_DELETE *pValue;
 	}
 
-	WPAD_Shutdown();
+	s_mpWPADWrapper->Shutdown();
 }
 
 void WiiInputSystem::ConfigureConnectedChannels()
@@ -54,7 +53,7 @@ void WiiInputSystem::ConfigureConnectedChannels()
 		WIRE_ASSERT(pWiiMote /* MainInputDevice is not WiiMote */);
 
 		// TODO: what about the x and y offsets?
-		WPAD_SetVRes(pWiiMote->GetChannel(), pApp->GetWidth(), pApp->GetHeight());
+		s_mpWPADWrapper->SetVRes(pWiiMote->GetChannel(), pApp->GetWidth(), pApp->GetHeight());
 	}
 }
 
@@ -74,7 +73,7 @@ WiiInputDataBuffer* WiiInputSystem::GetChannelInputDataBuffer(UInt channel)
 
 void WiiInputSystem::Capture()
 {
-	WPAD_ReadPending(WPAD_CHAN_ALL,	&WiiInputSystem::ReadWPADPendingEventsCallback);
+	s_mpWPADWrapper->ReadPending(WPAD_WRAPPER_CHAN_ALL);
 
 	for (UInt i = 0; i < mMainDevices.GetQuantity(); i++)
 	{
@@ -83,7 +82,7 @@ void WiiInputSystem::Capture()
 
 		UInt channel = pWiiMote->GetChannel();
 		WiiInputDataBuffer* pChannelDataBuffer = GetChannelInputDataBuffer(channel);
-		pChannelDataBuffer->SetData(WPAD_Data(channel));
+		pChannelDataBuffer->SetData(s_mpWPADWrapper->Data(channel));
 		pWiiMote->SetInputDataBuffer(pChannelDataBuffer);
 	}
 }
@@ -126,7 +125,7 @@ Bool WiiInputSystem::PollChannelsForChange()
 			if (!wasConnected)
 			{
 				// register wiimote's expected data format
-				WPAD_SetDataFormat(channel, WPAD_FMT_BTNS_ACC_IR);
+				s_mpWPADWrapper->SetDataFormat(channel, WPAD_WRAPPER_FMT_BTNS_ACC_IR);
 
 				// create and add the wiimote
 				pWiiMote = WIRE_NEW WiiMote(channel);
@@ -173,15 +172,15 @@ Bool WiiInputSystem::PollChannelsForChange()
 
 void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 {
-	expansion_t data;
-	WPAD_Expansion(pWiiMote->GetChannel(), &data);
+	WPADWrapperExpansion data;
+	s_mpWPADWrapper->Expansion(pWiiMote->GetChannel(), &data);
 
 	InputDeviceExtension* pExpansion;
 	const TArray<Pointer<InputDeviceExtension> >& rExtensions = pWiiMote->GetExtensions();
 
 	switch (data.type)
 	{
-	case WPAD_EXP_NONE:
+	case WPAD_WRAPPER_EXP_NONE:
 		// if there was no extension already, exit
 		if (pWiiMote->GetExtensions().GetQuantity() == 0)
 		{
@@ -196,7 +195,7 @@ void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 
 		break;
 
-	case WPAD_EXP_NUNCHUK:
+	case WPAD_WRAPPER_EXP_NUNCHUK:
 		// if a nunchuk was already added, exit
 		if (pWiiMote->HasExtension(Nunchuk::TYPE))
 		{
@@ -222,10 +221,11 @@ void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 Bool WiiInputSystem::IsChannelCorrectlyConnected(UInt channel)
 {
 	UInt type;
-	return (WPAD_Probe(channel, &type) == WPAD_ERR_NONE);
+	return (s_mpWPADWrapper->Probe(channel, &type) == WPAD_WRAPPER_ERR_NONE);
 }
 
-void WiiInputSystem::ReadWPADPendingEventsCallback(Int channel, const WPADData* pData)
+void WiiInputSystem::SetWPADWrapper(WPADWrapper* pWPADWrapper)
 {
-	WiiInputSystem::s_mEventCounter++;
+	s_mpWPADWrapper = pWPADWrapper;
 }
+
