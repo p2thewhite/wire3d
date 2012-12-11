@@ -31,7 +31,7 @@ Bool WiiMoteButtons::GetButton(Button button) const
 		return false;
 	}
 
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{

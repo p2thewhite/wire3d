@@ -25,6 +25,9 @@ class WiiInputSystem : public InputSystem
 {
 
 public:
+	static const UInt FIRST_CHANNEL;
+	static const UInt LAST_CHANNEL;
+
 	WiiInputSystem();
 	virtual ~WiiInputSystem();
 
@@ -32,15 +35,10 @@ public:
 
 	virtual void Capture();
 	virtual Bool DiscoverDevices();
+	Bool IsChannelCorrectlyConnected(UInt channel);
 
 private:
-	static const UInt FIRST_CHANNEL;
-	static const UInt LAST_CHANNEL;
-
-	static UInt s_mEventCounter;
 	static WPADWrapper* s_mpWPADWrapper;
-
-	static void ReadWPADPendingEventsCallback(Int channel, const WPADData* pData);
 
 	THashTable<Int, WiiInputDataBuffer*> mInputDataBufferByChannel;
 	Bool mChannelsConnectionStatus[MAXIMUM_NUMBER_OF_CHANNELS];
@@ -50,7 +48,6 @@ private:
 	void DiscoverWiiMoteExpansions(WiiMote* pWiiMote);
 	WiiInputDataBuffer* GetChannelInputDataBuffer(UInt channel);
 	WiiMote* GetWiiMoteByChannel(UInt channel);
-	Bool IsChannelCorrectlyConnected(UInt channel);
 	Bool PollChannelsForChange();
 
 };

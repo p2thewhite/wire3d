@@ -150,6 +150,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireVertexBuffer.h" />
     <ClInclude Include="Engine\WireVisibleObject.h" />
     <ClInclude Include="Engine\WireVisibleSet.h" />
+    <ClInclude Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukButtons.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukShake.h" />
@@ -353,7 +354,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="InputSystem\Wii\WireWiiMoteSwing.cpp" />
     <ClCompile Include="InputSystem\Wii\WireWiiMoteTilt.cpp" />
     <ClCompile Include="InputSystem\Wii\WireWiiNunchuk.cpp" />
-    <ClCompile Include="InputSystem\Wii\WireWPADWrapper.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.cpp" />
     <ClCompile Include="InputSystem\Win32\WireWin32EmulatedNunchuk.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>

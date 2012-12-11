@@ -11,18 +11,23 @@
 #include "WireApplication.h"
 #include "WireWiiNunchuk.h"
 #include "WireWiiMote.h"
+#include "WireDefaultWPADWrapperImpl.h"
 
 using namespace Wire;
 
 WPADWrapper* WiiInputSystem::s_mpWPADWrapper = 0;
 const UInt WiiInputSystem::FIRST_CHANNEL = 0;
 const UInt WiiInputSystem::LAST_CHANNEL = MAXIMUM_NUMBER_OF_CHANNELS - 1;
-UInt WiiInputSystem::s_mEventCounter = 0;
 
 WiiInputSystem::WiiInputSystem() :
 	mInputDataBufferByChannel(16),
 	mChanged(false)
 {
+	if (!s_mpWPADWrapper)
+	{
+		s_mpWPADWrapper = WIRE_NEW DefaultWPADWrapperImpl();
+	}
+
 	s_mpWPADWrapper->Init();
 
 	// reset channel status
@@ -73,8 +78,6 @@ WiiInputDataBuffer* WiiInputSystem::GetChannelInputDataBuffer(UInt channel)
 
 void WiiInputSystem::Capture()
 {
-	s_mpWPADWrapper->ReadPending(WPAD_WRAPPER_CHAN_ALL);
-
 	for (UInt i = 0; i < mMainDevices.GetQuantity(); i++)
 	{
 		WiiMote* pWiiMote = DynamicCast<WiiMote>(mMainDevices[i]);
@@ -82,7 +85,7 @@ void WiiInputSystem::Capture()
 
 		UInt channel = pWiiMote->GetChannel();
 		WiiInputDataBuffer* pChannelDataBuffer = GetChannelInputDataBuffer(channel);
-		pChannelDataBuffer->SetData(s_mpWPADWrapper->Data(channel));
+		s_mpWPADWrapper->GetData(channel, pChannelDataBuffer->GetData());
 		pWiiMote->SetInputDataBuffer(pChannelDataBuffer);
 	}
 }
@@ -133,7 +136,7 @@ Bool WiiInputSystem::PollChannelsForChange()
 
 				AddDevice(pWiiMote);
 
-				DiscoverWiiMoteExpansions(pWiiMote);
+				//DiscoverWiiMoteExpansions(pWiiMote);
 
 				mChanged = true;
 			}
@@ -173,7 +176,7 @@ Bool WiiInputSystem::PollChannelsForChange()
 void WiiInputSystem::DiscoverWiiMoteExpansions(WiiMote* pWiiMote)
 {
 	WPADWrapperExpansion data;
-	s_mpWPADWrapper->Expansion(pWiiMote->GetChannel(), &data);
+	s_mpWPADWrapper->GetExpansion(pWiiMote->GetChannel(), &data);
 
 	InputDeviceExtension* pExpansion;
 	const TArray<Pointer<InputDeviceExtension> >& rExtensions = pWiiMote->GetExtensions();
