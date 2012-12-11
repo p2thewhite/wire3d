@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include <Win32/WireWin32EmulatedWiiMote.h>
-#include <Win32/WireWin32EmulatedNunchuk.h>
+#include <WireWin32EmulatedWiiMote.h>
+#include <WireWin32EmulatedNunchuk.h>
 #include <WireAnalogPad.h>
 #include <WireButtons.h>
 #include <WireShake.h>

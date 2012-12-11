@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "../../Stubs/WireInputDeviceStub.h"
-#include <Win32/WireWin32KeyMappedIR.h>
-#include <Win32/WireWin32InputDataBuffer.h>
+#include <WireWin32KeyMappedIR.h>
+#include <WireWin32InputDataBuffer.h>
 
 namespace Wire
 {

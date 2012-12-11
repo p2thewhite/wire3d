@@ -134,7 +134,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;_DEBUG;D3D_DEBUG_INFO;WIRE_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\Renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\InputSystem\Win32;..\..\Wire\Renderer</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -155,7 +155,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIRE_WIN;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\gmock-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\Renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\gtest-1.6.0\include;..\..\Wire\Engine;..\..\Wire\Foundation;..\..\Wire\InputSystem;..\..\Wire\InputSystem\Win32;..\..\Wire\Renderer</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>Sync</ExceptionHandling>

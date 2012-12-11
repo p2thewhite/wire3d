@@ -2,8 +2,8 @@
 
 #include <Windows.h>
 #include "../../Stubs/WireInputDeviceStub.h"
-#include <Win32/WireWin32KeyMappedButtons.h>
-#include <Win32/WireWin32InputDataBuffer.h>
+#include <WireWin32KeyMappedButtons.h>
+#include <WireWin32InputDataBuffer.h>
 #include <WireButtons.h>
 
 namespace Wire
