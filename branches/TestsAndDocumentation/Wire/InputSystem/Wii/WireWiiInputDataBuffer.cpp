@@ -11,14 +11,15 @@ WiiInputDataBuffer::~WiiInputDataBuffer()
 {
 }
 
-void WiiInputDataBuffer::SetData(WPADWrapperData* pData)
+WPADWrapperData* WiiInputDataBuffer::GetData()
 {
-	mpData = pData;
+	return &pData;
 }
 
-const WPADWrapperData* WiiInputDataBuffer::GetData() const
+const WPADWrapperData* WiiInputDataBuffer::GetConstData() const
 {
-	return mpData;
+	return &pData;
 }
+
 
 }

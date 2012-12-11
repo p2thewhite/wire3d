@@ -22,10 +22,12 @@ public:
 	WiiInputDataBuffer();
 	virtual ~WiiInputDataBuffer();
 
-	void SetData(WPADWrapperData* pData);
-	const WPADWrapperData* GetData() const;
+	WPADWrapperData* GetData();
+	const WPADWrapperData* GetConstData() const;
+
 private:
-	WPADWrapperData* mpData;
+	WPADWrapperData pData;
+
 };
 
 }

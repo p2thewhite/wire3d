@@ -519,6 +519,9 @@
     <ClInclude Include="InputSystem\Wii\WireWPADWrapper.h">
       <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -1099,7 +1102,7 @@
     <ClCompile Include="Renderer\Dx9\WireDx9VertexAttributes.cpp">
       <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputSystem\Wii\WireWPADWrapper.cpp">
+    <ClCompile Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.cpp">
       <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

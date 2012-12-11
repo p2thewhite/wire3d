@@ -26,7 +26,7 @@ WiiMoteDigitalPad::~WiiMoteDigitalPad()
 
 Bool WiiMoteDigitalPad::GetDown() const
 {
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{
@@ -38,7 +38,7 @@ Bool WiiMoteDigitalPad::GetDown() const
 
 Bool WiiMoteDigitalPad::GetLeft() const
 {
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{
@@ -50,7 +50,7 @@ Bool WiiMoteDigitalPad::GetLeft() const
 
 Bool WiiMoteDigitalPad::GetRight() const
 {
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{
@@ -62,7 +62,7 @@ Bool WiiMoteDigitalPad::GetRight() const
 
 Bool WiiMoteDigitalPad::GetUp() const
 {
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{

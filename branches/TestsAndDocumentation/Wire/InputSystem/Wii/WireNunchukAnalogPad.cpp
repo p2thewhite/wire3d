@@ -35,7 +35,7 @@ Float NunchukAnalogPad::GetY() const
 		return 0;
 	}
 
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{
@@ -85,7 +85,7 @@ Float NunchukAnalogPad::GetX() const
 		return 0;
 	}
 
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{

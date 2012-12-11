@@ -29,7 +29,7 @@ Bool NunchukButtons::GetButton(Button button) const
 		return false;
 	}
 
-	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetData();
+	const WPADWrapperData* pData = static_cast<const WiiInputDataBuffer*>(GetParent()->GetInputDataBuffer())->GetConstData();
 
 	if (pData == NULL)
 	{
@@ -48,10 +48,10 @@ Bool NunchukButtons::GetButton(Button button) const
 		return false;
 
 	case BUTTON_Z:
-		return (pData->btns_h & WPAD_WRAPPER_NUNCHUK_BUTTON_Z) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_Z) != 0;
 
 	case BUTTON_C:
-		return (pData->btns_h & WPAD_WRAPPER_NUNCHUK_BUTTON_C) != 0;
+		return (pData->btns_h & WPAD_WRAPPER_BUTTON_C) != 0;
 
 	default:
 		WIRE_ASSERT(false /* Unknown button */);

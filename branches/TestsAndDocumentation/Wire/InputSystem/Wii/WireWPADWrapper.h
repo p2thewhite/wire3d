@@ -32,6 +32,7 @@ enum WPADWrapperExpansions
 };
 
 #define WPAD_WRAPPER_ERR_NONE							0
+#define WPAD_WRAPPER_ERR								1
 
 #define WPAD_WRAPPER_BUTTON_2							0x0001
 #define WPAD_WRAPPER_BUTTON_1							0x0002
@@ -44,64 +45,39 @@ enum WPADWrapperExpansions
 #define WPAD_WRAPPER_BUTTON_DOWN						0x0400
 #define WPAD_WRAPPER_BUTTON_UP							0x0800
 #define WPAD_WRAPPER_BUTTON_PLUS						0x1000
-#define WPAD_WRAPPER_NUNCHUK_BUTTON_Z					(0x0001<<16)
-#define WPAD_WRAPPER_NUNCHUK_BUTTON_C					(0x0002<<16)
+#define WPAD_WRAPPER_BUTTON_Z							(0x0001<<16)
+#define WPAD_WRAPPER_BUTTON_C							(0x0002<<16)
 
 typedef struct
 {
-	UChar num_dots;
-	Int state;
-	Int raw_valid;
-	Float ax;
-	Float ay;
-	Float distance;
-	Float z;
-	Float angle;
-	Int smooth_valid;
-	Float sx;
-	Float sy;
-	Float error_cnt;
-	Float glitch_cnt;
-	Int valid;
 	Float x;
 	Float y;
-	UInt vres[2];
-	Int offset[2];
+	Float z;
+	Int valid;
 } WPADWrapperIR;
 
 typedef struct
 {
-	UChar x, y;
+	UChar x;
+	UChar y;
 } WPADWrapperVec2b;
 
 typedef struct
 {
 	WPADWrapperVec2b max;
 	WPADWrapperVec2b min;
-	WPADWrapperVec2b center;
 	WPADWrapperVec2b pos;
-	Float ang;
-	Float mag;
 } WPADWrapperJoystick;
 
 typedef struct
 {
 	Float roll;
 	Float pitch;
-	Float yaw;
-	Float a_roll;
-	Float a_pitch;
 } WPADWrapperOrient;
 
 typedef struct
 {
 	WPADWrapperJoystick js;
-	Int* flags;
-	UChar btns;
-	UChar btns_last;
-	UChar btns_held;
-	UChar btns_released;
-	WPADWrapperOrient orient;
 } WPADWrapperNunchuk;
 
 typedef struct
@@ -116,9 +92,6 @@ typedef struct
 
 typedef struct
 {
-	UShort err;
-	UInt data_present;
-	UChar battery_level;
 	UInt btns_h;
 	UInt btns_l;
 	UInt btns_d;
@@ -134,31 +107,14 @@ public:
 	virtual void Init() = 0;
 	virtual void Shutdown() = 0;
 	virtual void SetVRes(UInt channel, UInt xResolution, UInt yResolution) = 0;
-	virtual void ReadPending(UInt channel) = 0;
-	virtual WPADWrapperData* Data(UInt channel) = 0;
+	virtual void GetData(UInt channel, WPADWrapperData* pWPADWrapperData) = 0;
 	virtual void SetDataFormat(UInt channel,  UInt format) = 0;
-	virtual void Expansion(UInt channel, WPADWrapperExpansion* expansion) = 0;
-	virtual Bool Probe(UInt channel, UInt* type) = 0;
+	virtual void GetExpansion(UInt channel, WPADWrapperExpansion* expansion) = 0;
+	virtual UInt Probe(UInt channel, UInt* type) = 0;
 
 protected:
 	WPADWrapper() {}
 	virtual ~WPADWrapper() {}
-
-};
-
-class DefaultWPADWrapperImpl : public WPADWrapper
-{
-public:
-	DefaultWPADWrapperImpl();
-	virtual ~DefaultWPADWrapperImpl();
-
-	virtual void Init();
-	virtual void Shutdown();
-	virtual void SetVRes(UInt channel, UInt xResolution, UInt yResolution);
-	virtual WPADWrapperData* Data(UInt channel);
-	virtual void SetDataFormat(UInt channel,  UInt format);
-	virtual void Expansion(UInt channel, WPADWrapperExpansion* expansion);
-	virtual Bool Probe(UInt channel, UInt* type);
 
 };
 
