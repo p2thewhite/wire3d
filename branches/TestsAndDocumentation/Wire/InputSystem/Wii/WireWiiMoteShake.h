@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * WiiMoteShake enables the reading of a WiiMote jolting movement.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Shake.
+ **/
 class WiiMoteShake : public Shake
 {
 	WIRE_DECLARE_RTTI;
@@ -23,12 +28,12 @@ public:
 	WiiMoteShake(const InputDevice* pParent);
 	virtual ~WiiMoteShake();
 
+	/// Returns the jolting intensity in the X-axis, normalized to (0, 1).
 	virtual Float GetX() const;
+	/// Returns the jolting intensity in the Y-axis, normalized to (0, 1).
 	virtual Float GetY() const;
+	/// Returns the jolting intensity in the Z-axis, normalized to (0, 1).
 	virtual Float GetZ() const;
-
-private:
-	WPADData* GetDataFromParent() const;
 
 };
 

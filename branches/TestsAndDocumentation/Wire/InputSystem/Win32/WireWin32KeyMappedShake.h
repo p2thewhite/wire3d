@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * Win32KeyMappedShake enables the reading of an emulated WiiMote jolting movement.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Shake.
+ **/
 class Win32KeyMappedShake : public Shake
 {
 	WIRE_DECLARE_RTTI;
@@ -23,8 +28,11 @@ public:
 	Win32KeyMappedShake(const InputDevice* pParent);
 	virtual ~Win32KeyMappedShake();
 
+	/// Returns the jolting intensity in the X-axis, normalized to (0, 1).
 	virtual Float GetX() const;
+	/// Returns the jolting intensity in the Y-axis, normalized to (0, 1).
 	virtual Float GetY() const;
+	/// Returns the jolting intensity in the Z-axis, normalized to (0, 1).
 	virtual Float GetZ() const;
 
 };

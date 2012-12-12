@@ -13,6 +13,13 @@
 namespace Wire
 {
 
+/**
+ * InputDataBuffer is a <a href="http://en.wikipedia.org/wiki/Marker_interface_pattern">marker interface</a>.<br>
+ * It must be realized in each supported platform.<br>
+ * It holds temporary input device information (i.e: button states, motion data, etc.).
+ *
+ * See also: InputSystem#Capture(), InputDevice#GetInputDataBuffer(), InputDevice#SetInputDataBuffer(const InputDataBuffer*), Win32InputDataBuffer and WiiInputDataBuffer
+ **/
 class InputDataBuffer
 {
 protected:

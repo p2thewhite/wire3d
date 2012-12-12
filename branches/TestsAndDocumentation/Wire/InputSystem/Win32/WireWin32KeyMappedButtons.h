@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * Win32KeyMappedButtons enables the reading of an emulated Nunchuk or WiiMote button state.<br>
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Buttons.
+ **/
 class Win32KeyMappedButtons : public Buttons
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +28,7 @@ public:
 	Win32KeyMappedButtons(const InputDevice* pParent);
 	virtual ~Win32KeyMappedButtons();
 
+	/// Returns true if a platform button is pressed and false otherwise.
 	virtual Bool GetButton(Button button) const;
 
 };

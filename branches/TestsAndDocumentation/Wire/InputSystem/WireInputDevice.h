@@ -19,6 +19,11 @@ namespace Wire
 
 class InputCapability;
 
+/**
+ * InputDevice is an upper level abstraction of a hardware device that produces input information.
+ *
+ * See also: InputSystem#GetDevice(UInt) const, InputSystem#GetDevicesCount(), MainInputDevice and InputDeviceExtension
+ **/
 class InputDevice : public Object
 {
 	WIRE_DECLARE_RTTI;
@@ -27,19 +32,28 @@ public:
 	InputDevice();
 	virtual ~InputDevice();
 
+	/// Returns an array containing all the capabilities registered for this input device.
 	const TArray<Pointer<InputCapability> >& GetCapabilities() const;
+	/// Returns an input capability that matches the passed type.
 	const InputCapability* GetCapability(const Rtti& rCapabilityType) const;
+	/// Returns the current input data buffer for this input device.
 	const InputDataBuffer* GetInputDataBuffer() const;
+	/// Sets the current input data buffer for this input device.
 	virtual void SetInputDataBuffer(const InputDataBuffer* pInputDataBuffer);
+	/// Returns true if input device has capability that matches the passed type.
 	Bool HasCapability(const Rtti& rCapabilityType) const;
+	/// Registers all input capabilities this input device should have.
 	virtual void SetUp() = 0;
 
 protected:
+	/// All the capabilities registered for this input device.
 	TArray<Pointer<InputCapability> > mCapabilities;
 
+	/// Registers an input capability.
 	void RegisterCapability(InputCapability* pInputCapability);
 
 private:
+	// Current input data buffer.
 	const InputDataBuffer* mpInputDataBuffer;
 
 };

@@ -16,6 +16,11 @@
 namespace Wire
 {
 
+/**
+ * InputDeviceExtension is an InputDevice that needs to be plugged-in to a MainInputDevice to function properly.
+ *
+ * See also: InputSystem#GetDeviceExtension(UInt) const, InputSystem#GetDeviceExtensionsCount(), Nunchuk
+ **/
 class InputDeviceExtension : public InputDevice
 {
 	WIRE_DECLARE_RTTI;
@@ -25,9 +30,11 @@ public:
 	virtual ~InputDeviceExtension();
 
 protected:
+	/// Returns a pointer to the main input device this extension is plugged-in to.
 	const MainInputDevice* GetMainInputDevice() const;
 
 private:
+	/// A pointer to the main input device this extension is plugged-in to.
 	MainInputDevice* mpMainInputDevice;
 
 };

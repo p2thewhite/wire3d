@@ -16,16 +16,25 @@
 namespace Wire
 {
 
+/**
+ * WiiInputDataBuffer is the realization of the InputDataBuffer interface on the Wii platform.<br>
+ * It only serves as a holder for the WPAD data of a given channel.
+ *
+ * See also: WiiInputSystem#Capture(), DefaultWPADWrapperImpl#GetData(UInt, WPADWrapperData*) and InputDataBuffer.
+ **/
 class WiiInputDataBuffer : public InputDataBuffer
 {
 public:
 	WiiInputDataBuffer();
 	virtual ~WiiInputDataBuffer();
 
+	/// Returns the WPAD data associated to this input data buffer.
 	WPADWrapperData* GetData();
+	/// Returns the WPAD data (read-only) associated to this input data buffer.
 	const WPADWrapperData* GetConstData() const;
 
 private:
+	/// The WPAD data associated to this input data buffer.
 	WPADWrapperData pData;
 
 };

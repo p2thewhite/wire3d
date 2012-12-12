@@ -15,6 +15,12 @@
 namespace Wire
 {
 
+/**
+ * Win32EmulatedWiiMote is a WiiMote emulation on keyboard and mouse.<br>
+ * It runs on Windows platform and receives its data from Win32 API (therefore the Win32 prefix).
+ *
+ * See also: Win32InputSystem#DiscoverDevices() and MainInputDevice.
+ **/
 class Win32EmulatedWiiMote : public MainInputDevice
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +29,7 @@ public:
 	Win32EmulatedWiiMote();
 	virtual ~Win32EmulatedWiiMote();
 
+	/// Registers all input capabilities an emulated WiiMote has.
 	virtual void SetUp();
 
 };

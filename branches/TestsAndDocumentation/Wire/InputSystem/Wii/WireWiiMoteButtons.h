@@ -15,6 +15,13 @@
 namespace Wire
 {
 
+/**
+ * WiiMoteButtons enables the reading of a WiiMote button state.<br>
+ * WiiMotes have buttons: 'A', 'B', '1', '2', '+', '-' and 'HOME'.<br>
+ * In order to know how to read the digital pad directions, refer to WiiMoteDigitalPad.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Buttons.
+ **/
 class WiiMoteButtons : public Buttons
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +30,7 @@ public:
 	WiiMoteButtons(const InputDevice* pParent);
 	virtual ~WiiMoteButtons();
 
+	/// Returns true if a platform button is pressed and false otherwise.
 	virtual Bool GetButton(Button button) const;
 
 };

@@ -7,6 +7,13 @@
 namespace Wire
 {
 
+/**
+ * DefaultWPADWrapperImpl is a realization of the WPADWrapper interface.<br>
+ * It's also the fall back implementation, which gets used if you set one explicitly calling WiiInputSystem#SetWPADWrapper(WPADWrapper*).<br>
+ * It maps all interface methods to WPAD API function calls, doing some type conversions along the way.<br>
+ *
+ * See also: WPADWrapper
+ **/
 class DefaultWPADWrapperImpl : public WPADWrapper
 {
 public:

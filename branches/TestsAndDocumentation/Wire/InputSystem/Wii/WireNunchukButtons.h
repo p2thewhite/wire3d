@@ -15,6 +15,12 @@
 namespace Wire
 {
 
+/**
+ * NunchukButtons enables the reading of a Nunchuk button state.<br>
+ * Nunchuks have only the buttons 'C' and 'Z'.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Buttons.
+ **/
 class NunchukButtons : public Buttons
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +29,7 @@ public:
 	NunchukButtons(const InputDevice* pParent);
 	virtual ~NunchukButtons();
 
+	/// Returns true if a platform button is pressed and false otherwise.
 	virtual Bool GetButton(Button button) const;
 
 };

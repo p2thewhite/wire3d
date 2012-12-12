@@ -48,6 +48,7 @@ enum WPADWrapperExpansions
 #define WPAD_WRAPPER_BUTTON_Z							(0x0001<<16)
 #define WPAD_WRAPPER_BUTTON_C							(0x0002<<16)
 
+/// %IR input data.
 typedef struct
 {
 	Float x;
@@ -56,12 +57,14 @@ typedef struct
 	Int valid;
 } WPADWrapperIR;
 
+/// 2D Vector.
 typedef struct
 {
 	UChar x;
 	UChar y;
 } WPADWrapperVec2b;
 
+/// Controller pad input data.
 typedef struct
 {
 	WPADWrapperVec2b max;
@@ -69,17 +72,20 @@ typedef struct
 	WPADWrapperVec2b pos;
 } WPADWrapperJoystick;
 
+/// Input device orientation.
 typedef struct
 {
 	Float roll;
 	Float pitch;
 } WPADWrapperOrient;
 
+/// %Nunchuk input data.
 typedef struct
 {
 	WPADWrapperJoystick js;
 } WPADWrapperNunchuk;
 
+/// Expansion description data.
 typedef struct
 {
 	int type;
@@ -90,6 +96,7 @@ typedef struct
 	};
 } WPADWrapperExpansion;
 
+/// Input device data.
 typedef struct
 {
 	UInt btns_h;
@@ -101,15 +108,29 @@ typedef struct
 	WPADWrapperOrient orient;
 } WPADWrapperData;
 
+/**
+ * WPADWrapper is an interface for the WPAD wrapper implementations.<br>
+ * A WPAD wrapper follows the facade design pattern, exposing a procedural API in a object oriented fashion.<br>
+ * The WPAD is the Wii platform API for input data retrieval.
+ *
+ * See also: DefaultWPADWrapperImpl
+ **/
 class WPADWrapper
 {
 public:
+	/// Initialized the WPAD.
 	virtual void Init() = 0;
+	/// Shutdown the WPAD.
 	virtual void Shutdown() = 0;
+	/// Sets the valid screen dimensions of the passed channel. This dimensions are needed by the WiiMote IR tracking.
 	virtual void SetVRes(UInt channel, UInt xResolution, UInt yResolution) = 0;
+	/// Fills the current input data of the passed channel in the passed WPADWrapperData pointer.
 	virtual void GetData(UInt channel, WPADWrapperData* pWPADWrapperData) = 0;
+	/// Sets the format of the input data of the passed channel (i.e.: buttons, buttons and IR tracking, buttons and IR tracking and accelerometer).
 	virtual void SetDataFormat(UInt channel,  UInt format) = 0;
+	/// Assigns the expansion description data to the WPADWrapperExpansion pointer, according to the passed channel (see WPADWrapperExpansion).
 	virtual void GetExpansion(UInt channel, WPADWrapperExpansion* expansion) = 0;
+	/// Returns the connection status of the passed channel.
 	virtual UInt Probe(UInt channel, UInt* type) = 0;
 
 protected:

@@ -15,6 +15,12 @@
 namespace Wire
 {
 
+/**
+ * Win32EmulatedNunchuk is a Nunchuk emulation on keyboard.<br>
+ * It runs on Windows platform and receives its data from Win32 API (therefore the Win32 prefix).
+ *
+ * See also: Win32InputSystem#DiscoverDevices() and Nunchuk.
+ **/
 class Win32EmulatedNunchuk : public Nunchuk
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +29,7 @@ public:
 	Win32EmulatedNunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~Win32EmulatedNunchuk();
 
+	/// Registers all input capabilities an emulated Nunchuk has.
 	virtual void SetUp();
 
 };

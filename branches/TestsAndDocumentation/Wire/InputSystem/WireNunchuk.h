@@ -15,6 +15,12 @@
 namespace Wire
 {
 
+/**
+ * Nunchuk is a <a href="http://en.wikipedia.org/wiki/Marker_interface_pattern">marker interface</a>.<br>
+ * Its RTTI type should be used as an argument for the extensions lookup method: MainInputDevice#GetExtension(const Rtti&) const.
+ *
+ * See also: Win32EmulatedNunchuk and WiiNunchuk
+ **/
 class Nunchuk : public InputDeviceExtension
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +29,7 @@ public:
 	Nunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~Nunchuk();
 
+	/// Registers all input capabilities this input device should have.
 	virtual void SetUp() = 0;
 
 };
