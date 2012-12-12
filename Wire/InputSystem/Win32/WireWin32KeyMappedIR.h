@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * Win32KeyMappedIR enables the reading of an emulated WiiMote IR tracking mechanism.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and IR.
+ **/
 class Win32KeyMappedIR : public IR
 {
 	WIRE_DECLARE_RTTI;
@@ -23,11 +28,17 @@ public:
 	Win32KeyMappedIR(const InputDevice* pParent);
 	virtual ~Win32KeyMappedIR();
 
+	/// Returns the Z-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetBackward() const;
+	/// Returns the Y-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetDown() const;
+	/// Returns the Z-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetForward() const;
+	/// Returns the X-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetLeft() const;
+	/// Returns the X-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetRight() const;
+	/// Returns the Y-axis position of the IR tracker, normalized to (-1, 1).
 	virtual Float GetUp() const;
 
 };

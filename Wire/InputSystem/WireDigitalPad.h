@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * DigitalPad enables the reading of an input device digital pad direction.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const, Win32KeyMappedDigitalPad, WiiMoteDigitalPad.
+ **/
 class DigitalPad : public InputCapability
 {
 	WIRE_DECLARE_RTTI;
@@ -23,9 +28,13 @@ public:
 	DigitalPad(const InputDevice* pParent);
 	virtual ~DigitalPad();
 
+	/// Returns true is the down button is pressed and false otherwise.
 	virtual Bool GetDown() const = 0;
+	/// Returns true is the left button is pressed and false otherwise.
 	virtual Bool GetLeft() const = 0;
+	/// Returns true is the right button is pressed and false otherwise.
 	virtual Bool GetRight() const = 0;
+	/// Returns true is the up button is pressed and false otherwise.
 	virtual Bool GetUp() const = 0;
 
 };

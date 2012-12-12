@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * WiiMoteTilt enables the reading of a WiiMote tilting level.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Tilt.
+ **/
 class WiiMoteTilt : public Tilt
 {
 	WIRE_DECLARE_RTTI;
@@ -23,9 +28,13 @@ public:
 	WiiMoteTilt(const InputDevice* pParent);
 	virtual ~WiiMoteTilt();
 
+	/// Returns the tilting level in the Z-axis, normalized to (-1, 1).
 	virtual Float GetBackward() const;
+	/// Returns the tilting level in the Z-axis, normalized to (-1, 1).
 	virtual Float GetForward() const;
+	/// Returns the tilting level in the X-axis, normalized to (-1, 1).
 	virtual Float GetLeft() const;
+	/// Returns the tilting level in the X-axis, normalized to (-1, 1).
 	virtual Float GetRight() const;
 
 };

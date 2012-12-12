@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * NunchukShake enables the reading of a Nunchuk jolting movement (currently not implemented).
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Shake.
+ **/
 class NunchukShake : public Shake
 {
 	WIRE_DECLARE_RTTI;
@@ -23,8 +28,11 @@ public:
 	NunchukShake(const InputDevice* pParent);
 	virtual ~NunchukShake();
 
+	/// Returns the jolting intensity in the X-axis, normalized to (0, 1).
 	virtual Float GetX() const;
+	/// Returns the jolting intensity in the Y-axis, normalized to (0, 1).
 	virtual Float GetY() const;
+	/// Returns the jolting intensity in the Z-axis, normalized to (0, 1).
 	virtual Float GetZ() const;
 
 };

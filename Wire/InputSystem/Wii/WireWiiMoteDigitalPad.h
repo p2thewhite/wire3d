@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * WiiMoteDigitalPad enables the reading of a WiiMote digital pad direction.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and DigitalPad.
+ **/
 class WiiMoteDigitalPad : public DigitalPad
 {
 	WIRE_DECLARE_RTTI;
@@ -23,9 +28,13 @@ public:
 	WiiMoteDigitalPad(const InputDevice* pParent);
 	virtual ~WiiMoteDigitalPad();
 
+	/// Returns true is the down button is pressed and false otherwise.
 	virtual Bool GetDown() const;
+	/// Returns true is the left button is pressed and false otherwise.
 	virtual Bool GetLeft() const;
+	/// Returns true is the right button is pressed and false otherwise.
 	virtual Bool GetRight() const;
+	/// Returns true is the up button is pressed and false otherwise.
 	virtual Bool GetUp() const;
 
 };

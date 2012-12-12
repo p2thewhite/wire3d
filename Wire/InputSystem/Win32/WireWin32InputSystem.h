@@ -16,6 +16,12 @@
 namespace Wire
 {
 
+/**
+ * Win32InputSystem is the specialization of the InputSystem on the Windows platform.
+ * It handles all platform dependent operations for the input data capturing and device discovery.
+ *
+ * See also: InputSystem
+ **/
 class Win32InputSystem : public InputSystem
 {
 
@@ -23,8 +29,11 @@ public:
 	Win32InputSystem();
 	virtual ~Win32InputSystem();
 
+	/// Tries to discover all available input devices.
 	virtual void Capture();
+	/// Consolidates all input data at his disposal.
 	virtual Bool DiscoverDevices();
+	/// Decodes Win32 system messages and stores input data in the back input data buffer. Used by the application layer and should not be called directly by the user.
 	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
 
 protected:

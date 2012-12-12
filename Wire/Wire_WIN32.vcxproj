@@ -139,6 +139,7 @@
     <ClInclude Include="Foundation\Wii\WireGXApplication.h" />
     <ClInclude Include="Foundation\Wii\WireOgcDefines.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
+    <ClInclude Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukAnalogPad.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukButtons.h" />
     <ClInclude Include="InputSystem\Wii\WireNunchukShake.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="InputSystem\Wii\WireNunchukTilt.h" />
     <ClInclude Include="InputSystem\Wii\WireWiiInputDataBuffer.h" />
     <ClInclude Include="InputSystem\Wii\WireWiiNunchuk.h" />
+    <ClInclude Include="InputSystem\Wii\WireWPADWrapper.h" />
     <ClInclude Include="InputSystem\WireAnalogPad.h" />
     <ClInclude Include="InputSystem\WireButtons.h" />
     <ClInclude Include="InputSystem\WireDigitalPad.h" />
@@ -328,6 +330,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp" />
+    <ClCompile Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="InputSystem\Wii\WireWiiNunchuk.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

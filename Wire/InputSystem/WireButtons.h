@@ -15,11 +15,20 @@
 namespace Wire
 {
 
+/**
+ * Buttons enables the reading of an input device button state.
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const, Win32KeyMappedButtons, NunchukButtons, WiiMoteButtons.
+ **/
 class Buttons : public InputCapability
 {
 	WIRE_DECLARE_RTTI;
 
 public:
+
+	/**
+	 * Button enumerates all platform buttons.
+	 **/
 	enum Button
 	{
 		BUTTON_A,
@@ -36,6 +45,7 @@ public:
 	Buttons(const InputDevice* pParent);
 	virtual ~Buttons();
 
+	/// Returns true if a platform button is pressed and false otherwise.
 	virtual Bool GetButton(Button button) const = 0;
 
 };

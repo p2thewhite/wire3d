@@ -15,6 +15,14 @@
 namespace Wire
 {
 
+/**
+ * Nunchuk is the most important input device extension of the Wii platform.<br>
+ * It's always plugged to a WiiMote and cannot work without being attached to it.<br> 
+ * They share the same controller channel (see WiiMote).<br>
+ * Currently this is the only WiiMote expansion supported.<br>
+ *
+ * See also: WiiInputSystem#DiscoverDevices() and InputDeviceExtension.
+ **/
 class WiiNunchuk : public Nunchuk
 {
 	WIRE_DECLARE_RTTI;
@@ -23,6 +31,7 @@ public:
 	WiiNunchuk(MainInputDevice* pMainInputDevice);
 	virtual ~WiiNunchuk();
 
+	/// Registers all input capabilities a Nunchuk has. This method is invoked automatically after the device discovery phase and should never be called directly by the user.
 	virtual void SetUp();
 };
 

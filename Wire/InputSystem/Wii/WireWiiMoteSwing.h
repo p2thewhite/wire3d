@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * WiiMoteSwing enables the reading of a WiiMote oscillatory movement (currently not implemented).
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const and Swing.
+ **/
 class WiiMoteSwing : public Swing
 {
 	WIRE_DECLARE_RTTI;
@@ -23,11 +28,17 @@ public:
 	WiiMoteSwing(const InputDevice* pParent);
 	virtual ~WiiMoteSwing();
 
+	/// Returns the oscillation intensity in the Z-axis, normalized to (-1, 1).
 	virtual Float GetBackward() const;
+	/// Returns the oscillation intensity in the Y-axis, normalized to (-1, 1).
 	virtual Float GetDown() const;
+	/// Returns the oscillation intensity in the Z-axis, normalized to (-1, 1).
 	virtual Float GetForward() const;
+	/// Returns the oscillation intensity in the X-axis, normalized to (-1, 1).
 	virtual Float GetLeft() const;
+	/// Returns the oscillation intensity in the X-axis, normalized to (-1, 1).
 	virtual Float GetRight() const;
+	/// Returns the oscillation intensity in the Y-axis, normalized to (-1, 1).
 	virtual Float GetUp() const;
 
 };

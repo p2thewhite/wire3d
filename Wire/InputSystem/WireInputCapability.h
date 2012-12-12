@@ -15,6 +15,11 @@
 namespace Wire
 {
 
+/**
+ * InputCapability is an upper level abstraction of an input device capability (i.e: buttons, pads, motion).
+ *
+ * See also: InputDevice#GetCapability(const Rtti&) const, AnalogPad, Buttons, DigitalPad, IR, Shake, Swing and Tilt.
+ **/
 class InputCapability : public Object
 {
 	WIRE_DECLARE_RTTI;
@@ -24,9 +29,11 @@ public:
 	virtual ~InputCapability();
 
 protected:
+	/// Returns a pointer to the input device that owns the capability.
 	const InputDevice* GetParent() const;
 
 private:
+	// Pointer to the input device that owns the capability.
 	const InputDevice* mpParent;
 
 };

@@ -518,6 +518,12 @@
     <ClInclude Include="Renderer\GX\WireGXVertexAttributes.h">
       <Filter>Renderer\Platforms\GX\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem\Wii\WireWPADWrapper.h">
+      <Filter>InputSystem\Platforms\Wii\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -1094,6 +1100,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\GX\WireGXVertexAttributes.cpp">
       <Filter>Renderer\Platforms\GX\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem\Wii\WireDefaultWPADWrapperImpl.cpp">
+      <Filter>InputSystem\Platforms\Wii\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
