@@ -126,13 +126,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)_WIN32d</TargetName>
+    <TargetName>WireTestsd</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>.\</OutDir>
     <IntDir>build\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)_WIN32</TargetName>
+    <TargetName>WireTests</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

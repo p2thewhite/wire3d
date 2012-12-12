@@ -57,6 +57,7 @@ private:
 	THashTable<Int, WiiInputDataBuffer*> mInputDataBufferByChannel;
 	/// An array containing the status of the connection of all channels.
 	Bool mChannelsConnectionStatus[MAXIMUM_NUMBER_OF_CHANNELS];
+	Bool mChanged;
 
 	/// Configures properly recently connected channels.
 	void ConfigureConnectedChannels();
