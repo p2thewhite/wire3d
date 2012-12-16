@@ -71,10 +71,11 @@ private:
 	UInt mIBOsSize;
 	UInt mTextureCount;
 	UInt mTexturesSize;
+	UInt mBatchIBOSize;
+	UInt mBatchedIBOData;
 	UInt mBatchVBOCount;
 	UInt mBatchVBOsSize;
 	UInt mBatchedVBOData;
-	UInt mBatchedIBOData;
 
 	// total number of vertex formats used
 	UInt mVertexFormatCount;

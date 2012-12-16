@@ -1055,7 +1055,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		return;
 	}
 
-	if (mIndexBatchingThreshold == 0 && mVertexBatchingThreshold == 0)
+	if (!UsesBatching())
 	{
 		for (UInt i = min; i < max; i++)
 		{
@@ -1611,36 +1611,41 @@ void Renderer::Set(const TArray<Pointer<Light> >& rLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::CreateBatchingBuffers(UInt size, UInt maxVertexStreams)
+void Renderer::CreateBatchingBuffers(UInt iboSize, UInt vboSize,
+	UInt maxVertexStreams)
 {
 	DestroyBatchingBuffers();
 
-	if (size == 0 || maxVertexStreams == 0)
+	if (!mSupportsBatching || iboSize == 0)
 	{
 		return;
 	}
+
+	mBatchedIndexBuffer = WIRE_NEW PdrIndexBuffer(this, iboSize, Buffer::
+		UT_DYNAMIC_WRITE_ONLY);
+	mStatistics.mIBOCount++;
+	mStatistics.mIBOsSize += mBatchedIndexBuffer->GetBufferSize();
+	mStatistics.mBatchIBOSize = mBatchedIndexBuffer->GetBufferSize();
 
 	if (maxVertexStreams > mVertexBuffers.GetQuantity())
 	{
 		maxVertexStreams = mVertexBuffers.GetQuantity();
 	}
 
-	mBatchedIndexBuffer = WIRE_NEW PdrIndexBuffer(this, size,
-		Buffer::UT_DYNAMIC_WRITE_ONLY);
-	mStatistics.mIBOCount++;
-	mStatistics.mIBOsSize += mBatchedIndexBuffer->GetBufferSize();
-
-	mBatchedVertexBuffers.SetQuantity(maxVertexStreams);
-	mRawBatchedVertexBuffers.SetQuantity(maxVertexStreams);
-	for (UInt i = 0; i < maxVertexStreams; i++)
+	if (vboSize > 0 && maxVertexStreams > 0)
 	{
-		mBatchedVertexBuffers[i] =  WIRE_NEW PdrVertexBuffer(this, size,
-			Buffer::UT_DYNAMIC_WRITE_ONLY);
-		const UInt bufferSize = mBatchedVertexBuffers[i]->GetBufferSize();
-		mStatistics.mVBOCount++;
-		mStatistics.mVBOsSize += bufferSize;
-		mStatistics.mBatchVBOCount++;
-		mStatistics.mBatchVBOsSize += bufferSize;
+		mBatchedVertexBuffers.SetQuantity(maxVertexStreams);
+		mRawBatchedVertexBuffers.SetQuantity(maxVertexStreams);
+		for (UInt i = 0; i < maxVertexStreams; i++)
+		{
+			mBatchedVertexBuffers[i] =  WIRE_NEW PdrVertexBuffer(this,
+				vboSize, Buffer::UT_DYNAMIC_WRITE_ONLY);
+			const UInt bufferSize = mBatchedVertexBuffers[i]->GetBufferSize();
+			mStatistics.mVBOCount++;
+			mStatistics.mVBOsSize += bufferSize;
+			mStatistics.mBatchVBOCount++;
+			mStatistics.mBatchVBOsSize += bufferSize;
+		}
 	}
 }
 
@@ -1651,6 +1656,7 @@ void Renderer::DestroyBatchingBuffers()
 	{
 		mStatistics.mIBOCount--;
 		mStatistics.mIBOsSize -= mBatchedIndexBuffer->GetBufferSize();
+		mStatistics.mBatchIBOSize = 0;
 		WIRE_DELETE mBatchedIndexBuffer;
 		mBatchedIndexBuffer = NULL;
 	}

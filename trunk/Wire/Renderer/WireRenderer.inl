@@ -103,60 +103,44 @@ inline const StateZBuffer* Renderer::GetStateZBuffer() const
 }
 
 //----------------------------------------------------------------------------
+inline Bool Renderer::SupportsBatching() const
+{
+	return mSupportsBatching;
+}
+
+//----------------------------------------------------------------------------
 inline Bool Renderer::UsesBatching() const
 {
-	return mIndexBatchingThreshold > 0 || mVertexBatchingThreshold > 0;
+	return mBatchedIndexBuffer && (mIndexBatchingThreshold > 0 || 
+		(mVertexBatchingThreshold > 0 &&
+		mBatchedVertexBuffers.GetQuantity() > 0));
 }
 
 //----------------------------------------------------------------------------
-inline Bool Renderer::SupportsStaticBatching() const
-{
-	return mSupportsStaticBatching;
-}
-
-//----------------------------------------------------------------------------
-inline Bool Renderer::UsesStaticBatching() const
-{
-	return mIndexBatchingThreshold > 0;
-}
-
-//----------------------------------------------------------------------------
-inline UInt Renderer::GetStaticBatchingThreshold() const
+inline UInt Renderer::GetIndexBatchingThreshold() const
 {
 	return mIndexBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetStaticBatchingThreshold(UInt threshold)
+inline void Renderer::SetIndexBatchingThreshold(UInt threshold)
 {
-	if (mSupportsStaticBatching)
+	if (mSupportsBatching)
 	{
 		mIndexBatchingThreshold = threshold;
 	}
 }
 
 //----------------------------------------------------------------------------
-inline Bool Renderer::SupportsDynamicBatching() const
-{
-	return mSupportsDynamicBatching;
-}
-
-//----------------------------------------------------------------------------
-inline Bool Renderer::UsesDynamicBatching() const
-{
-	return mVertexBatchingThreshold > 0;
-}
-
-//----------------------------------------------------------------------------
-inline UInt Renderer::GetDynamicBatchingThreshold() const
+inline UInt Renderer::GetVertexBatchingThreshold() const
 {
 	return mVertexBatchingThreshold;
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetDynamicBatchingThreshold(UInt threshold)
+inline void Renderer::SetVertexBatchingThreshold(UInt threshold)
 {
-	if (mSupportsDynamicBatching)
+	if (mSupportsBatching)
 	{
 		mVertexBatchingThreshold = threshold;
 	}

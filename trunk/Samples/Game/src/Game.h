@@ -6,7 +6,6 @@
 
 #include "ProbeRobot.h"
 #include "Player.h"
-#include "HealthMonitor.h"
 #include "Collider.h"
 #include "btBulletDynamicsCommon.h"
 
@@ -50,7 +49,6 @@ private:
 	Wire::Vector3F mStartingPoint;
 	Wire::Pointer<ProbeRobot> mspProbeRobot;
 	Wire::Pointer<Player> mspPlayer;
-	Wire::Pointer<HealthMonitor> mspHealthMonitor;
 	Wire::NodePtr mspLogo;
 	Wire::NodePtr mspScene;
 	Wire::NodePtr mspGUI;
@@ -61,8 +59,6 @@ private:
 	Wire::CullerSorting mSceneCuller;
 	Wire::Culler mGUICuller;
 	Wire::SpatialPtr mspCrosshair;
-	Wire::GeometryPtr mspGreenHealthBar;
-	Wire::GeometryPtr mspRedHealthBar;
 	Wire::TextPtr mspText;
 	Bool mShowColliders;
 	Wire::TArray<Wire::Spatial*> mColliderSpatials;

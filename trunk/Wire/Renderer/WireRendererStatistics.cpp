@@ -29,10 +29,11 @@ RendererStatistics::RendererStatistics()
 	mIBOsSize(0),
 	mTextureCount(0),
 	mTexturesSize(0),
+	mBatchIBOSize(0),
+	mBatchedIBOData(0),
 	mBatchVBOCount(0),
 	mBatchVBOsSize(0),
 	mBatchedVBOData(0),
-	mBatchedIBOData(0),
 	mVertexFormatCount(0),
 	mpRenderer(NULL),
 	mFpsSamplesIndex(0)
@@ -68,41 +69,42 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float kb = 1024.0F;
 	const Float mb = kb * kb;
 
+	const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
+		"VBOs: %d, VBOsSize: %.2f KB, VFs: %d\n"
+		"IBOs: %d, IBOsSize: %.2f KB\n"
+		"Textures: %d, TexturesSize: %.2f MB\n";
+
+	System::Sprintf(text, textArraySize, msg,
+		mDrawCalls, mTriangles, 
+		mVBOCount, mVBOsSize / kb, mVertexFormatCount,
+		mIBOCount, mIBOsSize / kb,
+		mTextureCount, mTexturesSize / mb);
+
+	pText->Append(text);
+
 	WIRE_ASSERT(mpRenderer);
 	if (mpRenderer->UsesBatching())
 	{
-		const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
+		const Char msg[] =
 			"Batched Static: %d, Batched Dynamic: %d, Batches: %d\n"
-			"Batched IBO Data: %.2f KB, Batched VBO Data: %.2f KB\n"
-			"BatchVBOs: %d, BatchVBOSize: %.2f KB\n"
-			"VBOs: %d, VBOsSize: %.2f KB, VertexFormats: %d\n"
-			"IBOs: %d, IBOsSize: %.2f KB\n"
-			"Textures: %d, TexturesSize: %.2f MB";
-
+			"BatchIBOSize: %.2f KB, Batched IBO Data: %.2f KB\n";
 		System::Sprintf(text, textArraySize, msg,
-			mDrawCalls, mTriangles, 
 			mBatchedStatic, mBatchedDynamic, mBatchCount,
-			mBatchedIBOData / kb, mBatchedVBOData / kb,
-			mBatchVBOCount, mBatchVBOsSize / kb,
-			mVBOCount, mVBOsSize / kb, mVertexFormatCount, 
-			mIBOCount, mIBOsSize / kb,
-			mTextureCount, mTexturesSize / mb);
-	}
-	else
-	{
-		const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
-			"VBOs: %d, VBOsSize: %.2f KB, VFs: %d\n"
-			"IBOs: %d, IBOsSize: %.2f KB\n"
-			"Textures: %d, TexturesSize: %.2f MB";
+			mBatchIBOSize / kb, mBatchedIBOData / kb);
+		pText->Append(text);
 
-		System::Sprintf(text, textArraySize, msg,
-			mDrawCalls, mTriangles, 
-			mVBOCount, mVBOsSize / kb, mVertexFormatCount,
-			mIBOCount, mIBOsSize / kb,
-			mTextureCount, mTexturesSize / mb);
-	}
+		if (mBatchVBOCount > 0)
+		{
+			const Char msg[] =
+				"BatchVBOSize: %.2f KB x%d, Batched VBO Data: %.2f KB\n";
+			System::Sprintf(text, textArraySize, msg,
+				(mBatchVBOsSize/mBatchVBOCount)/kb, mBatchVBOCount,
+				mBatchedVBOData / kb);
 
-	pText->Append(text);
+			pText->Append(text);
+
+		}
+	}
 
  	PdrRendererData* pRendererData = mpRenderer->GetRendererData();
  	pRendererData->AppendStatistics(pText);

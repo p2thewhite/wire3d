@@ -34,9 +34,9 @@ Bool Demo::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->BindAll(mspText);
 
- 	GetRenderer()->CreateBatchingBuffers(60*1024);
- 	GetRenderer()->SetDynamicBatchingThreshold(300);
- 	GetRenderer()->SetStaticBatchingThreshold(10000);
+ 	GetRenderer()->CreateBatchingBuffers(50000, 50000);
+ 	GetRenderer()->SetVertexBatchingThreshold(1000);
+ 	GetRenderer()->SetIndexBatchingThreshold(10000);
 
 	return true;
 }
@@ -203,8 +203,13 @@ Node* Demo::LoadAndInitScene()
 {
 	// Override default import options
 	Importer::Options options;
+
+	// This is for demonstration purposes only. Under normal circumstances,
+	// the scene should already be prepared for batching at export-time
+	// (as demonstrated by the Game sample), rather than import-time.
 	options.PrepareSceneForStaticBatching = true;
 	options.DuplicateSharedMeshesWhenPreparingSceneForStaticBatching = true;
+
 	Importer importer("Data/", &options);
 	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
 	if (!pScene)

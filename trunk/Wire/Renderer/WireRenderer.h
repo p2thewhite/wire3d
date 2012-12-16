@@ -59,24 +59,21 @@ public:
 		Bool useEffect = true);
 
 	// Batching
-	void CreateBatchingBuffers(UInt size, UInt maxVertexStreams = 6);
+	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
+		UInt maxVertexStreams = 6);
+	inline Bool SupportsBatching() const;
 	inline Bool UsesBatching() const;
-
-	inline Bool SupportsStaticBatching() const;
-	inline Bool UsesStaticBatching() const;
-	inline UInt GetStaticBatchingThreshold() const;
-	inline void SetStaticBatchingThreshold(UInt threshold);
-
-	inline Bool SupportsDynamicBatching() const;
-	inline Bool UsesDynamicBatching() const;
-	inline UInt GetDynamicBatchingThreshold() const;
-	inline void SetDynamicBatchingThreshold(UInt threshold);
+	inline UInt GetIndexBatchingThreshold() const;
+	inline void SetIndexBatchingThreshold(UInt threshold);
+	inline UInt GetVertexBatchingThreshold() const;
+	inline void SetVertexBatchingThreshold(UInt threshold);
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
 	inline UInt GetMaxTextureStages() const;
 	inline UInt GetMaxTextureWidth() const;
 	inline UInt GetMaxTextureHeight() const;
+
 	inline UInt GetMaxVertexStreams() const;
 
 	inline UInt GetMaxLights() const;
@@ -321,13 +318,13 @@ private:
 	Image2DMap mImage2DMap;
 	VertexFormatMap mVertexFormatMap;
 
+	// Batching
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
 	TArray<void*> mRawBatchedVertexBuffers;
 	UInt mIndexBatchingThreshold;
 	UInt mVertexBatchingThreshold;
-	Bool mSupportsStaticBatching;
-	Bool mSupportsDynamicBatching;
+	Bool mSupportsBatching;
 
 	RendererStatistics mStatistics;
 };
