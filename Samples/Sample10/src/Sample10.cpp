@@ -57,9 +57,8 @@ Bool Sample10::OnInitialize()
 	mspTextCamera = WIRE_NEW Camera(/* isPerspective */ false);
 	mspText = StandardMesh::CreateText();
 
-	// Create a buffer for batching draw calls. Maximum size of the buffer
-	// is 64k due to 16-bit index buffers.
-   	GetRenderer()->CreateBatchingBuffers(60*1024);
+	// Create buffers (size in bytes) for batching draw calls.
+   	GetRenderer()->CreateBatchingBuffers(10000, 50000);
 	return true;
 }
 
@@ -70,9 +69,9 @@ void Sample10::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	// disable batching by setting threshold to 0
-	GetRenderer()->SetDynamicBatchingThreshold(0);
-	GetRenderer()->SetStaticBatchingThreshold(0);
+	// disable batching by setting thresholds to 0
+	GetRenderer()->SetVertexBatchingThreshold(0);
+	GetRenderer()->SetIndexBatchingThreshold(0);
 
 	// Every 5 seconds we alternate between one of the following 3 states:
 	// Culler with no batching (to produce a visible set of objects in the
@@ -93,17 +92,25 @@ void Sample10::OnIdle()
 
 		if (MathF::FMod(static_cast<Float>(time), 15) > 10)
 		{
-			// Activate batching of dynamic objects with <= 200 vertices.
-			// Dynamic batching involves manual transformation of vertices
-			// and copying vertices and indices. Manual transformation is
-			// CPU intensive, thus the threshold should be very low.
-			// Otherwise we might waste more time than we gain.
-			GetRenderer()->SetDynamicBatchingThreshold(200);
+			// There are 2 methods of batching supported:
+			// a) Batching of index buffers only:
+			//    This is used if objects are batchable, share the same
+			//    vertexbuffer and the same static transformation.
+			//    This is the preferred way, but requires use of submeshes
+			//    to share vertexbuffers amongst objects.
+			//    (Use the "Combine static meshes" option in the exporter to
+			//    prepare your scene objects for this method.)
+            //
+			// b) Batching of vertex and index buffers:
+			//    This is used if objects are batchable and do not share the
+			//    same vertex buffer. If the objects do not have static
+			//    transformation, manual transformation is applied. This is
+			//    more CPU intensive, thus the VertexBatchingThreshold should
+			//    be kept low, or else more time might be wasted than gained.
 
-			// Activate batching of static objects with <= 2000 vertices.
-			// Static batching involves copying vertices and indices, no
-			// manual transformation required.
-			GetRenderer()->SetStaticBatchingThreshold(2000);
+			// Set thresholds for batching
+			GetRenderer()->SetVertexBatchingThreshold(200);
+			GetRenderer()->SetIndexBatchingThreshold(2000);
 		}
 	}
 

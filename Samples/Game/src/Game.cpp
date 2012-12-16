@@ -36,13 +36,13 @@ Bool Game::OnInitialize()
 	mShowFps = false;
 
 	// Font for render statistics debug text
-	mspText = Importer::CreateText("Data/Logo/cour.ttf", 20, 20);
+	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
 
 	GetRenderer()->BindAll(mspText);
-	GetRenderer()->CreateBatchingBuffers(100 * 1024);
-	GetRenderer()->SetDynamicBatchingThreshold(300);
-	GetRenderer()->SetStaticBatchingThreshold(2000);
+	GetRenderer()->CreateBatchingBuffers(100000);
+	GetRenderer()->SetVertexBatchingThreshold(300);
+	GetRenderer()->SetIndexBatchingThreshold(2000);
 
 	return true;
 }
@@ -423,18 +423,6 @@ Node* Game::LoadAndInitializeGUI()
 	mspCrosshair = pRoot->GetChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
-	mspGreenHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("GreenHealthBar"));
-	WIRE_ASSERT(mspGreenHealthBar /* No GreenHealthBar in GUI.xml */);
-	mspGreenHealthBar->Local.SetTranslate(Vector3F(10, GetHeightF() - 26.0F, 0));
-
-	mspRedHealthBar = DynamicCast<Geometry>(pRoot->GetChildByName("RedHealthBar"));
-	WIRE_ASSERT(mspRedHealthBar /* No RedHealthBar in GUI.xml */);
-	mspRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
-
-	// Create health monitor
-// 	mspHealthMonitor = WIRE_NEW HealthMonitor(mspGreenHealthBar, mspRedHealthBar, mspPlayer, mspProbeRobot);
-// 	pRoot->AttachController(mspHealthMonitor);
-
 	GetRenderer()->BindAll(pRoot);
 
 	return pRoot;
@@ -482,26 +470,23 @@ Node* Game::LoadAndInitializeScene()
 	}
 
 	pScene->GetAllChildrenByNameStartingWith("Collider for", mColliderSpatials);
-	Spatial* pProbeRobotSpatial = DynamicCast<Spatial>(pScene->GetChildByName("Probe Robot"));
-	Spatial* pPlayerSpatial = DynamicCast<Spatial>(pScene->GetChildByName("Player"));
+	Spatial* pProbeRobotSpatial = pScene->GetChildByName("Probe Robot");
+	Spatial* pPlayerSpatial = pScene->GetChildByName("Player");
 
 	// Create and configure probe robot controller
-	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, mspRedHealthBar);
+	Spatial* pRedHealthBar = mspGUI->GetChildByName("RedHealthBar");
+	WIRE_ASSERT(pRedHealthBar /* No RedHealthBar in GUI.xml */);
+	pRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
+	mspGUI->UpdateGS();
+
+	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, pRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
 	mspProbeRobot->Register(mpPhysicsWorld);
 
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);
-	mspPlayer->SetLookUpDeadZone(Vector2F(50, 50));
-	mspPlayer->SetHeadHeight(0.5F);
-	mspPlayer->SetCharacterHeight(1.5F);
-	mspPlayer->SetCharacterWidth(0.75F);
-	mspPlayer->SetStepHeight(0.5F);
-	mspPlayer->SetMaximumVerticalAngle(45);
-	mspPlayer->SetMaximumShootingDistance(1000.0f);
-	mspPlayer->SetMoveSpeed(5.0F);
-	mspPlayer->Register(mpPhysicsWorld);
 	pPlayerSpatial->AttachController(mspPlayer);
+	mspPlayer->Register(mpPhysicsWorld);
 
 	GetRenderer()->BindAll(pScene);
 

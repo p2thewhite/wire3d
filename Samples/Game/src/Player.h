@@ -18,18 +18,7 @@ public:
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pDynamicsWorld);
-	void SetTotalHealth(Float health);
-	Float GetHealth();
-	Float GetTotalHealth();
-	void SetHeadHeight(Float headHeight);
-	void SetCharacterWidth(Float characterWidth);
-	void SetCharacterHeight(Float characterHeight);
-	void SetStepHeight(Float stepHeight);
 	void SetMoveSpeed(Float moveSpeed);
-	void SetRotateSpeed(Float rotateSpeed);
-	void SetLookUpDeadZone(const Wire::Vector2F& rLookUpDeadZone);
-	void SetMaximumVerticalAngle(Float maximumVerticalAngle);
-	void SetMaximumShootingDistance(Float maximumShootingDistance);
 	void MoveForward();
 	void MoveBackward();
 	void StrafeLeft();
@@ -37,21 +26,13 @@ public:
 	void LookAt(const Wire::Vector2F& rLookAt);
 	void Jump();
 	void Shoot();
-	void TakeDamage(Float damage);
 
 private:
-	void InitializeIfNecessary();
-	Float GetDeltaTime(Double appTime);
 	Wire::Vector3F GetPosition();
-	void UpdatePlayerNode();
 	void UpdateGunRotation();
 	void DoShooting();
-	void UpdateCamera();
-	void MovePhysicsEntity();
 	void CreateRay(Float size);
 
-	Float mTotalHealth;
-	Float mHealth;
 	Float mHeadHeight;
 	Float mMaximumShootingDistance;
 	Float mMaximumVerticalAngle;

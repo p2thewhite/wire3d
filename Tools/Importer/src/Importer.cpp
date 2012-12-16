@@ -1047,7 +1047,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 {
 	Mesh* pMesh = NULL;
 	Material* pMaterial = NULL;
-	UInt subMeshIndex = GetUInt(pXmlNode, "SubMeshIndex");
+	UInt subMeshIndex = GetUInt(pXmlNode, "SubMesh");
 
 	if (pXmlNode->first_node())
 	{

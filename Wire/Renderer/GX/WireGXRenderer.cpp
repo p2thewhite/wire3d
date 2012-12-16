@@ -24,7 +24,7 @@
 #include "WireText.h"
 #include "WireVertexBuffer.h"
 #include <malloc.h>		// for memalign
-#include <string.h>		// for memset 
+#include <string.h>		// for memset
 
 using namespace Wire;
 
@@ -42,8 +42,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mImage2DMap(256),
-	mSupportsStaticBatching(false),
-	mSupportsDynamicBatching(false)
+	mSupportsBatching(false)
 {
 	Initialize(width, height);
 
@@ -842,8 +841,8 @@ void PdrRendererData::AppendStatistics(Text* pText)
 	Char text[textArraySize];
 	const Float kb = 1024.0F;
 
-	const Char msg[] = "\nDraw Calls using DisplayLists: %d\nDisplayLists: %d"
-		", DisplayListsSize: %.2f KB";
+	const Char msg[] = "Draw Calls using DisplayLists: %d\nDisplayLists: %d, "
+		"DisplayListsSize: %.2f KB";
 
 	System::Sprintf(text, textArraySize, msg,
 		Statistics.DrawCallsUsingDisplayLists,

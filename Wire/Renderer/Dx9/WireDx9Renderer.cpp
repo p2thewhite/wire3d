@@ -33,8 +33,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mImage2DMap(256),
-	mSupportsStaticBatching(true),
-	mSupportsDynamicBatching(true)
+	mSupportsBatching(true)
 {
 	Initialize(width, height);
 
@@ -596,21 +595,29 @@ void PdrRendererData::ResetDevice()
 	DestroyResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
 	DestroyNonManagedResources(rRenderer.mImage2DMap, saveTexture2Ds);
 	
-	UInt batchingSize = 0;
-	const UInt maxVertexStreamsToBatch = rRenderer.mBatchedVertexBuffers.
-		GetQuantity();
+	UInt batchingIBOSize = 0;
 	if (rRenderer.mBatchedIndexBuffer)
 	{
-		batchingSize = rRenderer.mBatchedIndexBuffer->GetBufferSize();
-		rRenderer.DestroyBatchingBuffers();
+		batchingIBOSize = rRenderer.mBatchedIndexBuffer->GetBufferSize();
 	}
+
+	const UInt maxVertexStreamsToBatch = rRenderer.mBatchedVertexBuffers.
+		GetQuantity();
+	UInt batchingVBOSize = 0;
+	if (rRenderer.mBatchedVertexBuffers.GetQuantity() > 0)
+	{
+		batchingVBOSize = rRenderer.mBatchedVertexBuffers[0]->GetBufferSize();
+	}
+
+	rRenderer.DestroyBatchingBuffers();
 
 	HRESULT hr;
 	hr = D3DDevice->Reset(&Present);
 	WIRE_ASSERT(SUCCEEDED(hr));
 	IsDeviceLost = false;
 
-	rRenderer.CreateBatchingBuffers(batchingSize, maxVertexStreamsToBatch);
+	rRenderer.CreateBatchingBuffers(batchingIBOSize, batchingVBOSize,
+		maxVertexStreamsToBatch);
 
 	RecreateResources(&rRenderer, saveIndexBuffers);
 	RecreateResources(&rRenderer, saveVertexBuffers);

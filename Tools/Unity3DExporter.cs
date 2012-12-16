@@ -15,7 +15,7 @@ public class Unity3DExporter : EditorWindow
 	private bool mDontGenerateMipmapsForLightmaps = true;
 	private bool mDiscardTexturesOnBind = true;
     private bool mWriteDataAsBigEndian = true;
-    private bool mCombineStaticMeshes = false;
+    private bool mCombineStaticMeshes = true;
 	private string m2ndTextureName;
 	private string mPath;
 
@@ -322,7 +322,7 @@ public class Unity3DExporter : EditorWindow
             {
                 submeshCount = sp.arraySize;
                 int idx = sp.GetArrayElementAtIndex(0).intValue;
-                subMeshIdx = " SubMeshIndex=\"" + idx + "\"";
+                subMeshIdx = " SubMesh=\"" + idx + "\"";
                 isCombined = true;
             }
         }
@@ -413,7 +413,7 @@ public class Unity3DExporter : EditorWindow
                 {
                     int i = sp.GetArrayElementAtIndex(j).intValue;
                     outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + "\"" +
-                        " SubMeshIndex=\"" + i + "\"" + isStatic + ">");
+                        " SubMesh=\"" + i + "\"" + isStatic + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[j], outFile, indent + "  ");
                     outFile.WriteLine(indent + "</Leaf>");
@@ -425,7 +425,7 @@ public class Unity3DExporter : EditorWindow
                 for (int i = 0; i < submeshCount; i++)
                 {
                     outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" +
-                        " SubMeshIndex=\"" + i + "\"" + isStatic + ">");
+                        " SubMesh=\"" + i + "\"" + isStatic + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
 
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
@@ -559,12 +559,15 @@ public class Unity3DExporter : EditorWindow
 	private void Export ()
 	{
 		string[] unityScenePath = EditorApplication.currentScene.Split (char.Parse ("/"));
-		string unitySceneName = unityScenePath [unityScenePath.Length - 1];
-		if (string.IsNullOrEmpty (unitySceneName)) {
-			Debug.Log ("Scene is empty, nothing to do.");
-		} else {
+		string unitySceneName = unityScenePath[unityScenePath.Length - 1];
+		if (string.IsNullOrEmpty (unitySceneName))
+        {
+			Debug.LogWarning("Scene has no name.\n");
+		}
+        else
+        {
 			if (unitySceneName.Substring (unitySceneName.Length - 6, 6).Equals (".unity")) {
-				unitySceneName = unitySceneName.Remove (unitySceneName.Length - 6);
+				unitySceneName = unitySceneName.Remove(unitySceneName.Length - 6);
 			}
 		}
         
@@ -639,8 +642,8 @@ public class Unity3DExporter : EditorWindow
         outFile.WriteLine("<Assets>");
 
         string indent = "    ";
-        outFile.WriteLine("  <Lights>");
 
+        bool foundLight = false;
         List<Transform> rootTransforms = GetRootTransforms();
         foreach (Transform transform in rootTransforms)
         {
@@ -653,25 +656,29 @@ public class Unity3DExporter : EditorWindow
 
                 if (light.enabled == true && lightmapProp.intValue != bakedOnly)
                 {
+                    if (!foundLight)
+                    {
+                        outFile.WriteLine("  <Lights>");
+                        foundLight = true;
+                    }
+
                     WriteLight(light, outFile, indent);
                 }
             }
         }
         
-        outFile.WriteLine("  </Lights>");
+        if (foundLight)
+        {
+            outFile.WriteLine("  </Lights>");
+        }
 
-        outFile.WriteLine("  <Meshes>");
-        WriteAssets(outFile, indent, true, false);
-        outFile.WriteLine("  </Meshes>");
-
-        outFile.WriteLine("  <Materials>");
-        WriteAssets(outFile, indent, false, true);
-        outFile.WriteLine("  </Materials>");
+        WriteAssets(outFile, indent, "Meshes");
+        WriteAssets(outFile, indent, "Materials");
 
         outFile.WriteLine("</Assets>");
     }
 
-    private void WriteAssets(StreamWriter outFile, string indent, bool writeMeshes, bool writeMaterials)
+    private void WriteAssets(StreamWriter outFile, string indent, string assetTypeName)
     {
         Stack<Transform> stack = new Stack<Transform>();
         foreach (Transform transform in GetRootTransforms())
@@ -679,6 +686,7 @@ public class Unity3DExporter : EditorWindow
             stack.Push(transform);
         }
 
+        bool foundAsset = false;
         while (stack.Count > 0)
         {
             Transform t = stack.Pop();
@@ -696,27 +704,44 @@ public class Unity3DExporter : EditorWindow
                     continue;
                 }
 
-                if (writeMeshes)
+                if (assetTypeName.Equals("Meshes"))
                 {
                     string meshAssetName = GetMeshAssetName(meshFilter.sharedMesh, GetLightmapTilingOffset(meshRenderer));
                     if (!mMeshAssetsProcessed.Contains(meshAssetName))
                     {
+                        if (!foundAsset)
+                        {
+                            foundAsset = true;
+                            outFile.WriteLine("  <" + assetTypeName + ">");
+                        }
+
                         WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent);
                     }
                 }
 
-                if (writeMaterials)
+                if (assetTypeName.Equals("Materials"))
                 {
                     foreach (Material material in meshRenderer.sharedMaterials)
                     {
                         string materialAssetName = GetMaterialAssetName(material, meshRenderer);
                         if (!mMaterialAssetsProcessed.Contains(materialAssetName))
                         {
+                            if (!foundAsset)
+                            {
+                                foundAsset = true;
+                                outFile.WriteLine("  <" + assetTypeName + ">");
+                            }
+
                             WriteMaterial(meshRenderer, material, outFile, indent);
                         }
                     }
                 }
             }
+        }
+
+        if (foundAsset)
+        {
+            outFile.WriteLine("  </" + assetTypeName + ">");
         }
     }
 

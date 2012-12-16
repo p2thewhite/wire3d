@@ -13,14 +13,15 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Controller);
 //----------------------------------------------------------------------------
 Player::Player(Camera* pCamera)
 	:
-	mTotalHealth(100.0F),
-	mHealth(100.0F),
-	mMaximumShootingDistance(100.0F),
-	mMaximumVerticalAngle(MathF::PI / 4),
-	mMoveSpeed(2.5F),
+	mHeadHeight(0.5F),
+	mMaximumShootingDistance(1000.0F),
+	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
+	mLookUpDeadZone(Vector2F(50, 50)),
+	mMoveSpeed(5.0F),
 	mRotateSpeed(MathF::PI / 9),
-	mCharacterWidth(1),
-	mCharacterHeight(1),
+	mCharacterWidth(0.75F),
+	mCharacterHeight(1.5F),
+	mStepHeight(0.5F),
 	mPitch(0),
 	mYaw(0),
 	mPitchIncrement(0),
@@ -38,9 +39,13 @@ Player::Player(Camera* pCamera)
 //----------------------------------------------------------------------------
 Bool Player::Update(Double appTime)
 {
-	Float deltaTime = GetDeltaTime(appTime);
+	Float deltaTime = static_cast<Float>(appTime - mLastApplicationTime);
+	if (mLastApplicationTime == -MathD::MAX_REAL)
+	{
+		deltaTime = 0.0F;
+	}
 
-	InitializeIfNecessary();
+	mLastApplicationTime = appTime;
 
 	// Apply accumulators
 	mMove *= deltaTime;
@@ -72,10 +77,22 @@ Bool Player::Update(Double appTime)
 	mRight = rotation * mForward;
 
 	DoShooting();
-	UpdatePlayerNode();
+
+	// update player node
+	mpNode->Local.SetTranslate(GetPosition());
+	mpNode->Local.SetRotate(mRotationY * mRotationX);
+
 	UpdateGunRotation();
-	UpdateCamera();
-	MovePhysicsEntity();
+
+	// update camera
+	mspCamera->SetFrame(GetPosition(), mEyeDirection, mUp, mRight);
+
+	// move physics entity
+	if (mJump)
+	{
+		mpPhysicsEntity->jump();
+	}
+	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(mMove));
 
 	// Reset accumulators
 	mMove = Vector3F::ZERO;
@@ -84,34 +101,6 @@ Bool Player::Update(Double appTime)
 	mJump = false;
 
 	return true;
-}
-
-//----------------------------------------------------------------------------
-void Player::InitializeIfNecessary()
-{
-	if (mpNode)
-	{
-		return;
-	}
-
-	mpNode = DynamicCast<Node>(GetSceneObject());
-	WIRE_ASSERT(mpNode);
-
-	mpGun = mpNode->GetChildByName("Gun");
-	if (mpGun)
-	{
-		mGunStartingRotation = mpGun->World.GetRotate();
-	}
-
-	// Set camera position
-	Vector3F cameraPosition = mpNode->World.GetTranslate();
-	mspCamera->SetFrame(cameraPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
-
-	// Set physics entity position
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(BulletUtils::Convert(mspCamera->GetLocation()));
-	mpGhostObject->setWorldTransform(transform);
 }
 
 //----------------------------------------------------------------------------
@@ -136,79 +125,32 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 		btBroadphaseProxy::CharacterFilter | 
 		btBroadphaseProxy::DefaultFilter);
 	mpPhysicsWorld->addAction(mpPhysicsEntity);
-}
 
-//----------------------------------------------------------------------------
-void Player::SetTotalHealth(Float totalHealth)
-{
-	mTotalHealth = totalHealth;
-	mHealth = mTotalHealth;
-}
 
-//----------------------------------------------------------------------------
-Float Player::GetHealth()
-{
-	return mHealth;
-}
+	mpNode = DynamicCast<Node>(GetSceneObject());
+	WIRE_ASSERT(mpNode);
 
-//----------------------------------------------------------------------------
-Float Player::GetTotalHealth()
-{
-	return mTotalHealth;
-}
+	mpGun = mpNode->GetChildByName("Gun");
+	if (mpGun)
+	{
+		mGunStartingRotation = mpGun->World.GetRotate();
+	}
 
-//----------------------------------------------------------------------------
-void Player::SetHeadHeight(Float headHeight)
-{
-	mHeadHeight = headHeight;
-}
+	// Set camera position
+	Vector3F cameraPosition = mpNode->World.GetTranslate();
+	mspCamera->SetFrame(cameraPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
 
-//----------------------------------------------------------------------------
-void Player::SetCharacterWidth(Float characterWidth)
-{
-	mCharacterWidth = characterWidth;
-}
-
-//----------------------------------------------------------------------------
-void Player::SetCharacterHeight(Float characterHeight)
-{
-	mCharacterHeight = characterHeight;
-}
-
-//----------------------------------------------------------------------------
-void Player::SetStepHeight(Float stepHeight)
-{
-	mStepHeight = stepHeight;
+	// Set physics entity position
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(BulletUtils::Convert(mspCamera->GetLocation()));
+	mpGhostObject->setWorldTransform(transform);
 }
 
 //----------------------------------------------------------------------------
 void Player::SetMoveSpeed(Float moveSpeed)
 {
 	mMoveSpeed = moveSpeed;
-}
-
-//----------------------------------------------------------------------------
-void Player::SetRotateSpeed(Float rotateSpeed)
-{
-	mRotateSpeed = rotateSpeed;
-}
-
-//----------------------------------------------------------------------------
-void Player::SetLookUpDeadZone(const Vector2F& rLookUpDeadZone)
-{
-	mLookUpDeadZone = rLookUpDeadZone;
-}
-
-//----------------------------------------------------------------------------
-void Player::SetMaximumVerticalAngle(Float maximumVerticalAngle)
-{
-	mMaximumVerticalAngle = MathF::DEG_TO_RAD * (maximumVerticalAngle);
-}
-
-//----------------------------------------------------------------------------
-void Player::SetMaximumShootingDistance(Float maximumShootingDistance)
-{
-	mMaximumShootingDistance = maximumShootingDistance;
 }
 
 //----------------------------------------------------------------------------
@@ -276,13 +218,6 @@ Vector3F Player::GetPosition()
 {
 	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
 	return Vector3F(origin.x(), origin.y() + mHeadHeight, origin.z());
-}
-
-//----------------------------------------------------------------------------
-void Player::UpdatePlayerNode()
-{
-	mpNode->Local.SetTranslate(GetPosition());
-	mpNode->Local.SetRotate(mRotationY * mRotationX);
 }
 
 //----------------------------------------------------------------------------
@@ -360,46 +295,4 @@ void Player::CreateRay(Float size)
 		* Vector3F(0, 0, 1.2F)) * (size * 0.5F);
 	pRay->Local.SetTranslate(gunEnd);
 	pRay->Local.SetRotate(mpGun->Local.GetRotate());
-}
-
-//----------------------------------------------------------------------------
-void Player::UpdateCamera()
-{
-	mspCamera->SetFrame(GetPosition(), mEyeDirection, mUp, mRight);
-}
-
-//----------------------------------------------------------------------------
-void Player::MovePhysicsEntity()
-{
-	if (mJump)
-	{
-		mpPhysicsEntity->jump();
-	}
-
-	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(mMove));
-}
-
-//----------------------------------------------------------------------------
-void Player::TakeDamage(Float damage)
-{
-	mHealth -= damage;
-}
-
-//----------------------------------------------------------------------------
-Float Player::GetDeltaTime(Double appTime)
-{
-	static Double lastApplicationTime = 0;
-	Float deltaTime;
-
-	if (lastApplicationTime == 0) 
-	{
-		deltaTime = 0;
-	} 
-	else 
-	{
-		deltaTime = (Float)(appTime - lastApplicationTime);
-	}
-	lastApplicationTime = appTime;
-
-	return deltaTime;
 }
