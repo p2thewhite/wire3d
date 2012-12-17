@@ -61,46 +61,50 @@
 	<References>
 	</References>
 	<Files>
-		<File
-			RelativePath=".\src\CollisionShapeToGeometryConverter.cpp"
+		<Filter
+			Name="Header Files"
 			>
-		</File>
-		<File
-			RelativePath=".\src\CollisionShapeToGeometryConverter.h"
+			<File
+				RelativePath=".\src\CollisionShapeToGeometryConverter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Game.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Player.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProbeRobot.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Source Files"
 			>
-		</File>
-		<File
-			RelativePath=".\src\Game.cpp"
+			<File
+				RelativePath=".\src\CollisionShapeToGeometryConverter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ProbeRobot.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Inline Files"
 			>
-		</File>
-		<File
-			RelativePath=".\src\Game.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\HealthMonitor.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\HealthMonitor.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Player.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Player.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\ProbeRobot.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\ProbeRobot.h"
-			>
-		</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
