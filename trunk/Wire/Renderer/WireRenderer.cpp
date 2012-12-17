@@ -1336,7 +1336,7 @@ void Renderer::BatchAllAndDraw(VisibleObject* const pVisible, UInt min,
 			mStatistics.mBatchedDynamic++;
 		}
 
-		batchedVertexCount += static_cast<UShort>(vertexCount);
+		batchedVertexCount = batchedVertexCount + static_cast<UShort>(vertexCount);
 		batchedIndexCount += pMesh->GetIndexCount();
 	}
 
