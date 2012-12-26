@@ -164,8 +164,8 @@ void Sample5::OnIdle()
 		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
 	mspWhiteCube->World.SetRotate(rotateWorldLight3);
 	mspWhiteCube->UpdateBS();
-	mspPlane->Lights[0]->Position = mspWhiteCube->World.GetTranslate();
-	mspPlane->Lights[0]->Direction = mspWhiteCube->World.GetMatrix().
+	mspPlane->GetLights()[0]->Position = mspWhiteCube->World.GetTranslate();
+	mspPlane->GetLights()[0]->Direction = mspWhiteCube->World.GetMatrix().
 		GetColumn(2);
 
 	GetRenderer()->ClearBuffers();
@@ -181,7 +181,7 @@ void Sample5::OnIdle()
 	}
 
 	// render the bottom plane which is being lit by the spot light
-	GetRenderer()->EnableLighting(mspPlane->Lights[0]->Ambient);
+	GetRenderer()->EnableLighting(mspPlane->GetLights()[0]->Ambient);
 	if (mCuller.IsVisible(mspPlane))
 	{
 		GetRenderer()->Draw(mspPlane);
@@ -253,14 +253,14 @@ Geometry* Sample5::CreatePlane()
 	// attach a material state and a light to the plane geometry directly
 	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
 	pStateMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
-	pPlane->States[State::MATERIAL] = pStateMaterial;
+	pPlane->GetStates()[State::MATERIAL] = pStateMaterial;
 
 	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
 	pLight->Position = Vector3F(0, 0, 10);
 	pLight->Direction = Vector3F(0, 0, -1);
 	pLight->Angle = 0.5F;
 	pLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
-	pPlane->Lights.Append(pLight);
+	pPlane->GetLights().Append(pLight);
 
 	// Notice the difference between attaching a light directly:
 	// 	pPlane->Lights.Append(pLight);

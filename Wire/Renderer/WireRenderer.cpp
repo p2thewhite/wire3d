@@ -16,6 +16,7 @@
 #include "WireLight.h"
 #include "WireMesh.h"
 #include "WireNode.h"
+#include "WireRenderObject.h"
 #include "WireTexture2D.h"
 #include "WireVisibleSet.h"
 
@@ -925,52 +926,47 @@ void Renderer::Set(const Mesh* pMesh)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(Geometry* pGeometry, Bool restoreState, Bool useEffect)
+void Renderer::Draw(Geometry* pGeometry, Bool restoreState)
 {
-	WIRE_ASSERT(pGeometry && pGeometry->GetMesh());
-	if (useEffect && pGeometry->GetEffectQuantity() > 0)
-	{
-		for (UInt i = 0; i < pGeometry->GetEffectQuantity(); i++)
-		{
-			VisibleObject visibleObject;
-			visibleObject.Object = pGeometry;
-			visibleObject.GlobalEffect = NULL;
-			pGeometry->GetEffect(i)->Draw(this, pGeometry, 0, 0,
-				&visibleObject, restoreState);
-		}
+	WIRE_ASSERT(pGeometry);
+	RenderObject* pRenderObject = *pGeometry;
+	pRenderObject->World = pGeometry->World;
+	Draw(pRenderObject, restoreState);
+}
 
-		return;
-	}
-
-	Mesh* pMesh = pGeometry->GetMesh();
+//----------------------------------------------------------------------------
+void Renderer::Draw(RenderObject* pRenderObject, Bool restoreState)
+{
+	WIRE_ASSERT(pRenderObject && pRenderObject->GetMesh());
+	Mesh* pMesh = pRenderObject->GetMesh();
 	WIRE_ASSERT((pMesh->GetStartIndex() + pMesh->GetIndexCount()) <= pMesh->
 		GetIndexBuffer()->GetQuantity());
 
 	Bool usesNormals = pMesh->HasNormal();
+	SetWorldTransformation(pRenderObject->World, usesNormals);
+
 	if (restoreState)
 	{
-		Enable(pGeometry->States);
-		Enable(pGeometry->Lights);
+		Enable(pRenderObject->GetStates());
+		Enable(pRenderObject->GetLights());
 		Enable(pMesh);
-		Enable(pGeometry->GetMaterial());
+		Enable(pRenderObject->GetMaterial());
 
-		SetWorldTransformation(pGeometry->World, usesNormals);
 		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex());
 
-		Disable(pGeometry->GetMaterial());
+		Disable(pRenderObject->GetMaterial());
 		Disable(pMesh);
-		Disable(pGeometry->Lights);
-		Disable(pGeometry->States);
+		Disable(pRenderObject->GetLights());
+		Disable(pRenderObject->GetStates());
 	}
 	else
 	{
-		Set(pGeometry->States);
-		Set(pGeometry->Lights);
+		Set(pRenderObject->GetStates());
+		Set(pRenderObject->GetLights());
 		Set(pMesh);
-		Set(pGeometry->GetMaterial());
+		Set(pRenderObject->GetMaterial());
 
-		SetWorldTransformation(pGeometry->World, usesNormals);
 		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex());
 	}
@@ -1060,7 +1056,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		for (UInt i = min; i < max; i++)
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));
-			Draw(StaticCast<Geometry>(pVisible[i].Object), false, true);
+			Draw(StaticCast<Geometry>(pVisible[i].Object), false);
 		}
 
 		return;
@@ -1070,10 +1066,10 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 	{
 		UInt idx = min;
 		const UInt maxStreams = mBatchedVertexBuffers.GetQuantity();
-		Bool hasIdenticalVBs = true;
 
 		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx].Object));
 		Geometry* pA = StaticCast<Geometry>(pVisible[idx].Object);
+		Bool hasIdenticalVBOs = pA->World.IsIdentity();
 		Mesh* pMeshA = pA->GetMesh();
 		WIRE_ASSERT(pMeshA);
 		UInt vA = GetVertexFormatKey(pMeshA->GetVertexBuffers());
@@ -1082,11 +1078,13 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx+1].Object));
 			Geometry* pB = StaticCast<Geometry>(pVisible[idx+1].Object);
+			Bool hadIdenticalVBOs = hasIdenticalVBOs && pB->World.IsIdentity();
+
 			Mesh* pMeshB = pB->GetMesh();
 			WIRE_ASSERT(pMeshB);
 
 			if (pA->GetMaterial() != pB->GetMaterial() ||
-				pA->StateSetID != pB->StateSetID)
+				pA->GetStateSetID() != pB->GetStateSetID())
 			{
 				break;
 			}
@@ -1098,25 +1096,24 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 				break;
 			}
 
-			Bool hadIdenticalVBs = hasIdenticalVBs;
 			for (UInt i = 0; i < rVBOsB.GetQuantity(); i++)
 			{
 				const VertexBufferPtr* pVBOsA = pMeshA->GetVertexBuffers().
 					GetArray();
 				if (rVBOsB[i] != pVBOsA[i])
 				{
-					hasIdenticalVBs = false;
+					hasIdenticalVBOs = false;
 					break;
 				}
 			}
 
-			if (hadIdenticalVBs && !hasIdenticalVBs && (idx > min))
+			if (hadIdenticalVBOs && !hasIdenticalVBOs && (idx > min))
 			{
-				hasIdenticalVBs = true;
+				hasIdenticalVBOs = true;
 				break;
 			}
 
-			if (!hasIdenticalVBs && rVBOsB.GetQuantity() > maxStreams)
+			if (!hasIdenticalVBOs && rVBOsB.GetQuantity() > maxStreams)
 			{
 				break;
 			}
@@ -1127,12 +1124,12 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 
 		if (idx > min)
 		{
-			Set(pA->States);
-			Set(pA->Lights);
+			Set(pA->GetStates());
+			Set(pA->GetLights());
 			Set(pA->GetMaterial());
 			Set(pMeshA->GetVertexBuffers());
 
-			if (hasIdenticalVBs)
+			if (hasIdenticalVBOs)
 			{
 				for (UInt i = 0; i < pMeshA->GetVertexBuffers().GetQuantity();
 					i++)
@@ -1150,7 +1147,7 @@ void Renderer::Draw(VisibleObject* const pVisible, UInt min, UInt max)
 		else
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[min].Object));
-			Draw(StaticCast<Geometry>(pVisible[min].Object), false, true);
+			Draw(StaticCast<Geometry>(pVisible[min].Object), false);
 		}
 
 		min = idx+1;
@@ -1179,7 +1176,7 @@ void Renderer::BatchIndicesAndDraw(VisibleObject* const pVisible, UInt min,
 
 		if (pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pGeometry, false, true);
+			Draw(pGeometry, false);
 			continue;
 		}
 
@@ -1192,7 +1189,7 @@ void Renderer::BatchIndicesAndDraw(VisibleObject* const pVisible, UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pGeometry, false, true);
+				Draw(pGeometry, false);
 				continue;
 			}
 
@@ -1257,7 +1254,7 @@ void Renderer::BatchAllAndDraw(VisibleObject* const pVisible, UInt min,
 		if (vertexCount > mVertexBatchingThreshold ||
 			pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pGeometry, false, true);
+			Draw(pGeometry, false);
 			continue;
 		}
 
@@ -1279,7 +1276,7 @@ void Renderer::BatchAllAndDraw(VisibleObject* const pVisible, UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pGeometry, false, true);
+				Draw(pGeometry, false);
 				continue;
 			}
 

@@ -2,13 +2,11 @@
 #ifndef IMPORTER_H
 #define IMPORTER_H
 
-#include <vector>
-#include <stdio.h>
-
 #include "rapidxml.hpp"
 #include "WireCamera.h"
 #include "WireColorRGBA.h"
 #include "WireGeometry.h"
+#include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireNode.h"
 #include "WireNodeSkybox.h"
@@ -18,10 +16,9 @@
 #include "WireVertexBuffer.h"
 #include "WireIndexBuffer.h"
 
+#ifndef NO_BULLET_PHYSICS_LIB
 #include "Collider.h"
-#include "btBulletDynamicsCommon.h"
-
-struct FT_FaceRec_;
+#endif
 
 class Importer
 {
@@ -57,9 +54,14 @@ public:
 
 	Importer(const Char* pPath = "", Options* pOptions = NULL);
 
+#ifndef NO_BULLET_PHYSICS_LIB
 	Wire::Node* LoadSceneFromXml(const Char* pFilename,
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
 		btDynamicsWorld* pPhysicsWorld = NULL);
+#else
+	Wire::Node* LoadSceneFromXml(const Char* pFilename,
+		Wire::TArray<Wire::CameraPtr>* pCameras = NULL);
+#endif
 
 	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool hasMipmaps,
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
@@ -77,8 +79,6 @@ private:
 	static void InitializeStaticSpatials(Wire::TArray<Wire::SpatialPtr>&
 		rSpatials, Bool prepareSceneForStaticBatching,
 		Bool duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
-	static void RegisterColliders(Wire::TArray<Collider*>& rColliders,
-		btDynamicsWorld* pPhysicsWorld);
 
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	UShort* Load16(const Char* pFilename, Int& rSize, Bool isBigEndian);
@@ -143,11 +143,16 @@ private:
 	Wire::THashTable<Wire::String, Wire::Texture2DPtr> mTextures;
 	Wire::THashTable<Wire::String, Wire::LightPtr> mLights;
 	Wire::TArray<Wire::SpatialPtr> mStaticSpatials;
-	Wire::TArray<Collider*> mColliders;
 
 	Statistics mStatistics;
 	Options mDefaultOptions;
 	Options* mpOptions;
+
+#ifndef NO_BULLET_PHYSICS_LIB
+	static void RegisterColliders(Wire::TArray<Collider*>& rColliders,
+		btDynamicsWorld* pPhysicsWorld);
+	Wire::TArray<Collider*> mColliders;
+#endif
 };
 
 #endif

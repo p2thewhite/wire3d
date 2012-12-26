@@ -7,37 +7,90 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
+inline Geometry::operator RenderObject* ()
+{
+	return mspRenderObject;
+}
+
+//----------------------------------------------------------------------------
+inline Geometry::operator const RenderObject* () const
+{
+	return mspRenderObject;
+}
+
+//----------------------------------------------------------------------------
 inline Mesh* Geometry::GetMesh()
 {
-	return mspMesh;
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetMesh();
 }
 
 //----------------------------------------------------------------------------
 inline const Mesh* Geometry::GetMesh() const
 {
-	return mspMesh;
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetMesh();
 }
 
 //----------------------------------------------------------------------------
 inline void Geometry::SetMesh(Mesh* pMesh)
 {
-	mspMesh = pMesh;
+	WIRE_ASSERT(mspRenderObject);
+	mspRenderObject->SetMesh(pMesh);
 }
 
 //----------------------------------------------------------------------------
 inline Material* Geometry::GetMaterial()
 {
-	return mspMaterial;
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetMaterial();
 }
 
 //----------------------------------------------------------------------------
 inline const Material* Geometry::GetMaterial() const
 {
-	return mspMaterial;
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetMaterial();
 }
 
 //----------------------------------------------------------------------------
 inline void Geometry::SetMaterial(Material* pMaterial)
 {
-	mspMaterial = pMaterial;
+	WIRE_ASSERT(mspRenderObject);
+	mspRenderObject->SetMaterial(pMaterial);
+}
+
+//----------------------------------------------------------------------------
+inline TArray<Pointer<Light> >& Geometry::GetLights()
+{
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetLights();
+}
+
+//----------------------------------------------------------------------------
+inline const TArray<Pointer<Light> >& Geometry::GetLights() const
+{
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetLights();
+}
+
+//----------------------------------------------------------------------------
+inline StatePtr* Geometry::GetStates()
+{
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetStates();
+}
+
+//----------------------------------------------------------------------------
+inline const StatePtr* Geometry::GetStates() const
+{
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetStates();
+}
+
+//----------------------------------------------------------------------------
+inline UInt Geometry::GetStateSetID() const
+{
+	WIRE_ASSERT(mspRenderObject);
+	return mspRenderObject->GetStateSetID();
 }

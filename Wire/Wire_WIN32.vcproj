@@ -1120,6 +1120,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderObject.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRtti.h"
 					>
 				</File>
@@ -1264,6 +1268,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderObject.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRtti.inl"
 					>
 				</File>
@@ -1389,6 +1397,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireRenderObject.cpp"
 					>
 				</File>
 				<File

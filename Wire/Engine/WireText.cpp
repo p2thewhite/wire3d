@@ -44,9 +44,8 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
-	SetMesh(pMesh);
+	mspRenderObject = WIRE_NEW RenderObject(pMesh);
 
-	Init();
 	Clear();
 	mWhitespaceWidth = mCharSizes[' '].Z();
 	mLineWidth = MathF::MAX_REAL;

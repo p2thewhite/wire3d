@@ -78,6 +78,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeSkybox.h" />
+    <ClInclude Include="Engine\WireRenderObject.h" />
     <ClInclude Include="Engine\WireText.h" />
     <ClInclude Include="Foundation\Dx9\WireDx9Application.h" />
     <ClInclude Include="Foundation\WireColor32.h" />
@@ -209,6 +210,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
   <ItemGroup>
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
+    <None Include="Engine\WireRenderObject.inl" />
     <None Include="Foundation\Dx9\WireSystemDx9.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
@@ -280,6 +282,7 @@ make WIRE_DEBUG=y -r 2&gt;&amp;1 | sed -e %27s/\(.[a-zA-Z]\+\):\([0-9]\+\):/\1(\
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />
+    <ClCompile Include="Engine\WireRenderObject.cpp" />
     <ClCompile Include="Engine\WireText.cpp" />
     <ClCompile Include="Foundation\Dx9\WireDx9Application.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

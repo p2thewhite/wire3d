@@ -10,6 +10,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCuller.h"
+#include "WireNode.h"
 
 using namespace Wire;
 
@@ -170,25 +171,6 @@ void Spatial::AttachLight(Light* pLight)
 
 	// This light is not in the current list, so add it.
 	mLights.Append(pLight);
-}
-
-//----------------------------------------------------------------------------
-void Spatial::AttachEffect(Effect* pEffect)
-{
-	WIRE_ASSERT(pEffect);
-
-	// Check if the effect is already in the list.
-	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
-	{
-		if (mEffects[i] == pEffect)
-		{
-			// The effect already exists, so do nothing.
-			return;
-		}
-	}
-
-	// The effect is not in the current list, so add it.
-	mEffects.Append(pEffect);
 }
 
 //----------------------------------------------------------------------------

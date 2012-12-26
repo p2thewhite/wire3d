@@ -2,8 +2,11 @@
 
 #include "BulletUtils.h"
 #include "PicoPNG.h"
+
+#ifndef NO_FREETYPE2_LIB
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#endif
 
 #include "WireEffect.h"
 #include "WireImage2D.h"
@@ -33,8 +36,13 @@ Importer::Importer(const Char* pPath, Options* pOptions)
 }
 
 //----------------------------------------------------------------------------
+#ifndef NO_BULLET_PHYSICS_LIB
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pCameras, btDynamicsWorld* pPhysicsWorld)
+#else
+Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
+	pCameras)
+#endif
 {
 	ResetStatistics();
 	mpCameras = pCameras;
@@ -85,11 +93,13 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		mStaticSpatials.RemoveAll();
 	}
 
+#ifndef NO_BULLET_PHYSICS_LIB
 	if (pPhysicsWorld != NULL)
 	{
 		RegisterColliders(mColliders, pPhysicsWorld);
 		mColliders.RemoveAll();
 	}
+#endif
 
 	return pRoot;
 }
@@ -153,6 +163,7 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
 Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 	UInt maxLength)
 {
+#ifndef NO_FREETYPE2_LIB
 	// Init FreeType lib and font
 	Int fileSize;
 	UChar* pMemFile = reinterpret_cast<UChar*>(Load(pFilename, fileSize));
@@ -345,6 +356,10 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 	WIRE_DELETE[] pMemFile;
+#else
+	Text* pText = StandardMesh::CreateText(maxLength);
+#endif
+
 	return pText;
 }
 
@@ -770,6 +785,7 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
+#ifndef NO_BULLET_PHYSICS_LIB
 	UpdateGS(pSpatial);
 
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
@@ -828,6 +844,7 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	mColliders.Append(pCollider);
 
 	mStatistics.ColliderCount++;
+#endif
 }
 
 //----------------------------------------------------------------------------
@@ -1909,6 +1926,7 @@ void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 	}
 }
 
+#ifndef NO_BULLET_PHYSICS_LIB
 //----------------------------------------------------------------------------
 void Importer::RegisterColliders(TArray<Collider*>& rColliders,
 	btDynamicsWorld* pPhysicsWorld)
@@ -1920,6 +1938,7 @@ void Importer::RegisterColliders(TArray<Collider*>& rColliders,
 		rColliders[i]->Register(pPhysicsWorld);
 	}
 }
+#endif
 
 //----------------------------------------------------------------------------
 Bool Importer::Is(const Char* pSrc, const Char* pDst)

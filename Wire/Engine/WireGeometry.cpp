@@ -29,21 +29,15 @@ WIRE_IMPLEMENT_RTTI(Wire, Geometry, Spatial);
 //----------------------------------------------------------------------------
 Geometry::Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 	pMaterial)
- 	:
-	mspMaterial(pMaterial)
 {
-	mspMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
-	Init();
+	Mesh* pMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
+	Init(pMesh, pMaterial);
 }
 
 //----------------------------------------------------------------------------
 Geometry::Geometry(Mesh* pMesh, Material* pMaterial)
-	:
-	mspMesh(pMesh),
-	mspMaterial(pMaterial)
 {
-	WIRE_ASSERT(pMesh);
-	Init();
+	Init(pMesh, pMaterial);
 }
 
 //----------------------------------------------------------------------------
@@ -57,16 +51,15 @@ Geometry::~Geometry()
 }
 
 //----------------------------------------------------------------------------
-void Geometry::Init()
+void Geometry::Init(Mesh* pMesh, Material* pMaterial)
 {
-	System::Memset(States, 0, State::MAX_STATE_TYPE * sizeof(State*));
-	StateSetID = System::MAX_UINT;
+	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
 }
 
 //----------------------------------------------------------------------------
 void Geometry::UpdateWorldBound()
 {
-	mspMesh->GetModelBound()->TransformBy(World, WorldBound);
+	GetMesh()->GetModelBound()->TransformBy(World, WorldBound);
 }
 
 //----------------------------------------------------------------------------
@@ -74,18 +67,20 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
 {
 	// update global state
+	StatePtr* rStates = GetStates();
 	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 	{
 		TArray<State*>& rState = pStateStacks[i];
-  		States[i] = rState[rState.GetQuantity()-1];
+  		rStates[i] = rState[rState.GetQuantity()-1];
 	}
 
 	// update light state
-	Lights.RemoveAll();
-	Lights.SetQuantity(pLightStack->GetQuantity());
+	TArray<LightPtr>& rLights = GetLights();
+	rLights.RemoveAll();
+	rLights.SetQuantity(pLightStack->GetQuantity());
 	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
 	{
-		Lights[i] = (*pLightStack)[i];
+		rLights[i] = (*pLightStack)[i];
 	}
 
 	// check if other Geometry objects share the same states
@@ -93,13 +88,13 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 	UInt* pStateSetID = pStateKeys->Find(key);
 	if (pStateSetID)
 	{
-		StateSetID = *pStateSetID;
+		mspRenderObject->SetStateSetID(*pStateSetID);
 	}
 	else
 	{
 		UInt id = pStateKeys->GetQuantity()+1;
 		pStateKeys->Insert(key, id);
-		StateSetID = id;
+		mspRenderObject->SetStateSetID(id);
 	}
 }
 
@@ -115,55 +110,58 @@ UInt Geometry::GetStateSetKey()
 	UInt key = 0;
 	UInt offset = 0;
 
-	if (States[State::ALPHA])
+	StatePtr* rStates = GetStates();
+	if (rStates[State::ALPHA])
 	{
-		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);
+		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
 		key = pState->ID;
 	}
 
 	offset = TInstanceID<StateAlpha>::GetMaxID()+1;
-	if (States[State::CULL])
+	if (rStates[State::CULL])
 	{
-		StateCull* pState = StaticCast<StateCull>(States[State::CULL]);
+		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
 		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateCull>::GetMaxID()+1;
-	if (States[State::FOG])
+	if (rStates[State::FOG])
 	{
-		StateFog* pState = StaticCast<StateFog>(States[State::FOG]);
+		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
 		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateFog>::GetMaxID()+1;
-	if (States[State::MATERIAL])
+	if (rStates[State::MATERIAL])
 	{
-		StateMaterial* pState = StaticCast<StateMaterial>(
-			States[State::MATERIAL]);
+		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
+			State::MATERIAL]);
 		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateMaterial>::GetMaxID()+1;
-	if (States[State::WIREFRAME])
+	if (rStates[State::WIREFRAME])
 	{
-		StateWireframe* pState = StaticCast<StateWireframe>(States[
+		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
 			State::WIREFRAME]);
 		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateWireframe>::GetMaxID()+1;
-	if (States[State::ZBUFFER])
+	if (rStates[State::ZBUFFER])
 	{
-		StateZBuffer* pState = StaticCast<StateZBuffer>(States[
+		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
 			State::ZBUFFER]);
 		key += pState->ID * offset;
 	}
 
-	for (UInt i = 0; i < Lights.GetQuantity(); i++)
+	TArray<LightPtr>& rLights = GetLights();
+	for (UInt i = 0; i < rLights.GetQuantity(); i++)
 	{
 		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
 			TInstanceID<Light>::GetMaxID()+1;
-		key += Lights[i]->ID * offset;
+		WIRE_ASSERT(rLights[i]);
+		key += rLights[i]->ID * offset;
 	}
 
 	WIRE_ASSERT(VerifyKey(key, offset));
@@ -174,10 +172,11 @@ UInt Geometry::GetStateSetKey()
 //----------------------------------------------------------------------------
 Bool Geometry::VerifyKey(UInt key, UInt offset)
 {
-	for (Int i = (Lights.GetQuantity()-1); i >= 0 ; i--)
+	TArray<LightPtr>& rLights = GetLights();
+	for (Int i = (rLights.GetQuantity()-1); i >= 0 ; i--)
 	{
 		UInt id = key / offset;
-		if (id != Lights[i]->ID)
+		if (id != rLights[i]->ID)
 		{
 			WIRE_ASSERT(false /* Light state id calculation error */);
 			return false;
@@ -188,9 +187,10 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 			TInstanceID<Light>::GetMaxID()+1;
 	}
 
-	if (States[State::ZBUFFER])
+	StatePtr* rStates = GetStates();
+	if (rStates[State::ZBUFFER])
 	{
-		StateZBuffer* pState = StaticCast<StateZBuffer>(States[
+		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
 			State::ZBUFFER]);
 		UInt id = key / offset;
 		if (id != pState->ID)
@@ -203,9 +203,9 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 	}
 
 	offset /= TInstanceID<StateWireframe>::GetMaxID()+1;
-	if (States[State::WIREFRAME])
+	if (rStates[State::WIREFRAME])
 	{
-		StateWireframe* pState = StaticCast<StateWireframe>(States[
+		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
 			State::WIREFRAME]);
 		UInt id = key / offset;
 		if (id != pState->ID)
@@ -218,9 +218,9 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 	}
 
 	offset /= TInstanceID<StateMaterial>::GetMaxID()+1;
-	if (States[State::MATERIAL])
+	if (rStates[State::MATERIAL])
 	{
-		StateMaterial* pState = StaticCast<StateMaterial>(States[
+		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
 			State::MATERIAL]);
 		UInt id = key / offset;
 		if (id != pState->ID)
@@ -233,9 +233,9 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 	}
 
 	offset /= TInstanceID<StateFog>::GetMaxID()+1;
-	if (States[State::FOG])
+	if (rStates[State::FOG])
 	{
-		StateFog* pState = StaticCast<StateFog>(States[State::FOG]);
+		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
 		UInt id = key / offset;
 		if (id != pState->ID)
 		{
@@ -247,9 +247,9 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 	}
 
 	offset /= TInstanceID<StateCull>::GetMaxID()+1;
-	if (States[State::CULL])
+	if (rStates[State::CULL])
 	{
-		StateCull* pState = StaticCast<StateCull>(States[State::CULL]);
+		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
 		UInt id = key / offset;
 		if (id != pState->ID)
 		{
@@ -261,9 +261,9 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 	}
 
 	offset /= TInstanceID<StateAlpha>::GetMaxID()+1;
-	if (States[State::ALPHA])
+	if (rStates[State::ALPHA])
 	{
-		StateAlpha* pState = StaticCast<StateAlpha>(States[State::ALPHA]);
+		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
 		UInt id = key / offset;
 		if (id != pState->ID)
 		{
@@ -280,11 +280,11 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 //----------------------------------------------------------------------------
 void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
-	VertexBuffer* const pPositions = mspMesh->GetPositionBuffer();
+	VertexBuffer* const pPositions = GetMesh()->GetPositionBuffer();
 	WIRE_ASSERT(pPositions);
-	VertexBuffer* const pNormals = mspMesh->GetNormalBuffer();
+	VertexBuffer* const pNormals = GetMesh()->GetNormalBuffer();
 
-	Bool isMeshShared = mspMesh->GetReferences() > 1;
+	Bool isMeshShared = GetMesh()->GetReferences() > 1;
 	Bool isPositionShared = pPositions->GetReferences() > 1;
 	Bool isNormalShared = pNormals && pNormals->GetReferences() > 1;
 	Bool isShared = isMeshShared ||isPositionShared || isNormalShared;
@@ -310,9 +310,9 @@ void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 	if (isShared)
 	{
 		TArray<VertexBuffer*> vertexBuffers;
-		for (UInt i = 0; i < mspMesh->GetVertexBuffers().GetQuantity(); i++)
+		for (UInt i = 0; i < GetMesh()->GetVertexBuffers().GetQuantity(); i++)
 		{
-			VertexBuffer* pVertexBuffer = mspMesh->GetVertexBuffer(i);
+			VertexBuffer* pVertexBuffer = GetMesh()->GetVertexBuffer(i);
 			if (pVertexBuffer == pPositions)
 			{
 				if (isMeshShared || isPositionShared)
@@ -331,19 +331,19 @@ void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 			vertexBuffers.Append(pVertexBuffer);
 		}
 
-		mspMesh = WIRE_NEW Mesh(vertexBuffers, mspMesh->GetIndexBuffer(),
-			mspMesh->GetStartIndex(), mspMesh->GetIndexCount());
+		SetMesh(WIRE_NEW Mesh(vertexBuffers, GetMesh()->GetIndexBuffer(),
+			GetMesh()->GetStartIndex(), GetMesh()->GetIndexCount()));
 	}
 
-	VertexBuffer* const pUniquePositions = mspMesh->GetPositionBuffer();
+	VertexBuffer* const pUniquePositions = GetMesh()->GetPositionBuffer();
 	pUniquePositions->ApplyForward(World, pUniquePositions->GetData());
-	VertexBuffer* const pUniqueNormals = mspMesh->GetNormalBuffer();
+	VertexBuffer* const pUniqueNormals = GetMesh()->GetNormalBuffer();
 	if (pUniqueNormals && (pUniquePositions != pUniqueNormals))
 	{
 		pUniqueNormals->ApplyForward(World, pUniqueNormals->GetData());
 	}
 
 	World.MakeIdentity();
-	mspMesh->UpdateModelBound();
+	GetMesh()->UpdateModelBound();
 	UpdateWorldBound();
 }

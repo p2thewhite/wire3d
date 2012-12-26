@@ -10,8 +10,9 @@
 #ifndef WIREGEOMETRY_H
 #define WIREGEOMETRY_H
 
-#include "WireSpatial.h"
 #include "WireMaterial.h"
+#include "WireSpatial.h"
+#include "WireRenderObject.h"
 
 namespace Wire
 {
@@ -31,7 +32,10 @@ public:
 	Geometry(Mesh* pMesh, Material* pMaterial = NULL);
 	virtual ~Geometry();
 
-	// geometric updates
+	inline operator RenderObject* ();
+	inline operator const RenderObject* () const;
+
+	// geometric update
 	virtual void UpdateWorldBound();
 
 	inline Mesh* GetMesh();
@@ -42,24 +46,22 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
+	inline TArray<Pointer<Light> >& GetLights();
+	inline const TArray<Pointer<Light> >& GetLights() const;
+
+	inline StatePtr* GetStates();
+	inline const StatePtr* GetStates() const;
+
+	inline UInt GetStateSetID() const;
+
 	// If World(Bound)IsCurrent or forceStatic is true, apply World transform
 	// to the vertices of the mesh and set World(Bound) to identity.
 	// If duplicateShared is true, shared Meshes will be duplicated before
 	// being processed. Otherwise shared Meshes will not be processed.
 	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
 
-	// member access
-	StatePtr States[State::MAX_STATE_TYPE];
-	TArray<Pointer<Light> > Lights;
-
-	// Identical IDs among different Geometry objects mean that all their
-	// States[] and Lights are identical. This is used for sorting Geometry
-	// by render state.
-	UInt StateSetID;
-
 protected:
 	Geometry();
-	void Init();
 
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,
@@ -68,11 +70,11 @@ protected:
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
+	Pointer<RenderObject> mspRenderObject;
+
 private:
 	UInt GetStateSetKey();
-
-	Pointer<Mesh> mspMesh;
-	Pointer<Material> mspMaterial;
+	void Init(Mesh* pMesh, Material* pMaterial);
 
 	// TODO: remove
 	Bool VerifyKey(UInt key, UInt offset);
