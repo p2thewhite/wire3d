@@ -17,6 +17,7 @@ namespace Wire
 {
 
 class Renderer;
+class Texture2D;
 
 class Text : public Geometry
 {

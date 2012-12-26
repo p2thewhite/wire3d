@@ -89,8 +89,8 @@ void Sample7::OnIdle()
 	mspGeometry->World.SetTranslate(Vector3F::ZERO);
 	mspGeometry->World.SetUniformScale(1);
 	mspGeometry->World.SetRotate(rotate);
-	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspGeometry->States[
-		State::MATERIAL]);
+	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspGeometry->
+		GetStates()[State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
 	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
 	GetRenderer()->Draw(mspGeometry);
@@ -229,10 +229,10 @@ Geometry* Sample7::CreateGeometry()
 	}
 	
 	// material for lighting
-	pTorus->States[State::MATERIAL] = WIRE_NEW StateMaterial;
+	pTorus->GetStates()[State::MATERIAL] = WIRE_NEW StateMaterial;
 
 	Light* pLight = WIRE_NEW Light;
-	pTorus->Lights.Append(pLight);
+	pTorus->GetLights().Append(pLight);
 
 	return pTorus;
 }

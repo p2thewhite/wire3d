@@ -11,3 +11,28 @@ inline UInt Node::GetQuantity() const
 {
 	return mChildren.GetQuantity();
 }
+
+//----------------------------------------------------------------------------
+inline UInt Node::GetEffectQuantity() const
+{
+	return mEffects.GetQuantity();
+}
+
+//----------------------------------------------------------------------------
+inline Effect* Node::GetEffect(UInt i) const
+{
+	WIRE_ASSERT(i < mEffects.GetQuantity());
+	return mEffects[i];
+}
+
+//----------------------------------------------------------------------------
+inline void Node::DetachEffect(Effect* pEffect)
+{
+	mEffects.Remove(pEffect);
+}
+
+//----------------------------------------------------------------------------
+inline void Node::DetachAllEffects()
+{
+	mEffects.RemoveAll();
+}

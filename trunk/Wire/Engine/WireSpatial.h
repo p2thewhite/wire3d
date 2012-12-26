@@ -10,7 +10,6 @@
 #ifndef WIRESPATIAL_H
 #define WIRESPATIAL_H
 
-#include "WireEffect.h"
 #include "WireLight.h"
 #include "WireSceneObject.h"
 #include "WireState.h"
@@ -22,6 +21,7 @@ namespace Wire
 
 class BoundingVolume;
 class Culler;
+class Node;
 
 class Spatial : public SceneObject
 {
@@ -83,8 +83,8 @@ public:
 		pLightStack = NULL, THashTable<UInt, UInt>* pStateKeys = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
-	inline void SetParent(Spatial* pParent);
-	inline Spatial* GetParent();
+	inline void SetParent(Node* pParent);
+	inline Node* GetParent();
 
 	// culling
 	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
@@ -105,19 +105,13 @@ public:
     inline void DetachLight(Light* pLight);
     inline void DetachAllLights();
 
-	// effect state
-	inline UInt GetEffectQuantity() const;
-	inline Effect* GetEffect(UInt i = 0) const;
-	void AttachEffect(Effect* pEffect);
-	inline void DetachEffect(Effect* pEffect);
-	inline void DetachAllEffects();
+	virtual void UpdateWorldBound() = 0;
 
 protected:
 	Spatial();
 
 	// geometric updates
 	virtual void UpdateWorldData(Double appTime);
-	virtual void UpdateWorldBound() = 0;
 	void PropagateBoundToRoot();
 
 	// render state updates
@@ -130,19 +124,13 @@ protected:
 
 protected:
 	// support for hierarchical scene graph
-	Spatial* mpParent;
+	Node* mpParent;
 
 	// render state
 	TArray<StatePtr> mStates;
 
 	// light state
 	TArray<Pointer<Light> > mLights;
-
-	// Effect state. If the effect is attached to a Geometry object, it
-	// applies to that object alone. If the effect is attached to a Node
-	// object, it applies to all Geometry objects in the subtree rooted at
-	// the Node.
-	TArray<Pointer<Effect> > mEffects;
 };
 
 typedef Pointer<Spatial> SpatialPtr;

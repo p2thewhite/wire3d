@@ -227,8 +227,8 @@ void CullerSorting::Insert(Spatial* pObject, Effect* pGlobalEffect)
 	}
 
 	WIRE_ASSERT(pGlobalEffect == NULL);
-	StateAlpha* pAlpha = DynamicCast<StateAlpha>(pGeometry->States[State::
-		ALPHA]);
+	StateAlpha* pAlpha = DynamicCast<StateAlpha>(pGeometry->GetStates()[
+		State::ALPHA]);
 	if (pAlpha)
 	{
 		if (pAlpha->BlendEnabled)
@@ -279,8 +279,8 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
 
 	key = static_cast<UInt>(z * (1<<DEPTH));
-	if (pGeometry->States[State::ALPHA] && StaticCast<StateAlpha>(pGeometry->
-		States[State::ALPHA])->BlendEnabled)
+	if (pGeometry->GetStates()[State::ALPHA] && StaticCast<StateAlpha>(
+		pGeometry->GetStates()[State::ALPHA])->BlendEnabled)
 	{
 		key = (((1<<DEPTH)-1) - key);
 	}
@@ -297,8 +297,8 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	}
 
 	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once)
-	WIRE_ASSERT(pGeometry->StateSetID < (1<<STATESET));
-	key |= pGeometry->StateSetID << (MATERIAL + DEPTH);
+	WIRE_ASSERT(pGeometry->GetStateSetID() < (1<<STATESET));
+	key |= pGeometry->GetStateSetID() << (MATERIAL + DEPTH);
 
 	return key;
 }

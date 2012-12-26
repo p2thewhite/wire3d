@@ -10,6 +10,7 @@
 #ifndef WIRENODE_H
 #define WIRENODE_H
 
+#include "WireEffect.h"
 #include "WireSpatial.h"
 
 namespace Wire
@@ -69,13 +70,22 @@ public:
 	void GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
+	// geometric update
+	virtual void UpdateWorldBound();
+
+	// effect state
+	inline UInt GetEffectQuantity() const;
+	inline Effect* GetEffect(UInt i = 0) const;
+	void AttachEffect(Effect* pEffect);
+	inline void DetachEffect(Effect* pEffect);
+	inline void DetachAllEffects();
+
 	// Traverse the child objects and call their MakeStatic()
 	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
 
 protected:
-	// geometric updates
+	// geometric update
 	virtual void UpdateWorldData(Double appTime);
-	virtual void UpdateWorldBound();
 
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,
@@ -85,6 +95,12 @@ protected:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 	TArray<SpatialPtr> mChildren;
+
+	// Effect state. If the effect is attached to a Geometry object, it
+	// applies to that object alone. If the effect is attached to a Node
+	// object, it applies to all Geometry objects in the subtree rooted at
+	// the Node.
+	TArray<Pointer<Effect> > mEffects;
 };
 
 typedef Pointer<Node> NodePtr;

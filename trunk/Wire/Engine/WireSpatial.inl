@@ -7,13 +7,13 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void Spatial::SetParent(Spatial* pParent)
+inline void Spatial::SetParent(Node* pParent)
 {
 	mpParent = pParent;
 }
 
 //----------------------------------------------------------------------------
-inline Spatial* Spatial::GetParent()
+inline Node* Spatial::GetParent()
 {
 	return mpParent;
 }
@@ -60,29 +60,4 @@ inline void Spatial::DetachLight(Light* pLight)
 inline void Spatial::DetachAllLights()
 {
 	mLights.RemoveAll();
-}
-
-//----------------------------------------------------------------------------
-inline UInt Spatial::GetEffectQuantity() const
-{
-	return mEffects.GetQuantity();
-}
-
-//----------------------------------------------------------------------------
-inline Effect* Spatial::GetEffect(UInt i) const
-{
-	WIRE_ASSERT(i < mEffects.GetQuantity());
-	return mEffects[i];
-}
-
-//----------------------------------------------------------------------------
-inline void Spatial::DetachEffect(Effect* pEffect)
-{
-	mEffects.Remove(pEffect);
-}
-
-//----------------------------------------------------------------------------
-inline void Spatial::DetachAllEffects()
-{
-	mEffects.RemoveAll();
 }

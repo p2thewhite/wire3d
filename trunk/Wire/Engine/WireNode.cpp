@@ -9,9 +9,9 @@
 #include "WireNode.h"
 
 #include "WireCuller.h"
-#include "WireEffect.h"
 #include "WireGeometry.h"
 #include "WireLight.h"
+#include "WireMaterial.h"
 #include "WireMesh.h"
 
 using namespace Wire;
@@ -229,6 +229,25 @@ void Node::UpdateWorldData(Double appTime)
 			pChild->UpdateGS(appTime, false);
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+void Node::AttachEffect(Effect* pEffect)
+{
+	WIRE_ASSERT(pEffect);
+
+	// Check if the effect is already in the list.
+	for (UInt i = 0; i < mEffects.GetQuantity(); i++)
+	{
+		if (mEffects[i] == pEffect)
+		{
+			// The effect already exists, so do nothing.
+			return;
+		}
+	}
+
+	// The effect is not in the current list, so add it.
+	mEffects.Append(pEffect);
 }
 
 //----------------------------------------------------------------------------

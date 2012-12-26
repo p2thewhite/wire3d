@@ -37,6 +37,7 @@ class PdrRendererInput;
 class PdrTexture2D;
 class PdrVertexFormat;
 class PdrVertexBuffer;
+class RenderObject;
 class Spatial;
 class Texture2D;
 class VertexAttributes;
@@ -55,8 +56,8 @@ public:
 	// Object drawing
 	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
 	void DrawScene(VisibleSet* rVisibleSet);
-	void Draw(Geometry* pGeometry, Bool restoreState = true,
-		Bool useEffect = true);
+	void Draw(Geometry* pGeometry, Bool restoreState = true);
+	void Draw(RenderObject* pRenderObject, Bool restoreState = true);
 
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,

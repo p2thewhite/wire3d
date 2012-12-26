@@ -41,12 +41,7 @@ void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
 		{
 			Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i].Object);
 			WIRE_ASSERT(pGeometry);
-
-			// Set useEffect to 'true' only if you detach this effect here
-			// (and/or attach some other effect of use), otherwise an infinite
-			// loop will be triggered.
-			Bool useEffect = false;
-			pRenderer->Draw(pGeometry, restoreState, useEffect);
+			pRenderer->Draw(pGeometry, restoreState);
 		}
 	}
 }
