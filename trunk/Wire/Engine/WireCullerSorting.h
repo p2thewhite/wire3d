@@ -25,7 +25,7 @@ public:
 	virtual ~CullerSorting();
 
 	virtual void ComputeVisibleSet(Spatial* pScene);
-	virtual void Insert(Spatial* pObject, Effect* pGlobalEffect);
+	virtual void Insert(Object* pObject);
 
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*

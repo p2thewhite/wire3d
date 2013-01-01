@@ -45,7 +45,7 @@ inline TArray<VisibleSet*>& Culler::GetVisibleSets()
 }
 
 //----------------------------------------------------------------------------
-inline void Culler::Insert(Spatial* pObject, Effect* pGlobalEffect)
+inline void Culler::Insert(Object* pObject)
 {
-	GetVisibleSet()->Insert(pObject, pGlobalEffect);
+	GetVisibleSet()->Insert(pObject);
 }

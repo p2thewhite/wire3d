@@ -11,21 +11,19 @@
 #define WIREVISIBLEOBJECT_H
 
 #include "WireTypes.h"
+#include "WireGeometry.h"
+#include "WireMesh.h"
 
 namespace Wire
 {
 
-class Effect;
-class Spatial;
+class Object;
 
 class VisibleObject
 {
 
 public:
-	Spatial* Object;
-	Effect* GlobalEffect;
-
-	inline Bool IsDrawable() const;
+	Object* VObject;
 };
 
 #include "WireVisibleObject.inl"

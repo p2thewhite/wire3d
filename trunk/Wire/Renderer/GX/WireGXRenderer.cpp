@@ -841,8 +841,8 @@ void PdrRendererData::AppendStatistics(Text* pText)
 	Char text[textArraySize];
 	const Float kb = 1024.0F;
 
-	const Char msg[] = "Draw Calls using DisplayLists: %d\nDisplayLists: %d, "
-		"DisplayListsSize: %.2f KB";
+	const Char msg[] = "Draw Calls using DisplayLists: %d\nDisplayLists: %d "
+		"/ %.2f KB";
 
 	System::Sprintf(text, textArraySize, msg,
 		Statistics.DrawCallsUsingDisplayLists,
