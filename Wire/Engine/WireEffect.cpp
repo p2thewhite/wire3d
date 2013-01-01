@@ -37,9 +37,9 @@ void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
 	// Override to obtain a different behavior.
 	for (UInt i = min; i <= max; i++)
 	{
-		if (pVisible[i].IsDrawable())
+		if (DynamicCast<Geometry>(pVisible[i].VObject))
 		{
-			Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i].Object);
+			Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i].VObject);
 			WIRE_ASSERT(pGeometry);
 			pRenderer->Draw(pGeometry, restoreState);
 		}

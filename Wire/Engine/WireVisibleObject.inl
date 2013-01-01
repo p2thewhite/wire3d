@@ -5,9 +5,3 @@
 // The Wire3D source code is supplied under the terms of the LGPL and
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
-
-//----------------------------------------------------------------------------
-inline Bool VisibleObject::IsDrawable() const
-{
-	return Object && !GlobalEffect;
-}

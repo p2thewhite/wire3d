@@ -70,9 +70,9 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float mb = kb * kb;
 
 	const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
-		"VBOs: %d, VBOsSize: %.2f KB, VFs: %d\n"
-		"IBOs: %d, IBOsSize: %.2f KB\n"
-		"Textures: %d, TexturesSize: %.2f MB\n";
+		"VBOs: %d / %.2f KB, VFs: %d\n"
+		"IBOs: %d / %.2f KB\n"
+		"Textures: %d / %.2f MB\n";
 
 	System::Sprintf(text, textArraySize, msg,
 		mDrawCalls, mTriangles, 
@@ -87,7 +87,7 @@ void RendererStatistics::AppendToText(Text* pText)
 	{
 		const Char msg[] =
 			"Batched Static: %d, Batched Dynamic: %d, Batches: %d\n"
-			"BatchIBOSize: %.2f KB, Batched IBO Data: %.2f KB\n";
+			"BatchIBO: %.2f KB, Batched IBO Data: %.2f KB\n";
 		System::Sprintf(text, textArraySize, msg,
 			mBatchedStatic, mBatchedDynamic, mBatchCount,
 			mBatchIBOSize / kb, mBatchedIBOData / kb);
@@ -96,7 +96,7 @@ void RendererStatistics::AppendToText(Text* pText)
 		if (mBatchVBOCount > 0)
 		{
 			const Char msg[] =
-				"BatchVBOSize: %.2f KB x%d, Batched VBO Data: %.2f KB\n";
+				"BatchVBOs: %.2f KB x%d, Batched VBO Data: %.2f KB\n";
 			System::Sprintf(text, textArraySize, msg,
 				(mBatchVBOsSize/mBatchVBOCount)/kb, mBatchVBOCount,
 				mBatchedVBOData / kb);

@@ -87,9 +87,9 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
-		if (pVisible[i].Object)
+		if (pVisible[i].VObject)
 		{
-			if (pVisible[i].GlobalEffect)
+			if (DynamicCast<Effect>(pVisible[i].VObject))
 			{
 				if (indexStack[0][0] < indexStack[0][1])
 				{
@@ -108,11 +108,12 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			else
 			{
 				// Found a leaf Geometry object.
+				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].VObject));
 				if (top == 0)
 				{
-					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].Object));					
-					pDestination->Insert(pVisible[i].Object, NULL);
-					mKeys.Append(GetKey(pVisible[i].Object));
+					pDestination->Insert(pVisible[i].VObject);
+					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[i].
+						VObject)));
 				}
 
 				indexStack[top][1]++;
@@ -121,21 +122,22 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		else
 		{
 			// End the scope of a global effect.
-			WIRE_ASSERT(!pVisible[i].GlobalEffect);
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
-			pDestination->Insert(pVisible[min].Object, pVisible[min].
-				GlobalEffect);
+			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min].VObject));
+			pDestination->Insert(pVisible[min].VObject);
 			mKeys.Append(0);	// dummy key to pad the array
 			left = pDestination->GetQuantity();
 
 			for (UInt j = min+1; j <= max; j++)
  			{
-				if (pVisible[j].IsDrawable())
+				if (DynamicCast<Geometry>(pVisible[j].VObject) != NULL)
 				{
-					pDestination->Insert(pVisible[j].Object, NULL);
-					mKeys.Append(GetKey(pVisible[j].Object));
+					pDestination->Insert(pVisible[j].VObject);
+					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].VObject));
+					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[j].
+						VObject)));
 				}
 			}
 
@@ -144,7 +146,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			QuickSort(mKeys, pDestination->GetVisible(), left,
 				pDestination->GetQuantity()-1);
 
-			pDestination->Insert(NULL, NULL);
+			pDestination->Insert(NULL);
 			mKeys.Append(0);
 
 			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/); // TODO
@@ -192,10 +194,10 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 			pKeys[i] = pKeys[j];
 			pKeys[j] = tmp;
 
-			WIRE_ASSERT(pVisibles[i].GlobalEffect == NULL);
-			Spatial* pTmp = pVisibles[i].Object;
-			pVisibles[i].Object = pVisibles[j].Object;
-			pVisibles[j].Object = pTmp;
+			WIRE_ASSERT(!(DynamicCast<Effect>(pVisibles[i].VObject)));
+			Object* pTmp = pVisibles[i].VObject;
+			pVisibles[i].VObject = pVisibles[j].VObject;
+			pVisibles[j].VObject = pTmp;
 
 			i++;
 			j--;
@@ -214,36 +216,36 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 }
 
 //----------------------------------------------------------------------------
-void CullerSorting::Insert(Spatial* pObject, Effect* pGlobalEffect)
+void CullerSorting::Insert(Object* pObject)
 {
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
 
 	Geometry* pGeometry = DynamicCast<Geometry>(pObject);
 	if (!pGeometry)
 	{
-		GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
-		GetVisibleSet(1)->Insert(pObject, pGlobalEffect);
+		GetVisibleSet(0)->Insert(pObject);
+		GetVisibleSet(1)->Insert(pObject);
 		return;
 	}
 
-	WIRE_ASSERT(pGlobalEffect == NULL);
-	StateAlpha* pAlpha = DynamicCast<StateAlpha>(pGeometry->GetStates()[
+	WIRE_ASSERT(!(DynamicCast<Effect>(pObject)));
+	StateAlpha* pAlpha = StaticCast<StateAlpha>(pGeometry->GetStates()[
 		State::ALPHA]);
 	if (pAlpha)
 	{
 		if (pAlpha->BlendEnabled)
 		{
-			GetVisibleSet(1)->Insert(pObject, pGlobalEffect);
+			GetVisibleSet(1)->Insert(pObject);
 		}
 		else
 		{
-			GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
+			GetVisibleSet(0)->Insert(pObject);
 		}
 	}
 	else
 	{
 		WIRE_ASSERT(false/* there's no AlphaState, call UpdateRS() to init*/);
-		GetVisibleSet(0)->Insert(pObject, pGlobalEffect);
+		GetVisibleSet(0)->Insert(pObject);
 	}
 }
 

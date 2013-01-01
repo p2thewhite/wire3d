@@ -59,6 +59,9 @@ public:
 	void Draw(Geometry* pGeometry, Bool restoreState = true);
 	void Draw(RenderObject* pRenderObject, Bool restoreState = true);
 
+	// draw array of objects [min,max)
+	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
+
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
 		UInt maxVertexStreams = 6);
@@ -256,7 +259,6 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
 	void BatchAllAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
 	void BatchIndicesAndDraw(VisibleObject* const pVisible, UInt min,
 		UInt max);

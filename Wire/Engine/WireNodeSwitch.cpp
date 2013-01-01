@@ -39,7 +39,7 @@ void NodeSwitch::GetVisibleSet(Culler& rCuller, Bool noCull)
     {
         // This is a global effect. Place a 'begin' marker in the visible
         // set to indicate the effect is active.
-        rCuller.Insert(this, mEffects[i]);
+        rCuller.Insert(mEffects[i]);
     }
 
     Spatial* pChild = mChildren[mActiveChild];
@@ -52,6 +52,6 @@ void NodeSwitch::GetVisibleSet(Culler& rCuller, Bool noCull)
     {
         // Place an 'end' marker in the visible set to indicate that the
         // global effect is inactive.
-        rCuller.Insert(NULL, NULL);
+        rCuller.Insert(NULL);
     }
 }
