@@ -12,7 +12,6 @@
 #include "WireLight.h"
 #include "WireMesh.h"
 #include "WireRenderer.h"
-#include "WireVisibleObject.h"
 
 using namespace Wire;
 
@@ -29,18 +28,17 @@ Effect::~Effect()
 }
 
 //----------------------------------------------------------------------------
-void Effect::Draw(Renderer* pRenderer, Spatial*, UInt min, UInt max,
-	VisibleObject* pVisible, Bool restoreState)
+void Effect::Draw(Renderer* pRenderer, Object* pVisible[], UInt min, UInt max,
+	Bool restoreState)
 {
 	// The default drawing function for global effects. Essentially, this
 	// draws all the visible leaf geometry, as if no effect was applied.
 	// Override to obtain a different behavior.
 	for (UInt i = min; i <= max; i++)
 	{
-		if (DynamicCast<Geometry>(pVisible[i].VObject))
+		Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i]);
+		if (pGeometry)
 		{
-			Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i].VObject);
-			WIRE_ASSERT(pGeometry);
 			pRenderer->Draw(pGeometry, restoreState);
 		}
 	}

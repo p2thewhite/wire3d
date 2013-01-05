@@ -7,12 +7,6 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void VisibleSet::Clear()
-{
-	mVisible.SetQuantity(0, false);
-}
-
-//----------------------------------------------------------------------------
 inline UInt VisibleSet::GetQuantity() const
 {
 	return mVisible.GetQuantity();
@@ -31,14 +25,26 @@ inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 }
 
 //----------------------------------------------------------------------------
-inline VisibleObject* VisibleSet::GetVisible()
+inline Object** VisibleSet::GetVisible()
 {
 	return mVisible.GetArray();
 }
 
 //----------------------------------------------------------------------------
-inline VisibleObject& VisibleSet::GetVisible(UInt i)
+inline Object* VisibleSet::GetVisible(UInt i)
 {
 	WIRE_ASSERT(i < GetQuantity());
 	return mVisible[i];
+}
+
+//----------------------------------------------------------------------------
+inline void VisibleSet::Clear()
+{
+	mVisible.SetQuantity(0, false);
+}
+
+//----------------------------------------------------------------------------
+inline void VisibleSet::Insert(Object* pObject)
+{
+	mVisible.Append(pObject);
 }

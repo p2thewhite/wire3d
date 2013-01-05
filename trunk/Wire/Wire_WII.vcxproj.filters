@@ -318,9 +318,6 @@
     <ClInclude Include="Engine\WireVertexBuffer.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireVisibleObject.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WireVisibleSet.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -660,9 +657,6 @@
       <Filter>Engine\Inline Files</Filter>
     </None>
     <None Include="Engine\WireVertexBuffer.inl">
-      <Filter>Engine\Inline Files</Filter>
-    </None>
-    <None Include="Engine\WireVisibleObject.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
     <None Include="Engine\WireVisibleSet.inl">

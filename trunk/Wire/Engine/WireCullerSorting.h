@@ -30,9 +30,9 @@ public:
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		pDestination);
-	void QuickSort(TArray<UInt>& pKeys, VisibleObject* const pVisibles,
-//	void QuickSort(UInt* const pKeys, VisibleObject* const pVisibles,
-		Int left, Int right);
+	void QuickSort(TArray<UInt>& pKeys, Object** const pVisible, Int left,
+//	void QuickSort(UInt* const pKeys, Object** const pVisible, Int left,
+		Int right);
 	UInt GetKey(Spatial* pSpatial);
 
 	VisibleSet* mpOpaqueGeometry;

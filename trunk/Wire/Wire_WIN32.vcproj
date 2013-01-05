@@ -1196,10 +1196,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireVisibleObject.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireVisibleSet.h"
 					>
 				</File>
@@ -1305,10 +1301,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireVertexBuffer.inl"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireVisibleObject.inl"
 					>
 				</File>
 				<File
