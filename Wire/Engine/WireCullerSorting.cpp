@@ -83,13 +83,13 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	UInt left;
 
 	const UInt visibleQuantity = pSource->GetQuantity();
-	VisibleObject* const pVisible = pSource->GetVisible();
+	Object** const pVisible = pSource->GetVisible();
 
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
-		if (pVisible[i].VObject)
+		if (pVisible[i])
 		{
-			if (DynamicCast<Effect>(pVisible[i].VObject))
+			if (DynamicCast<Effect>(pVisible[i]))
 			{
 				if (indexStack[0][0] < indexStack[0][1])
 				{
@@ -108,12 +108,11 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			else
 			{
 				// Found a leaf Geometry object.
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i].VObject));
+				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i]));
 				if (top == 0)
 				{
-					pDestination->Insert(pVisible[i].VObject);
-					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[i].
-						VObject)));
+					pDestination->Insert(pVisible[i]);
+					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[i])));
 				}
 
 				indexStack[top][1]++;
@@ -125,19 +124,18 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
-			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min].VObject));
-			pDestination->Insert(pVisible[min].VObject);
+			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
+			pDestination->Insert(pVisible[min]);
 			mKeys.Append(0);	// dummy key to pad the array
 			left = pDestination->GetQuantity();
 
 			for (UInt j = min+1; j <= max; j++)
  			{
-				if (DynamicCast<Geometry>(pVisible[j].VObject) != NULL)
+				Geometry* pGeometry = DynamicCast<Geometry>(pVisible[j]);
+				if (pGeometry)
 				{
-					pDestination->Insert(pVisible[j].VObject);
-					WIRE_ASSERT(DynamicCast<Geometry>(pVisible[j].VObject));
-					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[j].
-						VObject)));
+					pDestination->Insert(pVisible[j]);
+					mKeys.Append(GetKey(pGeometry));
 				}
 			}
 
@@ -168,9 +166,9 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 }
 
 //----------------------------------------------------------------------------
-//void CullerSorting::QuickSort(UInt* const pKeys, VisibleObject* const
-void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
-	pVisibles, Int left, Int right)
+//void CullerSorting::QuickSort(UInt* const pKeys, Object** const pVisible,
+void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
+	Int left, Int right)
 {
 	Int i = left;
 	Int j = right;
@@ -194,10 +192,10 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 			pKeys[i] = pKeys[j];
 			pKeys[j] = tmp;
 
-			WIRE_ASSERT(!(DynamicCast<Effect>(pVisibles[i].VObject)));
-			Object* pTmp = pVisibles[i].VObject;
-			pVisibles[i].VObject = pVisibles[j].VObject;
-			pVisibles[j].VObject = pTmp;
+			WIRE_ASSERT((DynamicCast<Geometry>(pVisible[i])));
+			Object* pTmp = pVisible[i];
+			pVisible[i] = pVisible[j];
+			pVisible[j] = pTmp;
 
 			i++;
 			j--;
@@ -206,12 +204,12 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, VisibleObject* const
 
 	if (left < j)
 	{
-		QuickSort(pKeys, pVisibles, left, j);
+		QuickSort(pKeys, pVisible, left, j);
 	}
 
 	if (i < right)
 	{
-		QuickSort(pKeys, pVisibles, i, right);
+		QuickSort(pKeys, pVisible, i, right);
 	}
 }
 
@@ -228,7 +226,6 @@ void CullerSorting::Insert(Object* pObject)
 		return;
 	}
 
-	WIRE_ASSERT(!(DynamicCast<Effect>(pObject)));
 	StateAlpha* pAlpha = StaticCast<StateAlpha>(pGeometry->GetStates()[
 		State::ALPHA]);
 	if (pAlpha)

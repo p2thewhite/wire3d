@@ -10,13 +10,11 @@
 #ifndef WIREVISIBLESET_H
 #define WIREVISIBLESET_H
 
-#include "WireVisibleObject.h"
+#include "WireObject.h"
 #include "WireTArray.h"
 
 namespace Wire
 {
-
-class Spatial;
 
 class VisibleSet
 {
@@ -35,16 +33,16 @@ public:
 	inline UInt GetQuantity() const;
 	inline UInt GetMaxQuantity() const;
 	inline void SetMaxQuantity(UInt maxQuantity);
-	inline VisibleObject* GetVisible();
-	inline VisibleObject& GetVisible(UInt i);
+	inline Object** GetVisible();
+	inline Object* GetVisible(UInt i);
 
 	// Creates a VisibleObject from the input and appends it to the end of the
 	// VisibleObject array.
-	void Insert(Object* pObject);
+	inline void Insert(Object* pObject);
 	inline void Clear();
 
 private:
-	TArray<VisibleObject> mVisible;
+	TArray<Object*> mVisible;
 };
 
 #include "WireVisibleSet.inl"

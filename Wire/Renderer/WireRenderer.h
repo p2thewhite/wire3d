@@ -42,7 +42,6 @@ class Spatial;
 class Texture2D;
 class VertexAttributes;
 class VertexBuffer;
-class VisibleObject;
 class VisibleSet;
 
 class Renderer
@@ -59,8 +58,8 @@ public:
 	void Draw(Geometry* pGeometry, Bool restoreState = true);
 	void Draw(RenderObject* pRenderObject, Bool restoreState = true);
 
-	// draw array of objects [min,max)
-	void Draw(VisibleObject* const pVisible, UInt min, UInt max);
+	// draw array of objects [min,max) using batching (if enabled)
+	void Draw(Object* const pVisible[], UInt min, UInt max);
 
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
@@ -259,9 +258,8 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void BatchAllAndDraw(VisibleObject* const pVisible, UInt min, UInt max);
-	void BatchIndicesAndDraw(VisibleObject* const pVisible, UInt min,
-		UInt max);
+	void BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max);
+	void BatchIndicesAndDraw(Object* const pVisible[], UInt min, UInt max);
 	void DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
 		UInt indexCount);

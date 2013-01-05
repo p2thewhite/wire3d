@@ -21,11 +21,3 @@ VisibleSet::VisibleSet(UInt maxQuantity, UInt growBy)
 VisibleSet::~VisibleSet()
 {
 }
-
-//----------------------------------------------------------------------------
-void VisibleSet::Insert(Object* pObject)
-{
-	VisibleObject visible;
-	visible.VObject = pObject;
-	mVisible.Append(visible);
-}
