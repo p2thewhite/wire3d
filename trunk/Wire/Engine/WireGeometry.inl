@@ -19,6 +19,18 @@ inline Geometry::operator const RenderObject* () const
 }
 
 //----------------------------------------------------------------------------
+inline RenderObject* Geometry::GetRenderObject()
+{
+	return mspRenderObject;
+}
+
+//----------------------------------------------------------------------------
+inline const RenderObject* Geometry::GetRenderObject() const
+{
+	return mspRenderObject;
+}
+
+//----------------------------------------------------------------------------
 inline Mesh* Geometry::GetMesh()
 {
 	WIRE_ASSERT(mspRenderObject);

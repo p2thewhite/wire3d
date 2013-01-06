@@ -40,7 +40,7 @@ Bool Sample3::OnInitialize()
 	// time during execution of the main loop (i.e. when the respective level
 	// of the object is drawn for the first time). Thus we bind beforehand in
 	// order to avoid wasting time in the main loop.
-	Renderer::BindAll(mspRoot);
+	mspRoot->Bind(GetRenderer());
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up

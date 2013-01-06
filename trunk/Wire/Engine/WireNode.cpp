@@ -9,10 +9,6 @@
 #include "WireNode.h"
 
 #include "WireCuller.h"
-#include "WireGeometry.h"
-#include "WireLight.h"
-#include "WireMaterial.h"
-#include "WireMesh.h"
 
 using namespace Wire;
 
@@ -367,23 +363,40 @@ void Node::GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*
 }
 
 //----------------------------------------------------------------------------
+void Node::Bind(Renderer* pRenderer)
+{
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Spatial* pSpatial = GetChild(i);
+		if (pSpatial)
+		{
+			pSpatial->Bind(pRenderer);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Node::Unbind(Renderer* pRenderer)
+{
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Spatial* pSpatial = GetChild(i);
+		if (pSpatial)
+		{
+			pSpatial->Unbind(pRenderer);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 void Node::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
 		Spatial* pChild = GetChild(i);
-		Node* pNode = DynamicCast<Node>(pChild);
-		if (pNode)
+		if (pChild)
 		{
-			pNode->MakeStatic(forceStatic, duplicateShared);
-		}
-		else
-		{
-			Geometry* pGeometry = DynamicCast<Geometry>(pChild);
-			if (pGeometry)
-			{
-				pGeometry->MakeStatic(forceStatic, duplicateShared);
-			}
+			pChild->MakeStatic(forceStatic, duplicateShared);
 		}
 	}
 }

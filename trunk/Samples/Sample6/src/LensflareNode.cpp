@@ -41,8 +41,6 @@ LensflareNode::LensflareNode(Spatial* pLightSource)
 	// Never let this node be culled by the system, because we determine
 	// the visibility of this node and its children (i.e. flares) ourselves.
 	Culling = CULL_NEVER;
-
-	Renderer::BindAll(this);
 }
 
 //----------------------------------------------------------------------------

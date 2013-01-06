@@ -22,6 +22,7 @@ namespace Wire
 class BoundingVolume;
 class Culler;
 class Node;
+class Renderer;
 
 class Spatial : public SceneObject
 {
@@ -105,7 +106,16 @@ public:
     inline void DetachLight(Light* pLight);
     inline void DetachAllLights();
 
+	// geometric updates
 	virtual void UpdateWorldBound() = 0;
+
+	// Bind/Unbind all renderer related resources
+	virtual void Bind(Renderer* pRenderer);
+	virtual void Unbind(Renderer* pRenderer);
+
+	// Traverse the child objects and call their MakeStatic()
+	virtual void MakeStatic(Bool forceStatic = false,
+		Bool duplicateShared = true);
 
 protected:
 	Spatial();

@@ -31,6 +31,8 @@ Bool Sample6::OnInitialize()
 	// initialize the render state of the scene graph
 	mspRoot->UpdateRS();
 
+	mspRoot->Bind(GetRenderer());
+
 	// setup the camera
 	Vector3F cameraLocation(0.0F, 0.0F, 0.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);

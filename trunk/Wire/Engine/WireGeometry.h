@@ -35,8 +35,8 @@ public:
 	inline operator RenderObject* ();
 	inline operator const RenderObject* () const;
 
-	// geometric update
-	virtual void UpdateWorldBound();
+	inline RenderObject* GetRenderObject();
+	inline const RenderObject* GetRenderObject() const;
 
 	inline Mesh* GetMesh();
 	inline const Mesh* GetMesh() const;
@@ -54,14 +54,25 @@ public:
 
 	inline UInt GetStateSetID() const;
 
+	// geometric update
+	virtual void UpdateWorldBound();
+
+	// Bind/Unbind all renderer related of the RenderObject
+	virtual void Bind(Renderer* pRenderer);
+	virtual void Unbind(Renderer* pRenderer);
+
 	// If World(Bound)IsCurrent or forceStatic is true, apply World transform
 	// to the vertices of the mesh and set World(Bound) to identity.
 	// If duplicateShared is true, shared Meshes will be duplicated before
 	// being processed. Otherwise shared Meshes will not be processed.
-	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
+	virtual void MakeStatic(Bool forceStatic = false,
+		Bool duplicateShared = true);
 
 protected:
 	Geometry();
+
+	// geometric update
+	virtual void UpdateWorldData(Double appTime);
 
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,
@@ -76,8 +87,7 @@ private:
 	UInt GetStateSetKey();
 	void Init(Mesh* pMesh, Material* pMaterial);
 
-	// TODO: remove
-	Bool VerifyKey(UInt key, UInt offset);
+	Bool VerifyKey(UInt key, UInt offset); 	// TODO: remove
 };
 
 typedef Pointer<Geometry> GeometryPtr;

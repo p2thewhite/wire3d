@@ -275,3 +275,18 @@ void Spatial::PopState(TArray<State*>* pStateStacks,
 		pLightStack->RemoveLast();
 	}
 }
+
+//----------------------------------------------------------------------------
+void Spatial::Bind(Renderer*)
+{
+}
+
+//----------------------------------------------------------------------------
+void Spatial::Unbind(Renderer*)
+{
+}
+
+//----------------------------------------------------------------------------
+void Spatial::MakeStatic(Bool, Bool)
+{
+}

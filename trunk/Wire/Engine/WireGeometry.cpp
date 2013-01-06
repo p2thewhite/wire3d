@@ -10,17 +10,8 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCuller.h"
-#include "WireEffect.h"
-#include "WireIndexBuffer.h"
-#include "WireLight.h"
 #include "WireMesh.h"
-#include "WireStateAlpha.h"
-#include "WireStateCull.h"
-#include "WireStateFog.h"
-#include "WireStateMaterial.h"
-#include "WireStateWireframe.h"
-#include "WireStateZBuffer.h"
-#include "WireVertexBuffer.h"
+#include "WireRenderer.h"
 
 using namespace Wire;
 
@@ -60,6 +51,14 @@ void Geometry::Init(Mesh* pMesh, Material* pMaterial)
 void Geometry::UpdateWorldBound()
 {
 	GetMesh()->GetModelBound()->TransformBy(World, WorldBound);
+}
+
+//----------------------------------------------------------------------------
+void Geometry::UpdateWorldData(Double appTime)
+{
+	Spatial::UpdateWorldData(appTime);
+	WIRE_ASSERT(mspRenderObject);
+	mspRenderObject->World = World;
 }
 
 //----------------------------------------------------------------------------
@@ -278,6 +277,24 @@ Bool Geometry::VerifyKey(UInt key, UInt offset)
 }
 
 //----------------------------------------------------------------------------
+void Geometry::Bind(Renderer* pRenderer)
+{
+	if (pRenderer)
+	{
+		pRenderer->Bind(mspRenderObject);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Geometry::Unbind(Renderer* pRenderer)
+{
+	if (pRenderer)
+	{
+		pRenderer->Unbind(mspRenderObject);
+	}
+}
+
+//----------------------------------------------------------------------------
 void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 {
 	VertexBuffer* const pPositions = GetMesh()->GetPositionBuffer();
@@ -344,6 +361,7 @@ void Geometry::MakeStatic(Bool forceStatic, Bool duplicateShared)
 	}
 
 	World.MakeIdentity();
+	mspRenderObject->World.MakeIdentity();
 	GetMesh()->UpdateModelBound();
 	UpdateWorldBound();
 }

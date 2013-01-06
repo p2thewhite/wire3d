@@ -8,16 +8,10 @@
 
 #include "WireNodeSkybox.h"
 
-#include "WireCamera.h"
 #include "WireCuller.h"
 #include "WireGeometry.h"
-#include "WireImage2D.h"
-#include "WireIndexBuffer.h"
-#include "WireMaterial.h"
 #include "WireMesh.h"
-#include "WireStandardMesh.h"
 #include "WireStateCull.h"
-#include "WireTexture2D.h"
 
 using namespace Wire;
 

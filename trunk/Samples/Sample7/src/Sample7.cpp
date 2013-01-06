@@ -30,7 +30,7 @@ Bool Sample7::OnInitialize()
 	// first time. However we want to dynamically fill the vertex buffer each
 	// frame, so the hardware buffer object already has to exist before we
 	// are rendering it. Thus we bind it manually.
-	Renderer::BindAll(mspGeometry);
+	mspGeometry->Bind(GetRenderer());
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
