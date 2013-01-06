@@ -16,7 +16,6 @@ namespace Wire
 {
 
 class Renderer;
-class Spatial;
 
 class Effect : public Object
 {

@@ -39,7 +39,7 @@ Bool Game::OnInitialize()
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
 
-	GetRenderer()->BindAll(mspText);
+	mspText->Bind(GetRenderer());
 	GetRenderer()->CreateBatchingBuffers(100000);
 	GetRenderer()->SetVertexBatchingThreshold(300);
 	GetRenderer()->SetIndexBatchingThreshold(2000);
@@ -400,7 +400,7 @@ Node* Game::LoadAndInitializeLoading()
 	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
 		(GetHeightF() - 256.0F)  * 0.5F, 0));
 
-	GetRenderer()->BindAll(pRoot);
+	pRoot->Bind(GetRenderer());
 
 	return pRoot;
 }
@@ -423,7 +423,7 @@ Node* Game::LoadAndInitializeGUI()
 	mspCrosshair = pRoot->GetChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
-	GetRenderer()->BindAll(pRoot);
+	pRoot->Bind(GetRenderer());
 
 	return pRoot;
 }
@@ -488,7 +488,7 @@ Node* Game::LoadAndInitializeScene()
 	pPlayerSpatial->AttachController(mspPlayer);
 	mspPlayer->Register(mpPhysicsWorld);
 
-	GetRenderer()->BindAll(pScene);
+	pScene->Bind(GetRenderer());
 
 	return pScene;
 }

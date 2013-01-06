@@ -38,7 +38,6 @@ class PdrTexture2D;
 class PdrVertexFormat;
 class PdrVertexBuffer;
 class RenderObject;
-class Spatial;
 class Texture2D;
 class VertexAttributes;
 class VertexBuffer;
@@ -118,9 +117,9 @@ public:
 	//    recommended way for updating resources (update the system memory and
 	//    then call Update).
 
-	// Bind/Unbind all resources of a geometry object or a scene graph
-	static void BindAll(const Spatial* pSpatial);
-	static void UnbindAll(const Spatial* pSpatial);
+	// Bind/Unbind all resources of a RenderObject
+	void Bind(const RenderObject* pRenderObject);
+	void Unbind(const RenderObject* pRenderObject);
 
 	// Index buffer management
 	PdrIndexBuffer* Bind(const IndexBuffer* pIndexBuffer);

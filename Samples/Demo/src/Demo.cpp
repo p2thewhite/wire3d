@@ -32,7 +32,7 @@ Bool Demo::OnInitialize()
 	// frames per second and render statistics debug text
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
-	GetRenderer()->BindAll(mspText);
+	mspText->Bind(GetRenderer());
 
  	GetRenderer()->CreateBatchingBuffers(50000, 50000);
  	GetRenderer()->SetVertexBatchingThreshold(1000);
@@ -194,7 +194,7 @@ Node* Demo::LoadAndInitLogo()
 		pLogo->AttachController(WIRE_NEW LogoFader);
 	}
 
-	GetRenderer()->BindAll(pRoot);
+	pRoot->Bind(GetRenderer());
 	return pRoot;
 }
 
@@ -255,6 +255,6 @@ Node* Demo::LoadAndInitScene()
 			GetRenderer()));
 	}	
 
-	GetRenderer()->BindAll(pScene);
+	pScene->Bind(GetRenderer());
 	return pScene;
 }

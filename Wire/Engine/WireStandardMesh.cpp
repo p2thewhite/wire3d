@@ -11,17 +11,9 @@
 #include "WireBoundingVolume.h"
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
-#include "WireEffect.h"
 #include "WireImage2D.h"
-#include "WireIndexBuffer.h"
-#include "WireGeometry.h"
-#include "WireLight.h"
-#include "WireMaterial.h"
 #include "WireMesh.h"
-#include "WireStateAlpha.h"
 #include "WireText.h"
-#include "WireTexture2D.h"
-#include "WireVertexBuffer.h"
 
 using namespace Wire;
 

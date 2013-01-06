@@ -73,6 +73,10 @@ public:
 	// geometric update
 	virtual void UpdateWorldBound();
 
+	// Bind/Unbind all renderer related resources of the subgraph
+	virtual void Bind(Renderer* pRenderer);
+	virtual void Unbind(Renderer* pRenderer);
+
 	// effect state
 	inline UInt GetEffectQuantity() const;
 	inline Effect* GetEffect(UInt i = 0) const;
@@ -81,7 +85,8 @@ public:
 	inline void DetachAllEffects();
 
 	// Traverse the child objects and call their MakeStatic()
-	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
+	virtual void MakeStatic(Bool forceStatic = false,
+		Bool duplicateShared = true);
 
 protected:
 	// geometric update

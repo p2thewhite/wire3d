@@ -1706,4 +1706,4 @@ const unsigned char Cursors::s_Png[] = {
 	0xae, 0x42, 0x60, 0x82
 };
 
-const int Cursors::s_PngSize = sizeof(s_Png);
+const Int Cursors::s_PngSize = sizeof(s_Png);

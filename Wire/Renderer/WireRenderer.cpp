@@ -8,16 +8,12 @@
 
 #include "WireRenderer.h"
 
-#include "WireCamera.h"
 #include "WireEffect.h"
 #include "WireGeometry.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
-#include "WireLight.h"
 #include "WireMesh.h"
-#include "WireNode.h"
 #include "WireRenderObject.h"
-#include "WireTexture2D.h"
 #include "WireVisibleSet.h"
 
 #ifdef WIRE_WII
@@ -114,89 +110,63 @@ void Renderer::ReleaseResources()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BindAll(const Spatial* pSpatial)
+void Renderer::Bind(const RenderObject* pRenderObject)
 {
-	if (!pSpatial || !s_pRenderer)
+	if (!pRenderObject)
 	{
 		return;
 	}
 
-	const Node* pNode = DynamicCast<Node>(pSpatial);
-	if (pNode)
+	const Mesh* pMesh = pRenderObject->GetMesh();
+	if (pMesh)
 	{
-		for (UInt i = 0; i < pNode->GetQuantity(); i++)
+		Bind(pMesh->GetIndexBuffer());
+
+		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 		{
-			BindAll(const_cast<Node*>(pNode)->GetChild(i));
+			Bind(pMesh->GetVertexBuffer(i));
 		}
+
+		Bind(pMesh->GetVertexBuffers());
+
+		Bind(pMesh); // Binds display lists on Wii
 	}
 
-	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
-	if (pGeometry)
+	const Material* pMaterial = pRenderObject->GetMaterial();
+	if (pMaterial)
 	{
-		const Mesh* pMesh = pGeometry->GetMesh();
-		if (pMesh)
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 		{
-			s_pRenderer->Bind(pMesh->GetIndexBuffer());
-
-			for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-			{
-				s_pRenderer->Bind(pMesh->GetVertexBuffer(i));
-			}
-
-			s_pRenderer->Bind(pMesh->GetVertexBuffers());
-
-			s_pRenderer->Bind(pMesh); // Binds display lists on Wii
-		}
-
-		const Material* pMaterial = pGeometry->GetMaterial();
-		if (pMaterial)
-		{
-			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
-			{
-				s_pRenderer->Bind(pMaterial->GetTexture(i)->GetImage());
-			}
+			Bind(pMaterial->GetTexture(i)->GetImage());
 		}
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::UnbindAll(const Spatial* pSpatial)
+void Renderer::Unbind(const RenderObject* pRenderObject)
 {
-	if (!pSpatial || !s_pRenderer)
+	if (!pRenderObject)
 	{
 		return;
 	}
 
-	const Node* pNode = DynamicCast<Node>(pSpatial);
-	if (pNode)
+	const Mesh* pMesh = pRenderObject->GetMesh();
+	if (pMesh)
 	{
-		for (UInt i = 0; i < pNode->GetQuantity(); i++)
+		Unbind(pMesh->GetIndexBuffer());
+
+		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 		{
-			UnbindAll(const_cast<Node*>(pNode)->GetChild(i));
+			Unbind(pMesh->GetVertexBuffer(i));
 		}
 	}
 
-	const Geometry* pGeometry = DynamicCast<Geometry>(pSpatial);
-	if (pGeometry)
+	const Material* pMaterial = pRenderObject->GetMaterial();
+	if (pMaterial)
 	{
-		const Mesh* pMesh = pGeometry->GetMesh();
-		if (pMesh)
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 		{
-			s_pRenderer->Unbind(pMesh->GetIndexBuffer());
-
-			for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-			{
-				s_pRenderer->Unbind(pMesh->GetVertexBuffer(i));
-			}
-		}
-
-		const Material* pMaterial = pGeometry->GetMaterial();
-		if (pMaterial)
-		{
-			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
-			{
-				s_pRenderer->Unbind(pMaterial->GetTexture(i)->GetImage());
-			}
+			Unbind(pMaterial->GetTexture(i)->GetImage());
 		}
 	}
 }
@@ -1057,7 +1027,7 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 		for (UInt i = min; i < max; i++)
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i]));
-			Draw(StaticCast<Geometry>(pVisible[i]), false);
+			Draw(*(StaticCast<Geometry>(pVisible[i])), false);
 		}
 
 		return;
@@ -1148,7 +1118,7 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 		else
 		{
 			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[min]));
-			Draw(StaticCast<Geometry>(pVisible[min]), false);
+			Draw(*(StaticCast<Geometry>(pVisible[min])), false);
 		}
 
 		min = idx+1;
@@ -1177,7 +1147,7 @@ void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
 
 		if (pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pGeometry, false);
+			Draw(*pGeometry, false);
 			continue;
 		}
 
@@ -1190,7 +1160,7 @@ void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pGeometry, false);
+				Draw(*pGeometry, false);
 				continue;
 			}
 
@@ -1254,7 +1224,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 		if (vertexCount > mVertexBatchingThreshold ||
 			pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pGeometry, false);
+			Draw(*pGeometry, false);
 			continue;
 		}
 
@@ -1276,7 +1246,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pGeometry, false);
+				Draw(*pGeometry, false);
 				continue;
 			}
 

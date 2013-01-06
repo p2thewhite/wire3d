@@ -31,8 +31,8 @@ private:
 	Wire::NodePtr mspCursors;
 	Wire::MaterialPtr mspMaterial;
 
-	static const unsigned char s_Png[];
-	static const int s_PngSize;
+	static const UChar s_Png[];
+	static const Int s_PngSize;
 };
 
 #endif

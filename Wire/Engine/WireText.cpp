@@ -11,9 +11,6 @@
 #include "WireIndexBuffer.h"
 #include "WireMesh.h"
 #include "WireRenderer.h"
-#include "WireStateAlpha.h"
-#include "WireVertexAttributes.h"
-#include "WireVertexBuffer.h"
 
 using namespace Wire;
 

@@ -10,11 +10,8 @@
 
 #include "WireEffect.h"
 #include "WireGeometry.h"
-#include "WireLight.h"
-#include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireRenderer.h"
-#include "WireStateAlpha.h"
 
 using namespace Wire;
 

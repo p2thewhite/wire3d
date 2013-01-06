@@ -7,6 +7,7 @@
 // that agreement.
 
 #include "WireRtti.h"
+
 using namespace Wire;
 
 //----------------------------------------------------------------------------
