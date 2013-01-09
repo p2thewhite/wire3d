@@ -905,12 +905,15 @@ void Renderer::Draw(Geometry* pGeometry, Bool restoreState)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(RenderObject* pRenderObject, Bool restoreState)
+void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
 {
-	WIRE_ASSERT(pRenderObject && pRenderObject->GetMesh());
-	Mesh* pMesh = pRenderObject->GetMesh();
-	WIRE_ASSERT((pMesh->GetStartIndex() + pMesh->GetIndexCount()) <= pMesh->
-		GetIndexBuffer()->GetQuantity());
+	WIRE_ASSERT(pRenderObject);
+	// assert that this is really a RenderObject, not a cast Effect
+	WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pRenderObject)));
+
+	const Mesh* pMesh = pRenderObject->GetMesh();
+	WIRE_ASSERT(pMesh && ((pMesh->GetStartIndex() +	pMesh->GetIndexCount()) <=
+		pMesh->GetIndexBuffer()->GetQuantity()));
 
 	Bool usesNormals = pMesh->HasNormal();
 	SetWorldTransformation(pRenderObject->World, usesNormals);
@@ -957,13 +960,15 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 
 	const UInt visibleQuantity = pVisibleSet->GetQuantity();
 	Object** pVisible = pVisibleSet->GetVisible();
+	RenderObject** pRenderObjects = reinterpret_cast<RenderObject**>(pVisible);
+
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i])
 		{
 			if (DynamicCast<Effect>(pVisible[i]))
 			{
-				Draw(pVisible, indexStack[0][0], indexStack[0][1]);
+				Draw(pRenderObjects, indexStack[0][0], indexStack[0][1]);
 
 				// Begin the scope of a global effect.
 				top++;
@@ -973,8 +978,8 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 			}
 			else
 			{
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i]));
-				// Found a leaf Geometry object.
+				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
+				// Found a leaf object.
 				indexStack[top][1]++;
 			}
 		}
@@ -1000,7 +1005,7 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 		}
 	}
 
-	Draw(pVisible, indexStack[0][0], indexStack[0][1]);
+	Draw(pRenderObjects, indexStack[0][0], indexStack[0][1]);
 
 	ReleaseResources();
 }
@@ -1015,7 +1020,7 @@ void Renderer::DrawScene(TArray<VisibleSet*>& rVisibleSets)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
+void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 {
 	if (min == max)
 	{
@@ -1026,8 +1031,7 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 	{
 		for (UInt i = min; i < max; i++)
 		{
-			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i]));
-			Draw(*(StaticCast<Geometry>(pVisible[i])), false);
+			Draw(pVisible[i], false);
 		}
 
 		return;
@@ -1038,20 +1042,20 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 		UInt idx = min;
 		const UInt maxStreams = mBatchedVertexBuffers.GetQuantity();
 
-		WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx]));
-		Geometry* pA = StaticCast<Geometry>(pVisible[idx]);
+		WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx])));
+		const RenderObject* pA = pVisible[idx];
 		Bool hasIdenticalVBOs = pA->World.IsIdentity();
-		Mesh* pMeshA = pA->GetMesh();
+		const Mesh* pMeshA = pA->GetMesh();
 		WIRE_ASSERT(pMeshA);
 		UInt vA = GetVertexFormatKey(pMeshA->GetVertexBuffers());
 
 		for (; idx < max-1; idx++)
 		{
-			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[idx+1]));
-			Geometry* pB = StaticCast<Geometry>(pVisible[idx+1]);
+			WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx+1])));
+			const RenderObject* pB = StaticCast<RenderObject>(pVisible[idx+1]);
 			Bool hadIdenticalVBOs = hasIdenticalVBOs && pB->World.IsIdentity();
 
-			Mesh* pMeshB = pB->GetMesh();
+			const Mesh* pMeshB = pB->GetMesh();
 			WIRE_ASSERT(pMeshB);
 
 			if (pA->GetMaterial() != pB->GetMaterial() ||
@@ -1117,8 +1121,7 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 		}
 		else
 		{
-			WIRE_ASSERT(DynamicCast<Geometry>(pVisible[min]));
-			Draw(*(StaticCast<Geometry>(pVisible[min])), false);
+			Draw(pVisible[min], false);
 		}
 
 		min = idx+1;
@@ -1126,11 +1129,10 @@ void Renderer::Draw(Object* const pVisible[], UInt min, UInt max)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
+void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 	UInt max)
 {
-	Geometry* pGeometry = StaticCast<Geometry>(pVisible[min]);
-	UInt vertexQuantity = pGeometry->GetMesh()->GetVertexBuffer()->
+	UInt vertexQuantity = pVisible[min]->GetMesh()->GetVertexBuffer()->
 		GetQuantity();
 	WIRE_ASSERT(vertexQuantity < 65536);
 	const UShort vertexCount = static_cast<UShort>(vertexQuantity);
@@ -1142,12 +1144,12 @@ void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
 
 	for (UInt i = min; i < max; i++)
 	{
-		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i]);
-		Mesh* const pMesh = pGeometry->GetMesh();
+		RenderObject* pRenderObject = pVisible[i];
+		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		if (pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(*pGeometry, false);
+			Draw(pRenderObject, false);
 			continue;
 		}
 
@@ -1160,13 +1162,12 @@ void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(*pGeometry, false);
+				Draw(pRenderObject, false);
 				continue;
 			}
 
 			pIBPdr->Unlock();
-			Geometry* pGeometry = StaticCast<Geometry>(pVisible[min]);
-			DrawBatched(pIBPdr, vertexCount, batchedIndexCount, pGeometry->
+			DrawBatch(pIBPdr, vertexCount, batchedIndexCount, pVisible[min]->
 				GetMesh()->HasNormal());
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
@@ -1190,19 +1191,19 @@ void Renderer::BatchIndicesAndDraw(Object* const pVisible[], UInt min,
 
 	if (batchedIndexCount > 0)
 	{
-		DrawBatched(pIBPdr, vertexCount, batchedIndexCount, pGeometry->
+		DrawBatch(pIBPdr, vertexCount, batchedIndexCount, pVisible[min]->
 			GetMesh()->HasNormal());
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
+void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
+	UInt max)
 {
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
-	Geometry* pGeometry = StaticCast<Geometry>(pVisible[min]);
-	const UInt vbCount = pGeometry->GetMesh()->GetVertexBuffers().
+	const UInt vbCount = pVisible[min]->GetMesh()->GetVertexBuffers().
 		GetQuantity();
 	for (UInt i = 0; i < vbCount; i++)
 	{
@@ -1215,8 +1216,8 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 
 	for (UInt i = min; i < max; i++)
 	{
-		Geometry* pGeometry = StaticCast<Geometry>(pVisible[i]);
-		Mesh* const pMesh = pGeometry->GetMesh();
+		RenderObject* pRenderObject = pVisible[i];
+		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
 		const UInt vertexCount = pMesh->GetVertexBuffer()->GetQuantity();
@@ -1224,7 +1225,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 		if (vertexCount > mVertexBatchingThreshold ||
 			pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(*pGeometry, false);
+			Draw(pRenderObject, false);
 			continue;
 		}
 
@@ -1246,7 +1247,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(*pGeometry, false);
+				Draw(pRenderObject, false);
 				continue;
 			}
 
@@ -1257,8 +1258,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 
 			pIBPdr->Unlock();
 
-			Geometry* pGeometry = StaticCast<Geometry>(pVisible[min]);
-			DrawBatched(pGeometry->GetMesh(), pIBPdr, mBatchedVertexBuffers,
+			DrawBatch(pVisible[min]->GetMesh(), pIBPdr, mBatchedVertexBuffers,
 				batchedVertexCount, batchedIndexCount);
 
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
@@ -1284,8 +1284,8 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 		for (UInt j = 0; j < vbCount; j++)
 		{
 			VertexBuffer* const pVertexBuffer = pMesh->GetVertexBuffer(j);
-			pVertexBuffer->ApplyForward(pGeometry->World, static_cast<Float*>(
-				mRawBatchedVertexBuffers[j]));
+			pVertexBuffer->ApplyForward(pRenderObject->World, static_cast<
+				Float*>(mRawBatchedVertexBuffers[j]));
 
 			UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 			UInt vbSize = vertexCount * vertexSize;
@@ -1294,7 +1294,7 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 			mStatistics.mBatchedVBOData += vbSize;
 		}
 
-		if (pGeometry->World.IsIdentity())
+		if (pRenderObject->World.IsIdentity())
 		{
 			mStatistics.mBatchedStatic++;
 		}
@@ -1303,7 +1303,8 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 			mStatistics.mBatchedDynamic++;
 		}
 
-		batchedVertexCount = batchedVertexCount + static_cast<UShort>(vertexCount);
+		batchedVertexCount = batchedVertexCount + static_cast<UShort>(
+			vertexCount);
 		batchedIndexCount += pMesh->GetIndexCount();
 	}
 
@@ -1315,13 +1316,13 @@ void Renderer::BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max)
 
 	if (batchedIndexCount > 0)
 	{
-		DrawBatched(pGeometry->GetMesh(), pIBPdr, mBatchedVertexBuffers,
+		DrawBatch(pVisible[min]->GetMesh(), pIBPdr, mBatchedVertexBuffers,
 			batchedVertexCount, batchedIndexCount);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
+void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 	TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount, UInt indexCount)
 {
 	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
@@ -1339,7 +1340,7 @@ void Renderer::DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		rVBsPdr[i]->Enable(this, vertexSize, i);
 	}
 
-	DrawBatched(pIBPdr, vertexCount, indexCount, pMesh->HasNormal());
+	DrawBatch(pIBPdr, vertexCount, indexCount, pMesh->HasNormal());
 
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
@@ -1348,7 +1349,7 @@ void Renderer::DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawBatched(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
+void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 	UInt indexCount, Bool hasNormals)
 {
 	if (mspIndexBuffer)
@@ -1369,7 +1370,7 @@ void Renderer::DrawBatched(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(StatePtr spStates[])
+void Renderer::Enable(const StatePtr spStates[])
 {
 	State* pState = spStates[State::ALPHA];
 	if (pState)
@@ -1409,7 +1410,7 @@ void Renderer::Enable(StatePtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(StatePtr spStates[])
+void Renderer::Disable(const StatePtr spStates[])
 {
 	State* pState;
 
@@ -1451,7 +1452,7 @@ void Renderer::Disable(StatePtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(StatePtr spStates[])
+void Renderer::Set(const StatePtr spStates[])
 {
 	State* pState = spStates[State::ALPHA];
 	if (pState && pState != mspStates[State::ALPHA])

@@ -10,17 +10,11 @@
 #ifndef WIREGEOMETRY_H
 #define WIREGEOMETRY_H
 
-#include "WireMaterial.h"
 #include "WireSpatial.h"
 #include "WireRenderObject.h"
 
 namespace Wire
 {
-
-class IndexBuffer;
-class Light;
-class Mesh;
-class VertexBuffer;
 
 class Geometry : public Spatial
 {

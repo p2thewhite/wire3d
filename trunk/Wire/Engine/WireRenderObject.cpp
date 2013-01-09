@@ -10,8 +10,6 @@
 
 #include "WireBoundingVolume.h"
 #include "WireLight.h"
-#include "WireMaterial.h"
-#include "WireMesh.h"
 
 using namespace Wire;
 
@@ -40,4 +38,11 @@ RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial)
 //----------------------------------------------------------------------------
 RenderObject::~RenderObject()
 {
+}
+
+//----------------------------------------------------------------------------
+void RenderObject::UpdateWorldBound()
+{
+	WIRE_ASSERT(WorldBound);
+	GetMesh()->GetModelBound()->TransformBy(World, WorldBound);
 }

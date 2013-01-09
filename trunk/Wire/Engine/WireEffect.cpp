@@ -9,7 +9,6 @@
 #include "WireEffect.h"
 
 #include "WireGeometry.h"
-#include "WireMesh.h"
 #include "WireRenderer.h"
 
 using namespace Wire;
@@ -36,9 +35,9 @@ void Effect::Draw(Renderer* pRenderer, Object* pVisible[], UInt min, UInt max,
 	for (UInt i = min; i <= max; i++)
 	{
 		Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i]);
-		if (pGeometry)
+		if (pGeometry && pGeometry->GetRenderObject())
 		{
-			pRenderer->Draw(pGeometry, restoreState);
+			pRenderer->Draw(pGeometry->GetRenderObject(), restoreState);
 		}
 	}
 }

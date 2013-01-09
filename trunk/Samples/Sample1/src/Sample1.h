@@ -22,13 +22,13 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube();
+	RenderObject* CreateCube();
 	Texture2D* CreateTexture();
 
 	CameraPtr mspCamera;
 	Culler mCuller;
 
-	GeometryPtr mspCube;
+	RenderObjectPtr mspCube;
 
 	LightPtr mspLight;
 	StateMaterialPtr mspMaterial;

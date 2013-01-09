@@ -9,9 +9,8 @@
 #include "WireCullerSorting.h"
 
 #include "WireEffect.h"
-#include "WireGeometry.h"
-#include "WireMesh.h"
 #include "WireRenderer.h"
+#include "WireRenderObject.h"
 
 using namespace Wire;
 
@@ -104,12 +103,12 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			}
 			else
 			{
-				// Found a leaf Geometry object.
-				WIRE_ASSERT(DynamicCast<Geometry>(pVisible[i]));
+				// Found a leaf object.
+				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
 				if (top == 0)
 				{
 					pDestination->Insert(pVisible[i]);
-					mKeys.Append(GetKey(StaticCast<Geometry>(pVisible[i])));
+					mKeys.Append(GetKey(StaticCast<RenderObject>(pVisible[i])));
 				}
 
 				indexStack[top][1]++;
@@ -128,11 +127,12 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 
 			for (UInt j = min+1; j <= max; j++)
  			{
-				Geometry* pGeometry = DynamicCast<Geometry>(pVisible[j]);
-				if (pGeometry)
+				RenderObject* pRenderObject = DynamicCast<RenderObject>(
+					pVisible[j]);
+				if (pRenderObject)
 				{
 					pDestination->Insert(pVisible[j]);
-					mKeys.Append(GetKey(pGeometry));
+					mKeys.Append(GetKey(pRenderObject));
 				}
 			}
 
@@ -189,7 +189,7 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
 			pKeys[i] = pKeys[j];
 			pKeys[j] = tmp;
 
-			WIRE_ASSERT((DynamicCast<Geometry>(pVisible[i])));
+			WIRE_ASSERT((DynamicCast<RenderObject>(pVisible[i])));
 			Object* pTmp = pVisible[i];
 			pVisible[i] = pVisible[j];
 			pVisible[j] = pTmp;
@@ -215,15 +215,15 @@ void CullerSorting::Insert(Object* pObject)
 {
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
 
-	Geometry* pGeometry = DynamicCast<Geometry>(pObject);
-	if (!pGeometry)
+	RenderObject* pRenderObject = DynamicCast<RenderObject>(pObject);
+	if (!pRenderObject)
 	{
 		GetVisibleSet(0)->Insert(pObject);
 		GetVisibleSet(1)->Insert(pObject);
 		return;
 	}
 
-	StateAlpha* pAlpha = StaticCast<StateAlpha>(pGeometry->GetStates()[
+	StateAlpha* pAlpha = StaticCast<StateAlpha>(pRenderObject->GetStates()[
 		State::ALPHA]);
 	if (pAlpha)
 	{
@@ -244,27 +244,37 @@ void CullerSorting::Insert(Object* pObject)
 }
 
 //----------------------------------------------------------------------------
-UInt CullerSorting::GetKey(Spatial* pSpatial)
+UInt CullerSorting::GetKey(RenderObject* pRenderObject)
 {
-	WIRE_ASSERT(pSpatial);
-	WIRE_ASSERT(DynamicCast<Geometry>(pSpatial));
-
-	Geometry* pGeometry = StaticCast<Geometry>(pSpatial);
+	WIRE_ASSERT(pRenderObject);
 	UInt key = 0;
 
 	// number of bits we use for the sorting key (MSB to LSB)
 	enum
 	{
-		STATESET = 10,
-		MATERIAL = 10,
-		DEPTH = 12
+		STATESET = 8,
+		MATERIAL = 8,
+		DEPTH = 16
 	};
 	
 	 // The sum of the ranges must fit in the key
 	WIRE_ASSERT((STATESET + MATERIAL + DEPTH) <= sizeof(key) * 8);
 
-	Float z = GetCamera()->GetLocation().Z() - pGeometry->WorldBound->
-		GetCenter().Z();
+	const Vector3F& rCamPos = GetCamera()->GetLocation();
+	Vector3F pos;
+	if (pRenderObject->WorldBound)
+	{
+		pos = pRenderObject->WorldBound->GetCenter() - rCamPos;
+	}
+	else
+	{
+		// if no world bound was supplied, we use the world translation 
+		// instead (depending on the actual vertex positions, this can be
+		// very inaccurate)
+		pos = pRenderObject->World.GetTranslate() - rCamPos;
+	}
+
+	Float z = GetCamera()->GetDVector().Dot(pos);
 	const Float far = GetCamera()->GetDMax();
 	const Float far3 = far*3;
 
@@ -275,8 +285,9 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
 
 	key = static_cast<UInt>(z * (1<<DEPTH));
-	if (pGeometry->GetStates()[State::ALPHA] && StaticCast<StateAlpha>(
-		pGeometry->GetStates()[State::ALPHA])->BlendEnabled)
+	StateAlpha* pStateAlpha = StaticCast<StateAlpha>(pRenderObject->
+		GetStates()[State::ALPHA]);
+	if (pStateAlpha && pStateAlpha->BlendEnabled)
 	{
 		key = (((1<<DEPTH)-1) - key);
 	}
@@ -285,7 +296,7 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 
 	// The following asserts let you know when you have created more materials
 	// and state sets than the key can handle. 
-	Material* pMaterial = pGeometry->GetMaterial();
+	Material* pMaterial = pRenderObject->GetMaterial();
 	if (pMaterial)
 	{
 		WIRE_ASSERT(pMaterial->ID < (1<<MATERIAL));
@@ -293,8 +304,8 @@ UInt CullerSorting::GetKey(Spatial* pSpatial)
 	}
 
 	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once)
-	WIRE_ASSERT(pGeometry->GetStateSetID() < (1<<STATESET));
-	key |= pGeometry->GetStateSetID() << (MATERIAL + DEPTH);
+	WIRE_ASSERT(pRenderObject->GetStateSetID() < (1<<STATESET));
+	key |= pRenderObject->GetStateSetID() << (MATERIAL + DEPTH);
 
 	return key;
 }
