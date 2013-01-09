@@ -17,6 +17,7 @@
 namespace Wire
 {
 
+class RenderObject;
 class Spatial;
 
 class Culler
@@ -44,6 +45,9 @@ public:
 
 	// Compare the object's world bounding volume against all culling planes.
 	Bool IsVisible(const Spatial* pSpatial) const;
+
+	// Compare the object's world bounding volume against all culling planes.
+	Bool IsVisible(const RenderObject* pSpatial) const;
 
 	// Compare the bounding volume against the active culling planes.
 	// Only Spatial calls this function (during traversal using plane state)

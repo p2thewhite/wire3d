@@ -55,10 +55,10 @@ public:
 	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
 	void DrawScene(VisibleSet* rVisibleSet);
 	void Draw(Geometry* pGeometry, Bool restoreState = true);
-	void Draw(RenderObject* pRenderObject, Bool restoreState = true);
+	void Draw(const RenderObject* pRenderObject, Bool restoreState = true);
 
-	// draw array of objects [min,max) using batching (if enabled)
-	void Draw(Object* const pVisible[], UInt min, UInt max);
+	// draw array of objects [min,max) (using batching if enabled)
+	void Draw(RenderObject* const pVisible[], UInt min, UInt max);
 
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
@@ -214,9 +214,9 @@ public:
 	inline const StateWireframe* GetStateWireframe() const;
 	inline const StateZBuffer* GetStateZBuffer() const;
 	// Renderer render state handling
-	void Set(StatePtr spStates[]);
-	void Enable(StatePtr spStates[]);
-	void Disable(StatePtr spStates[]);
+	void Set(const StatePtr spStates[]);
+	void Enable(const StatePtr spStates[]);
+	void Disable(const StatePtr spStates[]);
 
 	// Fixed function immediate light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
@@ -257,12 +257,13 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void BatchAllAndDraw(Object* const pVisible[], UInt min, UInt max);
-	void BatchIndicesAndDraw(Object* const pVisible[], UInt min, UInt max);
-	void DrawBatched(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
+	void BatchAllAndDraw(RenderObject* const pVisible[], UInt min, UInt max);
+	void BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
+		UInt max);
+	void DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
 		UInt indexCount);
-	void DrawBatched(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
+	void DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 		UInt indexCount, Bool hasNormals);
 
 	// The main entry point to drawing in the derived-class renderers

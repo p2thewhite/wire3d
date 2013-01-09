@@ -15,6 +15,8 @@
 namespace Wire
 {
 
+class RenderObject;
+
 class CullerSorting : public Culler
 {
 
@@ -33,7 +35,7 @@ protected:
 	void QuickSort(TArray<UInt>& pKeys, Object** const pVisible, Int left,
 //	void QuickSort(UInt* const pKeys, Object** const pVisible, Int left,
 		Int right);
-	UInt GetKey(Spatial* pSpatial);
+	UInt GetKey(RenderObject* pRenderObject);
 
 	VisibleSet* mpOpaqueGeometry;
 	VisibleSet* mpTransparentGeometry;

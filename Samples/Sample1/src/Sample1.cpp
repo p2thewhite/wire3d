@@ -176,7 +176,7 @@ void Sample1::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample1::CreateCube()
+RenderObject* Sample1::CreateCube()
 {
 	// Create a cube with unique texture (UV) coordinates for each side.
 	// This means we have to duplicate vertices, since every vertex can only
@@ -320,15 +320,18 @@ Geometry* Sample1::CreateCube()
 
 	// Geometric objects consist of a Vertex-, an IndexBuffer and optionally
 	// a material
-	Geometry* pCube = WIRE_NEW Geometry(pVBuffer, pIBuffer, pMaterial);
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, pMaterial);
+
+	// We want to use culling, so we need a bounding volume.
+	pCube->WorldBound = BoundingVolume::Create();
 
 	// Generate normal vectors from the triangles of the geometry.
 	pCube->GetMesh()->GenerateNormals();
 
-	// NOTE: Geometry takes ownership over Vertex- and IndexBuffers using
-	// smart pointers. Thus, you can share these buffers amongst Geometry 
-	// objects without having to worry about deletion. Same applies to
-	// Materials, Effects, Textures and Images.
+	// NOTE: RenderObject takes ownership over Vertex- and IndexBuffers using
+	// smart pointers. Thus, you can share these buffers amongst RenderObjects
+	// without having to worry about deletion. Same applies to Materials,
+	// Effects, Textures and Images.
 
 	return pCube;
 }

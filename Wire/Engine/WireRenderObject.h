@@ -10,17 +10,17 @@
 #ifndef WIRERENDEROBJECT_H
 #define WIRERENDEROBJECT_H
 
-#include "WireObject.h"
+#include "WireMaterial.h"
+#include "WireMesh.h"
 #include "WireState.h"
 #include "WireTransformation.h"
 
 namespace Wire
 {
 
+class BoundingVolume;
 class IndexBuffer;
 class Light;
-class Material;
-class Mesh;
 class VertexBuffer;
 
 class RenderObject: public Object
@@ -52,7 +52,10 @@ public:
 	inline UInt GetStateSetID() const;
 	inline void SetStateSetID(UInt stateSetID);
 
+	void UpdateWorldBound();
+
 	Transformation World;
+	Pointer<BoundingVolume> WorldBound;
 
 private:
 	Pointer<Mesh> mspMesh;

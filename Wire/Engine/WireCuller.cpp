@@ -8,6 +8,7 @@
 
 #include "WireCuller.h"
 
+#include "WireRenderObject.h"
 #include "WireSpatial.h"
 
 using namespace Wire;
@@ -39,6 +40,21 @@ Bool Culler::IsVisible(const Spatial* pSpatial) const
 	for (Int i = 0; i < mPlaneQuantity; i++)
 	{
 		if (pSpatial->WorldBound->WhichSide(mPlanes[i]) < 0)
+		{
+			// Object is on negative side. Cull it.
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool Culler::IsVisible(const RenderObject* pRenderObject) const
+{
+	for (Int i = 0; i < mPlaneQuantity; i++)
+	{
+		if (pRenderObject->WorldBound->WhichSide(mPlanes[i]) < 0)
 		{
 			// Object is on negative side. Cull it.
 			return false;

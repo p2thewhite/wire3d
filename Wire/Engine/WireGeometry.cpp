@@ -45,6 +45,7 @@ Geometry::~Geometry()
 void Geometry::Init(Mesh* pMesh, Material* pMaterial)
 {
 	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
+	mspRenderObject->WorldBound = WorldBound;
 }
 
 //----------------------------------------------------------------------------
@@ -100,7 +101,8 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 //----------------------------------------------------------------------------
 void Geometry::GetVisibleSet(Culler& rCuller, Bool)
 {
-	rCuller.Insert(this);
+	WIRE_ASSERT(mspRenderObject);
+	rCuller.Insert(mspRenderObject);
 }
 
 //----------------------------------------------------------------------------
