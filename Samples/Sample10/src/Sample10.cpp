@@ -127,7 +127,7 @@ void Sample10::OnIdle()
 	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(pCuller->GetVisibleSets());
+	GetRenderer()->Draw(pCuller->GetVisibleSets());
 	DrawFPS(elapsedTime, usesSorting);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
@@ -185,7 +185,7 @@ Spatial* Sample10::CreateGeometryA()
 	// to create such a sequence of instances to minimize changes.
 	if (!mspMeshA)
 	{
-		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
+		RenderObjectPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
 		mspMeshA = spTmp->GetMesh();
 		mspMeshA->GenerateNormals();
 	}
@@ -282,7 +282,7 @@ Spatial* Sample10::CreateGeometryB()
 	// See CreateGeometryA() for details
 	if (!mspMeshB)
 	{
-		GeometryPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
+		RenderObjectPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
 		mspMeshB = spTmp->GetMesh();
 	}
 
@@ -385,5 +385,5 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 
 	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(mspText);
+	GetRenderer()->Draw(mspText->GetRenderObject());
 }

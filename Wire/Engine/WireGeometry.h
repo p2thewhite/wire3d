@@ -26,9 +26,6 @@ public:
 	Geometry(Mesh* pMesh, Material* pMaterial = NULL);
 	virtual ~Geometry();
 
-	inline operator RenderObject* ();
-	inline operator const RenderObject* () const;
-
 	inline RenderObject* GetRenderObject();
 	inline const RenderObject* GetRenderObject() const;
 

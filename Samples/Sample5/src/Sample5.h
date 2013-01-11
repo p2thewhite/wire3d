@@ -19,7 +19,7 @@ public:
 private:
 	Geometry* CreateCube(Bool useTexture = true, Bool useNormals = true,
 		Bool useVertexColor = false, ColorRGBA vertexColor = ColorRGBA::WHITE);
-	Geometry* CreatePlane();
+	RenderObject* CreatePlane();
 
 	Texture2D* CreateTexture();
 
@@ -27,8 +27,8 @@ private:
 	Culler mCuller;
 
 	NodePtr mspRoot;
-	GeometryPtr mspPlane;
-	GeometryPtr mspWhiteCube;
+	RenderObjectPtr mspPlane;
+	RenderObjectPtr mspWhiteCube;
 	Texture2DPtr mspTexture;
 
 	Float mAngle;

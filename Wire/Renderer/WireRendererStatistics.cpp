@@ -156,7 +156,8 @@ void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
 	Camera* pCurrentCamera = mpRenderer->GetCamera();
 	mpRenderer->SetCamera(pCamera);
 	mpRenderer->DisableLighting();
-	mpRenderer->Draw(pText);
+	pText->GetRenderObject()->World = pText->World;
+	mpRenderer->Draw(pText->GetRenderObject());
 	mpRenderer->SetCamera(pCurrentCamera);
 }
 

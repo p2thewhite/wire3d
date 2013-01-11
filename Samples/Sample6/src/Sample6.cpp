@@ -80,7 +80,7 @@ void Sample6::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -89,7 +89,7 @@ void Sample6::OnIdle()
 Geometry* Sample6::CreateSun()
 {
 	// create a sun using a bright yellow colored sphere
-	Geometry* pSun = StandardMesh::CreateSphere(4, 16, 3, 0, 3);
+	Geometry* pSun = StandardMesh::CreateSphereAsNode(4, 16, 3, 0, 3);
 	VertexBuffer* pSunVB = pSun->GetMesh()->GetVertexBuffer();
 	for (UInt i = 0; i < pSunVB->GetQuantity(); i++)
 	{
@@ -107,7 +107,7 @@ Geometry* Sample6::CreateTerrain()
 	// values to represent hills
 	UInt tileXCount = 40;
 	UInt tileYCount = 20;
-	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
+	Geometry* pPlane = StandardMesh::CreatePlaneAsNode(tileXCount, tileYCount,
 		5, 5, 0, 0, true);
 	VertexBuffer* const pVBuffer = pPlane->GetMesh()->GetVertexBuffer();
 

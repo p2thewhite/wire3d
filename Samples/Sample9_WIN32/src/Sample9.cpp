@@ -10,7 +10,7 @@ using namespace Wire;
 
 Int gWindowID = 0;
 Renderer* gpRenderer = NULL;
-GeometryPtr gspCube;
+RenderObjectPtr gspCube;
 CameraPtr gspCamera;
 
 //----------------------------------------------------------------------------

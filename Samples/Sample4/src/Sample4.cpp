@@ -19,9 +19,8 @@ Bool Sample4::OnInitialize()
 	pMaterial->AddTexture(CreateTexture());
 	pMaterial->AddTexture(CreateTexture2());
 
-	mspGeometry = StandardMesh::CreateCube14(3, pMaterial->
-		GetTextureQuantity());
-	mspGeometry->SetMaterial(pMaterial);
+	mspCube = StandardMesh::CreateCube14(3, pMaterial->GetTextureQuantity());
+	mspCube->SetMaterial(pMaterial);
 
 	// camera and viewing frustum setup
 	Vector3F cameraLocation(0.0F, 0.0F, -7.0F);
@@ -51,7 +50,7 @@ void Sample4::OnIdle()
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 	Vector3F axis(Vector3F(MathF::Sin(mAngle), MathF::Cos(mAngle), 0.3F));
 	Matrix34F model(axis, mAngle);
-	mspGeometry->World.SetRotate(model);
+	mspCube->World.SetRotate(model);
 
 	// define some blending modes for the cube to cycle through
 	static const BlendMode modes[] =
@@ -82,7 +81,7 @@ void Sample4::OnIdle()
 	UInt modeIndex = static_cast<UInt>(MathF::FMod(static_cast<Float>(time),
 		static_cast<Float>(modeQuantity)));
 	WIRE_ASSERT(modeIndex < modeQuantity);
-	Material* pMaterial = mspGeometry->GetMaterial();
+	Material* pMaterial = mspCube->GetMaterial();
 	if (pMaterial)
 	{
 		pMaterial->SetBlendMode(modes[modeIndex].Mode0, 0);
@@ -91,7 +90,7 @@ void Sample4::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->Draw(mspGeometry);
+	GetRenderer()->Draw(mspCube);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }

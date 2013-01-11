@@ -36,7 +36,7 @@ private:
 	// 'mpObject' = member pointer to Object
 	// 'mspObject' = member smart pointer to Object
 
-	GeometryPtr mspCube;
+	RenderObjectPtr mspCube;
 	CameraPtr mspCamera;
 };
 

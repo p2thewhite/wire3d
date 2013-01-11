@@ -7,18 +7,6 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline Geometry::operator RenderObject* ()
-{
-	return mspRenderObject;
-}
-
-//----------------------------------------------------------------------------
-inline Geometry::operator const RenderObject* () const
-{
-	return mspRenderObject;
-}
-
-//----------------------------------------------------------------------------
 inline RenderObject* Geometry::GetRenderObject()
 {
 	return mspRenderObject;

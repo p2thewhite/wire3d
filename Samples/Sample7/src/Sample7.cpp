@@ -17,12 +17,12 @@ Bool Sample7::OnInitialize()
 	}
 
 	// create a cube with a dynamic vertex buffer
-	mspGeometry = CreateGeometry();
+	mspTorus = CreateTorus();
 
 	// We are using different parts of the same index-/vertexbuffers for 2
 	// objects, therefore we duplicate the initial mesh (i.e. share the
 	// buffers), to have control about what part of the mesh is being used.
-	mspMeshA = mspGeometry->GetMesh();
+	mspMeshA = mspTorus->GetMesh();
 	mspMeshB = WIRE_NEW Mesh(mspMeshA);
 
 	// Bind the geometry to the renderer, i.e. create hardware buffer objects.
@@ -30,7 +30,7 @@ Bool Sample7::OnInitialize()
 	// first time. However we want to dynamically fill the vertex buffer each
 	// frame, so the hardware buffer object already has to exist before we
 	// are rendering it. Thus we bind it manually.
-	mspGeometry->Bind(GetRenderer());
+	GetRenderer()->Bind(mspTorus);
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
@@ -62,7 +62,7 @@ void Sample7::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime*0.5F);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	mspGeometry->SetMesh(mspMeshA);
+	mspTorus->SetMesh(mspMeshA);
 	Mesh* pMesh = mspMeshA;
 	IndexBuffer* pIndexBuffer = pMesh->GetIndexBuffer();
 
@@ -78,7 +78,7 @@ void Sample7::OnIdle()
 	// We are not using culling since our transformations do not change
 	// and both torus knots are on screen. If we did, we would need to
 	// recalculate the model bounds since the positions of the mesh changed.
-//	mspGeometry->UpdateModelBound();
+//	mspTorus->GetMesh()->UpdateModelBound();
 
 	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
@@ -86,20 +86,20 @@ void Sample7::OnIdle()
 
 	// render centered torus knot
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
-	mspGeometry->World.SetTranslate(Vector3F::ZERO);
-	mspGeometry->World.SetUniformScale(1);
-	mspGeometry->World.SetRotate(rotate);
-	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspGeometry->
+	mspTorus->World.SetTranslate(Vector3F::ZERO);
+	mspTorus->World.SetUniformScale(1);
+	mspTorus->World.SetRotate(rotate);
+	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspTorus->
 		GetStates()[State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
 	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
-	GetRenderer()->Draw(mspGeometry);
+	GetRenderer()->Draw(mspTorus);
 
 	// render small torus knot
-	mspGeometry->SetMesh(mspMeshB);
+	mspTorus->SetMesh(mspMeshB);
 	pMesh = mspMeshB;
-	mspGeometry->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
-	mspGeometry->World.SetUniformScale(0.18F);
+	mspTorus->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
+	mspTorus->World.SetUniformScale(0.18F);
 	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
 
 	// Use the Geometry's StartIndex and ActiveIndexCount to control what
@@ -126,7 +126,7 @@ void Sample7::OnIdle()
 			pMesh->GetStartIndex());
 	}
 
-	GetRenderer()->Draw(mspGeometry);
+	GetRenderer()->Draw(mspTorus);
 
 	Float fps = static_cast<Float>(1.0 / elapsedTime);
 	GetRenderer()->GetStatistics()->Draw(mspText, fps);
@@ -136,7 +136,7 @@ void Sample7::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample7::CreateGeometry()
+RenderObject* Sample7::CreateTorus()
 {
 	// Create a PQ torus knot, which we will later animate per frame.
 	const UInt shapeCount = s_ShapeCount+1;
@@ -188,7 +188,7 @@ Geometry* Sample7::CreateGeometry()
 		}
 	}
 
-	Geometry* pTorus = WIRE_NEW Geometry(pVBuffer, pIBuffer);
+	RenderObject* pTorus = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
 
 	// fill the vertex buffer (i.e. initialize positions)
 	GeneratePositions(pVBuffer, MathF::PI * 0.5F);

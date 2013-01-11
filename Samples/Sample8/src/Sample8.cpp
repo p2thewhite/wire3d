@@ -83,12 +83,12 @@ void Sample8::OnIdle()
 
 	for (UInt i = 0; i < mGameObjects.GetQuantity(); i++)
 	{
-		Geometry* pGeometry = mGameObjects[i].spRenderObject;
-		WIRE_ASSERT(pGeometry);
-		pGeometry->UpdateWorldBound();
-		if (mCuller.IsVisible(pGeometry))
+		RenderObject* pRenderObject = mGameObjects[i].spRenderObject;
+		WIRE_ASSERT(pRenderObject);
+		pRenderObject->UpdateWorldBound();
+		if (mCuller.IsVisible(pRenderObject))
 		{
-			GetRenderer()->Draw(pGeometry);
+			GetRenderer()->Draw(pRenderObject);
 		}
 	}
 
@@ -119,7 +119,11 @@ void Sample8::CreateGameObjects()
 	const Float floorY = 0.25F;
 	const Float floorZ = 10;
 	const Float floorMass = 0;
-	Geometry* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
+
+	// using a smart pointer in local scope here because we only need the 
+	// RenderObject from the StandardMesh returned Node so the rest of the
+	// node gets deleted automatically when returning from this function.
+	RenderObject* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
 	pFloor->World.SetScale(Vector3F(floorX * 2, floorY, floorZ * 2));
 	pFloor->World.SetTranslate(Vector3F(0, -4.0F, 0));
 
@@ -140,7 +144,7 @@ void Sample8::CreateGameObjects()
 		for (UInt xCount = 0; xCount < s_BoxCountX; xCount++)
 		{
 			const Float extent = 0.5F;
-			Geometry* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
+			RenderObject* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
 			pBox->SetMaterial(pMaterial);
 			pBox->GetMesh()->GenerateNormals();
 			pBox->World.SetTranslate(Vector3F(switchX ? x : x+0.35F, y, 0));			
@@ -165,7 +169,7 @@ void Sample8::CreateGameObjects()
 	for (UInt i = 0; i < 2; i++)
 	{
 		const Float radius = 0.75F;
-		Geometry* pBall = StandardMesh::CreateSphere(16, 16, radius, 0, 0,
+		RenderObject* pBall = StandardMesh::CreateSphere(16, 16, radius, 0, 0,
 			true);
 		pBall->World.SetTranslate(Vector3F(1.5F * sign, -0.5F, 10 * sign));
 

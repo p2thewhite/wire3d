@@ -114,7 +114,7 @@ void Cursors::InitCursors()
 //----------------------------------------------------------------------------
 Geometry* Cursors::CreateCursor(Float uOffset, Float vOffset)
 {
-	Geometry* pCursor = StandardMesh::CreateQuad(0, 1, false, 32.0F);
+	Geometry* pCursor = StandardMesh::CreateQuadAsNode(0, 1, false, 32.0F);
 	const Vector2F uvs[] =
 	{
 		Vector2F(0 + uOffset, 0 + vOffset),
