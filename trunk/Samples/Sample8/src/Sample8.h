@@ -23,15 +23,15 @@ private:
 	struct GameObject  
 	{
 		GameObject() {};
-		GameObject(Geometry* pGeo, btCollisionShape* pCol,
+		GameObject(RenderObject* pRenderObject, btCollisionShape* pCol,
 			btRigidBody* pRigidBody)
 		{
-			spRenderObject = pGeo;
+			spRenderObject = pRenderObject;
 			pCollisionObject = pCol;
 			pRigidBody = pRigidBody;
 		}
 
-		GeometryPtr spRenderObject;
+		RenderObjectPtr spRenderObject;
 		btCollisionShape* pCollisionObject;
 		btRigidBody* pRigidBody;
 	};

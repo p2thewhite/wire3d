@@ -39,7 +39,7 @@ Bool Sample0::OnInitialize()
 	// pointer automatically deletes the object when it goes out of scope
 	// and no other references to the object exist. In this case deletion
 	// will happen when Sample0 is being destructed.
-	// Creation of Wire::Geometry objects is explained in detail in Sample1.
+	// Creation of Wire::RenderObject is explained in detail in Sample1.
 	mspCube = StandardMesh::CreateCube8(/* number of RGB(A) channels */ 4);
 
 	// Create a camera for rendering

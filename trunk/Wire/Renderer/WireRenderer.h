@@ -27,7 +27,6 @@ namespace Wire
 {
 
 class Camera;
-class Geometry;
 class IndexBuffer;
 class Light;
 class Mesh;
@@ -51,14 +50,17 @@ public:
 		Bool isFullscreen, Bool useVSync);
 	~Renderer();
 
-	// Object drawing
-	void DrawScene(TArray<VisibleSet*>& rVisibleSets);
-	void DrawScene(VisibleSet* rVisibleSet);
-	void Draw(Geometry* pGeometry, Bool restoreState = true);
+	// draw a single object
 	void Draw(const RenderObject* pRenderObject, Bool restoreState = true);
-
 	// draw array of objects [min,max) (using batching if enabled)
 	void Draw(RenderObject* const pVisible[], UInt min, UInt max);
+	// draw set(s) of objects supporting Wire::Effect
+	void Draw(VisibleSet* rVisibleSet);
+	void Draw(TArray<VisibleSet*>& rVisibleSets);
+
+	// Support for predraw and postdraw semantics.
+	Bool PreDraw(Camera* pCamera = NULL);
+	void PostDraw();
 
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
@@ -174,10 +176,6 @@ public:
 	void Enable(const Mesh* pMesh);
  	void Disable(const Mesh* pMesh);
  	void Set(const Mesh* pMesh);
-
-	// Support for predraw and postdraw semantics.
-	Bool PreDraw(Camera* pCamera = NULL);
-	void PostDraw();
 
 	// Release all references to non renderer owned resources (disables all
 	// actively used resources in the renderer).

@@ -325,7 +325,7 @@ RenderObject* Sample1::CreateCube()
 	// We want to use culling, so we need a bounding volume.
 	pCube->WorldBound = BoundingVolume::Create();
 
-	// Generate normal vectors from the triangles of the geometry.
+	// Generate normal vectors from the triangles of the mesh.
 	pCube->GetMesh()->GenerateNormals();
 
 	// NOTE: RenderObject takes ownership over Vertex- and IndexBuffers using

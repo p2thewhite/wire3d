@@ -9,10 +9,9 @@
 #include "WireRenderer.h"
 
 #include "WireEffect.h"
-#include "WireGeometry.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
-#include "WireMesh.h"
+#include "WireLight.h"
 #include "WireRenderObject.h"
 #include "WireVisibleSet.h"
 
@@ -896,15 +895,6 @@ void Renderer::Set(const Mesh* pMesh)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(Geometry* pGeometry, Bool restoreState)
-{
-	WIRE_ASSERT(pGeometry);
-	RenderObject* pRenderObject = *pGeometry;
-	pRenderObject->World = pGeometry->World;
-	Draw(pRenderObject, restoreState);
-}
-
-//----------------------------------------------------------------------------
 void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
 {
 	WIRE_ASSERT(pRenderObject);
@@ -946,7 +936,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawScene(VisibleSet* pVisibleSet)
+void Renderer::Draw(VisibleSet* pVisibleSet)
 {
 	// NOTE: The stack of 2-tuples is limited to having MAX_GLOBAL_EFFECTS
 	// elements. This should be plenty, because the chances of having that
@@ -1011,11 +1001,11 @@ void Renderer::DrawScene(VisibleSet* pVisibleSet)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawScene(TArray<VisibleSet*>& rVisibleSets)
+void Renderer::Draw(TArray<VisibleSet*>& rVisibleSets)
 {
 	for (UInt i = 0; i < rVisibleSets.GetQuantity(); i++)
 	{
-		DrawScene(rVisibleSets[i]);
+		Draw(rVisibleSets[i]);
 	}
 }
 

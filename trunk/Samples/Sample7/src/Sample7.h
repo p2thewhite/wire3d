@@ -17,12 +17,12 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateGeometry();
+	RenderObject* CreateTorus();
 	void GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle);
 	void GenerateNormals(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer);
 
 	CameraPtr mspCamera;
-	GeometryPtr mspGeometry;
+	RenderObjectPtr mspTorus;
 	MeshPtr mspMeshA;
 	MeshPtr mspMeshB;
 

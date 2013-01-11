@@ -102,6 +102,8 @@ void Main::Terminate()
 		}
 	}
 
+	// If this assert hits, there is a memory leak of Wire::Object(s)
+	// Check the .txt files (see above) for leaked objects.
 	WIRE_ASSERT(isObjectCountCorrect);
 
 	// Now that the object leak detection system has completed its tasks,

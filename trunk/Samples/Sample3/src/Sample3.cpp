@@ -90,7 +90,7 @@ void Sample3::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 	DrawLodTextLabel();
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
@@ -131,9 +131,10 @@ void Sample3::DrawLodTextLabel()
 	// center text (window resizing can happen any time)
 	Float offsetX = (GetWidthF() - 21.0F*8.0F) * 0.5F;
 	Float offsetY = GetHeightF() - 6.0F * 8.0F;
-	mspText->World.SetTranslate(Vector3F(offsetX, offsetY, 0));
+	Vector3F textPosition(offsetX, offsetY, 0);
+	mspText->GetRenderObject()->World.SetTranslate(textPosition);
 
-	GetRenderer()->Draw(mspText);
+	GetRenderer()->Draw(mspText->GetRenderObject());
 }
 
 //----------------------------------------------------------------------------

@@ -32,7 +32,7 @@ private:
 	Texture2D* CreateTexture2();
 
 	CameraPtr mspCamera;
-	GeometryPtr mspGeometry;
+	RenderObjectPtr mspCube;
 
 	Float mAngle;
 	Double mLastTime;

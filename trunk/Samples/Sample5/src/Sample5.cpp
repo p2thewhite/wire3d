@@ -87,8 +87,10 @@ Bool Sample5::OnInitialize()
 	// to be rendered manually in the render loop. This is only for the
 	// purpose of demonstrating scene graph and manual rendering with lights.
 	mspPlane = CreatePlane();
-	mspPlane->UpdateBS();	// manual update of world bounding volume
-	mspWhiteCube = CreateCube(false, false, true, ColorRGBA::WHITE);
+	mspPlane->UpdateWorldBound();	// manual update of world bounding volume
+	GeometryPtr spWhiteCubeNode = CreateCube(false, false, true,
+		ColorRGBA::WHITE);
+	mspWhiteCube = spWhiteCubeNode->GetRenderObject();
 	mspWhiteCube->World.SetUniformScale(0.15F);
 
 	// Setup the position and orientation of the camera to look down
@@ -163,7 +165,7 @@ void Sample5::OnIdle()
 	mspWhiteCube->World.SetTranslate(
 		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
 	mspWhiteCube->World.SetRotate(rotateWorldLight3);
-	mspWhiteCube->UpdateBS();
+	mspWhiteCube->UpdateWorldBound();
 	mspPlane->GetLights()[0]->Position = mspWhiteCube->World.GetTranslate();
 	mspPlane->GetLights()[0]->Direction = mspWhiteCube->World.GetMatrix().
 		GetColumn(2);
@@ -172,7 +174,7 @@ void Sample5::OnIdle()
 	GetRenderer()->PreDraw(mspCamera);
 
 	// render the scene graph
-	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 
 	// render the white cube representing the spot light
 	if (mCuller.IsVisible(mspWhiteCube))
@@ -197,7 +199,7 @@ void Sample5::OnIdle()
 Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 	Bool useVertexColor, ColorRGBA vertexColor)
 {
-	Geometry* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
+	Geometry* pCube = StandardMesh::CreateCube24AsNode(useVertexColor ? 4 : 0,
 		useTexture ? 1 : 0, useNormals);
 	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
@@ -229,13 +231,13 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample5::CreatePlane()
+RenderObject* Sample5::CreatePlane()
 {
 	const UInt tileXCount = 30;
 	const UInt tileYCount = 20;
 	const Float xSizeTotal = 12.0F;
 	const Float ySizeTotal = 8.0F;
-	Geometry* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
+	RenderObject* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
 		xSizeTotal, ySizeTotal, 0, 1, true);
 	pPlane->GetMesh()->GenerateNormals();
 
@@ -261,21 +263,6 @@ Geometry* Sample5::CreatePlane()
 	pLight->Angle = 0.5F;
 	pLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
 	pPlane->GetLights().Append(pLight);
-
-	// Notice the difference between attaching a light directly:
-	// 	pPlane->Lights.Append(pLight);
-	//
-	// and attaching a light via the AttachLight() method used
-	// in OnInitialize():
-	//	pPlane->AttachLight(pLight);
-	//
-	// pPlane->Lights[] holds all lights that will be used for rendering.
-	// pPlane->AttachLight() adds a light to an internal container and
-	// needs UpdateRS() to accumulate all lights from the internal container
-	// and the lights of all the parents of pPlane into pPlane->Lights.
-	// In short: use the first approach for direct rendering and the second
-	// if you are using the scene graph for rendering.
-
 	return pPlane;
 }
 

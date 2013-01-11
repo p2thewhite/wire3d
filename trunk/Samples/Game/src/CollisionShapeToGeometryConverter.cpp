@@ -56,7 +56,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
 	pBoxShape->setMargin(margin);
 
 	Vector3F halfExtents = BulletUtils::Convert(halfExtentsWithoutMargin);
-	Geometry* pBox = StandardMesh::CreateCube8(4);
+	Geometry* pBox = StandardMesh::CreateCube8AsNode(4);
 	VertexBuffer* pVertexBuffer = pBox->GetMesh()->GetVertexBuffer();
 	const UInt vertexQuantity = pVertexBuffer->GetQuantity();
 	for (UInt i = 0; i < vertexQuantity; i++)

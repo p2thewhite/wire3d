@@ -285,8 +285,8 @@ void Player::DoShooting()
 //----------------------------------------------------------------------------
 void Player::CreateRay(Float size)
 {
-	Geometry* pRay = StandardMesh::CreateCylinder(5, 5, 0.1F, size, 0, 4,
-		false);
+	Geometry* pRay = StandardMesh::CreateCylinderAsNode(5, 5, 0.1F, size, 0,
+		4, false);
 	pRay->SetName("Ray");
 	mpNode->AttachChild(pRay);
 	mpNode->UpdateRS();

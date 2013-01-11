@@ -111,7 +111,7 @@ void Sample2::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->DrawScene(mCuller.GetVisibleSets());
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }
@@ -121,7 +121,7 @@ Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 {
 	// Creation of Wire::Geometry objects is explained in detail in Sample1.
 	UInt vertexColorChannels = 4;	// RGBA
-	Geometry* pCube = StandardMesh::CreateCube8(vertexColorChannels);
+	Geometry* pCube = StandardMesh::CreateCube8AsNode(vertexColorChannels);
 	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
 	// initialize the cube's vertex colors with our supplied values

@@ -18,7 +18,7 @@ Int main(Int argc, Char** argv)
 	// Renderer must be created before calling PADInit
 	PADInit();
 
-	GeometryPtr spCube = StandardMesh::CreateCube8(/* RGB(A) channels */ 4);
+	RenderObjectPtr spCube = StandardMesh::CreateCube8(/* RGB(A) channels */ 4);
 	Vector3F cameraLocation(0.0F, 0.0F, 10.0F);
 	Vector3F viewDirection(0.0F, 0.0F, -1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
