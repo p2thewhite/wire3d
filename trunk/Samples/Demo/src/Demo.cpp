@@ -110,10 +110,10 @@ void Demo::StateRunning(Double time)
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mSceneCameras[0]);
-	GetRenderer()->DrawScene(mSceneCuller.GetVisibleSets());
+	GetRenderer()->Draw(mSceneCuller.GetVisibleSets());
 
 	GetRenderer()->SetCamera(mLogoCameras[0]);
-	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
+	GetRenderer()->Draw(mLogoCuller.GetVisibleSets());
 
 	static Double lastTime = 0.0F;
 	Double elapsed = time - lastTime;
@@ -156,7 +156,7 @@ void Demo::StateLoading(Double elapsedTime)
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mLogoCameras[0]);
-	GetRenderer()->DrawScene(mLogoCuller.GetVisibleSets());
+	GetRenderer()->Draw(mLogoCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 
