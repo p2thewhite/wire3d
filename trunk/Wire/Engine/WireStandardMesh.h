@@ -93,10 +93,9 @@ public:
 
 	// text using the built-in font
 	static Text* CreateText(UInt maxLength = 4000);
+	static Geometry* CreateTextAsNode(UInt maxLength = 4000);
 
 private:
-	static Geometry* CreateNode(RenderObject* pRenderObject);
-
 	static Texture2DPtr s_spFontTexture;
 	static const UChar s_Font[];
 };

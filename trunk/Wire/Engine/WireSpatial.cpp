@@ -185,11 +185,11 @@ void Spatial::UpdateRS(TArray<State*>* pStateStacks, TArray<Light*>*
 
 		// The order of preference is
 		//   (1) Default global states are used.
-		//   (2) Geometry can override them, but if global state FOOBAR
-		//       has not been pushed to the Geometry leaf node, then
-		//       the current FOOBAR remains in effect (rather than the
-		//       default FOOBAR being used).
-		//   (3) Effect can override default or Geometry render states.
+		//   (2) RenderObject can override them, but if global state FOOBAR
+		//       has not been pushed to the RenderObject, then the current
+		//       FOOBAR remains in effect (rather than the default FOOBAR
+		//       being used).
+		//   (3) Effect can override default or RenderObject render states.
 		pStateStacks = WIRE_NEW TArray<State*>[State::MAX_STATE_TYPE];
 
 		for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
@@ -274,19 +274,4 @@ void Spatial::PopState(TArray<State*>* pStateStacks,
 	{
 		pLightStack->RemoveLast();
 	}
-}
-
-//----------------------------------------------------------------------------
-void Spatial::Bind(Renderer*)
-{
-}
-
-//----------------------------------------------------------------------------
-void Spatial::Unbind(Renderer*)
-{
-}
-
-//----------------------------------------------------------------------------
-void Spatial::MakeStatic(Bool, Bool)
-{
 }

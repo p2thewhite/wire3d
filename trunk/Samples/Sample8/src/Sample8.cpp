@@ -88,7 +88,7 @@ void Sample8::OnIdle()
 		pRenderObject->UpdateWorldBound();
 		if (mCuller.IsVisible(pRenderObject))
 		{
-			GetRenderer()->Draw(pRenderObject);
+			GetRenderer()->Draw(pRenderObject, true);
 		}
 	}
 

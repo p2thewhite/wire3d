@@ -40,7 +40,6 @@ SphereBV::~SphereBV()
 {
 }
 
-
 //----------------------------------------------------------------------------
 void SphereBV::ComputeFrom(const VertexBuffer* pVertexBuffer)
 {

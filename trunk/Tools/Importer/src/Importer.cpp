@@ -474,7 +474,7 @@ const Importer::Statistics* Importer::GetStatistics()
 //----------------------------------------------------------------------------
 void Importer::ResetStatistics()
 {
-	mStatistics.GeometryCount = 0;
+	mStatistics.RenderObjectCount = 0;
 	mStatistics.NodeCount = 0;
 	mStatistics.TextureCount = 0;
 	mStatistics.MaterialCount = 0;
@@ -506,7 +506,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 
 	if (Is("Text", pXmlNode->name()))
 	{
-		Text* pText = ParseText(pXmlNode);
+		Geometry* pText = ParseText(pXmlNode);
 		if (pText)
 		{
 			pParent->AttachChild(pText);
@@ -1098,7 +1098,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 
 	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
 	WIRE_ASSERT(pGeo);
-	mStatistics.GeometryCount++;
+	mStatistics.RenderObjectCount++;
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
 	{
@@ -1123,7 +1123,7 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
+Geometry* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 {
 	Int width = 8;
 	Int height = 8;
@@ -1189,16 +1189,18 @@ Text* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 		WIRE_ASSERT_NO_SIDEEFFECTS(isOk /* Wire::Text::Set() failed */);
 	}
 
-	mStatistics.GeometryCount++;
+	Geometry* pTextNode = WIRE_NEW Geometry(pText);
+	mStatistics.RenderObjectCount++;
+
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
 	{
-		pText->SetName(pName);
+		pTextNode->SetName(pName);
 	}
 
-	ParseTransformationAndComponents(pXmlNode, pText);
+	ParseTransformationAndComponents(pXmlNode, pTextNode);
 
-	return pText;
+	return pTextNode;
 }
 
 //----------------------------------------------------------------------------

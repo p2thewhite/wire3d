@@ -24,6 +24,7 @@ public:
 	Geometry(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 		pMaterial = NULL);
 	Geometry(Mesh* pMesh, Material* pMaterial = NULL);
+	Geometry(RenderObject* pRenderObject);
 	virtual ~Geometry();
 
 	inline RenderObject* GetRenderObject();
@@ -60,8 +61,6 @@ public:
 		Bool duplicateShared = true);
 
 protected:
-	Geometry();
-
 	// geometric update
 	virtual void UpdateWorldData(Double appTime);
 

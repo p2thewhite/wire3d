@@ -51,7 +51,7 @@ public:
 	~Renderer();
 
 	// draw a single object
-	void Draw(const RenderObject* pRenderObject, Bool restoreState = true);
+	void Draw(const RenderObject* pRenderObject, Bool restoreState = false);
 	// draw array of objects [min,max) (using batching if enabled)
 	void Draw(RenderObject* const pVisible[], UInt min, UInt max);
 	// draw set(s) of objects supporting Wire::Effect

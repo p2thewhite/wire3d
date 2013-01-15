@@ -29,8 +29,9 @@ class RenderObject: public Object
 
 public:
 	RenderObject(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
-		pMaterial = NULL);
-	RenderObject(Mesh* pMesh, Material* pMaterial = NULL);
+		pMaterial = NULL, Bool createWorldBoundingVolume = false);
+	RenderObject(Mesh* pMesh, Material* pMaterial = NULL,
+		Bool createWorldBoundingVolume = false);
 	virtual ~RenderObject();
 
 	inline Mesh* GetMesh();
@@ -56,6 +57,10 @@ public:
 
 	Transformation World;
 	Pointer<BoundingVolume> WorldBound;
+
+protected:
+	RenderObject(Bool createWorldBoundingVolume = false);
+	void Init(Bool createWorldBoundingVolume);
 
 private:
 	Pointer<Mesh> mspMesh;
