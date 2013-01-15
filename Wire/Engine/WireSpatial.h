@@ -110,12 +110,12 @@ public:
 	virtual void UpdateWorldBound() = 0;
 
 	// Bind/Unbind all renderer related resources
-	virtual void Bind(Renderer* pRenderer);
-	virtual void Unbind(Renderer* pRenderer);
+	virtual void Bind(Renderer* pRenderer) = 0;
+	virtual void Unbind(Renderer* pRenderer) = 0;
 
 	// Traverse the child objects and call their MakeStatic()
 	virtual void MakeStatic(Bool forceStatic = false,
-		Bool duplicateShared = true);
+		Bool duplicateShared = true) = 0;
 
 protected:
 	Spatial();

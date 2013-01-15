@@ -23,8 +23,8 @@ Bool Sample11::OnInitialize()
 	mpCursors = WIRE_NEW Cursors;
 	mspGuiRoot = WIRE_NEW Node;
 	mspGuiRoot->AttachChild(mpCursors->GetRoot());
-	mspText = StandardMesh::CreateText();
-	mspGuiRoot->AttachChild(mspText);
+	mspTextNode = StandardMesh::CreateTextAsNode();
+	mspGuiRoot->AttachChild(mspTextNode);
 
 	mspGuiCamera = WIRE_NEW Camera(/* isPerspective */false);
 	mCuller.SetCamera(mspGuiCamera);
@@ -160,17 +160,23 @@ void Sample11::OnResize(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Sample11::UpdateInputDevicesInformationText()
 {
+	Text* pText = DynamicCast<Text>(mspTextNode->GetRenderObject());
+	if (!pText)
+	{
+		return;
+	}
+
 	// set to screen width (might change any time in window mode)
-	mspText->SetLineWidth(GetWidthF());
-	mspText->Clear();
+	pText->SetLineWidth(GetWidthF());
+	pText->Clear();
 	// Text uses OpenGL convention of (0,0) being left bottom of window
-	mspText->SetPen(0, GetHeightF()-mspText->GetFontHeight()-32.0F);
+	pText->SetPen(0, GetHeightF()-pText->GetFontHeight()-32.0F);
 
 	const UInt TextArraySize = 4000;
 	Char text[TextArraySize];
 	System::Sprintf(text, TextArraySize, "Number of Input Devices: %d\n",
 		mpInputSystem->GetDevicesCount());
-	mspText->Append(text);
+	pText->Append(text);
 
 	for (UInt i = 0; i < mpInputSystem->GetDevicesCount(); i++)
 	{
@@ -180,7 +186,7 @@ void Sample11::UpdateInputDevicesInformationText()
 		System::Sprintf(text, TextArraySize, "\nInput Device Number: %d - "
 			"%s (%s)\n- Capabilities:\n", i, rType.GetBaseType()->GetName(),
 			rType.GetName());
-		mspText->Append(text);
+		pText->Append(text);
 
 		const TArray<InputCapabilityPtr>& inputCapabilities = pInputDevice->
 			GetCapabilities();
@@ -190,9 +196,9 @@ void Sample11::UpdateInputDevicesInformationText()
 
 			System::Sprintf(text, TextArraySize, "%s (%s)\n",
 				rType.GetBaseType()->GetName(), rType.GetName());
-			mspText->Append(text);
+			pText->Append(text);
 		}
 	}
 
-	mspText->Update(GetRenderer());
+	pText->Update(GetRenderer());
 }

@@ -20,8 +20,12 @@ using namespace Wire;
 #endif
 
 Bool System::s_InitializedTime = false;
+
 const UInt System::MAX_UINT = UINT_MAX;
 const Int System::MAX_INT = INT_MAX;
+const Int System::MIN_INT = INT_MIN;
+const Float System::MAX_FLOAT = FLT_MAX;
+const Float System::MIN_FLOAT = FLT_MIN;
 
 //----------------------------------------------------------------------------
 Bool System::IsBigEndian()

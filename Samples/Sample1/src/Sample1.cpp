@@ -77,8 +77,9 @@ void Sample1::OnIdle()
 	GetRenderer()->PreDraw(mspCamera);
 
 	// We set the render state to backface culling and disable alpha blending.
-	// NOTE: if you are not using the scenegraph to handle render states for
-	// you, it is your responsibility to handle states between draw calls.
+	// NOTE: if you are not using the scenegraph or the RenderObject to
+	// handle render states, it is your responsibility to (re)set states 
+	// between draw calls.
 
 	// use back face culling
 	mspCull->CullFace = StateCull::CM_BACK;
@@ -119,7 +120,7 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			GetRenderer()->Draw(mspCube);
+			GetRenderer()->Draw(mspCube, true);
 		}
 	}
 

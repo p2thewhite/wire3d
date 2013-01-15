@@ -17,27 +17,44 @@ WIRE_IMPLEMENT_RTTI(Wire, RenderObject, Object);
 
 //----------------------------------------------------------------------------
 RenderObject::RenderObject(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer,
-	Material* pMaterial)
+	Material* pMaterial, Bool createWorldBoundingVolume)
 	:
-	mspMaterial(pMaterial),
-	mStateSetID(System::MAX_UINT)
+	mspMaterial(pMaterial)
 {
+	Init(createWorldBoundingVolume);
 	mspMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
 }
 
 //----------------------------------------------------------------------------
-RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial)
+RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial,
+	Bool createWorldBoundingVolume)
 	:
 	mspMesh(pMesh),
-	mspMaterial(pMaterial),
-	mStateSetID(System::MAX_UINT)
+	mspMaterial(pMaterial)
 {
+	Init(createWorldBoundingVolume);
 	WIRE_ASSERT(pMesh);
+}
+
+//----------------------------------------------------------------------------
+RenderObject::RenderObject(Bool createWorldBoundingVolume)
+{
+	Init(createWorldBoundingVolume);
 }
 
 //----------------------------------------------------------------------------
 RenderObject::~RenderObject()
 {
+}
+
+//----------------------------------------------------------------------------
+void RenderObject::Init(Bool createWorldBoundingVolume)
+{
+	mStateSetID = System::MAX_UINT;
+	if (createWorldBoundingVolume)
+	{
+		WorldBound = BoundingVolume::Create();
+	}
 }
 
 //----------------------------------------------------------------------------

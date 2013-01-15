@@ -38,8 +38,8 @@ Bool Game::OnInitialize()
 	// Font for render statistics debug text
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
+	GetRenderer()->Bind(mspText);
 
-	mspText->Bind(GetRenderer());
 	GetRenderer()->CreateBatchingBuffers(100000);
 	GetRenderer()->SetVertexBatchingThreshold(300);
 	GetRenderer()->SetIndexBatchingThreshold(2000);
@@ -462,11 +462,11 @@ Node* Game::LoadAndInitializeScene()
 	// the culler will dynamically increase it during runtime. This is not
 	// a big deal, however we do not want any memory allocations during the
 	// render loop.
-	UInt geometryCount = importer.GetStatistics()->GeometryCount;
+	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 
 	for (UInt i = 0; i < mSceneCuller.GetVisibleSets().GetQuantity(); i++)
 	{
-		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(geometryCount);
+		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(renderObjectCount);
 	}
 
 	pScene->GetAllChildrenByNameStartingWith("Collider for", mColliderSpatials);

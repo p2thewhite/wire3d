@@ -8,13 +8,14 @@
 
 #include "WireText.h"
 
+#include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
 #include "WireMesh.h"
 #include "WireRenderer.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, Text, Geometry);
+WIRE_IMPLEMENT_RTTI(Wire, Text, RenderObject);
 
 //----------------------------------------------------------------------------
 Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
@@ -41,7 +42,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
-	mspRenderObject = WIRE_NEW RenderObject(pMesh);
+	SetMesh(pMesh);
 
 	Clear();
 	mWhitespaceWidth = mCharSizes[' '].Z();
@@ -53,8 +54,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
 	pAlpha->BlendEnabled = true;
-	AttachState(pAlpha);
-	UpdateRS();
+	GetStates()[State::ALPHA] = pAlpha;
 }
 
 //----------------------------------------------------------------------------
@@ -65,9 +65,10 @@ Text::~Text()
 //----------------------------------------------------------------------------
 void Text::Clear()
 {
-	Culling = CULL_ALWAYS;
 	WIRE_ASSERT(GetMesh());
 	GetMesh()->SetIndexCount(0);
+	GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	GetMesh()->GetModelBound()->SetRadius(0);
 	mPenX = 0.0F;
 	mPenY = 0.0F;
 }
@@ -135,6 +136,19 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 
 	const UInt maxLength = pVertexBuffer->GetQuantity() / 4;
 	UInt indexCount = 0;
+
+	BoundingVolume* pModelBound = GetMesh()->GetModelBound();
+	WIRE_ASSERT(pModelBound);
+	Vector2F min(System::MAX_FLOAT, System::MAX_FLOAT);
+	Vector2F max(System::MIN_FLOAT, System::MIN_FLOAT);
+	Float radius = pModelBound->GetRadius();
+	Vector3F center3 = pModelBound->GetCenter();
+	if (radius != 0)
+	{
+		min = Vector2F(center3.X() - radius, center3.Y() - radius);
+		max = Vector2F(center3.X() + radius, center3.Y() + radius);
+	}
+
 	for (UInt j = 0; pText[j]; j++)
 	{
 		if ((offset+indexCount) >= maxLength)
@@ -170,11 +184,19 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 		}
 
 		Float cy = y - mCharSizes[c].W();
-		pVertexBuffer->Position3(i) = Vector3F(x, cy+cHeight, 0);
+		const Float x1 = x + cWidth;
+		const Float cy1 = cy + cHeight;
+
+		min.X() = min.X() > x ? x : min.X();
+		max.X() = max.X() < x1 ? x1 : max.X();
+		min.Y() = min.Y() > cy1 ? cy : min.Y();
+		max.Y() = max.Y() < cy1 ? cy1 : max.Y();
+
+		pVertexBuffer->Position3(i) = Vector3F(x, cy1, 0);
 		pVertexBuffer->Color4(i) = mColor;
-		pVertexBuffer->Position3(i+1) = Vector3F(x+cWidth, cy+cHeight, 0);
+		pVertexBuffer->Position3(i+1) = Vector3F(x1, cy1, 0);
 		pVertexBuffer->Color4(i+1) = mColor;
-		pVertexBuffer->Position3(i+2) = Vector3F(x+cWidth, cy, 0);
+		pVertexBuffer->Position3(i+2) = Vector3F(x1, cy, 0);
 		pVertexBuffer->Color4(i+2) = mColor;
 		pVertexBuffer->Position3(i+3) = Vector3F(x, cy, 0);
 		pVertexBuffer->Color4(i+3) = mColor;
@@ -196,12 +218,14 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 
 		x+= cStride;
 		indexCount++;
-
-		Culling = CULL_NEVER;
 	}
 
 	GetMesh()->SetIndexCount(GetMesh()->GetIndexCount() + indexCount*6);
 	mIsPdrBufferOutOfDate = true;
+
+	Vector2F center((max.X()+min.X()) * 0.5F, (max.Y()+min.Y()) * 0.5F);
+	pModelBound->SetCenter(Vector3F(center.X(), center.Y(), 0));
+	pModelBound->SetRadius((center - min).Length());
 
 	mPenX = x;
 	mPenY = y;

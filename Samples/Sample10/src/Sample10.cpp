@@ -385,5 +385,5 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 
 	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(mspText->GetRenderObject());
+	GetRenderer()->Draw(mspText);
 }

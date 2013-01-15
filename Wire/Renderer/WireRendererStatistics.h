@@ -51,7 +51,7 @@ public:
 	// handled by the caller. Draw() requires that Renderer::PreDraw() has
 	// been called beforehand.
 	void Draw(Text* pText, Float fps, Bool useAverageFps = true,
-		Camera* pCamera = NULL);
+		Bool restoreState = false, Camera* pCamera = NULL);
 
 private:
 	Float AverageFps(Float currentFps);

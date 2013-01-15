@@ -126,7 +126,7 @@ void RendererStatistics::AppendToText(Text* pText, Float fps,
 
 //----------------------------------------------------------------------------
 void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
-	Camera* pCamera)
+	Bool restoreState, Camera* pCamera)
 {
 	if (!mpRenderer)
 	{
@@ -156,8 +156,7 @@ void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
 	Camera* pCurrentCamera = mpRenderer->GetCamera();
 	mpRenderer->SetCamera(pCamera);
 	mpRenderer->DisableLighting();
-	pText->GetRenderObject()->World = pText->World;
-	mpRenderer->Draw(pText->GetRenderObject());
+	mpRenderer->Draw(pText, restoreState);
 	mpRenderer->SetCamera(pCurrentCamera);
 }
 

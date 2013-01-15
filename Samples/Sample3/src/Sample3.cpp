@@ -132,9 +132,11 @@ void Sample3::DrawLodTextLabel()
 	Float offsetX = (GetWidthF() - 21.0F*8.0F) * 0.5F;
 	Float offsetY = GetHeightF() - 6.0F * 8.0F;
 	Vector3F textPosition(offsetX, offsetY, 0);
-	mspText->GetRenderObject()->World.SetTranslate(textPosition);
+	mspText->World.SetTranslate(textPosition);
 
-	GetRenderer()->Draw(mspText->GetRenderObject());
+	GetRenderer()->SetState(StaticCast<StateWireframe>(State::Default[
+		State::WIREFRAME]));
+	GetRenderer()->Draw(mspText);
 }
 
 //----------------------------------------------------------------------------

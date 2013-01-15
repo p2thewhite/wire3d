@@ -899,7 +899,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
 {
 	WIRE_ASSERT(pRenderObject);
 	// assert that this is really a RenderObject, not a cast Effect
-	WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pRenderObject)));
+	WIRE_ASSERT(DynamicCast<RenderObject>(StaticCast<Object>(pRenderObject)));
 
 	const Mesh* pMesh = pRenderObject->GetMesh();
 	WIRE_ASSERT(pMesh && ((pMesh->GetStartIndex() +	pMesh->GetIndexCount()) <=
@@ -996,8 +996,6 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 	}
 
 	Draw(pRenderObjects, indexStack[0][0], indexStack[0][1]);
-
-	ReleaseResources();
 }
 
 //----------------------------------------------------------------------------
@@ -1021,7 +1019,7 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 	{
 		for (UInt i = min; i < max; i++)
 		{
-			Draw(pVisible[i], false);
+			Draw(pVisible[i]);
 		}
 
 		return;
@@ -1111,7 +1109,7 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 		}
 		else
 		{
-			Draw(pVisible[min], false);
+			Draw(pVisible[min]);
 		}
 
 		min = idx+1;
@@ -1139,7 +1137,7 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 
 		if (pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pRenderObject, false);
+			Draw(pRenderObject);
 			continue;
 		}
 
@@ -1152,7 +1150,7 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pRenderObject, false);
+				Draw(pRenderObject);
 				continue;
 			}
 
@@ -1215,7 +1213,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		if (vertexCount > mVertexBatchingThreshold ||
 			pMesh->GetIndexCount() > mIndexBatchingThreshold)
 		{
-			Draw(pRenderObject, false);
+			Draw(pRenderObject);
 			continue;
 		}
 
@@ -1237,7 +1235,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pRenderObject, false);
+				Draw(pRenderObject);
 				continue;
 			}
 
@@ -1509,7 +1507,7 @@ void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
 //----------------------------------------------------------------------------
 void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 {
-	 UInt lightCount = rLights.GetQuantity();
+	UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
 	{
 		return;

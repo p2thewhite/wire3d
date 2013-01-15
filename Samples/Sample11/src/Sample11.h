@@ -29,7 +29,7 @@ private:
 	Culler mCuller;
 	CameraPtr mspGuiCamera;
 	NodePtr mspGuiRoot;
-	TextPtr mspText;
+	GeometryPtr mspTextNode;
 
 	Cursors* mpCursors;
 };

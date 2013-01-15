@@ -32,7 +32,7 @@ Bool Demo::OnInitialize()
 	// frames per second and render statistics debug text
 	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
 	WIRE_ASSERT(mspText);
-	mspText->Bind(GetRenderer());
+	GetRenderer()->Bind(mspText);
 
  	GetRenderer()->CreateBatchingBuffers(50000, 50000);
  	GetRenderer()->SetVertexBatchingThreshold(1000);
@@ -229,10 +229,10 @@ Node* Demo::LoadAndInitScene()
 	// the culler will dynamically increase it during runtime. This is not
 	// a big deal, however we do not want any memory allocations during the
 	// render loop.
-	UInt geometryCount = importer.GetStatistics()->GeometryCount;
+	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 	for (UInt i = 0; i < mSceneCuller.GetVisibleSets().GetQuantity(); i++)
 	{
-		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(geometryCount);
+		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(renderObjectCount);
 	}
 
 	TArray<Spatial*> fans;

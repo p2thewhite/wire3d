@@ -152,6 +152,15 @@ Bool Renderer::PreDraw(Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::PostDraw()
+{
+	// Reset state cache (state is not preserved outside Begin/EndScene()),
+	// and release smart pointers cached by the Renderer.
+	ReleaseResources();
+	mspCamera = NULL;
+}
+
+//----------------------------------------------------------------------------
 void Renderer::ClearBuffers()
 {
 	if (mpData->IsFrameBufferDirty)
@@ -805,15 +814,6 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexFormat::
 	}
 
 	GXEnd();
-}
-
-//----------------------------------------------------------------------------
-void Renderer::PostDraw()
-{
-	// Reset state cache (state is not preserved outside Begin/EndScene()),
-	// and release smart pointers cached by the Renderer.
-	ReleaseResources();
-	mspCamera = NULL;
 }
 
 //----------------------------------------------------------------------------

@@ -100,8 +100,8 @@ RenderObject* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pCube->WorldBound = BoundingVolume::Create();
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 	return pCube;
 }
 
@@ -109,9 +109,9 @@ RenderObject* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 Geometry* StandardMesh::CreateCube8AsNode(const UInt vertexColorChannels,
 	const Bool useNormals, const Float extent)
 {
-	RenderObjectPtr spRenderObject = CreateCube8(vertexColorChannels,
+	RenderObject* pRenderObject = CreateCube8(vertexColorChannels,
 		useNormals, extent);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -226,8 +226,8 @@ RenderObject* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 		(*pIBuffer)[5+i*6] = indices[1+i*4];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pCube->WorldBound = BoundingVolume::Create();
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 	return pCube;
 }
 
@@ -235,9 +235,9 @@ RenderObject* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 Geometry* StandardMesh::CreateCube14AsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
-	RenderObjectPtr spRenderObject = CreateCube14(vertexColorChannels,
+	RenderObject* pRenderObject = CreateCube14(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -366,8 +366,8 @@ RenderObject* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pCube->WorldBound = BoundingVolume::Create();
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 	return pCube;
 }
 
@@ -375,9 +375,9 @@ RenderObject* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 Geometry* StandardMesh::CreateCube24AsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
-	RenderObjectPtr spRenderObject = CreateCube24(vertexColorChannels,
+	RenderObject* pRenderObject = CreateCube24(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -475,8 +475,8 @@ RenderObject* StandardMesh::CreatePlane(const UInt xTileCount,
 		}
 	}
 
-	RenderObject* pPlane = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pPlane->WorldBound = BoundingVolume::Create();
+	RenderObject* pPlane = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 	return pPlane;
 }
 
@@ -486,9 +486,9 @@ Geometry* StandardMesh::CreatePlaneAsNode(const UInt xTileCount,
 	const UInt vertexColorChannels, const UInt uvQuantity,
 	const Bool useNormals)
 {
-	RenderObjectPtr spRenderObject = CreatePlane(xTileCount, yTileCount,
+	RenderObject* pRenderObject = CreatePlane(xTileCount, yTileCount,
 		xSizeTotal, ySizeTotal, vertexColorChannels, uvQuantity, useNormals);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -573,8 +573,8 @@ RenderObject* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pQuad = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pQuad->WorldBound = BoundingVolume::Create();
+	RenderObject* pQuad = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 	return pQuad;
 }
 
@@ -582,9 +582,9 @@ RenderObject* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 Geometry* StandardMesh::CreateQuadAsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
-	RenderObjectPtr spRenderObject = CreateQuad(vertexColorChannels,
+	RenderObject* pRenderObject = CreateQuad(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -637,10 +637,10 @@ Geometry* StandardMesh::CreateCylinderAsNode(Int axisSampleCount,
 	const UInt uvQuantity, const UInt vertexColorChannels,
 	const Bool useNormals)
 {
-	RenderObjectPtr spRenderObject = CreateCylinder(axisSampleCount,
+	RenderObject* pRenderObject = CreateCylinder(axisSampleCount,
 		radialSampleCount, radius, height, uvQuantity, vertexColorChannels,
 		useNormals);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -906,8 +906,8 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount
 	WIRE_DELETE[] pCos;
 	WIRE_DELETE[] pSin;
 
-	RenderObject* pSphere = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
-	pSphere->WorldBound = BoundingVolume::Create();
+	RenderObject* pSphere = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
+		true);
 
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
@@ -922,10 +922,10 @@ Geometry* StandardMesh::CreateSphereAsNode(Int zSampleCount,
 	Int radialSampleCount, Float radius, const UInt uvQuantity,
 	const UInt vertexColorChannels, const Bool useNormals)
 {
-	RenderObjectPtr spRenderObject = CreateSphere(zSampleCount,
+	RenderObject* pRenderObject = CreateSphere(zSampleCount,
 		radialSampleCount, radius, uvQuantity, vertexColorChannels,
 		useNormals);
-	return CreateNode(spRenderObject);
+	return WIRE_NEW Geometry(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -1016,6 +1016,14 @@ Text* StandardMesh::CreateText(UInt maxLength)
 }
 
 //----------------------------------------------------------------------------
+Geometry* StandardMesh::CreateTextAsNode(UInt maxLength)
+{
+	Text* pText = CreateText(maxLength);
+	Geometry* pNode = WIRE_NEW Geometry(pText);
+	return pNode;
+}
+
+//----------------------------------------------------------------------------
 const UChar StandardMesh::s_Font[] = 
 {
 	0,16,40,40,16,96,32,16,16,16,16,0,0,0,0,0,0,16,40,40,60,100,80,16,32,8,84,
@@ -1048,10 +1056,3 @@ const UChar StandardMesh::s_Font[] =
 	16,48,16,24,0,40,120,60,64,4,36,76,40,84,40,60,32,48,16,24,0,84,64,4,64,
 	120,24,52,16,108,68,4,124,28,16,112,0,0,64,4,0,0,0,0,0,0,0,56,0,0,16,0,0,0
 };
-
-//----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateNode(RenderObject* pRenderObject)
-{
-	return WIRE_NEW Geometry(pRenderObject->GetMesh(), pRenderObject->
-		GetMaterial());
-}

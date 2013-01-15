@@ -249,10 +249,6 @@ void Renderer::Unbind(const Mesh*)
 //----------------------------------------------------------------------------
 Bool Renderer::PreDraw(Camera* pCamera)
 {
-	// Reset state cache (state is not preserved outside Begin/EndScene()),
-	// and release smart pointers cached by the Renderer.
-	ReleaseResources();
-
 	SetCamera(pCamera);
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
@@ -305,7 +301,10 @@ void Renderer::PostDraw()
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
+	// Reset state cache (state is not preserved outside Begin/EndScene()),
+	// and release smart pointers cached by the Renderer.
 	ReleaseResources();
+
 	mspCamera = NULL;
 }
 

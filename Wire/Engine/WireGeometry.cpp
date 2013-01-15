@@ -32,8 +32,11 @@ Geometry::Geometry(Mesh* pMesh, Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-Geometry::Geometry()
+Geometry::Geometry(RenderObject* pRenderObject)
 {
+	WIRE_ASSERT(pRenderObject);
+	mspRenderObject = pRenderObject;
+	mspRenderObject->WorldBound = WorldBound;
 }
 
 //----------------------------------------------------------------------------

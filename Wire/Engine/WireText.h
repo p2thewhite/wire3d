@@ -19,7 +19,7 @@ namespace Wire
 class Renderer;
 class Texture2D;
 
-class Text : public Geometry
+class Text : public RenderObject
 {
 	WIRE_DECLARE_RTTI
 

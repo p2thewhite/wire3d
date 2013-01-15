@@ -42,7 +42,7 @@ public:
 
 	struct Statistics
 	{
-		UInt GeometryCount;
+		UInt RenderObjectCount;
 		UInt NodeCount;
 		UInt TextureCount;
 		UInt MaterialCount;
@@ -102,7 +102,7 @@ private:
 	void ParseAssets(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
 	Wire::Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
-	Wire::Text* ParseText(rapidxml::xml_node<>* pXmlNode);
+	Wire::Geometry* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
