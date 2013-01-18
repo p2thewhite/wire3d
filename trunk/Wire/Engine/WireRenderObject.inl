@@ -43,21 +43,40 @@ inline void RenderObject::SetMaterial(Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-inline TArray<Pointer<Light> >& RenderObject::GetLights()
+inline TArray<Pointer<Light> >* RenderObject::GetLights()
 {
-	return mLights;
+	return mpLights;
 }
 
 //----------------------------------------------------------------------------
-inline const TArray<Pointer<Light> >& RenderObject::GetLights() const
+inline const TArray<Pointer<Light> >* RenderObject::GetLights() const
 {
-	return mLights;
+	return mpLights;
 }
 
 //----------------------------------------------------------------------------
 inline Light* RenderObject::GetLight(UInt i) const
 {
-	return mLights[i];
+	if (mpLights)
+	{
+		if (mpLights->GetQuantity() > i)
+		{
+			return (*mpLights)[i];
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+inline void RenderObject::SetLights(TArray<Pointer<Light> >* pLights)
+{
+	if (mpLights)
+	{
+		WIRE_DELETE mpLights;
+	}
+
+	mpLights = pLights;
 }
 
 //----------------------------------------------------------------------------

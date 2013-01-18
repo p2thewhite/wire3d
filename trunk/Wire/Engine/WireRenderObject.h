@@ -10,6 +10,7 @@
 #ifndef WIRERENDEROBJECT_H
 #define WIRERENDEROBJECT_H
 
+#include "WireLight.h"
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireState.h"
@@ -20,7 +21,6 @@ namespace Wire
 
 class BoundingVolume;
 class IndexBuffer;
-class Light;
 class VertexBuffer;
 
 class RenderObject: public Object
@@ -42,9 +42,10 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
-	inline TArray<Pointer<Light> >& GetLights();
-	inline const TArray<Pointer<Light> >& GetLights() const;
+	inline TArray<Pointer<Light> >* GetLights();
+	inline const TArray<Pointer<Light> >* GetLights() const;
 	inline Light* GetLight(UInt i = 0) const;
+	void SetLights(TArray<Pointer<Light> >* pLights);
 
 	inline StatePtr* GetStates();
 	inline const StatePtr* GetStates() const;
@@ -67,7 +68,7 @@ private:
 	Pointer<Material> mspMaterial;
 
 	StatePtr mStates[State::MAX_STATE_TYPE];
-	TArray<Pointer<Light> > mLights;
+	TArray<Pointer<Light> >* mpLights;
 
 	// Identical IDs of different RenderObjects mean that all their
 	// States[] and Lights are identical. This is used for sorting by

@@ -61,14 +61,14 @@ inline void Geometry::SetMaterial(Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-inline TArray<Pointer<Light> >& Geometry::GetLights()
+inline TArray<Pointer<Light> >* Geometry::GetLights()
 {
 	WIRE_ASSERT(mspRenderObject);
 	return mspRenderObject->GetLights();
 }
 
 //----------------------------------------------------------------------------
-inline const TArray<Pointer<Light> >& Geometry::GetLights() const
+inline const TArray<Pointer<Light> >* Geometry::GetLights() const
 {
 	WIRE_ASSERT(mspRenderObject);
 	return mspRenderObject->GetLights();

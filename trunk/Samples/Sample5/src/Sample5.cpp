@@ -166,9 +166,8 @@ void Sample5::OnIdle()
 		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
 	mspWhiteCube->World.SetRotate(rotateWorldLight3);
 	mspWhiteCube->UpdateWorldBound();
-	mspPlane->GetLights()[0]->Position = mspWhiteCube->World.GetTranslate();
-	mspPlane->GetLights()[0]->Direction = mspWhiteCube->World.GetMatrix().
-		GetColumn(2);
+	mspSpotLight->Position = mspWhiteCube->World.GetTranslate();
+	mspSpotLight->Direction = mspWhiteCube->World.GetMatrix().GetColumn(2);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -183,7 +182,8 @@ void Sample5::OnIdle()
 	}
 
 	// render the bottom plane which is being lit by the spot light
-	GetRenderer()->EnableLighting(mspPlane->GetLights()[0]->Ambient);
+	GetRenderer()->SetLight(mspSpotLight);
+	GetRenderer()->EnableLighting(mspSpotLight->Ambient);
 	if (mCuller.IsVisible(mspPlane))
 	{
 		GetRenderer()->Draw(mspPlane);
@@ -199,7 +199,7 @@ void Sample5::OnIdle()
 Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 	Bool useVertexColor, ColorRGBA vertexColor)
 {
-	Geometry* pCube = StandardMesh::CreateCube24AsNode(useVertexColor ? 4 : 0,
+	RenderObject* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
 		useTexture ? 1 : 0, useNormals);
 	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
@@ -227,7 +227,8 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 		pCube->SetMaterial(pMaterial);
 	}
 
-	return pCube;
+	Geometry* pCubeNode = WIRE_NEW Geometry(pCube);
+	return pCubeNode;
 }
 
 //----------------------------------------------------------------------------
@@ -257,12 +258,11 @@ RenderObject* Sample5::CreatePlane()
 	pStateMaterial->Ambient = ColorRGBA(1, 1, 1, 1);
 	pPlane->GetStates()[State::MATERIAL] = pStateMaterial;
 
-	Light* pLight = WIRE_NEW Light(Light::LT_SPOT);
-	pLight->Position = Vector3F(0, 0, 10);
-	pLight->Direction = Vector3F(0, 0, -1);
-	pLight->Angle = 0.5F;
-	pLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
-	pPlane->GetLights().Append(pLight);
+	mspSpotLight = WIRE_NEW Light(Light::LT_SPOT);
+	mspSpotLight->Position = Vector3F(0, 0, 10);
+	mspSpotLight->Direction = Vector3F(0, 0, -1);
+	mspSpotLight->Angle = 0.5F;
+	mspSpotLight->Ambient = ColorRGB(0.2F, 0.2F, 0.2F);
 	return pPlane;
 }
 

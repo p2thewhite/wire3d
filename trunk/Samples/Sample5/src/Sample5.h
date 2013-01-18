@@ -30,6 +30,7 @@ private:
 	RenderObjectPtr mspPlane;
 	RenderObjectPtr mspWhiteCube;
 	Texture2DPtr mspTexture;
+	LightPtr mspSpotLight;
 
 	Float mAngle;
 	Double mLastTime;

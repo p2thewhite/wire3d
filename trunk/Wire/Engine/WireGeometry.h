@@ -30,6 +30,7 @@ public:
 	inline RenderObject* GetRenderObject();
 	inline const RenderObject* GetRenderObject() const;
 
+	// convenience functions for accessing RenderObject members
 	inline Mesh* GetMesh();
 	inline const Mesh* GetMesh() const;
 	inline void SetMesh(Mesh* pMesh);
@@ -38,8 +39,8 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
-	inline TArray<Pointer<Light> >& GetLights();
-	inline const TArray<Pointer<Light> >& GetLights() const;
+	inline TArray<Pointer<Light> >* GetLights();
+	inline const TArray<Pointer<Light> >* GetLights() const;
 
 	inline StatePtr* GetStates();
 	inline const StatePtr* GetStates() const;
