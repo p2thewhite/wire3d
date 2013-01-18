@@ -222,9 +222,9 @@ public:
 	void DisableLighting();
 
 	// Renderer light state handling
-	void Enable(const TArray<Pointer<Light> >& rLights);
-	void Disable(const TArray<Pointer<Light> >& rLights);
-	void Set(const TArray<Pointer<Light> >& rLights);
+	void Enable(const TArray<Pointer<Light> >* pLights);
+	void Disable(const TArray<Pointer<Light> >* pLights);
+	void Set(const TArray<Pointer<Light> >* pLights);
 
 	// Draw call and bound resources' memory statistics
 	inline RendererStatistics* GetStatistics();

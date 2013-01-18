@@ -120,7 +120,7 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			GetRenderer()->Draw(mspCube, true);
+			GetRenderer()->Draw(mspCube);
 		}
 	}
 

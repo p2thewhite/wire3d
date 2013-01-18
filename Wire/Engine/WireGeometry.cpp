@@ -37,6 +37,7 @@ Geometry::Geometry(RenderObject* pRenderObject)
 	WIRE_ASSERT(pRenderObject);
 	mspRenderObject = pRenderObject;
 	mspRenderObject->WorldBound = WorldBound;
+	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
 }
 
 //----------------------------------------------------------------------------
@@ -49,6 +50,7 @@ void Geometry::Init(Mesh* pMesh, Material* pMaterial)
 {
 	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
 	mspRenderObject->WorldBound = WorldBound;
+	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
 }
 
 //----------------------------------------------------------------------------
@@ -78,12 +80,17 @@ void Geometry::UpdateState(TArray<State*>* pStateStacks,
 	}
 
 	// update light state
-	TArray<LightPtr>& rLights = GetLights();
-	rLights.RemoveAll();
-	rLights.SetQuantity(pLightStack->GetQuantity());
+	TArray<LightPtr>* pLights = GetLights();
+	if (!pLights)
+	{
+		pLights = WIRE_NEW TArray<LightPtr>;
+	}
+
+	pLights->RemoveAll();
+	pLights->SetQuantity(pLightStack->GetQuantity());
 	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
 	{
-		rLights[i] = (*pLightStack)[i];
+		(*pLights)[i] = (*pLightStack)[i];
 	}
 
 	// check if other Geometry objects share the same states
@@ -159,13 +166,13 @@ UInt Geometry::GetStateSetKey()
 		key += pState->ID * offset;
 	}
 
-	TArray<LightPtr>& rLights = GetLights();
-	for (UInt i = 0; i < rLights.GetQuantity(); i++)
+	TArray<LightPtr>* pLights = GetLights();
+	for (UInt i = 0; pLights && (i < pLights->GetQuantity()); i++)
 	{
 		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
 			TInstanceID<Light>::GetMaxID()+1;
-		WIRE_ASSERT(rLights[i]);
-		key += rLights[i]->ID * offset;
+		WIRE_ASSERT((*pLights)[i]);
+		key += (*pLights)[i]->ID * offset;
 	}
 
 	WIRE_ASSERT(VerifyKey(key, offset));
@@ -176,19 +183,22 @@ UInt Geometry::GetStateSetKey()
 //----------------------------------------------------------------------------
 Bool Geometry::VerifyKey(UInt key, UInt offset)
 {
-	TArray<LightPtr>& rLights = GetLights();
-	for (Int i = (rLights.GetQuantity()-1); i >= 0 ; i--)
+	TArray<LightPtr>* pLights = GetLights();
+	if (pLights)
 	{
-		UInt id = key / offset;
-		if (id != rLights[i]->ID)
+		for (Int i = (pLights->GetQuantity()-1); i >= 0; i--)
 		{
-			WIRE_ASSERT(false /* Light state id calculation error */);
-			return false;
-		}
+			UInt id = key / offset;
+			if (id != (*pLights)[i]->ID)
+			{
+				WIRE_ASSERT(false /* Light state id calculation error */);
+				return false;
+			}
 
-		key -= id * offset;
-		offset /= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
-			TInstanceID<Light>::GetMaxID()+1;
+			key -= id * offset;
+			offset /= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
+				TInstanceID<Light>::GetMaxID()+1;
+		}
 	}
 
 	StatePtr* rStates = GetStates();

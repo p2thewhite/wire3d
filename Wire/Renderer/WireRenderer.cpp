@@ -1480,8 +1480,14 @@ void Renderer::Set(const StatePtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
+void Renderer::Enable(const TArray<Pointer<Light> >* pLights)
 {
+	if (!pLights)
+	{
+		return;
+	}
+
+	const TArray<Pointer<Light> >& rLights = *pLights;
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
 	{
@@ -1505,8 +1511,15 @@ void Renderer::Enable(const TArray<Pointer<Light> >& rLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
+void Renderer::Disable(const TArray<Pointer<Light> >* pLights)
 {
+	if (!pLights)
+	{
+		return;
+	}
+
+	const TArray<Pointer<Light> >& rLights = *pLights;
+
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
 	{
@@ -1527,8 +1540,14 @@ void Renderer::Disable(const TArray<Pointer<Light> >& rLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const TArray<Pointer<Light> >& rLights)
+void Renderer::Set(const TArray<Pointer<Light> >* pLights)
 {
+	if (!pLights)
+	{
+		return;
+	}
+
+	const TArray<Pointer<Light> >& rLights = *pLights;
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount > mLights.GetQuantity())
 	{

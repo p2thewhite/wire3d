@@ -9,7 +9,6 @@
 #include "WireRenderObject.h"
 
 #include "WireBoundingVolume.h"
-#include "WireLight.h"
 
 using namespace Wire;
 
@@ -45,11 +44,16 @@ RenderObject::RenderObject(Bool createWorldBoundingVolume)
 //----------------------------------------------------------------------------
 RenderObject::~RenderObject()
 {
+	if (mpLights)
+	{
+		WIRE_DELETE mpLights;
+	}
 }
 
 //----------------------------------------------------------------------------
 void RenderObject::Init(Bool createWorldBoundingVolume)
 {
+	mpLights = NULL;
 	mStateSetID = System::MAX_UINT;
 	if (createWorldBoundingVolume)
 	{

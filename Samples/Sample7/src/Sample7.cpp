@@ -101,6 +101,7 @@ void Sample7::OnIdle()
 	mspTorus->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
 	mspTorus->World.SetUniformScale(0.18F);
 	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
+	GetRenderer()->SetState(pMaterial);
 
 	// Use the Geometry's StartIndex and ActiveIndexCount to control what
 	// part of the mesh is being rendered.
@@ -232,7 +233,8 @@ RenderObject* Sample7::CreateTorus()
 	pTorus->GetStates()[State::MATERIAL] = WIRE_NEW StateMaterial;
 
 	Light* pLight = WIRE_NEW Light;
-	pTorus->GetLights().Append(pLight);
+	pTorus->SetLights(WIRE_NEW TArray<LightPtr>);
+	pTorus->GetLights()->Append(pLight);
 
 	return pTorus;
 }
