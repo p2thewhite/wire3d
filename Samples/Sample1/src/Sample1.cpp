@@ -120,7 +120,7 @@ void Sample1::OnIdle()
 		mspCube->UpdateWorldBound();
 		if (mCuller.IsVisible(mspCube))
 		{
-			GetRenderer()->Draw(mspCube, true);
+			GetRenderer()->Draw(mspCube);
 		}
 	}
 
@@ -135,7 +135,10 @@ void Sample1::OnIdle()
 	GetRenderer()->DisableLighting();
 
 	// There is no more light, so the texture blending needs to be reset,
-	// otherwise it will modulate undefined values.
+	// otherwise it will modulate undefined values. As the material is
+	// currently cached by the renderer, we need to disable the material, so
+	// that the Renderer will pickup the changes.
+	GetRenderer()->Disable(mspCube->GetMaterial());
 	mspCube->GetMaterial()->SetBlendMode(Material::BM_REPLACE);
 	
 	z = MathF::Cos(mAngle) * 3.0F;

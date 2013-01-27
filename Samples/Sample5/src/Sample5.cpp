@@ -175,6 +175,11 @@ void Sample5::OnIdle()
 	// render the scene graph
 	GetRenderer()->Draw(mCuller.GetVisibleSets());
 
+	// before we start drawing objects in 'manual' mode, release all resources
+	// cached by the Renderer to return the renderer to its default state.
+	// This is necessary when identical resources (mspTexture in this case)
+	// are used by the scene graph and other objects that are being draw
+	// manually.
 	GetRenderer()->ReleaseResources();
 
 	// render the white cube representing the spot light
