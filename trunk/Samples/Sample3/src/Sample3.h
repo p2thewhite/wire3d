@@ -20,7 +20,7 @@ private:
 	NodeDLod* CreateLods();
 	Spatial* CreateLod(UInt shapeCount, UInt segmentCount);
 
-	Geometry* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
+	RenderObject* CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		UInt segmentCount, UInt p, UInt q);
 	Texture2D* CreateTexture();
 

@@ -158,9 +158,9 @@ Node* Sample10::CreateScene()
 			Float x = static_cast<Float>(xCount-1)*-0.5F;
 			for (UInt i = 0; i < xCount; i++)
 			{
-				Spatial* pGeo = useA ? CreateGeometryA() : CreateGeometryB();
-				pGeo->Local.SetTranslate(Vector3F(x+i, y+j, z+k));
-				pRoot->AttachChild(pGeo);
+				Node* pNode = useA ? CreateObjectA() : CreateObjectB();
+				pNode->Local.SetTranslate(Vector3F(x+i, y+j, z+k));
+				pRoot->AttachChild(pNode);
 				useA = !useA;
 			}
 		}
@@ -174,14 +174,14 @@ Node* Sample10::CreateScene()
 }
 
 //----------------------------------------------------------------------------
-Spatial* Sample10::CreateGeometryA()
+Node* Sample10::CreateObjectA()
 {
 	Node* pRootA = WIRE_NEW Node;
 
 	// Create the Mesh, Material and associated render States only once and
-	// use them for all instances of GeometryA. This saves memory and enables
+	// use them for all instances of ObjectA. This saves memory and enables
 	// the renderer to avoid redundant state and buffer changes when several
-	// instances of GeometryA are rendered in succession. Use CullerSorting
+	// instances of ObjectA are rendered in succession. Use CullerSorting
 	// to create such a sequence of instances to minimize changes.
 	if (!mspMeshA)
 	{
@@ -261,25 +261,25 @@ Spatial* Sample10::CreateGeometryA()
 		}
 	}
 
-	Geometry* pGeoFront = WIRE_NEW Geometry(mspMeshA, mspMaterialA);
-	pGeoFront->AttachState(mspAlphaA);
-	pGeoFront->AttachState(mspZBufferA);
+	Node* pFront = WIRE_NEW Node(mspMeshA, mspMaterialA);
+	pFront->AttachState(mspAlphaA);
+	pFront->AttachState(mspZBufferA);
 
-	Geometry* pGeoBack = WIRE_NEW Geometry(mspVertexBufferA, mspMeshA->
+	Node* pBack = WIRE_NEW Node(mspVertexBufferA, mspMeshA->
 		GetIndexBuffer(), mspMaterialA);
-	pGeoBack->AttachState(mspCullA);
+	pBack->AttachState(mspCullA);
 
-	pRootA->AttachChild(pGeoBack);
-	pRootA->AttachChild(pGeoFront);
+	pRootA->AttachChild(pBack);
+	pRootA->AttachChild(pFront);
 	pRootA->AttachState(mspStateMaterialA);
 
 	return pRootA;
 }
 
 //----------------------------------------------------------------------------
-Spatial* Sample10::CreateGeometryB()
+Node* Sample10::CreateObjectB()
 {
-	// See CreateGeometryA() for details
+	// See CreateObjectA() for details
 	if (!mspMeshB)
 	{
 		RenderObjectPtr spTmp = StandardMesh::CreateCube24(0, 1, true, 0.35F);
@@ -327,10 +327,10 @@ Spatial* Sample10::CreateGeometryB()
 		mspStateMaterialB->Ambient = ColorRGBA(1, 1, 0.9F, 1);
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(mspMeshB, mspMaterialB);
-	pGeo->AttachState(mspStateMaterialB);
+	Node* pObjectB = WIRE_NEW Node(mspMeshB, mspMaterialB);
+	pObjectB->AttachState(mspStateMaterialB);
 
-	return pGeo;
+	return pObjectB;
 }
 
 //----------------------------------------------------------------------------

@@ -1,21 +1,21 @@
 #include "ConveyorBelt.h"
 
-#include "WireMesh.h"
+#include "WireNode.h"
 
 using namespace Wire;
 
 //----------------------------------------------------------------------------
-ConveyorBelt::ConveyorBelt(Geometry* pGeometry, Renderer* pRenderer)
+ConveyorBelt::ConveyorBelt(RenderObject* pRenderObject, Renderer* pRenderer)
 	:
 	mpRenderer(pRenderer),
 	mOffset(0)
 {
-	if (!pGeometry || !pGeometry->GetMesh())
+	if (!pRenderObject || !pRenderObject->GetMesh())
 	{
 		return;
 	}
 
-	Mesh* pMesh = pGeometry->GetMesh();
+	Mesh* pMesh = pRenderObject->GetMesh();
 	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 	{
 		VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer(i);
@@ -52,14 +52,14 @@ Bool ConveyorBelt::Update(Double appTime)
 //----------------------------------------------------------------------------
 Bool ConveyorBelt::OnGetVisibleUpdate(const Camera*)
 {
-	Geometry* pGeo = DynamicCast<Geometry>(mpSceneObject);
-	if (!mspVertexBufferCopy || !pGeo || !pGeo->GetMesh())
+	Node* pGeo = DynamicCast<Node>(mpSceneObject);
+	if (!mspVertexBufferCopy || !pGeo)
 	{
 		return false;
 	}
 
 	VertexBuffer* pVertexBuffer = NULL;
-	Mesh* pMesh = pGeo->GetMesh();
+	Mesh* pMesh = pGeo->GetRenderObject()->GetMesh();
 	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 	{
 		if (pMesh->GetVertexBuffer(i)->GetAttributes().HasTCoord())

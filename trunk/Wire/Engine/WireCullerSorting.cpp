@@ -21,8 +21,8 @@ CullerSorting::CullerSorting(const Camera* pCamera, UInt maxQuantity,
 	Culler(pCamera, maxQuantity, growBy)
 {
 	mVisibleSets.Append(WIRE_NEW VisibleSet(maxQuantity, growBy));
-	mpOpaqueGeometry = WIRE_NEW VisibleSet(maxQuantity, growBy);
-	mpTransparentGeometry = WIRE_NEW VisibleSet(maxQuantity, growBy);
+	mpOpaqueObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
+	mpTransparentObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
 	mKeys.SetMaxQuantity(maxQuantity);
 	mKeys.SetGrowBy(growBy);
 }
@@ -32,8 +32,8 @@ CullerSorting::~CullerSorting()
 {
 	// The visible set created and stored in mVisibleSets in the constructor
 	// is deleted by the destructor of the parent class, not here.
-	WIRE_DELETE mpTransparentGeometry;
-	WIRE_DELETE mpOpaqueGeometry;
+	WIRE_DELETE mpTransparentObjects;
+	WIRE_DELETE mpOpaqueObjects;
 }
 
 //----------------------------------------------------------------------------
@@ -42,16 +42,16 @@ void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 	Culler::ComputeVisibleSet(pScene);
 
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
-	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueGeometry);
-	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentGeometry);
+	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects);
+	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects);
 
 	VisibleSet* pTemp = mVisibleSets[0];
-	mVisibleSets[0] = mpOpaqueGeometry;
-	mpOpaqueGeometry = pTemp;
+	mVisibleSets[0] = mpOpaqueObjects;
+	mpOpaqueObjects = pTemp;
 
 	pTemp = mVisibleSets[1];
-	mVisibleSets[1] = mpTransparentGeometry;
-	mpTransparentGeometry = pTemp;
+	mVisibleSets[1] = mpTransparentObjects;
+	mpTransparentObjects = pTemp;
 }
 
 //----------------------------------------------------------------------------

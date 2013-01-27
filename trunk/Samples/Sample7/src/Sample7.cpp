@@ -103,7 +103,7 @@ void Sample7::OnIdle()
 	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
 	GetRenderer()->SetState(pMaterial);
 
-	// Use the Geometry's StartIndex and ActiveIndexCount to control what
+	// Use the Mesh's StartIndex and ActiveIndexCount to control what
 	// part of the mesh is being rendered.
 	mSegmentCount += MathD::FMod(elapsedTime * 50, s_SegmentCount);
 	UInt segmentCount = static_cast<UInt>(mSegmentCount);

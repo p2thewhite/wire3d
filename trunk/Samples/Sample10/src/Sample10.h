@@ -19,8 +19,8 @@ public:
 
 private:
 	Node* CreateScene();
-	Spatial* CreateGeometryA();
-	Spatial* CreateGeometryB();
+	Node* CreateObjectA();
+	Node* CreateObjectB();
 
 	NodePtr mspRoot;
 	LightPtr mspLight;

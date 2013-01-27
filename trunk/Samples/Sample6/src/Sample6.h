@@ -18,8 +18,8 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateSun();
-	Geometry* CreateTerrain();
+	Node* CreateSun();
+	Node* CreateTerrain();
 
 	CameraPtr mspCamera;
 	Culler mCuller;

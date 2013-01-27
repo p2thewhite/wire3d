@@ -201,7 +201,7 @@ void Spatial::UpdateRS(TArray<State*>* pStateStacks, TArray<Light*>*
         // stack has no lights initially
         pLightStack = WIRE_NEW TArray<Light*>(0, growBy);
 
-		// Geometry identifies sets of identical states and shares their ID
+		// RenderObject identifies sets of identical states and shares the ID
 		pStateKeys = WIRE_NEW THashTable<UInt, UInt>;
 
 		// traverse to root and push states from root to this node

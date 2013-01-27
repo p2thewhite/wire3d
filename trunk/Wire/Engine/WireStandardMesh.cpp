@@ -12,7 +12,7 @@
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireImage2D.h"
-#include "WireMesh.h"
+#include "WireNode.h"
 #include "WireText.h"
 
 using namespace Wire;
@@ -106,12 +106,12 @@ RenderObject* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateCube8AsNode(const UInt vertexColorChannels,
+Node* StandardMesh::CreateCube8AsNode(const UInt vertexColorChannels,
 	const Bool useNormals, const Float extent)
 {
 	RenderObject* pRenderObject = CreateCube8(vertexColorChannels,
 		useNormals, extent);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -232,12 +232,12 @@ RenderObject* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateCube14AsNode(const UInt vertexColorChannels,
+Node* StandardMesh::CreateCube14AsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
 	RenderObject* pRenderObject = CreateCube14(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -372,12 +372,12 @@ RenderObject* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateCube24AsNode(const UInt vertexColorChannels,
+Node* StandardMesh::CreateCube24AsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
 	RenderObject* pRenderObject = CreateCube24(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -481,14 +481,14 @@ RenderObject* StandardMesh::CreatePlane(const UInt xTileCount,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreatePlaneAsNode(const UInt xTileCount,
+Node* StandardMesh::CreatePlaneAsNode(const UInt xTileCount,
 	const UInt yTileCount, const Float xSizeTotal, const Float ySizeTotal,
 	const UInt vertexColorChannels, const UInt uvQuantity,
 	const Bool useNormals)
 {
 	RenderObject* pRenderObject = CreatePlane(xTileCount, yTileCount,
 		xSizeTotal, ySizeTotal, vertexColorChannels, uvQuantity, useNormals);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -579,12 +579,12 @@ RenderObject* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateQuadAsNode(const UInt vertexColorChannels,
+Node* StandardMesh::CreateQuadAsNode(const UInt vertexColorChannels,
 	const UInt uvQuantity, const Bool useNormals, const Float extent)
 {
 	RenderObject* pRenderObject = CreateQuad(vertexColorChannels,
 		uvQuantity, useNormals, extent);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -632,7 +632,7 @@ RenderObject* StandardMesh::CreateCylinder(Int axisSampleCount,
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateCylinderAsNode(Int axisSampleCount,
+Node* StandardMesh::CreateCylinderAsNode(Int axisSampleCount,
 	Int radialSampleCount, const Float radius, const Float height,
 	const UInt uvQuantity, const UInt vertexColorChannels,
 	const Bool useNormals)
@@ -640,7 +640,7 @@ Geometry* StandardMesh::CreateCylinderAsNode(Int axisSampleCount,
 	RenderObject* pRenderObject = CreateCylinder(axisSampleCount,
 		radialSampleCount, radius, height, uvQuantity, vertexColorChannels,
 		useNormals);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -918,14 +918,14 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateSphereAsNode(Int zSampleCount,
+Node* StandardMesh::CreateSphereAsNode(Int zSampleCount,
 	Int radialSampleCount, Float radius, const UInt uvQuantity,
 	const UInt vertexColorChannels, const Bool useNormals)
 {
 	RenderObject* pRenderObject = CreateSphere(zSampleCount,
 		radialSampleCount, radius, uvQuantity, vertexColorChannels,
 		useNormals);
-	return WIRE_NEW Geometry(pRenderObject);
+	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -1016,10 +1016,10 @@ Text* StandardMesh::CreateText(UInt maxLength)
 }
 
 //----------------------------------------------------------------------------
-Geometry* StandardMesh::CreateTextAsNode(UInt maxLength)
+Node* StandardMesh::CreateTextAsNode(UInt maxLength)
 {
 	Text* pText = CreateText(maxLength);
-	Geometry* pNode = WIRE_NEW Geometry(pText);
+	Node* pNode = WIRE_NEW Node(pText);
 	return pNode;
 }
 

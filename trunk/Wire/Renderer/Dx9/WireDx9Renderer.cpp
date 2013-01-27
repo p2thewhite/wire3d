@@ -8,18 +8,14 @@
 
 #include "WireRenderer.h"
 
-#include "WireCamera.h"
 #include "WireDx9IndexBuffer.h"
 #include "WireDx9RendererData.h"
 #include "WireDx9RendererInput.h"
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
-#include "WireEffect.h"
-#include "WireGeometry.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMesh.h"
-#include "WireVertexBuffer.h"
 
 using namespace Wire;
 

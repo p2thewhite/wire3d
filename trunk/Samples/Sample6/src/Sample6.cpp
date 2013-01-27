@@ -19,10 +19,10 @@ Bool Sample6::OnInitialize()
 	// create a simple scene consisting of a sun, terrain and a lens flare
 	mspRoot = WIRE_NEW Node;
 	
-	Geometry* pSun = CreateSun();
+	Node* pSun = CreateSun();
 	mspRoot->AttachChild(pSun);
 
-	Geometry* pTerrain = CreateTerrain();
+	Node* pTerrain = CreateTerrain();
 	mspRoot->AttachChild(pTerrain);
 
 	LensflareNode* pLensflare = WIRE_NEW LensflareNode(pSun);
@@ -86,28 +86,29 @@ void Sample6::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample6::CreateSun()
+Node* Sample6::CreateSun()
 {
 	// create a sun using a bright yellow colored sphere
-	Geometry* pSun = StandardMesh::CreateSphereAsNode(4, 16, 3, 0, 3);
+	RenderObject* pSun = StandardMesh::CreateSphere(4, 16, 3, 0, 3);
 	VertexBuffer* pSunVB = pSun->GetMesh()->GetVertexBuffer();
 	for (UInt i = 0; i < pSunVB->GetQuantity(); i++)
 	{
 		pSunVB->Color3(i) = ColorRGB(1.0F, 1.0F, 0.8F);
 	}
 
-	pSun->Local.SetTranslate(Vector3F(20, 20, -100));
-	return pSun;
+	Node* pSunNode = WIRE_NEW Node(pSun);
+	pSunNode->Local.SetTranslate(Vector3F(20, 20, -100));
+	return pSunNode;
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample6::CreateTerrain()
+Node* Sample6::CreateTerrain()
 {
 	// create a simple terrain using a plane with sinus modulated height
 	// values to represent hills
 	UInt tileXCount = 40;
 	UInt tileYCount = 20;
-	Geometry* pPlane = StandardMesh::CreatePlaneAsNode(tileXCount, tileYCount,
+	RenderObject* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
 		5, 5, 0, 0, true);
 	VertexBuffer* const pVBuffer = pPlane->GetMesh()->GetVertexBuffer();
 
@@ -130,19 +131,20 @@ Geometry* Sample6::CreateTerrain()
 	}
 
 	// we changed the vertices so we need to recreate the model bound
-	// (which was automatically created by the constructor of Geometry)
+	// (which was automatically created by the constructor of RenderObject)
 	pPlane->GetMesh()->UpdateModelBound();
 	pPlane->GetMesh()->GenerateNormals();
 
+	Node* pPlaneNode = WIRE_NEW Node(pPlane);
 	Matrix3F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F);
-	pPlane->Local.SetTranslate(Vector3F(0, -0.25F, 0));
-	pPlane->Local.SetRotate(mat);
+	pPlaneNode->Local.SetTranslate(Vector3F(0, -0.25F, 0));
+	pPlaneNode->Local.SetRotate(mat);
 
 	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
-	pPlane->AttachLight(pLight);
+	pPlaneNode->AttachLight(pLight);
 	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
 	pStateMaterial->Ambient = ColorRGBA::GREEN;
-	pPlane->AttachState(pStateMaterial);
+	pPlaneNode->AttachState(pStateMaterial);
 
-	return pPlane;
+	return pPlaneNode;
 }

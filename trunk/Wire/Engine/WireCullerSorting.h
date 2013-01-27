@@ -37,8 +37,8 @@ protected:
 		Int right);
 	UInt GetKey(RenderObject* pRenderObject);
 
-	VisibleSet* mpOpaqueGeometry;
-	VisibleSet* mpTransparentGeometry;
+	VisibleSet* mpOpaqueObjects;
+	VisibleSet* mpTransparentObjects;
 	TArray<UInt> mKeys;
 };
 

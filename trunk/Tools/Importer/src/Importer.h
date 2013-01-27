@@ -5,7 +5,6 @@
 #include "rapidxml.hpp"
 #include "WireCamera.h"
 #include "WireColorRGBA.h"
-#include "WireGeometry.h"
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireNode.h"
@@ -101,8 +100,8 @@ private:
 
 	void ParseAssets(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
-	Wire::Geometry* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
-	Wire::Geometry* ParseText(rapidxml::xml_node<>* pXmlNode);
+	Wire::Node* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
+	Wire::Node* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);

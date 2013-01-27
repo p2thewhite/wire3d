@@ -275,25 +275,26 @@ void Game::ToggleCollidersVisibility()
 
 	for (UInt i = 0; i < mColliderSpatials.GetQuantity(); i++)
 	{
-		Node* pColliderNode = DynamicCast<Node>(mColliderSpatials[i]);
-		WIRE_ASSERT(pColliderNode);
+		Node* pColliderRoot = DynamicCast<Node>(mColliderSpatials[i]);
+		WIRE_ASSERT(pColliderRoot);
 
 		if (mShowColliders)
 		{
-			Collider* pCollider = DynamicCast<Collider>(pColliderNode->GetController(0));
+			Collider* pCollider = DynamicCast<Collider>(pColliderRoot->GetController(0));
 			WIRE_ASSERT(pCollider);
 
-			// Create proper geometry according to the collider shape
-			Geometry*  pColliderGeometry = CollisionShapeToGeometryConverter::Convert(pCollider->GetShape(), Color32::GREEN);
-			if (pColliderGeometry)
+			// Create node with render object according to collider shape
+			Node*  pColliderNode = CollisionShapeToGeometryConverter::Convert(
+				pCollider->GetShape(), Color32::GREEN);
+			if (pColliderNode)
 			{
-				pColliderNode->AttachChild(pColliderGeometry);
-				pColliderNode->UpdateRS();
+				pColliderRoot->AttachChild(pColliderNode);
+				pColliderRoot->UpdateRS();
 			}
 		}
 		else
 		{
-			pColliderNode->DetachChildAt(pColliderNode->GetQuantity() - 1);
+			pColliderRoot->DetachChildAt(pColliderRoot->GetQuantity() - 1);
 		}
 	}
 }

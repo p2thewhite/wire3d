@@ -187,7 +187,6 @@
     <ClInclude Include="Engine\WireController.h" />
     <ClInclude Include="Engine\WireCuller.h" />
     <ClInclude Include="Engine\WireEffect.h" />
-    <ClInclude Include="Engine\WireGeometry.h" />
     <ClInclude Include="Engine\WireImage2D.h" />
     <ClInclude Include="Engine\WireIndexBuffer.h" />
     <ClInclude Include="Engine\WireLight.h" />
@@ -220,7 +219,6 @@
     <ClInclude Include="Renderer\WireRendererStatistics.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Engine\WireGeometry.inl" />
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
     <None Include="Engine\WireNodeBillboard.inl" />
@@ -416,7 +414,6 @@
     <ClCompile Include="Engine\WireController.cpp" />
     <ClCompile Include="Engine\WireCuller.cpp" />
     <ClCompile Include="Engine\WireEffect.cpp" />
-    <ClCompile Include="Engine\WireGeometry.cpp" />
     <ClCompile Include="Engine\WireImage2D.cpp" />
     <ClCompile Include="Engine\WireIndexBuffer.cpp" />
     <ClCompile Include="Engine\WireLight.cpp" />

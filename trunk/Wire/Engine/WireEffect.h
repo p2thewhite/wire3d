@@ -27,7 +27,7 @@ public:
 
 	// Override this function to obtain whatever drawing behavior your effect
 	// requires. If this is not overridden, the default behavior is to
-	// draw all the Geometry objects in pVisible.
+	// draw all the RenderObjects in pVisible.
 	virtual void Draw(Renderer* pRenderer, Object* pVisible[], UInt min,
 		UInt max, Bool restoreState);
 

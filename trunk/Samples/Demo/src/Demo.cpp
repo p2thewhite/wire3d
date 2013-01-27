@@ -247,12 +247,12 @@ Node* Demo::LoadAndInitScene()
 	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot,
 		mSceneCameras[0]));
 
-	Geometry* pConveyorBelt = DynamicCast<Geometry>(pScene->GetChildByName(
+	Node* pConveyorBelt = DynamicCast<Node>(pScene->GetChildByName(
 		"polySurface437"));
 	if (pConveyorBelt)
 	{
-		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt,
-			GetRenderer()));
+		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt->
+			GetRenderObject(), GetRenderer()));
 	}	
 
 	pScene->Bind(GetRenderer());

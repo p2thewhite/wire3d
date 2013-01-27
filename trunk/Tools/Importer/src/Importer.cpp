@@ -506,7 +506,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 
 	if (Is("Text", pXmlNode->name()))
 	{
-		Geometry* pText = ParseText(pXmlNode);
+		Node* pText = ParseText(pXmlNode);
 		if (pText)
 		{
 			pParent->AttachChild(pText);
@@ -517,7 +517,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 
 	if (Is("Leaf", pXmlNode->name()))
 	{
-		Geometry* pGeo = ParseLeaf(pXmlNode);
+		Node* pGeo = ParseLeaf(pXmlNode);
 		if (pGeo)
 		{
 			pParent->AttachChild(pGeo);
@@ -1060,7 +1060,7 @@ Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
+Node* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 {
 	Mesh* pMesh = NULL;
 	Material* pMaterial = NULL;
@@ -1096,13 +1096,13 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pMesh, pMaterial);
-	WIRE_ASSERT(pGeo);
+	Node* pNode = WIRE_NEW Node(pMesh, pMaterial);
+	WIRE_ASSERT(pNode);
 	mStatistics.RenderObjectCount++;
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (pName)
 	{
-		pGeo->SetName(pName);
+		pNode->SetName(pName);
 	}
 
 	if (pMaterial)
@@ -1112,18 +1112,18 @@ Geometry* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		{
 			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
 			{
-				pGeo->AttachState((*pStateList)[i]);
+				pNode->AttachState((*pStateList)[i]);
 			}
 		}
 	}
 
-	ParseTransformationAndComponents(pXmlNode, pGeo);
+	ParseTransformationAndComponents(pXmlNode, pNode);
 
-	return pGeo;
+	return pNode;
 }
 
 //----------------------------------------------------------------------------
-Geometry* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
+Node* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 {
 	Int width = 8;
 	Int height = 8;
@@ -1189,7 +1189,7 @@ Geometry* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 		WIRE_ASSERT_NO_SIDEEFFECTS(isOk /* Wire::Text::Set() failed */);
 	}
 
-	Geometry* pTextNode = WIRE_NEW Geometry(pText);
+	Node* pTextNode = WIRE_NEW Node(pText);
 	mStatistics.RenderObjectCount++;
 
 	Char* pName = GetValue(pXmlNode, "Name");
@@ -1918,10 +1918,10 @@ void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 		rSpatials[i]->WorldBoundIsCurrent = true;
 		if (prepareSceneForStaticBatching)
 		{
-			Geometry* pGeo = DynamicCast<Geometry>(rSpatials[i]);
-			if (pGeo)
+			Node* pNode = DynamicCast<Node>(rSpatials[i]);
+			if (pNode && pNode->GetRenderObject())
 			{
-				pGeo->MakeStatic(true,
+				pNode->MakeRenderObjectStatic(true,
 					duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
 			}
 		}

@@ -9,8 +9,6 @@
 #include "WireNodeSkybox.h"
 
 #include "WireCuller.h"
-#include "WireGeometry.h"
-#include "WireMesh.h"
 #include "WireStateCull.h"
 
 using namespace Wire;
@@ -113,9 +111,9 @@ void NodeSkybox::AddQuad(const Vector3F& v0, const Vector3F& v1, const
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	Geometry* pQuad = WIRE_NEW Geometry(pVBuffer, pIBuffer);
 	Material* pMaterial = WIRE_NEW Material;
 	pMaterial->AddTexture(pTexture, Material::BM_REPLACE);
-	pQuad->SetMaterial(pMaterial);
+
+	Node* pQuad = WIRE_NEW Node(pVBuffer, pIBuffer, pMaterial);
 	AttachChild(pQuad);
 }

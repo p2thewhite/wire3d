@@ -12,6 +12,7 @@
 
 #include "WireEffect.h"
 #include "WireSpatial.h"
+#include "WireRenderObject.h"
 
 namespace Wire
 {
@@ -74,8 +75,8 @@ public:
 	virtual void UpdateWorldBound();
 
 	// Bind/Unbind all renderer related resources of the subgraph
-	virtual void Bind(Renderer* pRenderer);
-	virtual void Unbind(Renderer* pRenderer);
+	void Bind(Renderer* pRenderer);
+	void Unbind(Renderer* pRenderer);
 
 	// effect state
 	inline UInt GetEffectQuantity() const;
@@ -84,9 +85,8 @@ public:
 	inline void DetachEffect(Effect* pEffect);
 	inline void DetachAllEffects();
 
-	// Traverse the child objects and call their MakeStatic()
-	virtual void MakeStatic(Bool forceStatic = false,
-		Bool duplicateShared = true);
+	// Traverse child objects and call MakeRenderObjectStatic()
+	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
 
 protected:
 	// geometric update
@@ -101,11 +101,46 @@ protected:
 
 	TArray<SpatialPtr> mChildren;
 
-	// Effect state. If the effect is attached to a Geometry object, it
-	// applies to that object alone. If the effect is attached to a Node
-	// object, it applies to all Geometry objects in the subtree rooted at
-	// the Node.
+	// Effect state.
+	// Attached effects apply to the RenderObject of this Node and all
+	// RenderObjects in the subtree rooted at this Node.
 	TArray<Pointer<Effect> > mEffects;
+
+private:
+	void Init(UInt quantity, UInt growBy);
+
+	// RenderObject
+public:
+	Node(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
+		pMaterial = NULL, UInt quantity = 0, UInt growBy = 1);
+	Node(Mesh* pMesh, Material* pMaterial = NULL, UInt quantity = 0,
+		UInt growBy = 1);
+	Node(RenderObject* pRenderObject, UInt quantity = 0, UInt growBy = 1);
+
+	inline RenderObject* GetRenderObject();
+	inline const RenderObject* GetRenderObject() const;
+
+	// If World(Bound)IsCurrent or forceStatic is true, apply World transform
+	// to the vertices of the mesh and set World(Bound) to identity.
+	// If duplicateShared is true, shared Meshes will be duplicated before
+	// being processed. Otherwise shared Meshes will not be processed.
+	void MakeRenderObjectStatic(Bool forceStatic = false,
+		Bool duplicateShared = true);
+
+protected:
+	Bool UpdateWorldBoundRenderObject();
+	void UpdateWorldDataRenderObject();
+	void UpdateStateRenderObject(TArray<State*>* pStateStacks,
+		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
+	void GetVisibleSetRenderObject(Culler& rCuller, Bool noCull);
+
+	UInt GetStateSetKey();
+	Bool VerifyKey(UInt key, UInt offset); 	// TODO: remove
+
+private:
+	void InitRenderObject();
+
+	Pointer<RenderObject> mspRenderObject;
 };
 
 typedef Pointer<Node> NodePtr;
