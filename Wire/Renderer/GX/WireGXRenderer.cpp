@@ -8,9 +8,6 @@
 
 #include "WireRenderer.h"
 
-#include "WireCamera.h"
-#include "WireGeometry.h"
-#include "WireEffect.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireGXDisplayList.h"
@@ -18,11 +15,9 @@
 #include "WireGXRendererData.h"
 #include "WireGXRendererInput.h"
 #include "WireGXVertexBuffer.h"
-#include "WireLight.h"
 #include "WireMatrix4.h"
-#include "WireMesh.h"
 #include "WireText.h"
-#include "WireVertexBuffer.h"
+
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset
 

@@ -1068,10 +1068,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireGeometry.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.h"
 					>
 				</File>
@@ -1220,10 +1216,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireGeometry.inl"
-					>
-				</File>
-				<File
 					RelativePath=".\Engine\WireImage2D.inl"
 					>
 				</File>
@@ -1337,10 +1329,6 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireEffect.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Engine\WireGeometry.cpp"
 					>
 				</File>
 				<File

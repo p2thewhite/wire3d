@@ -10,7 +10,7 @@
 #ifndef WIRETEXT_H
 #define WIRETEXT_H
 
-#include "WireGeometry.h"
+#include "WireRenderObject.h"
 #include "WireVector2.h"
 
 namespace Wire

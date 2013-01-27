@@ -26,7 +26,7 @@ public:
 	virtual ~NodeLight();
 
 	void SetLight(Light* pLight);
-	inline Light* GetLight();
+	inline Light* GetLight();	// TODO: name conflict with Spatial
 	inline const Light* GetLight() const;
 
 protected:

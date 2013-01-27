@@ -1,9 +1,8 @@
 #include "Cursors.h"
 
 #include "Importer.h"
-#include "WireMesh.h"
 #include "WireStandardMesh.h"
-#include "WireVertexBuffer.h"
+#include "WireStateAlpha.h"
 
 using namespace Wire;
 
@@ -112,9 +111,10 @@ void Cursors::InitCursors()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Cursors::CreateCursor(Float uOffset, Float vOffset)
+Node* Cursors::CreateCursor(Float uOffset, Float vOffset)
 {
-	Geometry* pCursor = StandardMesh::CreateQuadAsNode(0, 1, false, 32.0F);
+	RenderObject* pCursor = StandardMesh::CreateQuad(0, 1, false, 32.0F);
+	pCursor->SetMaterial(mspMaterial);
 	const Vector2F uvs[] =
 	{
 		Vector2F(0 + uOffset, 0 + vOffset),
@@ -131,10 +131,10 @@ Geometry* Cursors::CreateCursor(Float uOffset, Float vOffset)
 		pVBuffer->TCoord2(i) = uvs[i];
 	}
 
-	pCursor->Culling = Spatial::CULL_ALWAYS;
-	pCursor->SetMaterial(mspMaterial);
+	Node* pCursorNode = WIRE_NEW Node(pCursor);
+	pCursorNode->Culling = Spatial::CULL_ALWAYS;
 
-	return pCursor;
+	return pCursorNode;
 }
 
 //----------------------------------------------------------------------------

@@ -2,7 +2,6 @@
 
 #include "ProbeRobot.h"
 #include "BulletUtils.h"
-#include "WireGeometry.h"
 #include "WireStandardMesh.h"
 #include "WireStateWireframe.h"
 
@@ -285,8 +284,7 @@ void Player::DoShooting()
 //----------------------------------------------------------------------------
 void Player::CreateRay(Float size)
 {
-	Geometry* pRay = StandardMesh::CreateCylinderAsNode(5, 5, 0.1F, size, 0,
-		4, false);
+	Node* pRay = StandardMesh::CreateCylinderAsNode(5, 5, 0.1F, size, 0, 4);
 	pRay->SetName("Ray");
 	mpNode->AttachChild(pRay);
 	mpNode->UpdateRS();

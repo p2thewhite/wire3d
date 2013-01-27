@@ -17,7 +17,8 @@ CollisionShapeToGeometryConverter::~CollisionShapeToGeometryConverter()
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape, const Color32& rColor)
+Node* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape,
+	const Color32& rColor)
 {
 	if (pShape->getShapeType() == BOX_SHAPE_PROXYTYPE)
 	{
@@ -38,7 +39,7 @@ Geometry* CollisionShapeToGeometryConverter::Convert(btCollisionShape* pShape, c
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
+Node* CollisionShapeToGeometryConverter::CreateWireframeBox(
 	btBoxShape* pBoxShape, const Color32& rColor)
 {
 	btVector3 scaling = pBoxShape->getLocalScaling();
@@ -56,7 +57,7 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
 	pBoxShape->setMargin(margin);
 
 	Vector3F halfExtents = BulletUtils::Convert(halfExtentsWithoutMargin);
-	Geometry* pBox = StandardMesh::CreateCube8AsNode(4);
+	RenderObject* pBox = StandardMesh::CreateCube8(4);
 	VertexBuffer* pVertexBuffer = pBox->GetMesh()->GetVertexBuffer();
 	const UInt vertexQuantity = pVertexBuffer->GetQuantity();
 	for (UInt i = 0; i < vertexQuantity; i++)
@@ -74,13 +75,14 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeBox(
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 
-	pBox->AttachState(pWireframe);
+	Node* pBoxNode = WIRE_NEW Node(pBox);
+	pBoxNode->AttachState(pWireframe);
 
-	return pBox;
+	return pBoxNode;
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
+Node* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 	btSphereShape* pSphereShape, const Color32& rColor)
 {
 	btVector3 scaling = pSphereShape->getLocalScaling();
@@ -100,15 +102,17 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 
 	// Creating the sphere
 
-	Float R = 1.0F / (Float) (rings - 1);
-	Float S = 1.0F / (Float) (sectors - 1);
+	Float R = 1.0F / static_cast<Float>(rings - 1);
+	Float S = 1.0F / static_cast<Float>(sectors - 1);
 
 	TArray<Vector3F> vertices;
-	for (UInt r = 0; r < rings; r++) {
-		for (UInt s = 0; s < sectors; s++) {
-			Float y = sin(-MathF::HALF_PI + MathF::PI * r * R);
-			Float x = cos(2 * MathF::PI * s * S) * sin(MathF::PI * r * R);
-			Float z = sin(2 * MathF::PI * s * S) * sin(MathF::PI * r * R);
+	for (UInt r = 0; r < rings; r++)
+	{
+		for (UInt s = 0; s < sectors; s++)
+		{
+			Float y = MathF::Sin(-MathF::HALF_PI + MathF::PI * r * R);
+			Float x = MathF::Cos(MathF::TWO_PI *s *S) * sin(MathF::PI *r * R);
+			Float z = MathF::Sin(MathF::TWO_PI *s *S) * sin(MathF::PI *r * R);
 			vertices.Append(Vector3F(x, y, z));
 		}
 	}
@@ -127,7 +131,8 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 	attributes.SetPositionChannels(3);
 	attributes.SetColorChannels(3);
 
-	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, vertices.GetQuantity());
+	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attributes, vertices.
+		GetQuantity());
 	WIRE_ASSERT(pVertexBuffer);
 
 	for (UInt i = 0; i < pVertexBuffer->GetQuantity(); i++)
@@ -142,10 +147,9 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 		(*pIndexBuffer)[i] = indexes[i];
 	}
 
-	Geometry* pSphere = WIRE_NEW Geometry(pVertexBuffer, pIndexBuffer);
+	Node* pSphere = WIRE_NEW Node(pVertexBuffer, pIndexBuffer);
 	WIRE_ASSERT(pSphere);
 
-	// Set wireframe rendering state
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
 
@@ -155,20 +159,16 @@ Geometry* CollisionShapeToGeometryConverter::CreateWireframeSphere(
 }
 
 //----------------------------------------------------------------------------
-Geometry* CollisionShapeToGeometryConverter::CreateWireframeMesh(
+Node* CollisionShapeToGeometryConverter::CreateWireframeMesh(
 	btBvhTriangleMeshShape* pTriangleMeshShape, const Color32& rColor)
 {
 	Mesh* pMesh = BulletUtils::Convert(pTriangleMeshShape);
+	pMesh->GenerateNormals();
 
-	Geometry* pGeometry = WIRE_NEW Geometry(pMesh);
-
-	pGeometry->GetMesh()->GenerateNormals();
-
-	// Set wireframe rendering state
+	Node* pNode = WIRE_NEW Node(pMesh);
 	StateWireframe* pWireframe = WIRE_NEW StateWireframe;
 	pWireframe->Enabled = true;
+	pNode->AttachState(pWireframe);
 
-	pGeometry->AttachState(pWireframe);
-
-	return pGeometry;
+	return pNode;
 }

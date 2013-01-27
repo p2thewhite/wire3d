@@ -16,7 +16,6 @@ namespace Wire
 {
 
 class Image2D;
-class Geometry;
 class Material;
 class Texture2D;
 

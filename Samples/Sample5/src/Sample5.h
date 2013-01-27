@@ -17,7 +17,7 @@ public:
 	virtual void OnIdle();
 
 private:
-	Geometry* CreateCube(Bool useTexture = true, Bool useNormals = true,
+	Node* CreateCube(Bool useTexture = true, Bool useNormals = true,
 		Bool useVertexColor = false, ColorRGBA vertexColor = ColorRGBA::WHITE);
 	RenderObject* CreatePlane();
 

@@ -36,3 +36,21 @@ inline void Node::DetachAllEffects()
 {
 	mEffects.RemoveAll();
 }
+
+//----------------------------------------------------------------------------
+inline RenderObject* Node::GetRenderObject()
+{
+	return mspRenderObject;
+}
+
+//----------------------------------------------------------------------------
+inline const RenderObject* Node::GetRenderObject() const
+{
+	return mspRenderObject;
+}
+// 
+// //----------------------------------------------------------------------------
+// inline Mesh* Node::GetMesh()
+// {
+// 	return mspRenderObject ? mspRenderObject->GetMesh() : NULL;
+// }

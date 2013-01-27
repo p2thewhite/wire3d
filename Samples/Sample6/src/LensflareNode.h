@@ -44,7 +44,7 @@ private:
 	};
 
 	void CreateFlares();
-	Geometry* CreateFlare(const FlareDef& rDef);
+	Node* CreateFlare(const FlareDef& rDef);
 	void CreateTextures();
 	Float SmoothStep(Float a, Float b, Float x);
 	void DrawParticle(Float* const pDst, Float fx, Float fy, UInt width);

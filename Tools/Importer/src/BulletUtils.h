@@ -1,6 +1,6 @@
 #pragma once
-#ifndef BULLETUTILS_H__
-#define BULLETUTILS_H__
+#ifndef BULLETUTILS_H
+#define BULLETUTILS_H
 
 #include "btBulletDynamicsCommon.h"
 #include "WireMatrix3.h"

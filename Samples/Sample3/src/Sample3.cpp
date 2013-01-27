@@ -113,7 +113,7 @@ void Sample3::DrawLodTextLabel()
 		return;
 	}
 
-	Geometry* pGeo = DynamicCast<Geometry>(pLodRoot->GetChild(activeLod));
+	Node* pGeo = DynamicCast<Node>(pLodRoot->GetChild(activeLod));
 	WIRE_ASSERT(pLodRoot);	// assumption that lod geo is child of lod node
 
 	// set the frustum for the text camera (screenWidth and screenHeight
@@ -124,7 +124,8 @@ void Sample3::DrawLodTextLabel()
 	const UInt textArraySize = 100;
 	Char text[textArraySize];
 	System::Sprintf(text, textArraySize, "LOD %d, %d Triangles",
-		activeLod, pGeo->GetMesh()->GetIndexBuffer()->GetQuantity() / 3);
+		activeLod, pGeo->GetRenderObject()->GetMesh()->GetIndexBuffer()->
+		GetQuantity() / 3);
 	mspText->Set(text, Color32::BLACK);
 	mspText->Update(GetRenderer());
 
@@ -163,18 +164,19 @@ NodeDLod* Sample3::CreateLods()
 Spatial* Sample3::CreateLod(UInt shapeCount, UInt segmentCount)
 {
 	// Create a PQ (4,3) torus knot with a inner radius of 0.2
-	Geometry* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount, 4, 3);
+	RenderObject* pTorus = CreatePqTorusKnot(shapeCount, 0.2F, segmentCount,
+		4, 3);
 
 	Material* pMaterial = WIRE_NEW Material;
 	pMaterial->AddTexture(CreateTexture(), Material::BM_REPLACE);
-
 	pTorus->SetMaterial(pMaterial);
 
-	return pTorus;
+	Node* pTorusNode = WIRE_NEW Node(pTorus);
+	return pTorusNode;
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
+RenderObject* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 	UInt segmentCount, UInt p, UInt q)
 {
 	shapeCount++;
@@ -273,8 +275,8 @@ Geometry* Sample3::CreatePqTorusKnot(UInt shapeCount, Float shapeRadius,
 		}
 	}
 
-	Geometry* pGeo = WIRE_NEW Geometry(pVBuffer, pIBuffer);
-	return pGeo;
+	RenderObject* pTorus = WIRE_NEW RenderObject(pVBuffer, pIBuffer);
+	return pTorus;
 }
 
 //----------------------------------------------------------------------------

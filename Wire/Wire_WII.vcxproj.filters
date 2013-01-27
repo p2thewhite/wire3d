@@ -237,9 +237,6 @@
     <ClInclude Include="Engine\WireEffect.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireGeometry.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\WireImage2D.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -605,9 +602,6 @@
     <None Include="Engine\WireCuller.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
-    <None Include="Engine\WireGeometry.inl">
-      <Filter>Engine\Inline Files</Filter>
-    </None>
     <None Include="Engine\WireImage2D.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
@@ -785,9 +779,6 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireEffect.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\WireGeometry.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireImage2D.cpp">

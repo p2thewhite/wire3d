@@ -17,7 +17,6 @@
 #include "WireCuller.h"
 #include "WireCullerSorting.h"
 #include "WireEffect.h"
-#include "WireGeometry.h"
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireLight.h"

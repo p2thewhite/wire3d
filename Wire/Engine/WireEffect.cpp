@@ -8,8 +8,8 @@
 
 #include "WireEffect.h"
 
-#include "WireGeometry.h"
 #include "WireRenderer.h"
+#include "WireRenderObject.h"
 
 using namespace Wire;
 
@@ -29,15 +29,15 @@ Effect::~Effect()
 void Effect::Draw(Renderer* pRenderer, Object* pVisible[], UInt min, UInt max,
 	Bool restoreState)
 {
-	// The default drawing function for global effects. Essentially, this
-	// draws all the visible leaf geometry, as if no effect was applied.
-	// Override to obtain a different behavior.
+	// The default drawing function for effects. Essentially, this draws
+	// all the RenderObjects, as if no effect was applied. Override to obtain
+	// a different behavior.
 	for (UInt i = min; i <= max; i++)
 	{
-		Geometry* pGeometry = DynamicCast<Geometry>(pVisible[i]);
-		if (pGeometry && pGeometry->GetRenderObject())
+		RenderObject* pRenderObject = DynamicCast<RenderObject>(pVisible[i]);
+		if (pRenderObject)
 		{
-			pRenderer->Draw(pGeometry->GetRenderObject(), restoreState);
+			pRenderer->Draw(pRenderObject, restoreState);
 		}
 	}
 }

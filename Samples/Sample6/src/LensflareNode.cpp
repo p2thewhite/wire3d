@@ -174,7 +174,7 @@ void LensflareNode::CreateFlares()
 	UInt quantity = sizeof(s_DefaultDef) / sizeof(FlareDef);
 	for (UInt i = 0; i < quantity; i++)
 	{
-		Geometry* pFlare = CreateFlare(s_DefaultDef[i]);
+		Node* pFlare = CreateFlare(s_DefaultDef[i]);
 		AttachChild(pFlare);
 	}
 
@@ -198,7 +198,7 @@ void LensflareNode::CreateFlares()
 }
 
 //----------------------------------------------------------------------------
-Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
+Node* LensflareNode::CreateFlare(const FlareDef& rDef)
 {
 	Float uvFactor;
 	Float uOffset;
@@ -235,7 +235,7 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 		return NULL;
 	}
 
-	Geometry* pQuad = StandardMesh::CreateQuadAsNode(0, 1, false,
+	RenderObject* pQuad = StandardMesh::CreateQuad(0, 1, false,
 		rDef.SizeFactor);
 	VertexBuffer* pVBuffer = pQuad->GetMesh()->GetVertexBuffer();
 
@@ -250,16 +250,18 @@ Geometry* LensflareNode::CreateFlare(const FlareDef& rDef)
 	pMaterial->AddTexture(pTexture, Material::BM_MODULATE);
 	pQuad->SetMaterial(pMaterial);
 
+	Node* pQuadNode = WIRE_NEW Node(pQuad);
+
 	// material state (used with light) to color the flare
 	StateMaterial* pStateMaterial = WIRE_NEW StateMaterial;
 	pStateMaterial->Ambient = rDef.Color;
-	pQuad->AttachState(pStateMaterial);
+	pQuadNode->AttachState(pStateMaterial);
 
 	// tell the system that we are doing transformations manually
-	pQuad->WorldIsCurrent = true;
-	pQuad->WorldBoundIsCurrent = true;
+	pQuadNode->WorldIsCurrent = true;
+	pQuadNode->WorldBoundIsCurrent = true;
 
-	return pQuad;
+	return pQuadNode;
 }
 
 //----------------------------------------------------------------------------

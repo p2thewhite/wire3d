@@ -88,7 +88,7 @@ Bool Sample5::OnInitialize()
 	// purpose of demonstrating scene graph and manual rendering with lights.
 	mspPlane = CreatePlane();
 	mspPlane->UpdateWorldBound();	// manual update of world bounding volume
-	GeometryPtr spWhiteCubeNode = CreateCube(false, false, true,
+	NodePtr spWhiteCubeNode = CreateCube(false, false, true,
 		ColorRGBA::WHITE);
 	mspWhiteCube = spWhiteCubeNode->GetRenderObject();
 	mspWhiteCube->World.SetUniformScale(0.15F);
@@ -175,6 +175,8 @@ void Sample5::OnIdle()
 	// render the scene graph
 	GetRenderer()->Draw(mCuller.GetVisibleSets());
 
+	GetRenderer()->ReleaseResources();
+
 	// render the white cube representing the spot light
 	if (mCuller.IsVisible(mspWhiteCube))
 	{
@@ -196,7 +198,7 @@ void Sample5::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
+Node* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 	Bool useVertexColor, ColorRGBA vertexColor)
 {
 	RenderObject* pCube = StandardMesh::CreateCube24(useVertexColor ? 4 : 0,
@@ -227,7 +229,7 @@ Geometry* Sample5::CreateCube(Bool useTexture, Bool useNormals,
 		pCube->SetMaterial(pMaterial);
 	}
 
-	Geometry* pCubeNode = WIRE_NEW Geometry(pCube);
+	Node* pCubeNode = WIRE_NEW Node(pCube);
 	return pCubeNode;
 }
 

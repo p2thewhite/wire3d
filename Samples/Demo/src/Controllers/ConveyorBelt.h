@@ -3,7 +3,6 @@
 #define CONVEYORBELT_H
 
 #include "WireController.h"
-#include "WireGeometry.h"
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 
@@ -12,7 +11,7 @@ using namespace Wire;
 class ConveyorBelt : public Controller
 {
 public:
-	ConveyorBelt(Geometry* pGeometry, Renderer* pRenderer);
+	ConveyorBelt(RenderObject* pRenderObject, Renderer* pRenderer);
 
 	virtual Bool Update(Double appTime);
 	virtual Bool OnGetVisibleUpdate(const Camera* pCamera);

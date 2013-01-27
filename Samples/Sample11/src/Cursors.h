@@ -2,10 +2,8 @@
 #ifndef CURSORS_H
 #define CURSORS_H
 
-#include "WireGeometry.h"
 #include "WireMaterial.h"
 #include "WireNode.h"
-#include "WireStateAlpha.h"
 
 class Cursors
 {
@@ -26,7 +24,7 @@ public:
 
 private:
 	void InitCursors();
-	Wire::Geometry* CreateCursor(Float uOffset, Float vOffset);
+	Wire::Node* CreateCursor(Float uOffset, Float vOffset);
 
 	Wire::NodePtr mspCursors;
 	Wire::MaterialPtr mspMaterial;

@@ -20,7 +20,7 @@ public:
 
 private:
 	Node* CreateHelicopter();
-	Geometry* CreateCube(ColorRGBA top, ColorRGBA bottom);
+	RenderObject* CreateCube(ColorRGBA top, ColorRGBA bottom);
 
 	CameraPtr mspCamera;
 	Culler mCuller;
@@ -29,8 +29,8 @@ private:
 	Double mLastTime;
 
 	NodePtr mspRoot;
-	GeometryPtr mspTopRotor;
-	GeometryPtr mspRearRotor;
+	NodePtr mspTopRotor;
+	NodePtr mspRearRotor;
 };
 
 WIRE_REGISTER_INITIALIZE(Sample2);

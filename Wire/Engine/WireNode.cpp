@@ -9,6 +9,7 @@
 #include "WireNode.h"
 
 #include "WireCuller.h"
+#include "WireRenderer.h"
 
 using namespace Wire;
 
@@ -17,8 +18,7 @@ WIRE_IMPLEMENT_RTTI(Wire, Node, Spatial);
 //----------------------------------------------------------------------------
 Node::Node(UInt quantity, UInt growBy)
 {
-	mChildren.SetMaxQuantity(quantity);
-	mChildren.SetGrowBy(growBy);
+	Init(quantity, growBy);
 }
 
 //----------------------------------------------------------------------------
@@ -188,9 +188,10 @@ SpatialPtr Node::GetChild(UInt i)
 //----------------------------------------------------------------------------
 void Node::UpdateWorldBound()
 {
+	Bool foundFirstBound = UpdateWorldBoundRenderObject();
+
 	if (!WorldBoundIsCurrent)
 	{
-		Bool foundFirstBound = false;
 		for (UInt i = 0; i < GetQuantity(); i++)
 		{
 			Spatial* pChild = mChildren[i];
@@ -225,6 +226,8 @@ void Node::UpdateWorldData(Double appTime)
 			pChild->UpdateGS(appTime, false);
 		}
 	}
+
+	UpdateWorldDataRenderObject();
 }
 
 //----------------------------------------------------------------------------
@@ -250,6 +253,8 @@ void Node::AttachEffect(Effect* pEffect)
 void Node::UpdateState(TArray<State*>* pStateStacks,
 	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
 {
+	UpdateStateRenderObject(pStateStacks, pLightStack, pStateKeys);
+
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		Spatial* pChild = mChildren[i];
@@ -270,8 +275,10 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 		rCuller.Insert(mEffects[i]);
 	}
 
-	// All Geometry objects in the subtree are added to the visible set. If
-	// a global effect is active, the Geometry objects in the subtree will be
+	GetVisibleSetRenderObject(rCuller, noCull);
+
+	// All RenderObjects in the subtree are added to the visible set. If
+	// a global effect is active, the RenderObjects in the subtree will be
 	// drawn using it.
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
@@ -365,6 +372,11 @@ void Node::GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*
 //----------------------------------------------------------------------------
 void Node::Bind(Renderer* pRenderer)
 {
+	if (pRenderer)
+	{
+		pRenderer->Bind(mspRenderObject);
+	}
+
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
 		Spatial* pSpatial = GetChild(i);
@@ -386,6 +398,11 @@ void Node::Unbind(Renderer* pRenderer)
 			pSpatial->Unbind(pRenderer);
 		}
 	}
+
+	if (pRenderer)
+	{
+		pRenderer->Unbind(mspRenderObject);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -399,4 +416,405 @@ void Node::MakeStatic(Bool forceStatic, Bool duplicateShared)
 			pChild->MakeStatic(forceStatic, duplicateShared);
 		}
 	}
+
+	MakeRenderObjectStatic(forceStatic, duplicateShared);
+}
+
+//----------------------------------------------------------------------------
+void Node::Init(UInt quantity, UInt growBy)
+{
+	mChildren.SetMaxQuantity(quantity);
+	mChildren.SetGrowBy(growBy);
+}
+
+//----------------------------------------------------------------------------
+Node::Node(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material* pMaterial,
+	UInt quantity, UInt growBy)
+{
+	Init(quantity, growBy);
+
+	Mesh* pMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
+	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
+	InitRenderObject();
+}
+
+//----------------------------------------------------------------------------
+Node::Node(Mesh* pMesh, Material* pMaterial, UInt quantity, UInt growBy)
+{
+	Init(quantity, growBy);
+
+	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
+	InitRenderObject();
+}
+
+//----------------------------------------------------------------------------
+Node::Node(RenderObject* pRenderObject, UInt quantity, UInt growBy)
+{
+	Init(quantity, growBy);
+
+	mspRenderObject = pRenderObject;
+	InitRenderObject();
+}
+
+//----------------------------------------------------------------------------
+void Node::UpdateWorldDataRenderObject()
+{
+	if (mspRenderObject)
+	{
+		mspRenderObject->World = World;
+	}
+}
+
+//----------------------------------------------------------------------------
+Bool Node::UpdateWorldBoundRenderObject()
+{
+	if (mspRenderObject)
+	{
+		mspRenderObject->GetMesh()->GetModelBound()->TransformBy(World,
+			mspRenderObject->WorldBound);
+
+		if (!WorldBoundIsCurrent)
+		{
+			WorldBound->CopyFrom(mspRenderObject->WorldBound);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+void Node::UpdateStateRenderObject(TArray<State*>* pStateStacks,
+	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
+{
+	if (!mspRenderObject)
+	{
+		return;
+	}
+
+	// update global state
+	StatePtr* rStates = mspRenderObject->GetStates();
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
+	{
+		TArray<State*>& rState = pStateStacks[i];
+		rStates[i] = rState[rState.GetQuantity()-1];
+	}
+
+	// update light state
+	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
+	if (!pLights)
+	{
+		pLights = WIRE_NEW TArray<LightPtr>;
+	}
+
+	pLights->RemoveAll();
+	pLights->SetQuantity(pLightStack->GetQuantity());
+	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
+	{
+		(*pLights)[i] = (*pLightStack)[i];
+	}
+
+	// check if other RenderObjects share the same states
+	UInt key = GetStateSetKey();
+	UInt* pStateSetID = pStateKeys->Find(key);
+	if (pStateSetID)
+	{
+		mspRenderObject->SetStateSetID(*pStateSetID);
+	}
+	else
+	{
+		UInt id = pStateKeys->GetQuantity()+1;
+		pStateKeys->Insert(key, id);
+		mspRenderObject->SetStateSetID(id);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Node::GetVisibleSetRenderObject(Culler& rCuller, Bool noCull)
+{
+	// Add this RenderObject if it's not culled. (Its bounding volume is
+	// smaller or equal the bounding volume of this node).
+	if (mspRenderObject)
+	{
+		if (GetQuantity() == 0)
+		{
+			rCuller.Insert(mspRenderObject);
+		}
+		else
+		{
+			UInt savePlaneState = rCuller.GetPlaneState();
+			if (noCull || rCuller.IsVisible(mspRenderObject->WorldBound))
+			{
+				rCuller.Insert(mspRenderObject);
+			}
+
+			rCuller.SetPlaneState(savePlaneState);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+UInt Node::GetStateSetKey()
+{
+	WIRE_ASSERT(mspRenderObject);
+	UInt key = 0;
+	UInt offset = 0;
+
+	StatePtr* rStates = mspRenderObject->GetStates();
+	if (rStates[State::ALPHA])
+	{
+		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
+		key = pState->ID;
+	}
+
+	offset = TInstanceID<StateAlpha>::GetMaxID()+1;
+	if (rStates[State::CULL])
+	{
+		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
+		key += pState->ID * offset;
+	}
+
+	offset *= TInstanceID<StateCull>::GetMaxID()+1;
+	if (rStates[State::FOG])
+	{
+		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
+		key += pState->ID * offset;
+	}
+
+	offset *= TInstanceID<StateFog>::GetMaxID()+1;
+	if (rStates[State::MATERIAL])
+	{
+		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
+			State::MATERIAL]);
+			key += pState->ID * offset;
+	}
+
+	offset *= TInstanceID<StateMaterial>::GetMaxID()+1;
+	if (rStates[State::WIREFRAME])
+	{
+		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
+			State::WIREFRAME]);
+			key += pState->ID * offset;
+	}
+
+	offset *= TInstanceID<StateWireframe>::GetMaxID()+1;
+	if (rStates[State::ZBUFFER])
+	{
+		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
+			State::ZBUFFER]);
+			key += pState->ID * offset;
+	}
+
+	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
+	for (UInt i = 0; pLights && (i < pLights->GetQuantity()); i++)
+	{
+		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
+			TInstanceID<Light>::GetMaxID()+1;
+	WIRE_ASSERT((*pLights)[i]);
+	key += (*pLights)[i]->ID * offset;
+	}
+
+	WIRE_ASSERT(VerifyKey(key, offset));
+
+	return key;
+}
+
+//----------------------------------------------------------------------------
+Bool Node::VerifyKey(UInt key, UInt offset)
+{
+	WIRE_ASSERT(mspRenderObject);
+	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
+	if (pLights)
+	{
+		for (Int i = (pLights->GetQuantity()-1); i >= 0; i--)
+		{
+			UInt id = key / offset;
+			if (id != (*pLights)[i]->ID)
+			{
+				WIRE_ASSERT(false /* Light state id calculation error */);
+				return false;
+			}
+
+			key -= id * offset;
+			offset /= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
+				TInstanceID<Light>::GetMaxID()+1;
+		}
+	}
+
+	StatePtr* rStates = mspRenderObject->GetStates();
+	if (rStates[State::ZBUFFER])
+	{
+		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
+			State::ZBUFFER]);
+			UInt id = key / offset;
+			if (id != pState->ID)
+			{
+				WIRE_ASSERT(false /* ZBuffer state id calculation error */);
+				return false;
+			}
+
+			key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateWireframe>::GetMaxID()+1;
+	if (rStates[State::WIREFRAME])
+	{
+		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
+			State::WIREFRAME]);
+			UInt id = key / offset;
+			if (id != pState->ID)
+			{
+				WIRE_ASSERT(false /* Wireframe state id calculation error */);
+				return false;
+			}
+
+			key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateMaterial>::GetMaxID()+1;
+	if (rStates[State::MATERIAL])
+	{
+		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
+			State::MATERIAL]);
+			UInt id = key / offset;
+			if (id != pState->ID)
+			{
+				WIRE_ASSERT(false /* Material state id calculation error */);
+				return false;
+			}
+
+			key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateFog>::GetMaxID()+1;
+	if (rStates[State::FOG])
+	{
+		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Fog state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateCull>::GetMaxID()+1;
+	if (rStates[State::CULL])
+	{
+		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Cull state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	offset /= TInstanceID<StateAlpha>::GetMaxID()+1;
+	if (rStates[State::ALPHA])
+	{
+		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
+		UInt id = key / offset;
+		if (id != pState->ID)
+		{
+			WIRE_ASSERT(false /* Alpha state id calculation error */);
+			return false;
+		}
+
+		key -= id * offset;
+	}
+
+	return true;
+}
+
+//----------------------------------------------------------------------------
+void Node::InitRenderObject()
+{
+	WIRE_ASSERT(mspRenderObject);
+	mspRenderObject->WorldBound = BoundingVolume::Create();
+	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
+}
+
+//----------------------------------------------------------------------------
+void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
+{
+	if (!mspRenderObject)
+	{
+		return;
+	}
+
+	Mesh* pMesh = mspRenderObject->GetMesh();
+	WIRE_ASSERT(pMesh);
+	VertexBuffer* const pPositions = pMesh->GetPositionBuffer();
+	WIRE_ASSERT(pPositions);
+	VertexBuffer* const pNormals = pMesh->GetNormalBuffer();
+
+	Bool isMeshShared = pMesh->GetReferences() > 1;
+	Bool isPositionShared = pPositions->GetReferences() > 1;
+	Bool isNormalShared = pNormals && pNormals->GetReferences() > 1;
+	Bool isShared = isMeshShared ||isPositionShared || isNormalShared;
+
+	if (isShared && !duplicateShared)
+	{
+		return;
+	}
+
+	if (forceStatic)
+	{
+		WorldIsCurrent = true;
+		WorldBoundIsCurrent = true;
+	}
+
+	if ((!(WorldIsCurrent && WorldBoundIsCurrent) || World.IsIdentity()))
+	{
+		return;
+	}
+
+	// if the mesh or a vertex buffer containing positions or normals is
+	// shared, we duplicate it to apply the World transformation
+	if (isShared)
+	{
+		TArray<VertexBuffer*> vertexBuffers;
+		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+		{
+			VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer(i);
+			if (pVertexBuffer == pPositions)
+			{
+				if (isMeshShared || isPositionShared)
+				{
+					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);		
+				}
+			}
+			else if (pVertexBuffer == pNormals)
+			{
+				if (isMeshShared || isNormalShared)
+				{
+					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);
+				}
+			}
+
+			vertexBuffers.Append(pVertexBuffer);
+		}
+
+		pMesh = WIRE_NEW Mesh(vertexBuffers, pMesh->GetIndexBuffer(),
+			pMesh->GetStartIndex(), pMesh->GetIndexCount());
+		mspRenderObject->SetMesh(pMesh);
+	}
+
+	VertexBuffer* const pUniquePositions = pMesh->GetPositionBuffer();
+	pUniquePositions->ApplyForward(World, pUniquePositions->GetData());
+	VertexBuffer* const pUniqueNormals = pMesh->GetNormalBuffer();
+	if (pUniqueNormals && (pUniquePositions != pUniqueNormals))
+	{
+		pUniqueNormals->ApplyForward(World, pUniqueNormals->GetData());
+	}
+
+	World.MakeIdentity();
+	mspRenderObject->World.MakeIdentity();
+	pMesh->UpdateModelBound();
+	UpdateWorldBound();
 }

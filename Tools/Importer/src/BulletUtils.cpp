@@ -18,24 +18,15 @@ BulletUtils::~BulletUtils()
 //----------------------------------------------------------------------------
 btTriangleIndexVertexArray* BulletUtils::Convert(Mesh* pMesh)
 {
-	unsigned short int* pTriangleIndexBase;
-	UShort* pIndexBufferData;
 	Float* pVertexBufferData;
 	btScalar* pVertexBase;
 
 	VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer();
 	IndexBuffer* pIndexBuffer = pMesh->GetIndexBuffer();
 
-	// Copying index buffer data
-
-	pIndexBufferData = pIndexBuffer->GetData();
-
-	UInt size = pIndexBuffer->GetQuantity();
-	pTriangleIndexBase = WIRE_NEW unsigned short int[size];
-	for (UInt i = 0; i < size; i++)
-	{
-		pTriangleIndexBase[i] = pIndexBufferData[i];
-	}
+	UInt size = pIndexBuffer->GetQuantity() * sizeof(UShort);
+	UShort* pTriangleIndexBase = WIRE_NEW UShort[size];
+	System::Memcpy(pTriangleIndexBase, size, pIndexBuffer->GetData(), size);
 
 	// Copying vertex buffer data
 

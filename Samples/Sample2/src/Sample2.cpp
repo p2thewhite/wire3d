@@ -117,11 +117,11 @@ void Sample2::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-Geometry* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
+RenderObject* Sample2::CreateCube(ColorRGBA top, ColorRGBA bottom)
 {
-	// Creation of Wire::Geometry objects is explained in detail in Sample1.
+	// Creation of Wire::RenderObjects is explained in detail in Sample1.
 	UInt vertexColorChannels = 4;	// RGBA
-	Geometry* pCube = StandardMesh::CreateCube8AsNode(vertexColorChannels);
+	RenderObject* pCube = StandardMesh::CreateCube8(vertexColorChannels);
 	VertexBuffer* const pVBuffer = pCube->GetMesh()->GetVertexBuffer();
 
 	// initialize the cube's vertex colors with our supplied values
@@ -151,74 +151,84 @@ Node* Sample2::CreateHelicopter()
 	// thus simplifies geometric transformations and visibility culling.
 
 	// Create a cube using the given colors for top and bottom halves.
-	Geometry* pBody1 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
+	RenderObject* pBody1 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
+	Node* pBody1Node = WIRE_NEW Node(pBody1);
 
 	// Scale the cube by a factor of 2 in x direction.
-	pBody1->Local.SetScale(Vector3F(2, 1, 1));
+	pBody1Node->Local.SetScale(Vector3F(2, 1, 1));
 	
 	// Attach the cube to the root node
-	pNode->AttachChild(pBody1);
+	pNode->AttachChild(pBody1Node);
 
 	// Create all the other parts of the helicopter by generating cubes,
 	// which are then scaled and translated with some modified vertices to
 	// create the desired shapes.
-	Geometry* pBody2 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
-	pBody2->Local.SetScale(Vector3F(1, 2, 1));
-	pBody2->Local.SetTranslate(Vector3F(3, 1, 0));
+	RenderObject* pBody2 = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	VertexBuffer* pBody2VB = pBody2->GetMesh()->GetVertexBuffer();
 	pBody2VB->Position3(1).Y() = -0.5F;
 	pBody2VB->Position3(5).Y() = -0.5F;
 	// we changed the vertices, the model bound has potentially changed, too
 	pBody2->GetMesh()->UpdateModelBound();
-	pNode->AttachChild(pBody2);
+	// create a scene graph node with the RenderObject attached
+	Node* pBody2Node = WIRE_NEW Node(pBody2);
+	pBody2Node->Local.SetScale(Vector3F(1, 2, 1));
+	pBody2Node->Local.SetTranslate(Vector3F(3, 1, 0));
+	pNode->AttachChild(pBody2Node);
 
-	Geometry* pTail = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
-	pTail->Local.SetTranslate(Vector3F(5, 2, 0));
+	RenderObject* pTail = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	VertexBuffer* pTailVB = pTail->GetMesh()->GetVertexBuffer();
 	pTailVB->Position3(2) = Vector3F(5, 0.6F, -0.1F);
 	pTailVB->Position3(6) = Vector3F(5, 0.6F, 0.1F);
 	pTailVB->Position3(1) = Vector3F(5, 0.1F, -0.1F);
 	pTailVB->Position3(5) = Vector3F(5, 0.1F, 0.1F);
 	pTail->GetMesh()->UpdateModelBound();
-	pNode->AttachChild(pTail);
+	Node* pTailNode = WIRE_NEW Node(pTail);
+	pTailNode->Local.SetTranslate(Vector3F(5, 2, 0));
+	pNode->AttachChild(pTailNode);
 
-	Geometry* pNose = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
-	pNose->Local.SetTranslate(Vector3F(-3, 0, 0));
+	RenderObject* pNose = CreateCube(ColorRGBA::RED, ColorRGBA::RED*0.3F);
 	VertexBuffer* pNoseVB = pNose->GetMesh()->GetVertexBuffer();
 	pNoseVB->Position3(0) = Vector3F(-1, -0.75F, -0.35F);
 	pNoseVB->Position3(4) = Vector3F(-1, -0.75F, 0.35F);
 	pNoseVB->Position3(3) = Vector3F(-1, -0.25F, -0.35F);
 	pNoseVB->Position3(7) = Vector3F(-1, -0.25F, 0.35F);
 	pNose->GetMesh()->UpdateModelBound();
-	pNode->AttachChild(pNose);
+	Node* pNoseNode = WIRE_NEW Node(pNose);
+	pNoseNode->Local.SetTranslate(Vector3F(-3, 0, 0));
+	pNode->AttachChild(pNoseNode);
 
 	// We save a reference to the rotors, so we can easily access them later
 	// to rotate them in the main loop.
-	mspRearRotor = CreateCube(ColorRGBA::WHITE*0.7F, ColorRGBA::WHITE*0.4F);
+	RenderObject* pRearRotor = CreateCube(ColorRGBA::WHITE*0.7F,
+		ColorRGBA::WHITE*0.4F);
+	mspRearRotor = WIRE_NEW Node(pRearRotor);
 	mspRearRotor->Local.SetScale(Vector3F(1, 0.2F, 0.1F));
 	mspRearRotor->Local.SetTranslate(Vector3F(9.75F, 2.5F, 0.55F));
 	pNode->AttachChild(mspRearRotor);
 
-	mspTopRotor = CreateCube(ColorRGBA::WHITE*0.8F, ColorRGBA::WHITE*0.3F);
+	RenderObject* pTopRotor = CreateCube(ColorRGBA::WHITE*0.8F,
+		ColorRGBA::WHITE*0.3F);
+	mspTopRotor = WIRE_NEW Node(pTopRotor);
 	mspTopRotor->Local.SetScale(Vector3F(6, 0.1F, 0.3F));
 	mspTopRotor->Local.SetTranslate(Vector3F(2, 3.2F, 0));
 	pNode->AttachChild(mspTopRotor);
 
-	Geometry* pCockpit = CreateCube(ColorRGBA(1, 1, 1, 0.3F),
+	RenderObject* pCockpit = CreateCube(ColorRGBA(1, 1, 1, 0.3F),
 		ColorRGBA(1, 1, 1, 0.5F));
-	pCockpit->Local.SetScale(Vector3F(2, 1, 1));
-	pCockpit->Local.SetTranslate(Vector3F(0, 2, 0));
 	VertexBuffer* pCockpitVB = pCockpit->GetMesh()->GetVertexBuffer();
 	pCockpitVB->Position3(3) = Vector3F(-0.5F, 0.2F, -0.35F);
 	pCockpitVB->Position3(7) = Vector3F(-0.5F, 0.2F, 0.35F);
 	pCockpit->GetMesh()->UpdateModelBound();
-	pNode->AttachChild(pCockpit);
+	Node* pCockpitNode = WIRE_NEW Node(pCockpit);
+	pCockpitNode->Local.SetScale(Vector3F(2, 1, 1));
+	pCockpitNode->Local.SetTranslate(Vector3F(0, 2, 0));
+	pNode->AttachChild(pCockpitNode);
 
 	// The cockpit is supposed to be transparent, so we create an StateAlpha 
 	// and attach it to the cockpit object.
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
 	pAlpha->BlendEnabled = true;
-	pCockpit->AttachState(pAlpha);
+	pCockpitNode->AttachState(pAlpha);
 
 	// Now we tilt and orient the helicopter for later use.
 	Matrix34F tilt(Vector3F(0, 0, 1), 0.2F);

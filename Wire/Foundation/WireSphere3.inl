@@ -12,6 +12,7 @@ Sphere3<Real>::Sphere3()
 {
 	// uninitialized
 }
+
 //----------------------------------------------------------------------------
 template <class Real>
 Sphere3<Real>::Sphere3(const Vector3<Real>& rCenter, Real radius)
@@ -20,6 +21,7 @@ Sphere3<Real>::Sphere3(const Vector3<Real>& rCenter, Real radius)
 	Radius(radius)
 {
 }
+
 //----------------------------------------------------------------------------
 template <class Real>
 Sphere3<Real>::Sphere3(const Sphere3& rSphere)
@@ -28,6 +30,7 @@ Sphere3<Real>::Sphere3(const Sphere3& rSphere)
 	Radius(rSphere.Radius)
 {
 }
+
 //----------------------------------------------------------------------------
 template <class Real>
 Sphere3<Real>& Sphere3<Real>::operator= (const Sphere3& rSphere)
