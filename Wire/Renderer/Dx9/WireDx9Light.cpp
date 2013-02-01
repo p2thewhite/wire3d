@@ -34,9 +34,9 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	D3DLIGHT9 d3dLight;
-	d3dLight.Ambient.r = pLight->Ambient.R();
-	d3dLight.Ambient.g = pLight->Ambient.G();
-	d3dLight.Ambient.b = pLight->Ambient.B();
+	d3dLight.Ambient.r = 0.0F; // pLight->Ambient.R();
+	d3dLight.Ambient.g = 0.0F; // pLight->Ambient.G();
+	d3dLight.Ambient.b = 0.0F; // pLight->Ambient.B();
 	d3dLight.Ambient.a = 1.0F;
 
 	d3dLight.Diffuse.r = pLight->Color.R();

@@ -26,7 +26,7 @@ NodeLight::~NodeLight()
 }
 
 //----------------------------------------------------------------------------
-void NodeLight::SetLight(Light* pLight)
+void NodeLight::Set(Light* pLight)
 {
 	mspLight = pLight;
 

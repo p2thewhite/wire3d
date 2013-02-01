@@ -63,11 +63,11 @@ Bool Sample5::OnInitialize()
 	// they own a light and apply scene graph transformations on that light.
 	NodeLight* pLightNode1 = WIRE_NEW NodeLight;
 	mspRoot->AttachChild(pLightNode1);
-	pLightNode1->SetLight(pLight1);
+	pLightNode1->Set(pLight1);
 
 	NodeLight* pLightNode2 = WIRE_NEW NodeLight;
 	mspRoot->AttachChild(pLightNode2);
-	pLightNode2->SetLight(pLight2);
+	pLightNode2->Set(pLight2);
 
 	// create two cubes representing the position and color of the lights
 	Spatial* pLightSrc1 = CreateCube(false, false, true, ColorRGBA::GREEN);

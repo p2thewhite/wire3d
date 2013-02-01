@@ -7,13 +7,13 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline Light* NodeLight::GetLight()
+inline Light* NodeLight::Get()
 {
 	return mspLight;
 }
 
 //----------------------------------------------------------------------------
-inline const Light* NodeLight::GetLight() const
+inline const Light* NodeLight::Get() const
 {
 	return mspLight;
 }
