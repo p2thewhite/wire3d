@@ -515,17 +515,6 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		return;
 	}
 
-	if (Is("Leaf", pXmlNode->name()))
-	{
-		Node* pGeo = ParseLeaf(pXmlNode);
-		if (pGeo)
-		{
-			pParent->AttachChild(pGeo);
-		}
-
-		return;
-	}
-
 	WIRE_ASSERT(Is("Node", pXmlNode->name()));
 	Node* pNode = ParseNode(pXmlNode);
 	pParent->AttachChild(pNode);
@@ -537,8 +526,8 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		{
 			ParseComponent(pChild, pNode);
 
-			if (Is("Node", pChild->name()) || Is("Leaf", pChild->name()) ||
-				Is("Text", pChild->name()) || Is("Skybox", pChild->name()))
+			if (Is("Node", pChild->name()) || Is("Text", pChild->name()) ||
+				Is("Skybox", pChild->name()))
 			{
 				Traverse(pChild, pNode);
 			}
@@ -1028,18 +1017,21 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 //---------------------------------------------------------------------------
 Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 {
-	Node* pNode = WIRE_NEW Node;
+	RenderObject* pRenderObject = ParseRenderObject(pXmlNode);
+	Node* pNode = WIRE_NEW Node(pRenderObject);
 
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())
 	{
 		if (Is("LightNode", pChild->name()))
 		{
+			// TODO: review
 			ParseComponents(pChild, pNode);
 			WIRE_ASSERT(pNode->GetLightQuantity() == 1);
 			Light* pLight = pNode->GetLight();
 			NodeLight* pLightNode = WIRE_NEW NodeLight;
-			pLightNode->SetLight(pLight);
+			mStatistics.NodeCount++;
+			pLightNode->Set(pLight);
 			pNode->DetachLight(pLight);
 			pNode->AttachChild(pLightNode);
 			break;
@@ -1056,11 +1048,24 @@ Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
 
 	ParseTransformationAndComponents(pXmlNode, pNode);
 
+	if (pRenderObject && pRenderObject->GetMaterial())
+	{
+		TArray<StatePtr>* pStateList = mMaterialStates.Find(pRenderObject->
+			GetMaterial());
+		if (pStateList)
+		{
+			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
+			{
+				pNode->AttachState((*pStateList)[i]);
+			}
+		}
+	}
+	
 	return pNode;
 }
 
 //----------------------------------------------------------------------------
-Node* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
+RenderObject* Importer::ParseRenderObject(rapidxml::xml_node<>* pXmlNode)
 {
 	Mesh* pMesh = NULL;
 	Material* pMaterial = NULL;
@@ -1084,7 +1089,6 @@ Node* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 
 	if (!pMesh)
 	{
-		WIRE_ASSERT(false /* Mesh is missing */);
 		return NULL;
 	}
 
@@ -1096,30 +1100,9 @@ Node* Importer::ParseLeaf(rapidxml::xml_node<>* pXmlNode)
 		}
 	}
 
-	Node* pNode = WIRE_NEW Node(pMesh, pMaterial);
-	WIRE_ASSERT(pNode);
+	RenderObject* pRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
 	mStatistics.RenderObjectCount++;
-	Char* pName = GetValue(pXmlNode, "Name");
-	if (pName)
-	{
-		pNode->SetName(pName);
-	}
-
-	if (pMaterial)
-	{
-		TArray<StatePtr>* pStateList = mMaterialStates.Find(pMaterial);
-		if (pStateList)
-		{
-			for (UInt i = 0; i < pStateList->GetQuantity(); i++)
-			{
-				pNode->AttachState((*pStateList)[i]);
-			}
-		}
-	}
-
-	ParseTransformationAndComponents(pXmlNode, pNode);
-
-	return pNode;
+	return pRenderObject;
 }
 
 //----------------------------------------------------------------------------

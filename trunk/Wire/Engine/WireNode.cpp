@@ -734,7 +734,11 @@ Bool Node::VerifyKey(UInt key, UInt offset)
 //----------------------------------------------------------------------------
 void Node::InitRenderObject()
 {
-	WIRE_ASSERT(mspRenderObject);
+	if (!mspRenderObject)
+	{
+		return;
+	}
+
 	mspRenderObject->WorldBound = BoundingVolume::Create();
 	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
 }

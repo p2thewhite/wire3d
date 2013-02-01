@@ -82,7 +82,7 @@ public class Unity3DExporter : EditorWindow
 		return (from s in rootTransforms orderby s.name select s).ToList ();
 	}
 	
-	private static bool IsLeaf (Transform transform)
+	private static bool HasRenderObject (Transform transform)
 	{
 		GameObject gameObject = transform.gameObject;
 		MeshFilter meshFilter = gameObject.GetComponent<MeshFilter> ();
@@ -121,7 +121,7 @@ public class Unity3DExporter : EditorWindow
 	
 	private static void GenerateBoxColliderTraverse (Transform transform)
 	{
-		if (IsLeaf (transform))
+		if (HasRenderObject (transform))
         {
 			GenerateBoxCollider (transform);
 		}
@@ -397,10 +397,9 @@ public class Unity3DExporter : EditorWindow
         }
 
         bool exportSubmeshes = submeshCount > 1 ? true : false;
-        string xmlNodeName = "Leaf";
+        string xmlNodeName = "Node";
         if (exportSubmeshes)
         {
-            xmlNodeName = "Node";
             subMeshIdx = "";
         }
 
@@ -413,26 +412,24 @@ public class Unity3DExporter : EditorWindow
         string isStatic = go.isStatic ? " Static=\"1\"" : "";
         outFile.WriteLine(indent + "<" + xmlNodeName + " Name=\"" + go.name + "\"" + transformString + subMeshIdx + isStatic + ">");
 
-        if (isGameObjectLeaf)
+        WriteLightNode(go.GetComponent<Light>(), outFile, indent);
+        WriteCamera(go.GetComponent<Camera>(), outFile, indent);
+
+        bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
+        if (!isLightmapped)
         {
-			WriteCamera(go.GetComponent<Camera>(), outFile, indent);
-
-            bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
-            if (!isLightmapped)
+            List<Light> lights = GetLightsForLayer(go.layer);
+            foreach (Light light in lights)
             {
-                List<Light> lights = GetLightsForLayer(go.layer);
-                foreach (Light light in lights)
-                {
-                    WriteLight(light, outFile, indent);
-                }
+                WriteLight(light, outFile, indent);
             }
+        }
 
-            WriteCollider(go, outFile, indent);
-		}
+        WriteCollider(go, outFile, indent);
 
         if (exportSubmeshes)
         {
-            WriteSubLeafs(go, outFile, indent + "  ");
+            WriteSubLeaves(go, outFile, indent + "  ");
         }
         else
         {
@@ -459,7 +456,7 @@ public class Unity3DExporter : EditorWindow
         return lights;
     }
 
-    private void WriteSubLeafs(GameObject gameObject, StreamWriter outFile, string indent)
+    private void WriteSubLeaves(GameObject gameObject, StreamWriter outFile, string indent)
     {
         MeshFilter meshFilter = gameObject.GetComponent<MeshFilter>();
         MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
@@ -481,11 +478,11 @@ public class Unity3DExporter : EditorWindow
                 for (int j = 0; j < sp.arraySize; j++)
                 {
                     int i = sp.GetArrayElementAtIndex(j).intValue;
-                    outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + "\"" +
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" +
                         " SubMesh=\"" + i + "\"" + isStatic + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[j], outFile, indent + "  ");
-                    outFile.WriteLine(indent + "</Leaf>");
+                    outFile.WriteLine(indent + "</Node>");
                 }
             }
             else
@@ -493,12 +490,12 @@ public class Unity3DExporter : EditorWindow
                 int submeshCount = mesh.subMeshCount;
                 for (int i = 0; i < submeshCount; i++)
                 {
-                    outFile.WriteLine(indent + "<Leaf Name=\"" + gameObject.name + " (submesh_" + i + ")\"" +
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + " (submesh_" + i + ")\"" +
                         " SubMesh=\"" + i + "\"" + isStatic + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
 
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
-                    outFile.WriteLine(indent + "</Leaf>");
+                    outFile.WriteLine(indent + "</Node>");
                 }
             }
         }
@@ -522,14 +519,18 @@ public class Unity3DExporter : EditorWindow
 
         outFile.WriteLine(indent + "<Node Name=\"" + transform.gameObject.name + "\" " +
              trafo + isStatic + ">");
-    	
-		WriteCamera(go.GetComponent<Camera>(), outFile, indent);
-		WriteLightNode(go.GetComponent<Light>(), outFile, indent);
-		WriteCollider(go, outFile, indent);
+
+        WriteLightNode(go.GetComponent<Light>(), outFile, indent);
+
+        if (!HasRenderObject(transform))
+        {
+            WriteCamera(go.GetComponent<Camera>(), outFile, indent);
+            WriteCollider(go, outFile, indent);
+        }
     	
 		if (transform.GetChildCount () > 0)
         {
-			if (IsLeaf(transform))
+			if (HasRenderObject(transform))
             {
 				WriteLeaf(transform, outFile, indent + "  ", false);
 			}
@@ -615,7 +616,7 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
       	
-		if (IsLeaf(transform) && transform.GetChildCount() == 0)
+		if (HasRenderObject(transform) && transform.GetChildCount() == 0)
         {
 			WriteLeaf(transform, outFile, indent);
 		}
@@ -764,7 +765,7 @@ public class Unity3DExporter : EditorWindow
                 stack.Push(t.GetChild(i));
             }
 
-            if (IsLeaf(t))
+            if (HasRenderObject(t))
             {
                 MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
@@ -929,11 +930,10 @@ public class Unity3DExporter : EditorWindow
 	
 	private void WriteBoxColliderAttributes (BoxCollider boxCollider, StreamWriter outFile, string indent)
 	{
-		bool isTrigger = boxCollider.isTrigger;
 		Vector3 center = boxCollider.center;
 		Vector3 size = boxCollider.size;
 		
-		outFile.Write ("IsTrigger=\"" + isTrigger + "\" Center=\"" + center.x + ", " + center.y + ", " + center.z +
+		outFile.Write ("Center=\"" + center.x + ", " + center.y + ", " + center.z +
 			"\" Size=\"" + size.x + ", " + size.y + ", " + size.z + "\"");
 	}
 

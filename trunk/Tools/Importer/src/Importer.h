@@ -100,7 +100,7 @@ private:
 
 	void ParseAssets(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
-	Wire::Node* ParseLeaf(rapidxml::xml_node<>* pXmlNode);
+	Wire::RenderObject* ParseRenderObject(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);

@@ -3,7 +3,7 @@
   <ZBufferState Enabled="0" Writable="0" CmpFunc="LEQUAL" />
   <Camera Fov="0" Near="0.3" Far="1000" />
   <Light Type="Point" Ambient="1, 1, 1" Color="1, 1, 1" />
-  <Leaf Name="Crosshair" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.0625, 0.125, 1" Static="0">
+  <Node Name="Crosshair" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.0625, 0.125, 1" Static="0">
     <Mesh Name="Quad_0001E0FA_1_1_0_0">
       <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
       <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
@@ -12,8 +12,8 @@
     <Material Name="CrosshairMaterial">
       <Texture Name="crosshair.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
     </Material>
-  </Leaf>
-  <Leaf Name="RedHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.0625, 1" Static="0">
+  </Node>
+  <Node Name="RedHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.0625, 1" Static="0">
     <Mesh Name="Quad_0001E0FA_1_1_0_0">
       <Vertices Name="Quad_0001E0FA.vtx" LittleEndian="y" />
       <Indices Name="Quad_0001E0FA.idx" LittleEndian="y" />
@@ -23,5 +23,5 @@
       <Texture Name="redHealthBar.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" BlendMode="Modulate" />
   	  <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
-  </Leaf>
+  </Node>
 </Node>

@@ -1556,7 +1556,7 @@ void Renderer::Set(const TArray<Pointer<Light> >* pLights)
 
 	ColorRGB ambient = ColorRGB::BLACK;
 	UInt unit = 0;
-	for (unit = 0; unit < lightCount; unit++)
+	for (; unit < lightCount; unit++)
 	{
 		if (mLights[unit] != rLights[unit])
 		{
