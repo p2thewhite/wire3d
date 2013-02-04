@@ -18,7 +18,7 @@ Player::Player(Camera* pCamera)
 	mLookUpDeadZone(Vector2F(50, 50)),
 	mMoveSpeed(5.0F),
 	mRotateSpeed(MathF::PI / 9),
-	mCharacterWidth(0.75F),
+	mCharacterWidth(1.7F),
 	mCharacterHeight(1.5F),
 	mStepHeight(0.5F),
 	mPitch(0),

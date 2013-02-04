@@ -38,7 +38,6 @@ private:
 
 	void MoveCrosshairTo(const Wire::Vector2F& rScreenPoint);
 	void InitializePhysics();
-	void RegisterStaticCollider(const Collider* pCollider);
 	void UpdatePhysics(Double deltaTime);
 	void TerminatePhysics();
 	void ToggleCollidersVisibility();
@@ -61,7 +60,6 @@ private:
 	Wire::SpatialPtr mspCrosshair;
 	Wire::TextPtr mspText;
 	Bool mShowColliders;
-	Wire::TArray<Wire::Spatial*> mColliderSpatials;
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
 	btBroadphaseInterface* mpOverlappingPairCache;

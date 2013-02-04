@@ -68,9 +68,6 @@ public:
 	void GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
-	void GetAllChildrenByNameStartingWith(const String& rName, TArray<Spatial*>&
-		rChildren) const;
-
 	// geometric update
 	virtual void UpdateWorldBound();
 

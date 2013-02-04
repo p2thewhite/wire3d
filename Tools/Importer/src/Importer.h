@@ -148,9 +148,7 @@ private:
 	Options* mpOptions;
 
 #ifndef NO_BULLET_PHYSICS_LIB
-	static void RegisterColliders(Wire::TArray<Collider*>& rColliders,
-		btDynamicsWorld* pPhysicsWorld);
-	Wire::TArray<Collider*> mColliders;
+	btDynamicsWorld* mpPhysicsWorld;
 #endif
 };
 
