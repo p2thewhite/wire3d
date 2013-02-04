@@ -21,7 +21,6 @@
 #include "WireStateMaterial.h"
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
-#include "WireTStack.h"
 #include "WireVertexAttributes.h"
 
 using namespace Wire;
@@ -30,7 +29,8 @@ using namespace Wire;
 Importer::Importer(const Char* pPath, Options* pOptions)
 	:
 	mpPath(pPath),
-	mStaticSpatials(0, 100)
+	mStaticSpatials(0, 100),
+	mpPhysicsWorld(NULL)
 {
 	mpOptions = pOptions ? pOptions : &mDefaultOptions;
 }
@@ -39,11 +39,13 @@ Importer::Importer(const Char* pPath, Options* pOptions)
 #ifndef NO_BULLET_PHYSICS_LIB
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pCameras, btDynamicsWorld* pPhysicsWorld)
+{
+	mpPhysicsWorld = pPhysicsWorld;
 #else
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pCameras)
-#endif
 {
+#endif
 	ResetStatistics();
 	mpCameras = pCameras;
 
@@ -92,14 +94,6 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching);
 		mStaticSpatials.RemoveAll();
 	}
-
-#ifndef NO_BULLET_PHYSICS_LIB
-	if (pPhysicsWorld != NULL)
-	{
-		RegisterColliders(mColliders, pPhysicsWorld);
-		mColliders.RemoveAll();
-	}
-#endif
 
 	return pRoot;
 }
@@ -524,8 +518,6 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 		for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 			pChild = pChild->next_sibling())
 		{
-			ParseComponent(pChild, pNode);
-
 			if (Is("Node", pChild->name()) || Is("Text", pChild->name()) ||
 				Is("Skybox", pChild->name()))
 			{
@@ -775,16 +767,20 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 #ifndef NO_BULLET_PHYSICS_LIB
+	if (!mpPhysicsWorld)
+	{
+		return;
+	}
+
 	UpdateGS(pSpatial);
 
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
 	WIRE_ASSERT(pShapeName);
 
+	Vector3F center = Vector3F::ZERO;
 	btCollisionShape* pCollisionShape = NULL;
 	if (Is("Box", pShapeName))
 	{
-		// FIXME: center is not being used!
-		Vector3F center = Vector3F::ZERO;
 		Vector3F size = Vector3F::ONE;
 
 		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
@@ -828,10 +824,33 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		return;
 	}
 
-	Collider* pCollider = WIRE_NEW Collider(pCollisionShape);
-	pSpatial->AttachController(pCollider);
-	mColliders.Append(pCollider);
+	// Setting position
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(BulletUtils::Convert(pSpatial->World.GetTranslate() + center));
 
+	// Setting rotation
+	transform.setBasis(BulletUtils::Convert(pSpatial->World.GetRotate()));
+
+	// Setting scale
+	pCollisionShape->setLocalScaling(BulletUtils::Convert(pSpatial->World.GetScale()));
+	pCollisionShape->setMargin(0.5F);
+
+	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(0, pMotionState,
+		pCollisionShape, btVector3(0, 0, 0));
+	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
+
+	// Only do CCD if  motion in one timestep (1/60) exceeds 
+	pRigidBody->setCcdMotionThreshold(0.5F);
+
+	//Experimental: better estimation of CCD Time of Impact.
+	pRigidBody->setCcdSweptSphereRadius(0.2F);
+
+	mpPhysicsWorld->addRigidBody(pRigidBody);
+
+	Collider* pCollider = WIRE_NEW Collider(pCollisionShape, pMotionState);
+	pSpatial->AttachController(pCollider);
 	mStatistics.ColliderCount++;
 #endif
 }
@@ -1910,20 +1929,6 @@ void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 		}
 	}
 }
-
-#ifndef NO_BULLET_PHYSICS_LIB
-//----------------------------------------------------------------------------
-void Importer::RegisterColliders(TArray<Collider*>& rColliders,
-	btDynamicsWorld* pPhysicsWorld)
-{
-	for (UInt i = 0; i < rColliders.GetQuantity(); i++)
-	{
-		WIRE_ASSERT(rColliders[i]);
-
-		rColliders[i]->Register(pPhysicsWorld);
-	}
-}
-#endif
 
 //----------------------------------------------------------------------------
 Bool Importer::Is(const Char* pSrc, const Char* pDst)

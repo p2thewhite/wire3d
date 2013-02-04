@@ -75,7 +75,51 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private static List<Transform> GetRootTransforms ()
+    [MenuItem("Wire3D/Copy Box Colliders")]
+    protected static void CopyBoxColliders()
+    {
+        GameObject[] gos = UnityEngine.Object.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        if (gos == null)
+        {
+            return;
+        }
+
+        foreach (GameObject go in gos)
+        {
+            if (go == null)
+            {
+                continue;
+            }
+
+            string colliderPrefix = "Collider for ";
+            if (!go.name.StartsWith(colliderPrefix))
+            {
+                continue;
+            }
+
+            if (go.GetComponent<BoxCollider>() == null)
+            {
+                Debug.Log("no box collider on " + go.name);
+            }
+
+            string goName = go.name.Substring(colliderPrefix.Length);
+            GameObject newGo = GameObject.Find(goName);
+            if (newGo == null)
+            {
+                continue;
+            }
+
+            BoxCollider oldBC = go.GetComponent<BoxCollider>();
+
+            BoxCollider boxCollider = newGo.AddComponent<BoxCollider>();
+            boxCollider.size = oldBC.size;
+            boxCollider.center = oldBC.center + go.transform.position;
+
+            DestroyImmediate(go);
+        }
+    }
+    
+    private static List<Transform> GetRootTransforms()
 	{
 		List<Transform> allTransforms = new List<Transform> (FindObjectsOfType (typeof(Transform)) as Transform[]);
 		List<Transform> rootTransforms = allTransforms.Where (t => t.parent == null).ToList ();
@@ -933,7 +977,7 @@ public class Unity3DExporter : EditorWindow
 		Vector3 center = boxCollider.center;
 		Vector3 size = boxCollider.size;
 		
-		outFile.Write ("Center=\"" + center.x + ", " + center.y + ", " + center.z +
+		outFile.Write ("Center=\"" + (-center.x) + ", " + center.y + ", " + center.z +
 			"\" Size=\"" + size.x + ", " + size.y + ", " + size.z + "\"");
 	}
 

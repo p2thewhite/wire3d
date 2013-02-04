@@ -273,28 +273,44 @@ void Game::ToggleCollidersVisibility()
 {
 	mShowColliders = !mShowColliders;
 
-	for (UInt i = 0; i < mColliderSpatials.GetQuantity(); i++)
+	TStack<Node*> traversalStack(256);
+	traversalStack.Push(mspScene);
+
+	while (!traversalStack.IsEmpty())
 	{
-		Node* pColliderRoot = DynamicCast<Node>(mColliderSpatials[i]);
-		WIRE_ASSERT(pColliderRoot);
-
-		if (mShowColliders)
+		Node* pNode = NULL;
+		traversalStack.Pop(pNode);
+		if (pNode)
 		{
-			Collider* pCollider = DynamicCast<Collider>(pColliderRoot->GetController(0));
-			WIRE_ASSERT(pCollider);
-
-			// Create node with render object according to collider shape
-			Node*  pColliderNode = CollisionShapeToGeometryConverter::Convert(
-				pCollider->GetShape(), Color32::GREEN);
-			if (pColliderNode)
+			for (UInt i = 0; i < pNode->GetControllerQuantity(); i++)
 			{
-				pColliderRoot->AttachChild(pColliderNode);
-				pColliderRoot->UpdateRS();
+				Collider* pCollider = DynamicCast<Collider>(pNode->
+					GetController(i));
+				if (!pCollider)
+				{
+					continue;
+				}
+
+				if (mShowColliders)
+				{
+					Node* pColliderNode = CollisionShapeToGeometryConverter::
+						Convert(pCollider->GetShape(), Color32::GREEN);
+					WIRE_ASSERT(pColliderNode);
+					Vector3F offset = pNode->World.GetTranslate() - pCollider->GetWorldTranslate();
+					pColliderNode->Local.SetTranslate(-offset);
+					pNode->AttachChild(pColliderNode);
+					pNode->UpdateRS();
+				}
+				else
+				{
+					pNode->DetachChildAt(pNode->GetQuantity() - 1);
+				}
 			}
-		}
-		else
-		{
-			pColliderRoot->DetachChildAt(pColliderRoot->GetQuantity() - 1);
+
+			for (UInt i = 0; i < pNode->GetQuantity(); i++)
+			{
+				traversalStack.Push(DynamicCast<Node>(pNode->GetChild(i)));
+			}
 		}
 	}
 }
@@ -470,7 +486,6 @@ Node* Game::LoadAndInitializeScene()
 		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(renderObjectCount);
 	}
 
-	pScene->GetAllChildrenByNameStartingWith("Collider for", mColliderSpatials);
 	Spatial* pProbeRobotSpatial = pScene->GetChildByName("Probe Robot");
 	Spatial* pPlayerSpatial = pScene->GetChildByName("Player");
 
