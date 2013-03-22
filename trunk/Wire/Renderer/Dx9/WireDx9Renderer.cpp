@@ -111,6 +111,10 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	else
 	{
 		behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
+// 		if(deviceCaps.DevCaps & D3DDEVCAPS_PUREDEVICE)
+// 		{
+// 			behaviorFlags |= D3DCREATE_PUREDEVICE;
+// 		}
 	}
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;

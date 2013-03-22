@@ -32,22 +32,22 @@ void Renderer::SetState(StateFog* pState)
 	PdrRendererData::StateFog& rState = mpData->FogState;
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_FOGENABLE, &rState.FOGENABLE);
+		hr = rDevice->SetRenderState(D3DRS_FOGENABLE, rState.FOGENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_FOGSTART, &rState.FOGSTART);
+		hr = rDevice->SetRenderState(D3DRS_FOGSTART, rState.FOGSTART);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_FOGEND, &rState.FOGEND);
+		hr = rDevice->SetRenderState(D3DRS_FOGEND, rState.FOGEND);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_FOGCOLOR, &rState.FOGCOLOR);
+		hr = rDevice->SetRenderState(D3DRS_FOGCOLOR, rState.FOGCOLOR);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_FOGDENSITY, &rState.FOGDENSITY);
+		hr = rDevice->SetRenderState(D3DRS_FOGDENSITY, rState.FOGDENSITY);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_FOGVERTEXMODE, &rState.
+		hr = rDevice->SetRenderState(D3DRS_FOGVERTEXMODE, rState.
 			FOGVERTEXMODE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 

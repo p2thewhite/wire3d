@@ -217,31 +217,31 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_MAXANISOTROPY, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAXANISOTROPY, rState.
 			MAXANISOTROPY);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_MAGFILTER, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MAGFILTER, rState.
 			MAGFILTER);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_MINFILTER, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MINFILTER, rState.
 			MINFILTER);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_MIPFILTER, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_MIPFILTER, rState.
 			MIPFILTER);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_BORDERCOLOR, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_BORDERCOLOR, rState.
 			BORDERCOLOR);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_ADDRESSU, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSU, rState.
 			ADDRESSU);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetSamplerState(unit, D3DSAMP_ADDRESSV, &rState.
+		hr = rDevice->SetSamplerState(unit, D3DSAMP_ADDRESSV, rState.
 			ADDRESSV);
 		WIRE_ASSERT(SUCCEEDED(hr));
 

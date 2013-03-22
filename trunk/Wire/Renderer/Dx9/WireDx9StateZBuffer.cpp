@@ -38,10 +38,10 @@ void Renderer::SetState(StateZBuffer* pState)
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_ZFUNC, &rState.ZFUNC);
+		hr = rDevice->SetRenderState(D3DRS_ZFUNC, rState.ZFUNC);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_ZWRITEENABLE, &rState.
+		hr = rDevice->SetRenderState(D3DRS_ZWRITEENABLE, rState.
 			ZWRITEENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
