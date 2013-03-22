@@ -65,10 +65,6 @@
 			Name="Header Files"
 			>
 			<File
-				RelativePath=".\src\CollisionShapeToGeometryConverter.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Game.h"
 				>
 			</File>
@@ -84,10 +80,6 @@
 		<Filter
 			Name="Source Files"
 			>
-			<File
-				RelativePath=".\src\CollisionShapeToGeometryConverter.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\src\Game.cpp"
 				>

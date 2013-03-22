@@ -6,8 +6,7 @@
 
 #include "ProbeRobot.h"
 #include "Player.h"
-#include "Collider.h"
-#include "btBulletDynamicsCommon.h"
+#include "PhysicsWorld.h"
 
 class Game : public WIREAPPLICATION
 {
@@ -40,7 +39,6 @@ private:
 	void InitializePhysics();
 	void UpdatePhysics(Double deltaTime);
 	void TerminatePhysics();
-	void ToggleCollidersVisibility();
 
 	Double mLastApplicationTime;
 	UInt mAppState;
@@ -60,11 +58,8 @@ private:
 	Wire::SpatialPtr mspCrosshair;
 	Wire::TextPtr mspText;
 	Bool mShowColliders;
-	btDefaultCollisionConfiguration* mpCollisionConfiguration;
-	btCollisionDispatcher* mpDispatcher;
-	btBroadphaseInterface* mpOverlappingPairCache;
-	btSequentialImpulseConstraintSolver* mpConstraintSolver;
-	btDiscreteDynamicsWorld* mpPhysicsWorld;
+
+	PhysicsWorldPtr mspPhysicsWorld;
 };
 
 WIRE_REGISTER_INITIALIZE(Game);

@@ -588,11 +588,11 @@ Node* StandardMesh::CreateQuadAsNode(const UInt vertexColorChannels,
 }
 
 //----------------------------------------------------------------------------
-RenderObject* StandardMesh::CreateCylinder(Int axisSampleCount,
-	Int radialSampleCount, const Float radius, const Float height,
-	const UInt uvQuantity, const UInt vertexColorChannels,
-	const Bool useNormals)
+RenderObject* StandardMesh::CreateCylinder(Int radialSampleCount,
+	const Float radius, const Float height, const UInt uvQuantity,
+	const UInt vertexColorChannels, const Bool useNormals)
 {
+	const Int axisSampleCount = 4;
 	RenderObject* pCylinder = CreateSphere(axisSampleCount, radialSampleCount,
 		radius, uvQuantity, vertexColorChannels, useNormals);
 
@@ -632,21 +632,62 @@ RenderObject* StandardMesh::CreateCylinder(Int axisSampleCount,
 }
 
 //----------------------------------------------------------------------------
-Node* StandardMesh::CreateCylinderAsNode(Int axisSampleCount,
-	Int radialSampleCount, const Float radius, const Float height,
-	const UInt uvQuantity, const UInt vertexColorChannels,
-	const Bool useNormals)
+Node* StandardMesh::CreateCylinderAsNode(Int radialSampleCount,
+	const Float radius, const Float height, const UInt uvQuantity,
+	const UInt vertexColorChannels, const Bool useNormals)
 {
-	RenderObject* pRenderObject = CreateCylinder(axisSampleCount,
-		radialSampleCount, radius, height, uvQuantity, vertexColorChannels,
-		useNormals);
+	RenderObject* pRenderObject = CreateCylinder(radialSampleCount, radius,
+		height, uvQuantity, vertexColorChannels, useNormals);
 	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
-RenderObject* StandardMesh::CreateSphere(Int zSampleCount, Int radialSampleCount,
-	Float radius, const UInt uvQuantity, const UInt vertexColorChannels,
+RenderObject* StandardMesh::CreateCapsule(Int zSampleCount,
+	Int radialSampleCount, const Float radius, const Float height,
+	const UInt uvQuantity, const UInt vertexColorChannels,
 	const Bool useNormals)
+{
+	// make sure zSampleCount is even, if not, add 1
+	zSampleCount = ((zSampleCount+1) >> 1) << 1;
+	RenderObject* pCapsule = CreateSphere(zSampleCount, radialSampleCount,
+		radius, uvQuantity, vertexColorChannels, useNormals);
+
+	VertexBuffer* pVBuffer = pCapsule->GetMesh()->GetVertexBuffer();
+	Int startVertex = (zSampleCount/2) * radialSampleCount;
+	Int endVertex = startVertex + radialSampleCount*2;
+	Int numVertices = pVBuffer->GetQuantity();
+	Float halfHeight = height * 0.5F - radius;
+
+	for (Int i = 0; i < numVertices; ++i)
+	{
+		Vector3F& rPos = pVBuffer->Position3(i);
+		if (i >= startVertex && i < endVertex)
+		{
+			Float adjust = radius*MathF::InvSqrt(rPos[0]*rPos[0] + rPos[1]*rPos[1]);
+			rPos[0] *= adjust;
+			rPos[1] *= adjust;
+		}
+
+		rPos[2] = rPos[2] > 0 ? rPos[2] + halfHeight : rPos[2] - halfHeight; 
+	}
+
+	if (useNormals)
+	{
+		pCapsule->GetMesh()->GenerateNormals();
+	}
+
+	// The duplication of vertices at the seam cause the automatically
+	// generated bounding volume to be slightly off center. Reset the bound
+	// to use the true information.
+	pCapsule->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
+	pCapsule->GetMesh()->GetModelBound()->SetRadius(height * 0.5F);
+	return pCapsule;
+}
+
+//----------------------------------------------------------------------------
+RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
+	Int radialSampleCount, Float radius, const UInt uvQuantity,
+	const UInt vertexColorChannels, const Bool useNormals)
 {
 	VertexAttributes attr;
 	attr.SetPositionChannels(3);  // channels: X, Y, Z

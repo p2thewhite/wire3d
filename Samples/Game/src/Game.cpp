@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "Importer.h"
-#include "CollisionShapeToGeometryConverter.h"
 
 WIRE_APPLICATION(Game);
 
@@ -177,6 +176,7 @@ void Game::OnInput()
 	Float y = pIR->GetUp();
 
 	// If the IR is pointing outside of the capture area, set the lookAt vector to the previous captured position
+	// TODO: fix inconsistent Win32/Wii behavior/handling
 	if (x == MathF::MAX_REAL || y == MathF::MAX_REAL)
 	{
 		x = oldX;
@@ -245,7 +245,9 @@ void Game::OnInput()
 
 	if (pButtons->GetButton(Buttons::BUTTON_1) && (appTime - lastButton1PressTime) > 0.5)
 	{
-		ToggleCollidersVisibility();
+		mShowColliders = !mShowColliders;
+		mspPhysicsWorld->ToggleDebugShapes(mShowColliders, true);
+
 		lastButton1PressTime = appTime;
 	}
 
@@ -269,64 +271,17 @@ void Game::OnInput()
 }
 
 //----------------------------------------------------------------------------
-void Game::ToggleCollidersVisibility()
-{
-	mShowColliders = !mShowColliders;
-
-	TStack<Node*> traversalStack(256);
-	traversalStack.Push(mspScene);
-
-	while (!traversalStack.IsEmpty())
-	{
-		Node* pNode = NULL;
-		traversalStack.Pop(pNode);
-		if (pNode)
-		{
-			for (UInt i = 0; i < pNode->GetControllerQuantity(); i++)
-			{
-				Collider* pCollider = DynamicCast<Collider>(pNode->
-					GetController(i));
-				if (!pCollider)
-				{
-					continue;
-				}
-
-				if (mShowColliders)
-				{
-					Node* pColliderNode = CollisionShapeToGeometryConverter::
-						Convert(pCollider->GetShape(), Color32::GREEN);
-					WIRE_ASSERT(pColliderNode);
-					Vector3F offset = pNode->World.GetTranslate() - pCollider->GetWorldTranslate();
-					pColliderNode->Local.SetTranslate(-offset);
-					pNode->AttachChild(pColliderNode);
-					pNode->UpdateRS();
-				}
-				else
-				{
-					pNode->DetachChildAt(pNode->GetQuantity() - 1);
-				}
-			}
-
-			for (UInt i = 0; i < pNode->GetQuantity(); i++)
-			{
-				traversalStack.Push(DynamicCast<Node>(pNode->GetChild(i)));
-			}
-		}
-	}
-}
-
-//----------------------------------------------------------------------------
 void Game::OnRunning(Double time, Double deltaTime)
 {
+	// Update physics simulation
+	UpdatePhysics(deltaTime);
+
 	mspScene->UpdateGS(time);
 	mSceneCuller.ComputeVisibleSet(mspScene);
 
 	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	mspGUI->UpdateGS(time);
 	mGUICuller.ComputeVisibleSet(mspGUI);
-
-	// Update physics simulation
-	UpdatePhysics(deltaTime);
 
 	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
@@ -449,7 +404,8 @@ Node* Game::LoadAndInitializeGUI()
 Node* Game::LoadAndInitializeScene()
 {
 	Importer importer("Data/Scene/");
-	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &mSceneCameras, mpPhysicsWorld);
+	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &mSceneCameras,
+		mspPhysicsWorld);
 
 	if (!pScene)
 	{
@@ -497,12 +453,12 @@ Node* Game::LoadAndInitializeScene()
 
 	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, pRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
-	mspProbeRobot->Register(mpPhysicsWorld);
+	mspProbeRobot->Register(mspPhysicsWorld->Get());
 
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);
 	pPlayerSpatial->AttachController(mspPlayer);
-	mspPlayer->Register(mpPhysicsWorld);
+	mspPlayer->Register(mspPhysicsWorld->Get());
 
 	pScene->Bind(GetRenderer());
 
@@ -518,47 +474,21 @@ void Game::MoveCrosshairTo(const Vector2F& rScreenPosition)
 //----------------------------------------------------------------------------
 void Game::InitializePhysics()
 {
-	mpCollisionConfiguration = WIRE_NEW btDefaultCollisionConfiguration();
+	mspPhysicsWorld = WIRE_NEW PhysicsWorld(Vector3F(-120, -120, -120),
+		Vector3F(120, 120, 120));
 
-	mpDispatcher = WIRE_NEW btCollisionDispatcher(mpCollisionConfiguration);
-
-	btVector3 worldAabbMin(-1000, -1000, -1000);
-	btVector3 worldAabbMax(1000, 1000, 1000);
-	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax);
-
-	mpConstraintSolver = WIRE_NEW btSequentialImpulseConstraintSolver();
-	mpPhysicsWorld = WIRE_NEW btDiscreteDynamicsWorld(mpDispatcher,	mpOverlappingPairCache, mpConstraintSolver, mpCollisionConfiguration);
-
-	mpPhysicsWorld->setGravity(btVector3(0, -9.8F, 0));
-	mpPhysicsWorld->getPairCache()->setInternalGhostPairCallback(WIRE_NEW btGhostPairCallback());
+	mspPhysicsWorld->Get()->getPairCache()->setInternalGhostPairCallback(
+		WIRE_NEW btGhostPairCallback());
 }
 
 //----------------------------------------------------------------------------
 void Game::UpdatePhysics(Double deltaTime)
 {
-	mpPhysicsWorld->stepSimulation(btScalar(deltaTime), 10);
+	mspPhysicsWorld->Get()->stepSimulation(btScalar(deltaTime), 10);
 }
 
 //----------------------------------------------------------------------------
 void Game::TerminatePhysics()
 {
-	for (Int i = mpPhysicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	{
-		btCollisionObject* pCollisionObject = mpPhysicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* pRigidBody = btRigidBody::upcast(pCollisionObject);
-
-		if (pRigidBody && pRigidBody->getMotionState())
-		{
-			WIRE_DELETE pRigidBody->getMotionState();
-		}
-
-		mpPhysicsWorld->removeCollisionObject(pCollisionObject);
-		WIRE_DELETE pCollisionObject;
-	}
-
-	WIRE_DELETE mpPhysicsWorld;
-	WIRE_DELETE mpConstraintSolver;
-	WIRE_DELETE mpOverlappingPairCache;
-	WIRE_DELETE mpDispatcher;
-	WIRE_DELETE mpCollisionConfiguration;
+	mspPhysicsWorld = NULL;
 }

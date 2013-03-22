@@ -1,7 +1,7 @@
 #include "Player.h"
 
 #include "ProbeRobot.h"
-#include "BulletUtils.h"
+#include "PhysicsWorld.h"
 #include "WireStandardMesh.h"
 #include "WireStateWireframe.h"
 
@@ -91,7 +91,8 @@ Bool Player::Update(Double appTime)
 	{
 		mpPhysicsEntity->jump();
 	}
-	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(mMove));
+
+	mpPhysicsEntity->setWalkDirection(PhysicsWorld::Convert(mMove));
 
 	// Reset accumulators
 	mMove = Vector3F::ZERO;
@@ -142,7 +143,7 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 	// Set physics entity position
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin(BulletUtils::Convert(mspCamera->GetLocation()));
+	transform.setOrigin(PhysicsWorld::Convert(mspCamera->GetLocation()));
 	mpGhostObject->setWorldTransform(transform);
 }
 
@@ -259,15 +260,15 @@ void Player::DoShooting()
 		return;
 	}
 
-	btVector3 rayStart = BulletUtils::Convert(GetPosition());
-	btVector3 rayEnd = rayStart + BulletUtils::Convert(mEyeDirection * mMaximumShootingDistance);
+	btVector3 rayStart = PhysicsWorld::Convert(GetPosition());
+	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(mEyeDirection * mMaximumShootingDistance);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
 	mpPhysicsWorld->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 
 	{
-		Vector3F hitPoint = BulletUtils::Convert(hitCallback.m_hitPointWorld);
+		Vector3F hitPoint = PhysicsWorld::Convert(hitCallback.m_hitPointWorld);
 		CreateRay(GetPosition().Distance(hitPoint));
 
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
@@ -284,7 +285,7 @@ void Player::DoShooting()
 //----------------------------------------------------------------------------
 void Player::CreateRay(Float size)
 {
-	Node* pRay = StandardMesh::CreateCylinderAsNode(5, 5, 0.1F, size, 0, 4);
+	Node* pRay = StandardMesh::CreateCylinderAsNode(5, 0.1F, size, 0, 4);
 	pRay->SetName("Ray");
 	mpNode->AttachChild(pRay);
 	mpNode->UpdateRS();

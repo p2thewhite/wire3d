@@ -1,6 +1,6 @@
 #include "ProbeRobot.h"
 
-#include "BulletUtils.h"
+#include "PhysicsWorld.h"
 
 using namespace Wire;
 
@@ -95,7 +95,7 @@ void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 	// Set physics entity position
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin(BulletUtils::Convert(pSpatial->Local.GetTranslate()));
+	transform.setOrigin(PhysicsWorld::Convert(pSpatial->Local.GetTranslate()));
 	mpGhostObject->setWorldTransform(transform);
 }
 
@@ -143,5 +143,5 @@ void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 	pSpatial->Local.SetRotate(rotation);
 
 	// update the physics object
-	mpPhysicsEntity->setWalkDirection(BulletUtils::Convert(move));
+	mpPhysicsEntity->setWalkDirection(PhysicsWorld::Convert(move));
 }

@@ -1,6 +1,5 @@
 #include "Importer.h"
 
-#include "BulletUtils.h"
 #include "PicoPNG.h"
 
 #ifndef NO_FREETYPE2_LIB
@@ -29,8 +28,7 @@ using namespace Wire;
 Importer::Importer(const Char* pPath, Options* pOptions)
 	:
 	mpPath(pPath),
-	mStaticSpatials(0, 100),
-	mpPhysicsWorld(NULL)
+	mStaticSpatials(0, 100)
 {
 	mpOptions = pOptions ? pOptions : &mDefaultOptions;
 }
@@ -38,9 +36,9 @@ Importer::Importer(const Char* pPath, Options* pOptions)
 //----------------------------------------------------------------------------
 #ifndef NO_BULLET_PHYSICS_LIB
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
-	pCameras, btDynamicsWorld* pPhysicsWorld)
+	pCameras, PhysicsWorld* pPhysicsWorld)
 {
-	mpPhysicsWorld = pPhysicsWorld;
+	mspPhysicsWorld = pPhysicsWorld;
 #else
 Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	pCameras)
@@ -710,6 +708,7 @@ ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
 //----------------------------------------------------------------------------
 void Importer::UpdateGS(Spatial* pSpatial)
 {
+	// TODO: return world trafo of Spatial instead of executing UpdateGS()
 	Spatial* pRoot = pSpatial->GetParent();
 	while (pRoot && pRoot->GetParent())
 	{
@@ -767,7 +766,7 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
 #ifndef NO_BULLET_PHYSICS_LIB
-	if (!mpPhysicsWorld)
+	if (!mspPhysicsWorld)
 	{
 		return;
 	}
@@ -777,12 +776,25 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
 	WIRE_ASSERT(pShapeName);
 
-	Vector3F center = Vector3F::ZERO;
+	// TODO: Make sure to re-use shapes among rigid bodies whenever possible!
 	btCollisionShape* pCollisionShape = NULL;
-	if (Is("Box", pShapeName))
-	{
-		Vector3F size = Vector3F::ONE;
+	btTriangleIndexVertexArray* pTriangleIndexVertexArray = NULL;
+	Vector3F center = Vector3F::ZERO;
 
+	if (Is("Mesh", pShapeName))
+	{
+		Char* pMeshName = GetValue(pXmlNode, "Mesh");
+		WIRE_ASSERT(pMeshName);
+
+		TArray<MeshPtr>* pValue = mMeshes.Find(pMeshName);
+		WIRE_ASSERT(pValue);
+		WIRE_ASSERT(0 < pValue->GetQuantity());
+		Mesh* pMesh = (*pValue)[0];
+
+		pTriangleIndexVertexArray = PhysicsWorld::Convert(pMesh);
+	}
+	else
+	{
 		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
 			attr; attr = attr->next_attribute())
 		{
@@ -792,31 +804,84 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 				n = sscanf(attr->value(), "%f, %f, %f", &center.X(), &center.Y(), &center.Z());
 				WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
 			}
-			else if (Is("Size", attr->name()))
-			{
-				Int n;
-				n = sscanf(attr->value(), "%f, %f, %f", &size.X(), &size.Y(), &size.Z());
-				WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
-			}
 		}
 
-		pCollisionShape = WIRE_NEW btBoxShape(BulletUtils::Convert(size * 0.5f));
-	}
-	else if (Is("Mesh", pShapeName))
-	{
-		rapidxml::xml_node<>* pFirstChild = pXmlNode->first_node();
+		if (Is("Box", pShapeName))
+		{
+			Vector3F size = Vector3F::ONE;
 
-		WIRE_ASSERT(pFirstChild /* Mesh collider has no child */);
-		WIRE_ASSERT(Is("Mesh", pFirstChild->name()) /* First child of mesh collider is not a mesh */);
-		
-		Mesh* pMesh = ParseMesh(pFirstChild);
-		btTriangleIndexVertexArray* pTriangleIndexVertexArray = BulletUtils::Convert(pMesh);
+			for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
+				attr; attr = attr->next_attribute())
+			{
+				if (Is("Size", attr->name()))
+				{
+					Int n;
+					n = sscanf(attr->value(), "%f, %f, %f", &size.X(), &size.Y(), &size.Z());
+					WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+				}
+			}
 
-		pCollisionShape = WIRE_NEW btBvhTriangleMeshShape(pTriangleIndexVertexArray, false);
+			pCollisionShape = WIRE_NEW btBoxShape(PhysicsWorld::Convert(size * 0.5f));
+		}
+		else if (Is("Sphere", pShapeName))
+		{
+			Float radius = GetFloat(pXmlNode, "Radius");
+			const Vector3F& rLocalScale = pSpatial->Local.GetScale();
+			Float maxScale = MathF::Max(rLocalScale.X(), rLocalScale.Y());
+			maxScale = MathF::Max(rLocalScale.Z(), maxScale);
+			pCollisionShape = WIRE_NEW btSphereShape(radius*maxScale);
+		}
+		else if (Is("Capsule", pShapeName))
+		{
+			Float radius = GetFloat(pXmlNode, "Radius");
+			Float height = GetFloat(pXmlNode, "Height");
+			Char* pDirection = GetValue(pXmlNode, "Direction");
+			WIRE_ASSERT(pDirection);
+			switch (*pDirection)
+			{
+			case 'X' : 
+				pCollisionShape = WIRE_NEW btCapsuleShapeX(radius, height);
+				break;
+			case 'Y' : 
+				pCollisionShape = WIRE_NEW btCapsuleShape(radius, height);
+				break;
+			case 'Z' : 
+				pCollisionShape = WIRE_NEW btCapsuleShapeZ(radius, height);
+				break;
+			default:
+				WIRE_ASSERT(false);
+			}
+		}
+		else 
+		{
+			WIRE_ASSERT(false /* Collider shape not supported yet! */);
+		}
 	}
-	else 
+
+	// Rigid body parameters
+	Float mass = 0;
+	rapidxml::xml_node<>* pXmlParent = pXmlNode->parent();
+	for (rapidxml::xml_node<>* pChild = pXmlParent->first_node(); pChild;
+		pChild = pChild->next_sibling())
 	{
-		WIRE_ASSERT(false /* Collider shape not supported yet! */);
+		if (Is("RigidBody", pChild->name()))
+		{
+			mass = GetFloat(pChild, "Mass");
+		}
+	}
+
+	if (pTriangleIndexVertexArray)
+	{
+		if (mass != 0)
+		{
+			pCollisionShape = WIRE_NEW btConvexTriangleMeshShape(
+				pTriangleIndexVertexArray, true);
+		}
+		else
+		{
+			pCollisionShape = WIRE_NEW btBvhTriangleMeshShape(
+				pTriangleIndexVertexArray, true);
+		}
 	}
 
 	if (!pCollisionShape)
@@ -827,30 +892,44 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	// Setting position
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin(BulletUtils::Convert(pSpatial->World.GetTranslate() + center));
+	Transformation& rWorld = pSpatial->World;
+	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
 
 	// Setting rotation
-	transform.setBasis(BulletUtils::Convert(pSpatial->World.GetRotate()));
+	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
 
 	// Setting scale
-	pCollisionShape->setLocalScaling(BulletUtils::Convert(pSpatial->World.GetScale()));
-	pCollisionShape->setMargin(0.5F);
+	pCollisionShape->setLocalScaling(PhysicsWorld::Convert(rWorld.GetScale()));
+//	pCollisionShape->setMargin(0.01F);
+
+	// rigid body is dynamic if and only if mass is non zero
+	btVector3 localInertia(0, 0, 0);
+	if (mass != 0.0F)
+	{
+		pCollisionShape->calculateLocalInertia(mass, localInertia);
+	}
 
 	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(0, pMotionState,
-		pCollisionShape, btVector3(0, 0, 0));
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
+		pMotionState, pCollisionShape, localInertia);
 	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
+	
+	// TODO: find values that correspond to PhysX in Bullet?
+// 	if (mass != 0.0F)
+// 	{
+// 		pRigidBody->setDamping(0.1F, 0);
+// 	}
 
 	// Only do CCD if  motion in one timestep (1/60) exceeds 
-	pRigidBody->setCcdMotionThreshold(0.5F);
+//	pRigidBody->setCcdMotionThreshold(0.5F);
 
 	//Experimental: better estimation of CCD Time of Impact.
-	pRigidBody->setCcdSweptSphereRadius(0.2F);
+//	pRigidBody->setCcdSweptSphereRadius(0.2F);
 
-	mpPhysicsWorld->addRigidBody(pRigidBody);
+	mspPhysicsWorld->AddRigidBody(pRigidBody);
+	
+	pSpatial->AttachController(mspPhysicsWorld->GetController(pRigidBody));
 
-	Collider* pCollider = WIRE_NEW Collider(pCollisionShape, pMotionState);
-	pSpatial->AttachController(pCollider);
 	mStatistics.ColliderCount++;
 #endif
 }
@@ -1526,7 +1605,6 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		TArray<MeshPtr>* pValue = mMeshes.Find(pName);
 		if (pValue)
 		{
-			WIRE_ASSERT(pValue);
 			WIRE_ASSERT(subMeshIndex < pValue->GetQuantity());
 			return (*pValue)[subMeshIndex];
 		}
