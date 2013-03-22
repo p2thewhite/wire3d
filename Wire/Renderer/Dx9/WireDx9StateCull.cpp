@@ -33,7 +33,7 @@ void Renderer::SetState(StateCull* pState)
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_CULLMODE, &rState.CULLMODE);
+		hr = rDevice->SetRenderState(D3DRS_CULLMODE, rState.CULLMODE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		rState.IsValid = true;

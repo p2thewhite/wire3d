@@ -25,7 +25,7 @@ void Renderer::SetState(StateWireframe* pState)
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_FILLMODE, &rState.FILLMODE);
+		hr = rDevice->SetRenderState(D3DRS_FILLMODE, rState.FILLMODE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		rState.IsValid = true;

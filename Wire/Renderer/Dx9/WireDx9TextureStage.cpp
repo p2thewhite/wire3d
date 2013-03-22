@@ -53,35 +53,35 @@ void Renderer::EnableTextureStage(Material::BlendMode blendMode, UInt unit,
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLOROP, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, rState.
 			COLOROP);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLORARG0, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG0, rState.
 			COLORARG0);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLORARG1, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG1, rState.
 			COLORARG1);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLORARG2, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLORARG2, rState.
 			COLORARG2);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_ALPHAOP, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAOP, rState.
 			ALPHAOP);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_ALPHAARG0, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAARG0, rState.
 			ALPHAARG0);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_ALPHAARG1, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAARG1, rState.
 			ALPHAARG1);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_ALPHAARG2, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_ALPHAARG2, rState.
 			ALPHAARG2);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -189,7 +189,7 @@ void Renderer::DisableTextureStage(UInt unit)
 		TextureStageStates[unit];
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetTextureStageState(unit, D3DTSS_COLOROP, &rState.
+		hr = rDevice->SetTextureStageState(unit, D3DTSS_COLOROP, rState.
 			COLOROP);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}

@@ -51,18 +51,17 @@ void Renderer::SetState(StateAlpha* pState)
 
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_ALPHABLENDENABLE, &rState.
+		hr = rDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, rState.
 			ALPHABLENDENABLE);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_SRCBLEND, &rState.SRCBLEND);
+		hr = rDevice->SetRenderState(D3DRS_SRCBLEND, rState.SRCBLEND);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_DESTBLEND, &rState.DESTBLEND);
+		hr = rDevice->SetRenderState(D3DRS_DESTBLEND, rState.DESTBLEND);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_BLENDFACTOR, &rState.
-			ALPHABLENDENABLE);
+		hr = rDevice->SetRenderState(D3DRS_BLENDFACTOR, rState.BLENDFACTOR);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		rState.IsValid = true;

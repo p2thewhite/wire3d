@@ -106,10 +106,10 @@ void Renderer::EnableLighting(const ColorRGB& rAmbient)
 	PdrRendererData::StateLight& rState = mpData->LightState;
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_AMBIENT, &rState.AMBIENT);
+		hr = rDevice->SetRenderState(D3DRS_AMBIENT, rState.AMBIENT);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_LIGHTING, &rState.LIGHTING);
+		hr = rDevice->SetRenderState(D3DRS_LIGHTING, rState.LIGHTING);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		rState.IsValid = true;
@@ -145,10 +145,10 @@ void Renderer::DisableLighting()
 	PdrRendererData::StateLight& rState = mpData->LightState;
 	if (!rState.IsValid)
 	{
-		hr = rDevice->GetRenderState(D3DRS_AMBIENT, &rState.AMBIENT);
+		hr = rDevice->SetRenderState(D3DRS_AMBIENT, rState.AMBIENT);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
-		hr = rDevice->GetRenderState(D3DRS_LIGHTING, &rState.LIGHTING);
+		hr = rDevice->SetRenderState(D3DRS_LIGHTING, rState.LIGHTING);
 		WIRE_ASSERT(SUCCEEDED(hr));
 
 		rState.IsValid = true;

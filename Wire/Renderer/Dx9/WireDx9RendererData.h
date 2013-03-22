@@ -39,7 +39,14 @@ public:
 
 	struct StateAlpha
 	{
-		StateAlpha() : IsValid(false) {}
+		StateAlpha()
+			:
+			SRCBLEND(D3DBLEND_ZERO),
+			DESTBLEND(D3DBLEND_ZERO),
+			BLENDFACTOR(0),
+			ALPHABLENDENABLE(FALSE),
+			IsValid(false) {}
+
 		static const DWORD ALPHA_SRC_BLEND[];
 		static const DWORD ALPHA_DST_BLEND[];	
 		DWORD SRCBLEND;
@@ -51,7 +58,11 @@ public:
 
 	struct StateCull
 	{
-		StateCull() : IsValid(false) {}
+		StateCull()
+			:
+			CULLMODE(D3DCULL_CW),
+			IsValid(false) {}
+
 		static const DWORD CULL_TYPE[];
 		DWORD CULLMODE;
 		Bool IsValid;
@@ -59,7 +70,16 @@ public:
 
 	struct StateFog
 	{
-		StateFog() : IsValid(false) {}
+		StateFog()
+			:
+			FOGENABLE(FALSE),
+			FOGSTART(0),
+			FOGEND(0x3f800000),
+			FOGCOLOR(0xff000000),
+			FOGDENSITY(0x3f800000),
+			FOGVERTEXMODE(D3DFOG_LINEAR),
+			IsValid(false) {}
+
 		static const DWORD FOG_DENSITY[];
 		DWORD FOGENABLE;
 		DWORD FOGSTART;
@@ -72,7 +92,12 @@ public:
 
 	struct StateLight
 	{
-		StateLight() : IsValid(false) {}
+		StateLight()
+			:
+			AMBIENT(0xff000000),
+			LIGHTING(FALSE),
+			IsValid(false) {}
+
 		DWORD AMBIENT;
 		DWORD LIGHTING;
 		Bool IsValid;
@@ -80,7 +105,17 @@ public:
 
 	struct StateSampler
 	{
-		StateSampler() : IsValid(false) {}
+		StateSampler()
+			:
+			MAXANISOTROPY(0x00000001),
+			MAGFILTER(D3DTEXF_LINEAR),
+			MINFILTER(D3DTEXF_LINEAR),
+			MIPFILTER(D3DTEXF_LINEAR),
+			BORDERCOLOR(0xff000000),
+			ADDRESSU(D3DTADDRESS_CLAMP),
+			ADDRESSV(D3DTADDRESS_CLAMP),
+			IsValid(false) {}
+
 		static const DWORD TEX_MIN_FILTER[];
 		static const DWORD TEX_MIP_FILTER[];
 		static const DWORD TEX_WRAP_MODE[];
@@ -97,7 +132,18 @@ public:
 
 	struct StateTextureStage
 	{
-		StateTextureStage() : IsValid(false) {}
+		StateTextureStage()
+			:
+			COLOROP(D3DTOP_SELECTARG1),
+			COLORARG0(0),
+			COLORARG1(D3DTA_TEXTURE),
+			COLORARG2(D3DTA_DIFFUSE),
+			ALPHAOP(D3DTOP_SELECTARG1),
+			ALPHAARG0(D3DTA_DIFFUSE),
+			ALPHAARG1(D3DTA_TEXTURE),
+			ALPHAARG2(D3DTA_DIFFUSE),
+			IsValid(false) {}
+
 		static const DWORD TEX_BLEND[];
 		DWORD COLOROP;
 		DWORD COLORARG0;
@@ -113,14 +159,23 @@ public:
 
 	struct StateWireframe
 	{
-		StateWireframe() : IsValid(false) {}
+		StateWireframe()
+			:
+			FILLMODE(D3DFILL_SOLID),
+			IsValid(false) {}
+
 		DWORD FILLMODE;
 		Bool IsValid;
 	} WireframeState;
 
 	struct StateZBuffer
 	{
-		StateZBuffer() : IsValid(false) {}
+		StateZBuffer()
+			:
+			ZFUNC(D3DCMP_LESSEQUAL),
+			ZWRITEENABLE(TRUE),
+			IsValid(false) {}
+
 		static const DWORD ZBUFFER_COMPARE[];
 		DWORD ZFUNC;
 		DWORD ZWRITEENABLE;
