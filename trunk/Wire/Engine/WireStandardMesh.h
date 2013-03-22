@@ -71,12 +71,16 @@ public:
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
 
-	// cylinder with axis through z-axis
-	static RenderObject* CreateCylinder(Int axisSampleCount,
-		Int radialSampleCount, const Float radius, const Float height,
-		const UInt uvQuantity, const UInt vertexColorChannels,
-		const Bool useNormals = false);
-	static Node* CreateCylinderAsNode(Int axisSampleCount,
+	// cylinder with axis through z
+	static RenderObject* CreateCylinder(Int radialSampleCount, 
+		const Float radius, const Float height, const UInt uvQuantity,
+		const UInt vertexColorChannels, const Bool useNormals = false);
+	static Node* CreateCylinderAsNode(Int radialSampleCount,
+		const Float radius, const Float height, const UInt uvQuantity,
+		const UInt vertexColorChannels, const Bool useNormals = false);
+
+	// capsule with axis through z
+	static RenderObject* CreateCapsule(Int zSampleCount,
 		Int radialSampleCount, const Float radius, const Float height,
 		const UInt uvQuantity, const UInt vertexColorChannels,
 		const Bool useNormals = false);

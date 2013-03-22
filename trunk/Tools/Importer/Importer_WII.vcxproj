@@ -11,17 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BulletUtils.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Importer.cpp" />
+    <ClCompile Include="src\PhysicsWorld.cpp" />
     <ClCompile Include="src\PicoPNG.cpp" />
+    <ClCompile Include="src\RigidBodyController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\BulletUtils.h" />
-    <ClInclude Include="src\Collider.h" />
     <ClInclude Include="src\Importer.h" />
+    <ClInclude Include="src\PhysicsWorld.h" />
     <ClInclude Include="src\PicoPNG.h" />
     <ClInclude Include="src\rapidxml.hpp" />
+    <ClInclude Include="src\RigidBodyController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\PhysicsWorld.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>Importer</ProjectName>

@@ -149,27 +149,23 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\src\BulletUtils.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\BulletUtils.h"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Collider.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\Collider.h"
-			>
-		</File>
-		<File
 			RelativePath=".\src\Importer.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\src\Importer.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsWorld.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsWorld.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsWorld.inl"
 			>
 		</File>
 		<File
@@ -182,6 +178,14 @@
 		</File>
 		<File
 			RelativePath=".\src\rapidxml.hpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\RigidBodyController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\RigidBodyController.h"
 			>
 		</File>
 	</Files>

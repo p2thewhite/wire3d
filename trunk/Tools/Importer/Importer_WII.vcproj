@@ -69,6 +69,18 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\PhysicsWorld.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsWorld.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsWorld.inl"
+			>
+		</File>
+		<File
 			RelativePath=".\src\PicoPNG.cpp"
 			>
 		</File>
@@ -78,6 +90,14 @@
 		</File>
 		<File
 			RelativePath=".\src\rapidxml.hpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\RigidBodyController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\RigidBodyController.h"
 			>
 		</File>
 	</Files>

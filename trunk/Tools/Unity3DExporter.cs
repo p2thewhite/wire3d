@@ -357,6 +357,7 @@ public class Unity3DExporter : EditorWindow
         }
 
         WriteCollider(go, outFile, indent);
+        WriteRigidbody(go, outFile, indent);
 
         if (exportSubmeshes)
         {
@@ -457,6 +458,7 @@ public class Unity3DExporter : EditorWindow
         {
             WriteCamera(go.GetComponent<Camera>(), outFile, indent);
             WriteCollider(go, outFile, indent);
+            WriteRigidbody(go, outFile, indent);
         }
     	
 		if (transform.GetChildCount () > 0)
@@ -696,28 +698,33 @@ public class Unity3DExporter : EditorWindow
                 stack.Push(t.GetChild(i));
             }
 
-            if (HasRenderObject(t))
+            MeshCollider meshCollider = t.gameObject.GetComponent<MeshCollider>();
+            Mesh collisionMesh = (meshCollider != null) ? meshCollider.sharedMesh : null;
+            if (HasRenderObject(t) || collisionMesh != null)
             {
                 MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
-                if (meshFilter == null || meshRenderer == null)
+                if (meshFilter == null)
                 {
                     continue;
                 }
 
                 if (assetTypeName.Equals("Meshes"))
                 {
-                    string meshAssetName = GetMeshAssetName(meshFilter.sharedMesh, GetLightmapTilingOffset(meshRenderer));
-                    if (!mMeshAssetsProcessed.Contains(meshAssetName))
+                    if (meshFilter != null)
                     {
-                        if (!foundAsset)
-                        {
-                            foundAsset = true;
-                            outFile.WriteLine("  <" + assetTypeName + ">");
-                        }
-
-                        WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent);
+                        WriteMeshAsset(meshFilter.sharedMesh, meshRenderer, ref foundAsset, outFile, indent);
                     }
+
+                    if (collisionMesh != null)
+                    {
+                        WriteMeshAsset(collisionMesh, meshRenderer, ref foundAsset, outFile, indent);
+                    }
+                }
+
+                if (meshRenderer == null)
+                {
+                    continue;
                 }
 
                 if (assetTypeName.Equals("Materials"))
@@ -746,8 +753,31 @@ public class Unity3DExporter : EditorWindow
         }
     }
 
+    private void WriteMeshAsset(Mesh mesh, MeshRenderer meshRenderer, ref bool foundAsset, StreamWriter outFile, string indent)
+    {
+        if (mesh != null)
+        {
+            string meshAssetName = GetMeshAssetName(mesh, GetLightmapTilingOffset(meshRenderer));
+            if (!mMeshAssetsProcessed.Contains(meshAssetName))
+            {
+                if (!foundAsset)
+                {
+                    foundAsset = true;
+                    outFile.WriteLine("  <Meshes>");
+                }
+
+                WriteMesh(mesh, meshRenderer, outFile, indent);
+            }
+        }
+    }
+    
     private Vector4 GetLightmapTilingOffset(MeshRenderer meshRenderer)
     {
+        if (meshRenderer == null)
+        {
+            return new Vector4(1, 1, 0, 0);
+        }
+
         // combined meshes already have lightmap tiling and offset applied
         Vector4 lightmapTilingOffset = meshRenderer.lightmapTilingOffset;
         SerializedObject so = new SerializedObject(meshRenderer);
@@ -832,24 +862,36 @@ public class Unity3DExporter : EditorWindow
 	
 	private void WriteCollider (GameObject gameObject, StreamWriter outFile, string indent)
 	{
-		Collider collider = gameObject.GetComponent<Collider> ();
-		
-		if (collider == null) {
+		Collider collider = gameObject.GetComponent<Collider>();
+		if (collider == null)
+        {
 			return;
 		}
 		
-		string shape = GetColliderShapeName (collider);
-		
-		// Collider element start.
+		string shape = GetColliderShapeName(collider);
 		outFile.Write (indent + "  " + "<Collider Shape=\"" + shape + "\" ");
 		
-		if (collider is BoxCollider) {
-			WriteBoxColliderAttributes (collider as BoxCollider, outFile, indent);
-		} else {
-			Debug.Log ("Collider shape not supported yet: '" + shape + "'.");
+		if (collider is BoxCollider)
+        {
+			WriteBoxColliderAttributes(collider as BoxCollider, outFile, indent);
+		}
+        else if (collider is SphereCollider)
+        {
+            WriteSphereColliderAttributes(collider as SphereCollider, outFile, indent);
+        }
+        else if (collider is CapsuleCollider)
+        {
+            WriteCapsuleColliderAttributes(collider as CapsuleCollider, outFile, indent);
+        }
+        else if (collider is MeshCollider)
+        {
+            WriteMeshColliderAttributes(collider as MeshCollider, outFile, indent);
+        }
+        else
+        {
+			Debug.Log("Collider shape not supported yet: '" + shape + "'.");
 		}
 		
-		// Collider element end.
 		outFile.Write (" />\n");
 	}
 	
@@ -864,9 +906,45 @@ public class Unity3DExporter : EditorWindow
 		Vector3 center = boxCollider.center;
 		Vector3 size = boxCollider.size;
 		
-		outFile.Write ("Center=\"" + center.x + ", " + center.y + ", " + center.z +
+		outFile.Write ("Center=\"" + (-center.x) + ", " + center.y + ", " + center.z +
 			"\" Size=\"" + size.x + ", " + size.y + ", " + size.z + "\"");
 	}
+
+    private void WriteSphereColliderAttributes(SphereCollider sphereCollider, StreamWriter outFile, string indent)
+    {
+        Vector3 center = sphereCollider.center;
+        float radius = sphereCollider.radius;
+
+        outFile.Write("Center=\"" + (-center.x) + ", " + center.y + ", " + center.z + "\" Radius=\"" + radius + "\"");
+    }
+
+    private void WriteCapsuleColliderAttributes(CapsuleCollider capsuleCollider, StreamWriter outFile, string indent)
+    {
+        Vector3 center = capsuleCollider.center;
+        float radius = capsuleCollider.radius;
+        float height = capsuleCollider.height;
+        char direction = capsuleCollider.direction < 1 ? 'X' : 'Y';
+        direction = capsuleCollider.direction > 1 ? 'Z' : direction;
+
+        outFile.Write("Center=\"" + (-center.x) + ", " + center.y + ", " + center.z + "\" Radius=\"" + radius + "\"" +
+            " Height=\"" + height + "\"" + " Direction=\"" + direction + "\"");
+    }
+
+    private void WriteMeshColliderAttributes(MeshCollider meshCollider, StreamWriter outFile, string indent)
+    {
+        outFile.Write("Mesh=\"" + meshCollider.sharedMesh.name + "\"");
+    }
+
+    private void WriteRigidbody(GameObject gameObject, StreamWriter outFile, string indent)
+    {
+        Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+        if (rigidbody == null)
+        {
+            return;
+        }
+
+        outFile.Write(indent + "  " + "<RigidBody Mass=\"" + rigidbody.mass + "\" />\n");
+    }
 
     private void WriteCamera(Camera camera, StreamWriter outFile, string indent)
 	{

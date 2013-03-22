@@ -16,7 +16,7 @@
 #include "WireIndexBuffer.h"
 
 #ifndef NO_BULLET_PHYSICS_LIB
-#include "Collider.h"
+#include "PhysicsWorld.h"
 #endif
 
 class Importer
@@ -56,7 +56,7 @@ public:
 #ifndef NO_BULLET_PHYSICS_LIB
 	Wire::Node* LoadSceneFromXml(const Char* pFilename,
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
-		btDynamicsWorld* pPhysicsWorld = NULL);
+		PhysicsWorld* pPhysicsWorld = NULL);
 #else
 	Wire::Node* LoadSceneFromXml(const Char* pFilename,
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL);
@@ -148,7 +148,7 @@ private:
 	Options* mpOptions;
 
 #ifndef NO_BULLET_PHYSICS_LIB
-	btDynamicsWorld* mpPhysicsWorld;
+	PhysicsWorldPtr mspPhysicsWorld;
 #endif
 };
 
