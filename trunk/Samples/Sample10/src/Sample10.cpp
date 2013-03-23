@@ -70,8 +70,8 @@ void Sample10::OnIdle()
 	mLastTime = time;
 
 	// disable batching by setting thresholds to 0
-	GetRenderer()->SetVertexBatchingThreshold(0);
-	GetRenderer()->SetIndexBatchingThreshold(0);
+	GetRenderer()->SetDynamicBatchingThreshold(0, 0);
+	GetRenderer()->SetStaticBatchingThreshold(0);
 
 	// Every 5 seconds we alternate between one of the following 3 states:
 	// Culler with no batching (to produce a visible set of objects in the
@@ -93,7 +93,7 @@ void Sample10::OnIdle()
 		if (MathF::FMod(static_cast<Float>(time), 15) > 10)
 		{
 			// There are 2 methods of batching supported:
-			// a) Batching of index buffers only:
+			// a) Batching of index buffers only, i.e. static batching:
 			//    This is used if objects are batchable, share the same
 			//    vertexbuffer and the same static transformation.
 			//    This is the preferred way, but requires use of submeshes
@@ -101,7 +101,7 @@ void Sample10::OnIdle()
 			//    (Use the "Combine static meshes" option in the exporter to
 			//    prepare your scene objects for this method.)
             //
-			// b) Batching of vertex and index buffers:
+			// b) Batching of vertex and index buffers, i.e. dynamic batching:
 			//    This is used if objects are batchable and do not share the
 			//    same vertex buffer. If the objects do not have static
 			//    transformation, manual transformation is applied. This is
@@ -109,8 +109,8 @@ void Sample10::OnIdle()
 			//    be kept low, or else more time might be wasted than gained.
 
 			// Set thresholds for batching
-			GetRenderer()->SetVertexBatchingThreshold(200);
-			GetRenderer()->SetIndexBatchingThreshold(2000);
+			GetRenderer()->SetDynamicBatchingThreshold(200, 100);
+			GetRenderer()->SetStaticBatchingThreshold(700);
 		}
 	}
 

@@ -35,8 +35,8 @@ Bool Demo::OnInitialize()
 	GetRenderer()->Bind(mspText);
 
  	GetRenderer()->CreateBatchingBuffers(50000, 50000);
- 	GetRenderer()->SetVertexBatchingThreshold(1000);
- 	GetRenderer()->SetIndexBatchingThreshold(10000);
+ 	GetRenderer()->SetDynamicBatchingThreshold(1000, 3000);
+ 	GetRenderer()->SetStaticBatchingThreshold(3000);
 
 	return true;
 }

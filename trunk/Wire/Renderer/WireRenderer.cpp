@@ -39,8 +39,9 @@ void Renderer::Initialize(UInt width, UInt height)
 	mVertexFormatKey = 0;
 
 	mBatchedIndexBuffer = NULL;
-	mIndexBatchingThreshold = 0;
-	mVertexBatchingThreshold = 0;
+	mStaticBatchingMaxIndexCount = 0;
+	mDynamicBatchingMaxVertexCount = 0;
+	mDynamicBatchingMaxIndexCount = 0;
 
 	mStatistics.mpRenderer = this;
 	mStatistics.Reset();
@@ -1135,7 +1136,7 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 		RenderObject* pRenderObject = pVisible[i];
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
-		if (pMesh->GetIndexCount() > mIndexBatchingThreshold)
+		if (pMesh->GetIndexCount() > mStaticBatchingMaxIndexCount)
 		{
 			Draw(pRenderObject);
 			continue;
@@ -1210,8 +1211,8 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
 		const UInt vertexCount = pMesh->GetVertexBuffer()->GetQuantity();
 
-		if (vertexCount > mVertexBatchingThreshold ||
-			pMesh->GetIndexCount() > mIndexBatchingThreshold)
+		if (vertexCount > mDynamicBatchingMaxVertexCount ||
+			pMesh->GetIndexCount() > mDynamicBatchingMaxIndexCount)
 		{
 			Draw(pRenderObject);
 			continue;

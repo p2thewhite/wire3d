@@ -111,38 +111,44 @@ inline Bool Renderer::SupportsBatching() const
 //----------------------------------------------------------------------------
 inline Bool Renderer::UsesBatching() const
 {
-	return mBatchedIndexBuffer && (mIndexBatchingThreshold > 0 || 
-		(mVertexBatchingThreshold > 0 &&
-		mBatchedVertexBuffers.GetQuantity() > 0));
+	Bool usesStaticBatching = mStaticBatchingMaxIndexCount > 0;
+	Bool usesDynamicBatching = (mDynamicBatchingMaxVertexCount > 0) &&
+		(mDynamicBatchingMaxIndexCount > 0);
+	return mBatchedIndexBuffer && (usesStaticBatching || 
+		(usesDynamicBatching && mBatchedVertexBuffers.GetQuantity() > 0));
 }
 
 //----------------------------------------------------------------------------
-inline UInt Renderer::GetIndexBatchingThreshold() const
+inline UInt Renderer::GetStaticBatchingThreshold() const
 {
-	return mIndexBatchingThreshold;
+	return mStaticBatchingMaxIndexCount / 3;
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetIndexBatchingThreshold(UInt threshold)
+inline void Renderer::SetStaticBatchingThreshold(UInt maxTriangles)
 {
 	if (mSupportsBatching)
 	{
-		mIndexBatchingThreshold = threshold;
+		mStaticBatchingMaxIndexCount = maxTriangles * 3;
 	}
 }
 
 //----------------------------------------------------------------------------
-inline UInt Renderer::GetVertexBatchingThreshold() const
+inline void Renderer::GetVertexBatchingThreshold(UInt& rMaxVertices,
+	UInt& rMaxTriangles) const
 {
-	return mVertexBatchingThreshold;
+	rMaxVertices = mDynamicBatchingMaxVertexCount;
+	rMaxTriangles = mDynamicBatchingMaxIndexCount / 3;
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::SetVertexBatchingThreshold(UInt threshold)
+inline void Renderer::SetDynamicBatchingThreshold(UInt maxVertices,
+	UInt maxTriangles)
 {
 	if (mSupportsBatching)
 	{
-		mVertexBatchingThreshold = threshold;
+		mDynamicBatchingMaxVertexCount = maxVertices;
+		mDynamicBatchingMaxIndexCount = maxTriangles * 3;
 	}
 }
 
