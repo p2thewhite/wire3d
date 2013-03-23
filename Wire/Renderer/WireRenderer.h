@@ -67,10 +67,12 @@ public:
 		UInt maxVertexStreams = 6);
 	inline Bool SupportsBatching() const;
 	inline Bool UsesBatching() const;
-	inline UInt GetIndexBatchingThreshold() const;
-	inline void SetIndexBatchingThreshold(UInt threshold);
-	inline UInt GetVertexBatchingThreshold() const;
-	inline void SetVertexBatchingThreshold(UInt threshold);
+	inline UInt GetStaticBatchingThreshold() const;
+	inline void SetStaticBatchingThreshold(UInt maxTriangles);
+	inline void GetVertexBatchingThreshold(UInt& rMaxVertices,
+		UInt& rMaxTriangles) const;
+	inline void SetDynamicBatchingThreshold(UInt maxVertices,
+		UInt maxTriangles);
 
 	// Texture sampler functions
 	inline Float GetMaxAnisotropy() const;
@@ -321,8 +323,9 @@ private:
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
 	TArray<void*> mRawBatchedVertexBuffers;
-	UInt mIndexBatchingThreshold;
-	UInt mVertexBatchingThreshold;
+	UInt mStaticBatchingMaxIndexCount;
+	UInt mDynamicBatchingMaxVertexCount;
+	UInt mDynamicBatchingMaxIndexCount;
 	Bool mSupportsBatching;
 
 	RendererStatistics mStatistics;
