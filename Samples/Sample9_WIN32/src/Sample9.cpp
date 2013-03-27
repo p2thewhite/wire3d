@@ -17,13 +17,14 @@ CameraPtr gspCamera;
 void OnIdle()
 {
 	// the render loop
+	Transformation transformation;
 	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F), MathF::FMod(
 		static_cast<Float>(System::GetTime()), MathF::TWO_PI));
-	gspCube->World.SetRotate(rotate);
+	transformation.SetRotate(rotate);
 
 	gpRenderer->ClearBuffers();
 	gpRenderer->PreDraw(gspCamera);
-	gpRenderer->Draw(gspCube);
+	gpRenderer->Draw(gspCube, transformation);
 	gpRenderer->PostDraw();
 	gpRenderer->DisplayBackBuffer();
 }

@@ -45,6 +45,8 @@ Bool Sample8::OnInitialize()
 	mspStateMaterial = WIRE_NEW StateMaterial;
 	mspStateMaterial->Ambient = ColorRGBA::WHITE;
 
+	mspWorldBound = WIRE_NEW SphereBV;
+
 	Double time = System::GetTime();
 	mResetTime = time + 4.0F;
 	return true;
@@ -85,10 +87,13 @@ void Sample8::OnIdle()
 	{
 		RenderObject* pRenderObject = mGameObjects[i].spRenderObject;
 		WIRE_ASSERT(pRenderObject);
-		pRenderObject->UpdateWorldBound();
-		if (mCuller.IsVisible(pRenderObject))
+
+		Transformation& rWorld = mGameObjects[i].WorldTransformation;
+		pRenderObject->GetMesh()->GetModelBound()->TransformBy(rWorld,
+			mspWorldBound);
+		if (mCuller.IsVisible(mspWorldBound))
 		{
-			GetRenderer()->Draw(pRenderObject);
+			GetRenderer()->Draw(pRenderObject, rWorld);
 		}
 	}
 
@@ -124,16 +129,22 @@ void Sample8::CreateGameObjects()
 	// RenderObject from the StandardMesh returned Node so the rest of the
 	// node gets deleted automatically when returning from this function.
 	RenderObject* pFloor = StandardMesh::CreateCube24(0, 0, true, 0.5F);
-	pFloor->World.SetScale(Vector3F(floorX * 2, floorY, floorZ * 2));
-	pFloor->World.SetTranslate(Vector3F(0, -4.0F, 0));
 
 	btCollisionShape* pColFloor = WIRE_NEW btBoxShape(btVector3(
 		btScalar(floorX), btScalar(floorY), btScalar(floorZ)));
-	btRigidBody* pRigidFloor = CreateRigidBody(pColFloor, floorMass, pFloor->
-		World.GetTranslate());
+	btRigidBody* pRigidFloor = CreateRigidBody(pColFloor, floorMass,
+		Vector3F(0, -4.0F, 0));
 
 	GameObject groundFloor(pFloor, pColFloor, pRigidFloor);
+	groundFloor.WorldTransformation.SetScale(Vector3F(floorX * 2, floorY,
+		floorZ * 2));
 	mGameObjects.Append(groundFloor);
+
+	// 1 RenderObject Box to reuse 
+	const Float extent = 0.5F;
+	mspBox = StandardMesh::CreateCube24(0, 1, true, extent);
+	mspBox->SetMaterial(pMaterial);
+	mspBox->GetMesh()->GenerateNormals();
 
 	// create a stack of boxes
 	Bool switchX = false;
@@ -143,19 +154,13 @@ void Sample8::CreateGameObjects()
 		Float x = static_cast<Float>(s_BoxCountX)*-0.5F;
 		for (UInt xCount = 0; xCount < s_BoxCountX; xCount++)
 		{
-			const Float extent = 0.5F;
-			RenderObject* pBox = StandardMesh::CreateCube24(0, 1, true, extent);
-			pBox->SetMaterial(pMaterial);
-			pBox->GetMesh()->GenerateNormals();
-			pBox->World.SetTranslate(Vector3F(switchX ? x : x+0.35F, y, 0));			
-
 			btCollisionShape* pColBox = WIRE_NEW btBoxShape(btVector3(extent,
 				extent, extent));
 			const Float mass = 1.0F;
-			btRigidBody* pRigidBox = CreateRigidBody(pColBox, mass, pBox->
-				World.GetTranslate());
+			btRigidBody* pRigidBox = CreateRigidBody(pColBox, mass,
+				Vector3F(switchX ? x : x+0.35F, y, 0));
 
-			GameObject box(pBox, pColBox, pRigidBox);
+			GameObject box(mspBox, pColBox, pRigidBox);
 			mGameObjects.Append(box);
 			x += 1.25F;
 		}
@@ -164,22 +169,22 @@ void Sample8::CreateGameObjects()
 		switchX = !switchX;
 	}
 
+
+	// 1 RenderObject Ball to reuse 
+	const Float radius = 0.75F;
+	mspBall = StandardMesh::CreateSphere(16, 16, radius, 0, 0, true);
+
 	// create 2 balls that collide with the boxes and cause them to collapse
 	Float sign = 1;
 	for (UInt i = 0; i < 2; i++)
 	{
-		const Float radius = 0.75F;
-		RenderObject* pBall = StandardMesh::CreateSphere(16, 16, radius, 0, 0,
-			true);
-		pBall->World.SetTranslate(Vector3F(1.5F * sign, -0.5F, 10 * sign));
-
 		btCollisionShape* pColBall = WIRE_NEW btSphereShape(radius);
 		const Float mass = 1.0F;
-		btRigidBody* pRigidBall = CreateRigidBody(pColBall, mass, pBall->
-			World.GetTranslate());
+		btRigidBody* pRigidBall = CreateRigidBody(pColBall, mass,
+			Vector3F(1.5F * sign, -0.5F, 10 * sign));
 		RandomizeBallVelocity(pRigidBall);
 
-		GameObject ball(pBall, pColBall, pRigidBall);
+		GameObject ball(mspBall, pColBall, pRigidBall);
 		mGameObjects.Append(ball);
 
 		sign = -sign;
@@ -393,8 +398,8 @@ void Sample8::UpdatePhysicsWorld(btScalar elapsedTime)
 			Vector3F pos = Convert(trans.getOrigin());
 			QuaternionF quat = Convert(trans.getRotation());
 			quat.ToRotationMatrix(mat);
-			mGameObjects[i].spRenderObject->World.SetTranslate(pos);
-			mGameObjects[i].spRenderObject->World.SetRotate(mat);
+			mGameObjects[i].WorldTransformation.SetTranslate(pos);
+			mGameObjects[i].WorldTransformation.SetRotate(mat);
 		}
 	}
 }

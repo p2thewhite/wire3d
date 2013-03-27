@@ -10,10 +10,12 @@
 
 using namespace Wire;
 
+const Transformation Transformation::IDENTITY;
+
 //----------------------------------------------------------------------------
 Transformation::Transformation()
 	:
-	mScale(Vector3F::ONE),
+	mScale(Vector3F(1, 1, 1)),
 	mIsIdentity(true),
 	mIsRSMatrix(true),
 	mIsUniformScale(true)

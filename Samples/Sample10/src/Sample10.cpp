@@ -369,21 +369,21 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	const UInt TextArraySize = 1000;
 	Char text[TextArraySize];
 	UInt fps = static_cast<UInt>(1/elapsed);
-	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static: "
-		"%d, Batched Dynamic: %d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d, "
-		"IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
+	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static/"
+		"Dynamic/Transformed: %d/%d/%d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d,"
+		" IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
 	Float kb = 1024.0F;
 	const RendererStatistics* pStats = GetRenderer()->GetStatistics();
 	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
 		pStats->GetDrawCalls(), pStats->GetTriangles(), pStats->
 		GetBatchedStatic(), pStats->GetBatchedDynamic(), pStats->
-		GetVBOCount(), pStats->GetVBOsSize()/kb, pStats->GetIBOCount(),
-		pStats->GetIBOsSize()/kb, pStats->GetTextureCount(), pStats->
-		GetTexturesSize()/(kb*kb));
+		GetBatchedDynamicTransformed(), pStats-> GetVBOCount(), pStats->
+		GetVBOsSize()/kb, pStats->GetIBOCount(), pStats->GetIBOsSize()/kb,
+		pStats->GetTextureCount(), pStats->GetTexturesSize()/(kb*kb));
 	mspText->SetColor(Color32::WHITE);
 	mspText->Append(text);
 
 	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(mspText);
+	GetRenderer()->Draw(mspText, Transformation::IDENTITY);
 }

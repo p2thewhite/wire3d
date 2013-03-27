@@ -57,13 +57,14 @@ void Sample0::OnIdle()
 	// The render loop. Called by the main loop.
 
 	// Rotate the cube and render it.
+	Transformation transformation;
 	Matrix34F rotate(Vector3F(0.2F, 0.7F, 0.1F),
 		MathF::FMod(static_cast<Float>(System::GetTime()), MathF::TWO_PI));
-	mspCube->World.SetRotate(rotate);
+	transformation.SetRotate(rotate);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->Draw(mspCube);
+	GetRenderer()->Draw(mspCube, transformation);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }

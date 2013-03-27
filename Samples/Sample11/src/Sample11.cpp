@@ -23,7 +23,7 @@ Bool Sample11::OnInitialize()
 	mpCursors = WIRE_NEW Cursors;
 	mspGuiRoot = WIRE_NEW Node;
 	mspGuiRoot->AttachChild(mpCursors->GetRoot());
-	mspTextNode = StandardMesh::CreateTextAsNode();
+	mspTextNode = WIRE_NEW Node(StandardMesh::CreateText());
 	mspGuiRoot->AttachChild(mspTextNode);
 
 	mspGuiCamera = WIRE_NEW Camera(/* isPerspective */false);
@@ -160,7 +160,8 @@ void Sample11::OnResize(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Sample11::UpdateInputDevicesInformationText()
 {
-	Text* pText = DynamicCast<Text>(mspTextNode->GetRenderObject());
+	WIRE_ASSERT(DynamicCast<Text>(mspTextNode->GetRenderObject()));
+	Text* pText = StaticCast<Text>(mspTextNode->GetRenderObject());
 	if (!pText)
 	{
 		return;

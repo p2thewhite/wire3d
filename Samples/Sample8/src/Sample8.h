@@ -32,6 +32,7 @@ private:
 		}
 
 		RenderObjectPtr spRenderObject;
+		Transformation WorldTransformation;
 		btCollisionShape* pCollisionObject;
 		btRigidBody* pRigidBody;
 	};
@@ -69,10 +70,14 @@ private:
 
 	TArray<GameObject> mGameObjects;
 
+	RenderObjectPtr mspBox;
+	RenderObjectPtr mspBall;
 	MaterialPtr mspMaterial;
 	StateMaterialPtr mspStateMaterial;
 	LightPtr mspLightA;
 	LightPtr mspLightB;
+
+	BoundingVolumePtr mspWorldBound; // TODO: remove
 
 	Float mAngle;
 	Double mLastTime;

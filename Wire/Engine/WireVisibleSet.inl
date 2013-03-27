@@ -22,29 +22,37 @@ inline UInt VisibleSet::GetMaxQuantity() const
 inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 {
 	mVisible.SetMaxQuantity(maxQuantity);
+	mTransformations.SetMaxQuantity(maxQuantity);
 }
 
 //----------------------------------------------------------------------------
-inline Object** VisibleSet::GetVisible()
+inline void VisibleSet::GetSet(Object**& rObjectArrayPtr, Transformation**&
+	rTransformationPtr)
 {
-	return mVisible.GetArray();
+	rObjectArrayPtr = mVisible.GetArray();
+	rTransformationPtr = mTransformations.GetArray();
 }
 
 //----------------------------------------------------------------------------
-inline Object* VisibleSet::GetVisible(UInt i)
+inline void VisibleSet::GetElement(UInt i, Object*& rObjectPtr,
+	Transformation*& rTransformationPtr)
 {
 	WIRE_ASSERT(i < GetQuantity());
-	return mVisible[i];
+	rObjectPtr = mVisible[i];
+	rTransformationPtr = mTransformations[i];
 }
 
 //----------------------------------------------------------------------------
 inline void VisibleSet::Clear()
 {
 	mVisible.SetQuantity(0, false);
+	mTransformations.SetQuantity(0, false);
 }
 
 //----------------------------------------------------------------------------
-inline void VisibleSet::Insert(Object* pObject)
+inline void VisibleSet::Insert(Object* pObject, Transformation*
+	pTransformation)
 {
 	mVisible.Append(pObject);
+	mTransformations.Append(pTransformation);
 }

@@ -126,18 +126,18 @@ public:
 
 protected:
 	Bool UpdateWorldBoundRenderObject();
-	void UpdateWorldDataRenderObject();
 	void UpdateStateRenderObject(TArray<State*>* pStateStacks,
 		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
 	void GetVisibleSetRenderObject(Culler& rCuller, Bool noCull);
 
 	UInt GetStateSetKey();
-	Bool VerifyKey(UInt key, UInt offset); 	// TODO: remove
+	Bool VerifyKey(UInt key, UInt offset);
 
 private:
 	void InitRenderObject();
 
 	Pointer<RenderObject> mspRenderObject;
+	Pointer<BoundingVolume> mspRenderObjectWorldBound;
 };
 
 typedef Pointer<Node> NodePtr;

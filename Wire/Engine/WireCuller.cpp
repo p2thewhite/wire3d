@@ -50,23 +50,22 @@ Bool Culler::IsVisible(const Spatial* pSpatial) const
 }
 
 //----------------------------------------------------------------------------
-Bool Culler::IsVisible(const RenderObject* pRenderObject) const
+Bool Culler::IsVisible(const BoundingVolume* pBound, Bool usePlaneMask)
 {
-	for (Int i = 0; i < mPlaneQuantity; i++)
+	if (!usePlaneMask)
 	{
-		if (pRenderObject->WorldBound->WhichSide(mPlanes[i]) < 0)
+		for (Int i = 0; i < mPlaneQuantity; i++)
 		{
-			// Object is on negative side. Cull it.
-			return false;
+			if (pBound->WhichSide(mPlanes[i]) < 0)
+			{
+				// Object is on negative side. Cull it.
+				return false;
+			}
 		}
+
+		return true;
 	}
 
-	return true;
-}
-
-//----------------------------------------------------------------------------
-Bool Culler::IsVisible(const BoundingVolume* pBound)
-{
 	// Start with the last pushed plane, which is potentially the most
 	// restrictive plane.
 	Int plane = mPlaneQuantity - 1;
@@ -174,11 +173,26 @@ void Culler::ComputeVisibleSet(Spatial* pScene)
 	if (mpCamera && pScene)
 	{
 		SetFrustum(mpCamera->GetFrustum());
-		for (UInt i = 0; i < mVisibleSets.GetQuantity(); i++)
-		{
-			mVisibleSets[i]->Clear();
-		}
+		Clear();
 
 		pScene->OnGetVisibleSet(*this, false);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Culler::Clear()
+{
+	for (UInt i = 0; i < mVisibleSets.GetQuantity(); i++)
+	{
+		mVisibleSets[i]->Clear();
+	}
+}
+
+//----------------------------------------------------------------------------
+void Culler::SetMaxQuantity(UInt maxQuantity)
+{
+	for (UInt i = 0; i < GetVisibleSets().GetQuantity(); i++)
+	{
+		GetVisibleSet(i)->SetMaxQuantity(maxQuantity);
 	}
 }

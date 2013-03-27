@@ -16,6 +16,7 @@ namespace Wire
 {
 
 class Renderer;
+class Transformation;
 
 class Effect : public Object
 {
@@ -28,8 +29,8 @@ public:
 	// Override this function to obtain whatever drawing behavior your effect
 	// requires. If this is not overridden, the default behavior is to
 	// draw all the RenderObjects in pVisible.
-	virtual void Draw(Renderer* pRenderer, Object* pVisible[], UInt min,
-		UInt max, Bool restoreState);
+	virtual void Draw(Renderer* pRenderer, Object* pVisible[], Transformation*
+		pTransformations[], UInt min, UInt max, Bool restoreState);
 
 protected:
  	Effect();

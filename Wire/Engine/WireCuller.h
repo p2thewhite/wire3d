@@ -46,19 +46,20 @@ public:
 	// Compare the object's world bounding volume against all culling planes.
 	Bool IsVisible(const Spatial* pSpatial) const;
 
-	// Compare the object's world bounding volume against all culling planes.
-	Bool IsVisible(const RenderObject* pSpatial) const;
-
 	// Compare the bounding volume against the active culling planes.
 	// Only Spatial calls this function (during traversal using plane state)
-	Bool IsVisible(const BoundingVolume* pBV);
+	Bool IsVisible(const BoundingVolume* pBV, Bool usePlaneMask = false);
 
-	// The base class behavior creates a VisibleObject from the input and
-	// appends it to the end of the VisibleObject array. Derived classes
+	// The base class behavior appends the RenderObject/Effect and its
+	// Transformation/NULL to the end of the VisibleSet. Derived classes
 	// may override this behavior; for example, the array might be maintained
 	// as a sorted array for minimizing render state changes or it might be
 	// maintained as a unique list of objects for a portal system.
-	inline virtual void Insert(Object* pObject);
+	inline virtual void Insert(Object* pObject, Transformation* pTrafo,
+		const Vector3F& rPosition = Vector3F::ZERO);
+
+	virtual void Clear();
+	virtual void SetMaxQuantity(UInt maxQuantity);
 
 	enum { VS_MAX_PLANE_QUANTITY = 32 };
 	inline void SetPlaneState(UInt planeState);

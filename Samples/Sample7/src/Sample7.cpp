@@ -86,20 +86,19 @@ void Sample7::OnIdle()
 
 	// render centered torus knot
 	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
-	mspTorus->World.SetTranslate(Vector3F::ZERO);
-	mspTorus->World.SetUniformScale(1);
-	mspTorus->World.SetRotate(rotate);
+	Transformation transformation;
+	transformation.SetRotate(rotate);
 	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspTorus->
 		GetStates()[State::MATERIAL]);
 	WIRE_ASSERT(pMaterial);
 	pMaterial->Ambient = ColorRGBA(0.9F, 1.0F, 0.8F, 1.0F); 
-	GetRenderer()->Draw(mspTorus);
+	GetRenderer()->Draw(mspTorus, transformation);
 
 	// render small torus knot
 	mspTorus->SetMesh(mspMeshB);
 	pMesh = mspMeshB;
-	mspTorus->World.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
-	mspTorus->World.SetUniformScale(0.18F);
+	transformation.SetTranslate(Vector3F(0.92F, -0.6F, 2.0F));
+	transformation.SetUniformScale(0.18F);
 	pMaterial->Ambient = ColorRGBA(0.8F, 1.0F, 0.9F, 1.0F);
 	GetRenderer()->SetState(pMaterial);
 
@@ -127,10 +126,10 @@ void Sample7::OnIdle()
 			pMesh->GetStartIndex());
 	}
 
-	GetRenderer()->Draw(mspTorus);
+	GetRenderer()->Draw(mspTorus, transformation);
 
 	Float fps = static_cast<Float>(1.0 / elapsedTime);
-	GetRenderer()->GetStatistics()->Draw(mspText, fps);
+	GetRenderer()->GetStatistics()->Draw(mspText, Transformation::IDENTITY, fps);
 
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();

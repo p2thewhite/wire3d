@@ -31,6 +31,12 @@ inline UInt RendererStatistics::GetBatchedDynamic() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetBatchedDynamicTransformed() const
+{
+	return mBatchedDynamicTransformed;
+}
+
+//----------------------------------------------------------------------------
 inline UInt RendererStatistics::GetTriangles() const
 {
 	return mTriangles;

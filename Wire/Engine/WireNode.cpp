@@ -226,8 +226,6 @@ void Node::UpdateWorldData(Double appTime)
 			pChild->UpdateGS(appTime, false);
 		}
 	}
-
-	UpdateWorldDataRenderObject();
 }
 
 //----------------------------------------------------------------------------
@@ -272,7 +270,7 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 	{
 		// This is a global effect. Place a 'begin' marker in the visible
 		// set to indicate the effect is active.
-		rCuller.Insert(mEffects[i]);
+		rCuller.Insert(mEffects[i], NULL);
 	}
 
 	GetVisibleSetRenderObject(rCuller, noCull);
@@ -293,7 +291,7 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 	{
 		// Place an 'end' marker in the visible set to indicate that the
 		// global effect is inactive.
-		rCuller.Insert(NULL);
+		rCuller.Insert(NULL, NULL);
 	}
 }
 
@@ -435,25 +433,16 @@ Node::Node(RenderObject* pRenderObject, UInt quantity, UInt growBy)
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateWorldDataRenderObject()
-{
-	if (mspRenderObject)
-	{
-		mspRenderObject->World = World;
-	}
-}
-
-//----------------------------------------------------------------------------
 Bool Node::UpdateWorldBoundRenderObject()
 {
 	if (mspRenderObject)
 	{
 		mspRenderObject->GetMesh()->GetModelBound()->TransformBy(World,
-			mspRenderObject->WorldBound);
+			mspRenderObjectWorldBound);
 
 		if (!WorldBoundIsCurrent)
 		{
-			WorldBound->CopyFrom(mspRenderObject->WorldBound);
+			WorldBound->CopyFrom(mspRenderObjectWorldBound);
 			return true;
 		}
 	}
@@ -516,14 +505,20 @@ void Node::GetVisibleSetRenderObject(Culler& rCuller, Bool noCull)
 	{
 		if (GetQuantity() == 0)
 		{
-			rCuller.Insert(mspRenderObject);
+			const Vector3F& rCamPos = rCuller.GetCamera()->GetLocation();
+			Vector3F pos = mspRenderObjectWorldBound->GetCenter() - rCamPos;
+
+			rCuller.Insert(mspRenderObject, &World, pos);
 		}
 		else
 		{
 			UInt savePlaneState = rCuller.GetPlaneState();
-			if (noCull || rCuller.IsVisible(mspRenderObject->WorldBound))
+			if (noCull || rCuller.IsVisible(mspRenderObjectWorldBound, true))
 			{
-				rCuller.Insert(mspRenderObject);
+				const Vector3F& rCamPos = rCuller.GetCamera()->GetLocation();
+				Vector3F pos = mspRenderObjectWorldBound->GetCenter() - rCamPos;
+
+				rCuller.Insert(mspRenderObject, &World, pos);
 			}
 
 			rCuller.SetPlaneState(savePlaneState);
@@ -717,7 +712,7 @@ void Node::InitRenderObject()
 		return;
 	}
 
-	mspRenderObject->WorldBound = BoundingVolume::Create();
+	mspRenderObjectWorldBound = BoundingVolume::Create();
 	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
 }
 
@@ -796,7 +791,6 @@ void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
 	}
 
 	World.MakeIdentity();
-	mspRenderObject->World.MakeIdentity();
 	pMesh->UpdateModelBound();
 	UpdateWorldBound();
 }

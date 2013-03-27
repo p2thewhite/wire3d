@@ -20,6 +20,7 @@
 #include "WireStateMaterial.h"
 #include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
+#include "WireTStack.h"
 #include "WireVertexAttributes.h"
 
 using namespace Wire;
@@ -508,8 +509,7 @@ void Importer::Traverse(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 	}
 
 	WIRE_ASSERT(Is("Node", pXmlNode->name()));
-	Node* pNode = ParseNode(pXmlNode);
-	pParent->AttachChild(pNode);
+	Node* pNode = ParseNode(pXmlNode, pParent);
 
 	if (pXmlNode->first_node())
 	{
@@ -706,15 +706,48 @@ ColorRGBA Importer::GetColorRGBA(rapidxml::xml_node<>* pXmlNode, const Char*
 }
 
 //----------------------------------------------------------------------------
-void Importer::UpdateGS(Spatial* pSpatial)
+void Importer::GetWorldTransformation(Spatial* pSpatial, Transformation&
+	rWorld)
 {
-	// TODO: return world trafo of Spatial instead of executing UpdateGS()
+	UInt depth = 1;
 	Spatial* pRoot = pSpatial->GetParent();
 	while (pRoot && pRoot->GetParent())
 	{
 		pRoot = pRoot->GetParent();
+		depth++;
 	}
 
+	TStack<Spatial*> pPath(depth);
+	pPath.Push(pSpatial);
+	pRoot = pSpatial->GetParent();
+	while (pRoot && pRoot->GetParent())
+	{
+		pPath.Push(pRoot);
+		pRoot = pRoot->GetParent();
+	}
+
+	while (!pPath.IsEmpty())
+	{
+		pPath.Pop(pSpatial);
+
+		if (!pSpatial->WorldIsCurrent)
+		{
+			if (pSpatial->GetParent())
+			{
+				rWorld.Product(rWorld, pSpatial->Local);
+			}
+			else
+			{
+				rWorld = pSpatial->Local;
+			}
+		}
+		else
+		{
+			rWorld = pSpatial->World;
+		}
+	}
+
+	// TODO: remove
 	if (pRoot)
 	{
 		pRoot->UpdateGS();
@@ -723,8 +756,16 @@ void Importer::UpdateGS(Spatial* pSpatial)
 	{
 		pSpatial->UpdateGS();
 	}
+	WIRE_ASSERT(rWorld.GetMatrix().GetRow(0) == pSpatial->World.GetMatrix().GetRow(0));
+	WIRE_ASSERT(rWorld.GetMatrix().GetRow(1) == pSpatial->World.GetMatrix().GetRow(1));
+	WIRE_ASSERT(rWorld.GetMatrix().GetRow(2) == pSpatial->World.GetMatrix().GetRow(2));
+	WIRE_ASSERT(rWorld.GetMatrix().GetColumn(0) == pSpatial->World.GetMatrix().GetColumn(0));
+	WIRE_ASSERT(rWorld.GetMatrix().GetColumn(1) == pSpatial->World.GetMatrix().GetColumn(1));
+	WIRE_ASSERT(rWorld.GetMatrix().GetColumn(2) == pSpatial->World.GetMatrix().GetColumn(2));
+	WIRE_ASSERT(rWorld.GetTranslate() == pSpatial->World.GetTranslate());
+	WIRE_ASSERT(rWorld.GetScale() == pSpatial->World.GetScale());
 }
- 
+
 //----------------------------------------------------------------------------
 void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 {
@@ -771,7 +812,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		return;
 	}
 
-	UpdateGS(pSpatial);
+	Transformation world;
+	GetWorldTransformation(pSpatial, world);
 
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
 	WIRE_ASSERT(pShapeName);
@@ -892,14 +934,13 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	// Setting position
 	btTransform transform;
 	transform.setIdentity();
-	Transformation& rWorld = pSpatial->World;
-	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
+	transform.setOrigin(PhysicsWorld::Convert(world.GetTranslate() + center));
 
 	// Setting rotation
-	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
+	transform.setBasis(PhysicsWorld::Convert(world.GetRotate()));
 
 	// Setting scale
-	pCollisionShape->setLocalScaling(PhysicsWorld::Convert(rWorld.GetScale()));
+	pCollisionShape->setLocalScaling(PhysicsWorld::Convert(world.GetScale()));
 //	pCollisionShape->setMargin(0.01F);
 
 	// rigid body is dynamic if and only if mass is non zero
@@ -1021,9 +1062,10 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
 
-	UpdateGS(pSpatial);
-	cameraLocation = pSpatial->World.GetTranslate();
-	Matrix34F rot = pSpatial->World.GetMatrix();
+	Transformation world;
+	GetWorldTransformation(pSpatial, world);
+	cameraLocation = world.GetTranslate();
+	Matrix34F rot = world.GetMatrix();
 	viewDirection = rot.GetColumn(2);
 	up = rot.GetColumn(1);
 	Vector3F right = viewDirection.Cross(up);
@@ -1113,10 +1155,11 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 }
 
 //---------------------------------------------------------------------------
-Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode)
+Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
 	RenderObject* pRenderObject = ParseRenderObject(pXmlNode);
 	Node* pNode = WIRE_NEW Node(pRenderObject);
+	pParent->AttachChild(pNode);
 
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())

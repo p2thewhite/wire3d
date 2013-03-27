@@ -100,18 +100,8 @@ RenderObject* StandardMesh::CreateCube8(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 	return pCube;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateCube8AsNode(const UInt vertexColorChannels,
-	const Bool useNormals, const Float extent)
-{
-	RenderObject* pRenderObject = CreateCube8(vertexColorChannels,
-		useNormals, extent);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -226,18 +216,8 @@ RenderObject* StandardMesh::CreateCube14(const UInt vertexColorChannels,
 		(*pIBuffer)[5+i*6] = indices[1+i*4];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 	return pCube;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateCube14AsNode(const UInt vertexColorChannels,
-	const UInt uvQuantity, const Bool useNormals, const Float extent)
-{
-	RenderObject* pRenderObject = CreateCube14(vertexColorChannels,
-		uvQuantity, useNormals, extent);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -366,18 +346,8 @@ RenderObject* StandardMesh::CreateCube24(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 	return pCube;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateCube24AsNode(const UInt vertexColorChannels,
-	const UInt uvQuantity, const Bool useNormals, const Float extent)
-{
-	RenderObject* pRenderObject = CreateCube24(vertexColorChannels,
-		uvQuantity, useNormals, extent);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -475,20 +445,8 @@ RenderObject* StandardMesh::CreatePlane(const UInt xTileCount,
 		}
 	}
 
-	RenderObject* pPlane = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pPlane = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 	return pPlane;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreatePlaneAsNode(const UInt xTileCount,
-	const UInt yTileCount, const Float xSizeTotal, const Float ySizeTotal,
-	const UInt vertexColorChannels, const UInt uvQuantity,
-	const Bool useNormals)
-{
-	RenderObject* pRenderObject = CreatePlane(xTileCount, yTileCount,
-		xSizeTotal, ySizeTotal, vertexColorChannels, uvQuantity, useNormals);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -573,18 +531,8 @@ RenderObject* StandardMesh::CreateQuad(const UInt vertexColorChannels,
 		(*pIBuffer)[i] = indices[i];
 	}
 
-	RenderObject* pQuad = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pQuad = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 	return pQuad;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateQuadAsNode(const UInt vertexColorChannels,
-	const UInt uvQuantity, const Bool useNormals, const Float extent)
-{
-	RenderObject* pRenderObject = CreateQuad(vertexColorChannels,
-		uvQuantity, useNormals, extent);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -629,16 +577,6 @@ RenderObject* StandardMesh::CreateCylinder(Int radialSampleCount,
 	Float boundingSphereRadius = MathF::Sqrt(radius*radius + height*height);
 	pCylinder->GetMesh()->GetModelBound()->SetRadius(boundingSphereRadius);
 	return pCylinder;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateCylinderAsNode(Int radialSampleCount,
-	const Float radius, const Float height, const UInt uvQuantity,
-	const UInt vertexColorChannels, const Bool useNormals)
-{
-	RenderObject* pRenderObject = CreateCylinder(radialSampleCount, radius,
-		height, uvQuantity, vertexColorChannels, useNormals);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -947,8 +885,7 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
 	WIRE_DELETE[] pCos;
 	WIRE_DELETE[] pSin;
 
-	RenderObject* pSphere = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL,
-		true);
+	RenderObject* pSphere = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
 
 	// The duplication of vertices at the seam cause the automatically
 	// generated bounding volume to be slightly off center. Reset the bound
@@ -956,17 +893,6 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
 	pSphere->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
 	pSphere->GetMesh()->GetModelBound()->SetRadius(radius);
 	return pSphere;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateSphereAsNode(Int zSampleCount,
-	Int radialSampleCount, Float radius, const UInt uvQuantity,
-	const UInt vertexColorChannels, const Bool useNormals)
-{
-	RenderObject* pRenderObject = CreateSphere(zSampleCount,
-		radialSampleCount, radius, uvQuantity, vertexColorChannels,
-		useNormals);
-	return WIRE_NEW Node(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -1054,14 +980,6 @@ Text* StandardMesh::CreateText(UInt maxLength)
 	Text* pText = WIRE_NEW Text(8, s_spFontTexture, uvs, charSizes,
 		maxLength);
 	return pText;
-}
-
-//----------------------------------------------------------------------------
-Node* StandardMesh::CreateTextAsNode(UInt maxLength)
-{
-	Text* pText = CreateText(maxLength);
-	Node* pNode = WIRE_NEW Node(pText);
-	return pNode;
 }
 
 //----------------------------------------------------------------------------

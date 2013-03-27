@@ -122,7 +122,8 @@ void Demo::StateRunning(Double time)
 	if (mShowFps)
 	{
 		Float fps = static_cast<Float>(1.0 / elapsed);
-		GetRenderer()->GetStatistics()->Draw(mspText, fps);		
+		GetRenderer()->GetStatistics()->Draw(mspText, Transformation::IDENTITY,
+			fps);		
 	}
 
 	GetRenderer()->PostDraw();
@@ -227,13 +228,10 @@ Node* Demo::LoadAndInitScene()
 	// The maximum number of objects that are going to be culled is the
 	// number of objects we imported. If we don't set the size of the set now,
 	// the culler will dynamically increase it during runtime. This is not
-	// a big deal, however we do not want any memory allocations during the
+	// a big deal, however it is better to avoid memory allocations during the
 	// render loop.
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
-	for (UInt i = 0; i < mSceneCuller.GetVisibleSets().GetQuantity(); i++)
-	{
-		mSceneCuller.GetVisibleSet(i)->SetMaxQuantity(renderObjectCount);
-	}
+	mSceneCuller.SetMaxQuantity(renderObjectCount);
 
 	TArray<Spatial*> fans;
 	pScene->GetAllChildrenByName("ceilingFan", fans);

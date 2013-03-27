@@ -34,22 +34,14 @@ public:
 	// cube using 8 vertices
 	static RenderObject* CreateCube8(const UInt vertexColorChannels = 0,
 		const Bool useNormals = false, const Float extent = 1.0F);
-	static Node* CreateCube8AsNode(const UInt vertexColorChannels = 0,
-		const Bool useNormals = false, const Float extent = 1.0F);
 
 	// cube using 14 vertices (for cross-like uv mapping)
  	static RenderObject* CreateCube14(const UInt vertexColorChannels = 0,
  		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
-	static Node* CreateCube14AsNode(const UInt vertexColorChannels = 0,
-		const UInt uvQuantity = 0, const Bool useNormals = false,
-		const Float extent = 1.0F);
 
 	// cube using 24 vertices (each side has its own uv coordinates)
 	static RenderObject* CreateCube24(const UInt vertexColorChannels = 0,
-		const UInt uvQuantity = 0, const Bool useNormals = false,
-		const Float extent = 1.0F);
-	static Node* CreateCube24AsNode(const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
 
@@ -58,24 +50,14 @@ public:
 		const UInt yTileCount, const Float xTotalSize, const Float yTotalSize,
 		const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false);
-	static Node* CreatePlaneAsNode(const UInt xTileCount,
-		const UInt yTileCount, const Float xTotalSize, const Float yTotalSize,
-		const UInt vertexColorChannels = 0,
-		const UInt uvQuantity = 0, const Bool useNormals = false);
 
 	// quad consisting of 2 triangles.
 	static RenderObject* CreateQuad(const UInt vertexColorChannels = 0,
 		const UInt uvQuantity = 0, const Bool useNormals = false,
 		const Float extent = 1.0F);
-	static Node* CreateQuadAsNode(const UInt vertexColorChannels = 0,
-		const UInt uvQuantity = 0, const Bool useNormals = false,
-		const Float extent = 1.0F);
 
 	// cylinder with axis through z
 	static RenderObject* CreateCylinder(Int radialSampleCount, 
-		const Float radius, const Float height, const UInt uvQuantity,
-		const UInt vertexColorChannels, const Bool useNormals = false);
-	static Node* CreateCylinderAsNode(Int radialSampleCount,
 		const Float radius, const Float height, const UInt uvQuantity,
 		const UInt vertexColorChannels, const Bool useNormals = false);
 
@@ -89,13 +71,9 @@ public:
 	static RenderObject* CreateSphere(Int zSampleCount, Int radialSampleCount,
 		Float radius, const UInt uvQuantity = 0,
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
-	static Node* CreateSphereAsNode(Int zSampleCount,
-		Int radialSampleCount, Float radius, const UInt uvQuantity = 0,
-		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
 	// text using the built-in font
 	static Text* CreateText(UInt maxLength = 4000);
-	static Node* CreateTextAsNode(UInt maxLength = 4000);
 
 private:
 	static Texture2DPtr s_spFontTexture;
