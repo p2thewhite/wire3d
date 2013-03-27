@@ -11,6 +11,7 @@
 #define WIRERENDERERSTATISTICS_H
 
 #include "WireCamera.h"
+#include "WireTransformation.h"
 
 namespace Wire
 {
@@ -30,6 +31,7 @@ public:
 	inline UInt GetBatchCount() const;
 	inline UInt GetBatchedStatic() const;
 	inline UInt GetBatchedDynamic() const;
+	inline UInt GetBatchedDynamicTransformed() const;
 	inline UInt GetTriangles() const;
 
 	// number of buffers and their total size bound to the Renderer
@@ -50,8 +52,9 @@ public:
 	// NOTE: If a Camera is supplied, Text layout is omitted and should be
 	// handled by the caller. Draw() requires that Renderer::PreDraw() has
 	// been called beforehand.
-	void Draw(Text* pText, Float fps, Bool useAverageFps = true,
-		Bool restoreState = false, Camera* pCamera = NULL);
+	void Draw(Text* pText, const Transformation& rTransformation, Float fps,
+		Bool useAverageFps = true, Bool restoreState = false,
+		Camera* pCamera = NULL);
 
 private:
 	Float AverageFps(Float currentFps);
@@ -62,6 +65,7 @@ private:
 	UInt mBatchCount;
 	UInt mBatchedStatic;
 	UInt mBatchedDynamic;
+	UInt mBatchedDynamicTransformed;
 	UInt mTriangles;
 
 	// number of buffers and their total size bound to the Renderer

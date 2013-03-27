@@ -42,8 +42,10 @@ void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 	Culler::ComputeVisibleSet(pScene);
 
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
-	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects);
-	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects);
+	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects,
+		mOpaquePositions);
+	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects,
+		mTransparentPositions);
 
 	VisibleSet* pTemp = mVisibleSets[0];
 	mVisibleSets[0] = mpOpaqueObjects;
@@ -56,7 +58,7 @@ void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 
 //----------------------------------------------------------------------------
 void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-	pDestination)
+	pDestination, TArray<Vector3F>& rPositions)
 {
 	pDestination->Clear();
 	mKeys.SetQuantity(0, false);
@@ -79,20 +81,26 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	UInt left;
 
 	const UInt visibleQuantity = pSource->GetQuantity();
-	Object** const pVisible = pSource->GetVisible();
+	Object** pVisible;
+	Transformation** pTransformations;
+	pSource->GetSet(pVisible, pTransformations);
 
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i])
 		{
-			if (DynamicCast<Effect>(pVisible[i]))
+			if (pTransformations[i] == NULL)
 			{
+				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
 				if (indexStack[0][0] < indexStack[0][1])
 				{
 					WIRE_ASSERT(i == indexStack[0][1]); // TODO check
 					// Sort leaves with no effect
-					QuickSort(mKeys, pDestination->GetVisible(),
-						indexStack[0][0], i-1);
+					Object** pDstSet;
+					Transformation** pDstTrafo;
+					pDestination->GetSet(pDstSet, pDstTrafo);
+					QuickSort(mKeys, pDstSet, pDstTrafo, indexStack[0][0],
+						i-1);
 				}
 
 				// Begin the scope of a global effect.
@@ -107,8 +115,9 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
 				if (top == 0)
 				{
-					pDestination->Insert(pVisible[i]);
-					mKeys.Append(GetKey(StaticCast<RenderObject>(pVisible[i])));
+					pDestination->Insert(pVisible[i], pTransformations[i]);
+					mKeys.Append(GetKey(StaticCast<RenderObject>(pVisible[i]),
+						rPositions[i]));
 				}
 
 				indexStack[top][1]++;
@@ -120,8 +129,9 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
+			WIRE_ASSERT(pTransformations[min]);
 			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
-			pDestination->Insert(pVisible[min]);
+			pDestination->Insert(pVisible[min], NULL);
 			mKeys.Append(0);	// dummy key to pad the array
 			left = pDestination->GetQuantity();
 
@@ -131,17 +141,20 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 					pVisible[j]);
 				if (pRenderObject)
 				{
-					pDestination->Insert(pVisible[j]);
-					mKeys.Append(GetKey(pRenderObject));
+					pDestination->Insert(pRenderObject, pTransformations[j]);
+					mKeys.Append(GetKey(pRenderObject, rPositions[j]));
 				}
 			}
 
+			Object** pDstSet;
+			Transformation** pDstTrafo;
+			pDestination->GetSet(pDstSet, pDstTrafo);
 // TODO: clean-up
-//			QuickSort(mKeys.GetArray(), pDestination->GetVisible(), left,
-			QuickSort(mKeys, pDestination->GetVisible(), left,
+//			QuickSort(mKeys.GetArray(), pDstSet, pDstTrafo, left,
+			QuickSort(mKeys, pDstSet, pDstTrafo, left,
 				pDestination->GetQuantity()-1);
 
-			pDestination->Insert(NULL);
+			pDestination->Insert(NULL, NULL);
 			mKeys.Append(0);
 
 			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/); // TODO
@@ -156,16 +169,18 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	UInt dstQty = pDestination->GetQuantity();
 	if ((dstQty > 0) && (indexStack[0][0] < dstQty-1))
 	{
-//	QuickSort(mKeys.GetArray(), pDestination->GetVisible(), indexStack[0][0],
-		QuickSort(mKeys, pDestination->GetVisible(), indexStack[0][0],
-			dstQty-1);
+		Object** pDstSet;
+		Transformation** pDstTrafo;
+		pDestination->GetSet(pDstSet, pDstTrafo);
+//		QuickSort(mKeys.GetArray(), pDstSet, pDstTrafo, indexStack[0][0], dstQty-1);
+		QuickSort(mKeys, pDstSet, pDstTrafo, indexStack[0][0], dstQty-1);
 	}
 }
 
 //----------------------------------------------------------------------------
 //void CullerSorting::QuickSort(UInt* const pKeys, Object** const pVisible,
 void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
-	Int left, Int right)
+	Transformation** pTrafo, Int left, Int right)
 {
 	Int i = left;
 	Int j = right;
@@ -194,6 +209,10 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
 			pVisible[i] = pVisible[j];
 			pVisible[j] = pTmp;
 
+			Transformation* pTmpTrafo = pTrafo[i];
+			pTrafo[i] = pTrafo[j];
+			pTrafo[j] = pTmpTrafo;
+
 			i++;
 			j--;
 		}
@@ -201,25 +220,28 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
 
 	if (left < j)
 	{
-		QuickSort(pKeys, pVisible, left, j);
+		QuickSort(pKeys, pVisible, pTrafo, left, j);
 	}
 
 	if (i < right)
 	{
-		QuickSort(pKeys, pVisible, i, right);
+		QuickSort(pKeys, pVisible, pTrafo, i, right);
 	}
 }
 
 //----------------------------------------------------------------------------
-void CullerSorting::Insert(Object* pObject)
+void CullerSorting::Insert(Object* pObject, Transformation* pTransformation,
+	const Vector3F& rPosition)
 {
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
 
 	RenderObject* pRenderObject = DynamicCast<RenderObject>(pObject);
 	if (!pRenderObject)
 	{
-		GetVisibleSet(0)->Insert(pObject);
-		GetVisibleSet(1)->Insert(pObject);
+		GetVisibleSet(0)->Insert(pObject, NULL);
+		mOpaquePositions.Append(rPosition);
+		GetVisibleSet(1)->Insert(pObject, NULL);
+		mTransparentPositions.Append(rPosition);
 		return;
 	}
 
@@ -229,22 +251,42 @@ void CullerSorting::Insert(Object* pObject)
 	{
 		if (pAlpha->BlendEnabled)
 		{
-			GetVisibleSet(1)->Insert(pObject);
+			GetVisibleSet(1)->Insert(pObject, pTransformation);
+			mTransparentPositions.Append(rPosition);
 		}
 		else
 		{
-			GetVisibleSet(0)->Insert(pObject);
+			GetVisibleSet(0)->Insert(pObject, pTransformation);
+			mOpaquePositions.Append(rPosition);
 		}
 	}
 	else
 	{
 		WIRE_ASSERT(false/* there's no AlphaState, call UpdateRS() to init*/);
-		GetVisibleSet(0)->Insert(pObject);
+		GetVisibleSet(0)->Insert(pObject, pTransformation);
+		mOpaquePositions.Append(rPosition);
 	}
 }
 
 //----------------------------------------------------------------------------
-UInt CullerSorting::GetKey(RenderObject* pRenderObject)
+void CullerSorting::Clear()
+{
+	Culler::Clear();
+	mOpaquePositions.SetQuantity(0, false);
+	mTransparentPositions.SetQuantity(0, false);
+}
+
+//----------------------------------------------------------------------------
+void CullerSorting::SetMaxQuantity(UInt maxQuantity)
+{
+	Culler::SetMaxQuantity(maxQuantity);
+	mOpaquePositions.SetMaxQuantity(maxQuantity);
+	mTransparentPositions.SetMaxQuantity(maxQuantity);
+}
+
+//----------------------------------------------------------------------------
+UInt CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
+	rPosition)
 {
 	WIRE_ASSERT(pRenderObject);
 	UInt key = 0;
@@ -260,27 +302,11 @@ UInt CullerSorting::GetKey(RenderObject* pRenderObject)
 	 // The sum of the ranges must fit in the key
 	WIRE_ASSERT((STATESET + MATERIAL + DEPTH) <= sizeof(key) * 8);
 
-	const Vector3F& rCamPos = GetCamera()->GetLocation();
-	Vector3F pos;
-	if (pRenderObject->WorldBound)
-	{
-		pos = pRenderObject->WorldBound->GetCenter() - rCamPos;
-	}
-	else
-	{
-		// if no world bound was supplied, we use the world translation 
-		// instead (depending on the actual vertex positions, this can be
-		// very inaccurate)
-		pos = pRenderObject->World.GetTranslate() - rCamPos;
-	}
-
-	Float z = GetCamera()->GetDVector().Dot(pos);
+	Float z = GetCamera()->GetDVector().Dot(rPosition);
 	const Float far = GetCamera()->GetDMax();
 	const Float far3 = far*3;
-
 	z += far;
 	z /= far3;
-
 	z = z < 0 ? 0 : z;
 	z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
 

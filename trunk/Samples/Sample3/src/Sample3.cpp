@@ -132,12 +132,13 @@ void Sample3::DrawLodTextLabel()
 	// center text (window resizing can happen any time)
 	Float offsetX = (GetWidthF() - 21.0F*8.0F) * 0.5F;
 	Float offsetY = GetHeightF() - 6.0F * 8.0F;
+	Transformation transformation;
 	Vector3F textPosition(offsetX, offsetY, 0);
-	mspText->World.SetTranslate(textPosition);
+	transformation.SetTranslate(textPosition);
 
 	GetRenderer()->SetState(StaticCast<StateWireframe>(State::Default[
 		State::WIREFRAME]));
-	GetRenderer()->Draw(mspText);
+	GetRenderer()->Draw(mspText, transformation);
 }
 
 //----------------------------------------------------------------------------

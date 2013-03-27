@@ -8,37 +8,34 @@
 
 #include "WireRenderObject.h"
 
-#include "WireBoundingVolume.h"
-
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, RenderObject, Object);
 
 //----------------------------------------------------------------------------
 RenderObject::RenderObject(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer,
-	Material* pMaterial, Bool createWorldBoundingVolume)
+	Material* pMaterial)
 	:
 	mspMaterial(pMaterial)
 {
-	Init(createWorldBoundingVolume);
+	Init();
 	mspMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
 }
 
 //----------------------------------------------------------------------------
-RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial,
-	Bool createWorldBoundingVolume)
+RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial)
 	:
 	mspMesh(pMesh),
 	mspMaterial(pMaterial)
 {
-	Init(createWorldBoundingVolume);
+	Init();
 	WIRE_ASSERT(pMesh);
 }
 
 //----------------------------------------------------------------------------
-RenderObject::RenderObject(Bool createWorldBoundingVolume)
+RenderObject::RenderObject()
 {
-	Init(createWorldBoundingVolume);
+	Init();
 }
 
 //----------------------------------------------------------------------------
@@ -51,19 +48,8 @@ RenderObject::~RenderObject()
 }
 
 //----------------------------------------------------------------------------
-void RenderObject::Init(Bool createWorldBoundingVolume)
+void RenderObject::Init()
 {
 	mpLights = NULL;
 	mStateSetID = System::MAX_UINT;
-	if (createWorldBoundingVolume)
-	{
-		WorldBound = BoundingVolume::Create();
-	}
-}
-
-//----------------------------------------------------------------------------
-void RenderObject::UpdateWorldBound()
-{
-	WIRE_ASSERT(WorldBound);
-	GetMesh()->GetModelBound()->TransformBy(World, WorldBound);
 }

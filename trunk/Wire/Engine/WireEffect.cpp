@@ -26,8 +26,8 @@ Effect::~Effect()
 }
 
 //----------------------------------------------------------------------------
-void Effect::Draw(Renderer* pRenderer, Object* pVisible[], UInt min, UInt max,
-	Bool restoreState)
+void Effect::Draw(Renderer* pRenderer, Object* pVisible[], Transformation*
+	pTransformations[], UInt min, UInt max,	Bool restoreState)
 {
 	// The default drawing function for effects. Essentially, this draws
 	// all the RenderObjects, as if no effect was applied. Override to obtain
@@ -37,7 +37,7 @@ void Effect::Draw(Renderer* pRenderer, Object* pVisible[], UInt min, UInt max,
 		RenderObject* pRenderObject = DynamicCast<RenderObject>(pVisible[i]);
 		if (pRenderObject)
 		{
-			pRenderer->Draw(pRenderObject, restoreState);
+			pRenderer->Draw(pRenderObject, *(pTransformations[i]), restoreState);
 		}
 	}
 }

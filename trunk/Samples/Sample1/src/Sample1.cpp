@@ -49,6 +49,8 @@ Bool Sample1::OnInitialize()
 	mAngle = 0.0F;
 	mLastTime = System::GetTime();
 
+	mspWorldBound = WIRE_NEW SphereBV;
+
 	return true;
 }
 
@@ -106,21 +108,23 @@ void Sample1::OnIdle()
 	const Float offset = cubeCount * -0.5F * stride + stride * 0.6F;
 	Float z = MathF::Sin(mAngle) * 3.0F;
 
+	Transformation transformation;
 	for (UInt i = 0; i < cubeCount; i++)
 	{
 		// Rotate the cube around the axis specified by the vector and
 		// the angle given in radians.
 		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), -mAngle - 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
+		transformation.SetRotate(model);
+		transformation.SetTranslate(Vector3F(offset + stride * i, 1.8F, z));
 
 		// After setting world transformation, we update the world bounding
 		// volume of the cube so we can cull it against the viewing frustum.
 		// That way we only draw objects that are visible on the screen.
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
+		mspCube->GetMesh()->GetModelBound()->TransformBy(transformation,
+			mspWorldBound);
+		if (mCuller.IsVisible(mspWorldBound))
 		{
-			GetRenderer()->Draw(mspCube);
+			GetRenderer()->Draw(mspCube, transformation);
 		}
 	}
 
@@ -145,12 +149,13 @@ void Sample1::OnIdle()
 	for (UInt i = 0; i < cubeCount; i++)
 	{
 		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
+		transformation.SetRotate(model);
+		transformation.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
+		mspCube->GetMesh()->GetModelBound()->TransformBy(transformation,
+			mspWorldBound);	
+		if (mCuller.IsVisible(mspWorldBound))
 		{
-			GetRenderer()->Draw(mspCube);
+			GetRenderer()->Draw(mspCube, transformation);
 		}
 	}
 
@@ -163,12 +168,13 @@ void Sample1::OnIdle()
 	for (UInt i = 0; i < cubeCount; i++)
 	{
 		Matrix34F model(Vector3F(0.75F, 0.25F, 0.5F), mAngle + 0.2F * i);
-		mspCube->World.SetRotate(model);
-		mspCube->World.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
-		mspCube->UpdateWorldBound();
-		if (mCuller.IsVisible(mspCube))
+		transformation.SetRotate(model);
+		transformation.SetTranslate(Vector3F(offset + stride * i, -1.8F, z));
+		mspCube->GetMesh()->GetModelBound()->TransformBy(transformation,
+			mspWorldBound);
+		if (mCuller.IsVisible(mspWorldBound))
 		{
-			GetRenderer()->Draw(mspCube);
+			GetRenderer()->Draw(mspCube, transformation);
 		}
 	}
 
@@ -325,9 +331,6 @@ RenderObject* Sample1::CreateCube()
 	// Geometric objects consist of a Vertex-, an IndexBuffer and optionally
 	// a material
 	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, pMaterial);
-
-	// We want to use culling, so we need a bounding volume.
-	pCube->WorldBound = BoundingVolume::Create();
 
 	// Generate normal vectors from the triangles of the mesh.
 	pCube->GetMesh()->GenerateNormals();

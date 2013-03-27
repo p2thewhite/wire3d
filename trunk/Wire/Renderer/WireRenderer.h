@@ -51,9 +51,11 @@ public:
 	~Renderer();
 
 	// draw a single object
-	void Draw(const RenderObject* pRenderObject, Bool restoreState = false);
+	void Draw(const RenderObject* pRenderObject, const Transformation&
+		rTransformation, Bool restoreState = false);
 	// draw array of objects [min,max) (using batching if enabled)
-	void Draw(RenderObject* const pVisible[], UInt min, UInt max);
+	void Draw(RenderObject* const pVisible[], Transformation* const
+		pTransformations[], UInt min, UInt max);
 	// draw set(s) of objects supporting Wire::Effect
 	void Draw(VisibleSet* rVisibleSet);
 	void Draw(TArray<VisibleSet*>& rVisibleSets);
@@ -257,9 +259,10 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void BatchAllAndDraw(RenderObject* const pVisible[], UInt min, UInt max);
-	void BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
-		UInt max);
+	void BatchAllAndDraw(RenderObject* const pVisible[], Transformation*
+		const pTransformations[], UInt min, UInt max);
+	void BatchIndicesAndDraw(RenderObject* const pVisible[], Transformation*
+		const pTransformations[], UInt min, UInt max);
 	void DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
 		UInt indexCount);

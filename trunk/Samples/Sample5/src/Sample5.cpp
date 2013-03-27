@@ -87,11 +87,9 @@ Bool Sample5::OnInitialize()
 	// to be rendered manually in the render loop. This is only for the
 	// purpose of demonstrating scene graph and manual rendering with lights.
 	mspPlane = CreatePlane();
-	mspPlane->UpdateWorldBound();	// manual update of world bounding volume
 	NodePtr spWhiteCubeNode = CreateCube(false, false, true,
 		ColorRGBA::WHITE);
 	mspWhiteCube = spWhiteCubeNode->GetRenderObject();
-	mspWhiteCube->World.SetUniformScale(0.15F);
 
 	// Setup the position and orientation of the camera to look down
 	// the -z axis with y up.
@@ -156,18 +154,16 @@ void Sample5::OnIdle()
 
 	// manual transformation from local to world space of 
 	// the non-scene graph part
-	//
+	Transformation transformation;
 	Float angle = MathF::Sin(mAngle*2);
 	angle = angle * MathF::HALF_PI*0.3F + MathF::PI;
 	Matrix34F rotateLocalLight3(Vector3F(0, 1, 0), angle);
 	Matrix34F rotateWorldLight3(Vector3F(1, 0, 0), -0.5F);
-	rotateWorldLight3 = rotateWorldLight3 * rotateLocalLight3;
-	mspWhiteCube->World.SetTranslate(
-		Vector3F(0.5F, -1.0F, 4 + MathF::Sin(y * 1.0F) * 2));
-	mspWhiteCube->World.SetRotate(rotateWorldLight3);
-	mspWhiteCube->UpdateWorldBound();
-	mspSpotLight->Position = mspWhiteCube->World.GetTranslate();
-	mspSpotLight->Direction = mspWhiteCube->World.GetMatrix().GetColumn(2);
+	transformation.SetTranslate(Vector3F(0.5F, -1.0F, 4+MathF::Sin(y*1.0F)*2));
+	transformation.SetRotate(rotateWorldLight3 * rotateLocalLight3);
+	transformation.SetUniformScale(0.15F);
+	mspSpotLight->Position = transformation.GetTranslate();
+	mspSpotLight->Direction = transformation.GetMatrix().GetColumn(2);
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
@@ -183,19 +179,17 @@ void Sample5::OnIdle()
 	GetRenderer()->ReleaseResources();
 
 	// render the white cube representing the spot light
-	if (mCuller.IsVisible(mspWhiteCube))
-	{
-		GetRenderer()->Draw(mspWhiteCube);
-	}
+	GetRenderer()->Draw(mspWhiteCube, transformation);
+
+	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
+	transformation.SetRotate(rotate);
+	transformation.SetTranslate(Vector3F(0, -2.5F, 0));
+	transformation.SetUniformScale(1);
 
 	// render the bottom plane which is being lit by the spot light
 	GetRenderer()->SetLight(mspSpotLight);
 	GetRenderer()->EnableLighting(mspSpotLight->Ambient);
-	if (mCuller.IsVisible(mspPlane))
-	{
-		GetRenderer()->Draw(mspPlane);
-	}
-
+	GetRenderer()->Draw(mspPlane, transformation);
 	GetRenderer()->DisableLighting();
 
 	GetRenderer()->PostDraw();
@@ -248,10 +242,6 @@ RenderObject* Sample5::CreatePlane()
 	RenderObject* pPlane = StandardMesh::CreatePlane(tileXCount, tileYCount,
 		xSizeTotal, ySizeTotal, 0, 1, true);
 	pPlane->GetMesh()->GenerateNormals();
-
-	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
-	pPlane->World.SetRotate(rotate);
-	pPlane->World.SetTranslate(Vector3F(0, -2.5F, 0));
 
 	Texture2D* pTexture = CreateTexture();
 	pTexture->SetWrapType(0, Texture2D::WT_REPEAT);

@@ -51,6 +51,7 @@ void RendererStatistics::Reset()
 	mBatchCount = 0;
 	mBatchedStatic = 0;
 	mBatchedDynamic = 0;
+	mBatchedDynamicTransformed = 0;
 	mTriangles = 0;
 	mBatchedVBOData = 0;
 	mBatchedIBOData = 0;
@@ -86,10 +87,10 @@ void RendererStatistics::AppendToText(Text* pText)
 	if (mpRenderer->UsesBatching())
 	{
 		const Char msg[] =
-			"Batched Static: %d, Batched Dynamic: %d, Batches: %d\n"
+			"Batched Static/Dynamic/Transformed: %d/%d/%d, Batches: %d\n"
 			"BatchIBO: %.2f KB, Batched IBO Data: %.2f KB\n";
 		System::Sprintf(text, textArraySize, msg,
-			mBatchedStatic, mBatchedDynamic, mBatchCount,
+			mBatchedStatic, mBatchedDynamic, mBatchedDynamicTransformed, mBatchCount,
 			mBatchIBOSize / kb, mBatchedIBOData / kb);
 		pText->Append(text);
 
@@ -125,8 +126,9 @@ void RendererStatistics::AppendToText(Text* pText, Float fps,
 }
 
 //----------------------------------------------------------------------------
-void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
-	Bool restoreState, Camera* pCamera)
+void RendererStatistics::Draw(Text* pText, const Transformation&
+	rTransformation, Float fps, Bool useAverageFps, Bool restoreState,
+	Camera* pCamera)
 {
 	if (!mpRenderer)
 	{
@@ -156,7 +158,7 @@ void RendererStatistics::Draw(Text* pText, Float fps, Bool useAverageFps,
 	Camera* pCurrentCamera = mpRenderer->GetCamera();
 	mpRenderer->SetCamera(pCamera);
 	mpRenderer->DisableLighting();
-	mpRenderer->Draw(pText, restoreState);
+	mpRenderer->Draw(pText, rTransformation, restoreState);
 	mpRenderer->SetCamera(pCurrentCamera);
 }
 

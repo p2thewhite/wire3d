@@ -45,7 +45,8 @@ inline TArray<VisibleSet*>& Culler::GetVisibleSets()
 }
 
 //----------------------------------------------------------------------------
-inline void Culler::Insert(Object* pObject)
+inline void Culler::Insert(Object* pObject, Transformation* pTransformation,
+	const Vector3F&)
 {
-	GetVisibleSet()->Insert(pObject);
+	GetVisibleSet()->Insert(pObject, pTransformation);
 }

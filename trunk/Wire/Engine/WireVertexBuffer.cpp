@@ -222,7 +222,6 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 		return;
 	}
 
-	// TODO: optimize
 	// interleaved vertex buffer
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{

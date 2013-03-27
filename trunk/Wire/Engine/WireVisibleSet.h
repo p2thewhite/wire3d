@@ -12,6 +12,7 @@
 
 #include "WireObject.h"
 #include "WireTArray.h"
+#include "WireTransformation.h"
 
 namespace Wire
 {
@@ -33,16 +34,18 @@ public:
 	inline UInt GetQuantity() const;
 	inline UInt GetMaxQuantity() const;
 	inline void SetMaxQuantity(UInt maxQuantity);
-	inline Object** GetVisible();
-	inline Object* GetVisible(UInt i);
 
-	// Creates a VisibleObject from the input and appends it to the end of the
-	// VisibleObject array.
-	inline void Insert(Object* pObject);
+	inline void GetSet(Object**& rObjectArrayPtr, Transformation**&
+		rTransformationPtr);
+	inline void GetElement(UInt i, Object*& rObjectPtr, Transformation*&
+		rTransformationPtr);
+
+	inline void Insert(Object* pObject, Transformation* pTransformation);
 	inline void Clear();
 
 private:
 	TArray<Object*> mVisible;
+	TArray<Transformation*> mTransformations;
 };
 
 #include "WireVisibleSet.inl"

@@ -49,8 +49,9 @@ void Sample4::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime) * 0.5F;
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 	Vector3F axis(Vector3F(MathF::Sin(mAngle), MathF::Cos(mAngle), 0.3F));
-	Matrix34F model(axis, mAngle);
-	mspCube->World.SetRotate(model);
+	Matrix34F rotation(axis, mAngle);
+	Transformation transformation;
+	transformation.SetRotate(rotation);
 
 	// define some blending modes for the cube to cycle through
 	static const BlendMode modes[] =
@@ -90,7 +91,7 @@ void Sample4::OnIdle()
 
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->Draw(mspCube);
+	GetRenderer()->Draw(mspCube, transformation);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 }

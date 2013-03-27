@@ -99,7 +99,7 @@ private:
 	Bool Is(const Char*, const Char*);
 
 	void ParseAssets(rapidxml::xml_node<>* pXmlNode);
-	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode);
+	Wire::Node* ParseNode(rapidxml::xml_node<>* pXmlNode, Wire::Node* pParent);
 	Wire::RenderObject* ParseRenderObject(rapidxml::xml_node<>* pXmlNode);
 	Wire::Node* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
@@ -121,7 +121,7 @@ private:
 	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
 		Wire::Spatial* pSpatial);
 
-	void UpdateGS(Wire::Spatial* pSpatial);
+	void GetWorldTransformation(Wire::Spatial* pSpatial, Wire::Transformation& rWorld);
 	void ResetStatistics();
 
 	Wire::IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian,

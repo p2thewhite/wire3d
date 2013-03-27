@@ -14,12 +14,10 @@
 #include "WireMaterial.h"
 #include "WireMesh.h"
 #include "WireState.h"
-#include "WireTransformation.h"
 
 namespace Wire
 {
 
-class BoundingVolume;
 class IndexBuffer;
 class VertexBuffer;
 
@@ -29,9 +27,8 @@ class RenderObject: public Object
 
 public:
 	RenderObject(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
-		pMaterial = NULL, Bool createWorldBoundingVolume = false);
-	RenderObject(Mesh* pMesh, Material* pMaterial = NULL,
-		Bool createWorldBoundingVolume = false);
+		pMaterial = NULL);
+	RenderObject(Mesh* pMesh, Material* pMaterial = NULL);
 	virtual ~RenderObject();
 
 	inline Mesh* GetMesh();
@@ -54,14 +51,9 @@ public:
 	inline UInt GetStateSetID() const;
 	inline void SetStateSetID(UInt stateSetID);
 
-	void UpdateWorldBound();
-
-	Transformation World;
-	Pointer<BoundingVolume> WorldBound;
-
 protected:
-	RenderObject(Bool createWorldBoundingVolume = false);
-	void Init(Bool createWorldBoundingVolume);
+	RenderObject();
+	void Init();
 
 private:
 	Pointer<Mesh> mspMesh;

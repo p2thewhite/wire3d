@@ -69,6 +69,8 @@ public:
     // point.
     Vector3F ApplyInverse(const Vector3F& rInput) const;
 
+	static const Transformation IDENTITY;
+
 private:
 	Matrix34F mMatrix;
 	Vector3F mScale;

@@ -896,7 +896,8 @@ void Renderer::Set(const Mesh* pMesh)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
+void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
+	rTransformation, Bool restoreState)
 {
 	WIRE_ASSERT(pRenderObject);
 	// assert that this is really a RenderObject, not a cast Effect
@@ -907,7 +908,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, Bool restoreState)
 		pMesh->GetIndexBuffer()->GetQuantity()));
 
 	Bool usesNormals = pMesh->HasNormal();
-	SetWorldTransformation(pRenderObject->World, usesNormals);
+	SetWorldTransformation(rTransformation, usesNormals);
 
 	if (restoreState)
 	{
@@ -950,16 +951,20 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 	indexStack[0][1] = 0;
 
 	const UInt visibleQuantity = pVisibleSet->GetQuantity();
-	Object** pVisible = pVisibleSet->GetVisible();
+	Object** pVisible;
+	Transformation** pTransformations;
+	pVisibleSet->GetSet(pVisible, pTransformations);
 	RenderObject** pRenderObjects = reinterpret_cast<RenderObject**>(pVisible);
 
 	for (UInt i = 0; i < visibleQuantity; i++)
 	{
 		if (pVisible[i])
 		{
-			if (DynamicCast<Effect>(pVisible[i]))
+			if (pTransformations[i] == NULL)
 			{
-				Draw(pRenderObjects, indexStack[0][0], indexStack[0][1]);
+				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
+				Draw(pRenderObjects, pTransformations, indexStack[0][0],
+					indexStack[0][1]);
 
 				// Begin the scope of a global effect.
 				top++;
@@ -980,9 +985,10 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
+			WIRE_ASSERT(pTransformations[min] == NULL);
 			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
 			Effect* pEffect = StaticCast<Effect>(pVisible[min]);
-			pEffect->Draw(this, pVisible, min+1, max, false);
+			pEffect->Draw(this, pVisible, pTransformations, min+1, max, false);
 
 			if (--top > 0)
 			{
@@ -996,7 +1002,7 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 		}
 	}
 
-	Draw(pRenderObjects, indexStack[0][0], indexStack[0][1]);
+	Draw(pRenderObjects, pTransformations, indexStack[0][0], indexStack[0][1]);
 }
 
 //----------------------------------------------------------------------------
@@ -1009,7 +1015,8 @@ void Renderer::Draw(TArray<VisibleSet*>& rVisibleSets)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
+void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
+	pTransformations[], UInt min, UInt max)
 {
 	if (min == max)
 	{
@@ -1020,7 +1027,7 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 	{
 		for (UInt i = min; i < max; i++)
 		{
-			Draw(pVisible[i]);
+			Draw(pVisible[i], *(pTransformations[i]));
 		}
 
 		return;
@@ -1033,7 +1040,8 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 
 		WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx])));
 		const RenderObject* pA = pVisible[idx];
-		Bool hasIdenticalVBOs = pA->World.IsIdentity();
+		const Transformation* pAT = pTransformations[idx];
+		Bool hasIdenticalVBOs = pAT->IsIdentity();
 		const Mesh* pMeshA = pA->GetMesh();
 		WIRE_ASSERT(pMeshA);
 		UInt vA = GetVertexFormatKey(pMeshA->GetVertexBuffers());
@@ -1042,7 +1050,8 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 		{
 			WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx+1])));
 			const RenderObject* pB = StaticCast<RenderObject>(pVisible[idx+1]);
-			Bool hadIdenticalVBOs = hasIdenticalVBOs && pB->World.IsIdentity();
+			const Transformation* pBT = pTransformations[idx+1];
+			Bool hadIdenticalVBOs = hasIdenticalVBOs && pBT->IsIdentity();
 
 			const Mesh* pMeshB = pB->GetMesh();
 			WIRE_ASSERT(pMeshB);
@@ -1101,16 +1110,16 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 					Set(pMeshA->GetVertexBuffer(i), i);
 				}
 
-				BatchIndicesAndDraw(pVisible, min, idx+1);
+				BatchIndicesAndDraw(pVisible, pTransformations, min, idx+1);
 			}
 			else
 			{
-				BatchAllAndDraw(pVisible, min, idx+1);
+				BatchAllAndDraw(pVisible, pTransformations, min, idx+1);
 			}
 		}
 		else
 		{
-			Draw(pVisible[min]);
+			Draw(pVisible[min], *(pTransformations[min]));
 		}
 
 		min = idx+1;
@@ -1118,8 +1127,8 @@ void Renderer::Draw(RenderObject* const pVisible[], UInt min, UInt max)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
-	UInt max)
+void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
+	Transformation*	const pTransformations[], UInt min, UInt max)
 {
 	UInt vertexQuantity = pVisible[min]->GetMesh()->GetVertexBuffer()->
 		GetQuantity();
@@ -1134,11 +1143,12 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 	for (UInt i = min; i < max; i++)
 	{
 		RenderObject* pRenderObject = pVisible[i];
+		Transformation& rTransformation = *(pTransformations[i]);
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		if (pMesh->GetIndexCount() > mStaticBatchingMaxIndexCount)
 		{
-			Draw(pRenderObject);
+			Draw(pRenderObject, rTransformation);
 			continue;
 		}
 
@@ -1151,7 +1161,7 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pRenderObject);
+				Draw(pRenderObject, rTransformation);
 				continue;
 			}
 
@@ -1186,8 +1196,8 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[], UInt min,
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
-	UInt max)
+void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], 
+	Transformation*	const pTransformations[], UInt min, UInt max)
 {
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
@@ -1206,6 +1216,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 	for (UInt i = min; i < max; i++)
 	{
 		RenderObject* pRenderObject = pVisible[i];
+		Transformation& rTransformation = *(pTransformations[i]);
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
@@ -1214,7 +1225,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		if (vertexCount > mDynamicBatchingMaxVertexCount ||
 			pMesh->GetIndexCount() > mDynamicBatchingMaxIndexCount)
 		{
-			Draw(pRenderObject);
+			Draw(pRenderObject, rTransformation);
 			continue;
 		}
 
@@ -1236,7 +1247,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		{
 			if (batchedIndexCount == 0)
 			{
-				Draw(pRenderObject);
+				Draw(pRenderObject, rTransformation);
 				continue;
 			}
 
@@ -1273,8 +1284,8 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 		for (UInt j = 0; j < vbCount; j++)
 		{
 			VertexBuffer* const pVertexBuffer = pMesh->GetVertexBuffer(j);
-			pVertexBuffer->ApplyForward(pRenderObject->World, static_cast<
-				Float*>(mRawBatchedVertexBuffers[j]));
+			pVertexBuffer->ApplyForward(rTransformation, static_cast<Float*>(
+				mRawBatchedVertexBuffers[j]));
 
 			UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 			UInt vbSize = vertexCount * vertexSize;
@@ -1283,13 +1294,13 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], UInt min,
 			mStatistics.mBatchedVBOData += vbSize;
 		}
 
-		if (pRenderObject->World.IsIdentity())
+		if (rTransformation.IsIdentity())
 		{
-			mStatistics.mBatchedStatic++;
+			mStatistics.mBatchedDynamic++;
 		}
 		else
 		{
-			mStatistics.mBatchedDynamic++;
+			mStatistics.mBatchedDynamicTransformed++;
 		}
 
 		batchedVertexCount = batchedVertexCount + static_cast<UShort>(
@@ -1349,8 +1360,7 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 
 	pIBPdr->Enable(this);
 
-	Transformation identity;
-	SetWorldTransformation(identity, hasNormals);
+	SetWorldTransformation(Transformation::IDENTITY, hasNormals);
 
 	DrawElements(vertexCount, indexCount, 0);
 	mStatistics.mBatchCount++;

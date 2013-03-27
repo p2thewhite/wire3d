@@ -27,19 +27,25 @@ public:
 	virtual ~CullerSorting();
 
 	virtual void ComputeVisibleSet(Spatial* pScene);
-	virtual void Insert(Object* pObject);
+	virtual void Insert(Object* pObject, Transformation* pTransformation,
+		const Vector3F& rPosition = Vector3F::ZERO);
+
+	virtual void Clear();
+	virtual void SetMaxQuantity(UInt maxQuantity);
 
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-		pDestination);
-	void QuickSort(TArray<UInt>& pKeys, Object** const pVisible, Int left,
-//	void QuickSort(UInt* const pKeys, Object** const pVisible, Int left,
-		Int right);
-	UInt GetKey(RenderObject* pRenderObject);
+		pDestination, TArray<Vector3F>& rPositions);
+	void QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
+//	void QuickSort(UInt* const pKeys, Object** const pVisible,
+		Transformation** const pTrafo, Int left, Int right);
+	UInt GetKey(RenderObject* pRenderObject, const Vector3F& rPosition);
 
 	VisibleSet* mpOpaqueObjects;
 	VisibleSet* mpTransparentObjects;
 	TArray<UInt> mKeys;
+	TArray<Vector3F> mOpaquePositions;
+	TArray<Vector3F> mTransparentPositions;
 };
 
 }

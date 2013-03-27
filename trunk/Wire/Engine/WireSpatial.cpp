@@ -94,7 +94,7 @@ void Spatial::OnGetVisibleSet(Culler& rCuller, Bool noCull)
 	}
 
 	UInt savePlaneState = rCuller.GetPlaneState();
-	if (noCull || rCuller.IsVisible(WorldBound))
+	if (noCull || rCuller.IsVisible(WorldBound, true))
 	{
 		OnGetVisibleUpdateControllers(rCuller.GetCamera());
 		GetVisibleSet(rCuller, noCull);
