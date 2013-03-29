@@ -28,14 +28,14 @@ public:
 		Options()
 			:
 			AssetsWithEqualNamesAreIdentical(true),
-			PrepareSceneForStaticBatching(false),
-			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching(false),
+			PrepareSceneForBatching(false),
+			DuplicateSharedMeshesWhenPreparingSceneForBatching(false),
 			CreateInterleavedVertexBuffers(false)
 			{}
 			 
 		Bool AssetsWithEqualNamesAreIdentical;
-		Bool PrepareSceneForStaticBatching;
-		Bool DuplicateSharedMeshesWhenPreparingSceneForStaticBatching;
+		Bool PrepareSceneForBatching;
+		Bool DuplicateSharedMeshesWhenPreparingSceneForBatching;
 		Bool CreateInterleavedVertexBuffers;
 	};
 
@@ -76,8 +76,8 @@ public:
 private:
 	static Char* Load(const Char* pFilename, Int& rSize);
 	static void InitializeStaticSpatials(Wire::TArray<Wire::SpatialPtr>&
-		rSpatials, Bool prepareSceneForStaticBatching,
-		Bool duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
+		rSpatials, Bool prepareSceneForBatching,
+		Bool duplicateSharedMeshesWhenPreparingSceneForBatching);
 
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	UShort* Load16(const Char* pFilename, Int& rSize, Bool isBigEndian);
@@ -94,7 +94,7 @@ private:
 	Wire::ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode,
 		const Char* pName, Bool& rHasValue);
 	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
-	Bool Is16Bit(rapidxml::xml_node<>* pXmlNode);
+	Bool IsTrue(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Wire::Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
 
@@ -128,10 +128,10 @@ private:
 		Wire::Buffer::UsageType indexBufferUsage, Bool is16Bit);
 	Wire::VertexBuffer* LoadVertexBufferFromFiles(Char* pFileName, Bool isVertexBufferBigEndian,
 		Wire::Buffer::UsageType vertexBufferUsage, Char* pNormalsName, Bool isNormalsBigEndian,
-		Char* pColorsName, Bool isColorsBigEndian, Wire::TArray<Char*>& rUvSetNames,
-		Wire::TArray<Bool>& rUvBigEndian);
-	Wire::VertexBuffer* LoadVertexBuffer(Char* pFileName, Bool isBigEndian,
-		Wire::Buffer::UsageType usage, Wire::VertexAttributes& rAttributes);
+		Char* pColorsName, Bool isColorsBigEndian, Bool isColors32Bit,
+		Wire::TArray<Char*>& rUvSetNames, Wire::TArray<Bool>& rUvBigEndian);
+	Wire::VertexBuffer* LoadVertexBuffer(rapidxml::xml_node<>* pXmlNode,
+		Wire::VertexAttributes& rAttributes);
 
 	const Char* mpPath;
 	Wire::TArray<Wire::CameraPtr>* mpCameras;
@@ -139,7 +139,7 @@ private:
 	Wire::THashTable<Wire::String, Wire::MaterialPtr> mMaterials;
 	Wire::THashTable<Wire::Material*, Wire::TArray<Wire::StatePtr> > mMaterialStates;
 	Wire::THashTable<Wire::String, Wire::TArray<Wire::MeshPtr> > mMeshes;
-	Wire::THashTable<Wire::String, Wire::Texture2DPtr> mTextures;
+	Wire::THashTable<Wire::String, Wire::Texture2DPtr> mTextures; // TODO: use Image2D
 	Wire::THashTable<Wire::String, Wire::LightPtr> mLights;
 	Wire::TArray<Wire::SpatialPtr> mStaticSpatials;
 

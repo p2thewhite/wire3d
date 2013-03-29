@@ -58,7 +58,7 @@ Bool Sample10::OnInitialize()
 	mspText = StandardMesh::CreateText();
 
 	// Create buffers (size in bytes) for batching draw calls.
-   	GetRenderer()->CreateBatchingBuffers(10000, 50000);
+   	GetRenderer()->CreateBatchingBuffers(5*1024, 50*1024, 1);
 	return true;
 }
 
@@ -85,12 +85,12 @@ void Sample10::OnIdle()
 	 
 	Bool usesSorting = false;
 	Culler* pCuller = &mCuller;
-	if (MathF::FMod(static_cast<Float>(time), 15) > 5)
+	if (MathF::FMod(static_cast<Float>(time), 20) > 4)
 	{
 		pCuller = &mCullerSorting;
 		usesSorting = true;
 
-		if (MathF::FMod(static_cast<Float>(time), 15) > 10)
+		if (MathF::FMod(static_cast<Float>(time), 20) > 8)
 		{
 			// There are 2 methods of batching supported:
 			// a) Batching of index buffers only, i.e. static batching:
@@ -359,31 +359,17 @@ void Sample10::DrawFPS(Double elapsed, Bool usesSorting)
 	mspText->Append(", Batching: ", Color32::WHITE);
 	if (GetRenderer()->UsesBatching())
 	{
-		mspText->Append("ON", Color32::GREEN);
+		mspText->Append("ON\n", Color32::GREEN);
 	}
 	else
 	{
-		mspText->Append("OFF", Color32::RED);
+		mspText->Append("OFF\n", Color32::RED);
 	}
 
-	const UInt TextArraySize = 1000;
-	Char text[TextArraySize];
-	UInt fps = static_cast<UInt>(1/elapsed);
-	String msg1 = "\nFPS: %d\nDraw Calls: %d, Triangles: %d\nBatched Static/"
-		"Dynamic/Transformed: %d/%d/%d\nVBOs: %d, VBOSize: %.2f KB\nIBOs: %d,"
-		" IBOSize: %.2f KB\nTextures: %d, TextureSize: %.2f MB";
-	Float kb = 1024.0F;
-	const RendererStatistics* pStats = GetRenderer()->GetStatistics();
-	System::Sprintf(text, TextArraySize, static_cast<const Char*>(msg1), fps,
-		pStats->GetDrawCalls(), pStats->GetTriangles(), pStats->
-		GetBatchedStatic(), pStats->GetBatchedDynamic(), pStats->
-		GetBatchedDynamicTransformed(), pStats-> GetVBOCount(), pStats->
-		GetVBOsSize()/kb, pStats->GetIBOCount(), pStats->GetIBOsSize()/kb,
-		pStats->GetTextureCount(), pStats->GetTexturesSize()/(kb*kb));
 	mspText->SetColor(Color32::WHITE);
-	mspText->Append(text);
-
-	mspText->Update(GetRenderer());
 	GetRenderer()->DisableLighting();
-	GetRenderer()->Draw(mspText, Transformation::IDENTITY);
+
+	Float fps = static_cast<Float>(1.0 / elapsed);
+	GetRenderer()->GetStatistics()->Draw(mspText, Transformation::IDENTITY,
+		fps, mspTextCamera);
 }

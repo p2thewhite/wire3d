@@ -66,7 +66,7 @@ public:
 
 	// Batching
 	void CreateBatchingBuffers(UInt iboSize, UInt vboSize = 0,
-		UInt maxVertexStreams = 6);
+		UInt maxVertexStreams = 5);
 	inline Bool SupportsBatching() const;
 	inline Bool UsesBatching() const;
 	inline UInt GetStaticBatchingThreshold() const;

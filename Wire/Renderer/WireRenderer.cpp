@@ -1180,9 +1180,8 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 			pMesh->GetIndexCount(), pMesh->GetStartIndex());
 		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
 			pIBRaw));
-		mStatistics.mBatchedIBOData += ibSize;
-		mStatistics.mBatchedStatic++;
 
+		mStatistics.mBatchedStatic++;
 		batchedIndexCount += pMesh->GetIndexCount();
 	}
 
@@ -1279,7 +1278,6 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 			pMesh->GetIndexCount(), pMesh->GetStartIndex());
 		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
 			pIBRaw));
-		mStatistics.mBatchedIBOData += ibSize;
 
 		for (UInt j = 0; j < vbCount; j++)
 		{
@@ -1291,7 +1289,6 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 			UInt vbSize = vertexCount * vertexSize;
 			mRawBatchedVertexBuffers[j] = reinterpret_cast<void*>(vbSize +
 				reinterpret_cast<UInt>(mRawBatchedVertexBuffers[j]));
-			mStatistics.mBatchedVBOData += vbSize;
 		}
 
 		if (rTransformation.IsIdentity())
@@ -1338,13 +1335,24 @@ void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 	{
 		UInt vertexSize = rVertexBuffers[i]->GetAttributes().GetVertexSize();
 		rVBsPdr[i]->Enable(this, vertexSize, i);
+
+		const UInt vbSize = vertexCount * vertexSize;
+		mStatistics.mBatchedVBOTotalData += vbSize;
+		if (mStatistics.mBatchedVBOLargestBatch < vbSize)
+		{
+			mStatistics.mBatchedVBOLargestBatch = vbSize;
+		}
 	}
 
 	DrawBatch(pIBPdr, vertexCount, indexCount, pMesh->HasNormal());
-
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		rVBsPdr[i]->Disable(this, i);
+	}
+
+	if (mStatistics.mBatchedVBOMaxLargestBatch < mStatistics.mBatchedVBOLargestBatch)
+	{
+		mStatistics.mBatchedVBOMaxLargestBatch = mStatistics.mBatchedVBOLargestBatch;
 	}
 }
 
@@ -1359,13 +1367,27 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 	}
 
 	pIBPdr->Enable(this);
-
 	SetWorldTransformation(Transformation::IDENTITY, hasNormals);
-
 	DrawElements(vertexCount, indexCount, 0);
-	mStatistics.mBatchCount++;
-
 	pIBPdr->Disable(this);
+
+	mStatistics.mBatchCount++;
+	if (mStatistics.mBatchCountMax < mStatistics.mBatchCount)
+	{
+		mStatistics.mBatchCountMax = mStatistics.mBatchCount;
+	}
+
+	const UInt ibSize = indexCount*sizeof(UShort);
+	mStatistics.mBatchedIBOTotalData += ibSize;
+	if (mStatistics.mBatchedIBOLargestBatch < ibSize)
+	{
+		mStatistics.mBatchedIBOLargestBatch = ibSize;
+	}
+
+	if (mStatistics.mBatchedIBOMaxLargestBatch < mStatistics.mBatchedIBOLargestBatch)
+	{
+		mStatistics.mBatchedIBOMaxLargestBatch = mStatistics.mBatchedIBOLargestBatch;
+	}
 }
 
 //----------------------------------------------------------------------------

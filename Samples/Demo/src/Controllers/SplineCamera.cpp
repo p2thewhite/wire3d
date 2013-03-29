@@ -17,7 +17,7 @@ SplineCamera::SplineCamera(Node* pSplineRoot, Camera* pCamera)
 		Spatial* pChild = pSplineRoot->GetChild(i);
 		if (pChild)
 		{
-			mSplinePoints.Append(&(pChild->Local));
+			mSplinePoints.Append(&(pChild->World));
 		}
 	}
 

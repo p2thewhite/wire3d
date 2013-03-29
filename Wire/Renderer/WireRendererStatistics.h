@@ -53,20 +53,27 @@ public:
 	// handled by the caller. Draw() requires that Renderer::PreDraw() has
 	// been called beforehand.
 	void Draw(Text* pText, const Transformation& rTransformation, Float fps,
-		Bool useAverageFps = true, Bool restoreState = false,
-		Camera* pCamera = NULL);
+		Camera* pCamera = NULL, Bool useAverageFps = true,
+		Bool restoreState = false);
 
 private:
 	Float AverageFps(Float currentFps);
 
-	// accumulated number of draw calls and triangles drawn since last
-	// Reset()
+	// accumulated number of draw calls, triangles and batching statistics
+	// since last Reset()
 	UInt mDrawCalls;
+	UInt mTriangles;
 	UInt mBatchCount;
+	UInt mBatchCountMax;
 	UInt mBatchedStatic;
 	UInt mBatchedDynamic;
 	UInt mBatchedDynamicTransformed;
-	UInt mTriangles;
+	UInt mBatchedIBOTotalData;
+	UInt mBatchedIBOLargestBatch;
+	UInt mBatchedIBOMaxLargestBatch;
+	UInt mBatchedVBOTotalData;
+	UInt mBatchedVBOLargestBatch;
+	UInt mBatchedVBOMaxLargestBatch;
 
 	// number of buffers and their total size bound to the Renderer
 	UInt mVBOCount;
@@ -76,10 +83,8 @@ private:
 	UInt mTextureCount;
 	UInt mTexturesSize;
 	UInt mBatchIBOSize;
-	UInt mBatchedIBOData;
 	UInt mBatchVBOCount;
 	UInt mBatchVBOsSize;
-	UInt mBatchedVBOData;
 
 	// total number of vertex formats used
 	UInt mVertexFormatCount;

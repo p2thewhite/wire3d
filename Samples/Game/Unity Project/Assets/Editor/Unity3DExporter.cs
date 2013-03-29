@@ -16,6 +16,7 @@ public class Unity3DExporter : EditorWindow
 	private bool mDiscardTexturesOnBind = true;
     private bool mWriteDataAsBigEndian = true;
     private bool mCombineStaticMeshes = true;
+    private bool mWriteColorsAs32Bit = true;
 	private string m2ndTextureName;
 	private string mPath = "../Data/Scene";
 
@@ -231,6 +232,9 @@ public class Unity3DExporter : EditorWindow
         mWriteDataAsBigEndian = GUILayout.Toggle(mWriteDataAsBigEndian, new GUIContent(
             "Write data as big endian",
             "PC uses little endian. Wii uses big endian. Byte order will be rearranged by the Importer if necessary. Thus favoring a particular order gives a slight speedup when importing data on that particular platform."));
+        mWriteColorsAs32Bit = GUILayout.Toggle(mWriteColorsAs32Bit, new GUIContent(
+            "Write vertex colors as 32bit",
+            "Write vertex colors of meshes as 32 bit values instead of 4 floats"));
         GUILayout.Label("Use property names:");
         m2ndTextureName = EditorGUILayout.TextField("- 2nd Texture ", m2ndTextureName ?? string.Empty);
     }
@@ -1374,10 +1378,11 @@ public class Unity3DExporter : EditorWindow
 		}
 
 		if (mesh.colors.Length > 0) {
+            string is32BitString = mWriteColorsAs32Bit ? " 32bit=\"1\"" : string.Empty;
             string colName = meshName + ".col";
-			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\"" + le + " />");
+			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\"" + le + is32BitString + " />");
 			if (!alreadyProcessed) {
-				SaveColors (mesh.colors, colName);
+				SaveColors (mesh, colName);
 			}
 		}
 
@@ -1448,7 +1453,7 @@ public class Unity3DExporter : EditorWindow
 		fileStream.Close ();
 	}
 
-	private void SaveColors (Color[] colors, string name)
+	private void SaveColors (Mesh mesh, string name)
 	{
 		if (mExportXmlOnly) {
 			return;
@@ -1457,13 +1462,28 @@ public class Unity3DExporter : EditorWindow
 		FileStream fileStream = new FileStream (mPath + "/" + name, FileMode.Create);
 		BinaryWriter binaryWriter = new BinaryWriter (fileStream);
 
-		for (int i = 0; i < colors.Length; i++)
+        if (mWriteColorsAs32Bit)
         {
-            WriteFloat(colors[i].r, binaryWriter);
-            WriteFloat(colors[i].g, binaryWriter);
-            WriteFloat(colors[i].b, binaryWriter);
-            WriteFloat(colors[i].a, binaryWriter);
-		}
+            Color32[] colors = mesh.colors32;
+            for (int i = 0; i < colors.Length; i++)
+            {
+                binaryWriter.Write(colors[i].r);
+                binaryWriter.Write(colors[i].g);
+                binaryWriter.Write(colors[i].b);
+                binaryWriter.Write(colors[i].a);
+            }
+        }
+        else
+        {
+            Color[] colors = mesh.colors;
+            for (int i = 0; i < colors.Length; i++)
+            {
+                WriteFloat(colors[i].r, binaryWriter);
+                WriteFloat(colors[i].g, binaryWriter);
+                WriteFloat(colors[i].b, binaryWriter);
+                WriteFloat(colors[i].a, binaryWriter);
+            }
+        }
 
 		binaryWriter.Close ();
 		fileStream.Close ();       
