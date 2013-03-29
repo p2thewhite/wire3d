@@ -30,12 +30,12 @@ Bool Demo::OnInitialize()
 	mShowFps = false;
 
 	// frames per second and render statistics debug text
-	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
+	mspText = Importer::CreateText("Data/Logo/font.ttf", 12, 12);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
- 	GetRenderer()->CreateBatchingBuffers(50000, 50000);
- 	GetRenderer()->SetDynamicBatchingThreshold(1000, 3000);
+ 	GetRenderer()->CreateBatchingBuffers(25*1024, 2*1024);
+ 	GetRenderer()->SetDynamicBatchingThreshold(200, 200);
  	GetRenderer()->SetStaticBatchingThreshold(3000);
 
 	return true;
@@ -133,25 +133,6 @@ void Demo::StateRunning(Double time)
 //----------------------------------------------------------------------------
 void Demo::StateLoading(Double elapsedTime)
 {
-	Spatial* pLoading = mspLogo->GetChildByName("Loading");
-	Bool isFadedIn = false;
-	if (pLoading)
-	{
-		StateMaterial* pMaterialState = DynamicCast<StateMaterial>(pLoading->
-			GetState(State::MATERIAL));
-		if (pMaterialState)
-		{
-			pMaterialState->Ambient.A() += static_cast<Float>(
-				elapsedTime) * 0.5F;
-
-			if (pMaterialState->Ambient.A() > 1.0F)
-			{
-				pMaterialState->Ambient.A() = 1.0F;
-				isFadedIn = true;	
-			}
-		}
-	}
-
 	mspLogo->UpdateGS();
 	mLogoCuller.ComputeVisibleSet(mspLogo);
 
@@ -161,11 +142,6 @@ void Demo::StateLoading(Double elapsedTime)
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 
-	if (!isFadedIn)
-	{
-		return;
-	}
-
 	mspScene = LoadAndInitScene();
 	if (!mspScene)
 	{
@@ -173,7 +149,6 @@ void Demo::StateLoading(Double elapsedTime)
 	}
 
 	mAppState = AS_RUNNING;
-	pLoading->Culling = Spatial::CULL_ALWAYS;
 }
 
 //----------------------------------------------------------------------------
@@ -202,16 +177,7 @@ Node* Demo::LoadAndInitLogo()
 //----------------------------------------------------------------------------
 Node* Demo::LoadAndInitScene()
 {
-	// Override default import options
-	Importer::Options options;
-
-	// This is for demonstration purposes only. Under normal circumstances,
-	// the scene should already be prepared for batching at export-time
-	// (as demonstrated by the Game sample), rather than import-time.
-	options.PrepareSceneForStaticBatching = true;
-	options.DuplicateSharedMeshesWhenPreparingSceneForStaticBatching = true;
-
-	Importer importer("Data/", &options);
+	Importer importer("Data/");
 	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
 	if (!pScene)
 	{
@@ -219,10 +185,7 @@ Node* Demo::LoadAndInitScene()
 	}
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
-	Float fov, aspect, near, far;
-	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
-	aspect = GetWidthF() / GetHeightF();
-	mSceneCameras[0]->SetFrustum(fov, aspect, near, far);
+	mSceneCameras[0]->SetAspectRatio(GetWidthF() / GetHeightF());
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
 	// The maximum number of objects that are going to be culled is the
@@ -251,7 +214,7 @@ Node* Demo::LoadAndInitScene()
 	{
 		pConveyorBelt->AttachController(WIRE_NEW ConveyorBelt(pConveyorBelt->
 			GetRenderObject(), GetRenderer()));
-	}	
+	}
 
 	pScene->Bind(GetRenderer());
 	return pScene;

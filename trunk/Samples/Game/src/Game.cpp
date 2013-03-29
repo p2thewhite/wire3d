@@ -35,7 +35,7 @@ Bool Game::OnInitialize()
 	mShowFps = false;
 
 	// Font for render statistics debug text
-	mspText = Importer::CreateText("Data/Logo/cour.ttf", 18, 18);
+	mspText = Importer::CreateText("Data/Logo/cour.ttf", 14, 14);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
@@ -413,10 +413,7 @@ Node* Game::LoadAndInitializeScene()
 	}
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
-
-	Float fov, aspect, near, far;
-	mSceneCameras[0]->GetFrustum(fov, aspect, near, far);
-	mSceneCameras[0]->SetFrustum(fov, GetWidthF() / GetHeightF(), near, far);
+	mSceneCameras[0]->SetAspectRatio(GetWidthF() / GetHeightF());
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
 	Spatial* pStartingPoint = pScene->GetChildByName("Starting Point");

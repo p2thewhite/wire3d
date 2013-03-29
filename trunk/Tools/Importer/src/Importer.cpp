@@ -89,8 +89,8 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	if (mStaticSpatials.GetQuantity() > 0)
 	{
 		InitializeStaticSpatials(mStaticSpatials, mpOptions->
-			PrepareSceneForStaticBatching, mpOptions->
-			DuplicateSharedMeshesWhenPreparingSceneForStaticBatching);
+			PrepareSceneForBatching, mpOptions->
+			DuplicateSharedMeshesWhenPreparingSceneForBatching);
 		mStaticSpatials.RemoveAll();
 	}
 
@@ -319,6 +319,11 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 		Float cWidth = static_cast<Float>(rBitmap.width);
 		Float cHeight = static_cast<Float>(rBitmap.rows);
 		Float cStride = static_cast<Float>(slot->advance.x >> 6);
+		if (wc == '.' || wc == ',' || wc == ':' || wc == ';')
+		{
+			cStride = static_cast<Float>(slot->bitmap.width+1);
+		}
+
 		Float cOffsetY = static_cast<Float>(slot->bitmap.rows - slot->bitmap_top);
 		charSizes.Append(Vector4F(cWidth, cHeight, cStride, cOffsetY));
 
@@ -559,6 +564,11 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 			{
 				if (*pValue == 'y' || *pValue == '1')
 				{
+					if (*pValue == 'y')
+					{
+						WIRE_ASSERT(false);
+					}
+
 					return false;
 				}
 			}
@@ -569,12 +579,12 @@ Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Bool Importer::Is16Bit(rapidxml::xml_node<>* pXmlNode)
+Bool Importer::IsTrue(const Char* pSrc, rapidxml::xml_node<>* pXmlNode)
 {
 	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
 		attr = attr->next_attribute())
 	{
-		if (Is("16bit", attr->name()))
+		if (Is(pSrc, attr->name()))
 		{
 			Char* pValue = attr->value();
 			if (pValue)
@@ -1712,6 +1722,7 @@ VertexBuffer* Importer::ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode)
 	Bool isVertexBufferBigEndian = true;
 	Bool isNormalsBigEndian = true;
 	Bool isColorsBigEndian = true;
+	Bool isColors32bit = false;
 	TArray<Bool> uvBigEndian(8,8);
 	Buffer::UsageType vertexBufferUsage = Buffer::UT_STATIC;
 
@@ -1736,6 +1747,7 @@ VertexBuffer* Importer::ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode)
 			WIRE_ASSERT(!pColorsFileName);
 			pColorsFileName = GetValue(pChild, "Name");
 			isColorsBigEndian = IsBigEndian(pChild);
+			isColors32bit = IsTrue("32bit", pChild);
 		}
 		else if (System::Strncmp("Uv", pChild->name(), 2) == 0)
 		{
@@ -1752,8 +1764,8 @@ VertexBuffer* Importer::ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode)
 
 	VertexBuffer* pVertexBuffer = LoadVertexBufferFromFiles(pVerticesFileName,
 		isVertexBufferBigEndian, vertexBufferUsage, pNormalsFileName,
-		isNormalsBigEndian, pColorsFileName, isColorsBigEndian, uvSetNames,
-		uvBigEndian);
+		isNormalsBigEndian, pColorsFileName, isColorsBigEndian, isColors32bit,
+		uvSetNames, uvBigEndian);
 
 	return pVertexBuffer;
 }
@@ -1769,30 +1781,26 @@ void Importer::ParseVertexBuffers(rapidxml::xml_node<>* pXmlNode,
 		if (Is("Vertices", pChild->name()))
 		{
 			va.SetPositionChannels(3);
-			VertexBuffer* pVertexBuffer = LoadVertexBuffer(GetValue(pChild,
-				"Name"), IsBigEndian(pChild), GetUsageType(pChild), va);
+			VertexBuffer* pVertexBuffer = LoadVertexBuffer(pChild, va);
 			rVertexBuffers.Append(pVertexBuffer);
 		}
 		else if (Is("Normals", pChild->name()))
 		{
 			va.SetNormalChannels(3);
-			VertexBuffer* pVertexBuffer = LoadVertexBuffer(GetValue(pChild,
-				"Name"), IsBigEndian(pChild), GetUsageType(pChild), va);
+			VertexBuffer* pVertexBuffer = LoadVertexBuffer(pChild, va);
 			rVertexBuffers.Append(pVertexBuffer);
 		}
 		else if (Is("Colors", pChild->name()))
 		{
 			va.SetColorChannels(4);
-			VertexBuffer* pVertexBuffer = LoadVertexBuffer(GetValue(pChild,
-				"Name"), IsBigEndian(pChild), GetUsageType(pChild), va);
+			VertexBuffer* pVertexBuffer = LoadVertexBuffer(pChild, va);
 			rVertexBuffers.Append(pVertexBuffer);
 		}
 		else if (System::Strncmp("Uv", pChild->name(), 2) == 0)
 		{
 			va.SetTCoordChannels(2);
-			VertexBuffer* pVertexBuffer = LoadVertexBuffer(GetValue(pChild,
-				"Name"), IsBigEndian(pChild), GetUsageType(pChild), va);
-				rVertexBuffers.Append(pVertexBuffer);
+			VertexBuffer* pVertexBuffer = LoadVertexBuffer(pChild, va);
+			rVertexBuffers.Append(pVertexBuffer);
 		}
 	}
 
@@ -1809,7 +1817,7 @@ IndexBuffer* Importer::ParseIndexBuffer(rapidxml::xml_node<>* pXmlNode)
 		{
 			IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(GetValue(
 				pChild, "Name"), IsBigEndian(pChild), GetUsageType(pChild),
-				Is16Bit(pChild));
+				IsTrue("16bit", pChild));
 			return pIndexBuffer;
 		}
 	}
@@ -2030,8 +2038,8 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 
 //----------------------------------------------------------------------------
 void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
-	Bool prepareSceneForStaticBatching,
-	Bool duplicateSharedMeshesWhenPreparingSceneForStaticBatching)
+	Bool prepareSceneForBatching,
+	Bool duplicateSharedMeshesWhenPreparingSceneForBatching)
 {
 	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
 	{
@@ -2039,13 +2047,13 @@ void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
 		WIRE_ASSERT(rSpatials[i]->WorldIsCurrent);
 		rSpatials[i]->UpdateBS();
 		rSpatials[i]->WorldBoundIsCurrent = true;
-		if (prepareSceneForStaticBatching)
+		if (prepareSceneForBatching)
 		{
 			Node* pNode = DynamicCast<Node>(rSpatials[i]);
 			if (pNode && pNode->GetRenderObject())
 			{
 				pNode->MakeRenderObjectStatic(true,
-					duplicateSharedMeshesWhenPreparingSceneForStaticBatching);
+					duplicateSharedMeshesWhenPreparingSceneForBatching);
 			}
 		}
 	}
@@ -2058,12 +2066,9 @@ Bool Importer::Is(const Char* pSrc, const Char* pDst)
 }
 
 //----------------------------------------------------------------------------
-VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
-	isBigEndian, Buffer::UsageType usage, VertexAttributes& rVA)
+VertexBuffer* Importer::LoadVertexBuffer(rapidxml::xml_node<>* pXmlNode,
+	VertexAttributes& rVA)
 {
-	Int size;
-	Float* const pChannel = Load32(pFileName, size, isBigEndian);
-
 	if (rVA.HasPosition())
 	{
 		WIRE_ASSERT(rVA.GetChannelQuantity() == rVA.GetPositionChannels());
@@ -2079,6 +2084,12 @@ VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
 		WIRE_ASSERT(rVA.GetChannelQuantity() == rVA.GetTCoordChannels());
 	}
 
+	Char* pFileName = GetValue(pXmlNode, "Name");
+	Bool isBigEndian = IsBigEndian(pXmlNode);
+	Buffer::UsageType usage = GetUsageType(pXmlNode);
+
+	Int size;
+	Float* const pChannel = Load32(pFileName, size, isBigEndian);
 	
 	VertexBuffer* pVertexBuffer = NULL;
 	mStatistics.VertexBufferCount++;
@@ -2090,23 +2101,66 @@ VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
 	}
 	else
 	{
-		const UInt count = size/(4*sizeof(Float));
-		pVertexBuffer = WIRE_NEW VertexBuffer(rVA, count, usage);
-
-		Float* pTempChannel = pChannel;
-		for (UInt i = 0; i < count; i++)
+		if (IsTrue("32bit", pXmlNode))
 		{
-			WIRE_ASSERT(rVA.GetChannelQuantity() == 1);
+			const UInt count = size/(rVA.GetChannelQuantity()*sizeof(UInt));
+			if (WIRE_RGBA_R != 0 || WIRE_RGBA_G != 1 || WIRE_RGBA_B != 2 ||
+				WIRE_RGBA_A != 3)
+			{
+				WIRE_ASSERT(sizeof(UInt) == 4);
+				UChar* pRGBA = reinterpret_cast<UChar*>(pChannel);
+				if (System::IsBigEndian())
+				{
+					for (UInt i = 0; i < count; i++)
+					{
+						UChar r = pRGBA[i*4];
+						UChar g = pRGBA[i*4+1];
+						UChar b = pRGBA[i*4+2];
+						UChar a = pRGBA[i*4+3];
+						pRGBA[i*4 + WIRE_RGBA_R] = r;
+						pRGBA[i*4 + WIRE_RGBA_G] = g;
+						pRGBA[i*4 + WIRE_RGBA_B] = b;
+						pRGBA[i*4 + WIRE_RGBA_A] = a;
+					}
+				}
+				else
+				{
+					for (UInt i = 0; i < count; i++)
+					{
+						UChar r = pRGBA[i*4+3];
+						UChar g = pRGBA[i*4+2];
+						UChar b = pRGBA[i*4+1];
+						UChar a = pRGBA[i*4];
+						pRGBA[i*4 + WIRE_RGBA_R] = r;
+						pRGBA[i*4 + WIRE_RGBA_G] = g;
+						pRGBA[i*4 + WIRE_RGBA_B] = b;
+						pRGBA[i*4 + WIRE_RGBA_A] = a;
+					}
+				}
+			}
 
-			ColorRGBA c;
-			c.R() = *pTempChannel++;
-			c.G() = *pTempChannel++;
-			c.B() = *pTempChannel++;
-			c.A() = *pTempChannel++;
-			pVertexBuffer->Color4(i) = c;
+			pVertexBuffer = WIRE_NEW VertexBuffer(pChannel, rVA, count, usage);
 		}
+		else
+		{
+			const UInt count = size/(4*sizeof(Float));
+			pVertexBuffer = WIRE_NEW VertexBuffer(rVA, count, usage);
 
-		Free32(pChannel);
+			Float* pTempChannel = pChannel;
+			for (UInt i = 0; i < count; i++)
+			{
+				WIRE_ASSERT(rVA.GetChannelQuantity() == 1);
+
+				ColorRGBA c;
+				c.R() = *pTempChannel++;
+				c.G() = *pTempChannel++;
+				c.B() = *pTempChannel++;
+				c.A() = *pTempChannel++;
+				pVertexBuffer->Color4(i) = c;
+			}
+
+			Free32(pChannel);
+		}
 	}
 
 	return pVertexBuffer;
@@ -2116,7 +2170,8 @@ VertexBuffer* Importer::LoadVertexBuffer(Char* pFileName, Bool
 VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 	isVertexBufferBigEndian, Buffer::UsageType vertexBufferUsage, 
 	Char* pNormalsName, Bool isNormalsBigEndian, Char* pColorsName, Bool
-	isColorsBigEndian, TArray<Char*>& rUvSetNames, TArray<Bool>& rUvBigEndian)
+	isColorsBigEndian, Bool isColors32Bit, TArray<Char*>& rUvSetNames,
+	TArray<Bool>& rUvBigEndian)
 {
 	VertexAttributes vertexAttributes;
 	vertexAttributes.SetPositionChannels(3);
@@ -2139,16 +2194,30 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 
 	Int colorsSize;
 	Float* pColors = NULL;
+	Char* pColors32 = NULL;
 	if (pColorsName)
 	{
 		vertexAttributes.SetColorChannels(4);
-		pColors = Load32(pColorsName, colorsSize, isColorsBigEndian);
-		if (verticesSize / (3 * sizeof(Float)) != colorsSize / (4 * sizeof(Float)))
+		Int vbSize = verticesSize/(3*sizeof(Float));
+		if (isColors32Bit)
 		{
-			WIRE_ASSERT(false /* Vertices and colors do not match */);
-			Free32(pNormals);
-			Free32(pVertices);
-			return NULL;
+			String path = String(mpPath) + String(pColorsName);
+			pColors32 = Load(static_cast<const Char*>(path), colorsSize);
+		}
+		else
+		{
+			pColors = Load32(pColorsName, colorsSize, isColorsBigEndian);
+		}
+
+		if (vbSize != (colorsSize/(4*sizeof(Float))))
+		{
+			if (isColors32Bit && (vbSize != (colorsSize/4)))
+			{
+				WIRE_ASSERT(false /* Vertices and colors do not match */);
+				Free32(pNormals);
+				Free32(pVertices);
+				return NULL;
+			}
 		}
 	}
 
@@ -2167,6 +2236,7 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 				Free32(uvSets[j]);
 			}
 
+			WIRE_DELETE[] pColors32;
 			Free32(pColors);
 			Free32(pNormals);
 			Free32(pVertices);
@@ -2181,6 +2251,7 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 	Float* pTempVertices = pVertices;
 	Float* pTempNormals = pNormals;
 	Float* pTempColors = pColors;
+	Char* pTempColors32 = pColors32;
 	for (UInt i = 0; i < (verticesSize/(3*sizeof(Float))); i++)
 	{
 		if (pVertices)
@@ -2201,7 +2272,16 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 			pVertexBuffer->Normal3(i) = n;
 		}
 
-		if (pColors)
+		if (pColors32)
+		{
+			Color32 c;
+			c.R() = *pTempColors32++;
+			c.G() = *pTempColors32++;
+			c.B() = *pTempColors32++;
+			c.A() = *pTempColors32++;
+			pVertexBuffer->Color4(i) = c;
+		}
+		else if (pColors)
 		{
 			ColorRGBA c;
 			c.R() = *pTempColors++;
@@ -2223,6 +2303,7 @@ VertexBuffer* Importer::LoadVertexBufferFromFiles(Char* pFileName, Bool
 		Free32(uvSets[i]);
 	}
 
+	WIRE_DELETE[] pColors32;
 	Free32(pColors);
 	Free32(pNormals);
 	Free32(pVertices);

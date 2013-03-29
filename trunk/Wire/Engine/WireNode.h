@@ -52,7 +52,7 @@ public:
 	// The same comments for AttachChild apply here regarding the inability
 	// to have multiple parents. If i < GetQuantity(), the function
 	// succeeds and returns i. If i is out of range, the function *still*
-	// succeeds, appending the child to the end of the array.  The return
+	// succeeds, appending the child to the end of the array. The return
 	// value is the previous child stored at index i.
 	SpatialPtr SetChild(UInt i, Spatial* pChild);
 

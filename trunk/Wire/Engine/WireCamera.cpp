@@ -96,6 +96,18 @@ Bool Camera::GetFrustum(Float& rUpFovDegrees, Float& rAspectRatio,
 }
 
 //----------------------------------------------------------------------------
+void Camera::SetAspectRatio(Float aspectRation)
+{
+	Float fov;
+	Float oldAspectRatio;
+	Float near;
+	Float far;
+
+	GetFrustum(fov, oldAspectRatio, near, far);
+	SetFrustum(fov, aspectRation, near, far);
+}
+
+//----------------------------------------------------------------------------
 void Camera::SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 	const Vector3F& rRVector)
 {

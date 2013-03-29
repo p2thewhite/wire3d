@@ -62,6 +62,8 @@ public:
 	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 		const Vector3F& rRVector);
 
+	void SetAspectRatio(Float aspectRatio);
+
 	// Set the view frustum. The interval [rmin, rmax] is measured in the
 	// right direction R. These are the "left" and "right" frustum values.
 	// The interval [umin, umax] is measured in the up direction U.  These

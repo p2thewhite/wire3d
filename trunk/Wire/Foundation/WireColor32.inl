@@ -51,5 +51,5 @@ inline UChar Color32::A() const
 //----------------------------------------------------------------------------
 inline UChar& Color32::A()
 {
-	return mTuple.m8[WIRE_RGBA_R];
+	return mTuple.m8[WIRE_RGBA_A];
 }

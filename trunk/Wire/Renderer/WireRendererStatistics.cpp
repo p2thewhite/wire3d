@@ -23,6 +23,19 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 RendererStatistics::RendererStatistics()
 	:
+	mDrawCalls(0),
+	mTriangles(0),
+	mBatchCount(0),
+	mBatchCountMax(0),
+	mBatchedStatic(0),
+	mBatchedDynamic(0),
+	mBatchedDynamicTransformed(0),
+	mBatchedIBOTotalData(0),
+	mBatchedIBOLargestBatch(0),
+	mBatchedIBOMaxLargestBatch(0),
+	mBatchedVBOTotalData(0),
+	mBatchedVBOLargestBatch(0),
+	mBatchedVBOMaxLargestBatch(0),
 	mVBOCount(0),
 	mVBOsSize(0),
 	mIBOCount(0),
@@ -30,10 +43,8 @@ RendererStatistics::RendererStatistics()
 	mTextureCount(0),
 	mTexturesSize(0),
 	mBatchIBOSize(0),
-	mBatchedIBOData(0),
 	mBatchVBOCount(0),
 	mBatchVBOsSize(0),
-	mBatchedVBOData(0),
 	mVertexFormatCount(0),
 	mpRenderer(NULL),
 	mFpsSamplesIndex(0)
@@ -53,8 +64,10 @@ void RendererStatistics::Reset()
 	mBatchedDynamic = 0;
 	mBatchedDynamicTransformed = 0;
 	mTriangles = 0;
-	mBatchedVBOData = 0;
-	mBatchedIBOData = 0;
+	mBatchedIBOTotalData = 0;
+	mBatchedIBOLargestBatch = 0;
+	mBatchedVBOTotalData = 0;
+	mBatchedVBOLargestBatch = 0;
 
 	if (mpRenderer && mpRenderer->GetRendererData())
 	{
@@ -70,13 +83,15 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float kb = 1024.0F;
 	const Float mb = kb * kb;
 
-	const Char msg[] = "Draw Calls: %d, Triangles: %d\n"
+	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize;
+
+	const Char msg[] = "Draw Calls: %d, Triangles: %d, VRAM: >%.2f MB\n"
 		"VBOs: %d / %.2f KB, VFs: %d\n"
 		"IBOs: %d / %.2f KB\n"
 		"Textures: %d / %.2f MB\n";
 
 	System::Sprintf(text, textArraySize, msg,
-		mDrawCalls, mTriangles, 
+		mDrawCalls, mTriangles, totalVRam / mb,
 		mVBOCount, mVBOsSize / kb, mVertexFormatCount,
 		mIBOCount, mIBOsSize / kb,
 		mTextureCount, mTexturesSize / mb);
@@ -87,20 +102,23 @@ void RendererStatistics::AppendToText(Text* pText)
 	if (mpRenderer->UsesBatching())
 	{
 		const Char msg[] =
-			"Batched Static/Dynamic/Transformed: %d/%d/%d, Batches: %d\n"
-			"BatchIBO: %.2f KB, Batched IBO Data: %.2f KB\n";
+			"Batches/Max: %d/%d, Static/Dynamic/Transformed: %d/%d/%d\n"
+			"BatchedIBOs: Total/CurMax/AllMax/VRAM: %.2f/%.2f/%.2f/%.2f KB\n";
 		System::Sprintf(text, textArraySize, msg,
-			mBatchedStatic, mBatchedDynamic, mBatchedDynamicTransformed, mBatchCount,
-			mBatchIBOSize / kb, mBatchedIBOData / kb);
+			mBatchCount, mBatchCountMax,
+			mBatchedStatic, mBatchedDynamic, mBatchedDynamicTransformed,
+			mBatchedIBOTotalData / kb, mBatchedIBOLargestBatch / kb,
+			mBatchedIBOMaxLargestBatch / kb, mBatchIBOSize / kb);
 		pText->Append(text);
 
 		if (mBatchVBOCount > 0)
 		{
 			const Char msg[] =
-				"BatchVBOs: %.2f KB x%d, Batched VBO Data: %.2f KB\n";
+				"BatchedVBOs: Total/CurMax/AllMax/VRAM: %.2f/%.2f/%.2f/%.2fx%d KB\n";
 			System::Sprintf(text, textArraySize, msg,
-				(mBatchVBOsSize/mBatchVBOCount)/kb, mBatchVBOCount,
-				mBatchedVBOData / kb);
+				mBatchedVBOTotalData / kb, mBatchedVBOLargestBatch / kb,
+				mBatchedVBOMaxLargestBatch / kb, (mBatchVBOsSize/mBatchVBOCount) / kb,
+				mBatchVBOCount);
 
 			pText->Append(text);
 
@@ -127,8 +145,8 @@ void RendererStatistics::AppendToText(Text* pText, Float fps,
 
 //----------------------------------------------------------------------------
 void RendererStatistics::Draw(Text* pText, const Transformation&
-	rTransformation, Float fps, Bool useAverageFps, Bool restoreState,
-	Camera* pCamera)
+	rTransformation, Float fps, Camera* pCamera, Bool useAverageFps,
+	Bool restoreState)
 {
 	if (!mpRenderer)
 	{
