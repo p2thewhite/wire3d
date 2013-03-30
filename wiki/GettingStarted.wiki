@@ -27,4 +27,6 @@ You can build Wire3D for the following target platforms:
   * Open `Wire3D_WIN32.sln` with Visual Studio 2005/2008 or `Wire3D_WIN32_VS2010.sln` with Visual Studio 2010
   * Compile and run any of the samples in the solution
 
-*Note*: There are only solution and project files for Visual Studio 2005 and Visual Studio 2010. If you want to use Visual Studio 2008, just open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings.
+*Note*: If you are using Visual Studio 2008, open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings.
+
+*Note*: If you are using Visual Studio Express, you will get a warning that solution folders are not supported. While the folders appear to be unloaded, they have just been moved to the root solution space, and compilation succeeds without further warnings.
