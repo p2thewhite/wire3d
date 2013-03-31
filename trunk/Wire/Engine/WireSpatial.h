@@ -76,7 +76,8 @@ public:
 	// world bounding volumes on an upward pass. This is useful if model
 	// data changes, causing the model and world bounds to change, but no
 	// transformations need recomputing.
-	void UpdateGS(Double appTime = -MathD::MAX_REAL, Bool isInitiator = true);
+	void UpdateGS(Double appTime = -MathD::MAX_REAL, Bool isInitiator = true,
+		Bool updateControllers = true);
 	void UpdateBS();
 
 	// update render state
@@ -121,7 +122,7 @@ protected:
 	Spatial();
 
 	// geometric updates
-	virtual void UpdateWorldData(Double appTime);
+	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 	void PropagateBoundToRoot();
 
 	// render state updates

@@ -34,7 +34,7 @@ public:
 
 protected:
     // geometric updates
-    virtual void UpdateWorldData(Double appTime);
+    virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 
     Pointer<Camera> mspCamera;
 };

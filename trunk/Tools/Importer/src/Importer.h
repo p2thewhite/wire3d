@@ -62,11 +62,11 @@ public:
 		Wire::TArray<Wire::CameraPtr>* pCameras = NULL);
 #endif
 
-	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool hasMipmaps,
+	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool createMipmaps,
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
-	static Wire::Image2D* LoadPNG(const Char* pFilename, Bool hasMipmaps,
+	static Wire::Image2D* LoadPNG(const Char* pFilename, Bool createMipmaps,
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
-	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool hasMipmaps,
+	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool createMipmaps,
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC);
 	static Wire::Text* CreateText(const Char* pFilename, UInt width,
 		UInt height, UInt maxLength = 4000);
@@ -93,7 +93,6 @@ private:
 		const Char* pName, Bool& rHasValue);
 	Wire::ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode,
 		const Char* pName, Bool& rHasValue);
-	Bool IsBigEndian(rapidxml::xml_node<>* pXmlNode);
 	Bool IsTrue(const Char* pName, rapidxml::xml_node<>* pXmlNode);
 	Wire::Buffer::UsageType GetUsageType(rapidxml::xml_node<>* pXmlNode);
 	Bool Is(const Char*, const Char*);
@@ -104,7 +103,7 @@ private:
 	Wire::Node* ParseText(rapidxml::xml_node<>* pXmlNode);
 	Wire::NodeSkybox* ParseSkybox(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseSkyboxTexture(const Char* pName, rapidxml::xml_node<>* pXmlNode);
-	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex = 0);
+	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Wire::VertexBuffer* ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode);
 	void ParseVertexBuffers(rapidxml::xml_node<>* pXmlNode, Wire::TArray<
 		Wire::VertexBuffer*>& rVertexBuffers);

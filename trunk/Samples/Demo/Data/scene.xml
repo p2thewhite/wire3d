@@ -356,654 +356,623 @@
     </LightNode>
   </Node>
   <Node Name="Spline" Static="1">
-    <Node Name="SplinePoinr000" Pos="12.93083, 1.698919, -21.20506" Rot="-0.401905, 0, -0.9156814, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoins000" Pos="12.93083, 1.698919, -21.20506" Rot="-0.5735765, 0, -0.8191521, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint000" Pos="12.93083, 1.698919, -21.20506" Rot="0.7071068, 0, 0.7071068, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint001" Pos="18.32076, 1.698919, -19.88341" Rot="-0.7071068, 0, -0.7071068, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint002" Pos="19.63469, 1.67788, -10.25353" Rot="-0.9998477, 0, -0.01745246, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint003" Pos="23.84465, 1.67788, -3.561514" Rot="0.7071068, 0, 0.7071068, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint004" Pos="18.74584, 1.67788, 4.447592" Rot="-4.371139E-08, 0, -1, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint005" Pos="11.63964, 1.67788, 5.084217" Rot="0.5, 0, -0.8660254, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint006" Pos="6.106486, 0.1937088, 5.17461" Rot="0.5, 0, -0.8660254, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint008" Pos="-3.818709, 1.415088, 8.786616" Rot="0.3420202, 0, -0.9396926, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint009" Pos="-7.141752, 4.4, 9.714417" Rot="-0.4790405, -0.04145752, -0.873548, 0.07559932" Static="1">
-    </Node>
-    <Node Name="SplinePoint0091" Pos="-7.141752, 4.4, 9.714417" Rot="-0.6241845, -0.01815813, -0.7807357, 0.02271236" Static="1">
-    </Node>
-    <Node Name="SplinePoint010" Pos="0.00561142, 1.696959, 5.551973" Rot="-4.371139E-08, 0, -1, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint011" Pos="1.263802, 1.696959, -4.180597" Rot="-4.371139E-08, 0, -1, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint012" Pos="1.263802, -2.222968, -10.59951" Rot="-0.1682652, -0.008999499, -0.9842939, 0.05264399" Static="1">
-    </Node>
-    <Node Name="SplinePoint013" Pos="-0.3767405, -2.2682, -17.78069" Rot="0.3589858, 0.03140718, -0.9292648, 0.08130013" Static="1">
-    </Node>
-    <Node Name="SplinePoint014" Pos="-8.946209, -1.269882, -19.15137" Rot="0.354655, 0.06385189, -0.9180542, 0.165286" Static="1">
-    </Node>
-    <Node Name="SplinePoint015" Pos="-18.88073, -1.269882, -19.15137" Rot="-0.641353, -0.04292316, -0.7643346, 0.05115383" Static="1">
-    </Node>
-    <Node Name="SplinePoint0155" Pos="-20.28296, -1.269882, -18.58446" Rot="-0.9964304, -0.06668701, -0.05164694, 0.003456519" Static="1">
-    </Node>
-    <Node Name="SplinePoint016" Pos="-12.46319, -1.908401, -16.56107" Rot="0.6982593, 0, 0.7158449, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint017" Pos="-3.564306, -1.908401, -13.71003" Rot="0.8957986, 0, 0.4444603, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint018" Pos="6.508595, -1.908401, -7.489676" Rot="0.7942075, 0.002381911, -0.6076393, 0.001822373" Static="1">
-    </Node>
-    <Node Name="SplinePoint019" Pos="-3.270019, 2.152175, -5.840305" Rot="0.9260237, 0.002777263, -0.3774536, 0.001132032" Static="1">
-    </Node>
-    <Node Name="SplinePoint020" Pos="1.051352, 1.829292, -0.5414573" Static="1">
-    </Node>
-    <Node Name="SplinePoint021" Pos="0.396385, 1.2, 3.838744" Rot="0.9656451, 0, -0.2598645, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint022" Pos="-0.1892302, 1.2, 4.873164" Rot="0.9610723, 0.01908159, -0.2755831, 0.005471558" Static="1">
-    </Node>
-    <Node Name="SplinePoint024" Pos="15.64994, 1.829292, 4.305258" Rot="0.6640134, 0, 0.7477208, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint025" Pos="18.82474, 1.829292, -2.811902" Rot="0.2243503, -0.1855428, 0.9556902, -0.04355657" Static="1">
-    </Node>
-    <Node Name="SplinePoint026" Pos="19.51411, 1.829292, -15.39478" Rot="0.08023232, 0, 0.9967762, 0" Static="1">
-    </Node>
-    <Node Name="SplinePoint027" Pos="12.93083, 1.698919, -21.20506" Rot="-0.401905, 0, -0.9156814, 0" Static="1">
-    </Node>
+    <Node Name="SplinePoinr000" Pos="12.93083, 1.698919, -21.20506" Rot="-0.401905, 0, -0.9156814, 0" Static="1" />
+    <Node Name="SplinePoins000" Pos="12.93083, 1.698919, -21.20506" Rot="-0.5735765, 0, -0.8191521, 0" Static="1" />
+    <Node Name="SplinePoint000" Pos="12.93083, 1.698919, -21.20506" Rot="0.7071068, 0, 0.7071068, 0" Static="1" />
+    <Node Name="SplinePoint001" Pos="18.32076, 1.698919, -19.88341" Rot="-0.7071068, 0, -0.7071068, 0" Static="1" />
+    <Node Name="SplinePoint002" Pos="19.63469, 1.67788, -10.25353" Rot="-0.9998477, 0, -0.01745246, 0" Static="1" />
+    <Node Name="SplinePoint003" Pos="23.84465, 1.67788, -3.561514" Rot="0.7071068, 0, 0.7071068, 0" Static="1" />
+    <Node Name="SplinePoint004" Pos="18.74584, 1.67788, 4.447592" Rot="-4.371139E-08, 0, -1, 0" Static="1" />
+    <Node Name="SplinePoint005" Pos="11.63964, 1.67788, 5.084217" Rot="0.5, 0, -0.8660254, 0" Static="1" />
+    <Node Name="SplinePoint006" Pos="6.106486, 0.1937088, 5.17461" Rot="0.5, 0, -0.8660254, 0" Static="1" />
+    <Node Name="SplinePoint008" Pos="-3.818709, 1.415088, 8.786616" Rot="0.3420202, 0, -0.9396926, 0" Static="1" />
+    <Node Name="SplinePoint009" Pos="-7.141752, 4.4, 9.714417" Rot="-0.4790405, -0.04145752, -0.873548, 0.07559932" Static="1" />
+    <Node Name="SplinePoint0091" Pos="-7.141752, 4.4, 9.714417" Rot="-0.6241845, -0.01815813, -0.7807357, 0.02271236" Static="1" />
+    <Node Name="SplinePoint010" Pos="0.00561142, 1.696959, 5.551973" Rot="-4.371139E-08, 0, -1, 0" Static="1" />
+    <Node Name="SplinePoint011" Pos="1.263802, 1.696959, -4.180597" Rot="-4.371139E-08, 0, -1, 0" Static="1" />
+    <Node Name="SplinePoint012" Pos="1.263802, -2.222968, -10.59951" Rot="-0.1682652, -0.008999499, -0.9842939, 0.05264399" Static="1" />
+    <Node Name="SplinePoint013" Pos="-0.3767405, -2.2682, -17.78069" Rot="0.3589858, 0.03140718, -0.9292648, 0.08130013" Static="1" />
+    <Node Name="SplinePoint014" Pos="-8.946209, -1.269882, -19.15137" Rot="0.354655, 0.06385189, -0.9180542, 0.165286" Static="1" />
+    <Node Name="SplinePoint015" Pos="-18.88073, -1.269882, -19.15137" Rot="-0.641353, -0.04292316, -0.7643346, 0.05115383" Static="1" />
+    <Node Name="SplinePoint0155" Pos="-20.28296, -1.269882, -18.58446" Rot="-0.9964304, -0.06668701, -0.05164694, 0.003456519" Static="1" />
+    <Node Name="SplinePoint016" Pos="-12.46319, -1.908401, -16.56107" Rot="0.6982593, 0, 0.7158449, 0" Static="1" />
+    <Node Name="SplinePoint017" Pos="-3.564306, -1.908401, -13.71003" Rot="0.8957986, 0, 0.4444603, 0" Static="1" />
+    <Node Name="SplinePoint018" Pos="6.508595, -1.908401, -7.489676" Rot="0.7942075, 0.002381911, -0.6076393, 0.001822373" Static="1" />
+    <Node Name="SplinePoint019" Pos="-3.270019, 2.152175, -5.840305" Rot="0.9260237, 0.002777263, -0.3774536, 0.001132032" Static="1" />
+    <Node Name="SplinePoint020" Pos="1.051352, 1.829292, -0.5414573" Static="1" />
+    <Node Name="SplinePoint021" Pos="0.396385, 1.2, 3.838744" Rot="0.9656451, 0, -0.2598645, 0" Static="1" />
+    <Node Name="SplinePoint022" Pos="-0.1892302, 1.2, 4.873164" Rot="0.9610723, 0.01908159, -0.2755831, 0.005471558" Static="1" />
+    <Node Name="SplinePoint024" Pos="15.64994, 1.829292, 4.305258" Rot="0.6640134, 0, 0.7477208, 0" Static="1" />
+    <Node Name="SplinePoint025" Pos="18.82474, 1.829292, -2.811902" Rot="0.2243503, -0.1855428, 0.9556902, -0.04355657" Static="1" />
+    <Node Name="SplinePoint026" Pos="19.51411, 1.829292, -15.39478" Rot="0.08023232, 0, 0.9967762, 0" Static="1" />
+    <Node Name="SplinePoint027" Pos="12.93083, 1.698919, -21.20506" Rot="-0.401905, 0, -0.9156814, 0" Static="1" />
   </Node>
   <Node Name="wareHouseFBX" Static="1">
-    <Node Name="ambientLight1" Static="1">
-    </Node>
-    <Node Name="cargoTruck" SubMesh="106" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="ambientLight1" Static="1" />
+    <Node Name="cargoTruck" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="106" />
       <Material Name="cargoTruckTGA" />
     </Node>
-    <Node Name="deskWood6" SubMesh="147" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="deskWood6" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="147" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="deskWood7" SubMesh="148" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="deskWood7" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="148" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="officeChair5" SubMesh="35" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="officeChair5" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="35" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="pCube10" SubMesh="97" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="pCube10" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="97" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="pCube11" SubMesh="93" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="pCube11" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="93" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface88" SubMesh="53" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface88" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="53" />
       <Material Name="loadingDoor" />
     </Node>
-    <Node Name="polySurface89" SubMesh="76" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface89" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="76" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface91" SubMesh="70" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface91" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="70" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface93" SubMesh="78" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface93" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="78" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface94" SubMesh="77" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface94" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="77" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface138" SubMesh="15" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface138" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="15" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface139" SubMesh="14" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface139" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="14" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface141" SubMesh="16" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface141" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="16" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface142" SubMesh="11" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface142" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="11" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface143" SubMesh="49" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface143" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="49" />
       <Material Name="woodBeams2" />
     </Node>
-    <Node Name="polySurface147" SubMesh="12" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface147" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="12" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface156" SubMesh="13" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface156" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="13" />
       <Material Name="outerWindows" />
     </Node>
-    <Node Name="polySurface280" SubMesh="1" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface280" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="1" />
       <Material Name="couchFabricTGA" />
     </Node>
-    <Node Name="polySurface288" SubMesh="79" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface288" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="79" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface294" SubMesh="82" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface294" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="82" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface296" SubMesh="81" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface296" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="81" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface298" SubMesh="80" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface298" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="80" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface302" SubMesh="91" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface302" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="91" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface304" SubMesh="85" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface304" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="85" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface328" SubMesh="38" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface328" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="38" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface344" SubMesh="126" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface344" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="126" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface345" SubMesh="123" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface345" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="123" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface359" SubMesh="111" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface359" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="111" />
       <Material Name="brickWall4" />
     </Node>
-    <Node Name="polySurface376" SubMesh="95" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface376" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="95" />
       <Material Name="woodenCeiling3" />
     </Node>
-    <Node Name="polySurface427" SubMesh="92" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface427" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="92" />
       <Material Name="woodenCeiling2" />
     </Node>
-    <Node Name="polySurface428" SubMesh="113" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface428" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="113" />
       <Material Name="brickWall5" />
     </Node>
-    <Node Name="polySurface429" SubMesh="5" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface429" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="5" />
       <Material Name="woodFloorTexture" />
     </Node>
-    <Node Name="polySurface432" SubMesh="45" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface432" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="45" />
       <Material Name="woodBeams" />
     </Node>
     <Node Name="polySurface437" Pos="-1.067141, -3.897616, -9.209357">
       <Mesh Name="polySurface437" />
       <Material Name="loadingDoor" />
     </Node>
-    <Node Name="polySurface439" SubMesh="43" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface439" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="43" />
       <Material Name="conveyorSideTGA" />
     </Node>
-    <Node Name="polySurface440" SubMesh="54" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface440" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="54" />
       <Material Name="loadingDoor" />
     </Node>
-    <Node Name="polySurface445" SubMesh="44" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface445" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="44" />
       <Material Name="conveyorSideTGA" />
     </Node>
     <Node Name="polySurface447" Static="1">
-      <Node Name="polySurface447" SubMesh="67" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface447" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="67" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface447" SubMesh="68" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface447" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="68" />
         <Material Name="woodenCeiling" />
       </Node>
-      <Node Name="polySurface447" SubMesh="69" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface447" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="69" />
         <Material Name="cargoTruckTGA" />
       </Node>
     </Node>
     <Node Name="polySurface448" Static="1">
-      <Node Name="polySurface448" SubMesh="71" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface448" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="71" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface448" SubMesh="72" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface448" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="72" />
         <Material Name="woodenCeiling" />
       </Node>
-      <Node Name="polySurface448" SubMesh="73" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface448" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="73" />
         <Material Name="cargoTruckTGA" />
       </Node>
     </Node>
-    <Node Name="polySurface452" SubMesh="141" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface452" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="141" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface456" SubMesh="0" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface456" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="0" />
       <Material Name="couchFabricTGA" />
     </Node>
-    <Node Name="polySurface461" SubMesh="99" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface461" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="99" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface462" SubMesh="3" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface462" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="3" />
       <Material Name="couchFabricTGA" />
     </Node>
-    <Node Name="polySurface470" SubMesh="4" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface470" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="4" />
       <Material Name="woodFloorTexture" />
     </Node>
-    <Node Name="polySurface471" SubMesh="112" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface471" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="112" />
       <Material Name="brickWall2" />
     </Node>
-    <Node Name="polySurface472" SubMesh="89" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface472" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="89" />
       <Material Name="woodenCeiling2" />
     </Node>
-    <Node Name="polySurface475" SubMesh="51" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface475" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="51" />
       <Material Name="woodBeams" />
     </Node>
     <Node Name="polySurface540" Static="1">
-      <Node Name="polySurface540" SubMesh="103" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface540" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="103" />
         <Material Name="cargoTruckTGA" />
       </Node>
-      <Node Name="polySurface540" SubMesh="104" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface540" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="104" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface540" SubMesh="105" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface540" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="105" />
         <Material Name="woodenCeiling" />
       </Node>
     </Node>
     <Node Name="polySurface544" Static="1">
-      <Node Name="polySurface544" SubMesh="74" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface544" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="74" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface544" SubMesh="75" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface544" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="75" />
         <Material Name="woodenCeiling" />
       </Node>
     </Node>
     <Node Name="polySurface547" Static="1">
-      <Node Name="polySurface547" SubMesh="87" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface547" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="87" />
         <Material Name="woodenCeiling" />
       </Node>
-      <Node Name="polySurface547" SubMesh="88" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface547" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="88" />
         <Material Name="concreteCeiling" />
       </Node>
     </Node>
-    <Node Name="polySurface554" SubMesh="138" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface554" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="138" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface579" SubMesh="131" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface579" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="131" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface582" SubMesh="98" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface582" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="98" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface597" SubMesh="19" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface597" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="19" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface598" SubMesh="21" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface598" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="21" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface599" SubMesh="20" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface599" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="20" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface601" SubMesh="133" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface601" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="133" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface602" SubMesh="134" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface602" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="134" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface711" SubMesh="94" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface711" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="94" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface801" SubMesh="34" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface801" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="34" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface804" SubMesh="33" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface804" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="33" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface807" SubMesh="96" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface807" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="96" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface816" SubMesh="146" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface816" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="146" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="polySurface818" SubMesh="100" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface818" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="100" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface819" SubMesh="143" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface819" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="143" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="polySurface824" SubMesh="144" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface824" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="144" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="polySurface825" SubMesh="116" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface825" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="116" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface826" SubMesh="114" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface826" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="114" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface827" SubMesh="2" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface827" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="2" />
       <Material Name="couchFabricTGA" />
     </Node>
-    <Node Name="polySurface855" SubMesh="86" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface855" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="86" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface858" SubMesh="6" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface858" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="6" />
       <Material Name="woodFloorTexture3" />
     </Node>
-    <Node Name="polySurface875" SubMesh="8" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface875" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="8" />
       <Material Name="woodFloorTexture4" />
     </Node>
-    <Node Name="polySurface887" SubMesh="41" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface887" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="41" />
       <Material Name="largeBrick" />
     </Node>
-    <Node Name="polySurface890" SubMesh="142" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface890" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="142" />
       <Material Name="brickFrame" />
     </Node>
-    <Node Name="polySurface891" SubMesh="59" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface891" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="59" />
       <Material Name="concreteCeiling2" />
     </Node>
-    <Node Name="polySurface915" SubMesh="107" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface915" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="107" />
       <Material Name="cargoTruckTGA" />
     </Node>
-    <Node Name="polySurface984" SubMesh="55" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface984" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="55" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface985" SubMesh="65" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface985" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="65" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface986" SubMesh="9" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface986" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="9" />
       <Material Name="innerWindows" />
     </Node>
-    <Node Name="polySurface987" SubMesh="10" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface987" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="10" />
       <Material Name="innerWindows" />
     </Node>
-    <Node Name="polySurface1068" SubMesh="108" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1068" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="108" />
       <Material Name="concreteFloor2" />
     </Node>
-    <Node Name="polySurface1069" SubMesh="109" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1069" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="109" />
       <Material Name="concreteFloor2" />
     </Node>
-    <Node Name="polySurface1135" SubMesh="135" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1135" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="135" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1170" SubMesh="28" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1170" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="28" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1187" SubMesh="137" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1187" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="137" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1188" SubMesh="136" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1188" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="136" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1202" SubMesh="129" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1202" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="129" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1203" SubMesh="128" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1203" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="128" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1204" SubMesh="130" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1204" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="130" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1205" SubMesh="132" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1205" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="132" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1218" SubMesh="90" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1218" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="90" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface1231" SubMesh="17" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1231" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="17" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface1232" SubMesh="18" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1232" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="18" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface1233" SubMesh="22" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1233" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="22" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface1257" SubMesh="52" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1257" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="52" />
       <Material Name="woodBeams2" />
     </Node>
-    <Node Name="polySurface1258" SubMesh="50" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1258" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="50" />
       <Material Name="woodBeams2" />
     </Node>
     <Node Name="polySurface1288" Static="1">
-      <Node Name="polySurface1288" SubMesh="60" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface1288" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="60" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface1288" SubMesh="61" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface1288" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="61" />
         <Material Name="woodenCeiling" />
       </Node>
     </Node>
-    <Node Name="polySurface1289" SubMesh="102" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1289" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="102" />
       <Material Name="cargoTruckTGA" />
     </Node>
     <Node Name="polySurface1299" Static="1">
-      <Node Name="polySurface1299" SubMesh="56" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface1299" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="56" />
         <Material Name="concreteCeiling" />
       </Node>
-      <Node Name="polySurface1299" SubMesh="57" Static="1">
-        <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+      <Node Name="polySurface1299" Static="1">
+        <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="57" />
         <Material Name="woodenCeiling" />
       </Node>
     </Node>
-    <Node Name="polySurface1300" SubMesh="101" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1300" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="101" />
       <Material Name="cargoTruckTGA" />
     </Node>
-    <Node Name="polySurface1341" SubMesh="149" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1341" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="149" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="polySurface1342" SubMesh="83" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1342" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="83" />
       <Material Name="woodenCeiling" />
     </Node>
-    <Node Name="polySurface1344" SubMesh="25" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1344" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="25" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1346" SubMesh="58" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1346" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="58" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface1370" SubMesh="66" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1370" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="66" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface1372" SubMesh="26" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1372" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="26" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1381" SubMesh="139" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1381" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="139" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1382" SubMesh="140" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1382" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="140" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1434" SubMesh="23" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1434" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="23" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface1435" SubMesh="24" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1435" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="24" />
       <Material Name="cardboardBoxTGA" />
     </Node>
-    <Node Name="polySurface1440" SubMesh="27" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1440" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="27" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1441" SubMesh="29" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1441" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="29" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1442" SubMesh="145" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1442" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="145" />
       <Material Name="mapleWoodTGA" />
     </Node>
-    <Node Name="polySurface1445" SubMesh="63" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1445" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="63" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface1446" SubMesh="62" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1446" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="62" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface1448" SubMesh="37" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1448" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="37" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1449" SubMesh="64" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1449" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="64" />
       <Material Name="concreteCeiling" />
     </Node>
-    <Node Name="polySurface1451" SubMesh="127" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1451" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="127" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1455" SubMesh="117" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1455" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="117" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1456" SubMesh="115" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1456" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="115" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1457" SubMesh="118" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1457" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="118" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1458" SubMesh="124" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1458" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="124" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1459" SubMesh="42" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1459" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="42" />
       <Material Name="largeBrick" />
     </Node>
-    <Node Name="polySurface1460" SubMesh="36" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1460" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="36" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1461" SubMesh="40" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1461" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="40" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1463" SubMesh="125" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1463" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="125" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1464" SubMesh="120" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1464" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="120" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1465" SubMesh="121" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1465" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="121" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1466" SubMesh="122" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1466" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="122" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
-    <Node Name="polySurface1468" SubMesh="39" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1468" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="39" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1469" SubMesh="32" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1469" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="32" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1470" SubMesh="119" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1470" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="119" />
       <Material Name="mostlyBoxesTGA" />
     </Node>
     <Node Name="polySurface1473" Pos="0.6983299, 6.233997, 7.402587">
@@ -1011,36 +980,36 @@
       <Mesh Name="polySurface1473" />
       <Material Name="mostlyBoxesTGA_2_(renamed)" />
     </Node>
-    <Node Name="polySurface1475" SubMesh="31" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1475" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="31" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1476" SubMesh="30" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1476" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="30" />
       <Material Name="officeStuffTGA" />
     </Node>
-    <Node Name="polySurface1478" SubMesh="110" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1478" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="110" />
       <Material Name="brickWall3" />
     </Node>
-    <Node Name="polySurface1479" SubMesh="84" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1479" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="84" />
       <Material Name="woodenCeiling5" />
     </Node>
-    <Node Name="polySurface1480" SubMesh="7" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1480" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="7" />
       <Material Name="woodFloorTexture2" />
     </Node>
-    <Node Name="polySurface1518" SubMesh="46" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="polySurface1518" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="46" />
       <Material Name="woodBeams3" />
     </Node>
-    <Node Name="pPipe6" SubMesh="48" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="pPipe6" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="48" />
       <Material Name="woodBeams2" />
     </Node>
-    <Node Name="pPipe7" SubMesh="47" Static="1">
-      <Mesh Name="Combined Mesh (root wareHouseFBX)" />
+    <Node Name="pPipe7" Static="1">
+      <Mesh Name="Combined Mesh (root wareHouseFBX)" SubMesh="47" />
       <Material Name="woodBeams2" />
     </Node>
   </Node>

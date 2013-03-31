@@ -75,6 +75,11 @@ public:
 	void Bind(Renderer* pRenderer);
 	void Unbind(Renderer* pRenderer);
 
+	// Draw the entire subgraph once (without displaying it), so that the
+	// graphics driver can allocate/initialize its resources (e.g buffers
+	// for batching)
+	void WarmUpRendering(Renderer* pRenderer);
+
 	// effect state
 	inline UInt GetEffectQuantity() const;
 	inline Effect* GetEffect(UInt i = 0) const;
@@ -87,7 +92,7 @@ public:
 
 protected:
 	// geometric update
-	virtual void UpdateWorldData(Double appTime);
+	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 
 	// render state updates
 	virtual void UpdateState(TArray<State*>* pStateStacks,

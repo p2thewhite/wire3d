@@ -33,9 +33,10 @@ Spatial::~Spatial()
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateGS(Double appTime, Bool isInitiator)
+void Spatial::UpdateGS(Double appTime, Bool isInitiator,
+	Bool updateControllers)
 {
-	UpdateWorldData(appTime);
+	UpdateWorldData(appTime, updateControllers);
 	UpdateWorldBound();
 	if (isInitiator)
 	{
@@ -51,10 +52,13 @@ void Spatial::UpdateBS()
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateWorldData(Double appTime)
+void Spatial::UpdateWorldData(Double appTime, Bool updateControllers)
 {
-	// update any controllers associated with this object
-	UpdateControllers(appTime);
+	if (updateControllers)
+	{
+		// update any controllers associated with this object
+		UpdateControllers(appTime);
+	}
 
 	// update world transforms
 	if (!WorldIsCurrent)
