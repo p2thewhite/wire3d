@@ -28,7 +28,7 @@ NodeSkybox::~NodeSkybox()
 }
 
 //----------------------------------------------------------------------------
-void NodeSkybox::UpdateWorldData(Double appTime)
+void NodeSkybox::UpdateWorldData(Double appTime, Bool)
 {
 	mAppTime = appTime;
 }
@@ -39,7 +39,7 @@ void NodeSkybox::GetVisibleSet(Culler& rCuller, Bool noCull)
 	const Camera* const pCamera = rCuller.GetCamera();
 	World.SetTranslate(pCamera->GetLocation());
 
-	Node::UpdateWorldData(mAppTime);
+	Node::UpdateWorldData(mAppTime, true);
 	Node::GetVisibleSet(rCuller, noCull);
 }
 

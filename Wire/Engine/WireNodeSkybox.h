@@ -32,7 +32,7 @@ public:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 protected:
-	virtual void UpdateWorldData(Double appTime);
+	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 
 private:
 	void Init(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,

@@ -9,6 +9,7 @@
 #include "WireNode.h"
 
 #include "WireCuller.h"
+#include "WireCullerSorting.h"
 #include "WireRenderer.h"
 
 using namespace Wire;
@@ -214,16 +215,16 @@ void Node::UpdateWorldBound()
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateWorldData(Double appTime)
+void Node::UpdateWorldData(Double appTime, Bool updateControllers)
 {
-	Spatial::UpdateWorldData(appTime);
+	Spatial::UpdateWorldData(appTime, updateControllers);
 
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
 		Spatial* pChild = mChildren[i];
 		if (pChild)
 		{
-			pChild->UpdateGS(appTime, false);
+			pChild->UpdateGS(appTime, false, updateControllers);
 		}
 	}
 }
@@ -379,6 +380,35 @@ void Node::Unbind(Renderer* pRenderer)
 	{
 		pRenderer->Unbind(mspRenderObject);
 	}
+}
+
+//----------------------------------------------------------------------------
+void Node::WarmUpRendering(Renderer* pRenderer)
+{
+	WIRE_ASSERT(pRenderer);
+	UpdateGS(0, true, false);
+
+	Vector3F cameraLocation = WorldBound->GetCenter();
+	cameraLocation.Z() += WorldBound->GetRadius();
+	Vector3F viewDirection = -Vector3F::UNIT_Z;
+	Vector3F up = Vector3F::UNIT_Y;
+	Vector3F right = viewDirection.Cross(up);
+	CameraPtr spCamera = WIRE_NEW Camera;
+	spCamera->SetFrame(cameraLocation, viewDirection, up, right);
+
+	Float fieldOfView = 60.0F;
+	Float aspectRatio = 2;
+	Float nearPlane = 0.1F;
+	Float farPlane = WorldBound->GetRadius() * 2.0F;
+	spCamera->SetFrustum(fieldOfView, aspectRatio, nearPlane, farPlane);
+
+	CullerSorting culler;
+	culler.SetCamera(spCamera);
+	culler.ComputeVisibleSet(this);
+
+	pRenderer->PreDraw(spCamera);
+	pRenderer->Draw(culler.GetVisibleSets());
+	pRenderer->PostDraw();
 }
 
 //----------------------------------------------------------------------------

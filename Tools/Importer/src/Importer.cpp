@@ -83,7 +83,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 	mTextures.RemoveAll();
 	mLights.RemoveAll();
 
-	pRoot->UpdateGS();
+	pRoot->UpdateGS(0, true, false);
 	pRoot->UpdateRS();
 
 	if (mStaticSpatials.GetQuantity() > 0)
@@ -98,7 +98,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 }
 
 //----------------------------------------------------------------------------
-Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps,
+Image2D* Importer::LoadPNG(const Char* pFilename, Bool createMipmaps,
 	Buffer::UsageType usage)
 {
 	Int pngSize;
@@ -108,17 +108,17 @@ Image2D* Importer::LoadPNG(const Char* pFilename, Bool hasMipmaps,
 		return NULL;
 	}
 
-	Image2D* pImage2D = DecodePNG(pPNG, pngSize, hasMipmaps, usage);
+	Image2D* pImage2D = DecodePNG(pPNG, pngSize, createMipmaps, usage);
 	WIRE_DELETE[] pPNG;
 
 	return pImage2D;
 }
 
 //----------------------------------------------------------------------------
-Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps,
+Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool createMipmaps,
 	Buffer::UsageType usage)
 {
-	Image2D* pImage = LoadPNG(pFilename, hasMipmaps, usage);
+	Image2D* pImage = LoadPNG(pFilename, createMipmaps, usage);
 	if (!pImage)
 	{
 		return NULL;
@@ -131,7 +131,7 @@ Texture2D* Importer::LoadTexture2D(const Char* pFilename, Bool hasMipmaps,
 
 //----------------------------------------------------------------------------
 Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
-	Bool hasMipmaps, Buffer::UsageType usage)
+	Bool createMipmaps, Buffer::UsageType usage)
 {
 	std::vector<UChar> rawImage;
 	ULong width;
@@ -147,7 +147,7 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
 	System::Memcpy(pDst, size, &(rawImage[0]), size);
 
 	Image2D* pImage = WIRE_NEW Image2D(format, width, height, pDst,
-		hasMipmaps, usage);
+		createMipmaps, usage);
 
 	return pImage;
 }
@@ -549,33 +549,6 @@ Char* Importer::GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 Bool Importer::HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
 	return GetValue(pXmlNode, pName) != NULL;
-}
-
-//----------------------------------------------------------------------------
-Bool Importer::IsBigEndian(rapidxml::xml_node<>* pXmlNode)
-{
-	for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();	attr;
-		attr = attr->next_attribute())
-	{
-		if (Is("LittleEndian", attr->name()))
-		{
-			Char* pValue = attr->value();
-			if (pValue)
-			{
-				if (*pValue == 'y' || *pValue == '1')
-				{
-					if (*pValue == 'y')
-					{
-						WIRE_ASSERT(false);
-					}
-
-					return false;
-				}
-			}
-		}
-	}
-
-	return true;
 }
 
 //----------------------------------------------------------------------------
@@ -1220,7 +1193,6 @@ RenderObject* Importer::ParseRenderObject(rapidxml::xml_node<>* pXmlNode)
 {
 	Mesh* pMesh = NULL;
 	Material* pMaterial = NULL;
-	UInt subMeshIndex = GetUInt(pXmlNode, "SubMesh");
 
 	if (pXmlNode->first_node())
 	{
@@ -1229,7 +1201,7 @@ RenderObject* Importer::ParseRenderObject(rapidxml::xml_node<>* pXmlNode)
 		{
 			if (Is("Mesh", pChild->name()))
 			{
-				pMesh = ParseMesh(pChild, subMeshIndex);
+				pMesh = ParseMesh(pChild);
 			}
 			else if (Is("Material", pChild->name()))
 			{
@@ -1644,7 +1616,7 @@ State* Importer::ParseRenderStates(rapidxml::xml_node<>* pXmlNode)
 }
 
 //----------------------------------------------------------------------------
-Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
+Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode)
 {
 	Char* pName = GetValue(pXmlNode, "Name");
 	if (!pName)
@@ -1652,6 +1624,8 @@ Mesh* Importer::ParseMesh(rapidxml::xml_node<>* pXmlNode, UInt subMeshIndex)
 		WIRE_ASSERT(false /* Mesh has no name */);
 		return NULL;
 	}
+
+	UInt subMeshIndex = GetUInt(pXmlNode, "SubMesh");
 
 	if (mpOptions->AssetsWithEqualNamesAreIdentical)
 	{
@@ -1733,26 +1707,26 @@ VertexBuffer* Importer::ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode)
 		{
 			WIRE_ASSERT(!pVerticesFileName);
 			pVerticesFileName = GetValue(pChild, "Name");
-			isVertexBufferBigEndian = IsBigEndian(pChild);
+			isVertexBufferBigEndian = !IsTrue("LittleEndian", pChild);
 			vertexBufferUsage = GetUsageType(pChild);
 		}
 		else if (Is("Normals", pChild->name()))
 		{
 			WIRE_ASSERT(!pNormalsFileName);
 			pNormalsFileName = GetValue(pChild, "Name");
-			isNormalsBigEndian = IsBigEndian(pChild);
+			isNormalsBigEndian = !IsTrue("LittleEndian", pChild);
 		}
 		else if (Is("Colors", pChild->name()))
 		{
 			WIRE_ASSERT(!pColorsFileName);
 			pColorsFileName = GetValue(pChild, "Name");
-			isColorsBigEndian = IsBigEndian(pChild);
+			isColorsBigEndian = !IsTrue("LittleEndian", pChild);
 			isColors32bit = IsTrue("32bit", pChild);
 		}
 		else if (System::Strncmp("Uv", pChild->name(), 2) == 0)
 		{
 			uvSetNames.Append(GetValue(pChild, "Name"));
-			uvBigEndian.Append(IsBigEndian(pChild));
+			uvBigEndian.Append(!IsTrue("LittleEndian", pChild));
 		}
 	}
 
@@ -1816,8 +1790,8 @@ IndexBuffer* Importer::ParseIndexBuffer(rapidxml::xml_node<>* pXmlNode)
 		if (Is("Indices", pChild->name()))
 		{
 			IndexBuffer* pIndexBuffer = LoadIndexBufferFromFile(GetValue(
-				pChild, "Name"), IsBigEndian(pChild), GetUsageType(pChild),
-				IsTrue("16bit", pChild));
+				pChild, "Name"), !IsTrue("LittleEndian", pChild),
+				GetUsageType(pChild), IsTrue("16bit", pChild));
 			return pIndexBuffer;
 		}
 	}
@@ -2085,7 +2059,7 @@ VertexBuffer* Importer::LoadVertexBuffer(rapidxml::xml_node<>* pXmlNode,
 	}
 
 	Char* pFileName = GetValue(pXmlNode, "Name");
-	Bool isBigEndian = IsBigEndian(pXmlNode);
+	Bool isBigEndian = !IsTrue("LittleEndian", pXmlNode);
 	Buffer::UsageType usage = GetUsageType(pXmlNode);
 
 	Int size;

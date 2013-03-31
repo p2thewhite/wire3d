@@ -34,7 +34,7 @@ Bool Demo::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
- 	GetRenderer()->CreateBatchingBuffers(25*1024, 2*1024);
+ 	GetRenderer()->CreateBatchingBuffers(25*1024, 5*1024, 3);
  	GetRenderer()->SetDynamicBatchingThreshold(200, 200);
  	GetRenderer()->SetStaticBatchingThreshold(3000);
 
@@ -217,5 +217,6 @@ Node* Demo::LoadAndInitScene()
 	}
 
 	pScene->Bind(GetRenderer());
+	pScene->WarmUpRendering(GetRenderer());
 	return pScene;
 }

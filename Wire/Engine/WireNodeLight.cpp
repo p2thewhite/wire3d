@@ -31,16 +31,12 @@ void NodeLight::Set(Light* pLight)
 	mspLight = pLight;
 
 	LightToLocalTransform();
-	if (mspLight)
-	{
-		UpdateGS();
-	}
 }
 
 //----------------------------------------------------------------------------
-void NodeLight::UpdateWorldData(Double appTime)
+void NodeLight::UpdateWorldData(Double appTime, Bool updateControllers)
 {
-	Node::UpdateWorldData(appTime);
+	Node::UpdateWorldData(appTime, updateControllers);
 
 	if (mspLight)
 	{

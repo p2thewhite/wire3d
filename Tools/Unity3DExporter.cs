@@ -68,7 +68,7 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private static List<Transform> GetRootTransforms ()
+    private static List<Transform> GetRootTransforms()
 	{
 		List<Transform> allTransforms = new List<Transform> (FindObjectsOfType (typeof(Transform)) as Transform[]);
 		List<Transform> rootTransforms = allTransforms.Where (t => t.parent == null).ToList ();
@@ -304,7 +304,7 @@ public class Unity3DExporter : EditorWindow
 		}
 	}
 
-	private void WriteLeaf(Transform transform, StreamWriter outFile, string indent, bool isGameObjectLeaf = true)
+	private void WriteRenderObject(Transform transform, StreamWriter outFile, string indent)
 	{
         GameObject go = transform.gameObject;
         MeshFilter meshFilter = go.GetComponent<MeshFilter>();
@@ -314,9 +314,8 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 
-        string subMeshIdx = "";
+        int subMeshIndex = -1;
         int submeshCount = meshFilter.sharedMesh.subMeshCount;
-        bool isCombined = false;
 
         SerializedObject so = new SerializedObject(meshRenderer);
         SerializedProperty sp = so.FindProperty("m_SubsetIndices");
@@ -325,43 +324,34 @@ public class Unity3DExporter : EditorWindow
             if (sp.arraySize > 0)
             {
                 submeshCount = sp.arraySize;
-                int idx = sp.GetArrayElementAtIndex(0).intValue;
-                subMeshIdx = " SubMesh=\"" + idx + "\"";
-                isCombined = true;
+                subMeshIndex = sp.GetArrayElementAtIndex(0).intValue;
             }
         }
 
         bool exportSubmeshes = submeshCount > 1 ? true : false;
-        string xmlNodeName = "Node";
         if (exportSubmeshes)
         {
-            subMeshIdx = "";
+            subMeshIndex = 0;
         }
 
-        string transformString = "";
-        if (isGameObjectLeaf && !isCombined)
-        {
-            transformString = " " + GetTransformAsString(transform, go.isStatic);
-        }
-
-        string isStatic = go.isStatic ? " Static=\"1\"" : "";
-        outFile.WriteLine(indent + "<" + xmlNodeName + " Name=\"" + go.name + "\"" + transformString + subMeshIdx + isStatic + ">");
-
-        WriteLightNode(go.GetComponent<Light>(), outFile, indent);
-        WriteCamera(go.GetComponent<Camera>(), outFile, indent);
-
+        bool extraNode = false;
         bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
         if (!isLightmapped)
         {
             List<Light> lights = GetLightsForLayer(go.layer);
+            if (lights.Count > 0 && transform.GetChildCount() > 0)
+            {
+                indent = indent + "  ";
+                string isStatic = go.isStatic ? " Static=\"1\"" : "";
+                outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\"" + isStatic + ">");
+                extraNode = true;
+            }
+
             foreach (Light light in lights)
             {
                 WriteLight(light, outFile, indent);
             }
         }
-
-        WriteCollider(go, outFile, indent);
-        WriteRigidbody(go, outFile, indent);
 
         if (exportSubmeshes)
         {
@@ -369,11 +359,14 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
-            WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent + "  ");
+            WriteMesh(meshFilter.sharedMesh, meshRenderer, outFile, indent + "  ", subMeshIndex);
             WriteMaterial(meshRenderer, meshRenderer.sharedMaterial, outFile, indent + "  ");
         }
 
-        outFile.WriteLine(indent + "</" + xmlNodeName + ">");       
+        if (extraNode)
+        {
+            outFile.WriteLine(indent + "</Node>");       
+        }
 	}
 
     private List<Light> GetLightsForLayer(int layer)
@@ -414,9 +407,8 @@ public class Unity3DExporter : EditorWindow
                 for (int j = 0; j < sp.arraySize; j++)
                 {
                     int i = sp.GetArrayElementAtIndex(j).intValue;
-                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" +
-                        " SubMesh=\"" + i + "\"" + isStatic + ">");
-                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + ">");
+                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ", i);
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[j], outFile, indent + "  ");
                     outFile.WriteLine(indent + "</Node>");
                 }
@@ -426,10 +418,8 @@ public class Unity3DExporter : EditorWindow
                 int submeshCount = mesh.subMeshCount;
                 for (int i = 0; i < submeshCount; i++)
                 {
-                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + " (submesh_" + i + ")\"" +
-                        " SubMesh=\"" + i + "\"" + isStatic + ">");
-                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ");
-
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + ">");
+                    WriteMesh(mesh, meshRenderer, outFile, indent + "  ", i);
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
                     outFile.WriteLine(indent + "</Node>");
                 }
@@ -453,32 +443,37 @@ public class Unity3DExporter : EditorWindow
             isStatic += "Static=\"1\"";
         }
 
+        bool isEmpty = go.transform.GetChildCount() == 0;
+        Component[] components = go.GetComponents<Component>();
+        isEmpty = isEmpty && (components == null || components.Length < 2);
+        string slash = isEmpty ? " /" : "";
+
         outFile.WriteLine(indent + "<Node Name=\"" + transform.gameObject.name + "\" " +
-             trafo + isStatic + ">");
+             trafo + isStatic + slash + ">");
 
         WriteLightNode(go.GetComponent<Light>(), outFile, indent);
 
-        if (!HasRenderObject(transform))
+        WriteCamera(go.GetComponent<Camera>(), outFile, indent);
+        WriteCollider(go, outFile, indent);
+        WriteRigidbody(go, outFile, indent);
+
+        if (HasRenderObject(transform))
         {
-            WriteCamera(go.GetComponent<Camera>(), outFile, indent);
-            WriteCollider(go, outFile, indent);
-            WriteRigidbody(go, outFile, indent);
+            WriteRenderObject(transform, outFile, indent);
         }
-    	
+
 		if (transform.GetChildCount () > 0)
-        {
-			if (HasRenderObject(transform))
-            {
-				WriteLeaf(transform, outFile, indent + "  ", false);
-			}
-    	
+        {   	
 			for (int i = 0; i < transform.GetChildCount(); i++)
             {
 				Traverse(transform.GetChild (i), outFile, indent + "  ");
 			}
 		}
     	
-		outFile.WriteLine(indent + "</Node>");
+        if (!isEmpty)
+        {
+            outFile.WriteLine(indent + "</Node>");
+        }
 	}
 
 	private void WriteSkybox (StreamWriter outFile, string indent)
@@ -553,14 +548,7 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
       	
-		if (HasRenderObject(transform) && transform.GetChildCount() == 0)
-        {
-			WriteLeaf(transform, outFile, indent);
-		}
-        else
-        {
-			WriteNode(transform, outFile, indent);
-		}
+		WriteNode(transform, outFile, indent);
 	}
 	
 	private void Export ()
@@ -603,6 +591,21 @@ public class Unity3DExporter : EditorWindow
 
 	private string GetTransformAsString(Transform transform, bool useWorldTransform = false)
 	{
+        GameObject go = transform.gameObject;
+        MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
+        if (meshRenderer != null)
+        {
+            SerializedObject so = new SerializedObject(meshRenderer);
+            SerializedProperty sp = so.FindProperty("m_SubsetIndices");
+            if (sp != null && sp.isArray)
+            {
+                if (sp.arraySize > 0)
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
 		Vector3 position = transform.localPosition;
 		Quaternion rotation = transform.localRotation;
 		Vector3 scale = transform.localScale;
@@ -867,7 +870,7 @@ public class Unity3DExporter : EditorWindow
 	private void WriteCollider (GameObject gameObject, StreamWriter outFile, string indent)
 	{
 		Collider collider = gameObject.GetComponent<Collider>();
-		if (collider == null)
+		if (collider == null || !collider.enabled)
         {
 			return;
 		}
@@ -1222,7 +1225,8 @@ public class Unity3DExporter : EditorWindow
         return mesh.name + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
     }
 
-	private void WriteMesh(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent)
+	private void WriteMesh(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent,
+        int subMeshIndex = -1)
 	{
 		if (mesh == null)
         {
@@ -1244,13 +1248,15 @@ public class Unity3DExporter : EditorWindow
 
         meshName = mMeshAssetNameToMeshName[meshAssetName];
 
+        string subMesh = subMeshIndex == -1 ? "" : " SubMesh=\"" + subMeshIndex + "\"";
+
         if (alreadyProcessed)
         {
-            outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\" />");
+            outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\"" + subMesh + " />");
             return;
         }
 
-        outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\">");
+        outFile.WriteLine(indent + "<Mesh Name=\"" + meshName + "\"" + subMesh + ">");
 
         if (mesh.subMeshCount > 1)
         {

@@ -454,6 +454,7 @@ Node* Game::LoadAndInitializeScene()
 	mspPlayer->Register(mspPhysicsWorld->Get());
 
 	pScene->Bind(GetRenderer());
+	pScene->WarmUpRendering(GetRenderer());
 
 	return pScene;
 }
