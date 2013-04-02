@@ -23,6 +23,7 @@ You can build Wire3D for the following target platforms:
 
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
+    *  In Visual Studio 2005/2008 add DirectX SDK include and library directories to Visual Studio global directories (Tools -> Options -> Projects and Solutions -> VC++ Directories)
   * Get the latest [http://code.google.com/p/wire3d/downloads/list release] (recommended) or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
   * Open `Wire3D_WIN32.sln` with Visual Studio 2005/2008 or `Wire3D_WIN32_VS2010.sln` with Visual Studio 2010
   * Compile and run any of the samples in the solution
