@@ -9,6 +9,7 @@
 #include "WireNodeSkybox.h"
 
 #include "WireCuller.h"
+#include "WireIndexBuffer.h"
 #include "WireStateCull.h"
 
 using namespace Wire;
@@ -17,9 +18,9 @@ WIRE_IMPLEMENT_RTTI(Wire, NodeSkybox, Node);
 
 //----------------------------------------------------------------------------
 NodeSkybox::NodeSkybox(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
-	Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY, Float scale)
+	Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY)
 {
-	Init(pPosZ, pNegZ, pPosX, pNegX, pPosY, pNegY, scale);
+	Init(pPosZ, pNegZ, pPosX, pNegX, pPosY, pNegY);
 }
 
 //----------------------------------------------------------------------------
@@ -36,8 +37,11 @@ void NodeSkybox::UpdateWorldData(Double appTime, Bool)
 //----------------------------------------------------------------------------
 void NodeSkybox::GetVisibleSet(Culler& rCuller, Bool noCull)
 {
+	const Float sqrtOfThree = 1.7320508F;
 	const Camera* const pCamera = rCuller.GetCamera();
+	Float scale = pCamera->GetDMax() * 0.25F * sqrtOfThree;
 	World.SetTranslate(pCamera->GetLocation());
+	World.SetUniformScale(scale);
 
 	Node::UpdateWorldData(mAppTime, true);
 	Node::GetVisibleSet(rCuller, noCull);
@@ -45,7 +49,7 @@ void NodeSkybox::GetVisibleSet(Culler& rCuller, Bool noCull)
 
 //----------------------------------------------------------------------------
 void NodeSkybox::Init(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
-	Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY, Float scale)
+	Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY)
 {
 	mAppTime = 0;
 	Culling = CULL_NEVER;
@@ -57,50 +61,50 @@ void NodeSkybox::Init(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
 	// +Z (front)
 	AddQuad(Vector3F(1.0F, 1.0F, 1.0F), Vector3F(-1.0F, 1.0F, 1.0F),
 			Vector3F(-1.0F, -1.0F, 1.0F), Vector3F(1.0F, -1.0F, 1.0F),
-			pPosZ, scale);
+			pPosZ);
 
 	// -Z (back)
 	AddQuad(Vector3F(-1.0F, 1.0F, -1.0F), Vector3F(1.0F, 1.0F,-1.0F),
 			Vector3F(1.0F, -1.0F, -1.0F), Vector3F(-1.0F, -1.0F, -1.0F),
-			pNegZ, scale);
+			pNegZ);
 
 	// +X (left)
 	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(1.0F, 1.0F, 1.0F),
 			Vector3F(1.0F, -1.0F, 1.0F), Vector3F(1.0F, -1.0F, -1.0F),
-			pPosX, scale);
+			pPosX);
 
 	// -X (right)
 	AddQuad(Vector3F(-1.0F, 1.0F, 1.0F), Vector3F(-1.0F, 1.0F, -1.0F),
 			Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
-			pNegX, scale);
+			pNegX);
 
 	// +Y (up)
 	AddQuad(Vector3F(1.0F, 1.0F, -1.0F), Vector3F(-1.0F, 1.0F, -1.0F),
 			Vector3F(-1.0F, 1.0F, 1.0F), Vector3F(1.0F, 1.0F, 1.0F),
-			pPosY, scale);
+			pPosY);
 
 	// -Y (down)
 	AddQuad(Vector3F(1.0F, -1.0F, 1.0F), Vector3F(-1.0F, -1.0F, 1.0F),
 			Vector3F(-1.0F, -1.0F, -1.0F), Vector3F(1.0F, -1.0F, -1.0F),
-			pNegY, scale);
+			pNegY);
 }
 
 //----------------------------------------------------------------------------
 void NodeSkybox::AddQuad(const Vector3F& v0, const Vector3F& v1, const
-	Vector3F& v2, const Vector3F& v3, Texture2D* pTexture, const Float scale)
+	Vector3F& v2, const Vector3F& v3, Texture2D* pTexture)
 {
 	VertexAttributes attributes;
 	attributes.SetPositionChannels(3);  // channels: X, Y, Z
 	attributes.SetTCoordChannels(2);	// channels: U, V
 
 	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attributes, 4);
-	pVBuffer->Position3(0) = v0 * scale;
+	pVBuffer->Position3(0) = v0;
 	pVBuffer->TCoord2(0) = Vector2F(0, 0);
-	pVBuffer->Position3(1) = v1 * scale;
+	pVBuffer->Position3(1) = v1;
 	pVBuffer->TCoord2(1) = Vector2F(1, 0);
-	pVBuffer->Position3(2) = v2 * scale;
+	pVBuffer->Position3(2) = v2;
 	pVBuffer->TCoord2(2) = Vector2F(1, 1);
-	pVBuffer->Position3(3) = v3 * scale;
+	pVBuffer->Position3(3) = v3;
 	pVBuffer->TCoord2(3) = Vector2F(0, 1);
 
 	const UShort indices[6] = { 0, 1, 2, 0, 2, 3 };

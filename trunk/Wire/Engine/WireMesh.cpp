@@ -22,7 +22,7 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer)
 	:
 	mVertexBuffers(1, 1)
 {
-	InitVertexBuffer(pVertexBuffer);
+	SetVertexBuffer(pVertexBuffer);
 	Init(pIndexBuffer, 0, pIndexBuffer->GetQuantity());
 }
 
@@ -32,26 +32,26 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 	:
 	mVertexBuffers(1, 1)
 {
-	InitVertexBuffer(pVertexBuffer);
+	SetVertexBuffer(pVertexBuffer);
 	Init(pIndexBuffer, startIndex, indexCount);
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer)
+Mesh::Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
 {
-	InitVertexBuffers(rVertexBuffers);
+	SetVertexBuffers(rVertexBuffers);
 	Init(pIndexBuffer, 0, pIndexBuffer->GetQuantity());
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
+Mesh::Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer,
 	UInt startIndex, UInt indexCount)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
 {
-	InitVertexBuffers(rVertexBuffers);
+	SetVertexBuffers(rVertexBuffers);
 	Init(pIndexBuffer, startIndex, indexCount);
 }
 
@@ -59,13 +59,17 @@ Mesh::Mesh(TArray<VertexBuffer*>& rVertexBuffers, IndexBuffer* pIndexBuffer,
 Mesh::Mesh(const Mesh* pMesh)
 {
 	WIRE_ASSERT(pMesh);
-	for (UInt i = 0; i < pMesh->mVertexBuffers.GetQuantity(); i++)
-	{
-		mVertexBuffers.Append(pMesh->mVertexBuffers[i]);
-	}
-
+	SetVertexBuffers(pMesh->GetVertexBuffers());
 	Init(pMesh->mspIndexBuffer, pMesh->GetStartIndex(), pMesh->
 		GetIndexCount());
+}
+
+//----------------------------------------------------------------------------
+Mesh::Mesh(const Mesh* pMesh, UInt startIndex, UInt indexCount)
+{
+	WIRE_ASSERT(pMesh);
+	SetVertexBuffers(pMesh->GetVertexBuffers());
+	Init(pMesh->mspIndexBuffer, startIndex, indexCount);
 }
 
 //----------------------------------------------------------------------------
@@ -313,23 +317,28 @@ void Mesh::Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount)
 }
 
 //----------------------------------------------------------------------------
-void Mesh::InitVertexBuffer(VertexBuffer* pVertexBuffer)
+void Mesh::SetVertexBuffer(VertexBuffer* pVertexBuffer)
 {
 	WIRE_ASSERT(pVertexBuffer);
+	mVertexBuffers.SetQuantity(0, false);
+	mVertexBuffers.SetMaxQuantity(1);
 	mVertexBuffers.Append(pVertexBuffer);
 }
 
 //----------------------------------------------------------------------------
-void Mesh::InitVertexBuffers(TArray<VertexBuffer*>& rVertexBuffers)
+void Mesh::SetVertexBuffers(const TArray<VertexBufferPtr>& rVertexBuffers)
 {
 	WIRE_ASSERT(rVertexBuffers.GetQuantity() > 0);
 	WIRE_ASSERT(rVertexBuffers[0]);
+
+	mVertexBuffers.SetQuantity(0, false);
+	mVertexBuffers.SetMaxQuantity(rVertexBuffers.GetMaxQuantity());
 
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		WIRE_ASSERT(rVertexBuffers[i]);
 		WIRE_ASSERT(rVertexBuffers[i]->GetQuantity() == rVertexBuffers[0]->
-			GetQuantity());
+			GetQuantity()); // check if all streams have the same vertex count
 		mVertexBuffers.Append(rVertexBuffers[i]);
 	}
 }

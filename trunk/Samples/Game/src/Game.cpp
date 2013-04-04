@@ -35,7 +35,7 @@ Bool Game::OnInitialize()
 	mShowFps = false;
 
 	// Font for render statistics debug text
-	mspText = Importer::CreateText("Data/Logo/cour.ttf", 14, 14);
+	mspText = Importer::CreateText("Data/Logo/font.ttf", 12, 12);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 

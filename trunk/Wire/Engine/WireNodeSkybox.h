@@ -25,8 +25,7 @@ class NodeSkybox : public Node
 
 public:
 	NodeSkybox(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
-		Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY,
-		Float scale = 1.0F);
+		Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY);
 	virtual ~NodeSkybox();
 
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
@@ -36,9 +35,9 @@ protected:
 
 private:
 	void Init(Texture2D* pPosZ, Texture2D* pNegZ, Texture2D* pPosX,
-		Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY, Float scale);
+		Texture2D* pNegX, Texture2D* pPosY, Texture2D* pNegY);
 	void AddQuad(const Vector3F& v0, const Vector3F& v1, const Vector3F& v2,
-		const Vector3F& v3, Texture2D* pTexture, const Float scale = 1.0F);
+		const Vector3F& v3, Texture2D* pTexture);
 
 	Double mAppTime;
 };

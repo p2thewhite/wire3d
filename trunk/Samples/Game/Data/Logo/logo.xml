@@ -18,8 +18,8 @@
     <MaterialState Ambient="1, 1, 1, 0" />
     <Mesh Name="Quad2_FFFFFAB2_1_1_0_0">
       <Vertices Name="Quad2_FFFFFAB2.vtx" LittleEndian="1" />
-      <Indices Name="Quad2_FFFFFAB2.idx" LittleEndian="1" />
-      <Uv0 Name="Quad2_FFFFFAB2.uv0" LittleEndian="1" />
+      <Indices Name="Quad_0001E0FA.idx" LittleEndian="1" />
+      <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="1" />
     </Mesh>
     <Material Name="LoadingMaterial">
       <Texture Name="Loading_000040AA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" BlendMode="Modulate"/>

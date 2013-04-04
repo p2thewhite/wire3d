@@ -10,14 +10,16 @@
 #ifndef WIREBOUNDINGVOLUME_H
 #define WIREBOUNDINGVOLUME_H
 
-#include "WireIndexBuffer.h"
 #include "WirePlane3.h"
 #include "WireTransformation.h"
+#include "WireObject.h"
 #include "WireVector3.h"
-#include "WireVertexBuffer.h"
 
 namespace Wire
 {
+
+class IndexBuffer;
+class VertexBuffer;
 
 class BoundingVolume : public Object
 {

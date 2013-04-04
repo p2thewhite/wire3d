@@ -34,8 +34,6 @@ public class Unity3DExporter : EditorWindow
     private Dictionary<Light, string> mLightToName;
     private Dictionary<string, int> mLightNameToCount;
 
-	private float mSkyboxScale = 100.0f;
-
 	private struct Statistics
 	{
 		public int LightmapsCount;
@@ -133,11 +131,6 @@ public class Unity3DExporter : EditorWindow
     {
         mExportXmlOnly = GUILayout.Toggle(mExportXmlOnly, new GUIContent("Export scene XML file only", "Textures, meshes, etc. will not be exported."));
         mIgnoreUnderscore = GUILayout.Toggle(mIgnoreUnderscore, "Ignore GameObjects starting with '_'");
-
-        if (RenderSettings.skybox != null)
-        {
-            mSkyboxScale = EditorGUILayout.FloatField("Skybox Size", mSkyboxScale);
-        }
     }
 
     private void ShowAdvancedSettingsDialog()
@@ -499,7 +492,7 @@ public class Unity3DExporter : EditorWindow
 		Texture2D posYTexture2D = GetTextureFromMaterial (skyboxMaterial, "_UpTex");
 		Texture2D negYTexture2D = GetTextureFromMaterial (skyboxMaterial, "_DownTex");
 
-		outFile.WriteLine (indent + "<Skybox Scale=\"" + mSkyboxScale + "\">");
+		outFile.WriteLine (indent + "<Skybox>");
 
 		outFile.WriteLine (indent + "  " + "<PosZ>");
 		WriteTexture (posZTexture2D, outFile, indent + "  ");
@@ -802,6 +795,11 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteStateFog (StreamWriter outFile, string indent)
     {
+        if (!RenderSettings.fog)
+        {
+            return;
+        }
+
         string enabled = RenderSettings.fog ? "1" : "0";
         Color color = RenderSettings.fogColor;
         string mode = "LINEAR";
@@ -875,7 +873,7 @@ public class Unity3DExporter : EditorWindow
 			return;
 		}
 		
-		string shape = GetColliderShapeName(collider);
+        string shape = GetColliderShapeName(collider);
 		outFile.Write (indent + "  " + "<Collider Shape=\"" + shape + "\" ");
 		
 		if (collider is BoxCollider)
@@ -896,9 +894,16 @@ public class Unity3DExporter : EditorWindow
         }
         else
         {
-			Debug.Log("Collider shape not supported yet: '" + shape + "'.");
+			Debug.Log("Collider shape not supported: '" + shape + "'.", gameObject);
 		}
-		
+
+        Transform parent = gameObject.transform.parent;
+        if (parent != null && parent.lossyScale != Vector3.one)
+        {
+            Debug.LogWarning("'" + gameObject.name + "' has one or more parent transforms with scale. " +
+            "This causes incorrect collision shapes.", gameObject);
+        }
+
 		outFile.Write (" />\n");
 	}
 	

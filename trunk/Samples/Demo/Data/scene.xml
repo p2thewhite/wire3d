@@ -332,7 +332,6 @@
   </Materials>
 </Assets>
 <Node Name="scene">
-  <FogState Enabled="0" Color="0.01792115, 0.02016129, 0.015681" Start="0" End="300" Mode="EXPSQR" />
   <Node Name="ceilingFanPivot" Pos="6.690254, 5.736781, 7.542114" Static="1">
     <Node Name="ceilingFan" >
       <Light Name="outGoingLight" />

@@ -785,7 +785,7 @@ void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
 	// shared, we duplicate it to apply the World transformation
 	if (isShared)
 	{
-		TArray<VertexBuffer*> vertexBuffers;
+		TArray<VertexBufferPtr> vertexBuffers;
 		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
 		{
 			VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer(i);

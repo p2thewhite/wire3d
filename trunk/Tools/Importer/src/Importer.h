@@ -106,7 +106,7 @@ private:
 	Wire::Mesh* ParseMesh(rapidxml::xml_node<>* pXmlNode);
 	Wire::VertexBuffer* ParseVertexBuffer(rapidxml::xml_node<>* pXmlNode);
 	void ParseVertexBuffers(rapidxml::xml_node<>* pXmlNode, Wire::TArray<
-		Wire::VertexBuffer*>& rVertexBuffers);
+		Wire::VertexBufferPtr>& rVertexBuffers);
 	Wire::IndexBuffer* ParseIndexBuffer(rapidxml::xml_node<>* pXmlNode);
 	Wire::Material* ParseMaterial(rapidxml::xml_node<>* pXmlNode);
 	Wire::Texture2D* ParseTexture(rapidxml::xml_node<>* pXmlNode, Wire::Material::BlendMode& blendMode);
@@ -120,7 +120,7 @@ private:
 	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
 		Wire::Spatial* pSpatial);
 
-	void GetWorldTransformation(Wire::Spatial* pSpatial, Wire::Transformation& rWorld);
+	void UpdateWorldTransformation(Wire::Spatial* pSpatial);
 	void ResetStatistics();
 
 	Wire::IndexBuffer* LoadIndexBufferFromFile(Char* pFileName, Bool isIndexBufferBigEndian,
