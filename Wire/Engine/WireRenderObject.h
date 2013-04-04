@@ -29,6 +29,8 @@ public:
 	RenderObject(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 		pMaterial = NULL);
 	RenderObject(Mesh* pMesh, Material* pMaterial = NULL);
+	// shallow copy (shared Mesh and Material)
+	RenderObject(const RenderObject* pRenderObject);
 	virtual ~RenderObject();
 
 	inline Mesh* GetMesh();

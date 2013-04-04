@@ -29,6 +29,7 @@ private:
 	Culler mCuller;
 
 	RenderObjectPtr mspCube;
+	BoundingVolumePtr mspWorldBound;
 
 	LightPtr mspLight;
 	StateMaterialPtr mspMaterial;
@@ -39,7 +40,6 @@ private:
 	Float mAngle;
 	Double mLastTime;
 
-	BoundingVolumePtr mspWorldBound; // TODO: remove
 };
 
 WIRE_REGISTER_INITIALIZE(Sample1);

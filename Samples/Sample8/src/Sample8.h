@@ -72,12 +72,11 @@ private:
 
 	RenderObjectPtr mspBox;
 	RenderObjectPtr mspBall;
+	BoundingVolumePtr mspWorldBound;
 	MaterialPtr mspMaterial;
 	StateMaterialPtr mspStateMaterial;
 	LightPtr mspLightA;
 	LightPtr mspLightB;
-
-	BoundingVolumePtr mspWorldBound; // TODO: remove
 
 	Float mAngle;
 	Double mLastTime;

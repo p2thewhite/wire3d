@@ -12,6 +12,7 @@
 #include "WireColorRGB.h"
 #include "WireColorRGBA.h"
 #include "WireImage2D.h"
+#include "WireIndexBuffer.h"
 #include "WireNode.h"
 #include "WireText.h"
 

@@ -33,6 +33,26 @@ RenderObject::RenderObject(Mesh* pMesh, Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
+RenderObject::RenderObject(const RenderObject* pRenderObject)
+{
+	mspMesh = pRenderObject->mspMesh;
+	mspMaterial = pRenderObject->mspMaterial;
+	
+	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
+	{
+		mStates[i] = pRenderObject->mStates[i];
+	}
+
+	mStateSetID = pRenderObject->mStateSetID;
+
+	mpLights = NULL;
+	if (pRenderObject->mpLights)
+	{
+		mpLights = WIRE_NEW TArray<LightPtr>(*(pRenderObject->mpLights));
+	}
+}
+
+//----------------------------------------------------------------------------
 RenderObject::RenderObject()
 {
 	Init();

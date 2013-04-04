@@ -695,7 +695,7 @@
     <Mesh Name="Sphere002" />
     <Material Name="Probe Robot_lit" />
   </Node>
-  <Skybox Scale="120">
+  <Skybox>
     <PosZ>
       <Texture Name="Front.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
     </PosZ>
