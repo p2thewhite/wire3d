@@ -111,6 +111,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	else
 	{
 		behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
+		// The Renderer does not use any Get* D3D api calls, thus it is
+		// capable of using a pure device.
 // 		if(deviceCaps.DevCaps & D3DDEVCAPS_PUREDEVICE)
 // 		{
 // 			behaviorFlags |= D3DCREATE_PUREDEVICE;
@@ -342,7 +344,7 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
-	UInt startIndex)
+	UInt startIndex, UInt minIndex)
 {
 	const UInt triangleCount = indexCount/3;
 	mStatistics.mDrawCalls++;
@@ -350,8 +352,8 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, vertexCount,
-		startIndex, triangleCount);
+	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, minIndex,
+		vertexCount, startIndex, triangleCount);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
 

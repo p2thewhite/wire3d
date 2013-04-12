@@ -38,8 +38,6 @@ public:
 	inline VertexBuffer* GetVertexBuffer(UInt streamIndex = 0);
 	inline const VertexBuffer* GetVertexBuffer(UInt streamIndex = 0) const;
 	inline const TArray<VertexBufferPtr>& GetVertexBuffers() const;
-	void SetVertexBuffer(VertexBuffer* pVertexBuffer);
-	void SetVertexBuffers(const TArray<VertexBufferPtr>& rVertexBuffers);
 	VertexBuffer* GetPositionBuffer();
 	const VertexBuffer* GetPositionBuffer() const;
 	VertexBuffer* GetNormalBuffer();
@@ -52,6 +50,10 @@ public:
 	inline const BoundingVolume* GetModelBound() const;
 
 	inline UInt GetVertexQuantity() const;
+
+	inline UShort GetMinIndex() const;
+	inline UShort GetMaxIndex() const;
+	inline UInt GetActiveVertexCount() const;
 
 	// Control over which continuous part of the mesh is rendered.
 	// Default values render the entire mesh.
@@ -69,13 +71,23 @@ public:
 
 private:
 	void Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount);
+	void FindMinMaxIndex(UInt startIndex, UInt indexCount);
+	void SetVertexBuffer(VertexBuffer* pVertexBuffer);
+	void SetVertexBuffers(const TArray<VertexBufferPtr>& rVertexBuffers);
 
 	TArray<Pointer<VertexBuffer> > mVertexBuffers;
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<BoundingVolume> mspModelBound;
 
+	// hint about range of used vertices (for software vertex processing)
+	UShort mMinIndex;
+	UShort mMaxIndex;
+
+	// submesh definition
 	UInt mStartIndex;
 	UInt mIndexCount;
+
+	// flag to indicate changes to the submesh's definition
 	Bool mIsDirty;
 };
 

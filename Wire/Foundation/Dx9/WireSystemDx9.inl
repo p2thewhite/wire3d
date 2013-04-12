@@ -6,6 +6,8 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <sys/timeb.h>
 #include <stdlib.h>
 #include <windows.h>

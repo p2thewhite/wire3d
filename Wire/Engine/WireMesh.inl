@@ -58,6 +58,26 @@ inline UInt Mesh::GetVertexQuantity() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt Mesh::GetActiveVertexCount() const
+{
+	WIRE_ASSERT(mVertexBuffers.GetQuantity() > 0);
+	return mIsDirty ? mVertexBuffers[0]->GetQuantity() :
+		mMaxIndex - mMinIndex + 1;
+}
+
+//----------------------------------------------------------------------------
+inline UShort Mesh::GetMinIndex() const
+{
+	return mIsDirty ? 0 : mMinIndex;
+}
+
+//----------------------------------------------------------------------------
+inline UShort Mesh::GetMaxIndex() const
+{
+	return mMaxIndex;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Mesh::GetStartIndex() const
 {
 	return mStartIndex;

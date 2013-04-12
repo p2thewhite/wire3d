@@ -271,7 +271,7 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex)
+void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex, UInt)
 {
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += indexCount/3;
