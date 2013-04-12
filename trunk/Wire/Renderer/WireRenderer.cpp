@@ -917,8 +917,8 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Enable(pMesh);
 		Enable(pRenderObject->GetMaterial());
 
-		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
-			pMesh->GetStartIndex());
+		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
+			pMesh->GetStartIndex(), pMesh->GetMinIndex());
 
 		Disable(pRenderObject->GetMaterial());
 		Disable(pMesh);
@@ -932,8 +932,8 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Set(pMesh);
 		Set(pRenderObject->GetMaterial());
 
-		DrawElements(pMesh->GetVertexQuantity(), pMesh->GetIndexCount(),
-			pMesh->GetStartIndex());
+		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
+			pMesh->GetStartIndex(), pMesh->GetMinIndex());
 	}
 }
 
@@ -1130,14 +1130,11 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 	Transformation*	const pTransformations[], UInt min, UInt max)
 {
-	UInt vertexQuantity = pVisible[min]->GetMesh()->GetVertexBuffer()->
-		GetQuantity();
-	WIRE_ASSERT(vertexQuantity < 65536);
-	const UShort vertexCount = static_cast<UShort>(vertexQuantity);
-
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
+	UShort maxIndex = 0;
+	UShort minIndex = System::MAX_USHORT;
 	UInt batchedIndexCount = 0;
 
 	for (UInt i = min; i < max; i++)
@@ -1152,6 +1149,11 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 			continue;
 		}
 
+		UShort curMaxIndex = pRenderObject->GetMesh()->GetMaxIndex();
+		maxIndex = maxIndex < curMaxIndex ? curMaxIndex : maxIndex;
+		UShort curMinIndex = pRenderObject->GetMesh()->GetMinIndex();
+		minIndex = minIndex > curMinIndex ? curMinIndex : minIndex;
+
 		const UInt ibSize = pMesh->GetIndexCount() * sizeof(UShort);
 
 		Bool exceedsBuffer = (ibSize+batchedIndexCount*sizeof(UShort)) >
@@ -1162,14 +1164,19 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 			if (batchedIndexCount == 0)
 			{
 				Draw(pRenderObject, rTransformation);
+				maxIndex = 0;
+				minIndex = System::MAX_USHORT;
 				continue;
 			}
 
 			pIBPdr->Unlock();
-			DrawBatch(pIBPdr, vertexCount, batchedIndexCount, pVisible[min]->
-				GetMesh()->HasNormal());
+			WIRE_ASSERT(maxIndex < 65535);
+			DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
+				pVisible[min]->GetMesh()->HasNormal());
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
+			maxIndex = 0;
+			minIndex = System::MAX_USHORT;
 			batchedIndexCount = 0;
 			i--;
 			continue;
@@ -1189,8 +1196,9 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 
 	if (batchedIndexCount > 0)
 	{
-		DrawBatch(pIBPdr, vertexCount, batchedIndexCount, pVisible[min]->
-			GetMesh()->HasNormal());
+		WIRE_ASSERT(maxIndex < 65535);
+		DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
+			pVisible[min]->GetMesh()->HasNormal());
 	}
 }
 
@@ -1320,7 +1328,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 
 //----------------------------------------------------------------------------
 void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
-	TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount, UInt indexCount)
+	TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount, UInt indexCount)
 {
 	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
 	{
@@ -1344,7 +1352,7 @@ void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		}
 	}
 
-	DrawBatch(pIBPdr, vertexCount, indexCount, pMesh->HasNormal());
+	DrawBatch(pIBPdr, vertexCount, indexCount, /* TODO */ 0, pMesh->HasNormal());
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		rVBsPdr[i]->Disable(this, i);
@@ -1357,8 +1365,8 @@ void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
-	UInt indexCount, Bool hasNormals)
+void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
+	UInt indexCount, UShort minIndex, Bool hasNormals)
 {
 	if (mspIndexBuffer)
 	{
@@ -1368,7 +1376,7 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
 
 	pIBPdr->Enable(this);
 	SetWorldTransformation(Transformation::IDENTITY, hasNormals);
-	DrawElements(vertexCount, indexCount, 0);
+	DrawElements(vertexCount, indexCount, 0, minIndex);
 	pIBPdr->Disable(this);
 
 	mStatistics.mBatchCount++;

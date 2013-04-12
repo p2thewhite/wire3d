@@ -61,6 +61,9 @@ public:
 
 	static const UInt MAX_UINT;
 	static const Int MAX_INT;
+	static const UShort MAX_USHORT;
+	static const Short MAX_SHORT;
+	static const Short MIN_SHORT;
 	static const Int MIN_INT;
 	static const Float MAX_FLOAT;
 	static const Float MIN_FLOAT;

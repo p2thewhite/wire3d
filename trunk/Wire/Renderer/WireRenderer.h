@@ -264,13 +264,14 @@ private:
 	void BatchIndicesAndDraw(RenderObject* const pVisible[], Transformation*
 		const pTransformations[], UInt min, UInt max);
 	void DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
-		TArray<PdrVertexBuffer*>& rVBsPdr, UShort vertexCount,
+		TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount,
 		UInt indexCount);
-	void DrawBatch(PdrIndexBuffer* const pIBPdr, UShort vertexCount,
-		UInt indexCount, Bool hasNormals);
+	void DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
+		UInt indexCount, UShort minIndex, Bool hasNormals);
 
 	// The main entry point to drawing in the derived-class renderers
-	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex);
+	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex,
+		UInt minIndex = 0);
 
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
