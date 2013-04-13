@@ -1227,7 +1227,8 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
-		const UInt vertexCount = pMesh->GetVertexBuffer()->GetQuantity();
+		const UInt vertexCount = pMesh->GetActiveVertexCount();
+		const UShort minIndex = pMesh->GetMinIndex();
 
 		if (vertexCount > mDynamicBatchingMaxVertexCount ||
 			pMesh->GetIndexCount() > mDynamicBatchingMaxIndexCount)
@@ -1282,8 +1283,9 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 		}
 
 		IndexBuffer* const pIndexBuffer = pMesh->GetIndexBuffer();
-		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), batchedVertexCount,
-			pMesh->GetIndexCount(), pMesh->GetStartIndex());
+		const UShort offset = batchedVertexCount - minIndex;
+		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), offset, pMesh->
+			GetIndexCount(), pMesh->GetStartIndex());
 		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
 			pIBRaw));
 
@@ -1291,7 +1293,7 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 		{
 			VertexBuffer* const pVertexBuffer = pMesh->GetVertexBuffer(j);
 			pVertexBuffer->ApplyForward(rTransformation, static_cast<Float*>(
-				mRawBatchedVertexBuffers[j]));
+				mRawBatchedVertexBuffers[j]), vertexCount, minIndex);
 
 			UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 			UInt vbSize = vertexCount * vertexSize;
@@ -1352,7 +1354,7 @@ void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		}
 	}
 
-	DrawBatch(pIBPdr, vertexCount, indexCount, /* TODO */ 0, pMesh->HasNormal());
+	DrawBatch(pIBPdr, vertexCount, indexCount, 0, pMesh->HasNormal());
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		rVBsPdr[i]->Disable(this, i);
