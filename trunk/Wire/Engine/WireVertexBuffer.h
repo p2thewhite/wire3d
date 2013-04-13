@@ -68,7 +68,8 @@ public:
 
 	// Compute Y = M*X+T
 	// User has to take care that pDst is big enough to fit this VertexBuffer
-	void ApplyForward(const Transformation& rTransformation, Float* pDst);
+	void ApplyForward(const Transformation& rTransformation, Float* pDst,
+		UInt activeCount = 0, UShort minIndex = 0);
 
 	void GeneratePlatonicNormals();
 

@@ -145,17 +145,19 @@ Vector2F VertexBuffer::TCoord2(UInt i, UInt unit) const
 
 //----------------------------------------------------------------------------
 void VertexBuffer::ApplyForward(const Transformation& rTransformation,
-	Float* pDst)
+	Float* pDst, UInt activeCount, UShort minIndex)
 {
-	const UInt quantity = GetQuantity();
+	WIRE_ASSERT((mAttributes.GetVertexSize() % sizeof(Float)) == 0);
+	Float* pSrc = GetData() + minIndex * mAttributes.GetVertexSize() / sizeof(Float);
+	const UInt quantity = activeCount == 0 ? GetQuantity() : activeCount;
 	const UInt channelQuantity = mAttributes.GetChannelQuantity();
 	Bool needsTrafo = mAttributes.HasPosition() || mAttributes.HasNormal();
 	if (rTransformation.IsIdentity() || !needsTrafo)
 	{
-		if (GetData() != pDst)
+		if (pSrc != pDst)
 		{
 			size_t size = quantity * channelQuantity * sizeof(Float);
-			System::Memcpy(pDst, size, GetData(), size);
+			System::Memcpy(pDst, size, pSrc, size);
 			return;
 		}
 	}
@@ -169,8 +171,8 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 	if (rAttr.GetPositionChannels() == rAttr.GetChannelQuantity())
 	{
 		WIRE_ASSERT(rAttr.GetPositionChannels() == 3);
-		const Float* pPosition = GetData();
-		for (UInt i = 0; i < GetQuantity(); i++)
+		const Float* pPosition = pSrc;
+		for (UInt i = 0; i < quantity; i++)
 		{
 			Vector3F v;
 			v.X() = *pPosition++;
@@ -197,8 +199,8 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 	if (rAttr.GetNormalChannels() == rAttr.GetChannelQuantity())
 	{
 		WIRE_ASSERT(rAttr.GetNormalChannels() == 3);
-		const Float* pNormal = GetData();
-		for (UInt i = 0; i < GetQuantity(); i++)
+		const Float* pNormal = pSrc;
+		for (UInt i = 0; i < quantity; i++)
 		{
 			Vector3F n;
 			n.X() = *pNormal++;
@@ -223,7 +225,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 	}
 
 	// interleaved vertex buffer
-	for (UInt i = 0; i < GetQuantity(); i++)
+	for (UInt i = minIndex; i < minIndex+quantity; i++)
 	{
 		if (rAttr.GetPositionChannels() == 3)
 		{
