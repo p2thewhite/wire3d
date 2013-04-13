@@ -72,7 +72,7 @@ void Cursors::InitCursors()
 	mspCursors->AttachState(pCursorsAlpha);
 
 	Image2D* pImage = Importer::DecodePNG(Cursors::s_Png, Cursors::s_PngSize,
-		false);
+		false, Buffer::UT_STATIC, 1);
 	Texture2D * pTexture = WIRE_NEW	Texture2D(pImage);
 	mspMaterial = WIRE_NEW	Material();
 	mspMaterial->AddTexture(pTexture, Material::BM_REPLACE);

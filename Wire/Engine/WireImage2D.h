@@ -36,7 +36,8 @@ public:
 	// deleting the input array.
 
 	Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
-		Bool createMipmaps = true, UsageType usage = Buffer::UT_STATIC);
+		Bool filterMipmaps = true, UsageType usage = Buffer::UT_STATIC,
+		UInt mipmapCount = 0); // mipmapCount 0 means maximum number of levels
 	virtual ~Image2D();
 
 	// Pointer to the image (i.e. mipmap level 0)
@@ -51,8 +52,9 @@ public:
 
 	inline Bool HasAlpha() const;
 	inline Bool HasMipmaps() const;
-	void CreateMipmaps();
-	UInt GetMipmapCount() const;
+	inline UInt GetMipmapCount() const;
+
+	void FilterMipmaps();
 	UInt GetMipmapQuantity(UInt level) const;
 
 	// Pointer to a mipmap level
@@ -77,8 +79,8 @@ public:
 
 private:
 	inline Bool IsPowerOfTwo(UInt value) const;
-	void CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
-	void CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
+	void FilterMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
+	void FilterMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height);
 
 	static Pointer<Image2D> s_spDefault;
 	static Pointer<Image2D> s_spDefaultWithAlpha;
@@ -90,7 +92,7 @@ private:
 	FormatMode mFormat;
 	UChar* mpData;
 	UInt mBound[2];
-	Bool mHasMipmaps;
+	UInt mMipmapCount;
 };
 
 typedef Pointer<Image2D> Image2DPtr;

@@ -40,7 +40,13 @@ inline Bool Image2D::HasAlpha() const
 //----------------------------------------------------------------------------
 inline Bool Image2D::HasMipmaps() const
 {
-	return mHasMipmaps;
+	return mMipmapCount > 1;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Image2D::GetMipmapCount() const
+{
+	return mMipmapCount;
 }
 
 //----------------------------------------------------------------------------
