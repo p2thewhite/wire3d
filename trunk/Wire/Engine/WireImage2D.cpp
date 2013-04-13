@@ -45,11 +45,11 @@ void Image2D::Initialize()
 
 	FormatMode format = FM_RGB888;
 	s_spDefault = WIRE_NEW Image2D(format, width, height,
-		const_cast<UChar*>(s_Default), false);
+		const_cast<UChar*>(s_Default), false, Buffer::UT_STATIC, 1);
 
 	format = FM_RGBA8888;
 	s_spDefaultWithAlpha = WIRE_NEW Image2D(format, width, height,
-		const_cast<UChar*>(s_DefaultWithAlpha), false);
+		const_cast<UChar*>(s_DefaultWithAlpha), false, Buffer::UT_STATIC, 1);
 }
 
 //----------------------------------------------------------------------------
@@ -61,12 +61,12 @@ void Image2D::Terminate()
 
 //----------------------------------------------------------------------------
 Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
-	Bool createMipmaps, UsageType usage)
+	Bool filterMipmaps, UsageType usage, UInt mipmapCount)
 	:
 	Buffer(usage),
 	mFormat(format),
 	mpData(pData),
-	mHasMipmaps(createMipmaps)
+	mMipmapCount(mipmapCount)
 {
 	WIRE_ASSERT(IsPowerOfTwo(width) && width > 0);
 	WIRE_ASSERT(IsPowerOfTwo(height) && height > 0);
@@ -74,9 +74,20 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 	mBound[0] = width;
 	mBound[1] = height;
 
-	if (createMipmaps)
+	if (filterMipmaps)
 	{
-		CreateMipmaps();
+		if (mipmapCount == 0)
+		{
+			mMipmapCount = 1;
+			while (width > 1 || height > 1)
+			{
+				mMipmapCount++;
+				width = width >> 1;
+				height = height >> 1;
+			}
+		}
+
+		FilterMipmaps();
 	}
 }
 
@@ -92,6 +103,7 @@ UInt Image2D::GetBound(UInt i, UInt level) const
 	WIRE_ASSERT(i < 2);
 	if (GetMipmapCount() <= level)
 	{
+		WIRE_ASSERT(false);
 		return 0;
 	}
 
@@ -116,30 +128,9 @@ UInt Image2D::GetBound(UInt i, UInt level) const
 }
 
 //----------------------------------------------------------------------------
-UInt Image2D::GetMipmapCount() const
-{
-	if (!mHasMipmaps)
-	{
-		return 1;
-	}
-
-	UInt mipmapCount = 1;
-	UInt width = mBound[0];
-	UInt height = mBound[1];
-
-	while (width > 1 || height > 1)
-	{
-		mipmapCount++;
-		width = width >> 1;
-		height = height >> 1;
-	}
-
-	return mipmapCount;
-}
-
-//----------------------------------------------------------------------------
 UInt Image2D::GetMipmapQuantity(UInt level) const
 {
+	WIRE_ASSERT(level < GetMipmapCount());
 	UInt width = mBound[0];
 	UInt height = mBound[1];
 	UInt currentLevel = 0;
@@ -169,7 +160,7 @@ UInt Image2D::GetTotalQuantity() const
 //----------------------------------------------------------------------------
 UInt Image2D::GetMipmapOffset(UInt level) const
 {
-	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
+	if ((!HasMipmaps() && level > 0) || (GetMipmapCount() <= level))
 	{
 		return 0;
 	}
@@ -194,7 +185,7 @@ UInt Image2D::GetMipmapOffset(UInt level) const
 //----------------------------------------------------------------------------
 UChar* Image2D::GetMipmap(UInt level) const
 {
-	if ((!mHasMipmaps && level > 0) || (GetMipmapCount() <= level))
+	if ((!HasMipmaps() && level > 0) || (GetMipmapCount() <= level))
 	{
 		return NULL;
 	}
@@ -203,21 +194,26 @@ UChar* Image2D::GetMipmap(UInt level) const
 }
 
 //----------------------------------------------------------------------------
-void Image2D::CreateMipmaps()
+void Image2D::FilterMipmaps()
 {
 	UInt width = mBound[0];
 	UInt height = mBound[1];
 	UInt bpp = GetBytesPerPixel();
 	UInt totalQuantity = 0;
+	UInt currentLevel = 0;
 
-	while (width > 1 || height > 1)
+	while ((width > 1 || height > 1) && (currentLevel < GetMipmapCount()))
 	{
 		totalQuantity += width * height * bpp;
+		currentLevel++;
 		width = width > 1 ? width >> 1 : width;
 		height = height > 1 ? height >> 1 : height;
 	}
 
-	totalQuantity += bpp;
+	if (width == 1 && height == 1)
+	{
+		totalQuantity += bpp;
+	}
 
 	UChar* pData = WIRE_NEW UChar[totalQuantity];
 	UInt quantity = mBound[0]*mBound[1] * bpp;
@@ -227,19 +223,21 @@ void Image2D::CreateMipmaps()
 
 	width = mBound[0];
 	height = mBound[1];
+	currentLevel = 1;
 
-	while (width > 1 || height > 1)
+	while ((width > 1 || height > 1) && (currentLevel < GetMipmapCount()))
 	{
 		UInt mipmapSize = width * height * bpp;
-		CreateMipmap(pData, pData + mipmapSize, width, height);
+		FilterMipmap(pData, pData + mipmapSize, width, height);
 		pData += mipmapSize;
 		width = width > 1 ? width >> 1 : width;
 		height = height > 1 ? height >> 1 : height;
+		currentLevel++;
 	}
 }
 
 //----------------------------------------------------------------------------
-void Image2D::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
+void Image2D::FilterMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 {
 	if (width == 1 && height == 1)
 	{
@@ -248,7 +246,7 @@ void Image2D::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 
 	if (width == 1 || height == 1)
 	{
-		CreateMipmap1(pSrc, pDst, width, height);
+		FilterMipmap1(pSrc, pDst, width, height);
 		return;
 	}
 
@@ -370,7 +368,7 @@ void Image2D::CreateMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 }
 
 //----------------------------------------------------------------------------
-void Image2D::CreateMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height)
+void Image2D::FilterMipmap1(UChar* pSrc, UChar* pDst, UInt width, UInt height)
 {
 	UInt bpp = GetBytesPerPixel();
 
@@ -530,7 +528,7 @@ void Image2D::Discard()
 
 		mBound[0] = 2;
 		mBound[1] = 2;
-		mHasMipmaps = false;
+		mMipmapCount = 1;
 
 		if (HasAlpha())
 		{
