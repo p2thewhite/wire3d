@@ -16,6 +16,7 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMesh.h"
+#include "WireShader.h"
 
 using namespace Wire;
 
@@ -82,8 +83,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	// Query the device for its capabilities.
 	D3DCAPS9 deviceCaps;
 	HRESULT hr;
-	hr = rD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
-		&deviceCaps);
+	hr = rD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &deviceCaps);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	mpData->Supports32BitIndices = deviceCaps.MaxVertexIndex > 0xffff ?
@@ -312,11 +312,11 @@ void Renderer::PostDraw()
 
 //----------------------------------------------------------------------------
 void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
-	usesNormals)
+	processNormals)
 {
 	// TODO: this is only necessary for fixed function pipeline, clean up
-	Bool needsRenormalization = usesNormals;
-	if (usesNormals && rWorld.IsUniformScale())
+	Bool needsRenormalization = processNormals;
+	if (processNormals && rWorld.IsUniformScale())
 	{
 		if (rWorld.GetUniformScale() == 1.0F)
 		{
@@ -535,7 +535,7 @@ PdrRendererData::PdrRendererData(Renderer* pRenderer)
 
 //----------------------------------------------------------------------------
 template <typename Resource, typename PdrResource>
-void DestroyNonManagedResources(THashTable<const Resource*,
+void PdrRendererData::DestroyNonManagedResources(THashTable<const Resource*,
 	PdrResource*>& rMap, TArray<const Resource*>& rSave)
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity(), false);

@@ -85,6 +85,7 @@ private:
 	UInt mBatchIBOSize;
 	UInt mBatchVBOCount;
 	UInt mBatchVBOsSize;
+	UInt mShaderCount;
 
 	// total number of vertex formats used
 	UInt mVertexFormatCount;

@@ -13,6 +13,7 @@
 #include <Windows.h>
 
 #pragma comment(lib,"d3d9.lib")
+#pragma comment(lib,"d3dx9.lib")  // only used for D3DXCompileShader
 
 using namespace Wire;
 

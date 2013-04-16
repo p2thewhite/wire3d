@@ -931,7 +931,7 @@ Text* StandardMesh::CreateText(UInt maxLength)
 		}
 
 		Image2D* pImage = WIRE_NEW Image2D(Image2D::FM_RGBA8888, texWidth,
-			texHeight, pRaw, false);
+			texHeight, pRaw, false, Buffer::UT_STATIC, 1);
 		s_spFontTexture = WIRE_NEW Texture2D(pImage);
 		s_spFontTexture->SetFilterType(Texture2D::FT_NEAREST);
 	}

@@ -29,3 +29,39 @@ inline void Material::SetBlendMode(BlendMode blendmode, UInt i)
 {
 	mTextures[i].BlendMode = blendmode;
 }
+
+//----------------------------------------------------------------------------
+inline UInt Material::GetSamplerIndex(UInt i) const
+{
+	return mTextures[i].SamplerIndex;
+}
+
+//----------------------------------------------------------------------------
+inline void Material::SetSamplerIndex(UInt i)
+{
+	mTextures[i].SamplerIndex = i;
+}
+
+//----------------------------------------------------------------------------
+inline Shader* Material::GetPixelShader() const
+{
+	return mspPixelShader;
+}
+
+//----------------------------------------------------------------------------
+inline void Material::SetPixelShader(Shader* pShader)
+{
+	mspPixelShader = pShader;
+}
+
+//----------------------------------------------------------------------------
+inline Shader* Material::GetVertexShader() const
+{
+	return mspVertexShader;
+}
+
+//----------------------------------------------------------------------------
+inline void Material::SetVertexShader(Shader* pShader)
+{
+	mspVertexShader = pShader;
+}

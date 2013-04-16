@@ -45,6 +45,7 @@ RendererStatistics::RendererStatistics()
 	mBatchIBOSize(0),
 	mBatchVBOCount(0),
 	mBatchVBOsSize(0),
+	mShaderCount(0),
 	mVertexFormatCount(0),
 	mpRenderer(NULL),
 	mFpsSamplesIndex(0)

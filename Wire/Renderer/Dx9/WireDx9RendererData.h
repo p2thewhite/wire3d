@@ -12,7 +12,9 @@
 
 #include "WireMatrix4.h"
 #include "WireTArray.h"
+#include "WireTHashTable.h"
 #include <d3d9.h>
+#include <d3dx9.h> // only used for D3DXCompileShader
 
 namespace Wire
 {
@@ -29,6 +31,10 @@ public:
 	// Platform dependent renderer statistics
 	void AppendStatistics(Text*) {}
 	void ResetStatistics() {}
+
+	template <typename Resource, typename PdrResource>
+	void DestroyNonManagedResources(THashTable<const Resource*,
+		PdrResource*>& rMap, TArray<const Resource*>& rSave);
 
 	// Platform-dependent data
 	IDirect3D9* D3D;

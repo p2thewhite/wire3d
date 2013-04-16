@@ -38,7 +38,7 @@ Texture2D::~Texture2D()
 	// This allows the renderer to free up any associated resources.
 	if (mspImage)
 	{
-		Renderer::UnbindAll(mspImage);
+		Renderer::UnbindAll(mspImage.Get());
 	}
 }
 
