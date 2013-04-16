@@ -67,6 +67,193 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 }
 
 //----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Unbind(const Resource* pResource, THashTable<const
+	Resource*, PdrResource*>& rMap, UInt* pCount, UInt* pSize)
+{
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		if (pCount)
+		{
+			(*pCount)--;
+		}
+
+		if (pSize)
+		{
+			(*pSize) -= (*pValue)->GetBufferSize();
+		}
+
+		WIRE_DELETE *pValue;
+		rMap.Remove(pResource);
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource>
+void Renderer::UnbindAll(const Resource* pResource)
+{
+	if (s_pRenderer)
+	{
+		s_pRenderer->Unbind(pResource);
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Enable(const Resource* pResource, THashTable<
+	const Resource*, PdrResource*>& rMap)
+{
+
+	WIRE_ASSERT(pResource);
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		(*pValue)->Enable(this);
+	}
+	else
+	{
+		PdrResource* pPdrResource = Bind(pResource);
+		pPdrResource->Enable(this);
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Disable(const Resource* pResource, THashTable<
+	const Resource*, PdrResource*>& rMap)
+{
+	WIRE_ASSERT(pResource);
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // resource is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Disable(const Resource* pResource, UInt index,
+	THashTable<const Resource*, PdrResource*>& rMap)
+{
+	WIRE_ASSERT(pResource);
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		(*pValue)->Disable(this, index);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // resource is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename PdrResource>
+inline void Renderer::Disable(const UInt key, THashTable<UInt, PdrResource*>&
+	rMap)
+{
+	PdrResource** pValue = rMap.Find(key);
+
+	if (pValue)
+	{
+		(*pValue)->Disable(this);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // key is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource>
+inline void Renderer::Set(const Resource* pResource, Pointer<Resource> spInUse)
+{
+	if (spInUse != pResource)
+	{
+		if (spInUse)
+		{
+			Disable(spInUse);
+		}
+
+		Enable(pResource);
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource>
+inline void Renderer::Set(const Resource* pResource, UInt index, TArray<
+	Pointer<Resource> >& rInUse)
+{
+	WIRE_ASSERT(rInUse.GetQuantity() > index);
+	if (rInUse[index] != pResource)
+	{
+		if (rInUse[index])
+		{
+			Disable(rInUse[index], index);
+		}
+
+		Enable(pResource, index);
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Update(const Resource* pResource, THashTable<
+	const Resource*, PdrResource*>& rMap)
+{
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		(*pValue)->Update(pResource);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // resource is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline void Renderer::Update(const Resource* pResource, THashTable<
+	const Resource*, PdrResource*>& rMap, UInt count, UInt offset)
+{
+	PdrResource** pValue = rMap.Find(pResource);
+	if (pValue)
+	{
+		(*pValue)->Update(pResource, count, offset);
+	}
+	else
+	{
+		WIRE_ASSERT(false); // resource is not bound
+	}
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
+inline PdrResource* Renderer::GetResource(const Resource* pResource,
+	THashTable<const Resource*, PdrResource*>& rMap)
+{
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
 inline const StateAlpha* Renderer::GetStateAlpha() const
 {
 	return StaticCast<StateAlpha>(mspStates[State::ALPHA]);

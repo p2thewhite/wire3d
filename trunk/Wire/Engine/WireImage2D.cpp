@@ -68,25 +68,29 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 	mpData(pData),
 	mMipmapCount(mipmapCount)
 {
+	if (!filterMipmaps)
+	{
+		WIRE_ASSERT(mipmapCount > 0); // TODO: remove
+	}
 	WIRE_ASSERT(IsPowerOfTwo(width) && width > 0);
 	WIRE_ASSERT(IsPowerOfTwo(height) && height > 0);
 
 	mBound[0] = width;
 	mBound[1] = height;
 
+	if (mipmapCount == 0)
+	{
+		mMipmapCount = 1;
+		while (width > 1 || height > 1)
+		{
+			mMipmapCount++;
+			width = width >> 1;
+			height = height >> 1;
+		}
+	}
+
 	if (filterMipmaps)
 	{
-		if (mipmapCount == 0)
-		{
-			mMipmapCount = 1;
-			while (width > 1 || height > 1)
-			{
-				mMipmapCount++;
-				width = width >> 1;
-				height = height >> 1;
-			}
-		}
-
 		FilterMipmaps();
 	}
 }

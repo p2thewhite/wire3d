@@ -13,14 +13,17 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireRenderObject.h"
+#include "WireShader.h"
 #include "WireVisibleSet.h"
 
 #ifdef WIRE_WII
 #include "WireGXIndexBuffer.h"
+#include "WireGXShader.h"
 #include "WireGXTexture2D.h"
 #include "WireGXVertexBuffer.h"
 #else
 #include "WireDx9IndexBuffer.h"
+#include "WireDx9Shader.h"
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
 #endif
@@ -58,6 +61,7 @@ void Renderer::Terminate()
 	DestroyAll(mIndexBufferMap);
 	DestroyAll(mVertexBufferMap);
 	DestroyAll(mImage2DMap);
+	DestroyAll(mShaderMap);
 	DestroyAll(mVertexFormatMap);
 	DestroyBatchingBuffers();
 
@@ -106,6 +110,16 @@ void Renderer::ReleaseResources()
 		mspStates[i] = NULL;
 	}
 
+	if (mspPixelShader)
+	{
+		Disable(mspPixelShader, mspPixelShader);
+	}
+
+	if (mspVertexShader)
+	{
+		Disable(mspVertexShader, mspVertexShader);
+	}
+
 	mspMesh = NULL;
 }
 
@@ -138,6 +152,11 @@ void Renderer::Bind(const RenderObject* pRenderObject)
 		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 		{
 			Bind(pMaterial->GetTexture(i)->GetImage());
+		}
+
+		if (pMaterial->GetPixelShader())
+		{
+			Bind(pMaterial->GetPixelShader());
 		}
 	}
 }
@@ -193,121 +212,49 @@ PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::Unbind(const IndexBuffer* pIndexBuffer)
 {
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		mStatistics.mIBOCount--;
-		mStatistics.mIBOsSize -= (*pValue)->GetBufferSize();
-		WIRE_DELETE *pValue;
-		mIndexBufferMap.Remove(pIndexBuffer);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::UnbindAll(const IndexBuffer* pIndexBuffer)
-{
-	if (s_pRenderer)
-	{
-		s_pRenderer->Unbind(pIndexBuffer);
-	}
+	Unbind(pIndexBuffer, mIndexBufferMap, &mStatistics.mIBOCount,
+		&mStatistics.mIBOsSize);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Enable(const IndexBuffer* pIndexBuffer)
 {
 	WIRE_ASSERT(mspIndexBuffer == NULL /* Disable the previous IB first. */);
-	WIRE_ASSERT(pIndexBuffer);
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Enable(this);
-	}
-	else
-	{
-		PdrIndexBuffer* pPdrIndexBuffer = Bind(pIndexBuffer);
-		pPdrIndexBuffer->Enable(this);
-	}
-
+	Enable(pIndexBuffer, mIndexBufferMap);
 	mspIndexBuffer = const_cast<IndexBuffer*>(pIndexBuffer);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Disable(const IndexBuffer* pIndexBuffer)
 {
-	WIRE_ASSERT(pIndexBuffer);
 	WIRE_ASSERT(mspIndexBuffer == pIndexBuffer /* This IB is not enabled */);
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Disable(this);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Index buffer is not bound
-	}
-
+	Disable(pIndexBuffer, mIndexBufferMap);
 	mspIndexBuffer = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Set(const IndexBuffer* pIndexBuffer)
 {
-	if (mspIndexBuffer != pIndexBuffer)
-	{
-		if (mspIndexBuffer)
-		{
-			Disable(mspIndexBuffer);
-		}
-
-		Enable(pIndexBuffer);
-	}
+	Set(pIndexBuffer, mspIndexBuffer);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Update(const IndexBuffer* pIndexBuffer)
 {
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Update(pIndexBuffer);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Index buffer is not bound
-	}
+	Update(pIndexBuffer, mIndexBufferMap);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Update(const IndexBuffer* pIndexBuffer, UInt count,
 	UInt offset)
 {
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Update(pIndexBuffer, count, offset);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Index buffer is not bound
-	}
+	Update(pIndexBuffer, mIndexBufferMap, count, offset);
 }
 
 //----------------------------------------------------------------------------
 PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 {
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (pValue)
-	{
-		return *pValue;
-	}
-
-	return NULL;
+	return GetResource(pIndexBuffer, mIndexBufferMap);
 }
 
 //----------------------------------------------------------------------------
@@ -332,24 +279,8 @@ PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::Unbind(const VertexBuffer* pVertexBuffer)
 {
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (pValue)
-	{
-		mStatistics.mVBOCount--;
-		mStatistics.mVBOsSize -= (*pValue)->GetBufferSize();
-		WIRE_DELETE *pValue;
-		mVertexBufferMap.Remove(pVertexBuffer);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::UnbindAll(const VertexBuffer* pVertexBuffer)
-{
-	if (s_pRenderer)
-	{
-		s_pRenderer->Unbind(pVertexBuffer);
-	}
+	Unbind(pVertexBuffer, mVertexBufferMap, &mStatistics.mVBOCount,
+		&mStatistics.mVBOsSize);
 }
 
 //----------------------------------------------------------------------------
@@ -380,78 +311,33 @@ void Renderer::Disable(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 {
 	/* This VB is not enabled */
 	WIRE_ASSERT(mVertexBuffers[streamIndex] == pVertexBuffer);
-
-	WIRE_ASSERT(pVertexBuffer);
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Disable(this, streamIndex);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex buffer is not bound
-	}
-
+	Disable(pVertexBuffer, streamIndex, mVertexBufferMap);
 	mVertexBuffers[streamIndex] = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Set(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 {
-	if (mVertexBuffers[streamIndex] != pVertexBuffer)
-	{
-		if (mVertexBuffers[streamIndex])
-		{
-			Disable(mVertexBuffers[streamIndex], streamIndex);
-		}
-
-		Enable(pVertexBuffer, streamIndex);
-	}
+	Set(pVertexBuffer, streamIndex, mVertexBuffers);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Update(const VertexBuffer* pVertexBuffer)
 {
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Update(pVertexBuffer);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex buffer is not bound
-	}
+	Update(pVertexBuffer, mVertexBufferMap);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Update(const VertexBuffer* pVertexBuffer, UInt count,
 	UInt offset)
 {
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (pValue)
-	{
-		(*pValue)->Update(pVertexBuffer, count, offset);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex buffer is not bound
-	}
+	Update(pVertexBuffer, mVertexBufferMap, count, offset);
 }
 
 //----------------------------------------------------------------------------
 PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 {
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (pValue)
-	{
-		return *pValue;
-	}
-
-	return NULL;
+	return GetResource(pVertexBuffer, mVertexBufferMap);
 }
 
 //----------------------------------------------------------------------------
@@ -481,24 +367,8 @@ PdrTexture2D* Renderer::Bind(const Image2D* pImage)
 //----------------------------------------------------------------------------
 void Renderer::Unbind(const Image2D* pImage)
 {
-	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
-
-	if (pValue)
-	{
-		mStatistics.mTextureCount--;
-		mStatistics.mTexturesSize -= (*pValue)->GetBufferSize();
-		WIRE_DELETE *pValue;
-		mImage2DMap.Remove(pImage);
-	}
-}
-
-//----------------------------------------------------------------------------
-void Renderer::UnbindAll(const Image2D* pImage)
-{
-	if (s_pRenderer)
-	{
-		s_pRenderer->Unbind(pImage);
-	}
+	Unbind(pImage, mImage2DMap, &mStatistics.mTextureCount,
+		&mStatistics.mTexturesSize);
 }
 
 //----------------------------------------------------------------------------
@@ -532,48 +402,79 @@ void Renderer::Disable(const Texture2D* pTexture, UInt unit)
 	WIRE_ASSERT(mTexture2Ds[unit] == pTexture /* This Tex is not enabled */);
 	WIRE_ASSERT(pTexture);
 	const Image2D* pImage = pTexture->GetImage();
-	WIRE_ASSERT(pImage);
-
-	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
-
-	if (pValue)
-	{
-		(*pValue)->Disable(this, unit);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Texture is not bound
-	}
-
+	Disable(pImage, unit, mImage2DMap);
 	mTexture2Ds[unit] = NULL;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Set(const Texture2D* pTexture, UInt unit)
 {
-	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
-	if (mTexture2Ds[unit] != pTexture)
-	{
-		if (mTexture2Ds[unit])
-		{
-			Disable(mTexture2Ds[unit], unit);
-		}
-
-		Enable(pTexture, unit);
-	}
+	Set(pTexture, unit, mTexture2Ds);
 }
 
 //----------------------------------------------------------------------------
 PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 {
-	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
+	return GetResource(pImage, mImage2DMap);
+}
 
-	if (pValue)
+//----------------------------------------------------------------------------
+PdrShader* Renderer::Bind(const Shader* pShader)
+{
+	WIRE_ASSERT(pShader);
+	PdrShader** pValue = mShaderMap.Find(pShader);
+
+	if (!pValue)
 	{
-		return *pValue;
+		PdrShader* pPdrShader = WIRE_NEW PdrShader(this, pShader);
+		mShaderMap.Insert(pShader, pPdrShader);
+		mStatistics.mShaderCount++;
+		return pPdrShader;
 	}
 
-	return NULL;
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const Shader* pShader)
+{
+	Unbind(pShader, mShaderMap, &mStatistics.mShaderCount, NULL);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const Shader* pShader, ShaderPtr& rInUse)
+{
+	WIRE_ASSERT(rInUse == NULL /* Disable the previous shader first. */);
+	Enable(pShader, mShaderMap);
+	rInUse = const_cast<Shader*>(pShader);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const Shader* pShader, ShaderPtr& rInUse)
+{
+	WIRE_ASSERT(rInUse == pShader /* This shader is not enabled */);
+	Disable(pShader, mShaderMap);
+	rInUse = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const Shader* pShader, ShaderPtr& rInUse)
+{
+	if (rInUse != pShader)
+	{
+		if (rInUse)
+		{
+			Disable(rInUse, rInUse);
+		}
+
+		Enable(pShader, rInUse);
+	}
+}
+
+//----------------------------------------------------------------------------
+PdrShader* Renderer::GetResource(const Shader* pShader)
+{
+	return GetResource(pShader, mShaderMap);
 }
 
 //----------------------------------------------------------------------------
@@ -654,17 +555,7 @@ void Renderer::Enable(const TArray<VertexBufferPtr>& rVertexBuffers)
 void Renderer::Disable(const TArray<VertexBufferPtr>& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
-	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
-
-	if (pValue)
-	{
-		(*pValue)->Disable(this);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // Vertex Attribute is not bound
-	}
-
+	Disable(key, mVertexFormatMap);
 	mVertexFormatKey = 0;
 }
 
@@ -676,17 +567,7 @@ void Renderer::Set(const TArray<VertexBufferPtr>& rVertexBuffers)
 	{
 		if (mVertexFormatKey != 0)
 		{
-			PdrVertexFormat** pValue = mVertexFormatMap.Find(
-				mVertexFormatKey);
-
-			if (pValue)
-			{
-				(*pValue)->Disable(this);
-			}
-			else
-			{
-				WIRE_ASSERT(false); // Vertex Attribute is not bound
-			}
+			Disable(mVertexFormatKey, mVertexFormatMap);
 		}
 
 		Enable(rVertexBuffers);
@@ -709,48 +590,21 @@ PdrVertexFormat* Renderer::GetResource(const TArray<VertexBufferPtr>&
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DestroyAll(IndexBufferMap& rIndexBufferMap)
+template <typename Resource, typename PdrResource>
+void Renderer::DestroyAll(THashTable<const Resource*, PdrResource*>& rMap)
 {
-	while (rIndexBufferMap.GetQuantity() > 0)
+	typedef THashTable<const Resource*, PdrResource*> Map;
+
+	while (rMap.GetQuantity() > 0)
 	{
-		IndexBufferMap::Iterator it(&rIndexBufferMap);
-		const IndexBuffer* pKey = NULL;
+		typename Map::Iterator it(&rMap);
+		const Resource* pKey = NULL;
 		it.GetFirst(&pKey);
 		WIRE_ASSERT(pKey);
 		Unbind(pKey);
 	}
 
-	WIRE_ASSERT(rIndexBufferMap.GetQuantity() == 0);
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DestroyAll(VertexBufferMap& rVertexBufferMap)
-{
-	while (rVertexBufferMap.GetQuantity() > 0)
-	{
-		VertexBufferMap::Iterator it(&rVertexBufferMap);
-		const VertexBuffer* pKey = NULL;
-		it.GetFirst(&pKey);
-		WIRE_ASSERT(pKey);
-		Unbind(pKey);
-	}
-
-	WIRE_ASSERT(rVertexBufferMap.GetQuantity() == 0);
-}
-
-//----------------------------------------------------------------------------
-void Renderer::DestroyAll(Image2DMap& rTexture2DMap)
-{
-	while (rTexture2DMap.GetQuantity() > 0)
-	{
-		Image2DMap::Iterator it(&rTexture2DMap);
-		const Image2D* pKey = NULL;
-		it.GetFirst(&pKey);
-		WIRE_ASSERT(pKey);
-		Unbind(pKey);
-	}
-
-	WIRE_ASSERT(rTexture2DMap.GetQuantity() == 0);
+	WIRE_ASSERT(rMap.GetQuantity() == 0);
 }
 
 //----------------------------------------------------------------------------
@@ -781,11 +635,23 @@ void Renderer::Enable(const Material* pMaterial)
 		return;
 	}
 
+	if (pMaterial->GetPixelShader())
+	{
+		Enable(pMaterial->GetPixelShader(), mspPixelShader);
+	}
+	else
+	{
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+		{
+			EnableTextureStage(pMaterial->GetBlendMode(i), i,
+				pMaterial->GetTexture(pMaterial->GetSamplerIndex(i))->
+				GetImage()->HasAlpha());
+		}
+	}
+
 	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 	{
-		Enable(pMaterial->GetTexture(i), i);
-		EnableTextureStage(pMaterial->GetBlendMode(i), i, pMaterial->
-			GetTexture(i)->GetImage()->HasAlpha());
+		Enable(pMaterial->GetTexture(pMaterial->GetSamplerIndex(i)), i);
 	}
 
 	mspMaterial = const_cast<Material*>(pMaterial);
@@ -794,15 +660,30 @@ void Renderer::Enable(const Material* pMaterial)
 //----------------------------------------------------------------------------
 void Renderer::Disable(const Material* pMaterial)
 {
+	WIRE_ASSERT(mspMaterial == pMaterial);
 	if (!pMaterial)
 	{
 		return;
 	}
 
+	if (pMaterial->GetPixelShader())
+	{
+		if (mspPixelShader)
+		{
+			Disable(pMaterial->GetPixelShader(), mspPixelShader);
+		}
+	}
+	else
+	{
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+		{
+			DisableTextureStage(i);
+		}
+	}
+
 	for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 	{
-		DisableTextureStage(i);
-		Disable(pMaterial->GetTexture(i), i);
+		Disable(pMaterial->GetTexture(pMaterial->GetSamplerIndex(i)), i);
 	}
 
 	mspMaterial = NULL;
@@ -811,37 +692,63 @@ void Renderer::Disable(const Material* pMaterial)
 //----------------------------------------------------------------------------
 void Renderer::Set(const Material* pMaterial)
 {
-	if (mspMaterial != pMaterial)
+	if (mspMaterial == pMaterial)
 	{
-		if (mspMaterial)
+		return;
+	}
+
+	UInt currentTextureQuantity = 0;
+	Shader* pCurrentPixelShader = NULL;
+	if (mspMaterial)
+	{
+		currentTextureQuantity = mspMaterial->GetTextureQuantity();
+		pCurrentPixelShader = mspMaterial->GetPixelShader();
+		WIRE_ASSERT(mspPixelShader == pCurrentPixelShader);
+		if (!mspPixelShader)
 		{
 			for (UInt i = 0; i < mspMaterial->GetTextureQuantity(); i++)
 			{
 				DisableTextureStage(i);
 			}
 		}
+	}
 
-		if (pMaterial)
+	UInt newTextureQuantity = 0;
+	Shader* pNewPixelShader = NULL;
+	if (pMaterial)
+	{
+		newTextureQuantity = pMaterial->GetTextureQuantity();
+		pNewPixelShader = pMaterial->GetPixelShader();
+		if (pNewPixelShader)
+		{
+			Set(pNewPixelShader, mspPixelShader);
+		}
+		else
 		{
 			for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
 			{
-				Set(pMaterial->GetTexture(i), i);
-				EnableTextureStage(pMaterial->GetBlendMode(i), i, pMaterial->
-					GetTexture(i)->GetImage()->HasAlpha());
+				EnableTextureStage(pMaterial->GetBlendMode(i), i,
+					pMaterial->GetTexture(i)->GetImage()->HasAlpha());
 			}
 		}
 
-		mspMaterial = const_cast<Material*>(pMaterial);
+		for (UInt i = 0; i < pMaterial->GetTextureQuantity(); i++)
+		{
+			Set(pMaterial->GetTexture(pMaterial->GetSamplerIndex(i)), i);
+		}
 	}
-}
 
-//----------------------------------------------------------------------------
-void Renderer::UnbindAll(const Mesh* pMesh)
-{
-	if (s_pRenderer)
+	for (UInt i = newTextureQuantity; i < currentTextureQuantity; i++)
 	{
-		s_pRenderer->Unbind(pMesh);
+		Disable(mspMaterial->GetTexture(mspMaterial->GetSamplerIndex(i)), i);
 	}
+
+	if (pCurrentPixelShader && !pNewPixelShader)
+	{
+		Disable(pCurrentPixelShader, mspPixelShader);
+	}
+
+	mspMaterial = const_cast<Material*>(pMaterial);
 }
 
 //----------------------------------------------------------------------------
@@ -881,18 +788,26 @@ void Renderer::Set(const Mesh* pMesh)
 {
 	WIRE_ASSERT(pMesh);
 
-	if (mspMesh != pMesh)
+	if (mspMesh == pMesh)
 	{
-		Set(pMesh->GetIndexBuffer());
-		Set(pMesh->GetVertexBuffers());
-
-		for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
-		{
-			Set(pMesh->GetVertexBuffer(i), i);
-		}
-
-		mspMesh = const_cast<Mesh*>(pMesh);
+		return;
 	}
+
+	Set(pMesh->GetIndexBuffer());
+	Set(pMesh->GetVertexBuffers());
+
+	for (UInt i = 0; i < pMesh->GetVertexBuffers().GetQuantity(); i++)
+	{
+		Set(pMesh->GetVertexBuffer(i), i);
+	}
+
+	UInt count = mspMesh ? mspMesh->GetVertexBuffers().GetQuantity() : 0;
+	for (UInt i = pMesh->GetVertexBuffers().GetQuantity(); i < count; i++)
+	{
+		Disable(mspMesh->GetVertexBuffer(i), i);
+	}
+
+	mspMesh = const_cast<Mesh*>(pMesh);
 }
 
 //----------------------------------------------------------------------------
@@ -907,13 +822,16 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 	WIRE_ASSERT(pMesh && ((pMesh->GetStartIndex() +	pMesh->GetIndexCount()) <=
 		pMesh->GetIndexBuffer()->GetQuantity()));
 
-	Bool usesNormals = pMesh->HasNormal();
-	SetWorldTransformation(rTransformation, usesNormals);
+// TODO
+// 	Bool isFixedFunction = pRenderObject->GetMaterial() &&
+// 		(pRenderObject->GetMaterial()->GetVertexShader() == NULL);
+	Bool processNormals = pMesh->HasNormal(); // && isSoftwareVertexProcessing;
+	SetWorldTransformation(rTransformation, processNormals);
 
 	if (restoreState)
 	{
 		Enable(pRenderObject->GetStates());
-		Enable(pRenderObject->GetLights());
+		Enable(pRenderObject->GetLights());	// TODO: fixed function only
 		Enable(pMesh);
 		Enable(pRenderObject->GetMaterial());
 

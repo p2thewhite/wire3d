@@ -253,7 +253,7 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 
 //----------------------------------------------------------------------------
 void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
-	usesNormals)
+	processNormals)
 {
 	Matrix34F model;
 	rWorld.GetTransformation(model);
@@ -261,7 +261,7 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 	Matrix34F modelView = mpData->ViewMatrix * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
-	if (usesNormals)
+	if (processNormals)
 	{
 		Mtx modelViewInverse;
 		MTXInverse(modelView, modelViewInverse);

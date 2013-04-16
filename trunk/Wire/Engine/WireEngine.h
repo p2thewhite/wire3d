@@ -32,6 +32,7 @@
 #include "WireRenderObject.h"
 #include "WireRtti.h"
 #include "WireSceneObject.h"
+#include "WireShader.h"
 #include "WireSmartPointer.h"
 #include "WireSpatial.h"
 #include "WireSphereBV.h"

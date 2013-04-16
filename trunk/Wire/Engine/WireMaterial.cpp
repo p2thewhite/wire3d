@@ -13,7 +13,10 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Material, Object);
 
 //----------------------------------------------------------------------------
-Material::Material()
+Material::Material(Shader* pPixelShader, Shader* pVertexShader)
+	:
+	mspPixelShader(pPixelShader),
+	mspVertexShader(pVertexShader)
 {
 }
 
@@ -28,6 +31,7 @@ void Material::AddTexture(Texture2D* pTexture, BlendMode blendMode)
 	TextureBlendMode item;
 	item.Texture = pTexture;
 	item.BlendMode = blendMode;
+	item.SamplerIndex = mTextures.GetQuantity();
 	mTextures.Append(item);
 }
 
@@ -37,5 +41,7 @@ void Material::SetTexture(UInt i, Texture2D* pTexture, BlendMode blendMode)
 	TextureBlendMode item;
 	item.Texture = pTexture;
 	item.BlendMode = blendMode;
+	item.SamplerIndex = (i < mTextures.GetQuantity()) ?
+		mTextures[i].SamplerIndex : i;
 	mTextures.SetElement(i, item);
 }
