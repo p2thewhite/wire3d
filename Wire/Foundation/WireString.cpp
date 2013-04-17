@@ -155,7 +155,26 @@ String::operator UInt () const
 }
 
 //----------------------------------------------------------------------------
-bool String::StartsWith(const String& rString) const
+Int String::Find(const String& rSubString, UInt from) const
+{
+	if (from >= mLength)
+	{
+		return -1;
+	}
+
+	const Char* p = System::Strstr(mpText+from, static_cast<const char*>(
+		rSubString));
+
+	if (!p)
+	{
+		return -1;
+	}
+
+	return p - mpText;
+}
+
+//----------------------------------------------------------------------------
+Bool String::StartsWith(const String& rString) const
 {
 	if (mLength < rString.GetLength())
 	{
@@ -163,6 +182,26 @@ bool String::StartsWith(const String& rString) const
 	}
 
 	return (System::Strncmp(mpText, rString.mpText, rString.GetLength()) == 0);
+}
+
+//----------------------------------------------------------------------------
+String String::SubString(UInt beginIndex, UInt endIndex) const
+{
+	WIRE_ASSERT(beginIndex < mLength);
+	WIRE_ASSERT(endIndex < mLength);
+	if (endIndex < beginIndex)
+	{
+		return String();
+	}
+
+	UInt length = endIndex - beginIndex+1;
+	const size_t size = static_cast<size_t>(length + 1);
+	Char* pNew = WIRE_NEW char[size];
+	System::Strncpy(pNew, size, mpText+beginIndex, length);
+
+	String subString(length, pNew);
+	WIRE_DELETE[] pNew;
+	return subString;
 }
 
 //----------------------------------------------------------------------------

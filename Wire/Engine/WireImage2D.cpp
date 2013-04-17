@@ -68,10 +68,6 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 	mpData(pData),
 	mMipmapCount(mipmapCount)
 {
-	if (!filterMipmaps)
-	{
-		WIRE_ASSERT(mipmapCount > 0); // TODO: remove
-	}
 	WIRE_ASSERT(IsPowerOfTwo(width) && width > 0);
 	WIRE_ASSERT(IsPowerOfTwo(height) && height > 0);
 

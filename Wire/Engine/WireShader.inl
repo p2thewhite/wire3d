@@ -29,3 +29,15 @@ inline UInt Shader::GetProgramLength() const
 {
 	return mpProgram->GetLength();
 }
+
+//----------------------------------------------------------------------------
+inline UInt Shader::GetSamplerIndex(UInt at)
+{
+	return mSamplerIndices.GetQuantity() <= at ? at : mSamplerIndices[at];
+}
+
+//----------------------------------------------------------------------------
+inline void Shader::SetSamplerIndex(UInt samplerIndex, UInt at)
+{
+	mSamplerIndices.SetElement(at, samplerIndex);
+}

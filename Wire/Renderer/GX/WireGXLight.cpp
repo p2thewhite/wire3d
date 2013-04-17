@@ -41,7 +41,7 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		Light* pL = const_cast<Light*>(pLight);
 		Vec* pLightPos = reinterpret_cast<Vec*>(&pL->Position);
 		Vec lightViewPos;
-		MTXMultVec(mpData->ViewMatrix, pLightPos, &lightViewPos);
+		MTXMultVec(mpData->View, pLightPos, &lightViewPos);
 		GXInitLightPosv(&gxLight, &lightViewPos);
 		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);
 		GXInitLightDistAttn(&gxLight, 20, 1, GX_DA_OFF);
@@ -57,7 +57,7 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		lightDir.x = lightDir.x * 1000000;
 		lightDir.y = lightDir.y * 1000000;
 		lightDir.z = lightDir.z * 1000000;
-		MTXMultVec(mpData->ViewMatrix, &lightDir, &lightDir);
+		MTXMultVec(mpData->View, &lightDir, &lightDir);
 		GXInitLightPosv(&gxLight, &lightDir);
 		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);
 		GXInitLightDistAttn(&gxLight, 20, 1, GX_DA_OFF);
@@ -70,12 +70,12 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 
 		Vec* pLightDir = reinterpret_cast<Vec*>(&pL->Direction);
 		Vec lightViewDir;
-		MTXMultVecSR(mpData->ViewMatrix, pLightDir, &lightViewDir);
+		MTXMultVecSR(mpData->View, pLightDir, &lightViewDir);
 		GXInitLightDirv(&gxLight, &lightViewDir);
 
 		Vec* pLightPos = reinterpret_cast<Vec*>(&pL->Position);
 		Vec lightViewPos;
-		MTXMultVec(mpData->ViewMatrix, pLightPos, &lightViewPos);
+		MTXMultVec(mpData->View, pLightPos, &lightViewPos);
 		GXInitLightPosv(&gxLight, &lightViewPos);
 		
 		Float angle = pL->Angle * MathF::RAD_TO_DEG * 0.5F;
@@ -91,7 +91,7 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 // 		Light* pL = const_cast<Light*>(pLight);
 // 		Vec* pLightDir = reinterpret_cast<Vec*>(&pL->Direction);
 // 		Vec lightViewDir;
-// 		MTXMultVecSR(mpData->ViewMatrix, pLightDir, &lightViewDir);
+// 		MTXMultVecSR(mpData->View, pLightDir, &lightViewDir);
 // 		GXInitSpecularDirv(&gxLight, &lightViewDir);
 // 		GXInitLightShininess(&gxLight, 4);
 //		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);

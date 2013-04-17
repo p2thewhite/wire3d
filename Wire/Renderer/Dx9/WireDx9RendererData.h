@@ -41,7 +41,12 @@ public:
 	IDirect3DDevice9* D3DDevice;
 	D3DPRESENT_PARAMETERS Present;
 
-	Matrix4F ViewMatrix;
+	Matrix4F View;
+	Matrix4F Projection;
+
+	Matrix4F ViewProjection;
+	Matrix4F ModelView;
+	Matrix4F ModelViewProjection;
 
 	struct StateAlpha
 	{

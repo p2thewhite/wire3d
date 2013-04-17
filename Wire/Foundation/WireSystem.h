@@ -94,6 +94,7 @@ public:
 	static Char* Strcat(Char* pDst, size_t dstSize, const Char* pSrc);
 	static Char* Strncpy(Char* pDst, size_t dstSize, const Char* pSrc,
         size_t srcSize);
+	static const Char* Strstr(const Char* pStr, const Char* pSubStr);
 	static UInt Strlen(const Char* pString);
 	static Int Strcmp(const Char* pStr1, const Char* pStr2);
 	static Int Strncmp(const Char* pStr1, const Char* pStr2, size_t size);
