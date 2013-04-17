@@ -11,6 +11,7 @@
 #include "WireDx9IndexBuffer.h"
 #include "WireDx9RendererData.h"
 #include "WireDx9RendererInput.h"
+#include "WireDx9Shader.h"
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
 #include "WireIndexBuffer.h"
@@ -311,10 +312,10 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
-	processNormals)
+void Renderer::SetTransformation(const Transformation& rWorld, Bool
+	processNormals, Shader* pVertexShader)
 {
-	// TODO: this is only necessary for fixed function pipeline, clean up
+	processNormals = pVertexShader ? false : processNormals;
 	Bool needsRenormalization = processNormals;
 	if (processNormals && rWorld.IsUniformScale())
 	{
@@ -337,15 +338,33 @@ void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
 
 	Matrix4F world;
 	rWorld.GetHomogeneous(world);
-	hr = rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
-		&world));
-	WIRE_ASSERT(SUCCEEDED(hr));
+
+	if (pVertexShader)
+	{
+		mpData->ModelView = world * mpData->View;
+		mpData->ModelViewProjection = mpData->ModelView * mpData->Projection;
+	}
+	else
+	{
+		hr = rDevice->SetTransform(D3DTS_WORLD, reinterpret_cast<D3DMATRIX*>(
+			&world));
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
 }
 
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	UInt startIndex, UInt minIndex)
 {
+	if (mspVertexShader)
+	{
+		PdrShader* pPdrShader = GetResource(mspVertexShader);
+		if (pPdrShader)
+		{
+			pPdrShader->SetBuiltInVariables(this);
+		}
+	}
+
 	const UInt triangleCount = indexCount/3;
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += triangleCount;
@@ -384,17 +403,15 @@ void Renderer::SetCamera(Camera* pCamera)
 	
 	if (pCamera->IsPerspective())
 	{
-		D3DMATRIX matProj = {
+		mpData->Projection = Matrix4F(
 			2.0F*n*w, 0.0F,     0.0F,  0.0F,
 			0.0F,     2.0F*n*h, 0.0F,  0.0F,
 			-(r+l)*w, -(t+b)*h, f*d,   1.0F,
-			0.0F,     0.0F,    -n*f*d, 0.0F };
-
-		rDevice->SetTransform(D3DTS_PROJECTION, &matProj);
+			0.0F,     0.0F,    -n*f*d, 0.0F );
 	}
 	else
 	{
-		Matrix4F orthogonalProjection(
+		mpData->Projection = Matrix4F(
 			2.0F*w,   0.0F,     0.0F, 0.0F,
 			0.0F,     2.0F*h,   0.0F, 0.0F,
 			0.0F,     0.0F,     d,    0.0F,
@@ -403,14 +420,15 @@ void Renderer::SetCamera(Camera* pCamera)
 		Matrix4F halfPixelOffset(false);
 		halfPixelOffset[3][0] = 0.5F;
 		halfPixelOffset[3][1] = 0.5F;
-		orthogonalProjection = halfPixelOffset * orthogonalProjection;
-
-		rDevice->SetTransform(D3DTS_PROJECTION, reinterpret_cast<D3DMATRIX*>(
-			&orthogonalProjection));
+		mpData->Projection = halfPixelOffset * mpData->Projection;
 	}
 
+	rDevice->SetTransform(D3DTS_PROJECTION, reinterpret_cast<D3DMATRIX*>(
+		&mpData->Projection));
 	rDevice->SetTransform(D3DTS_VIEW, reinterpret_cast<D3DMATRIX*>(&mpData->
-		ViewMatrix));
+		View));
+
+	mpData->ViewProjection = mpData->View * mpData->Projection;
 }
 
 //----------------------------------------------------------------------------
@@ -422,7 +440,7 @@ void Renderer::OnFrameChange()
 	Vector3F uVector = mspCamera->GetUVector();
 	Vector3F dVector = mspCamera->GetDVector();
 
-	Matrix4F& rViewMatrix = mpData->ViewMatrix;
+	Matrix4F& rViewMatrix = mpData->View;
 	rViewMatrix[0][0] = rVector[0];
 	rViewMatrix[0][1] = uVector[0];
 	rViewMatrix[0][2] = dVector[0];

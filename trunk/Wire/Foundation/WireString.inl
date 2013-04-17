@@ -17,3 +17,16 @@ inline String::operator const Char* () const
 {
     return mpText;
 }
+
+//----------------------------------------------------------------------------
+inline char& String::operator[] (UInt index)
+{
+	WIRE_ASSERT(index <= mLength);
+	return mpText[index];
+}
+//----------------------------------------------------------------------------
+inline const char& String::operator[] (UInt index) const
+{
+	WIRE_ASSERT(index <= mLength);
+	return mpText[index];
+}

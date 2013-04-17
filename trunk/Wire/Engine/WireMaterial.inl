@@ -33,13 +33,7 @@ inline void Material::SetBlendMode(BlendMode blendmode, UInt i)
 //----------------------------------------------------------------------------
 inline UInt Material::GetSamplerIndex(UInt i) const
 {
-	return mTextures[i].SamplerIndex;
-}
-
-//----------------------------------------------------------------------------
-inline void Material::SetSamplerIndex(UInt i)
-{
-	mTextures[i].SamplerIndex = i;
+	return mspPixelShader ? mspPixelShader->GetSamplerIndex(i) : i;
 }
 
 //----------------------------------------------------------------------------

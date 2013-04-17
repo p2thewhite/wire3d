@@ -12,6 +12,7 @@
 
 #include "WireObject.h"
 #include "WireString.h"
+#include "WireTArray.h"
 
 namespace Wire
 {
@@ -29,10 +30,15 @@ public:
 	inline const Char* GetProfile() const;
 	inline UInt GetProgramLength() const;
 
+	inline UInt GetSamplerIndex(UInt at);
+	inline void SetSamplerIndex(UInt samplerIndex, UInt at);
+
 private:
 	String* mpProgram;
 	String* mpFunction;
 	String* mpProfile;
+
+	TArray<UInt> mSamplerIndices;
 };
 
 typedef Pointer<Shader> ShaderPtr;

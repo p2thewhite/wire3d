@@ -252,13 +252,13 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::SetWorldTransformation(const Transformation& rWorld, Bool
-	processNormals)
+void Renderer::SetTransformation(const Transformation& rWorld, Bool
+	processNormals, Shader*)
 {
 	Matrix34F model;
 	rWorld.GetTransformation(model);
 	// load the modelview matrix into matrix memory
-	Matrix34F modelView = mpData->ViewMatrix * model;
+	Matrix34F modelView = mpData->View * model;
 	GXLoadPosMtxImm(modelView, GX_PNMTX0);
 
 	if (processNormals)
@@ -402,7 +402,7 @@ void Renderer::OnFrameChange()
 	Vector3F uVector = mspCamera->GetUVector();
 	Vector3F dVector = -mspCamera->GetDVector();
 
-	Matrix34F& rViewMatrix = mpData->ViewMatrix;
+	Matrix34F& rViewMatrix = mpData->View;
 	rViewMatrix[0][0] = rVector[0];
 	rViewMatrix[1][0] = uVector[0];
 	rViewMatrix[2][0] = dVector[0];
@@ -470,7 +470,7 @@ PdrRendererData::PdrRendererData()
 	ClearColor.g = 0;
 	ClearColor.b = 0;
 	ClearColor.a = 0xFF;
-	ViewMatrix.MakeZero();
+	View.MakeZero();
 }
 
 //----------------------------------------------------------------------------

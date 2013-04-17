@@ -635,6 +635,11 @@ void Renderer::Enable(const Material* pMaterial)
 		return;
 	}
 
+	if (pMaterial->GetVertexShader())
+	{
+		Enable(pMaterial->GetVertexShader(), mspVertexShader);
+	}
+
 	if (pMaterial->GetPixelShader())
 	{
 		Enable(pMaterial->GetPixelShader(), mspPixelShader);
@@ -666,12 +671,14 @@ void Renderer::Disable(const Material* pMaterial)
 		return;
 	}
 
+	if (pMaterial->GetVertexShader())
+	{
+		Disable(pMaterial->GetVertexShader(), mspVertexShader);
+	}
+
 	if (pMaterial->GetPixelShader())
 	{
-		if (mspPixelShader)
-		{
-			Disable(pMaterial->GetPixelShader(), mspPixelShader);
-		}
+		Disable(pMaterial->GetPixelShader(), mspPixelShader);
 	}
 	else
 	{
@@ -699,8 +706,10 @@ void Renderer::Set(const Material* pMaterial)
 
 	UInt currentTextureQuantity = 0;
 	Shader* pCurrentPixelShader = NULL;
+	Shader* pCurrentVertexShader = NULL;
 	if (mspMaterial)
 	{
+		pCurrentVertexShader = mspMaterial->GetVertexShader();
 		currentTextureQuantity = mspMaterial->GetTextureQuantity();
 		pCurrentPixelShader = mspMaterial->GetPixelShader();
 		WIRE_ASSERT(mspPixelShader == pCurrentPixelShader);
@@ -715,8 +724,15 @@ void Renderer::Set(const Material* pMaterial)
 
 	UInt newTextureQuantity = 0;
 	Shader* pNewPixelShader = NULL;
+	Shader* pNewVertexShader = NULL;
 	if (pMaterial)
 	{
+		pNewVertexShader = pMaterial->GetVertexShader();
+		if (pNewVertexShader)
+		{
+			Set(pNewVertexShader, mspVertexShader);
+		}
+
 		newTextureQuantity = pMaterial->GetTextureQuantity();
 		pNewPixelShader = pMaterial->GetPixelShader();
 		if (pNewPixelShader)
@@ -741,6 +757,11 @@ void Renderer::Set(const Material* pMaterial)
 	for (UInt i = newTextureQuantity; i < currentTextureQuantity; i++)
 	{
 		Disable(mspMaterial->GetTexture(mspMaterial->GetSamplerIndex(i)), i);
+	}
+
+	if (pCurrentVertexShader && !pNewVertexShader)
+	{
+		Disable(pCurrentVertexShader, mspVertexShader);
 	}
 
 	if (pCurrentPixelShader && !pNewPixelShader)
@@ -826,7 +847,9 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 // 	Bool isFixedFunction = pRenderObject->GetMaterial() &&
 // 		(pRenderObject->GetMaterial()->GetVertexShader() == NULL);
 	Bool processNormals = pMesh->HasNormal(); // && isSoftwareVertexProcessing;
-	SetWorldTransformation(rTransformation, processNormals);
+	Shader* pVertexShader = pRenderObject->GetMaterial() ?
+		pRenderObject->GetMaterial()->GetVertexShader() : NULL;
+	SetTransformation(rTransformation, processNormals, pVertexShader);
 
 	if (restoreState)
 	{
@@ -1295,7 +1318,7 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
 	}
 
 	pIBPdr->Enable(this);
-	SetWorldTransformation(Transformation::IDENTITY, hasNormals);
+	SetTransformation(Transformation::IDENTITY, hasNormals);
 	DrawElements(vertexCount, indexCount, 0, minIndex);
 	pIBPdr->Disable(this);
 

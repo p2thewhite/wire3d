@@ -174,6 +174,12 @@ Int System::Fprintf(FILE* pFile, const Char* pFormat, ...)
 }
 
 //----------------------------------------------------------------------------
+const Char* System::Strstr(const Char* pStr, const Char* pSubStr)
+{
+	return strstr(pStr, pSubStr);
+}
+
+//----------------------------------------------------------------------------
 UInt System::Strlen(const Char* pString)
 {
 	return static_cast<UInt>(strlen(pString));

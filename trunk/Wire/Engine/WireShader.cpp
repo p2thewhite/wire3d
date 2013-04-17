@@ -8,6 +8,7 @@
 
 #include "WireShader.h"
 
+#include "WireRenderer.h"
 #include "WireString.h"
 
 using namespace Wire;
@@ -32,4 +33,6 @@ Shader::~Shader()
 	WIRE_DELETE mpProgram;
 	WIRE_DELETE mpFunction;
 	WIRE_DELETE mpProfile;
+
+	Renderer::UnbindAll(this);
 }

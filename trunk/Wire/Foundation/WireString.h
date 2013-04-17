@@ -28,7 +28,11 @@ public:
 	inline UInt GetLength() const;
 	inline operator const Char* () const;
 
-    // assignment, comparisons
+	// index access
+	inline const Char& operator[] (UInt index) const;
+	inline Char& operator[] (UInt index);
+
+	// assignment, comparisons
 	String& operator= (const String& rString);
 	String& operator+= (const String& rString);
 	String operator+ (const String& rString) const;
@@ -38,7 +42,9 @@ public:
 	// implicit conversion (support for hash tables)
 	operator UInt () const;
 
-	bool StartsWith(const String& rString) const;
+	Int Find(const String& rSubString, UInt from = 0) const;
+	Bool StartsWith(const String& rString) const;
+	String SubString(UInt beginIndex, UInt endIndex) const;
 
     // case-related
 	String ToUpper() const;

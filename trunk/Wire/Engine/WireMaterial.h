@@ -59,7 +59,6 @@ private:
 	{
 		Texture2DPtr Texture;
 		Material::BlendMode BlendMode;
-		UInt SamplerIndex;
 	};
 
 	TArray<TextureBlendMode> mTextures;

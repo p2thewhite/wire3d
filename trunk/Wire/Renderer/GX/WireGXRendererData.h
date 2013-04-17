@@ -69,7 +69,7 @@ public:
 	GXColor ClearColor;
 
 	// Transforms world space to camera space.
-	Matrix34F ViewMatrix;
+	Matrix34F View;
 
 	static const UInt MAXLIGHTS = 8;
 	UInt FrameBufferIndex;

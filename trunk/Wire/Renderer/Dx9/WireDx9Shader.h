@@ -11,6 +11,7 @@
 #define WIREDX9SHADER_H
 
 #include "WireDx9RendererData.h"
+#include "WireString.h"
 
 namespace Wire
 {
@@ -29,10 +30,20 @@ public:
 	void Disable(Renderer* pRenderer);
 	UInt GetBufferSize() { return 0; }
 
+	void SetBuiltInVariables(Renderer* pRenderer);
+
 private:
+	void InitBuiltInVariableHandles();
+	void ParseSamplerNames(const Shader* pShader);
+	void SkipWhitespace(String& rStr, UInt& rFrom);
+
 	LPD3DXCONSTANTTABLE mpConstantTable;
 	LPDIRECT3DPIXELSHADER9 mpPixelShader;
 	LPDIRECT3DVERTEXSHADER9 mpVertexShader;
+
+	D3DXHANDLE mModelViewProjection;
+	D3DXHANDLE mModelView;
+	D3DXHANDLE mProjection;
 };
 
 }
