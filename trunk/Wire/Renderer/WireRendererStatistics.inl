@@ -92,6 +92,12 @@ inline UInt RendererStatistics::GetBatchVBOsSize() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetShaderCount() const
+{
+	return mShaderCount;
+}
+
+//----------------------------------------------------------------------------
 inline UInt RendererStatistics::GetVertexFormatCount() const
 {
 	return mVertexFormatCount;

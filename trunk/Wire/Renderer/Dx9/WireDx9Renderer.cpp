@@ -312,10 +312,73 @@ void Renderer::PostDraw()
 }
 
 //----------------------------------------------------------------------------
+void Renderer::SetShaderVariables()
+{
+	if (mspVertexShader)
+	{
+		PdrShader* pPdrShader = GetResource(mspVertexShader);
+		if (pPdrShader)
+		{
+			pPdrShader->SetBuiltInVariables(this);
+		}
+
+		if (mspMaterial && mspMaterial->GetVertexShaderVariables())
+		{
+			SetShaderVariables(pPdrShader, mspMaterial->
+				GetVertexShaderVariables());
+		}
+	}
+
+	if (mspPixelShader)
+	{
+		PdrShader* pPdrShader = GetResource(mspPixelShader);
+		if (pPdrShader)
+		{
+			pPdrShader->SetBuiltInVariables(this);
+		}
+
+		if (mspMaterial && mspMaterial->GetPixelShaderVariables())
+		{
+			SetShaderVariables(pPdrShader, mspMaterial->
+				GetPixelShaderVariables());
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetShaderVariables(PdrShader* pPdrShader, const
+	ShaderVariables* pShaderVars)
+{
+	WIRE_ASSERT(pPdrShader && pShaderVars);
+
+	const TArray<Matrix4F>& rMatrices = pShaderVars->GetMatrices();
+	const TArray<String>& rMatrixNames = pShaderVars->GetMatrixNames();
+	for (UInt i = 0; i < rMatrices.GetQuantity(); i++)
+	{
+		pPdrShader->SetMatrix(this, rMatrixNames[i], &(rMatrices[i]));
+	}
+
+	const TArray<Float>& rFloats = pShaderVars->GetFloats();
+	const TArray<String>& rFloatNames = pShaderVars->GetFloatNames();
+	for (UInt i = 0; i < rFloats.GetQuantity(); i++)
+	{
+		pPdrShader->SetFloat(this, rFloatNames[i], rFloats[i]);
+	}
+
+	const TArray<Vector4F>& rFloat4s = pShaderVars->GetFloat4s();
+	const TArray<String>& rFloat4Names = pShaderVars->GetFloat4Names();
+	for (UInt i = 0; i < rFloat4s.GetQuantity(); i++)
+	{
+		pPdrShader->SetFloat4(this, rFloat4Names[i], &(rFloat4s[i]));
+	}
+}
+
+//----------------------------------------------------------------------------
 void Renderer::SetTransformation(const Transformation& rWorld, Bool
 	processNormals, Shader* pVertexShader)
 {
 	processNormals = pVertexShader ? false : processNormals;
+
 	Bool needsRenormalization = processNormals;
 	if (processNormals && rWorld.IsUniformScale())
 	{
@@ -356,15 +419,6 @@ void Renderer::SetTransformation(const Transformation& rWorld, Bool
 void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	UInt startIndex, UInt minIndex)
 {
-	if (mspVertexShader)
-	{
-		PdrShader* pPdrShader = GetResource(mspVertexShader);
-		if (pPdrShader)
-		{
-			pPdrShader->SetBuiltInVariables(this);
-		}
-	}
-
 	const UInt triangleCount = indexCount/3;
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += triangleCount;

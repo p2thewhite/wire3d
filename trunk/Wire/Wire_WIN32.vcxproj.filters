@@ -524,6 +524,9 @@
     <ClInclude Include="Engine\WireShader.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\WireShaderVariables.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -719,6 +722,9 @@
       <Filter>Engine\Inline Files</Filter>
     </None>
     <None Include="Engine\WireShader.inl">
+      <Filter>Engine\Inline Files</Filter>
+    </None>
+    <None Include="Engine\WireShaderVariables.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
   </ItemGroup>
@@ -1106,6 +1112,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\Dx9\WireDx9Shader.cpp">
       <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireShaderVariables.cpp">
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

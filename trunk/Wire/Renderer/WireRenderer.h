@@ -300,6 +300,10 @@ private:
 		Bool hasAlpha = true);
 	void DisableTextureStage(UInt unit = 0);
 
+	void SetShaderVariables();
+	void SetShaderVariables(PdrShader* pPdrShader, const ShaderVariables*
+		pShaderVars);
+
 	void SetTransformation(const Transformation& rWorld,
 		Bool processNormals, Shader* pVertexShader = NULL);
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&

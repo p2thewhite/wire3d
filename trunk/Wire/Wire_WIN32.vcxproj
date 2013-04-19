@@ -97,6 +97,7 @@
     <ClInclude Include="Engine\WireNodeSwitch.h" />
     <ClInclude Include="Engine\WireRenderObject.h" />
     <ClInclude Include="Engine\WireShader.h" />
+    <ClInclude Include="Engine\WireShaderVariables.h" />
     <ClInclude Include="Engine\WireStandardMesh.h" />
     <ClInclude Include="Engine\WireState.h" />
     <ClInclude Include="Engine\WireStateAlpha.h" />
@@ -230,6 +231,7 @@
     <None Include="Engine\WireNodeSwitch.inl" />
     <None Include="Engine\WireRenderObject.inl" />
     <None Include="Engine\WireShader.inl" />
+    <None Include="Engine\WireShaderVariables.inl" />
     <None Include="Foundation\WireApplication.inl" />
     <None Include="Foundation\WireBox3.inl" />
     <None Include="Foundation\WireColor32.inl" />
@@ -299,6 +301,7 @@
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
     <ClCompile Include="Engine\WireRenderObject.cpp" />
     <ClCompile Include="Engine\WireShader.cpp" />
+    <ClCompile Include="Engine\WireShaderVariables.cpp" />
     <ClCompile Include="Engine\WireStandardMesh.cpp" />
     <ClCompile Include="Engine\WireState.cpp" />
     <ClCompile Include="Engine\WireStateAlpha.cpp" />

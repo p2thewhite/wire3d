@@ -406,6 +406,9 @@ void Node::WarmUpRendering(Renderer* pRenderer)
 	culler.SetCamera(spCamera);
 	culler.ComputeVisibleSet(this);
 
+	// TODO: how to deal with CULL_ALWAYS objects and LOD subgraphs that
+	// have not been traversed?
+
 	pRenderer->PreDraw(spCamera);
 	pRenderer->Draw(culler.GetVisibleSets());
 	pRenderer->PostDraw();

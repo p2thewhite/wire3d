@@ -201,6 +201,34 @@ void PdrShader::SetBuiltInVariables(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
+void PdrShader::SetMatrix(Renderer* pRenderer, const Char* pName,
+	const Matrix4F* pMatrix)
+{
+	WIRE_ASSERT(pRenderer && pName && pMatrix && mpConstantTable);
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	mpConstantTable->SetMatrix(rDevice, pName, reinterpret_cast<const
+		D3DXMATRIX*>(pMatrix));
+}
+
+//----------------------------------------------------------------------------
+void PdrShader::SetFloat4(Renderer* pRenderer, const Char* pName,
+	const Vector4F* pFloat4)
+{
+	WIRE_ASSERT(pRenderer && pName && pFloat4 && mpConstantTable);
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	mpConstantTable->SetVector(rDevice, pName, reinterpret_cast<const
+		D3DXVECTOR4*>(pFloat4));
+}
+
+//----------------------------------------------------------------------------
+void PdrShader::SetFloat(Renderer* pRenderer, const Char* pName, Float value)
+{
+	WIRE_ASSERT(pRenderer && pName && mpConstantTable);
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	mpConstantTable->SetFloat(rDevice, pName, value);
+}
+
+//----------------------------------------------------------------------------
 void PdrShader::InitBuiltInVariableHandles()
 {
 	mModelViewProjection = mpConstantTable->GetConstantByName(NULL,

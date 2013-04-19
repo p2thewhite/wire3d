@@ -660,6 +660,7 @@ void Renderer::Enable(const Material* pMaterial)
 	}
 
 	mspMaterial = const_cast<Material*>(pMaterial);
+	SetShaderVariables();
 }
 
 //----------------------------------------------------------------------------
@@ -701,6 +702,11 @@ void Renderer::Set(const Material* pMaterial)
 {
 	if (mspMaterial == pMaterial)
 	{
+		if (mspMaterial)
+		{
+			SetShaderVariables();
+		}
+
 		return;
 	}
 
@@ -770,6 +776,7 @@ void Renderer::Set(const Material* pMaterial)
 	}
 
 	mspMaterial = const_cast<Material*>(pMaterial);
+	SetShaderVariables();
 }
 
 //----------------------------------------------------------------------------

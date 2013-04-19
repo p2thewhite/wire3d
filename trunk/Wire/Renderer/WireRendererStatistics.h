@@ -43,6 +43,7 @@ public:
 	inline UInt GetTexturesSize() const;
 	inline UInt GetBatchVBOCount() const;
 	inline UInt GetBatchVBOsSize() const;
+	inline UInt GetShaderCount() const;
 	inline UInt GetVertexFormatCount() const;
 
 	void Reset();
