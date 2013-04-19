@@ -39,7 +39,10 @@ public:
 	void Insert(UInt i, const T& rElement);
 	void SetElement(UInt i, const T& rElement);
 
+	// linear search
 	Bool Contains(const T& rElement);
+	// returns index of rElement if found, otherwise Quantity
+	UInt Find(const T& rElement);
 
 	// Remove the element or at the specified index. The elements occurring
 	// after that one are shifted so that the array remains contiguous. After

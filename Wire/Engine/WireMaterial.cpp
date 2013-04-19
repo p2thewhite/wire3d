@@ -13,10 +13,13 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI(Wire, Material, Object);
 
 //----------------------------------------------------------------------------
-Material::Material(Shader* pPixelShader, Shader* pVertexShader)
+Material::Material(Shader* pPixelShader, Shader* pVertexShader,
+	ShaderVariables* pPixelVars, ShaderVariables* pVertexVars)
 	:
 	mspPixelShader(pPixelShader),
-	mspVertexShader(pVertexShader)
+	mspVertexShader(pVertexShader),
+	mspPixelShaderVariables(pPixelVars),
+	mspVertexShaderVariables(pVertexVars)
 {
 }
 

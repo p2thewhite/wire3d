@@ -11,6 +11,7 @@
 #define WIREMATERIAL_H
 
 #include "WireShader.h"
+#include "WireShaderVariables.h"
 #include "WireTArray.h"
 #include "WireTexture2D.h"
 #include "WireTInstanceID.h"
@@ -23,7 +24,9 @@ class Material : public Object
 	WIRE_DECLARE_RTTI;
 
 public:
-	Material(Shader* pPixelShader = NULL, Shader* pVertexShader = NULL);
+	Material(Shader* pPixelShader = NULL, Shader* pVertexShader = NULL,
+		ShaderVariables* pPixelShaderVariables = NULL,
+		ShaderVariables* pVertexShaderVariables = NULL);
 	virtual ~Material();
 
 	enum BlendMode
@@ -47,6 +50,10 @@ public:
 	inline void SetPixelShader(Shader* pShader);
 	inline Shader* GetVertexShader() const;
 	inline void SetVertexShader(Shader* pShader);
+	inline ShaderVariables* GetPixelShaderVariables() const;
+	inline void SetPixelShaderVariables(ShaderVariables* pPSVars);
+	inline ShaderVariables* GetVertexShaderVariables() const;
+	inline void SetVertexShaderVariables(ShaderVariables* pVSVars);
 
 	void AddTexture(Texture2D* pTexture, BlendMode blendMode = BM_MODULATE);
  	void SetTexture(UInt i, Texture2D* pTexture, BlendMode blendMode = 
@@ -65,6 +72,8 @@ private:
 
 	ShaderPtr mspPixelShader;
 	ShaderPtr mspVertexShader;
+	ShaderVariablesPtr mspPixelShaderVariables;
+	ShaderVariablesPtr mspVertexShaderVariables;
 };
 
 typedef Pointer<Material> MaterialPtr;

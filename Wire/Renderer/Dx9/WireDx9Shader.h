@@ -31,6 +31,11 @@ public:
 	UInt GetBufferSize() { return 0; }
 
 	void SetBuiltInVariables(Renderer* pRenderer);
+	void SetMatrix(Renderer* pRenderer, const Char* pName,
+		const Matrix4F* pMatrix);
+	void SetFloat4(Renderer* pRenderer, const Char* pName,
+		const Vector4F* pFloat4);
+	void SetFloat(Renderer* pRenderer, const Char* pName, Float value);
 
 private:
 	void InitBuiltInVariableHandles();

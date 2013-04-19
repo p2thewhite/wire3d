@@ -59,3 +59,27 @@ inline void Material::SetVertexShader(Shader* pShader)
 {
 	mspVertexShader = pShader;
 }
+
+//----------------------------------------------------------------------------
+inline ShaderVariables* Material::GetPixelShaderVariables() const
+{
+	return mspPixelShaderVariables;
+}
+
+//----------------------------------------------------------------------------
+inline void Material::SetPixelShaderVariables(ShaderVariables* pPSVars)
+{
+	mspPixelShaderVariables = pPSVars;
+}
+
+//----------------------------------------------------------------------------
+inline ShaderVariables* Material::GetVertexShaderVariables() const
+{
+	return mspVertexShaderVariables;
+}
+
+//----------------------------------------------------------------------------
+inline void Material::SetVertexShaderVariables(ShaderVariables* pVSVars)
+{
+	mspVertexShaderVariables = pVSVars;
+}

@@ -121,6 +121,21 @@ Bool TArray<T>::Contains(const T& rElement)
 
 //----------------------------------------------------------------------------
 template <class T>
+UInt TArray<T>::Find(const T& rElement)
+{
+	for (UInt i = 0; i < mQuantity; i++)
+	{
+		if (mpArray[i] == rElement)
+		{
+			return i;
+		}
+	}
+
+	return mQuantity;
+}
+
+//----------------------------------------------------------------------------
+template <class T>
 void TArray<T>::RemoveAt(UInt i)
 {
 	WIRE_ASSERT(i < mQuantity);

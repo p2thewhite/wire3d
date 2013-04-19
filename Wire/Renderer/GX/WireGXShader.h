@@ -19,13 +19,14 @@ class Shader;
 class PdrShader
 {
 
+// no shaders on the Wii, so there is nothing to do
 public:
-	PdrShader(Renderer* pRenderer, const Shader* pShader) {}
+	PdrShader(Renderer*, const Shader*) {}
 	~PdrShader() {}
 
-	void Enable(Renderer* pRenderer) {}
-	void Disable(Renderer* pRenderer) {}
-	UInt GetBufferSize() { return 0; }
+	inline void Enable(Renderer*) {}
+	inline void Disable(Renderer*) {}
+	inline UInt GetBufferSize() { return 0; }
 };
 
 }

@@ -527,6 +527,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireShaderVariables.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireSmartPointer.h"
 					>
 				</File>
@@ -675,6 +679,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireShaderVariables.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireSmartPointer.inl"
 					>
 				</File>
@@ -804,6 +812,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireShader.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireShaderVariables.cpp"
 					>
 				</File>
 				<File

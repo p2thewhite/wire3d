@@ -252,6 +252,17 @@ void Renderer::SetClearColor(const ColorRGBA& rClearColor)
 }
 
 //----------------------------------------------------------------------------
+void Renderer::SetShaderVariables()
+{
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetShaderVariables(PdrShader* pPdrShader, const
+	ShaderVariables* pShaderVars)
+{
+}
+
+//----------------------------------------------------------------------------
 void Renderer::SetTransformation(const Transformation& rWorld, Bool
 	processNormals, Shader*)
 {
