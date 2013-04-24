@@ -83,3 +83,9 @@ inline void Material::SetVertexShaderVariables(ShaderVariables* pVSVars)
 {
 	mspVertexShaderVariables = pVSVars;
 }
+
+//----------------------------------------------------------------------------
+inline Bool Material::HasShaders() const
+{
+	return mspPixelShader || mspVertexShader;
+}

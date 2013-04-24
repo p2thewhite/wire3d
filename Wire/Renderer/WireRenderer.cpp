@@ -628,8 +628,14 @@ void Renderer::DestroyAll(VertexFormatMap& rVertexFormatMap)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const Material* pMaterial)
+void Renderer::Enable(const Material* pMaterial, const TArray<LightPtr>*
+	pLights)
 {
+	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
+	{
+		Enable(pLights);
+	}
+
 	if (!pMaterial)
 	{
 		return;
@@ -664,8 +670,14 @@ void Renderer::Enable(const Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const Material* pMaterial)
+void Renderer::Disable(const Material* pMaterial, const TArray<LightPtr>*
+	pLights)
 {
+	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
+	{
+		Disable(pLights);
+	}
+
 	WIRE_ASSERT(mspMaterial == pMaterial);
 	if (!pMaterial)
 	{
@@ -698,8 +710,13 @@ void Renderer::Disable(const Material* pMaterial)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const Material* pMaterial)
+void Renderer::Set(const Material* pMaterial, const TArray<LightPtr>* pLights)
 {
+	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
+	{
+		Set(pLights);
+	}
+
 	if (mspMaterial == pMaterial)
 	{
 		if (mspMaterial)
@@ -850,35 +867,28 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 	WIRE_ASSERT(pMesh && ((pMesh->GetStartIndex() +	pMesh->GetIndexCount()) <=
 		pMesh->GetIndexBuffer()->GetQuantity()));
 
-// TODO
-// 	Bool isFixedFunction = pRenderObject->GetMaterial() &&
-// 		(pRenderObject->GetMaterial()->GetVertexShader() == NULL);
-	Bool processNormals = pMesh->HasNormal(); // && isSoftwareVertexProcessing;
-	Shader* pVertexShader = pRenderObject->GetMaterial() ?
-		pRenderObject->GetMaterial()->GetVertexShader() : NULL;
-	SetTransformation(rTransformation, processNormals, pVertexShader);
+	const Material* pMaterial = pRenderObject->GetMaterial();
+	Shader* pVertexShader = pMaterial ?	pMaterial->GetVertexShader() : NULL;
+	SetTransformation(rTransformation, pMesh->HasNormal(), pVertexShader);
 
 	if (restoreState)
 	{
 		Enable(pRenderObject->GetStates());
-		Enable(pRenderObject->GetLights());	// TODO: fixed function only
 		Enable(pMesh);
-		Enable(pRenderObject->GetMaterial());
+		Enable(pMaterial, pRenderObject->GetLights());
 
 		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex(), pMesh->GetMinIndex());
 
-		Disable(pRenderObject->GetMaterial());
+		Disable(pMaterial, pRenderObject->GetLights());
 		Disable(pMesh);
-		Disable(pRenderObject->GetLights());
 		Disable(pRenderObject->GetStates());
 	}
 	else
 	{
 		Set(pRenderObject->GetStates());
-		Set(pRenderObject->GetLights());
 		Set(pMesh);
-		Set(pRenderObject->GetMaterial());
+		Set(pMaterial, pRenderObject->GetLights());
 
 		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex(), pMesh->GetMinIndex());
@@ -1046,8 +1056,7 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 		if (idx > min)
 		{
 			Set(pA->GetStates());
-			Set(pA->GetLights());
-			Set(pA->GetMaterial());
+			Set(pA->GetMaterial(), pA->GetLights());
 			Set(pMeshA->GetVertexBuffers());
 
 			if (hasIdenticalVBOs)

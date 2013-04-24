@@ -73,6 +73,12 @@ Int System::Memcmp(const void* pBuf1, const void* pBuf2, size_t size)
 }
 
 //----------------------------------------------------------------------------
+void* System::Memmove(void* pDst, const void* pSrc, size_t size)
+{
+	return memmove(pDst, pSrc, size);
+}
+
+//----------------------------------------------------------------------------
 Bool System::Load(const Char* pFilename, Char*& rBuffer, Int& rSize)
 {
 	struct stat fileStatus;

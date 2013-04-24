@@ -74,6 +74,7 @@ public:
 		size_t srcSize);
 	static void Memset(void* pDst, Int value, size_t count);
 	static Int Memcmp(const void* pBuf1, const void* pBuf2, size_t size);
+	static void* Memmove(void* pDst, const void* pSrc, size_t size);
 
 	static Double GetTime();
 	static void Print(const Char* pFormat, ...);

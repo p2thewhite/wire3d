@@ -54,6 +54,7 @@ public:
 	inline void SetPixelShaderVariables(ShaderVariables* pPSVars);
 	inline ShaderVariables* GetVertexShaderVariables() const;
 	inline void SetVertexShaderVariables(ShaderVariables* pVSVars);
+	inline Bool HasShaders() const;
 
 	void AddTexture(Texture2D* pTexture, BlendMode blendMode = BM_MODULATE);
  	void SetTexture(UInt i, Texture2D* pTexture, BlendMode blendMode = 

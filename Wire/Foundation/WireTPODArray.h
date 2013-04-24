@@ -7,25 +7,33 @@
 // that agreement.
 
 #pragma once
-#ifndef WIRETARRAY_H
-#define WIRETARRAY_H
+#ifndef WIRETPODARRAY_H
+#define WIRETPODARRAY_H
 
 #include "WireSystem.h"
 
 namespace Wire
 {
 
+// Same as TArray, but must only be used with POD types.
+// A POD type is defined as either a scalar type or a POD class.
+// A POD class has no user-defined copy assignment operator,
+// no user-defined destructor, and no non-static data members
+// that are not themselves PODs. Moreover, a POD class must be an aggregate,
+// meaning it has no user-declared constructors, no private nor protected
+// non-static data, no base classes and no virtual functions.
+
 template <class T>
-class TArray
+class TPODArray
 {
 public:
 	// construction and destruction
-	TArray(UInt maxQuantity = 0, UInt growBy = 1);
-	TArray(const TArray& rObject);
-	~TArray();
+	TPODArray(UInt maxQuantity = 0, UInt growBy = 1);
+	TPODArray(const TPODArray& rObject);
+	~TPODArray();
 
 	// assignment
-	TArray& operator= (const TArray& rObject);
+	TPODArray& operator= (const TPODArray& rObject);
 
 	// element access, index i must be in range
 	inline UInt GetQuantity() const;
@@ -61,7 +69,7 @@ public:
 	inline void RemoveLast();
 
 	// All elements are set to the default object of class T.
-	void RemoveAll();
+	inline void RemoveAll();
 
 	// dynamic growth, new array elements are default constructed
 	void SetMaxQuantity(UInt newMaxQuantity, Bool copy = true);
@@ -79,7 +87,7 @@ private:
 	T* mpArray;
 };
 
-#include "WireTArray.inl"
+#include "WireTPODArray.inl"
 
 }
 

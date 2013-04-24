@@ -211,18 +211,6 @@ public:
 	void Set(const Shader* pShader, Pointer<Shader>& rInUse);
 	PdrShader* GetResource(const Shader* pShader);
 
-	// Material management
-	void Enable(const Material* pMaterial);
-	void Disable(const Material* pMaterial);
-	void Set(const Material* pMaterial);
-
-	// Mesh management
-	void Bind(const Mesh* pMesh);
-	void Unbind(const Mesh* pMesh);
-	void Enable(const Mesh* pMesh);
- 	void Disable(const Mesh* pMesh);
- 	void Set(const Mesh* pMesh);
-
 	// Release all references to non renderer owned resources (disables all
 	// actively used resources in the renderer).
 	void ReleaseResources();
@@ -261,6 +249,21 @@ public:
 	void Set(const StatePtr spStates[]);
 	void Enable(const StatePtr spStates[]);
 	void Disable(const StatePtr spStates[]);
+
+	// Material management
+	void Enable(const Material* pMaterial, const TArray<Pointer<Light> >*
+		pLights = NULL);
+	void Disable(const Material* pMaterial, const TArray<Pointer<Light> >*
+		pLights = NULL);
+	void Set(const Material* pMaterial, const TArray<Pointer<Light> >*
+		pLights = NULL);
+
+	// Mesh management
+	void Bind(const Mesh* pMesh);
+	void Unbind(const Mesh* pMesh);
+	void Enable(const Mesh* pMesh);
+	void Disable(const Mesh* pMesh);
+	void Set(const Mesh* pMesh);
 
 	// Fixed function immediate light state handling
 	void SetLight(const Light* pLight, UInt unit = 0);
@@ -364,6 +367,9 @@ private:
 	Float mMaxAnisotropy;
 	UInt mMaxTextureWidth;
 	UInt mMaxTextureHeight;
+
+	// PS major/minor, VS major/minor version number
+	UInt mShaderVersion; 
 
 	static Renderer* s_pRenderer;
 

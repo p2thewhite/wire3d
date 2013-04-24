@@ -527,6 +527,9 @@
     <ClInclude Include="Engine\WireShaderVariables.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Foundation\WireTPODArray.h">
+      <Filter>Foundation\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -726,6 +729,9 @@
     </None>
     <None Include="Engine\WireShaderVariables.inl">
       <Filter>Engine\Inline Files</Filter>
+    </None>
+    <None Include="Foundation\WireTPODArray.inl">
+      <Filter>Foundation\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
