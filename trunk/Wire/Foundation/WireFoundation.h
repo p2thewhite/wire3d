@@ -35,6 +35,7 @@
 #include "WireTInstanceID.h"
 #include "WireTList.h"
 #include "WireTMap.h"
+#include "WireTPODArray.h"
 #include "WireTQueue.h"
 #include "WireTStack.h"
 #include "WireTypes.h"

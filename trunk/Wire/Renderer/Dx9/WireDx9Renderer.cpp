@@ -120,6 +120,12 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 // 		}
 	}
 
+	DWORD psVer = deviceCaps.PixelShaderVersion;
+	DWORD vsVer = deviceCaps.VertexShaderVersion;
+	mShaderVersion = D3DSHADER_VERSION_MAJOR(psVer) << 24 |
+		D3DSHADER_VERSION_MINOR(psVer) << 16 |
+		D3DSHADER_VERSION_MAJOR(vsVer) << 8 | D3DSHADER_VERSION_MINOR(vsVer);
+
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 
 	hr = -1;
@@ -377,7 +383,7 @@ void Renderer::SetShaderVariables(PdrShader* pPdrShader, const
 void Renderer::SetTransformation(const Transformation& rWorld, Bool
 	processNormals, Shader* pVertexShader)
 {
-	processNormals = pVertexShader ? false : processNormals;
+	processNormals = pVertexShader && mShaderVersion ? false : processNormals;
 
 	Bool needsRenormalization = processNormals;
 	if (processNormals && rWorld.IsUniformScale())

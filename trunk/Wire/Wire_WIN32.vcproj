@@ -258,6 +258,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Foundation\WireTPODArray.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Foundation\WireTQueue.h"
 					>
 				</File>
@@ -367,6 +371,10 @@
 				</File>
 				<File
 					RelativePath=".\Foundation\WireTMap.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\Foundation\WireTPODArray.inl"
 					>
 				</File>
 				<File
