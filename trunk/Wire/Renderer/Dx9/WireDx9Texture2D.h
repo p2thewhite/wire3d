@@ -10,7 +10,7 @@
 #ifndef WIREDX9TEXTURE2D_H
 #define WIREDX9TEXTURE2D_H
 
-#include "WireBuffer.h"
+#include "WireImage2D.h"
 #include "WireTypes.h"
 
 struct IDirect3DTexture9;
@@ -18,7 +18,6 @@ struct IDirect3DTexture9;
 namespace Wire
 {
 
-class Image2D;
 class Renderer;
 class Texture2D;
 
@@ -36,6 +35,12 @@ public:
 	inline UInt GetBufferSize() const { return mBufferSize; }
 
 private:
+	friend class PdrRenderTarget;
+	// RenderTarget texture/depth stencil
+	PdrTexture2D(Renderer* pRenderer, Image2D::FormatMode format, UInt width,
+		UInt height, Bool autoGenerateMipMaps);
+	void Enable(Renderer* pRenderer, UInt unit);
+
 	IDirect3DTexture9* mpBuffer;
 	UInt mBufferSize;
 };

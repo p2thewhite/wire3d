@@ -530,6 +530,15 @@
     <ClInclude Include="Foundation\WireTPODArray.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\WireRenderTarget.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Dx9\WireDx9RenderTarget.h">
+      <Filter>Renderer\Platforms\Dx9\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\GX\WireGXRenderTarget.h">
+      <Filter>Renderer\Platforms\GX\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Foundation\WireBox3.inl">
@@ -732,6 +741,9 @@
     </None>
     <None Include="Foundation\WireTPODArray.inl">
       <Filter>Foundation\Inline Files</Filter>
+    </None>
+    <None Include="Engine\WireRenderTarget.inl">
+      <Filter>Engine\Inline Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1121,6 +1133,15 @@
     </ClCompile>
     <ClCompile Include="Engine\WireShaderVariables.cpp">
       <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireRenderTarget.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Dx9\WireDx9RenderTarget.cpp">
+      <Filter>Renderer\Platforms\Dx9\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GX\WireGXRenderTarget.cpp">
+      <Filter>Renderer\Platforms\GX\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

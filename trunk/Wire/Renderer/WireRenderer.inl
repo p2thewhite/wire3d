@@ -55,6 +55,18 @@ inline UInt Renderer::GetMaxVertexStreams() const
 }
 
 //----------------------------------------------------------------------------
+inline UInt Renderer::GetShaderVersion() const
+{
+	return mShaderVersion;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Renderer::GetMaxSimultaneousRenderTargets() const
+{
+	return mMaxSimultaneousRenderTargets;
+}
+
+//----------------------------------------------------------------------------
 inline UInt Renderer::GetMaxLights() const
 {
 	return mLights.GetQuantity();

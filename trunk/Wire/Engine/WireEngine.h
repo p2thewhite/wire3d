@@ -30,6 +30,7 @@
 #include "WireNodeSwitch.h"
 #include "WireObject.h"
 #include "WireRenderObject.h"
+#include "WireRenderTarget.h"
 #include "WireRtti.h"
 #include "WireSceneObject.h"
 #include "WireShader.h"

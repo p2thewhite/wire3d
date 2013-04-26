@@ -22,6 +22,7 @@ const UChar PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_QUANTITY] =
 	GX_TF_RGBA8,	// Image2D::FM_RGBA8888
 	GX_TF_RGB565,	// Image2D::FM_RGB565
 	GX_TF_RGB5A3,	// Image2D::FM_RGBA4444
+	GX_TF_Z24X8		// Image2D::FM_D24S8
 };
 
 const UChar PdrRendererData::TEX_MIN_FILTER[Texture2D::FT_QUANTITY] =

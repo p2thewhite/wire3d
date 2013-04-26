@@ -97,6 +97,19 @@ inline UInt RendererStatistics::GetShaderCount() const
 	return mShaderCount;
 }
 
+
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetRenderTargetCount() const
+{
+	return mRenderTargetCount;
+}
+
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetRenderTargetSize() const
+{
+	return mRenderTargetSize;
+}
+
 //----------------------------------------------------------------------------
 inline UInt RendererStatistics::GetVertexFormatCount() const
 {

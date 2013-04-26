@@ -33,11 +33,13 @@ class Mesh;
 class PdrIndexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
+class PdrRenderTarget;
 class PdrShader;
 class PdrTexture2D;
 class PdrVertexFormat;
 class PdrVertexBuffer;
 class RenderObject;
+class RenderTarget;
 class Texture2D;
 class VertexAttributes;
 class VertexBuffer;
@@ -85,6 +87,12 @@ public:
 
 	inline UInt GetMaxVertexStreams() const;
 
+	// PS major/minor, VS major/minor version number
+	inline UInt GetShaderVersion() const;
+
+	inline UInt GetMaxSimultaneousRenderTargets() const;
+
+	// maximum fixed function lights supported by hardware
 	inline UInt GetMaxLights() const;
 
 	// Resource management.
@@ -211,6 +219,14 @@ public:
 	void Set(const Shader* pShader, Pointer<Shader>& rInUse);
 	PdrShader* GetResource(const Shader* pShader);
 
+	// render target management
+	PdrRenderTarget* Bind(const RenderTarget* pRenderTarget);
+	void Unbind(const RenderTarget* pRenderTarget);
+	void Enable(const RenderTarget* pRenderTarget);
+	void Disable(const RenderTarget* pRenderTarget);
+	void Set(const RenderTarget* pRenderTarget);
+	PdrRenderTarget* GetResource(const RenderTarget* pRenderTarget);
+
 	// Release all references to non renderer owned resources (disables all
 	// actively used resources in the renderer).
 	void ReleaseResources();
@@ -330,6 +346,7 @@ private:
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
 	typedef THashTable<const Image2D*, PdrTexture2D*> Image2DMap;
 	typedef THashTable<const Shader*, PdrShader*> ShaderMap;
+	typedef THashTable<const RenderTarget*, PdrRenderTarget*> RenderTargetMap;
 	typedef THashTable<UInt, PdrVertexFormat*> VertexFormatMap;
 
 	// Support for destructor. Destroy any remaining resources that the
@@ -350,6 +367,7 @@ private:
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	Pointer<Shader> mspPixelShader;
 	Pointer<Shader> mspVertexShader;
+	Pointer<RenderTarget> mspRenderTarget;
 	TArray<Pointer<Light> > mLights;
 	UInt mVertexFormatKey;
 
@@ -369,7 +387,9 @@ private:
 	UInt mMaxTextureHeight;
 
 	// PS major/minor, VS major/minor version number
-	UInt mShaderVersion; 
+	UInt mShaderVersion;
+
+	UInt mMaxSimultaneousRenderTargets;
 
 	static Renderer* s_pRenderer;
 
@@ -380,6 +400,7 @@ private:
 	VertexBufferMap mVertexBufferMap;
 	Image2DMap mImage2DMap;
 	ShaderMap mShaderMap;
+	RenderTargetMap mRenderTargetMap;
 	VertexFormatMap mVertexFormatMap;
 
 	// Batching

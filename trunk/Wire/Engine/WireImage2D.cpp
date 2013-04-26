@@ -19,7 +19,17 @@ const UChar Image2D::s_ImageBpp[] =
 	3,	// FM_RGB888,
 	4,	// FM_RGBA8888,
 	2,	// FM_RGB565,
-	2	// FM_RGBA4444,
+	2,	// FM_RGBA4444,
+	4	// FM_D24S8
+};
+
+const Bool Image2D::s_FormatHasAlpha[] =
+{
+	false,	// FM_RGB888,
+	true,	// FM_RGBA8888,
+	false,	// FM_RGB565,
+	true,	// FM_RGBA4444,
+	false	// FM_D24S8
 };
 
 Image2DPtr Image2D::s_spDefault;
@@ -76,13 +86,7 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 
 	if (mipmapCount == 0)
 	{
-		mMipmapCount = 1;
-		while (width > 1 || height > 1)
-		{
-			mMipmapCount++;
-			width = width >> 1;
-			height = height >> 1;
-		}
+		mMipmapCount = GetMipmapCount(width, height);
 	}
 
 	if (filterMipmaps)
@@ -131,8 +135,12 @@ UInt Image2D::GetBound(UInt i, UInt level) const
 UInt Image2D::GetMipmapQuantity(UInt level) const
 {
 	WIRE_ASSERT(level < GetMipmapCount());
-	UInt width = mBound[0];
-	UInt height = mBound[1];
+	return GetMipmapQuantity(level, mBound[0], mBound[1]);
+}
+
+//----------------------------------------------------------------------------
+UInt Image2D::GetMipmapQuantity(UInt level, UInt width, UInt height)
+{
 	UInt currentLevel = 0;
 
 	while ((width > 1 || height > 1) && currentLevel < level)
@@ -152,6 +160,19 @@ UInt Image2D::GetTotalQuantity() const
 	for (UInt i = 0; i < GetMipmapCount(); i++)
 	{
 		totalQuantity += GetMipmapQuantity(i);
+	}
+
+	return totalQuantity;
+}
+
+//----------------------------------------------------------------------------
+UInt Image2D::GetTotalQuantity(UInt width, UInt height)
+{
+	UInt totalQuantity = 0;
+	UInt mipmapCount = GetMipmapCount(width, height);
+	for (UInt i = 0; i < mipmapCount; i++)
+	{
+		totalQuantity += GetMipmapQuantity(i, width, height);
 	}
 
 	return totalQuantity;
@@ -194,8 +215,27 @@ UChar* Image2D::GetMipmap(UInt level) const
 }
 
 //----------------------------------------------------------------------------
+UInt Image2D::GetMipmapCount(UInt width, UInt height)
+{
+	UInt mipmapCount = 1;
+	while (width > 1 || height > 1)
+	{
+		mipmapCount++;
+		width = width >> 1;
+		height = height >> 1;
+	}
+
+	return mipmapCount;
+}
+
+//----------------------------------------------------------------------------
 void Image2D::FilterMipmaps()
 {
+	if (!mpData || (mFormat == FM_D24S8))
+	{
+		return;
+	}
+
 	UInt width = mBound[0];
 	UInt height = mBound[1];
 	UInt bpp = GetBytesPerPixel();

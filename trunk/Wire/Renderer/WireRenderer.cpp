@@ -13,16 +13,19 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireRenderObject.h"
+#include "WireRenderTarget.h"
 #include "WireShader.h"
 #include "WireVisibleSet.h"
 
 #ifdef WIRE_WII
 #include "WireGXIndexBuffer.h"
+#include "WireGXRenderTarget.h"
 #include "WireGXShader.h"
 #include "WireGXTexture2D.h"
 #include "WireGXVertexBuffer.h"
 #else
 #include "WireDx9IndexBuffer.h"
+#include "WireDx9RenderTarget.h"
 #include "WireDx9Shader.h"
 #include "WireDx9Texture2D.h"
 #include "WireDx9VertexBuffer.h"
@@ -118,6 +121,11 @@ void Renderer::ReleaseResources()
 	if (mspVertexShader)
 	{
 		Disable(mspVertexShader, mspVertexShader);
+	}
+
+	if (mspRenderTarget)
+	{
+		Disable(mspRenderTarget);
 	}
 
 	mspMesh = NULL;
@@ -475,6 +483,60 @@ void Renderer::Set(const Shader* pShader, ShaderPtr& rInUse)
 PdrShader* Renderer::GetResource(const Shader* pShader)
 {
 	return GetResource(pShader, mShaderMap);
+}
+
+//----------------------------------------------------------------------------
+PdrRenderTarget* Renderer::Bind(const RenderTarget* pRenderTarget)
+{
+	WIRE_ASSERT(pRenderTarget);
+	PdrRenderTarget** pValue = mRenderTargetMap.Find(pRenderTarget);
+
+	if (!pValue)
+	{
+		PdrRenderTarget* pPdrRenderTarget = WIRE_NEW PdrRenderTarget(this,
+			pRenderTarget);
+		mRenderTargetMap.Insert(pRenderTarget, pPdrRenderTarget);
+		mStatistics.mRenderTargetCount++;
+		mStatistics.mRenderTargetSize += pPdrRenderTarget->GetBufferSize();
+		return pPdrRenderTarget;
+	}
+
+	return *pValue;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Unbind(const RenderTarget* pRenderTarget)
+{
+	Unbind(pRenderTarget, mRenderTargetMap, &mStatistics.mRenderTargetCount,
+		&mStatistics.mRenderTargetSize);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Enable(const RenderTarget* pRenderTarget)
+{
+	WIRE_ASSERT(mspRenderTarget == NULL /* Disable the previous RT first. */);
+	Enable(pRenderTarget, mRenderTargetMap);
+	mspRenderTarget = const_cast<RenderTarget*>(pRenderTarget);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Disable(const RenderTarget* pRenderTarget)
+{
+	WIRE_ASSERT(mspRenderTarget == pRenderTarget /* This RT is not enabled */);
+	Disable(pRenderTarget, mRenderTargetMap);
+	mspRenderTarget = NULL;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Set(const RenderTarget* pRenderTarget)
+{
+	Set(pRenderTarget, mspRenderTarget);
+}
+
+//----------------------------------------------------------------------------
+PdrRenderTarget* Renderer::GetResource(const RenderTarget* pRenderTarget)
+{
+	return GetResource(pRenderTarget, mRenderTargetMap);
 }
 
 //----------------------------------------------------------------------------

@@ -9,7 +9,6 @@
 #include "WireDx9Texture2D.h"
 
 #include "WireDx9RendererData.h"
-#include "WireImage2D.h"
 #include "WireRenderer.h"
 #include "WireTexture2D.h"
 
@@ -21,6 +20,7 @@ const D3DFORMAT PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_QUANTITY] =
 	D3DFMT_A8R8G8B8,	// Image2D::FM_RGBA8888
 	D3DFMT_R5G6B5,		// Image2D::FM_RGB565
 	D3DFMT_A4R4G4B4,	// Image2D::FM_RGBA4444
+	D3DFMT_D24S8        // Image2D::FM_D24S8
 };
 
 const DWORD PdrRendererData::StateSampler::TEX_MIN_FILTER[Texture2D::
@@ -180,6 +180,48 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 	if (pSrc != pDst)
 	{
 		WIRE_DELETE[] pDst;
+	}
+}
+
+//----------------------------------------------------------------------------
+PdrTexture2D::PdrTexture2D(Renderer* pRenderer, Image2D::FormatMode format,
+	UInt width, UInt height, Bool autoGenerateMipMaps)
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	IDirect3DDevice9*& rDevice = pData->D3DDevice;
+	HRESULT hr;
+
+	WIRE_ASSERT(width <= pRenderer->GetMaxTextureWidth());
+	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
+
+	mBufferSize = width*height*Image2D::GetBytesPerPixel(format);
+	if (format == Image2D::FM_D24S8)
+	{
+		hr = rDevice->CreateTexture(width, height, 1, D3DUSAGE_DEPTHSTENCIL,
+			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
+			&mpBuffer, NULL);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+	else
+	{
+		UINT levels = 1;
+		DWORD usage = D3DUSAGE_RENDERTARGET;
+		if (autoGenerateMipMaps)
+		{
+			levels = 0;
+			usage |= D3DUSAGE_AUTOGENMIPMAP;
+		}
+
+		hr = rDevice->CreateTexture(width, height, levels, usage,
+			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
+			&mpBuffer, NULL);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		
+		if (levels == 0)
+		{
+			mBufferSize = Image2D::GetTotalQuantity(width, height) *
+				Image2D::GetBytesPerPixel(format);
+		}
 	}
 }
 
@@ -355,6 +397,19 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 		WIRE_ASSERT(SUCCEEDED(hr));
 		rState.ADDRESSV = vWrap;
 	}
+
+	hr = rDevice->SetTexture(unit, mpBuffer);
+	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+void PdrTexture2D::Enable(Renderer* pRenderer, UInt unit)
+{
+	WIRE_ASSERT(unit < pRenderer->GetMaxTextureStages());
+
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	IDirect3DDevice9*& rDevice = pData->D3DDevice;
+	HRESULT hr;
 
 	hr = rDevice->SetTexture(unit, mpBuffer);
 	WIRE_ASSERT(SUCCEEDED(hr));

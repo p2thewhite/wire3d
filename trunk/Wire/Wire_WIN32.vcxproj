@@ -96,6 +96,7 @@
     <ClInclude Include="Engine\WireNodeSkybox.h" />
     <ClInclude Include="Engine\WireNodeSwitch.h" />
     <ClInclude Include="Engine\WireRenderObject.h" />
+    <ClInclude Include="Engine\WireRenderTarget.h" />
     <ClInclude Include="Engine\WireShader.h" />
     <ClInclude Include="Engine\WireShaderVariables.h" />
     <ClInclude Include="Engine\WireStandardMesh.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Renderer\Dx9\WireDx9IndexBuffer.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9RendererData.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9RendererInput.h" />
+    <ClInclude Include="Renderer\Dx9\WireDx9RenderTarget.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9Shader.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9Texture2D.h" />
     <ClInclude Include="Renderer\Dx9\WireDx9VertexBuffer.h" />
@@ -216,6 +218,7 @@
     <ClInclude Include="Renderer\GX\WireGXIndexBuffer.h" />
     <ClInclude Include="Renderer\GX\WireGXRendererData.h" />
     <ClInclude Include="Renderer\GX\WireGXRendererInput.h" />
+    <ClInclude Include="Renderer\GX\WireGXRenderTarget.h" />
     <ClInclude Include="Renderer\GX\WireGXShader.h" />
     <ClInclude Include="Renderer\GX\WireGXTexture2D.h" />
     <ClInclude Include="Renderer\GX\WireGXVertexBuffer.h" />
@@ -231,6 +234,7 @@
     <None Include="Engine\WireNodeLight.inl" />
     <None Include="Engine\WireNodeSwitch.inl" />
     <None Include="Engine\WireRenderObject.inl" />
+    <None Include="Engine\WireRenderTarget.inl" />
     <None Include="Engine\WireShader.inl" />
     <None Include="Engine\WireShaderVariables.inl" />
     <None Include="Foundation\WireApplication.inl" />
@@ -302,6 +306,7 @@
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
     <ClCompile Include="Engine\WireRenderObject.cpp" />
+    <ClCompile Include="Engine\WireRenderTarget.cpp" />
     <ClCompile Include="Engine\WireShader.cpp" />
     <ClCompile Include="Engine\WireShaderVariables.cpp" />
     <ClCompile Include="Engine\WireStandardMesh.cpp" />
@@ -438,6 +443,7 @@
     <ClCompile Include="Engine\WireVertexAttributes.cpp" />
     <ClCompile Include="Engine\WireVertexBuffer.cpp" />
     <ClCompile Include="Engine\WireVisibleSet.cpp" />
+    <ClCompile Include="Renderer\Dx9\WireDx9RenderTarget.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9Shader.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9TextureStage.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9IndexBuffer.cpp" />
@@ -452,6 +458,10 @@
     <ClCompile Include="Renderer\Dx9\WireDx9Texture2D.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9VertexBuffer.cpp" />
     <ClCompile Include="Renderer\Dx9\WireDx9VertexFormat.cpp" />
+    <ClCompile Include="Renderer\GX\WireGXRenderTarget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Renderer\GX\WireGXTextureStage.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

@@ -17,6 +17,7 @@
 #include "WireIndexBuffer.h"
 #include "WireLight.h"
 #include "WireMesh.h"
+#include "WireRenderTarget.h"
 #include "WireShader.h"
 
 using namespace Wire;
@@ -125,6 +126,8 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mShaderVersion = D3DSHADER_VERSION_MAJOR(psVer) << 24 |
 		D3DSHADER_VERSION_MINOR(psVer) << 16 |
 		D3DSHADER_VERSION_MAJOR(vsVer) << 8 | D3DSHADER_VERSION_MINOR(vsVer);
+
+	mMaxSimultaneousRenderTargets = deviceCaps.NumSimultaneousRTs;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 
@@ -635,7 +638,7 @@ void PdrRendererData::DestroyNonManagedResources(THashTable<const Resource*,
 
 //----------------------------------------------------------------------------
 template <typename Resource, typename PdrResource>
-void DestroyResources(THashTable<const Resource*,
+void PdrRendererData::DestroyResources(THashTable<const Resource*,
 	PdrResource*>& rMap, TArray<const Resource*>& rSave)
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity(), false);
@@ -654,7 +657,8 @@ void DestroyResources(THashTable<const Resource*,
 
 //----------------------------------------------------------------------------
 template <typename Resource>
-void RecreateResources(Renderer* pRenderer, TArray<const Resource*>& rSave)
+void PdrRendererData::RecreateResources(Renderer* pRenderer, TArray<const
+	Resource*>& rSave)
 {
 	for (UInt i = 0; i < rSave.GetQuantity(); i++)
 	{
@@ -670,9 +674,11 @@ void PdrRendererData::ResetDevice()
 	TArray<const IndexBuffer*> saveIndexBuffers;
 	TArray<const VertexBuffer*> saveVertexBuffers;
 	TArray<const Image2D*> saveTexture2Ds;
+	TArray<const RenderTarget*> saveRenderTargets;
 	DestroyResources(rRenderer.mIndexBufferMap, saveIndexBuffers);
 	DestroyResources(rRenderer.mVertexBufferMap, saveVertexBuffers);
 	DestroyNonManagedResources(rRenderer.mImage2DMap, saveTexture2Ds);
+	DestroyResources(rRenderer.mRenderTargetMap, saveRenderTargets);
 	
 	UInt batchingIBOSize = 0;
 	if (rRenderer.mBatchedIndexBuffer)
@@ -701,6 +707,7 @@ void PdrRendererData::ResetDevice()
 	RecreateResources(&rRenderer, saveIndexBuffers);
 	RecreateResources(&rRenderer, saveVertexBuffers);
 	RecreateResources(&rRenderer, saveTexture2Ds);
+	RecreateResources(&rRenderer, saveRenderTargets);
 
 	rRenderer.OnViewportChange();
 
