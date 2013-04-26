@@ -68,6 +68,12 @@ inline UInt Image2D::GetBytesPerPixel(FormatMode format)
 }
 
 //----------------------------------------------------------------------------
+inline Bool Image2D::HasAlpha(FormatMode format)
+{
+	return s_FormatHasAlpha[format];
+}
+
+//----------------------------------------------------------------------------
 inline void Image2D::RGB888ToRGB565(UChar* pSrc888, UChar* pDst565)
 {
 	UShort rgb565 = static_cast<UShort>(*pSrc888++);		// red

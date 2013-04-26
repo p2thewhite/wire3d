@@ -29,6 +29,7 @@ public:
 		FM_RGBA8888,
 		FM_RGB565,
 		FM_RGBA4444,
+		FM_D24S8,
 		FM_QUANTITY
 	};
 
@@ -48,14 +49,12 @@ public:
 	inline UInt GetQuantity(UInt level = 0) const;
 	UInt GetBound(UInt i, UInt level = 0) const;
 	inline UInt GetBytesPerPixel() const;
-	inline static UInt GetBytesPerPixel(FormatMode format);
 
 	inline Bool HasAlpha() const;
 	inline Bool HasMipmaps() const;
 	inline UInt GetMipmapCount() const;
 
 	void FilterMipmaps();
-	UInt GetMipmapQuantity(UInt level) const;
 
 	// Pointer to a mipmap level
 	UChar* GetMipmap(UInt level) const;
@@ -65,6 +64,9 @@ public:
 
 	// Number of pixels across all mipmap levels
 	UInt GetTotalQuantity() const;
+
+	// Number of pixels of a particular mipmap level
+	UInt GetMipmapQuantity(UInt level) const;
 
 	// Release the raw buffer and replace it with a 2x2 default image
 	void Discard();
@@ -77,6 +79,12 @@ public:
 	inline static Image2D* GetDefault();
 	inline static Image2D* GetDefaultWithAlpha();
 
+	inline static UInt GetBytesPerPixel(FormatMode format);
+	inline static Bool HasAlpha(FormatMode format);
+	static UInt GetMipmapQuantity(UInt level, UInt width, UInt height);
+	static UInt GetMipmapCount(UInt width, UInt height);
+	static UInt GetTotalQuantity(UInt width, UInt height);
+
 private:
 	inline Bool IsPowerOfTwo(UInt value) const;
 	void FilterMipmap(UChar* pSrc, UChar* pDst, UInt width, UInt height);
@@ -84,7 +92,9 @@ private:
 
 	static Pointer<Image2D> s_spDefault;
 	static Pointer<Image2D> s_spDefaultWithAlpha;
+
 	static const UChar s_ImageBpp[];
+	static const Bool s_FormatHasAlpha[];
 
 	static const UChar s_Default[];
 	static const UChar s_DefaultWithAlpha[];

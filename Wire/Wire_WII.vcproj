@@ -523,6 +523,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderTarget.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRtti.h"
 					>
 				</File>
@@ -675,6 +679,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireRenderTarget.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireRtti.inl"
 					>
 				</File>
@@ -808,6 +816,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireRenderObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireRenderTarget.cpp"
 					>
 				</File>
 				<File
@@ -961,6 +973,10 @@
 							>
 						</File>
 						<File
+							RelativePath=".\Renderer\GX\WireGXRenderTarget.h"
+							>
+						</File>
+						<File
 							RelativePath=".\Renderer\GX\WireGXShader.h"
 							>
 						</File>
@@ -994,6 +1010,10 @@
 						</File>
 						<File
 							RelativePath=".\Renderer\GX\WireGXRenderer.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\Renderer\GX\WireGXRenderTarget.cpp"
 							>
 						</File>
 						<File

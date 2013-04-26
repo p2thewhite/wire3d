@@ -44,6 +44,8 @@ public:
 	inline UInt GetBatchVBOCount() const;
 	inline UInt GetBatchVBOsSize() const;
 	inline UInt GetShaderCount() const;
+	inline UInt GetRenderTargetCount() const;
+	inline UInt GetRenderTargetSize() const;
 	inline UInt GetVertexFormatCount() const;
 
 	void Reset();
@@ -87,6 +89,8 @@ private:
 	UInt mBatchVBOCount;
 	UInt mBatchVBOsSize;
 	UInt mShaderCount;
+	UInt mRenderTargetCount;
+	UInt mRenderTargetSize;
 
 	// total number of vertex formats used
 	UInt mVertexFormatCount;

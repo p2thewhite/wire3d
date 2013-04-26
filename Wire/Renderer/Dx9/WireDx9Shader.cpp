@@ -66,10 +66,29 @@ PdrShader::PdrShader(Renderer* pRenderer, const Shader* pShader)
 	LPD3DXBUFFER pCode = NULL;
 	DWORD dwShaderFlags = 0;
 	LPD3DXBUFFER pBufferErrors = NULL;
+	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	const Bool isPixelShader = (pShader->GetProfile()[0] == 'p');
+
+	Char* pProfile = const_cast<Char*>(pShader->GetProfile());
+	const Char* const pHighestProfile = isPixelShader ?
+		D3DXGetPixelShaderProfile(rDevice) :
+		D3DXGetVertexShaderProfile(rDevice);
+
+	WIRE_ASSERT(System::Strlen(pProfile) == System::Strlen(pHighestProfile));
+	for (UInt i = 0; pProfile && pProfile[i]; i++)
+	{
+		if (pHighestProfile[i] < pProfile[i])
+		{
+			// force down to highest available profile. If compilation fails,
+			// shader will be replaced by default shader.
+			pProfile = const_cast<Char*>(pHighestProfile);
+			break;
+		}
+	}
 
 	hr = D3DXCompileShader(pShader->GetProgram(), pShader->GetProgramLength(),
-		NULL, NULL, pShader->GetFunction(), pShader->GetProfile(),
-		dwShaderFlags, &pCode, &pBufferErrors, &mpConstantTable);
+		NULL, NULL, pShader->GetFunction(), pProfile, dwShaderFlags, &pCode,
+		&pBufferErrors, &mpConstantTable);
 
 	if (FAILED(hr))
 	{
@@ -77,7 +96,7 @@ PdrShader::PdrShader(Renderer* pRenderer, const Shader* pShader)
 		MessageBox(NULL, static_cast<const char*>(pCompileErrors),
 			"Shader Compile Error", MB_OK|MB_ICONEXCLAMATION);
 
-		if (pShader->GetProfile()[0] == 'p')
+		if (isPixelShader)
 		{
 			hr = D3DXCompileShader(DefaultPixelProgram,
 				strlen(DefaultPixelProgram), NULL, NULL, "main", "ps_2_0",
@@ -100,9 +119,7 @@ PdrShader::PdrShader(Renderer* pRenderer, const Shader* pShader)
 
 	InitBuiltInVariableHandles();
 
-	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
-
-	if (pShader->GetProfile()[0] == 'p')
+	if (isPixelShader)
 	{
 		hr = rDevice->CreatePixelShader((DWORD*)pCode->GetBufferPointer(),
 			&mpPixelShader);

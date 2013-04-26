@@ -36,6 +36,14 @@ public:
 	void DestroyNonManagedResources(THashTable<const Resource*,
 		PdrResource*>& rMap, TArray<const Resource*>& rSave);
 
+	template <typename Resource, typename PdrResource>
+	void DestroyResources(THashTable<const Resource*,
+		PdrResource*>& rMap, TArray<const Resource*>& rSave);
+
+	template <typename Resource>
+	void RecreateResources(Renderer* pRenderer, TArray<const Resource*>&
+		rSave);
+
 	// Platform-dependent data
 	IDirect3D9* D3D;
 	IDirect3DDevice9* D3DDevice;

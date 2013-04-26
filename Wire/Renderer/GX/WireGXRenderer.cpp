@@ -16,6 +16,7 @@
 #include "WireGXRendererInput.h"
 #include "WireGXVertexBuffer.h"
 #include "WireMatrix4.h"
+#include "WireRenderTarget.h"
 #include "WireText.h"
 
 #include <malloc.h>		// for memalign
@@ -35,6 +36,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxTextureWidth(1024),
 	mMaxTextureHeight(1024),
 	mShaderVersion(0),
+	mMaxSimultaneousRenderTargets(1),
 	mIndexBufferMap(1024),
 	mVertexBufferMap(1024),
 	mImage2DMap(256),

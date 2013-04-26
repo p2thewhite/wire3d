@@ -46,6 +46,8 @@ RendererStatistics::RendererStatistics()
 	mBatchVBOCount(0),
 	mBatchVBOsSize(0),
 	mShaderCount(0),
+	mRenderTargetCount(0),
+	mRenderTargetSize(0),
 	mVertexFormatCount(0),
 	mpRenderer(NULL),
 	mFpsSamplesIndex(0)
@@ -84,7 +86,8 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float kb = 1024.0F;
 	const Float mb = kb * kb;
 
-	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize;
+	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize +
+		mRenderTargetSize;
 
 	const Char msg[] = "Draw Calls: %d, Triangles: %d, VRAM: >%.2f MB\n"
 		"VBOs: %d / %.2f KB, VFs: %d\n"
@@ -98,6 +101,21 @@ void RendererStatistics::AppendToText(Text* pText)
 		mTextureCount, mTexturesSize / mb);
 
 	pText->Append(text);
+
+	if (mShaderCount > 0)
+	{
+		const Char msg[] = "Shaders: %d\n";
+		System::Sprintf(text, textArraySize, msg, mShaderCount);
+		pText->Append(text);
+	}
+
+	if (mRenderTargetCount > 0)
+	{
+		const Char msg[] = "RenderTargets: %d / %.2f MB\n";
+		System::Sprintf(text, textArraySize, msg, mRenderTargetCount,
+			mRenderTargetSize / mb);
+		pText->Append(text);
+	}
 
 	WIRE_ASSERT(mpRenderer);
 	if (mpRenderer->UsesBatching())
