@@ -20,6 +20,9 @@ class RenderTarget : public Object
 	WIRE_DECLARE_RTTI;
 
 public:
+	// The number of supported targets depends on the graphics hardware
+	// and drivers. Use the Renderer's GetMaxSimultaneousRenderTargets() to
+	// determine the number. 'targetQuantity' must be at least 1.
 	RenderTarget(UInt targetQuantity, Image2D::FormatMode format, UInt width,
 		UInt height, Bool hasMipmaps, Bool hasDepthStencil);
 	virtual ~RenderTarget();
@@ -28,16 +31,16 @@ public:
 	inline Image2D::FormatMode GetFormat() const;
 	inline UInt GetWidth() const;
 	inline UInt GetHeight() const;
+	inline Image2D* GetColorTexture(UInt i) const;
+	inline Image2D* GetDepthStencilTexture() const;
 	inline Bool HasMipmaps() const;
 	inline Bool HasDepthStencil() const;
 
 private:
-	UInt mTargetQuantity;
+	TArray<Image2DPtr> mImages;
+	Image2DPtr mspDepthStencilImage;
 	Image2D::FormatMode mFormat;
-	UInt mWidth;
-	UInt mHeight;
 	Bool mHasMipmaps;
-	Bool mHasDepthStencil;
 };
 
 typedef Pointer<RenderTarget> RenderTargetPtr;

@@ -9,35 +9,52 @@
 //----------------------------------------------------------------------------
 inline UInt RenderTarget::GetTargetQuantity() const
 {
-	return mTargetQuantity;
+	return mImages.GetQuantity();
 }
 
 //----------------------------------------------------------------------------
 inline Image2D::FormatMode RenderTarget::GetFormat() const
 {
-	return mFormat;
+	WIRE_ASSERT(mImages.GetQuantity() > 0);
+	return mImages[0]->GetFormat();
 }
 
 //----------------------------------------------------------------------------
 inline UInt RenderTarget::GetWidth() const
 {
-	return mWidth;
+	WIRE_ASSERT(mImages.GetQuantity() > 0);
+	return mImages[0]->GetBound(0);
 }
 
 //----------------------------------------------------------------------------
 inline UInt RenderTarget::GetHeight() const
 {
-	return mHeight;
+	WIRE_ASSERT(mImages.GetQuantity() > 0);
+	return mImages[0]->GetBound(1);
+}
+
+//----------------------------------------------------------------------------
+inline Image2D* RenderTarget::GetColorTexture(UInt i) const
+{
+	WIRE_ASSERT(mImages.GetQuantity() > i);
+	return mImages[i];
+}
+	
+//----------------------------------------------------------------------------
+inline Image2D* RenderTarget::GetDepthStencilTexture() const
+{
+	return mspDepthStencilImage;
 }
 
 //----------------------------------------------------------------------------
 inline Bool RenderTarget::HasMipmaps() const
 {
-	return mHasMipmaps;
+	WIRE_ASSERT(mImages.GetQuantity() > 0);
+	return mImages[0]->HasMipmaps();
 }
 
 //----------------------------------------------------------------------------
 inline Bool RenderTarget::HasDepthStencil() const
 {
-	return mHasDepthStencil;
+	return mspDepthStencilImage != NULL;
 }

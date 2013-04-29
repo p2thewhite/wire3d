@@ -199,22 +199,10 @@ void Renderer::Unbind(const RenderObject* pRenderObject)
 }
 
 //----------------------------------------------------------------------------
-PdrIndexBuffer* Renderer::Bind(const IndexBuffer* pIndexBuffer)
+void Renderer::Bind(const IndexBuffer* pIndexBuffer)
 {
-	WIRE_ASSERT(pIndexBuffer);
-	PdrIndexBuffer** pValue = mIndexBufferMap.Find(pIndexBuffer);
-
-	if (!pValue)
-	{
-		PdrIndexBuffer* pPdrIndexBuffer = WIRE_NEW PdrIndexBuffer(this,
-			pIndexBuffer);
-		mIndexBufferMap.Insert(pIndexBuffer, pPdrIndexBuffer);
-		mStatistics.mIBOCount++;
-		mStatistics.mIBOsSize += pPdrIndexBuffer->GetBufferSize();
-		return pPdrIndexBuffer;
-	}
-
-	return *pValue;
+	Bind(pIndexBuffer, mIndexBufferMap, &mStatistics.mIBOCount,
+		&mStatistics.mIBOsSize);
 }
 
 //----------------------------------------------------------------------------
@@ -266,22 +254,10 @@ PdrIndexBuffer* Renderer::GetResource(const IndexBuffer* pIndexBuffer)
 }
 
 //----------------------------------------------------------------------------
-PdrVertexBuffer* Renderer::Bind(const VertexBuffer* pVertexBuffer)
+void Renderer::Bind(const VertexBuffer* pVertexBuffer)
 {
-	WIRE_ASSERT(pVertexBuffer);
-	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
-
-	if (!pValue)
-	{
-		PdrVertexBuffer* pPdrVertexBuffer = WIRE_NEW PdrVertexBuffer(this,
-			pVertexBuffer);
-		mVertexBufferMap.Insert(pVertexBuffer, pPdrVertexBuffer);
-		mStatistics.mVBOCount++;
-		mStatistics.mVBOsSize += pPdrVertexBuffer->GetBufferSize();
-		return pPdrVertexBuffer;
-	}
-
-	return *pValue;
+	Bind(pVertexBuffer, mVertexBufferMap, &mStatistics.mVBOCount,
+		&mStatistics.mVBOsSize);
 }
 
 //----------------------------------------------------------------------------
@@ -301,15 +277,15 @@ void Renderer::Enable(const VertexBuffer* pVertexBuffer, UInt streamIndex)
 	const UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 	PdrVertexBuffer** pValue = mVertexBufferMap.Find(pVertexBuffer);
 
-	if (pValue)
+	if (!pValue)
 	{
-		(*pValue)->Enable(this, vertexSize, streamIndex);
+		Bind(pVertexBuffer);
+		pValue = mVertexBufferMap.Find(pVertexBuffer);
+		WIRE_ASSERT(pValue);
 	}
-	else
-	{
-		PdrVertexBuffer* pPdrVertexBuffer = Bind(pVertexBuffer);
-		pPdrVertexBuffer->Enable(this, vertexSize, streamIndex);
-	}
+
+	WIRE_ASSERT(*pValue);
+	(*pValue)->Enable(this, vertexSize, streamIndex);
 
 	mVertexBuffers[streamIndex] = const_cast<VertexBuffer*>(pVertexBuffer);
 }
@@ -349,40 +325,28 @@ PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-PdrTexture2D* Renderer::Bind(const Image2D* pImage)
+void Renderer::Bind(const Image2D* pImage)
 {
-	WIRE_ASSERT(pImage);
-	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
+	Bool didBind = Bind(pImage, mImage2DMap, &mStatistics.mTextureCount,
+		&mStatistics.mTexturesSize);
 
-	if (!pValue)
+	if (didBind && pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
 	{
-		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(this, pImage);
-		mImage2DMap.Insert(pImage, pPdrTexture);
-		mStatistics.mTextureCount++;
-		mStatistics.mTexturesSize += pPdrTexture->GetBufferSize();
-
-		if (pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
-		{
-			const_cast<Image2D*>(pImage)->Discard();
-		}
-
-		return pPdrTexture;
+		const_cast<Image2D*>(pImage)->Discard();
 	}
 
-	return *pValue;
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Unbind(const Image2D* pImage)
 {
-	Unbind(pImage, mImage2DMap, &mStatistics.mTextureCount,
-		&mStatistics.mTexturesSize);
+	Unbind(pImage, mImage2DMap, &mStatistics.mTextureCount,	&mStatistics.
+		mTexturesSize);
 }
 
 //----------------------------------------------------------------------------
 void Renderer::Enable(const Texture2D* pTexture, UInt unit)
 {
-	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
 	WIRE_ASSERT(mTexture2Ds[unit] == NULL /* Disable previous first */);
 	WIRE_ASSERT(pTexture);
 	const Image2D* pImage = pTexture->GetImage();
@@ -390,15 +354,15 @@ void Renderer::Enable(const Texture2D* pTexture, UInt unit)
 
 	PdrTexture2D** pValue = mImage2DMap.Find(pImage);
 
-	if (pValue)
+	if (!pValue)
 	{
-		(*pValue)->Enable(this, pTexture, unit);
+		Bind(pImage);
+		pValue = mImage2DMap.Find(pImage);
+		WIRE_ASSERT(pValue);
 	}
-	else
-	{
-		PdrTexture2D* pPdrTexture =	Bind(pImage);
-		pPdrTexture->Enable(this, pTexture, unit);
-	}
+
+	WIRE_ASSERT(*pValue);
+	(*pValue)->Enable(this, pTexture, unit);
 
 	mTexture2Ds[unit] = const_cast<Texture2D*>(pTexture);
 }
@@ -406,7 +370,6 @@ void Renderer::Enable(const Texture2D* pTexture, UInt unit)
 //----------------------------------------------------------------------------
 void Renderer::Disable(const Texture2D* pTexture, UInt unit)
 {
-	WIRE_ASSERT(mTexture2Ds.GetQuantity() > unit);
 	WIRE_ASSERT(mTexture2Ds[unit] == pTexture /* This Tex is not enabled */);
 	WIRE_ASSERT(pTexture);
 	const Image2D* pImage = pTexture->GetImage();
@@ -427,20 +390,9 @@ PdrTexture2D* Renderer::GetResource(const Image2D* pImage)
 }
 
 //----------------------------------------------------------------------------
-PdrShader* Renderer::Bind(const Shader* pShader)
+void Renderer::Bind(const Shader* pShader)
 {
-	WIRE_ASSERT(pShader);
-	PdrShader** pValue = mShaderMap.Find(pShader);
-
-	if (!pValue)
-	{
-		PdrShader* pPdrShader = WIRE_NEW PdrShader(this, pShader);
-		mShaderMap.Insert(pShader, pPdrShader);
-		mStatistics.mShaderCount++;
-		return pPdrShader;
-	}
-
-	return *pValue;
+	Bind(pShader, mShaderMap, &mStatistics.mShaderCount, NULL);
 }
 
 //----------------------------------------------------------------------------
@@ -486,22 +438,10 @@ PdrShader* Renderer::GetResource(const Shader* pShader)
 }
 
 //----------------------------------------------------------------------------
-PdrRenderTarget* Renderer::Bind(const RenderTarget* pRenderTarget)
+void Renderer::Bind(const RenderTarget* pRenderTarget)
 {
-	WIRE_ASSERT(pRenderTarget);
-	PdrRenderTarget** pValue = mRenderTargetMap.Find(pRenderTarget);
-
-	if (!pValue)
-	{
-		PdrRenderTarget* pPdrRenderTarget = WIRE_NEW PdrRenderTarget(this,
-			pRenderTarget);
-		mRenderTargetMap.Insert(pRenderTarget, pPdrRenderTarget);
-		mStatistics.mRenderTargetCount++;
-		mStatistics.mRenderTargetSize += pPdrRenderTarget->GetBufferSize();
-		return pPdrRenderTarget;
-	}
-
-	return *pValue;
+	Bind(pRenderTarget, mRenderTargetMap, &mStatistics.mRenderTargetCount,
+		&mStatistics.mRenderTargetSize);
 }
 
 //----------------------------------------------------------------------------
@@ -540,7 +480,7 @@ PdrRenderTarget* Renderer::GetResource(const RenderTarget* pRenderTarget)
 }
 
 //----------------------------------------------------------------------------
-PdrVertexFormat* Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
@@ -551,10 +491,7 @@ PdrVertexFormat* Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
 			rVertexBuffers);
 		mVertexFormatMap.Insert(key, pPdrVertexFormat);
 		mStatistics.mVertexFormatCount++;
-		return pPdrVertexFormat;
 	}
-
-	return *pValue;
 }
 
 //----------------------------------------------------------------------------
@@ -600,15 +537,15 @@ void Renderer::Enable(const TArray<VertexBufferPtr>& rVertexBuffers)
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
 
-	if (pValue)
+	if (!pValue)
 	{
-		(*pValue)->Enable(this);
+		Bind(rVertexBuffers);
+		pValue = mVertexFormatMap.Find(key);
+		WIRE_ASSERT(pValue);
 	}
-	else
-	{
-		PdrVertexFormat* pPdrVertexFormat = Bind(rVertexBuffers);
-		pPdrVertexFormat->Enable(this);
-	}
+
+	WIRE_ASSERT(*pValue);
+	(*pValue)->Enable(this);
 
 	mVertexFormatKey = key;
 }
@@ -965,7 +902,7 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 	// many global effects in the same path is small (that is a *lot* of
 	// effects to apply in one frame). If it needs to be larger for your
 	// applications, increase the maximum size.
-	UInt indexStack[MAX_GLOBAL_EFFECTS][2]; // startIndex, finalIndex
+	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2]; // startIndex, finalIndex
 	UInt top = 0;							// stack is initially empty
 	indexStack[0][0] = 0;
 	indexStack[0][1] = 0;
@@ -988,7 +925,7 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 
 				// Begin the scope of a global effect.
 				top++;
-				WIRE_ASSERT(top < static_cast<Int>(MAX_GLOBAL_EFFECTS));
+				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
 				indexStack[top][0] = i;
 				indexStack[top][1] = i;
 			}
@@ -1129,11 +1066,11 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 					Set(pMeshA->GetVertexBuffer(i), i);
 				}
 
-				BatchIndicesAndDraw(pVisible, pTransformations, min, idx+1);
+				DrawStaticBatches(pVisible, pTransformations, min, idx+1);
 			}
 			else
 			{
-				BatchAllAndDraw(pVisible, pTransformations, min, idx+1);
+				DrawDynamicBatches(pVisible, pTransformations, min, idx+1);
 			}
 		}
 		else
@@ -1146,7 +1083,7 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
+void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 	Transformation*	const pTransformations[], UInt min, UInt max)
 {
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
@@ -1222,7 +1159,7 @@ void Renderer::BatchIndicesAndDraw(RenderObject* const pVisible[],
 }
 
 //----------------------------------------------------------------------------
-void Renderer::BatchAllAndDraw(RenderObject* const pVisible[], 
+void Renderer::DrawDynamicBatches(RenderObject* const pVisible[], 
 	Transformation*	const pTransformations[], UInt min, UInt max)
 {
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
@@ -1285,8 +1222,8 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 
 			pIBPdr->Unlock();
 
-			DrawBatch(pVisible[min]->GetMesh(), pIBPdr, mBatchedVertexBuffers,
-				batchedVertexCount, batchedIndexCount);
+			DrawDynamicBatch(pVisible[min]->GetMesh(), pIBPdr,
+				mBatchedVertexBuffers, batchedVertexCount, batchedIndexCount);
 
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 			for (UInt j = 0; j < vbCount; j++)
@@ -1342,13 +1279,13 @@ void Renderer::BatchAllAndDraw(RenderObject* const pVisible[],
 
 	if (batchedIndexCount > 0)
 	{
-		DrawBatch(pVisible[min]->GetMesh(), pIBPdr, mBatchedVertexBuffers,
-			batchedVertexCount, batchedIndexCount);
+		DrawDynamicBatch(pVisible[min]->GetMesh(), pIBPdr,
+			mBatchedVertexBuffers, batchedVertexCount, batchedIndexCount);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
+void Renderer::DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 	TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount, UInt indexCount)
 {
 	for (UInt i = 0; i < mVertexBuffers.GetQuantity(); i++)
@@ -1711,4 +1648,12 @@ void Renderer::DestroyBatchingBuffers()
 
 	mBatchedVertexBuffers.SetQuantity(0);
 	mRawBatchedVertexBuffers.SetQuantity(0);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::InsertInImage2DMap(const Image2D* pImage, PdrTexture2D*
+	pPdrTexture)
+{
+	WIRE_ASSERT(mImage2DMap.Find(pImage) == NULL);
+	mImage2DMap.Insert(pImage, pPdrTexture);
 }

@@ -78,9 +78,6 @@ Image2D::Image2D(FormatMode format, UInt width, UInt height, UChar* pData,
 	mpData(pData),
 	mMipmapCount(mipmapCount)
 {
-	WIRE_ASSERT(IsPowerOfTwo(width) && width > 0);
-	WIRE_ASSERT(IsPowerOfTwo(height) && height > 0);
-
 	mBound[0] = width;
 	mBound[1] = height;
 
@@ -231,13 +228,16 @@ UInt Image2D::GetMipmapCount(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Image2D::FilterMipmaps()
 {
-	if (!mpData || (mFormat == FM_D24S8))
+	UInt width = mBound[0];
+	UInt height = mBound[1];
+
+	if (!mpData || (mFormat == FM_D24S8) ||
+		!(IsPowerOfTwo(width) && width > 0) ||
+		!(IsPowerOfTwo(height) && height > 0))
 	{
 		return;
 	}
 
-	UInt width = mBound[0];
-	UInt height = mBound[1];
 	UInt bpp = GetBytesPerPixel();
 	UInt totalQuantity = 0;
 	UInt currentLevel = 0;

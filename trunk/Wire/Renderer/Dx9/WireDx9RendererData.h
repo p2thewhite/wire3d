@@ -26,23 +26,10 @@ class PdrRendererData
 {
 public:
 	PdrRendererData(Renderer* pRenderer);
-	void ResetDevice();
 
 	// Platform dependent renderer statistics
-	void AppendStatistics(Text*) {}
-	void ResetStatistics() {}
-
-	template <typename Resource, typename PdrResource>
-	void DestroyNonManagedResources(THashTable<const Resource*,
-		PdrResource*>& rMap, TArray<const Resource*>& rSave);
-
-	template <typename Resource, typename PdrResource>
-	void DestroyResources(THashTable<const Resource*,
-		PdrResource*>& rMap, TArray<const Resource*>& rSave);
-
-	template <typename Resource>
-	void RecreateResources(Renderer* pRenderer, TArray<const Resource*>&
-		rSave);
+	inline void AppendStatistics(Text*) {}
+	inline void ResetStatistics() {}
 
 	// Platform-dependent data
 	IDirect3D9* D3D;

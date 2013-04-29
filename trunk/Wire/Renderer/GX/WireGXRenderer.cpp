@@ -37,9 +37,6 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	mMaxTextureHeight(1024),
 	mShaderVersion(0),
 	mMaxSimultaneousRenderTargets(1),
-	mIndexBufferMap(1024),
-	mVertexBufferMap(1024),
-	mImage2DMap(256),
 	mSupportsBatching(false)
 {
 	Initialize(width, height);
@@ -213,8 +210,14 @@ void Renderer::Bind(const Mesh* pMesh)
 
 		if ((pIBuffer->GetUsage() == Buffer::UT_STATIC) && !pMesh->IsDirty())
 		{
-			PdrIndexBuffer* pPdrIBuffer = Bind(pIBuffer);
-			PdrVertexFormat* pPdrVFormat = Bind(pMesh->GetVertexBuffers());
+			Bind(pIBuffer);
+			PdrIndexBuffer* pPdrIBuffer = GetResource(pIBuffer);
+			WIRE_ASSERT(pPdrIBuffer);
+
+			Bind(pMesh->GetVertexBuffers());
+			PdrVertexFormat* pPdrVFormat = GetResource(pMesh->GetVertexBuffers());
+			WIRE_ASSERT(pPdrVFormat);
+
 			PdrDisplayList* pDisplayList = WIRE_NEW PdrDisplayList(mpData,
 				*pPdrIBuffer, pMesh->GetIndexCount(), pMesh->GetStartIndex(),
 				pPdrVFormat->GetDeclaration());
@@ -464,6 +467,23 @@ void Renderer::OnViewportChange()
 	}
 
 	GXSetScissor(originX, originY, width, height);
+}
+
+//----------------------------------------------------------------------------
+void Renderer::SetState(StateWireframe* pState)
+{
+	mspStates[State::WIREFRAME] = pState;
+}
+
+//----------------------------------------------------------------------------
+void Renderer::Resize(UInt, UInt)
+{
+	// nothing to do, window resizing not supported
+}
+
+//----------------------------------------------------------------------------
+void Renderer::ResetDevice()
+{
 }
 
 //----------------------------------------------------------------------------
@@ -823,18 +843,6 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexFormat::
 	}
 
 	GXEnd();
-}
-
-//----------------------------------------------------------------------------
-void Renderer::SetState(StateWireframe* pState)
-{
-	mspStates[State::WIREFRAME] = pState;
-}
-
-//----------------------------------------------------------------------------
-void Renderer::Resize(UInt, UInt)
-{
-	// nothing to do, window resizing not supported
 }
 
 //----------------------------------------------------------------------------

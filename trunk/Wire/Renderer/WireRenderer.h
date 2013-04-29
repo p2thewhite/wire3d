@@ -30,6 +30,13 @@ class Camera;
 class IndexBuffer;
 class Light;
 class Mesh;
+class RenderObject;
+class RenderTarget;
+class Texture2D;
+class VertexAttributes;
+class VertexBuffer;
+class VisibleSet;
+// Opaque classes resolving to the platform-dependent resource (pdr) classes.
 class PdrIndexBuffer;
 class PdrRendererData;
 class PdrRendererInput;
@@ -38,21 +45,10 @@ class PdrShader;
 class PdrTexture2D;
 class PdrVertexFormat;
 class PdrVertexBuffer;
-class RenderObject;
-class RenderTarget;
-class Texture2D;
-class VertexAttributes;
-class VertexBuffer;
-class VisibleSet;
 
 class Renderer
 {
 public:
-
-	Renderer(PdrRendererInput& rInput, UInt width, UInt height,
-		Bool isFullscreen, Bool useVSync);
-	~Renderer();
-
 	// draw a single object
 	void Draw(const RenderObject* pRenderObject, const Transformation&
 		rTransformation, Bool restoreState = false);
@@ -74,7 +70,7 @@ public:
 	inline Bool UsesBatching() const;
 	inline UInt GetStaticBatchingThreshold() const;
 	inline void SetStaticBatchingThreshold(UInt maxTriangles);
-	inline void GetVertexBatchingThreshold(UInt& rMaxVertices,
+	inline void GetDynamicBatchingThreshold(UInt& rMaxVertices,
 		UInt& rMaxTriangles) const;
 	inline void SetDynamicBatchingThreshold(UInt maxVertices,
 		UInt maxTriangles);
@@ -132,59 +128,20 @@ public:
 	//    recommended way for updating resources (update the system memory and
 	//    then call Update).
 
-	template <typename Resource, typename PdrResource>
-	inline void Unbind(const Resource* pResource, THashTable<const Resource*,
-		PdrResource*>& rMap, UInt* pCount, UInt* pSize);
-
 	template <typename Resource>
 	static void UnbindAll(const Resource* pResource);
 
-	template <typename Resource, typename PdrResource>
-	inline void Enable(const Resource* pResource, THashTable<const Resource*,
-		PdrResource*>& rMap);
-
-	template <typename Resource, typename PdrResource>
-	inline void Disable(const Resource* pResource, THashTable<const Resource*,
-		PdrResource*>& rMap);
-
-	template <typename Resource, typename PdrResource>
-	inline void Disable(const Resource* pResource, UInt index, THashTable<
-		const Resource*, PdrResource*>& rMap);
-
-	template <typename PdrResource>
-	inline void Disable(const UInt key, THashTable<UInt, PdrResource*>& rMap);
-
-	template <typename Resource>
-	inline void Set(const Resource* pResource, Pointer<Resource> spInUse);
-
-	template <typename Resource>
-	inline void Set(const Resource* pResource, UInt index, TArray<Pointer<
-		Resource> >& rInUse);
-
-	template <typename Resource, typename PdrResource>
-	inline void Update(const Resource* pResource, THashTable<const Resource*,
-		PdrResource*>& rMap);
-
-	template <typename Resource, typename PdrResource>
-	inline void Update(const Resource* pResource, THashTable<const Resource*,
-		PdrResource*>& rMap, UInt count, UInt offset = 0);
-
-	template <typename Resource, typename PdrResource>
-	inline PdrResource* GetResource(const Resource* pResource, THashTable<
-		const Resource*, PdrResource*>& rMap);
-
 	// Index buffer management
-	PdrIndexBuffer* Bind(const IndexBuffer* pIndexBuffer);
+	void Bind(const IndexBuffer* pIndexBuffer);
 	void Unbind(const IndexBuffer* pIndexBuffer);
 	void Enable(const IndexBuffer* pIndexBuffer);
 	void Disable(const IndexBuffer* pIndexBuffer);
 	void Set(const IndexBuffer* pIndexBuffer);
 	void Update(const IndexBuffer* pIndexBuffer);
 	void Update(const IndexBuffer* pIndexBuffer, UInt count, UInt offset = 0);
-	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 
 	// Vertex buffer management
-	PdrVertexBuffer* Bind(const VertexBuffer* pVertexBuffer);
+	void Bind(const VertexBuffer* pVertexBuffer);
 	void Unbind(const VertexBuffer* pVertexBuffer);
 	void Enable(const VertexBuffer* pVertexBuffer, UInt streamIndex);
 	void Disable(const VertexBuffer* pVertexBuffer, UInt streamIndex);
@@ -192,48 +149,43 @@ public:
 	void Update(const VertexBuffer* pVertexBuffer);
 	void Update(const VertexBuffer* pVertexBuffer, UInt count,
 		UInt offset = 0);
-	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
 
 	// Vertex format management
-	PdrVertexFormat* Bind(const TArray<Pointer<VertexBuffer> >&
-		rVertexBuffers);
+	void Bind(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	void Enable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	void Disable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
 	void Set(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	PdrVertexFormat* GetResource(const TArray<Pointer<VertexBuffer> >&
-		rVertexBuffers);
-	
+
 	// 2D texture management
-	PdrTexture2D* Bind(const Image2D* pImage);
+	void Bind(const Image2D* pImage);
 	void Unbind(const Image2D* pImage);
 	void Enable(const Texture2D* pTexture, UInt unit = 0);
 	void Disable(const Texture2D* pTexture, UInt unit = 0);
 	void Set(const Texture2D* pTexture, UInt unit = 0);
-	PdrTexture2D* GetResource(const Image2D* pTexture);
 
 	// Shader management
-	PdrShader* Bind(const Shader* pShader);
+	void Bind(const Shader* pShader);
 	void Unbind(const Shader* pShader);
 	void Enable(const Shader* pShader, Pointer<Shader>& rInUse);
 	void Disable(const Shader* pShader, Pointer<Shader>& rInUse);
 	void Set(const Shader* pShader, Pointer<Shader>& rInUse);
-	PdrShader* GetResource(const Shader* pShader);
 
 	// render target management
-	PdrRenderTarget* Bind(const RenderTarget* pRenderTarget);
+	void Bind(const RenderTarget* pRenderTarget);
 	void Unbind(const RenderTarget* pRenderTarget);
 	void Enable(const RenderTarget* pRenderTarget);
 	void Disable(const RenderTarget* pRenderTarget);
 	void Set(const RenderTarget* pRenderTarget);
-	PdrRenderTarget* GetResource(const RenderTarget* pRenderTarget);
 
 	// Release all references to non renderer owned resources (disables all
 	// actively used resources in the renderer).
 	void ReleaseResources();
 
-	// Apply camera changes to platform specific renderer.
+	// Access to the current camera state.
 	void SetCamera(Camera* pCamera);
 	Camera* GetCamera() const;
+
+	// Apply camera changes to platform specific renderer.
 	void OnFrameChange();
 	void OnViewportChange();
 
@@ -306,12 +258,9 @@ public:
 	// any of its own work.
 	void Terminate();
 
-	inline PdrRendererData* GetRendererData() const;
-
-	enum
-	{
-		MAX_GLOBAL_EFFECTS = 64
-	};
+	Renderer(PdrRendererInput& rInput, UInt width, UInt height,
+		Bool isFullscreen, Bool useVSync);
+	~Renderer();
 
 private:
 	// Fixed function texture stage management
@@ -328,11 +277,11 @@ private:
 	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
 		rVertexBuffers);
 
-	void BatchAllAndDraw(RenderObject* const pVisible[], Transformation*
+	void DrawDynamicBatches(RenderObject* const pVisible[], Transformation*
 		const pTransformations[], UInt min, UInt max);
-	void BatchIndicesAndDraw(RenderObject* const pVisible[], Transformation*
+	void DrawStaticBatches(RenderObject* const pVisible[], Transformation*
 		const pTransformations[], UInt min, UInt max);
-	void DrawBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
+	void DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount,
 		UInt indexCount);
 	void DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
@@ -342,12 +291,53 @@ private:
 	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex,
 		UInt minIndex = 0);
 
+	void ResetDevice();
+
+	// Resource management.
 	typedef THashTable<const IndexBuffer*, PdrIndexBuffer*> IndexBufferMap;
 	typedef THashTable<const VertexBuffer*, PdrVertexBuffer*> VertexBufferMap;
 	typedef THashTable<const Image2D*, PdrTexture2D*> Image2DMap;
 	typedef THashTable<const Shader*, PdrShader*> ShaderMap;
 	typedef THashTable<const RenderTarget*, PdrRenderTarget*> RenderTargetMap;
 	typedef THashTable<UInt, PdrVertexFormat*> VertexFormatMap;
+
+	template <typename Resource, typename PdrResource>
+	inline Bool Bind(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap, UInt* pCount, UInt* pSize);
+
+	template <typename Resource, typename PdrResource>
+	inline void Unbind(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap, UInt* pCount, UInt* pSize);
+
+	template <typename Resource, typename PdrResource>
+	inline void Enable(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap);
+
+	template <typename Resource, typename PdrResource>
+	inline void Disable(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap);
+
+	template <typename Resource, typename PdrResource>
+	inline void Disable(const Resource* pResource, UInt index, THashTable<
+		const Resource*, PdrResource*>& rMap);
+
+	template <typename PdrResource>
+	inline void Disable(const UInt key, THashTable<UInt, PdrResource*>& rMap);
+
+	template <typename Resource>
+	inline void Set(const Resource* pResource, Pointer<Resource> spInUse);
+
+	template <typename Resource>
+	inline void Set(const Resource* pResource, UInt index, TArray<Pointer<
+		Resource> >& rInUse);
+
+	template <typename Resource, typename PdrResource>
+	inline void Update(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap);
+
+	template <typename Resource, typename PdrResource>
+	inline void Update(const Resource* pResource, THashTable<const Resource*,
+		PdrResource*>& rMap, UInt count, UInt offset = 0);
 
 	// Support for destructor. Destroy any remaining resources that the
 	// application did not explicitly release.
@@ -356,6 +346,13 @@ private:
 	void DestroyAll(VertexFormatMap& rVertexFormatMap);
 
 	void DestroyBatchingBuffers();
+
+	IndexBufferMap mIndexBufferMap;
+	VertexBufferMap mVertexBufferMap;
+	Image2DMap mImage2DMap;
+	ShaderMap mShaderMap;
+	RenderTargetMap mRenderTargetMap;
+	VertexFormatMap mVertexFormatMap;
 
 	// Objects currently in use by the Renderer
 	StatePtr mspStates[State::MAX_STATE_TYPE];
@@ -393,16 +390,6 @@ private:
 
 	static Renderer* s_pRenderer;
 
-	friend class PdrRendererData;
-	PdrRendererData* mpData;
-	
-	IndexBufferMap mIndexBufferMap;
-	VertexBufferMap mVertexBufferMap;
-	Image2DMap mImage2DMap;
-	ShaderMap mShaderMap;
-	RenderTargetMap mRenderTargetMap;
-	VertexFormatMap mVertexFormatMap;
-
 	// Batching
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
@@ -413,6 +400,27 @@ private:
 	Bool mSupportsBatching;
 
 	RendererStatistics mStatistics;
+
+public:
+	// The platform-specific data. It is in public scope to allow the
+	// renderer resource classes to access it.
+	inline PdrRendererData* GetRendererData() const;
+
+	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
+	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
+	PdrVertexFormat* GetResource(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
+	PdrTexture2D* GetResource(const Image2D* pTexture);
+	PdrShader* GetResource(const Shader* pShader);
+	PdrRenderTarget* GetResource(const RenderTarget* pRenderTarget);
+
+	void InsertInImage2DMap(const Image2D* pImage, PdrTexture2D* pPdrTexture); 
+
+private:
+	template <typename Resource, typename PdrResource>
+	inline PdrResource* GetResource(const Resource* pResource, THashTable<
+		const Resource*, PdrResource*>& rMap);
+
+	PdrRendererData* mpData;
 };
 
 #include "WireRenderer.inl"
