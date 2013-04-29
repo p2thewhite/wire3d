@@ -23,6 +23,11 @@ class Effect : public Object
 	WIRE_DECLARE_RTTI;
 
 public:
+	enum
+	{
+		MAX_SIMULTANEOUS_EFFECTS = 64
+	};
+
 	// abstract base class
 	virtual ~Effect();
 

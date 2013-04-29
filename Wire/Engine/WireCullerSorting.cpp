@@ -74,7 +74,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		mKeys.SetMaxQuantity(pSource->GetMaxQuantity());
 	}
 
-	UInt indexStack[Renderer::MAX_GLOBAL_EFFECTS][2];
+	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
 	indexStack[0][0] = 0;
 	indexStack[0][1] = 0;
 	UInt top = 0;
@@ -105,7 +105,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 
 				// Begin the scope of a global effect.
 				top++;
-				WIRE_ASSERT(top < Renderer::MAX_GLOBAL_EFFECTS);
+				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
 				indexStack[top][0] = i;
 				indexStack[top][1] = i;
 			}

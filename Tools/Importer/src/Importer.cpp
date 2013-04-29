@@ -1108,28 +1108,28 @@ void Importer::ParseTransformation(rapidxml::xml_node<>* pXmlNode, Spatial*
 Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 {
 	RenderObject* pRenderObject = ParseRenderObject(pXmlNode);
-	Node* pNode = NULL;
+	Node* pNode = WIRE_NEW Node(pRenderObject);
+	pParent->AttachChild(pNode);
 
 	for (rapidxml::xml_node<>* pChild = pXmlNode->first_node(); pChild;
 		pChild = pChild->next_sibling())
 	{
 		if (Is("LightNode", pChild->name()))
 		{
-			pNode = WIRE_NEW NodeLight;
+			// attach as dedicated child node due to the light node using
+			// the light's parameters as its own local transformation
 			ParseComponents(pChild, pNode);
 			WIRE_ASSERT(pNode->GetLightQuantity() == 1);
-			StaticCast<NodeLight>(pNode)->Set(pNode->GetLight());
-			pNode->DetachLight(pNode->GetLight());
+			Light* pLight = pNode->GetLight();
+			NodeLight* pLightNode = WIRE_NEW NodeLight;
+			mStatistics.NodeCount++;
+			pLightNode->Set(pLight);
+			pNode->DetachLight(pLight);
+			pNode->AttachChild(pLightNode);
 			break;
 		}
 	}
 
-	if (!pNode)
-	{
-		pNode = WIRE_NEW Node(pRenderObject);
-	}
-
-	pParent->AttachChild(pNode);
 	mStatistics.NodeCount++;
 
 	Char* pName = GetValue(pXmlNode, "Name");

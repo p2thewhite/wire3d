@@ -784,7 +784,7 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
 
 	if (uvChannelCount > 0)
 	{
-		Vector2F tCoord = Vector2F(0.5F, 0.5F);
+		Vector2F tCoord = Vector2F(0.5F, 0);
 		for (UInt unit = 0; unit < uvChannelCount; unit++)
 		{
 			if (attr.HasTCoord(unit))

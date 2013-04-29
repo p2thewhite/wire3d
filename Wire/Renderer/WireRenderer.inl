@@ -80,6 +80,34 @@ inline const ColorRGBA& Renderer::GetClearColor() const
 
 //----------------------------------------------------------------------------
 template <typename Resource, typename PdrResource>
+inline Bool Renderer::Bind(const Resource* pResource, THashTable<const
+	Resource*, PdrResource*>& rMap, UInt* pCount, UInt* pSize)
+{
+	WIRE_ASSERT(pResource);
+	PdrResource** pValue = rMap.Find(pResource);
+
+	if (!pValue)
+	{
+		PdrResource* pPdrResource = WIRE_NEW PdrResource(this, pResource);
+		rMap.Insert(pResource, pPdrResource);
+		if (pCount)
+		{
+			(*pCount)++;
+		}
+
+		if (pSize)
+		{
+			(*pSize) += pPdrResource->GetBufferSize();
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+//----------------------------------------------------------------------------
+template <typename Resource, typename PdrResource>
 inline void Renderer::Unbind(const Resource* pResource, THashTable<const
 	Resource*, PdrResource*>& rMap, UInt* pCount, UInt* pSize)
 {
@@ -117,19 +145,18 @@ template <typename Resource, typename PdrResource>
 inline void Renderer::Enable(const Resource* pResource, THashTable<
 	const Resource*, PdrResource*>& rMap)
 {
-
 	WIRE_ASSERT(pResource);
 	PdrResource** pValue = rMap.Find(pResource);
 
-	if (pValue)
+	if (!pValue)
 	{
-		(*pValue)->Enable(this);
+		Bind(pResource);
+		pValue = rMap.Find(pResource);
+		WIRE_ASSERT(pValue);
 	}
-	else
-	{
-		PdrResource* pPdrResource = Bind(pResource);
-		pPdrResource->Enable(this);
-	}
+
+	WIRE_ASSERT(*pValue);
+	(*pValue)->Enable(this);
 }
 
 //----------------------------------------------------------------------------
@@ -333,7 +360,7 @@ inline void Renderer::SetStaticBatchingThreshold(UInt maxTriangles)
 }
 
 //----------------------------------------------------------------------------
-inline void Renderer::GetVertexBatchingThreshold(UInt& rMaxVertices,
+inline void Renderer::GetDynamicBatchingThreshold(UInt& rMaxVertices,
 	UInt& rMaxTriangles) const
 {
 	rMaxVertices = mDynamicBatchingMaxVertexCount;
