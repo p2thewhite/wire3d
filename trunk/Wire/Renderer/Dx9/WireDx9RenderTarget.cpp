@@ -48,22 +48,30 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
 			mFormat, mWidth, mHeight, pRenderTarget->HasMipmaps());
 
-		mColorTextures.Append(pPdrTexture);
+		pRenderer->InsertInImage2DMap(pRenderTarget->GetColorTexture(i),
+			pPdrTexture);
+		mColorTextures.Append(pPdrTexture->mpBuffer);
+		mColorTextures[i]->AddRef();
 		mBufferSize += pPdrTexture->GetBufferSize();
+
 		IDirect3DSurface9* pSurface;
- 		hr = mColorTextures[i]->mpBuffer->GetSurfaceLevel(0, &pSurface);
+ 		hr = mColorTextures[i]->GetSurfaceLevel(0, &pSurface);
 		WIRE_ASSERT(SUCCEEDED(hr));
 		mColorSurfaces.Append(pSurface);
 	}
 
 	if (mHasDepthStencil)
 	{
-		mpDepthStencilTexture = WIRE_NEW PdrTexture2D(pRenderer,
+		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
 			Image2D::FM_D24S8, mWidth, mHeight, false);
-		mBufferSize += mpDepthStencilTexture->GetBufferSize();
 
-		hr = mpDepthStencilTexture->mpBuffer->GetSurfaceLevel(0,
-			&mpDepthStencilSurface);
+		pRenderer->InsertInImage2DMap(pRenderTarget->GetDepthStencilTexture(),
+			pPdrTexture);
+		mpDepthStencilTexture = pPdrTexture->mpBuffer;
+		mpDepthStencilTexture->AddRef();
+		mBufferSize += pPdrTexture->GetBufferSize();
+
+		hr = mpDepthStencilTexture->GetSurfaceLevel(0, &mpDepthStencilSurface);
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 }
@@ -71,16 +79,17 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 //----------------------------------------------------------------------------
 PdrRenderTarget::~PdrRenderTarget()
 {
+	WIRE_ASSERT(mColorTextures.GetQuantity() == mColorSurfaces.GetQuantity());
 	for (UInt i = 0; i < mColorTextures.GetQuantity(); i++)
 	{
 		mColorSurfaces[i]->Release();
-		WIRE_DELETE mColorTextures[i];
+		mColorTextures[i]->Release();
 	}
 
-	if (mpDepthStencilTexture)
+	if (mpDepthStencilSurface)
 	{
 		mpDepthStencilSurface->Release();
-		WIRE_DELETE mpDepthStencilTexture;
+		mpDepthStencilTexture->Release();
 	}
 }
 

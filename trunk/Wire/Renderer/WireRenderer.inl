@@ -255,10 +255,6 @@ inline void Renderer::Update(const Resource* pResource, THashTable<
 	{
 		(*pValue)->Update(pResource);
 	}
-	else
-	{
-		WIRE_ASSERT(false); // resource is not bound
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -270,10 +266,6 @@ inline void Renderer::Update(const Resource* pResource, THashTable<
 	if (pValue)
 	{
 		(*pValue)->Update(pResource, count, offset);
-	}
-	else
-	{
-		WIRE_ASSERT(false); // resource is not bound
 	}
 }
 

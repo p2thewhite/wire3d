@@ -176,6 +176,10 @@ public:
 	void Enable(const RenderTarget* pRenderTarget);
 	void Disable(const RenderTarget* pRenderTarget);
 	void Set(const RenderTarget* pRenderTarget);
+	// The render target must be disabled when ReadColor is called.
+	// It returns a copy of the render target color video memory.
+	Image2D* ReadColor(UInt i, const RenderTarget* pRenderTarget);
+
 
 	// Release all references to non renderer owned resources (disables all
 	// actively used resources in the renderer).

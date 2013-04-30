@@ -248,19 +248,11 @@ void Text::Update(Renderer* pRenderer)
 		return;
 	}
 
-	VertexBuffer* pVertexBuffer = GetMesh()->GetVertexBuffer();
 	const UInt indexCount = GetMesh()->GetIndexCount();
-	if (pRenderer->GetResource(pVertexBuffer))
-	{
-		WIRE_ASSERT(indexCount % 6 == 0);
-		pRenderer->Update(pVertexBuffer, indexCount/6*4);
-	}
+	WIRE_ASSERT(indexCount % 6 == 0);
+	pRenderer->Update(GetMesh()->GetVertexBuffer(), indexCount/6*4);
 
-	IndexBuffer* pIndexBuffer = GetMesh()->GetIndexBuffer();
-	if (pRenderer->GetResource(pIndexBuffer))
-	{
-		pRenderer->Update(pIndexBuffer, indexCount);
-	}
+	pRenderer->Update(GetMesh()->GetIndexBuffer(), indexCount);
 
 	mIsPdrBufferOutOfDate = false;
 }

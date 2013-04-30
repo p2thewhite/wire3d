@@ -327,14 +327,16 @@ PdrVertexBuffer* Renderer::GetResource(const VertexBuffer* pVertexBuffer)
 //----------------------------------------------------------------------------
 void Renderer::Bind(const Image2D* pImage)
 {
-	Bool didBind = Bind(pImage, mImage2DMap, &mStatistics.mTextureCount,
+	Bool performedBind = Bind(pImage, mImage2DMap, &mStatistics.mTextureCount,
 		&mStatistics.mTexturesSize);
 
-	if (didBind && pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
+	if (performedBind)
 	{
-		const_cast<Image2D*>(pImage)->Discard();
+		if (pImage->GetUsage() == Buffer::UT_STATIC_DISCARD_ON_BIND)
+		{
+			const_cast<Image2D*>(pImage)->Discard();
+		}
 	}
-
 }
 
 //----------------------------------------------------------------------------
@@ -471,6 +473,18 @@ void Renderer::Disable(const RenderTarget* pRenderTarget)
 void Renderer::Set(const RenderTarget* pRenderTarget)
 {
 	Set(pRenderTarget, mspRenderTarget);
+}
+
+//----------------------------------------------------------------------------
+Image2D* Renderer::ReadColor(UInt i, const RenderTarget* pRenderTarget)
+{
+	PdrRenderTarget* pPdrRenderTarget = GetResource(pRenderTarget);
+	if (pPdrRenderTarget)
+	{
+		return pPdrRenderTarget->ReadColor(i, this);
+	}
+
+	return NULL;
 }
 
 //----------------------------------------------------------------------------

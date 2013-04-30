@@ -86,8 +86,7 @@ void RendererStatistics::AppendToText(Text* pText)
 	const Float kb = 1024.0F;
 	const Float mb = kb * kb;
 
-	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize +
-		mRenderTargetSize;
+	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize;
 
 	const Char msg[] = "Draw Calls: %d, Triangles: %d, VRAM: >%.2f MB\n"
 		"VBOs: %d / %.2f KB, VFs: %d\n"

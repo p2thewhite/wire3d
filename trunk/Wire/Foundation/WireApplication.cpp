@@ -119,6 +119,7 @@ void Application::OnResize(UInt width, UInt height)
 {
 	if (mpRenderer)
 	{
+		height = (height == 0) ? 1 : height;
 		mpRenderer->Resize(width, height);
 		mWidth = width;
 		mHeight = height;
