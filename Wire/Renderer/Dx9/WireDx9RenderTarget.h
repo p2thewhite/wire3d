@@ -14,6 +14,7 @@
 #include "WireTArray.h"
 
 struct IDirect3DSurface9;
+struct IDirect3DTexture9;
 
 namespace Wire
 {
@@ -39,9 +40,9 @@ private:
 	Image2D::FormatMode mFormat;
 	Bool mHasDepthStencil;
 
-	TArray<PdrTexture2D*> mColorTextures;
+	TArray<IDirect3DTexture9*> mColorTextures;
 	TArray<IDirect3DSurface9*> mColorSurfaces;
-	PdrTexture2D* mpDepthStencilTexture;
+	IDirect3DTexture9* mpDepthStencilTexture;
 	IDirect3DSurface9* mpDepthStencilSurface;
 
 	UInt mBufferSize;

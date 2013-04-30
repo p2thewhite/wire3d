@@ -82,12 +82,7 @@ Bool ConveyorBelt::OnGetVisibleUpdate(const Camera*)
 		pVertexBuffer->TCoord2(i) = vec2;
 	}
 
-	PdrVertexBuffer* pPdrVBuffer = mpRenderer->GetResource(pVertexBuffer);
-	if (pPdrVBuffer)
-	{
-		// vertex buffer is bound, so we can update it
-		mpRenderer->Update(pVertexBuffer);
-	}
+	mpRenderer->Update(pVertexBuffer);
 
 	return true;
 }

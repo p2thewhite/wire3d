@@ -228,9 +228,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, Image2D::FormatMode format,
 //----------------------------------------------------------------------------
 PdrTexture2D::~PdrTexture2D()
 {
-	HRESULT hr;
-	hr = mpBuffer->Release();
-	WIRE_ASSERT(SUCCEEDED(hr));
+	mpBuffer->Release();
 }
 
 //----------------------------------------------------------------------------

@@ -586,10 +586,13 @@ void DestroyNonManagedResources(THashTable<const Resource*,
 		const Buffer* pBuffer = reinterpret_cast<const Buffer*>(pKey);
 		if (PdrRendererData::POOLS[pBuffer->GetUsage()] != D3DPOOL_MANAGED)
 		{
-			WIRE_DELETE *pValue;
 			rSave.Append(pKey);
-			rMap.Remove(pKey);
 		}
+	}
+
+	for (UInt i = 0; i < rSave.GetQuantity(); i++)
+	{
+		Renderer::UnbindAll(rSave[i]);
 	}
 }
 
@@ -599,17 +602,19 @@ void DestroyResources(THashTable<const Resource*, PdrResource*>& rMap,
 	TArray<const Resource*>& rSave)
 {
 	rSave.SetMaxQuantity(rMap.GetQuantity(), false);
-	while (rMap.GetQuantity() > 0)
-	{
-		THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
-		const Resource* pKey;
-		it.GetFirst(&pKey);
+	const Resource* pKey;
+	THashTable<const Resource*, PdrResource*>::Iterator it(&rMap);
 
-		Renderer::UnbindAll(pKey);
+	for (PdrResource** pValue = it.GetFirst(&pKey); pValue;
+		pValue = it.GetNext(&pKey))
+	{
 		rSave.Append(pKey);
 	}
 
-	rMap.RemoveAll();
+	for (UInt i = 0; i < rSave.GetQuantity(); i++)
+	{
+		Renderer::UnbindAll(rSave[i]);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -660,8 +665,8 @@ void Renderer::ResetDevice()
 
 	RecreateResources(this, saveIndexBuffers);
 	RecreateResources(this, saveVertexBuffers);
+	RecreateResources(this, saveRenderTargets);	// recreate before textures! TODO: fix this
 	RecreateResources(this, saveTexture2Ds);
-	RecreateResources(this, saveRenderTargets);
 
 	OnViewportChange();
 

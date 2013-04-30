@@ -31,7 +31,7 @@ public:
 	inline Image2D::FormatMode GetFormat() const;
 	inline UInt GetWidth() const;
 	inline UInt GetHeight() const;
-	inline Image2D* GetColorTexture(UInt i) const;
+	inline Image2D* GetColorTexture(UInt i = 0) const;
 	inline Image2D* GetDepthStencilTexture() const;
 	inline Bool HasMipmaps() const;
 	inline Bool HasDepthStencil() const;
