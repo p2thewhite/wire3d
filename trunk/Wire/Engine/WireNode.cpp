@@ -10,6 +10,7 @@
 
 #include "WireCuller.h"
 #include "WireCullerSorting.h"
+#include "WireIndexBuffer.h"
 #include "WireRenderer.h"
 
 using namespace Wire;
@@ -20,6 +21,37 @@ WIRE_IMPLEMENT_RTTI(Wire, Node, Spatial);
 Node::Node(UInt quantity, UInt growBy)
 {
 	Init(quantity, growBy);
+}
+
+//----------------------------------------------------------------------------
+Node::Node(const Node* pNode)
+	:
+	Spatial(pNode)
+{
+	mEffects.SetQuantity(pNode->mEffects.GetQuantity());
+	for (UInt i = 0; i < pNode->mEffects.GetQuantity(); i++)
+	{
+		mEffects[i] = pNode->mEffects[i];
+	}	
+
+	mspRenderObject = pNode->mspRenderObject;
+	if (mspRenderObject)
+	{
+		mspRenderObjectWorldBound = BoundingVolume::Create();
+		mspRenderObjectWorldBound->CopyFrom(pNode->mspRenderObjectWorldBound);
+	}
+
+	mChildren.SetMaxQuantity(pNode->mChildren.GetQuantity());
+	for (UInt i = 0; i < pNode->mChildren.GetQuantity(); i++)
+	{
+		Node* pChild = DynamicCast<Node>(pNode->mChildren[i]);
+		if (pChild)
+		{
+			AttachChild(WIRE_NEW Node(pChild));
+		}
+	}	
+
+	Init(pNode->mChildren.GetMaxQuantity(), pNode->mChildren.GetGrowBy());
 }
 
 //----------------------------------------------------------------------------
@@ -249,17 +281,16 @@ void Node::AttachEffect(Effect* pEffect)
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateState(TArray<State*>* pStateStacks,
-	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
+void Node::UpdateState(States* pStates, Lights* pLights, Keys* pKeys)
 {
-	UpdateStateRenderObject(pStateStacks, pLightStack, pStateKeys);
+	UpdateStateRenderObject(pStates, pLights, pKeys);
 
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		Spatial* pChild = mChildren[i];
 		if (pChild)
 		{
-			pChild->UpdateRS(pStateStacks, pLightStack, pStateKeys);
+			pChild->UpdateRS(pStates, pLights, pKeys);
 		}
 	}
 }
@@ -415,18 +446,240 @@ void Node::WarmUpRendering(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
-void Node::MakeStatic(Bool forceStatic, Bool duplicateShared)
+void Node::PrepareForDynamicBatching(Bool forceWorldIsCurrent,
+	Bool duplicateShared)
 {
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
-		Spatial* pChild = GetChild(i);
+		Node* pChild = DynamicCast<Node>(GetChild(i));
 		if (pChild)
 		{
-			pChild->MakeStatic(forceStatic, duplicateShared);
+			pChild->PrepareForDynamicBatching(forceWorldIsCurrent,
+				duplicateShared);
 		}
 	}
 
-	MakeRenderObjectStatic(forceStatic, duplicateShared);
+	PrepareRenderObjectForDynamicBatching(forceWorldIsCurrent,
+		duplicateShared);
+}
+
+//----------------------------------------------------------------------------
+void Node::PrepareForStaticBatching(Bool forceWorldIsCurrent,
+	Bool duplicateShared, TArray<MergeArray*>* pMergeArrays)
+{
+	Bool isInitiator = pMergeArrays == NULL;
+	if (isInitiator)
+	{
+		PrepareForDynamicBatching(forceWorldIsCurrent, duplicateShared);
+		pMergeArrays = WIRE_NEW TArray<MergeArray*>;
+	}
+
+	if (mspRenderObject && WorldIsCurrent && WorldBoundIsCurrent &&
+		World.IsIdentity())
+	{
+		Mesh* pMesh = mspRenderObject->GetMesh();
+		Bool isNewMesh = true;
+		for (UInt i = 0; i < pMergeArrays->GetQuantity(); i++)
+		{
+			MergeArray* pMeshArray = (*pMergeArrays)[i];
+			Mesh::VertexBuffers& rMVABs = (*pMeshArray)[0]->GetMesh()->
+				GetVertexBuffers();
+			Mesh::VertexBuffers& rMVBs = pMesh->GetVertexBuffers();
+
+			Bool isIdentical = true;
+			if (rMVABs.GetQuantity() == rMVBs.GetQuantity())
+			{
+				for (UInt j = 0; j < rMVBs.GetQuantity(); j++)
+				{
+					if (rMVBs[j]->GetAttributes().GetKey() !=
+						rMVABs[j]->GetAttributes().GetKey())
+					{
+						isIdentical = false;
+						break;
+					}
+				}
+			}
+
+			if (isIdentical)
+			{
+				pMeshArray->Append(mspRenderObject);
+				isNewMesh = false;
+				break;
+			}
+		}
+
+		if (isNewMesh)
+		{
+			MergeArray* pNewArray = WIRE_NEW MergeArray;
+			pNewArray->Append(mspRenderObject);
+			pMergeArrays->Append(pNewArray);
+		}
+	}
+
+	for (UInt i = 0; i < GetQuantity(); i++)
+	{
+		Node* pChild = DynamicCast<Node>(GetChild(i));
+		if (pChild)
+		{
+			pChild->PrepareForStaticBatching(forceWorldIsCurrent,
+				duplicateShared, pMergeArrays);
+		}
+	}
+
+	if (isInitiator)
+	{
+		TArray<MergeArray*>* pSortedArrays = WIRE_NEW TArray<MergeArray*>;
+		for (UInt i = 0; i < pMergeArrays->GetQuantity(); i++)
+		{
+			MergeArray* pMergeArray = (*pMergeArrays)[i];
+
+			const UInt maxVtxQty = 0x10000;
+			UInt vtxCount = 0;
+			UInt idxCount = 0;
+			MergeArray* pSortedArray = WIRE_NEW MergeArray(pMergeArray->
+				GetQuantity(), 16);
+			pSortedArrays->Append(pSortedArray);
+
+			for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
+			{
+				Mesh* pMesh = (*pMergeArray)[i]->GetMesh();
+				if ((vtxCount + pMesh->GetVertexCount()) < maxVtxQty)
+				{
+					vtxCount += pMesh->GetVertexCount();
+					idxCount += pMesh->GetIndexCount();
+				}
+				else
+				{
+					pSortedArray = WIRE_NEW MergeArray(pMergeArray->
+						GetQuantity(), 16);
+					pSortedArrays->Append(pSortedArray);
+					vtxCount = 0;
+					idxCount = 0;
+				}
+
+				pSortedArray->Append((*pMergeArray)[i]);
+			}
+
+			WIRE_DELETE pMergeArray;
+		}
+
+		WIRE_DELETE pMergeArrays;
+		pMergeArrays = NULL;
+
+		for (UInt i = 0; i < pSortedArrays->GetQuantity(); i++)
+		{
+			MergeArray* pSortedArray = (*pSortedArrays)[i];
+			MergeMeshes(pSortedArray);
+			WIRE_DELETE pSortedArray;
+		}
+
+		WIRE_DELETE pSortedArrays;
+		pSortedArrays = NULL;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Node::MergeMeshes(MergeArray* pMergeArray)
+{
+	WIRE_ASSERT(pMergeArray->GetQuantity() > 0);
+	if (pMergeArray->GetQuantity() == 1)
+	{
+		return;
+	}
+
+	TArray<Transformation*> transformations(pMergeArray->GetQuantity());
+	TArray<UInt> keys(pMergeArray->GetQuantity());
+	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
+	{
+		UInt key = 0;
+		enum
+		{
+			STATESET = 16,
+			MATERIAL = 16,
+		};
+
+		WIRE_ASSERT((STATESET + MATERIAL) <= sizeof(key) * 8);
+
+		RenderObject* pRenderObject = (*pMergeArray)[i];
+		Material* pMaterial = pRenderObject->GetMaterial();
+		if (pMaterial)
+		{
+			WIRE_ASSERT(pMaterial->ID < (1<<MATERIAL));
+			key |= pMaterial->ID;
+		}
+
+		// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS()
+		// once or initialize manually)
+		WIRE_ASSERT(pRenderObject->GetStateSetID() < (1<<STATESET));
+		key |= pRenderObject->GetStateSetID() << (MATERIAL);
+
+		keys.Append(key);
+	}
+
+	Object** pObjects = reinterpret_cast<Object**>(pMergeArray->GetArray());
+ 	CullerSorting::QuickSort(keys, pObjects, transformations.GetArray(), 0,
+		pMergeArray->GetQuantity()-1);
+
+	UInt vtxCount = 0;
+	UInt idxCount = 0;
+	Mesh* pMesh = NULL;
+	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
+	{
+		pMesh = (*pMergeArray)[i]->GetMesh();
+		vtxCount += pMesh->GetVertexCount();
+		idxCount += pMesh->GetIndexCount();
+	}
+
+	const UInt vbCount = pMesh->GetVertexBuffers().GetQuantity();
+	Mesh::VertexBuffers vbs(vbCount);
+	TArray<Float*> rawDst(vbCount);
+
+	for (UInt j = 0; j < vbCount; j++)
+	{
+		VertexBuffer* pVB = WIRE_NEW VertexBuffer(pMesh->
+			GetVertexBuffer(j)->GetAttributes(), vtxCount);
+		vbs.Append(pVB);
+		rawDst.Append(pVB->GetData());
+	}
+
+	IndexBuffer* pIB = WIRE_NEW IndexBuffer(idxCount);
+	UShort* pRawIB = pIB->GetData();
+	Int offset = 0;
+
+	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
+	{
+		pMesh = (*pMergeArray)[i]->GetMesh();
+		for (UInt j = 0; j < vbCount; j++)
+		{
+			VertexBuffer* pMVB = pMesh->GetVertexBuffer(j);
+			const UInt vtxCount = pMesh->GetVertexCount();
+			pMVB->ApplyForward(Transformation::IDENTITY, rawDst[j], vtxCount,
+				pMesh->GetMinIndex());
+			const UInt vtxSize = pMVB->GetAttributes().GetVertexSize();
+			rawDst[j] += (vtxSize / sizeof(Float)) * vtxCount;
+		}
+
+		IndexBuffer* pMIB = pMesh->GetIndexBuffer();
+		offset -= pMesh->GetMinIndex();
+		const UInt startIdx = pMesh->GetStartIndex();
+		for (UInt j = startIdx; j < (startIdx + pMesh->GetIndexCount()); j++)
+		{
+			WIRE_ASSERT((((*pMIB)[j])+offset) < 0x10000);
+			*pRawIB++ = static_cast<UShort>((((*pMIB)[j])+offset));
+		}
+
+		offset += pMesh->GetVertexCount();
+	}
+
+	UInt startIndex = 0;
+	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
+	{
+		pMesh = (*pMergeArray)[i]->GetMesh();
+		const UInt indexCount = pMesh->GetIndexCount();
+		Mesh* pMergedMesh = WIRE_NEW Mesh(vbs, pIB, startIndex, indexCount);
+		startIndex += indexCount;
+		(*pMergeArray)[i]->SetMesh(pMergedMesh);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -484,8 +737,8 @@ Bool Node::UpdateWorldBoundRenderObject()
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateStateRenderObject(TArray<State*>* pStateStacks,
-	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
+void Node::UpdateStateRenderObject(States* pStates, Lights* pLights,
+	Keys* pKeys)
 {
 	if (!mspRenderObject)
 	{
@@ -496,35 +749,35 @@ void Node::UpdateStateRenderObject(TArray<State*>* pStateStacks,
 	StatePtr* rStates = mspRenderObject->GetStates();
 	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 	{
-		TArray<State*>& rState = pStateStacks[i];
+		TArray<State*>& rState = pStates[i];
 		rStates[i] = rState[rState.GetQuantity()-1];
 	}
 
 	// update light state
-	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
-	if (!pLights)
+	TArray<LightPtr>* pRenderObjectLights = mspRenderObject->GetLights();
+	if (!pRenderObjectLights)
 	{
-		pLights = WIRE_NEW TArray<LightPtr>;
+		pRenderObjectLights = WIRE_NEW TArray<LightPtr>;
 	}
 
-	pLights->RemoveAll();
-	pLights->SetQuantity(pLightStack->GetQuantity());
-	for (UInt i = 0; i < pLightStack->GetQuantity(); i++)
+	pRenderObjectLights->RemoveAll();
+	pRenderObjectLights->SetQuantity(pLights->GetQuantity());
+	for (UInt i = 0; i < pLights->GetQuantity(); i++)
 	{
-		(*pLights)[i] = (*pLightStack)[i];
+		(*pRenderObjectLights)[i] = (*pLights)[i];
 	}
 
 	// check if other RenderObjects share the same states
 	UInt key = GetStateSetKey();
-	UInt* pStateSetID = pStateKeys->Find(key);
+	UInt* pStateSetID = pKeys->Find(key);
 	if (pStateSetID)
 	{
 		mspRenderObject->SetStateSetID(*pStateSetID);
 	}
 	else
 	{
-		UInt id = pStateKeys->GetQuantity()+1;
-		pStateKeys->Insert(key, id);
+		UInt id = pKeys->GetQuantity()+1;
+		pKeys->Insert(key, id);
 		mspRenderObject->SetStateSetID(id);
 	}
 }
@@ -746,11 +999,15 @@ void Node::InitRenderObject()
 	}
 
 	mspRenderObjectWorldBound = BoundingVolume::Create();
-	mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
+	if (!mspRenderObject->GetLights())
+	{
+		mspRenderObject->SetLights(WIRE_NEW TArray<LightPtr>);
+	}
 }
 
 //----------------------------------------------------------------------------
-void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
+void Node::PrepareRenderObjectForDynamicBatching(Bool forceWorldIsCurrent,
+	Bool duplicateShared)
 {
 	if (!mspRenderObject)
 	{
@@ -763,17 +1020,19 @@ void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
 	WIRE_ASSERT(pPositions);
 	VertexBuffer* const pNormals = pMesh->GetNormalBuffer();
 
+	Bool isRenderObjectShared = mspRenderObject->GetReferences() > 1;
 	Bool isMeshShared = pMesh->GetReferences() > 1;
 	Bool isPositionShared = pPositions->GetReferences() > 1;
 	Bool isNormalShared = pNormals && pNormals->GetReferences() > 1;
-	Bool isShared = isMeshShared ||isPositionShared || isNormalShared;
+	Bool isShared = isMeshShared ||isPositionShared || isNormalShared ||
+		isRenderObjectShared;
 
 	if (isShared && !duplicateShared)
 	{
 		return;
 	}
 
-	if (forceStatic)
+	if (forceWorldIsCurrent)
 	{
 		WorldIsCurrent = true;
 		WorldBoundIsCurrent = true;
@@ -794,20 +1053,25 @@ void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
 			VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer(i);
 			if (pVertexBuffer == pPositions)
 			{
-				if (isMeshShared || isPositionShared)
+				if (isRenderObjectShared || isMeshShared || isPositionShared)
 				{
 					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);		
 				}
 			}
 			else if (pVertexBuffer == pNormals)
 			{
-				if (isMeshShared || isNormalShared)
+				if (isRenderObjectShared || isMeshShared || isNormalShared)
 				{
 					pVertexBuffer = WIRE_NEW VertexBuffer(pVertexBuffer);
 				}
 			}
 
 			vertexBuffers.Append(pVertexBuffer);
+		}
+
+		if (isRenderObjectShared)
+		{
+			mspRenderObject = WIRE_NEW RenderObject(mspRenderObject);
 		}
 
 		pMesh = WIRE_NEW Mesh(vertexBuffers, pMesh->GetIndexBuffer(),
@@ -824,6 +1088,5 @@ void Node::MakeRenderObjectStatic(Bool forceStatic, Bool duplicateShared)
 	}
 
 	World.MakeIdentity();
-	pMesh->UpdateModelBound();
-	UpdateWorldBound();
+	pMesh->GetModelBound()->CopyFrom(mspRenderObjectWorldBound);
 }

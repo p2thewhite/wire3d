@@ -45,11 +45,12 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 
 	for (UInt i = 0; i < targetQuantity; ++i)
 	{
+		Image2D* pColorTexture = pRenderTarget->GetColorTexture(i);
+		WIRE_ASSERT(pColorTexture->GetData() == NULL);
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
-			mFormat, mWidth, mHeight, pRenderTarget->HasMipmaps());
+			pColorTexture);
 
-		pRenderer->InsertInImage2DMap(pRenderTarget->GetColorTexture(i),
-			pPdrTexture);
+		pRenderer->InsertInImage2DMap(pColorTexture, pPdrTexture);
 		mColorTextures.Append(pPdrTexture->mpBuffer);
 		mColorTextures[i]->AddRef();
 		mBufferSize += pPdrTexture->GetBufferSize();
@@ -62,8 +63,13 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 
 	if (mHasDepthStencil)
 	{
+		mHasDepthStencil = IsDepthFormatSupported(pRenderer);
+	}
+
+	if (mHasDepthStencil)
+	{
 		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
-			Image2D::FM_D24S8, mWidth, mHeight, false);
+			pRenderTarget->GetDepthStencilTexture());
 
 		pRenderer->InsertInImage2DMap(pRenderTarget->GetDepthStencilTexture(),
 			pPdrTexture);
@@ -165,23 +171,15 @@ Image2D* PdrRenderTarget::ReadColor(UInt i, Renderer* pRenderer)
 		WIRE_ASSERT(SUCCEEDED(hr));
 	}
 
-	hr = rDevice->SetRenderTarget((DWORD)i, mColorSurfaces[i]);
+	hr = rDevice->SetRenderTarget(static_cast<DWORD>(i), mColorSurfaces[i]);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Make a duplicate in system memory.
 	IDirect3DTexture9* pCopyTexture = NULL;
-	// TODO:
-	hr = D3DXCreateTexture
-		(
-		rDevice,
-		(UINT)mWidth,
-		(UINT)mHeight,
-		0,
-		0,
-		PdrRendererData::IMAGE2D_FORMAT[mFormat],
-		D3DPOOL_SYSTEMMEM,
-		&pCopyTexture
-		);
+	const DWORD usage = 0;
+	WIRE_ASSERT(PdrTexture2D::IsTextureFormatSupported(pRenderer, mFormat));
+	hr = rDevice->CreateTexture(mWidth, mHeight, 1, usage, PdrRendererData::
+		IMAGE2D_FORMAT[mFormat], D3DPOOL_SYSTEMMEM, &pCopyTexture, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
 	// Get the surface associated with the copy.
@@ -193,16 +191,12 @@ Image2D* PdrRenderTarget::ReadColor(UInt i, Renderer* pRenderer)
 	hr = rDevice->GetRenderTargetData(mColorSurfaces[i], pCopySurface);
 	WIRE_ASSERT(SUCCEEDED(hr));
 
-	// Get the data to write to disk.
 	D3DLOCKED_RECT rect;
 	hr = pCopySurface->LockRect(&rect, 0, 0);
 	WIRE_ASSERT(SUCCEEDED(hr));
-
-	size_t size = mWidth*mHeight*Image2D::GetBytesPerPixel(mFormat);
-	UChar* pData = WIRE_NEW UChar[size];
+	size_t size = mWidth * mHeight * Image2D::GetBytesPerPixel(mFormat);
+	UChar* const pData = WIRE_NEW UChar[size];
 	System::Memcpy(pData, size, rect.pBits, size);
-	Image2D* pImage = WIRE_NEW Image2D(mFormat, mWidth, mHeight, pData,
-		false, Buffer::UT_STATIC, 1);
 	hr = pCopySurface->UnlockRect();
 	WIRE_ASSERT(SUCCEEDED(hr));
 
@@ -218,5 +212,34 @@ Image2D* PdrRenderTarget::ReadColor(UInt i, Renderer* pRenderer)
 		mpSaveColorSurface->Release();
 	}
 
+	Image2D* pImage = WIRE_NEW Image2D(mFormat, mWidth, mHeight, pData,
+		false, Buffer::UT_STATIC, 1);
 	return pImage;
+}
+
+//----------------------------------------------------------------------------
+Bool PdrRenderTarget::IsDepthFormatSupported(Renderer* pRenderer) const
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	D3DFORMAT format = PdrRendererData::IMAGE2D_FORMAT[Image2D::FM_D24S8];
+	HRESULT hr;
+	hr = pData->D3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+		pData->Present.BackBufferFormat, D3DUSAGE_DEPTHSTENCIL,
+		D3DRTYPE_SURFACE, format);
+	if(FAILED(hr))
+	{
+		WIRE_ASSERT(false);
+		return false;
+	}
+
+	hr = pData->D3D->CheckDepthStencilMatch(D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL, pData->Present.BackBufferFormat,
+		PdrRendererData::IMAGE2D_FORMAT[mFormat], format);
+	if(FAILED(hr))
+	{
+		WIRE_ASSERT(false);
+		return false;
+	}
+
+	return true;
 }

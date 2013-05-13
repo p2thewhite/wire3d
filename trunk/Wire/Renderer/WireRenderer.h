@@ -151,10 +151,11 @@ public:
 		UInt offset = 0);
 
 	// Vertex format management
-	void Bind(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	void Enable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	void Disable(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
-	void Set(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
+	typedef TArray<Pointer<VertexBuffer> > VertexBuffers;
+	void Bind(const VertexBuffers& rVertexBuffers);
+	void Enable(const VertexBuffers& rVertexBuffers);
+	void Disable(const VertexBuffers& rVertexBuffers);
+	void Set(const VertexBuffers& rVertexBuffers);
 
 	// 2D texture management
 	void Bind(const Image2D* pImage);
@@ -223,12 +224,10 @@ public:
 	void Disable(const StatePtr spStates[]);
 
 	// Material management
-	void Enable(const Material* pMaterial, const TArray<Pointer<Light> >*
-		pLights = NULL);
-	void Disable(const Material* pMaterial, const TArray<Pointer<Light> >*
-		pLights = NULL);
-	void Set(const Material* pMaterial, const TArray<Pointer<Light> >*
-		pLights = NULL);
+	typedef TArray<Pointer<Light> > Lights;
+	void Enable(const Material* pMaterial, const Lights* pLights = NULL);
+	void Disable(const Material* pMaterial, const Lights* pLights = NULL);
+	void Set(const Material* pMaterial, const Lights* pLights = NULL);
 
 	// Mesh management
 	void Bind(const Mesh* pMesh);
@@ -243,9 +242,9 @@ public:
 	void DisableLighting();
 
 	// Renderer light state handling
-	void Enable(const TArray<Pointer<Light> >* pLights);
-	void Disable(const TArray<Pointer<Light> >* pLights);
-	void Set(const TArray<Pointer<Light> >* pLights);
+	void Enable(const Lights* pLights);
+	void Disable(const Lights* pLights);
+	void Set(const Lights* pLights);
 
 	// Bind/Unbind all resources of a RenderObject
 	void Bind(const RenderObject* pRenderObject);
@@ -277,13 +276,12 @@ private:
 		pShaderVars);
 
 	void SetTransformation(const Transformation& rWorld,
-		Bool processNormals, Shader* pVertexShader = NULL);
-	UInt GetVertexFormatKey(const TArray<Pointer<VertexBuffer> >&
-		rVertexBuffers);
+		Bool processNormals, Shader* pVertexShader);
+	UInt GetVertexFormatKey(const VertexBuffers& rVertexBuffers);
 
-	void DrawDynamicBatches(RenderObject* const pVisible[], Transformation*
-		const pTransformations[], UInt min, UInt max);
 	void DrawStaticBatches(RenderObject* const pVisible[], Transformation*
+		const pTransformations[], UInt min, UInt max);
+	void DrawDynamicBatches(RenderObject* const pVisible[], Transformation*
 		const pTransformations[], UInt min, UInt max);
 	void DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount,
@@ -363,13 +361,13 @@ private:
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<Material> mspMaterial;
 	Pointer<Mesh> mspMesh;
-	TArray<Pointer<VertexBuffer> > mVertexBuffers;
+	VertexBuffers mVertexBuffers;
 	TArray<TArray<UInt> > mVertexFormatKeys;
 	TArray<Pointer<Texture2D> > mTexture2Ds;
 	Pointer<Shader> mspPixelShader;
 	Pointer<Shader> mspVertexShader;
 	Pointer<RenderTarget> mspRenderTarget;
-	TArray<Pointer<Light> > mLights;
+	Lights mLights;
 	UInt mVertexFormatKey;
 
 	// The camera for establishing the view frustum
@@ -412,7 +410,7 @@ public:
 
 	PdrIndexBuffer* GetResource(const IndexBuffer* pIndexBuffer);
 	PdrVertexBuffer* GetResource(const VertexBuffer* pVertexBuffer);
-	PdrVertexFormat* GetResource(const TArray<Pointer<VertexBuffer> >& rVertexBuffers);
+	PdrVertexFormat* GetResource(const VertexBuffers& rVertexBuffers);
 	PdrTexture2D* GetResource(const Image2D* pTexture);
 	PdrShader* GetResource(const Shader* pShader);
 	PdrRenderTarget* GetResource(const RenderTarget* pRenderTarget);

@@ -31,7 +31,7 @@ PdrDisplayList::PdrDisplayList(PdrRendererData* pRendererData,
 	pRendererData->Draw(rElements, rIBuffer.GetBuffer(), indexCount,
 		startIndex);
 	mSize = GXEndDisplayList();
-	WIRE_ASSERT(mSize);
+	WIRE_ASSERT(mSize && mSize <= mBufferSize);
 
 	DCFlushRange(mpData, mBufferSize);
 }

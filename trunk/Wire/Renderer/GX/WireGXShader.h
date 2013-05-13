@@ -27,6 +27,8 @@ public:
 	inline void Enable(Renderer*) {}
 	inline void Disable(Renderer*) {}
 	inline UInt GetBufferSize() { return 0; }
+	inline void SetBuiltInVariables(Renderer*) {}
+
 };
 
 }

@@ -40,7 +40,6 @@ private:
 	TArray<Image2DPtr> mImages;
 	Image2DPtr mspDepthStencilImage;
 	Image2D::FormatMode mFormat;
-	Bool mHasMipmaps;
 };
 
 typedef Pointer<RenderTarget> RenderTargetPtr;

@@ -59,6 +59,12 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 	// Copy the image data from system memory to video memory.
 	WIRE_ASSERT(pImage);
 
+	if (!pImage->GetData())
+	{
+		CreateRenderTarget(pRenderer, pImage);
+		return;
+	}
+
 	// Windows stores BGR (lowest byte to highest byte), but Wire stores RGB.
 	// The byte ordering must be reversed.
 	UChar* const pSrc = pImage->GetData();
@@ -153,6 +159,7 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
 	HRESULT hr;
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
+	WIRE_ASSERT(IsTextureFormatSupported(pRenderer, format));
 	hr = rDevice->CreateTexture(width, height, mipmapCount, usage,
 		PdrRendererData::IMAGE2D_FORMAT[format], pool, &mpBuffer, NULL);
 	WIRE_ASSERT(SUCCEEDED(hr));
@@ -180,48 +187,6 @@ PdrTexture2D::PdrTexture2D(Renderer* pRenderer, const Image2D* pImage)
 	if (pSrc != pDst)
 	{
 		WIRE_DELETE[] pDst;
-	}
-}
-
-//----------------------------------------------------------------------------
-PdrTexture2D::PdrTexture2D(Renderer* pRenderer, Image2D::FormatMode format,
-	UInt width, UInt height, Bool autoGenerateMipMaps)
-{
-	PdrRendererData* pData = pRenderer->GetRendererData();
-	IDirect3DDevice9*& rDevice = pData->D3DDevice;
-	HRESULT hr;
-
-	WIRE_ASSERT(width <= pRenderer->GetMaxTextureWidth());
-	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
-
-	mBufferSize = width*height*Image2D::GetBytesPerPixel(format);
-	if (format == Image2D::FM_D24S8)
-	{
-		hr = rDevice->CreateTexture(width, height, 1, D3DUSAGE_DEPTHSTENCIL,
-			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
-			&mpBuffer, NULL);
-		WIRE_ASSERT(SUCCEEDED(hr));
-	}
-	else
-	{
-		UINT levels = 1;
-		DWORD usage = D3DUSAGE_RENDERTARGET;
-		if (autoGenerateMipMaps)
-		{
-			levels = 0;
-			usage |= D3DUSAGE_AUTOGENMIPMAP;
-		}
-
-		hr = rDevice->CreateTexture(width, height, levels, usage,
-			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
-			&mpBuffer, NULL);
-		WIRE_ASSERT(SUCCEEDED(hr));
-		
-		if (levels == 0)
-		{
-			mBufferSize = Image2D::GetTotalQuantity(width, height) *
-				Image2D::GetBytesPerPixel(format);
-		}
 	}
 }
 
@@ -401,19 +366,6 @@ void PdrTexture2D::Enable(Renderer* pRenderer, const Texture2D* pTexture,
 }
 
 //----------------------------------------------------------------------------
-void PdrTexture2D::Enable(Renderer* pRenderer, UInt unit)
-{
-	WIRE_ASSERT(unit < pRenderer->GetMaxTextureStages());
-
-	PdrRendererData* pData = pRenderer->GetRendererData();
-	IDirect3DDevice9*& rDevice = pData->D3DDevice;
-	HRESULT hr;
-
-	hr = rDevice->SetTexture(unit, mpBuffer);
-	WIRE_ASSERT(SUCCEEDED(hr));
-}
-
-//----------------------------------------------------------------------------
 void PdrTexture2D::Disable(Renderer* pRenderer, UInt unit)
 {
 	IDirect3DDevice9*& rDevice = pRenderer->GetRendererData()->D3DDevice;
@@ -439,4 +391,64 @@ void PdrTexture2D::Unlock(UInt level)
 	HRESULT hr;
 	hr = mpBuffer->UnlockRect(level);
 	WIRE_ASSERT(SUCCEEDED(hr));
+}
+
+//----------------------------------------------------------------------------
+Bool PdrTexture2D::IsTextureFormatSupported(Renderer* pRenderer, Image2D::
+	FormatMode format)
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	D3DFORMAT d3dFormat = PdrRendererData::IMAGE2D_FORMAT[format];
+	HRESULT hr;
+	hr = pData->D3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+		pData->Present.BackBufferFormat, 0, D3DRTYPE_TEXTURE,
+		d3dFormat);
+	return SUCCEEDED(hr);
+}
+
+//----------------------------------------------------------------------------
+void PdrTexture2D::CreateRenderTarget(Renderer* pRenderer, const Image2D*
+	pImage)
+{
+	PdrRendererData* pData = pRenderer->GetRendererData();
+	IDirect3DDevice9*& rDevice = pData->D3DDevice;
+	HRESULT hr;
+
+	const UInt width = pImage->GetBound(0);
+	const UInt height = pImage->GetBound(1);
+	WIRE_ASSERT(width <= pRenderer->GetMaxTextureWidth());
+	WIRE_ASSERT(height <= pRenderer->GetMaxTextureHeight());
+
+	const Image2D::FormatMode format = pImage->GetFormat();
+	mBufferSize = width*height*Image2D::GetBytesPerPixel(format);
+	if (format == Image2D::FM_D24S8)
+	{
+		hr = rDevice->CreateTexture(width, height, 1, D3DUSAGE_DEPTHSTENCIL,
+			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
+			&mpBuffer, NULL);
+		WIRE_ASSERT(SUCCEEDED(hr));
+	}
+	else
+	{
+		UINT levels = 1;
+		DWORD usage = D3DUSAGE_RENDERTARGET;
+		if (pImage->HasMipmaps())
+		{
+			levels = 0;
+			usage |= D3DUSAGE_AUTOGENMIPMAP;
+		}
+
+		WIRE_ASSERT(IsTextureFormatSupported(pRenderer, format));
+		hr = rDevice->CreateTexture(width, height, levels, usage,
+			PdrRendererData::IMAGE2D_FORMAT[format], D3DPOOL_DEFAULT,
+			&mpBuffer, NULL);
+		WIRE_ASSERT(SUCCEEDED(hr));
+		WIRE_ASSERT(pImage->GetMipmapCount() == mpBuffer->GetLevelCount());
+
+		if (levels == 0)
+		{
+			mBufferSize = Image2D::GetTotalQuantity(width, height) *
+				Image2D::GetBytesPerPixel(format);
+		}
+	}
 }

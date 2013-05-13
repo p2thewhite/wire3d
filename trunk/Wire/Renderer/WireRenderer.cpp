@@ -494,7 +494,7 @@ PdrRenderTarget* Renderer::GetResource(const RenderTarget* pRenderTarget)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Renderer::Bind(const VertexBuffers& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
@@ -509,8 +509,7 @@ void Renderer::Bind(const TArray<VertexBufferPtr>& rVertexBuffers)
 }
 
 //----------------------------------------------------------------------------
-UInt Renderer::GetVertexFormatKey(const TArray<VertexBufferPtr>&
-	rVertexBuffers)
+UInt Renderer::GetVertexFormatKey(const VertexBuffers& rVertexBuffers)
 {
 	WIRE_ASSERT(rVertexBuffers.GetQuantity() < 256);
 
@@ -546,7 +545,7 @@ UInt Renderer::GetVertexFormatKey(const TArray<VertexBufferPtr>&
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Renderer::Enable(const VertexBuffers& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
@@ -565,7 +564,7 @@ void Renderer::Enable(const TArray<VertexBufferPtr>& rVertexBuffers)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Renderer::Disable(const VertexBuffers& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	Disable(key, mVertexFormatMap);
@@ -573,7 +572,7 @@ void Renderer::Disable(const TArray<VertexBufferPtr>& rVertexBuffers)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Renderer::Set(const VertexBuffers& rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	if (mVertexFormatKey != key)
@@ -588,8 +587,7 @@ void Renderer::Set(const TArray<VertexBufferPtr>& rVertexBuffers)
 }
 
 //----------------------------------------------------------------------------
-PdrVertexFormat* Renderer::GetResource(const TArray<VertexBufferPtr>&
-	rVertexBuffers)
+PdrVertexFormat* Renderer::GetResource(const VertexBuffers&	rVertexBuffers)
 {
 	const UInt key = GetVertexFormatKey(rVertexBuffers);
 	PdrVertexFormat** pValue = mVertexFormatMap.Find(key);
@@ -641,8 +639,7 @@ void Renderer::DestroyAll(VertexFormatMap& rVertexFormatMap)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const Material* pMaterial, const TArray<LightPtr>*
-	pLights)
+void Renderer::Enable(const Material* pMaterial, const Lights* pLights)
 {
 	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
 	{
@@ -683,8 +680,7 @@ void Renderer::Enable(const Material* pMaterial, const TArray<LightPtr>*
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const Material* pMaterial, const TArray<LightPtr>*
-	pLights)
+void Renderer::Disable(const Material* pMaterial, const Lights* pLights)
 {
 	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
 	{
@@ -723,7 +719,7 @@ void Renderer::Disable(const Material* pMaterial, const TArray<LightPtr>*
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const Material* pMaterial, const TArray<LightPtr>* pLights)
+void Renderer::Set(const Material* pMaterial, const Lights* pLights)
 {
 	if (!pMaterial || !pMaterial->HasShaders() || mShaderVersion == 0)
 	{
@@ -890,7 +886,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Enable(pMesh);
 		Enable(pMaterial, pRenderObject->GetLights());
 
-		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
+		DrawElements(pMesh->GetVertexCount(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex(), pMesh->GetMinIndex());
 
 		Disable(pMaterial, pRenderObject->GetLights());
@@ -903,7 +899,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Set(pMesh);
 		Set(pMaterial, pRenderObject->GetLights());
 
-		DrawElements(pMesh->GetActiveVertexCount(), pMesh->GetIndexCount(),
+		DrawElements(pMesh->GetVertexCount(), pMesh->GetIndexCount(),
 			pMesh->GetStartIndex(), pMesh->GetMinIndex());
 	}
 }
@@ -1033,7 +1029,7 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 				break;
 			}
 
-			const TArray<VertexBufferPtr>& rVBOsB = pMeshB->GetVertexBuffers();
+			const VertexBuffers& rVBOsB = pMeshB->GetVertexBuffers();
 			UInt vB = GetVertexFormatKey(rVBOsB);
 			if ((vA != vB))
 			{
@@ -1141,6 +1137,7 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 
 			pIBPdr->Unlock();
 			WIRE_ASSERT(maxIndex < 65535);
+			WIRE_ASSERT(maxIndex > 0);
 			DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
 				pVisible[min]->GetMesh()->HasNormal());
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
@@ -1197,7 +1194,7 @@ void Renderer::DrawDynamicBatches(RenderObject* const pVisible[],
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
-		const UInt vertexCount = pMesh->GetActiveVertexCount();
+		const UInt vertexCount = pMesh->GetVertexCount();
 		const UShort minIndex = pMesh->GetMinIndex();
 
 		if (vertexCount > mDynamicBatchingMaxVertexCount ||
@@ -1310,7 +1307,7 @@ void Renderer::DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		}
 	}
 
-	const TArray<VertexBufferPtr>& rVertexBuffers = pMesh->GetVertexBuffers();
+	const VertexBuffers& rVertexBuffers = pMesh->GetVertexBuffers();
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		UInt vertexSize = rVertexBuffers[i]->GetAttributes().GetVertexSize();
@@ -1347,7 +1344,25 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
 	}
 
 	pIBPdr->Enable(this);
-	SetTransformation(Transformation::IDENTITY, hasNormals);
+	SetTransformation(Transformation::IDENTITY, hasNormals, mspVertexShader);
+	if (mspVertexShader)
+	{
+		PdrShader* pPdrShader = GetResource(mspVertexShader);
+		if (pPdrShader)
+		{
+			pPdrShader->SetBuiltInVariables(this);
+		}
+	}
+
+	if (mspPixelShader)
+	{
+		PdrShader* pPdrShader = GetResource(mspPixelShader);
+		if (pPdrShader)
+		{
+			pPdrShader->SetBuiltInVariables(this);
+		}
+	}
+
 	DrawElements(vertexCount, indexCount, 0, minIndex);
 	pIBPdr->Disable(this);
 
@@ -1493,14 +1508,14 @@ void Renderer::Set(const StatePtr spStates[])
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Enable(const TArray<Pointer<Light> >* pLights)
+void Renderer::Enable(const Lights* pLights)
 {
 	if (!pLights)
 	{
 		return;
 	}
 
-	const TArray<Pointer<Light> >& rLights = *pLights;
+	const Lights& rLights = *pLights;
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
 	{
@@ -1524,14 +1539,14 @@ void Renderer::Enable(const TArray<Pointer<Light> >* pLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Disable(const TArray<Pointer<Light> >* pLights)
+void Renderer::Disable(const Lights* pLights)
 {
 	if (!pLights)
 	{
 		return;
 	}
 
-	const TArray<Pointer<Light> >& rLights = *pLights;
+	const Lights& rLights = *pLights;
 
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount == 0)
@@ -1553,14 +1568,14 @@ void Renderer::Disable(const TArray<Pointer<Light> >* pLights)
 }
 
 //----------------------------------------------------------------------------
-void Renderer::Set(const TArray<Pointer<Light> >* pLights)
+void Renderer::Set(const Lights* pLights)
 {
 	if (!pLights)
 	{
 		return;
 	}
 
-	const TArray<Pointer<Light> >& rLights = *pLights;
+	const Lights& rLights = *pLights;
 	UInt lightCount = rLights.GetQuantity();
 	if (lightCount > mLights.GetQuantity())
 	{

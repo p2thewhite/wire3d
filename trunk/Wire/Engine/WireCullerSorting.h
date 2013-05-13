@@ -33,12 +33,15 @@ public:
 	virtual void Clear();
 	virtual void SetMaxQuantity(UInt maxQuantity);
 
+	void Sort();
+
+	static void QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
+		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
+		Transformation** const pTrafo, Int left, Int right);
+
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		pDestination, TArray<Vector3F>& rPositions);
-	void QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
-//	void QuickSort(UInt* const pKeys, Object** const pVisible,
-		Transformation** const pTrafo, Int left, Int right);
 	UInt GetKey(RenderObject* pRenderObject, const Vector3F& rPosition);
 
 	VisibleSet* mpOpaqueObjects;

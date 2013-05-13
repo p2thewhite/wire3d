@@ -29,13 +29,11 @@ public:
 			:
 			AssetsWithEqualNamesAreIdentical(true),
 			PrepareSceneForBatching(false),
-			DuplicateSharedMeshesWhenPreparingSceneForBatching(false),
 			CreateInterleavedVertexBuffers(false)
 			{}
 			 
 		Bool AssetsWithEqualNamesAreIdentical;
 		Bool PrepareSceneForBatching;
-		Bool DuplicateSharedMeshesWhenPreparingSceneForBatching;
 		Bool CreateInterleavedVertexBuffers;
 	};
 
@@ -75,9 +73,6 @@ public:
 
 private:
 	static Char* Load(const Char* pFilename, Int& rSize);
-	static void InitializeStaticSpatials(Wire::TArray<Wire::SpatialPtr>&
-		rSpatials, Bool prepareSceneForBatching,
-		Bool duplicateSharedMeshesWhenPreparingSceneForBatching);
 
 	Float* Load32(const Char* pFilename, Int& rSize, Bool isBigEndian);
 	UShort* Load16(const Char* pFilename, Int& rSize, Bool isBigEndian);

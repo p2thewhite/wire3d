@@ -21,7 +21,6 @@ namespace Wire
 
 class BoundingVolume;
 class Culler;
-class Node;
 class Renderer;
 
 class Spatial : public SceneObject
@@ -70,7 +69,7 @@ public:
 
 	CullingMode Culling;
 
-	// Update of geometric state and controllers. The UpdateGS() function
+	// Update of Geometric State and controllers. The UpdateGS() function
 	// computes world transformations on the downward pass and world bounding
 	// volumes on the upward pass. The UpdateBS() function just computes the
 	// world bounding volumes on an upward pass. This is useful if model
@@ -80,13 +79,15 @@ public:
 		Bool updateControllers = true);
 	void UpdateBS();
 
-	// update render state
+	// Update of Render State. Pushes render states and lights down to child
+	// nodes and render objects. Calculates state keys for render objects to
+	// indicate identical render states and lights of render objects.
 	virtual void UpdateRS(TArray<State*>* pStateStacks = NULL, TArray<Light*>*
 		pLightStack = NULL, THashTable<UInt, UInt>* pStateKeys = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
-	inline void SetParent(Node* pParent);
-	inline Node* GetParent();
+	inline void SetParent(Spatial* pParent);
+	inline Spatial* GetParent();
 
 	// culling
 	void OnGetVisibleSet(Culler& rCuller, Bool noCull);
@@ -114,28 +115,26 @@ public:
 	virtual void Bind(Renderer* pRenderer) = 0;
 	virtual void Unbind(Renderer* pRenderer) = 0;
 
-	// Traverse the child objects and call their MakeStatic()
-	virtual void MakeStatic(Bool forceStatic = false,
-		Bool duplicateShared = true) = 0;
-
 protected:
 	Spatial();
+	Spatial(const Spatial* pSpatial);
 
 	// geometric updates
 	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 	void PropagateBoundToRoot();
 
 	// render state updates
-	void PropagateStateFromRoot(TArray<State*>* pStateStacks,
-		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
-	void PushState(TArray<State*>* pStateStacks, TArray<Light*>* pLightStack);
-	void PopState(TArray<State*>* pStateStacks, TArray<Light*>* pLightStack);
-	virtual void UpdateState(TArray<State*>* pStateStacks,
-		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys) = 0;
+	typedef TArray<State*> States;
+	typedef TArray<Light*> Lights;
+	typedef THashTable<UInt, UInt> Keys;
+	void PropagateStateFromRoot(States* pStates, Lights* pLights, Keys* pKeys);
+	void PushState(States* pStates, Lights* pLights);
+	void PopState(States* pStates, Lights* pLights);
+	virtual void UpdateState(States* pStates, Lights* pLights, Keys* pKeys) = 0;
 
 protected:
 	// support for hierarchical scene graph
-	Node* mpParent;
+	Spatial* mpParent;
 
 	// render state
 	TArray<StatePtr> mStates;

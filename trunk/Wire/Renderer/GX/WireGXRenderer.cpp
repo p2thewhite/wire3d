@@ -288,10 +288,12 @@ void Renderer::SetTransformation(const Transformation& rWorld, Bool
 }
 
 //----------------------------------------------------------------------------
-void Renderer::DrawElements(UInt, UInt indexCount, UInt startIndex, UInt)
+void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
+	UInt startIndex, UInt)
 {
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += indexCount/3;
+	mStatistics.mVertices += vertexCount;
 
 	mpData->IsFrameBufferDirty = true;
 

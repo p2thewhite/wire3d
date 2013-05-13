@@ -17,8 +17,6 @@ WIRE_IMPLEMENT_RTTI(Wire, RenderTarget, Object);
 //----------------------------------------------------------------------------
 RenderTarget::RenderTarget(UInt targetQuantity, Image2D::FormatMode format,
 	UInt width, UInt height, Bool hasMipmaps, Bool hasDepthStencil)
-	:
-	mHasMipmaps(hasMipmaps)
 {
 	WIRE_ASSERT(targetQuantity > 0 /* Number of targets must be at least 1 */);
 	for (UInt i = 0; i < targetQuantity; i++)

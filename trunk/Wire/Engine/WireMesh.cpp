@@ -11,7 +11,6 @@
 #include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
 #include "WireRenderer.h"
-#include "WireVertexBuffer.h"
 
 using namespace Wire;
 
@@ -37,7 +36,7 @@ Mesh::Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer)
+Mesh::Mesh(VertexBuffers& rVertexBuffers, IndexBuffer* pIndexBuffer)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
 {
@@ -46,7 +45,7 @@ Mesh::Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer)
 }
 
 //----------------------------------------------------------------------------
-Mesh::Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer,
+Mesh::Mesh(VertexBuffers& rVertexBuffers, IndexBuffer* pIndexBuffer,
 	UInt startIndex, UInt indexCount)
 	:
 	mVertexBuffers(rVertexBuffers.GetQuantity(), 1)
@@ -340,7 +339,7 @@ void Mesh::SetVertexBuffer(VertexBuffer* pVertexBuffer)
 }
 
 //----------------------------------------------------------------------------
-void Mesh::SetVertexBuffers(const TArray<VertexBufferPtr>& rVertexBuffers)
+void Mesh::SetVertexBuffers(const VertexBuffers& rVertexBuffers)
 {
 	WIRE_ASSERT(rVertexBuffers.GetQuantity() > 0);
 	WIRE_ASSERT(rVertexBuffers[0]);

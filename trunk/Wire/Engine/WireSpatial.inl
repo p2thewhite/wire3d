@@ -7,13 +7,13 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-inline void Spatial::SetParent(Node* pParent)
+inline void Spatial::SetParent(Spatial* pParent)
 {
 	mpParent = pParent;
 }
 
 //----------------------------------------------------------------------------
-inline Node* Spatial::GetParent()
+inline Spatial* Spatial::GetParent()
 {
 	return mpParent;
 }

@@ -25,6 +25,7 @@ RendererStatistics::RendererStatistics()
 	:
 	mDrawCalls(0),
 	mTriangles(0),
+	mVertices(0),
 	mBatchCount(0),
 	mBatchCountMax(0),
 	mBatchedStatic(0),
@@ -67,6 +68,7 @@ void RendererStatistics::Reset()
 	mBatchedDynamic = 0;
 	mBatchedDynamicTransformed = 0;
 	mTriangles = 0;
+	mVertices = 0;
 	mBatchedIBOTotalData = 0;
 	mBatchedIBOLargestBatch = 0;
 	mBatchedVBOTotalData = 0;
@@ -88,13 +90,13 @@ void RendererStatistics::AppendToText(Text* pText)
 
 	UInt totalVRam = mVBOsSize + mIBOsSize + mTexturesSize;
 
-	const Char msg[] = "Draw Calls: %d, Triangles: %d, VRAM: >%.2f MB\n"
+	const Char msg[] = "Draw Calls: %d, Triangles: %d, Vertices: %d, VRAM: >%.2f MB\n"
 		"VBOs: %d / %.2f KB, VFs: %d\n"
 		"IBOs: %d / %.2f KB\n"
 		"Textures: %d / %.2f MB\n";
 
 	System::Sprintf(text, textArraySize, msg,
-		mDrawCalls, mTriangles, totalVRam / mb,
+		mDrawCalls, mTriangles, mVertices, totalVRam / mb,
 		mVBOCount, mVBOsSize / kb, mVertexFormatCount,
 		mIBOCount, mIBOsSize / kb,
 		mTextureCount, mTexturesSize / mb);

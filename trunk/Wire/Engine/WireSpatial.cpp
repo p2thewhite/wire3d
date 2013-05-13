@@ -10,7 +10,6 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCuller.h"
-#include "WireNode.h"
 
 using namespace Wire;
 
@@ -25,6 +24,31 @@ Spatial::Spatial()
 	Culling(CULL_DYNAMIC),
 	mpParent(NULL)
 {
+}
+
+//----------------------------------------------------------------------------
+Spatial::Spatial(const Spatial* pSpatial)
+	:
+	mpParent(NULL)
+{
+	Local = pSpatial->Local;
+	World = pSpatial->World;
+	WorldIsCurrent = pSpatial->WorldIsCurrent;
+	WorldBound = BoundingVolume::Create();
+	WorldBound->CopyFrom(pSpatial->WorldBound);
+	WorldBoundIsCurrent = pSpatial->WorldBoundIsCurrent;
+	Culling = pSpatial->Culling;
+	mStates.SetQuantity(pSpatial->mStates.GetQuantity());
+	for (UInt i = 0; i < pSpatial->mStates.GetQuantity(); i++)
+	{
+		mStates[i] = pSpatial->mStates[i];
+	}
+
+	mLights.SetQuantity(pSpatial->mLights.GetQuantity());
+	for (UInt i = 0; i < pSpatial->mLights.GetQuantity(); i++)
+	{
+		mLights[i] = pSpatial->mLights[i];
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -178,10 +202,9 @@ void Spatial::AttachLight(Light* pLight)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateRS(TArray<State*>* pStateStacks, TArray<Light*>*
-	pLightStack, THashTable<UInt, UInt>* pStateKeys)
+void Spatial::UpdateRS(States* pStates, Lights*	pLights, Keys* pKeys)
 {
-	Bool isInitiator = (pStateStacks == NULL);
+	Bool isInitiator = (pStates == NULL);
 
 	if (isInitiator)
 	{
@@ -189,93 +212,92 @@ void Spatial::UpdateRS(TArray<State*>* pStateStacks, TArray<Light*>*
 
 		// The order of preference is
 		//   (1) Default global states are used.
-		//   (2) RenderObject can override them, but if global state FOOBAR
-		//       has not been pushed to the RenderObject, then the current
-		//       FOOBAR remains in effect (rather than the default FOOBAR
-		//       being used).
-		//   (3) Effect can override default or RenderObject render states.
-		pStateStacks = WIRE_NEW TArray<State*>[State::MAX_STATE_TYPE];
+		//   (2) Nodes can override them
+		//   (3) Effects can override render states at DrawCall
+		//
+		// Note: If states have not been pushed to a Node's RenderObject (i.e.
+		//   RenderObject's states are NULL), the current render state of the
+		//   Renderer is being used to draw the RenderObject.
+
+		pStates = WIRE_NEW TArray<State*>[State::MAX_STATE_TYPE];
 
 		for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
 		{
-			pStateStacks[i].SetGrowBy(growBy);
-			pStateStacks[i].Append(State::Default[i]);
+			pStates[i].SetGrowBy(growBy);
+			pStates[i].Append(State::Default[i]);
 		}
 
         // stack has no lights initially
-        pLightStack = WIRE_NEW TArray<Light*>(0, growBy);
+        pLights = WIRE_NEW TArray<Light*>(0, growBy);
 
 		// RenderObject identifies sets of identical states and shares the ID
-		pStateKeys = WIRE_NEW THashTable<UInt, UInt>;
+		pKeys = WIRE_NEW THashTable<UInt, UInt>;
 
 		// traverse to root and push states from root to this node
-		PropagateStateFromRoot(pStateStacks, pLightStack, pStateKeys);
+		PropagateStateFromRoot(pStates, pLights, pKeys);
 	}
 	else
 	{
 		// push states at this node
-		PushState(pStateStacks, pLightStack);
+		PushState(pStates, pLights);
 	}
 
 	// propagate the new state to the subtree rooted here
-	UpdateState(pStateStacks, pLightStack, pStateKeys);
+	UpdateState(pStates, pLights, pKeys);
 
 	if (isInitiator)
 	{
-		WIRE_DELETE[] pStateStacks;
-		WIRE_DELETE pLightStack;
-		WIRE_DELETE pStateKeys;
+		WIRE_DELETE[] pStates;
+		WIRE_DELETE pLights;
+		WIRE_DELETE pKeys;
 	}
 	else
 	{
 		// pop states at this node
-		PopState(pStateStacks, pLightStack);
+		PopState(pStates, pLights);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PropagateStateFromRoot(TArray<State*>* pStateStacks,
-	TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys)
+void Spatial::PropagateStateFromRoot(States* pStates, Lights* pLights,
+	Keys* pKeys)
 {
 	// traverse to root to allow downward state propagation
 	if (mpParent)
 	{
-		mpParent->PropagateStateFromRoot(pStateStacks, pLightStack,
-			pStateKeys);
+		mpParent->PropagateStateFromRoot(pStates, pLights, pKeys);
 	}
 
 	// push states onto current render state stack
-	PushState(pStateStacks, pLightStack);
+	PushState(pStates, pLights);
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PushState(TArray<State*>* pStateStacks,
-	TArray<Light*>* pLightStack)
+void Spatial::PushState(States* pStates, Lights* pLights)
 {
 	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
 		State::StateType type = mStates[i]->GetStateType();
-		pStateStacks[type].Append(mStates[i]);
+		pStates[type].Append(mStates[i]);
 	}
 
 	for (UInt i = 0; i < mLights.GetQuantity(); i++)
 	{
-		pLightStack->Append(mLights[i]);
+		pLights->Append(mLights[i]);
 	}
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PopState(TArray<State*>* pStateStacks,
-	TArray<Light*>* pLightStack)
+void Spatial::PopState(States* pStates,	Lights* pLights)
 {
 	for (UInt i = 0; i < mStates.GetQuantity(); i++)
 	{
 		State::StateType type = mStates[i]->GetStateType();
-		pStateStacks[type].RemoveLast();
+		pStates[type].RemoveLast();
 	}
 
 	for (UInt i = 0; i < mLights.GetQuantity(); i++)
 	{
-		pLightStack->RemoveLast();
+		pLights->RemoveLast();
 	}
 }

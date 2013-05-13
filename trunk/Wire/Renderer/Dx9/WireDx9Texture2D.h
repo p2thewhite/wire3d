@@ -34,13 +34,13 @@ public:
 
 	inline UInt GetBufferSize() const { return mBufferSize; }
 
-private:
-	friend class PdrRenderTarget;
-	// RenderTarget texture/depth stencil
-	PdrTexture2D(Renderer* pRenderer, Image2D::FormatMode format, UInt width,
-		UInt height, Bool autoGenerateMipMaps);
-	void Enable(Renderer* pRenderer, UInt unit);
+	static Bool IsTextureFormatSupported(Renderer* pRenderer, Image2D::
+		FormatMode format);
 
+private:
+	void CreateRenderTarget(Renderer* pRenderer, const Image2D* pImage);
+
+	friend class PdrRenderTarget; // requires access to render target texture
 	IDirect3DTexture9* mpBuffer;
 	UInt mBufferSize;
 };
