@@ -88,10 +88,19 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 
 	if (mStaticSpatials.GetQuantity() > 0)
 	{
-		InitializeStaticSpatials(mStaticSpatials, mpOptions->
-			PrepareSceneForBatching, mpOptions->
-			DuplicateSharedMeshesWhenPreparingSceneForBatching);
-		mStaticSpatials.RemoveAll();
+		for (UInt i = 0; i < mStaticSpatials.GetQuantity(); i++)
+		{
+			WIRE_ASSERT(mStaticSpatials[i]);
+			WIRE_ASSERT(mStaticSpatials[i]->WorldIsCurrent);
+			mStaticSpatials[i]->WorldBoundIsCurrent = true;
+		}
+	}
+
+	mStaticSpatials.RemoveAll();
+
+	if (mpOptions->PrepareSceneForBatching)
+	{
+		pRoot->PrepareForStaticBatching(false, true);
 	}
 
 	return pRoot;
@@ -1973,29 +1982,6 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 	mTextures.Insert(pName, pTexture);
 
 	return pTexture;
-}
-
-//----------------------------------------------------------------------------
-void Importer::InitializeStaticSpatials(TArray<SpatialPtr>& rSpatials,
-	Bool prepareSceneForBatching,
-	Bool duplicateSharedMeshesWhenPreparingSceneForBatching)
-{
-	for (UInt i = 0; i < rSpatials.GetQuantity(); i++)
-	{
-		WIRE_ASSERT(rSpatials[i]);
-		WIRE_ASSERT(rSpatials[i]->WorldIsCurrent);
-		rSpatials[i]->UpdateBS();
-		rSpatials[i]->WorldBoundIsCurrent = true;
-		if (prepareSceneForBatching)
-		{
-			Node* pNode = DynamicCast<Node>(rSpatials[i]);
-			if (pNode && pNode->GetRenderObject())
-			{
-				pNode->MakeRenderObjectStatic(true,
-					duplicateSharedMeshesWhenPreparingSceneForBatching);
-			}
-		}
-	}
 }
 
 //----------------------------------------------------------------------------

@@ -42,6 +42,12 @@ inline UInt RendererStatistics::GetTriangles() const
 	return mTriangles;
 }
 
+//----------------------------------------------------------------------------
+inline UInt RendererStatistics::GetVertices() const
+{
+	return mVertices;
+}
+
 // number of buffers and their total size bound to the Renderer
 //----------------------------------------------------------------------------
 inline UInt RendererStatistics::GetVBOCount() const

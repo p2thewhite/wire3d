@@ -24,11 +24,13 @@ class Mesh : public Object
 	WIRE_DECLARE_RTTI;
 
 public:
+	typedef TArray<VertexBufferPtr> VertexBuffers;
+
 	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer);
 	Mesh(VertexBuffer* pVertexBuffer, IndexBuffer* pIndexBuffer,
 		UInt startIndex, UInt indexCount);
-	Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer);
-	Mesh(TArray<VertexBufferPtr>& rVertexBuffers, IndexBuffer* pIndexBuffer,
+	Mesh(VertexBuffers& rVertexBuffers, IndexBuffer* pIndexBuffer);
+	Mesh(VertexBuffers& rVertexBuffers, IndexBuffer* pIndexBuffer,
 		UInt startIndex, UInt indexCount);
 	// shallow copy (shared Index- and Vertexbuffers)
 	Mesh(const Mesh* pMesh);
@@ -37,7 +39,8 @@ public:
 
 	inline VertexBuffer* GetVertexBuffer(UInt streamIndex = 0);
 	inline const VertexBuffer* GetVertexBuffer(UInt streamIndex = 0) const;
-	inline const TArray<VertexBufferPtr>& GetVertexBuffers() const;
+	inline VertexBuffers& GetVertexBuffers();
+	inline const VertexBuffers& GetVertexBuffers() const;
 	VertexBuffer* GetPositionBuffer();
 	const VertexBuffer* GetPositionBuffer() const;
 	VertexBuffer* GetNormalBuffer();
@@ -49,11 +52,9 @@ public:
 	inline BoundingVolume* GetModelBound();
 	inline const BoundingVolume* GetModelBound() const;
 
-	inline UInt GetVertexQuantity() const;
-
 	inline UShort GetMinIndex() const;
 	inline UShort GetMaxIndex() const;
-	inline UInt GetActiveVertexCount() const;
+	inline UInt GetVertexCount() const;
 
 	// Control over which continuous part of the mesh is rendered.
 	// Default values render the entire mesh.
@@ -73,9 +74,9 @@ private:
 	void Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount);
 	void FindMinMaxIndex(UInt startIndex, UInt indexCount);
 	void SetVertexBuffer(VertexBuffer* pVertexBuffer);
-	void SetVertexBuffers(const TArray<VertexBufferPtr>& rVertexBuffers);
+	void SetVertexBuffers(const VertexBuffers& rVertexBuffers);
 
-	TArray<Pointer<VertexBuffer> > mVertexBuffers;
+	VertexBuffers mVertexBuffers;
 	Pointer<IndexBuffer> mspIndexBuffer;
 	Pointer<BoundingVolume> mspModelBound;
 

@@ -40,7 +40,12 @@ CullerSorting::~CullerSorting()
 void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 {
 	Culler::ComputeVisibleSet(pScene);
+	Sort();
+}
 
+//----------------------------------------------------------------------------
+void CullerSorting::Sort()
+{
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
 	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects,
 		mOpaquePositions);
@@ -262,7 +267,6 @@ void CullerSorting::Insert(Object* pObject, Transformation* pTransformation,
 	}
 	else
 	{
-		WIRE_ASSERT(false/* there's no AlphaState, call UpdateRS() to init*/);
 		GetVisibleSet(0)->Insert(pObject, pTransformation);
 		mOpaquePositions.Append(rPosition);
 	}
@@ -329,7 +333,8 @@ UInt CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
 		key |= pMaterial->ID << DEPTH;
 	}
 
-	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once)
+	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once,
+	// or initialize manually)
 	WIRE_ASSERT(pRenderObject->GetStateSetID() < (1<<STATESET));
 	key |= pRenderObject->GetStateSetID() << (MATERIAL + DEPTH);
 

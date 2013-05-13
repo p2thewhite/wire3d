@@ -23,7 +23,7 @@ class VertexBuffer;
 class PdrVertexFormat
 {
 public:
-	PdrVertexFormat(Renderer* pRenderer, const TArray<Pointer<VertexBuffer> >&
+	PdrVertexFormat(Renderer* pRenderer, const Renderer::VertexBuffers&
 		rVertexBuffers);
 	~PdrVertexFormat();
 

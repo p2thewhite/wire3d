@@ -33,6 +33,7 @@ public:
 	inline UInt GetBatchedDynamic() const;
 	inline UInt GetBatchedDynamicTransformed() const;
 	inline UInt GetTriangles() const;
+	inline UInt GetVertices() const;
 
 	// number of buffers and their total size bound to the Renderer
 	inline UInt GetVBOCount() const;
@@ -66,6 +67,7 @@ private:
 	// since last Reset()
 	UInt mDrawCalls;
 	UInt mTriangles;
+	UInt mVertices;
 	UInt mBatchCount;
 	UInt mBatchCountMax;
 	UInt mBatchedStatic;

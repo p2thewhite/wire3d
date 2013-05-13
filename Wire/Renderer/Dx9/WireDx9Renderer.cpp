@@ -428,6 +428,7 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	const UInt triangleCount = indexCount/3;
 	mStatistics.mDrawCalls++;
 	mStatistics.mTriangles += triangleCount;
+	mStatistics.mVertices += vertexCount;
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;

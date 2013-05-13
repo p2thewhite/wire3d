@@ -575,7 +575,7 @@ RenderObject* StandardMesh::CreateCylinder(Int radialSampleCount,
 	// generated bounding volume to be slightly off center. Reset the bound
 	// to use the true information.
 	pCylinder->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
-	Float boundingSphereRadius = MathF::Sqrt(radius*radius + height*height);
+	Float boundingSphereRadius = MathF::Sqrt(radius*radius+height*height)*0.5F;
 	pCylinder->GetMesh()->GetModelBound()->SetRadius(boundingSphereRadius);
 	return pCylinder;
 }

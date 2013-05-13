@@ -21,7 +21,13 @@ inline const VertexBuffer* Mesh::GetVertexBuffer(UInt streamIndex) const
 }
 
 //----------------------------------------------------------------------------
-inline const TArray<Pointer<VertexBuffer> >& Mesh::GetVertexBuffers() const
+inline Mesh::VertexBuffers& Mesh::GetVertexBuffers()
+{
+	return mVertexBuffers;
+}
+
+//----------------------------------------------------------------------------
+inline const Mesh::VertexBuffers& Mesh::GetVertexBuffers() const
 {
 	return mVertexBuffers;
 }
@@ -51,14 +57,7 @@ inline const BoundingVolume* Mesh::GetModelBound() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt Mesh::GetVertexQuantity() const
-{
-	WIRE_ASSERT(mVertexBuffers.GetQuantity() > 0);
-	return mVertexBuffers[0]->GetQuantity();
-}
-
-//----------------------------------------------------------------------------
-inline UInt Mesh::GetActiveVertexCount() const
+inline UInt Mesh::GetVertexCount() const
 {
 	WIRE_ASSERT(mVertexBuffers.GetQuantity() > 0);
 	return mIsDirty ? mVertexBuffers[0]->GetQuantity() :

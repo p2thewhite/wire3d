@@ -23,6 +23,11 @@ class Node : public Spatial
 
 public:
 	Node(UInt quantity = 0, UInt growBy = 1);
+	// Create a shallow copy of the given node and its subtree.
+	// Resources like render objects, render states, lights and effects
+	// are shared (it's the users responsibility to re-initialized derived
+	// user effects if necessary)
+	Node(const Node* pNode);
 	virtual ~Node();
 
 	// This is the current number of elements in the child array. These
@@ -87,16 +92,20 @@ public:
 	inline void DetachEffect(Effect* pEffect);
 	inline void DetachAllEffects();
 
-	// Traverse child objects and call MakeRenderObjectStatic()
-	void MakeStatic(Bool forceStatic = false, Bool duplicateShared = true);
+	// Prepare subtree for static/dynamic batching
+	// (see comments below)
+	void PrepareForDynamicBatching(Bool forceWorldIsCurrent = false,
+		Bool duplicateShared = true);
+	void PrepareForStaticBatching(Bool forceWorldIsCurrent = false,
+		Bool duplicateShared = true, TArray<TArray<RenderObject*>*>*
+		pMergeArrays = NULL);
 
 protected:
 	// geometric update
 	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 
 	// render state updates
-	virtual void UpdateState(TArray<State*>* pStateStacks,
-		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
+	virtual void UpdateState(States* pStates, Lights* pLights, Keys* pKeys);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
@@ -111,7 +120,10 @@ protected:
 private:
 	void Init(UInt quantity, UInt growBy);
 
-	// RenderObject
+	typedef TArray<RenderObject*> MergeArray;
+	void MergeMeshes(MergeArray* pMergeArray);
+
+	// RenderObject handling
 public:
 	Node(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 		pMaterial = NULL, UInt quantity = 0, UInt growBy = 1);
@@ -122,17 +134,17 @@ public:
 	inline RenderObject* GetRenderObject();
 	inline const RenderObject* GetRenderObject() const;
 
-	// If World(Bound)IsCurrent or forceStatic is true, apply World transform
-	// to the vertices of the mesh and set World(Bound) to identity.
-	// If duplicateShared is true, shared Meshes will be duplicated before
-	// being processed. Otherwise shared Meshes will not be processed.
-	void MakeRenderObjectStatic(Bool forceStatic = false,
-		Bool duplicateShared = true);
+	// If World(Bound)IsCurrent or forceWorldIsCurrent is true, apply World
+	// transformation to the vertices and set World to identity.
+	// If duplicateShared is true, shared Vertexbuffers, shared Meshes and
+	// shared RenderObjects will be duplicated before being processed.
+	// Otherwise shared objects will not be prepared for dynamic batching.
+	void PrepareRenderObjectForDynamicBatching(
+		Bool forceWorldIsCurrent = false, Bool duplicateShared = true);
 
 protected:
 	Bool UpdateWorldBoundRenderObject();
-	void UpdateStateRenderObject(TArray<State*>* pStateStacks,
-		TArray<Light*>* pLightStack, THashTable<UInt, UInt>* pStateKeys);
+	void UpdateStateRenderObject(States* pStates, Lights* pLights, Keys* pKeys);
 	void GetVisibleSetRenderObject(Culler& rCuller, Bool noCull);
 
 	UInt GetStateSetKey();

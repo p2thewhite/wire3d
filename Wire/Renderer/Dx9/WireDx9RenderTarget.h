@@ -35,6 +35,8 @@ public:
 	inline UInt GetBufferSize() { return mBufferSize; }
 
 private:
+	Bool IsDepthFormatSupported(Renderer* pRenderer) const;
+
 	UInt mWidth;
 	UInt mHeight;
 	Image2D::FormatMode mFormat;

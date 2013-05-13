@@ -41,10 +41,10 @@ public:
 	inline const Material* GetMaterial() const;
 	inline void SetMaterial(Material* pMaterial);
 
-	inline TArray<Pointer<Light> >* GetLights();
-	inline const TArray<Pointer<Light> >* GetLights() const;
+	inline TArray<LightPtr>* GetLights();
+	inline const TArray<LightPtr>* GetLights() const;
 	inline Light* GetLight(UInt i = 0) const;
-	void SetLights(TArray<Pointer<Light> >* pLights);
+	void SetLights(TArray<LightPtr>* pLights);
 
 	inline StatePtr* GetStates();
 	inline const StatePtr* GetStates() const;
@@ -58,11 +58,11 @@ protected:
 	void Init();
 
 private:
-	Pointer<Mesh> mspMesh;
-	Pointer<Material> mspMaterial;
+	MeshPtr mspMesh;
+	MaterialPtr mspMaterial;
 
 	StatePtr mStates[State::MAX_STATE_TYPE];
-	TArray<Pointer<Light> >* mpLights;
+	TArray<LightPtr>* mpLights;
 
 	// Identical IDs of different RenderObjects mean that all their
 	// States[] and Lights are identical. This is used for sorting by

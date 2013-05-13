@@ -18,27 +18,40 @@ public:
 	virtual void OnIdle();
 
 private:
-	Node* CreateScene();
-	Node* CreateObjectA();
-	Node* CreateObjectB();
+	// There are 2 scenarios that consist of cubes and transparent cylinders.
+	// They use different materials and are placed in the scene graph/an array
+	// in alternating order to create a worst-case scenario (the renderer has
+	// to switch materials and render states in every draw call (unless
+	// sorting is used to alter the order of objects being rendered))
 
-	NodePtr mspRoot;
+	// Scenario 1 sorts and draws an array of 188 objects.
+	// draw call count is relatively low, overdraw is high
+	void CreateScenario1();
+	TArray<RenderObjectPtr> mScenario1Objects;
+	TArray<Transformation> mTransformations;
+	SphereBVPtr mspBound;
+
+	// Scenario 2 uses a scene graph of more than 2500 objects.
+	// draw call count is high, overdraw is low
+	void CreateScenario2();
+	NodePtr mspScenario2;
+
+	// Resources to be used be all scenarios
+	void CreateCube();
+	RenderObjectPtr mspCube;
+
+	RenderObject* CreateCylinder() const;
+
+	void CreateCylinderFront();
+	RenderObjectPtr mspCylinderFront;
+
+	void CreateCylinderBack();
+	RenderObjectPtr mspCylinderBack;
+
+	Node* CreateNodeCylinder();
+	Node* CreateNodeCube();
+
 	LightPtr mspLight;
-
-	// object A's shared resources
-	MeshPtr mspMeshA;
-	MaterialPtr mspMaterialA;
-	StateAlphaPtr mspAlphaA;
-	StateCullPtr mspCullA;
-	StateMaterialPtr mspStateMaterialA;
-	StateZBufferPtr mspZBufferA;
-	VertexBufferPtr mspVertexBufferA;
-
-	// object B's shared resources
-	MeshPtr mspMeshB;
-	MaterialPtr mspMaterialB;
-	StateMaterialPtr mspStateMaterialB;
-
 	CameraPtr mspCamera;
 	Culler mCuller;
 	CullerSorting mCullerSorting;
