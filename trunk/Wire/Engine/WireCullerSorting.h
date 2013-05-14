@@ -35,20 +35,20 @@ public:
 
 	void Sort();
 
-	static void QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
+	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
 		Transformation** const pTrafo, Int left, Int right);
 
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-		pDestination, TArray<Vector3F>& rPositions);
+		pDestination, TPODArray<Vector3F>& rPositions);
 	UInt GetKey(RenderObject* pRenderObject, const Vector3F& rPosition);
 
 	VisibleSet* mpOpaqueObjects;
 	VisibleSet* mpTransparentObjects;
-	TArray<UInt> mKeys;
-	TArray<Vector3F> mOpaquePositions;
-	TArray<Vector3F> mTransparentPositions;
+	TPODArray<UInt> mKeys;
+	TPODArray<Vector3F> mOpaquePositions;
+	TPODArray<Vector3F> mTransparentPositions;
 };
 
 }

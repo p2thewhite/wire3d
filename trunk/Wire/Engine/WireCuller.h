@@ -12,6 +12,7 @@
 
 #include "WireBoundingVolume.h"
 #include "WireCamera.h"
+#include "WireTArray.h"
 #include "WireVisibleSet.h"
 
 namespace Wire

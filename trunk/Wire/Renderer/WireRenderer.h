@@ -291,7 +291,7 @@ private:
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex,
-		UInt minIndex = 0);
+		UInt startVertex = 0);
 
 	void ResetDevice();
 

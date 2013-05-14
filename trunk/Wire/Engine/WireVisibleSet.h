@@ -11,7 +11,7 @@
 #define WIREVISIBLESET_H
 
 #include "WireObject.h"
-#include "WireTArray.h"
+#include "WireTPODArray.h"
 #include "WireTransformation.h"
 
 namespace Wire
@@ -29,7 +29,7 @@ public:
 
 	VisibleSet(UInt maxQuantity = VS_DEFAULT_MAX_QUANTITY, UInt growBy =
 		VS_DEFAULT_GROWBY);
-	virtual ~VisibleSet ();
+	virtual ~VisibleSet();
 
 	inline UInt GetQuantity() const;
 	inline UInt GetMaxQuantity() const;
@@ -44,8 +44,8 @@ public:
 	inline void Clear();
 
 private:
-	TArray<Object*> mVisible;
-	TArray<Transformation*> mTransformations;
+	TPODArray<Object*> mVisible;
+	TPODArray<Transformation*> mTransformations;
 };
 
 #include "WireVisibleSet.inl"
