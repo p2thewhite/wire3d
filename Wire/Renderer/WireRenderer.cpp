@@ -887,7 +887,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Enable(pMaterial, pRenderObject->GetLights());
 
 		DrawElements(pMesh->GetVertexCount(), pMesh->GetIndexCount(),
-			pMesh->GetStartIndex(), pMesh->GetMinIndex());
+			pMesh->GetStartIndex(), pMesh->GetStartVertex());
 
 		Disable(pMaterial, pRenderObject->GetLights());
 		Disable(pMesh);
@@ -900,7 +900,7 @@ void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 		Set(pMaterial, pRenderObject->GetLights());
 
 		DrawElements(pMesh->GetVertexCount(), pMesh->GetIndexCount(),
-			pMesh->GetStartIndex(), pMesh->GetMinIndex());
+			pMesh->GetStartIndex(), pMesh->GetStartVertex());
 	}
 }
 
@@ -1099,7 +1099,7 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 	PdrIndexBuffer* const pIBPdr = mBatchedIndexBuffer;
 	void* pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
-	UShort maxIndex = 0;
+	UInt maxIndex = 0;
 	UShort minIndex = System::MAX_USHORT;
 	UInt batchedIndexCount = 0;
 
@@ -1115,9 +1115,9 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 			continue;
 		}
 
-		UShort curMaxIndex = pRenderObject->GetMesh()->GetMaxIndex();
+		UInt curMaxIndex = pMesh->GetVertexCount()+pMesh->GetStartVertex()-1;
 		maxIndex = maxIndex < curMaxIndex ? curMaxIndex : maxIndex;
-		UShort curMinIndex = pRenderObject->GetMesh()->GetMinIndex();
+		UShort curMinIndex = pMesh->GetStartVertex();
 		minIndex = minIndex > curMinIndex ? curMinIndex : minIndex;
 
 		const UInt ibSize = pMesh->GetIndexCount() * sizeof(UShort);
@@ -1137,7 +1137,6 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 
 			pIBPdr->Unlock();
 			WIRE_ASSERT(maxIndex < 65535);
-			WIRE_ASSERT(maxIndex > 0);
 			DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
 				pVisible[min]->GetMesh()->HasNormal());
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
@@ -1195,7 +1194,7 @@ void Renderer::DrawDynamicBatches(RenderObject* const pVisible[],
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
 		const UInt vertexCount = pMesh->GetVertexCount();
-		const UShort minIndex = pMesh->GetMinIndex();
+		const UShort minIndex = pMesh->GetStartVertex();
 
 		if (vertexCount > mDynamicBatchingMaxVertexCount ||
 			pMesh->GetIndexCount() > mDynamicBatchingMaxIndexCount)

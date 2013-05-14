@@ -47,10 +47,14 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 	{
 		Image2D* pColorTexture = pRenderTarget->GetColorTexture(i);
 		WIRE_ASSERT(pColorTexture->GetData() == NULL);
-		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
-			pColorTexture);
 
-		pRenderer->InsertInImage2DMap(pColorTexture, pPdrTexture);
+		PdrTexture2D* pPdrTexture = pRenderer->GetResource(pColorTexture);
+		if (!pPdrTexture)
+		{
+			pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer, pColorTexture);
+			pRenderer->InsertInImage2DMap(pColorTexture, pPdrTexture);
+		}
+
 		mColorTextures.Append(pPdrTexture->mpBuffer);
 		mColorTextures[i]->AddRef();
 		mBufferSize += pPdrTexture->GetBufferSize();
@@ -68,11 +72,14 @@ PdrRenderTarget::PdrRenderTarget(Renderer* pRenderer, const RenderTarget*
 
 	if (mHasDepthStencil)
 	{
-		PdrTexture2D* pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer,
-			pRenderTarget->GetDepthStencilTexture());
+		Image2D* pDepthTexture = pRenderTarget->GetDepthStencilTexture();
+		PdrTexture2D* pPdrTexture = pRenderer->GetResource(pDepthTexture);
+		if (!pPdrTexture)
+		{
+			pPdrTexture = WIRE_NEW PdrTexture2D(pRenderer, pDepthTexture);
+			pRenderer->InsertInImage2DMap(pDepthTexture, pPdrTexture);
+		}
 
-		pRenderer->InsertInImage2DMap(pRenderTarget->GetDepthStencilTexture(),
-			pPdrTexture);
 		mpDepthStencilTexture = pPdrTexture->mpBuffer;
 		mpDepthStencilTexture->AddRef();
 		mBufferSize += pPdrTexture->GetBufferSize();

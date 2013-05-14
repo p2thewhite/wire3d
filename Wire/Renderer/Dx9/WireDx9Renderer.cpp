@@ -423,7 +423,7 @@ void Renderer::SetTransformation(const Transformation& rWorld, Bool
 
 //----------------------------------------------------------------------------
 void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
-	UInt startIndex, UInt minIndex)
+	UInt startIndex, UInt startVertex)
 {
 	const UInt triangleCount = indexCount/3;
 	mStatistics.mDrawCalls++;
@@ -432,7 +432,7 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 
 	IDirect3DDevice9*& rDevice = mpData->D3DDevice;
 	HRESULT hr;
-	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, minIndex,
+	hr = rDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, startVertex,
 		vertexCount, startIndex, triangleCount);
 	WIRE_ASSERT(SUCCEEDED(hr));
 }
@@ -666,8 +666,8 @@ void Renderer::ResetDevice()
 
 	RecreateResources(this, saveIndexBuffers);
 	RecreateResources(this, saveVertexBuffers);
-	RecreateResources(this, saveRenderTargets);	// recreate before textures! TODO: fix this
 	RecreateResources(this, saveTexture2Ds);
+	RecreateResources(this, saveRenderTargets);
 
 	OnViewportChange();
 

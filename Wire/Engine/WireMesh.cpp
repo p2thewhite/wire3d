@@ -319,14 +319,16 @@ void Mesh::Init(IndexBuffer* pIndexBuffer, UInt startIndex, UInt indexCount)
 //----------------------------------------------------------------------------
 void Mesh::FindMinMaxIndex(UInt startIndex, UInt indexCount)
 {
-	mMinIndex = System::MAX_USHORT;
-	mMaxIndex = 0;
+	mStartVertex = System::MAX_USHORT;
+	UShort maxIndex = 0;
 	for (UInt i = startIndex; i < startIndex + indexCount; i++)
 	{
 		UShort index = (*mspIndexBuffer)[i];
-		mMinIndex = mMinIndex > index ? index : mMinIndex;
-		mMaxIndex = mMaxIndex < index ? index :	mMaxIndex;
+		mStartVertex = mStartVertex > index ? index : mStartVertex;
+		maxIndex = maxIndex < index ? index : maxIndex;
 	}
+
+	mVertexCount = maxIndex - mStartVertex + 1;
 }
 
 //----------------------------------------------------------------------------

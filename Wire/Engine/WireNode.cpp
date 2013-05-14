@@ -587,8 +587,8 @@ void Node::MergeMeshes(MergeArray* pMergeArray)
 		return;
 	}
 
-	TArray<Transformation*> transformations(pMergeArray->GetQuantity());
-	TArray<UInt> keys(pMergeArray->GetQuantity());
+	TPODArray<Transformation*> transformations(pMergeArray->GetQuantity());
+	TPODArray<UInt> keys(pMergeArray->GetQuantity());
 	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
 	{
 		UInt key = 0;
@@ -654,13 +654,13 @@ void Node::MergeMeshes(MergeArray* pMergeArray)
 			VertexBuffer* pMVB = pMesh->GetVertexBuffer(j);
 			const UInt vtxCount = pMesh->GetVertexCount();
 			pMVB->ApplyForward(Transformation::IDENTITY, rawDst[j], vtxCount,
-				pMesh->GetMinIndex());
+				pMesh->GetStartVertex());
 			const UInt vtxSize = pMVB->GetAttributes().GetVertexSize();
 			rawDst[j] += (vtxSize / sizeof(Float)) * vtxCount;
 		}
 
 		IndexBuffer* pMIB = pMesh->GetIndexBuffer();
-		offset -= pMesh->GetMinIndex();
+		offset -= pMesh->GetStartVertex();
 		const UInt startIdx = pMesh->GetStartIndex();
 		for (UInt j = startIdx; j < (startIdx + pMesh->GetIndexCount()); j++)
 		{

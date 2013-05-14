@@ -52,8 +52,7 @@ public:
 	inline BoundingVolume* GetModelBound();
 	inline const BoundingVolume* GetModelBound() const;
 
-	inline UShort GetMinIndex() const;
-	inline UShort GetMaxIndex() const;
+	inline UShort GetStartVertex() const;
 	inline UInt GetVertexCount() const;
 
 	// Control over which continuous part of the mesh is rendered.
@@ -81,8 +80,8 @@ private:
 	Pointer<BoundingVolume> mspModelBound;
 
 	// hint about range of used vertices (for software vertex processing)
-	UShort mMinIndex;
-	UShort mMaxIndex;
+	UShort mStartVertex;
+	UShort mVertexCount;
 
 	// submesh definition
 	UInt mStartIndex;

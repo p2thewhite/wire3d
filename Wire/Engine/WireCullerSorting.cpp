@@ -63,7 +63,7 @@ void CullerSorting::Sort()
 
 //----------------------------------------------------------------------------
 void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-	pDestination, TArray<Vector3F>& rPositions)
+	pDestination, TPODArray<Vector3F>& rPositions)
 {
 	pDestination->Clear();
 	mKeys.SetQuantity(0, false);
@@ -184,30 +184,30 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 
 //----------------------------------------------------------------------------
 //void CullerSorting::QuickSort(UInt* const pKeys, Object** const pVisible,
-void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
+void CullerSorting::QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 	Transformation** pTrafo, Int left, Int right)
 {
 	Int i = left;
 	Int j = right;
-	UInt pivot = pKeys[(left + right) / 2];
+	UInt pivot = rKeys[(left + right) / 2];
 
 	while (i <= j)
 	{
-		while (pKeys[i] < pivot)
+		while (rKeys[i] < pivot)
 		{
 			i++;
 		}
 
-		while (pKeys[j] > pivot)
+		while (rKeys[j] > pivot)
 		{
 			j--;
 		}
 
 		if (i <= j)
 		{
-			UInt tmp = pKeys[i];
-			pKeys[i] = pKeys[j];
-			pKeys[j] = tmp;
+			UInt tmp = rKeys[i];
+			rKeys[i] = rKeys[j];
+			rKeys[j] = tmp;
 
 			WIRE_ASSERT((DynamicCast<RenderObject>(pVisible[i])));
 			Object* pTmp = pVisible[i];
@@ -225,12 +225,12 @@ void CullerSorting::QuickSort(TArray<UInt>& pKeys, Object** const pVisible,
 
 	if (left < j)
 	{
-		QuickSort(pKeys, pVisible, pTrafo, left, j);
+		QuickSort(rKeys, pVisible, pTrafo, left, j);
 	}
 
 	if (i < right)
 	{
-		QuickSort(pKeys, pVisible, pTrafo, i, right);
+		QuickSort(rKeys, pVisible, pTrafo, i, right);
 	}
 }
 

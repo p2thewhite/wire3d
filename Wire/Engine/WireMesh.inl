@@ -60,20 +60,13 @@ inline const BoundingVolume* Mesh::GetModelBound() const
 inline UInt Mesh::GetVertexCount() const
 {
 	WIRE_ASSERT(mVertexBuffers.GetQuantity() > 0);
-	return mIsDirty ? mVertexBuffers[0]->GetQuantity() :
-		mMaxIndex - mMinIndex + 1;
+	return mIsDirty ? mVertexBuffers[0]->GetQuantity() : mVertexCount;
 }
 
 //----------------------------------------------------------------------------
-inline UShort Mesh::GetMinIndex() const
+inline UShort Mesh::GetStartVertex() const
 {
-	return mIsDirty ? 0 : mMinIndex;
-}
-
-//----------------------------------------------------------------------------
-inline UShort Mesh::GetMaxIndex() const
-{
-	return mMaxIndex;
+	return mIsDirty ? 0 : mStartVertex;
 }
 
 //----------------------------------------------------------------------------
