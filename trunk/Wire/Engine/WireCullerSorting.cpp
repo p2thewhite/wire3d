@@ -134,7 +134,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
-			WIRE_ASSERT(pTransformations[min]);
+			WIRE_ASSERT(!pTransformations[min]);
 			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
 			pDestination->Insert(pVisible[min], NULL);
 			mKeys.Append(0);	// dummy key to pad the array
