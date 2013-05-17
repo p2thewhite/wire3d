@@ -20,6 +20,7 @@ VisibleSet::VisibleSet(UInt maxQuantity, UInt growBy)
 	mTransformations(maxQuantity, growBy),
 	mKeys(maxQuantity, growBy)
 {
+	Clear();
 }
 
 //----------------------------------------------------------------------------
@@ -33,6 +34,27 @@ void VisibleSet::Clear()
 	mVisible.SetQuantity(0, false);
 	mTransformations.SetQuantity(0, false);
 	mKeys.SetQuantity(0, false);
+
+	mVisibleUnwrapped.SetQuantity(0, false);
+	mTransformationsUnwrapped.SetQuantity(0, false);
+	mKeysUnwrapped.SetQuantity(0, false);
+	mIsUnwrapped = false;
+}
+
+//----------------------------------------------------------------------------
+void VisibleSet::GetSet(Object**& rObjectArrayPtr, Transformation**&
+	rTransformationPtr)
+{
+	if (mIsUnwrapped)
+	{
+		rObjectArrayPtr = mVisibleUnwrapped.GetArray();
+		rTransformationPtr = mTransformationsUnwrapped.GetArray();
+	}
+	else
+	{
+		rObjectArrayPtr = mVisible.GetArray();
+		rTransformationPtr = mTransformations.GetArray();
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -153,7 +175,7 @@ void VisibleSet::Sort()
 	}
 
 	WIRE_ASSERT(top == 0);
-	WIRE_ASSERT(indexStack[0][1] = GetQuantity());
+	WIRE_ASSERT(indexStack[0][1] == GetQuantity());
 	if (indexStack[0][0] != indexStack[0][1])
 	{
 		Sort(indexStack[0][0], indexStack[0][1]-1);

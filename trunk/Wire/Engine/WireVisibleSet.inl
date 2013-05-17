@@ -9,7 +9,8 @@
 //----------------------------------------------------------------------------
 inline UInt VisibleSet::GetQuantity() const
 {
-	return mVisible.GetQuantity();
+	return mIsUnwrapped ? mVisibleUnwrapped.GetQuantity() : mVisible.
+		GetQuantity();
 }
 
 //----------------------------------------------------------------------------
@@ -24,23 +25,6 @@ inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 	mVisible.SetMaxQuantity(maxQuantity);
 	mTransformations.SetMaxQuantity(maxQuantity);
 	mKeys.SetMaxQuantity(maxQuantity);
-}
-
-//----------------------------------------------------------------------------
-inline void VisibleSet::GetSet(Object**& rObjectArrayPtr, Transformation**&
-	rTransformationPtr)
-{
-	rObjectArrayPtr = mVisible.GetArray();
-	rTransformationPtr = mTransformations.GetArray();
-}
-
-//----------------------------------------------------------------------------
-inline void VisibleSet::GetElement(UInt i, Object*& rObjectPtr,
-	Transformation*& rTransformationPtr)
-{
-	WIRE_ASSERT(i < GetQuantity());
-	rObjectPtr = mVisible[i];
-	rTransformationPtr = mTransformations[i];
 }
 
 //----------------------------------------------------------------------------

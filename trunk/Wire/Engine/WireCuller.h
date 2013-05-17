@@ -59,8 +59,8 @@ public:
 	inline virtual void Insert(Object* pObject, Transformation* pTrafo,
 		const Vector3F& rPosition = Vector3F::ZERO);
 
-	virtual void Clear();
-	virtual void SetMaxQuantity(UInt maxQuantity);
+	void Clear();
+	void SetMaxQuantity(UInt maxQuantity);
 
 	enum { VS_MAX_PLANE_QUANTITY = 32 };
 	inline void SetPlaneState(UInt planeState);

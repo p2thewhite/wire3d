@@ -32,12 +32,12 @@ public:
 	virtual ~VisibleSet();
 
 	inline UInt GetQuantity() const;
-	inline UInt GetMaxQuantity() const;
+	inline UInt GetMaxQuantity() const; // TODO: remove
 	inline void SetMaxQuantity(UInt maxQuantity);
 
-	inline void GetSet(Object**& rObjectArrayPtr, Transformation**&
-		rTransformationPtr);
-	inline void GetElement(UInt i, Object*& rObjectPtr, Transformation*&
+	UInt GetKey(UInt i) { return mKeys[i]; }
+
+	void GetSet(Object**& rObjectArrayPtr, Transformation**&
 		rTransformationPtr);
 
 	inline void Insert(Object* pObject, Transformation* pTransformation,
@@ -56,6 +56,11 @@ private:
 	TPODArray<Object*> mVisible;
 	TPODArray<Transformation*> mTransformations;
 	TPODArray<UInt> mKeys;
+
+	TPODArray<Object*> mVisibleUnwrapped;
+	TPODArray<Transformation*> mTransformationsUnwrapped;
+	TPODArray<UInt> mKeysUnwrapped;
+	Bool mIsUnwrapped;
 };
 
 #include "WireVisibleSet.inl"
