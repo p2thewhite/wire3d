@@ -23,6 +23,7 @@ inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 {
 	mVisible.SetMaxQuantity(maxQuantity);
 	mTransformations.SetMaxQuantity(maxQuantity);
+	mKeys.SetMaxQuantity(maxQuantity);
 }
 
 //----------------------------------------------------------------------------
@@ -43,16 +44,10 @@ inline void VisibleSet::GetElement(UInt i, Object*& rObjectPtr,
 }
 
 //----------------------------------------------------------------------------
-inline void VisibleSet::Clear()
-{
-	mVisible.SetQuantity(0, false);
-	mTransformations.SetQuantity(0, false);
-}
-
-//----------------------------------------------------------------------------
 inline void VisibleSet::Insert(Object* pObject, Transformation*
-	pTransformation)
+	pTransformation, UInt key)
 {
 	mVisible.Append(pObject);
 	mTransformations.Append(pTransformation);
+	mKeys.Append(key);
 }

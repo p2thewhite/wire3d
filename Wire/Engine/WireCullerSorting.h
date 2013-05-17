@@ -35,10 +35,6 @@ public:
 
 	void Sort();
 
-	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
-		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
-		Transformation** const pTrafo, Int left, Int right);
-
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		pDestination, TPODArray<Vector3F>& rPositions);
@@ -46,7 +42,6 @@ protected:
 
 	VisibleSet* mpOpaqueObjects;
 	VisibleSet* mpTransparentObjects;
-	TPODArray<UInt> mKeys;
 	TPODArray<Vector3F> mOpaquePositions;
 	TPODArray<Vector3F> mTransparentPositions;
 };
