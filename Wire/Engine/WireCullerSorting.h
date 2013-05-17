@@ -30,20 +30,15 @@ public:
 	virtual void Insert(Object* pObject, Transformation* pTransformation,
 		const Vector3F& rPosition = Vector3F::ZERO);
 
-	virtual void Clear();
-	virtual void SetMaxQuantity(UInt maxQuantity);
-
 	void Sort();
 
 protected:
 	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-		pDestination, TPODArray<Vector3F>& rPositions);
+		pDestination);
 	UInt GetKey(RenderObject* pRenderObject, const Vector3F& rPosition);
 
 	VisibleSet* mpOpaqueObjects;
 	VisibleSet* mpTransparentObjects;
-	TPODArray<Vector3F> mOpaquePositions;
-	TPODArray<Vector3F> mTransparentPositions;
 };
 
 }

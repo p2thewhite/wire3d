@@ -45,10 +45,8 @@ void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 void CullerSorting::Sort()
 {
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
-	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects,
-		mOpaquePositions);
-	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects,
-		mTransparentPositions);
+	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects);
+	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects);
 
 	VisibleSet* pTemp = mVisibleSets[0];
 	mVisibleSets[0] = mpOpaqueObjects;
@@ -61,7 +59,7 @@ void CullerSorting::Sort()
 
 //----------------------------------------------------------------------------
 void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-	pDestination, TPODArray<Vector3F>& rPositions)
+	pDestination)
 {
 	pDestination->Clear();
 
@@ -108,9 +106,8 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
 				if (top == 0)
 				{
-					UInt key = GetKey(StaticCast<RenderObject>(pVisible[i]),
-						rPositions[i]);
-					pDestination->Insert(pVisible[i], pTransformations[i], key);
+					pDestination->Insert(pVisible[i], pTransformations[i],
+						pSource->GetKey(i));
 				}
 
 				indexStack[top][1]++;
@@ -133,8 +130,8 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 					pVisible[j]);
 				if (pRenderObject)
 				{
-					UInt key = GetKey(pRenderObject, rPositions[j]);
-					pDestination->Insert(pRenderObject, pTransformations[j], key);
+					pDestination->Insert(pRenderObject, pTransformations[j],
+						pSource->GetKey(j));
 				}
 			}
 
@@ -167,48 +164,28 @@ void CullerSorting::Insert(Object* pObject, Transformation* pTransformation,
 	if (!pRenderObject)
 	{
 		GetVisibleSet(0)->Insert(pObject, NULL);
-		mOpaquePositions.Append(rPosition);
 		GetVisibleSet(1)->Insert(pObject, NULL);
-		mTransparentPositions.Append(rPosition);
 		return;
 	}
 
+	UInt key = GetKey(pRenderObject, rPosition);
 	StateAlpha* pAlpha = StaticCast<StateAlpha>(pRenderObject->GetStates()[
 		State::ALPHA]);
 	if (pAlpha)
 	{
 		if (pAlpha->BlendEnabled)
 		{
-			GetVisibleSet(1)->Insert(pObject, pTransformation);
-			mTransparentPositions.Append(rPosition);
+			GetVisibleSet(1)->Insert(pObject, pTransformation, key);
 		}
 		else
 		{
-			GetVisibleSet(0)->Insert(pObject, pTransformation);
-			mOpaquePositions.Append(rPosition);
+			GetVisibleSet(0)->Insert(pObject, pTransformation, key);
 		}
 	}
 	else
 	{
-		GetVisibleSet(0)->Insert(pObject, pTransformation);
-		mOpaquePositions.Append(rPosition);
+		GetVisibleSet(0)->Insert(pObject, pTransformation, key);
 	}
-}
-
-//----------------------------------------------------------------------------
-void CullerSorting::Clear()
-{
-	Culler::Clear();
-	mOpaquePositions.SetQuantity(0, false);
-	mTransparentPositions.SetQuantity(0, false);
-}
-
-//----------------------------------------------------------------------------
-void CullerSorting::SetMaxQuantity(UInt maxQuantity)
-{
-	Culler::SetMaxQuantity(maxQuantity);
-	mOpaquePositions.SetMaxQuantity(maxQuantity);
-	mTransparentPositions.SetMaxQuantity(maxQuantity);
 }
 
 //----------------------------------------------------------------------------
