@@ -933,7 +933,7 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 				Draw(pRenderObjects, pTransformations, indexStack[0][0],
 					indexStack[0][1]);
 
-				// Begin the scope of a global effect.
+				// Begin the scope of an effect.
 				top++;
 				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
 				indexStack[top][0] = i;
@@ -948,7 +948,7 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 		}
 		else
 		{
-			// End the scope of a global effect.
+			// End the scope of an effect.
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 

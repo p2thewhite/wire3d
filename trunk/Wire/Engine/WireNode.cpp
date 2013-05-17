@@ -656,7 +656,7 @@ void Node::MergeMeshes(MergeArray* pMergeArray)
 	}
 
 	Object** pObjects = reinterpret_cast<Object**>(pMergeArray->GetArray());
- 	CullerSorting::QuickSort(keys, pObjects, transformations.GetArray(), 0,
+ 	VisibleSet::QuickSort(keys, pObjects, transformations.GetArray(), 0,
 		pMergeArray->GetQuantity()-1);
 
 	UInt vtxCount = 0;

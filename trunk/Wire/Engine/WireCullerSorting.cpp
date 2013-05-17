@@ -23,8 +23,6 @@ CullerSorting::CullerSorting(const Camera* pCamera, UInt maxQuantity,
 	mVisibleSets.Append(WIRE_NEW VisibleSet(maxQuantity, growBy));
 	mpOpaqueObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
 	mpTransparentObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
-	mKeys.SetMaxQuantity(maxQuantity);
-	mKeys.SetGrowBy(growBy);
 }
 
 //----------------------------------------------------------------------------
@@ -66,17 +64,11 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	pDestination, TPODArray<Vector3F>& rPositions)
 {
 	pDestination->Clear();
-	mKeys.SetQuantity(0, false);
 
 	// The destination set will have at least the size of the source set.
 	if (pDestination->GetMaxQuantity() < pSource->GetMaxQuantity())
 	{
 		pDestination->SetMaxQuantity(pSource->GetMaxQuantity());
-	}
-
-	if (mKeys.GetMaxQuantity() < pSource->GetMaxQuantity())
-	{
-		mKeys.SetMaxQuantity(pSource->GetMaxQuantity());
 	}
 
 	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
@@ -101,14 +93,10 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 				{
 					WIRE_ASSERT(i == indexStack[0][1]); // TODO check
 					// Sort leaves with no effect
-					Object** pDstSet;
-					Transformation** pDstTrafo;
-					pDestination->GetSet(pDstSet, pDstTrafo);
-					QuickSort(mKeys, pDstSet, pDstTrafo, indexStack[0][0],
-						i-1);
+					pDestination->Sort(indexStack[0][0], i-1);
 				}
 
-				// Begin the scope of a global effect.
+				// Begin the scope of an effect.
 				top++;
 				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
 				indexStack[top][0] = i;
@@ -120,9 +108,9 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
 				if (top == 0)
 				{
-					pDestination->Insert(pVisible[i], pTransformations[i]);
-					mKeys.Append(GetKey(StaticCast<RenderObject>(pVisible[i]),
-						rPositions[i]));
+					UInt key = GetKey(StaticCast<RenderObject>(pVisible[i]),
+						rPositions[i]);
+					pDestination->Insert(pVisible[i], pTransformations[i], key);
 				}
 
 				indexStack[top][1]++;
@@ -130,14 +118,13 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 		}
 		else
 		{
-			// End the scope of a global effect.
+			// End the scope of an effect.
 			UInt min = indexStack[top][0];
 			UInt max = indexStack[top][1];
 
-			WIRE_ASSERT(!pTransformations[min]);
+			WIRE_ASSERT(pTransformations[min] == NULL);
 			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
 			pDestination->Insert(pVisible[min], NULL);
-			mKeys.Append(0);	// dummy key to pad the array
 			left = pDestination->GetQuantity();
 
 			for (UInt j = min+1; j <= max; j++)
@@ -146,21 +133,13 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 					pVisible[j]);
 				if (pRenderObject)
 				{
-					pDestination->Insert(pRenderObject, pTransformations[j]);
-					mKeys.Append(GetKey(pRenderObject, rPositions[j]));
+					UInt key = GetKey(pRenderObject, rPositions[j]);
+					pDestination->Insert(pRenderObject, pTransformations[j], key);
 				}
 			}
 
-			Object** pDstSet;
-			Transformation** pDstTrafo;
-			pDestination->GetSet(pDstSet, pDstTrafo);
-// TODO: clean-up
-//			QuickSort(mKeys.GetArray(), pDstSet, pDstTrafo, left,
-			QuickSort(mKeys, pDstSet, pDstTrafo, left,
-				pDestination->GetQuantity()-1);
-
+			pDestination->Sort(left, pDestination->GetQuantity()-1);
 			pDestination->Insert(NULL, NULL);
-			mKeys.Append(0);
 
 			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/); // TODO
 			--top;
@@ -174,63 +153,7 @@ void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
 	UInt dstQty = pDestination->GetQuantity();
 	if ((dstQty > 0) && (indexStack[0][0] < dstQty-1))
 	{
-		Object** pDstSet;
-		Transformation** pDstTrafo;
-		pDestination->GetSet(pDstSet, pDstTrafo);
-//		QuickSort(mKeys.GetArray(), pDstSet, pDstTrafo, indexStack[0][0], dstQty-1);
-		QuickSort(mKeys, pDstSet, pDstTrafo, indexStack[0][0], dstQty-1);
-	}
-}
-
-//----------------------------------------------------------------------------
-//void CullerSorting::QuickSort(UInt* const pKeys, Object** const pVisible,
-void CullerSorting::QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
-	Transformation** pTrafo, Int left, Int right)
-{
-	Int i = left;
-	Int j = right;
-	UInt pivot = rKeys[(left + right) / 2];
-
-	while (i <= j)
-	{
-		while (rKeys[i] < pivot)
-		{
-			i++;
-		}
-
-		while (rKeys[j] > pivot)
-		{
-			j--;
-		}
-
-		if (i <= j)
-		{
-			UInt tmp = rKeys[i];
-			rKeys[i] = rKeys[j];
-			rKeys[j] = tmp;
-
-			WIRE_ASSERT((DynamicCast<RenderObject>(pVisible[i])));
-			Object* pTmp = pVisible[i];
-			pVisible[i] = pVisible[j];
-			pVisible[j] = pTmp;
-
-			Transformation* pTmpTrafo = pTrafo[i];
-			pTrafo[i] = pTrafo[j];
-			pTrafo[j] = pTmpTrafo;
-
-			i++;
-			j--;
-		}
-	};
-
-	if (left < j)
-	{
-		QuickSort(rKeys, pVisible, pTrafo, left, j);
-	}
-
-	if (i < right)
-	{
-		QuickSort(rKeys, pVisible, pTrafo, i, right);
+		pDestination->Sort(indexStack[0][0], dstQty-1);
 	}
 }
 

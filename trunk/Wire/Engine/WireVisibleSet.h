@@ -40,12 +40,22 @@ public:
 	inline void GetElement(UInt i, Object*& rObjectPtr, Transformation*&
 		rTransformationPtr);
 
-	inline void Insert(Object* pObject, Transformation* pTransformation);
-	inline void Clear();
+	inline void Insert(Object* pObject, Transformation* pTransformation,
+		UInt key = 0);
+	void Clear();
+
+	void Sort();
+
+	void Sort(Int left, Int right); // TODO: make private
+
+	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
+		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
+		Transformation** const pTrafo, Int left, Int right);
 
 private:
 	TPODArray<Object*> mVisible;
 	TPODArray<Transformation*> mTransformations;
+	TPODArray<UInt> mKeys;
 };
 
 #include "WireVisibleSet.inl"
