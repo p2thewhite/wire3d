@@ -14,12 +14,6 @@ inline UInt VisibleSet::GetQuantity() const
 }
 
 //----------------------------------------------------------------------------
-inline UInt VisibleSet::GetMaxQuantity() const
-{
-	return mVisible.GetMaxQuantity();
-}
-
-//----------------------------------------------------------------------------
 inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 {
 	mVisible.SetMaxQuantity(maxQuantity);
@@ -34,4 +28,13 @@ inline void VisibleSet::Insert(Object* pObject, Transformation*
 	mVisible.Append(pObject);
 	mTransformations.Append(pTransformation);
 	mKeys.Append(key);
+}
+
+//----------------------------------------------------------------------------
+inline void VisibleSet::InsertUnwrapped(Object* pObject, Transformation*
+	pTransformation, UInt key)
+{
+	mVisibleUnwrapped.Append(pObject);
+	mTransformationsUnwrapped.Append(pTransformation);
+	mKeysUnwrapped.Append(key);
 }
