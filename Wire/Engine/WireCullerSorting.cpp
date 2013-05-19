@@ -8,9 +8,8 @@
 
 #include "WireCullerSorting.h"
 
-#include "WireEffect.h"
-#include "WireRenderer.h"
 #include "WireRenderObject.h"
+#include "WireStateAlpha.h"
 
 using namespace Wire;
 
@@ -21,137 +20,21 @@ CullerSorting::CullerSorting(const Camera* pCamera, UInt maxQuantity,
 	Culler(pCamera, maxQuantity, growBy)
 {
 	mVisibleSets.Append(WIRE_NEW VisibleSet(maxQuantity, growBy));
-	mpOpaqueObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
-	mpTransparentObjects = WIRE_NEW VisibleSet(maxQuantity, growBy);
 }
 
 //----------------------------------------------------------------------------
 CullerSorting::~CullerSorting()
 {
-	// The visible set created and stored in mVisibleSets in the constructor
-	// is deleted by the destructor of the parent class, not here.
-	WIRE_DELETE mpTransparentObjects;
-	WIRE_DELETE mpOpaqueObjects;
 }
 
 //----------------------------------------------------------------------------
 void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 {
 	Culler::ComputeVisibleSet(pScene);
-	Sort();
-}
 
-//----------------------------------------------------------------------------
-void CullerSorting::Sort()
-{
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
-	UnwrapEffectStackAndSort(mVisibleSets[0], mpOpaqueObjects);
-	UnwrapEffectStackAndSort(mVisibleSets[1], mpTransparentObjects);
-
-	VisibleSet* pTemp = mVisibleSets[0];
-	mVisibleSets[0] = mpOpaqueObjects;
-	mpOpaqueObjects = pTemp;
-
-	pTemp = mVisibleSets[1];
-	mVisibleSets[1] = mpTransparentObjects;
-	mpTransparentObjects = pTemp;
-}
-
-//----------------------------------------------------------------------------
-void CullerSorting::UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-	pDestination)
-{
-	pDestination->Clear();
-
-	// The destination set will have at least the size of the source set.
-	if (pDestination->GetMaxQuantity() < pSource->GetMaxQuantity())
-	{
-		pDestination->SetMaxQuantity(pSource->GetMaxQuantity());
-	}
-
-	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
-	indexStack[0][0] = 0;
-	indexStack[0][1] = 0;
-	UInt top = 0;
-	UInt left;
-
-	const UInt visibleQuantity = pSource->GetQuantity();
-	Object** pVisible;
-	Transformation** pTransformations;
-	pSource->GetSet(pVisible, pTransformations);
-
-	for (UInt i = 0; i < visibleQuantity; i++)
-	{
-		if (pVisible[i])
-		{
-			if (pTransformations[i] == NULL)
-			{
-				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
-				if (indexStack[0][0] < indexStack[0][1])
-				{
-					WIRE_ASSERT(i == indexStack[0][1]); // TODO check
-					// Sort leaves with no effect
-					pDestination->Sort(indexStack[0][0], i-1);
-				}
-
-				// Begin the scope of an effect.
-				top++;
-				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
-				indexStack[top][0] = i;
-				indexStack[top][1] = i;
-			}
-			else
-			{
-				// Found a leaf object.
-				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
-				if (top == 0)
-				{
-					pDestination->Insert(pVisible[i], pTransformations[i],
-						pSource->GetKey(i));
-				}
-
-				indexStack[top][1]++;
-			}
-		}
-		else
-		{
-			// End the scope of an effect.
-			UInt min = indexStack[top][0];
-			UInt max = indexStack[top][1];
-
-			WIRE_ASSERT(pTransformations[min] == NULL);
-			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
-			pDestination->Insert(pVisible[min], NULL);
-			left = pDestination->GetQuantity();
-
-			for (UInt j = min+1; j <= max; j++)
- 			{
-				RenderObject* pRenderObject = DynamicCast<RenderObject>(
-					pVisible[j]);
-				if (pRenderObject)
-				{
-					pDestination->Insert(pRenderObject, pTransformations[j],
-						pSource->GetKey(j));
-				}
-			}
-
-			pDestination->Sort(left, pDestination->GetQuantity()-1);
-			pDestination->Insert(NULL, NULL);
-
-			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/); // TODO
-			--top;
-			indexStack[top][1] = max + 1;
-			indexStack[0][0] = pDestination->GetQuantity();
-			indexStack[0][1] = pDestination->GetQuantity();
-		}
-	}
-
-	WIRE_ASSERT(top == 0);
-	UInt dstQty = pDestination->GetQuantity();
-	if ((dstQty > 0) && (indexStack[0][0] < dstQty-1))
-	{
-		pDestination->Sort(indexStack[0][0], dstQty-1);
-	}
+	mVisibleSets[0]->Sort(true);
+	mVisibleSets[1]->Sort(true);
 }
 
 //----------------------------------------------------------------------------

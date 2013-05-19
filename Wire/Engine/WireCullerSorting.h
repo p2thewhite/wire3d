@@ -30,15 +30,8 @@ public:
 	virtual void Insert(Object* pObject, Transformation* pTransformation,
 		const Vector3F& rPosition = Vector3F::ZERO);
 
-	void Sort();
-
 protected:
-	void UnwrapEffectStackAndSort(VisibleSet* pSource, VisibleSet*
-		pDestination);
 	UInt GetKey(RenderObject* pRenderObject, const Vector3F& rPosition);
-
-	VisibleSet* mpOpaqueObjects;
-	VisibleSet* mpTransparentObjects;
 };
 
 }

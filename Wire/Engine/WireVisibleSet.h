@@ -32,27 +32,28 @@ public:
 	virtual ~VisibleSet();
 
 	inline UInt GetQuantity() const;
-	inline UInt GetMaxQuantity() const; // TODO: remove
 	inline void SetMaxQuantity(UInt maxQuantity);
-
-	UInt GetKey(UInt i) { return mKeys[i]; }
 
 	void GetSet(Object**& rObjectArrayPtr, Transformation**&
 		rTransformationPtr);
 
 	inline void Insert(Object* pObject, Transformation* pTransformation,
 		UInt key = 0);
+
 	void Clear();
-
-	void Sort();
-
-	void Sort(Int left, Int right); // TODO: make private
+	void Sort(Bool unwrap = true);
 
 	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
 		Transformation** const pTrafo, Int left, Int right);
 
 private:
+	void UnwrapEffectStackAndSort();
+	void Sort(Int left, Int right);
+	void SortUnwrapped(Int left, Int right);
+	inline void InsertUnwrapped(Object* pObject, Transformation*
+		pTransformation, UInt key = 0);
+
 	TPODArray<Object*> mVisible;
 	TPODArray<Transformation*> mTransformations;
 	TPODArray<UInt> mKeys;

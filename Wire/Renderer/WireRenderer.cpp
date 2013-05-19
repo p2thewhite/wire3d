@@ -930,8 +930,11 @@ void Renderer::Draw(VisibleSet* pVisibleSet)
 			if (pTransformations[i] == NULL)
 			{
 				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
-				Draw(pRenderObjects, pTransformations, indexStack[0][0],
-					indexStack[0][1]);
+				if (top == 0)
+				{
+					Draw(pRenderObjects, pTransformations, indexStack[0][0],
+						indexStack[0][1]);
+				}
 
 				// Begin the scope of an effect.
 				top++;

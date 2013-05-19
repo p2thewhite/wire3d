@@ -18,7 +18,10 @@ VisibleSet::VisibleSet(UInt maxQuantity, UInt growBy)
 	:
 	mVisible(maxQuantity, growBy),
 	mTransformations(maxQuantity, growBy),
-	mKeys(maxQuantity, growBy)
+	mKeys(maxQuantity, growBy),
+	mVisibleUnwrapped(0, growBy),
+	mTransformationsUnwrapped(0, growBy),
+	mKeysUnwrapped(0, growBy)
 {
 	Clear();
 }
@@ -35,9 +38,6 @@ void VisibleSet::Clear()
 	mTransformations.SetQuantity(0, false);
 	mKeys.SetQuantity(0, false);
 
-	mVisibleUnwrapped.SetQuantity(0, false);
-	mTransformationsUnwrapped.SetQuantity(0, false);
-	mKeysUnwrapped.SetQuantity(0, false);
 	mIsUnwrapped = false;
 }
 
@@ -62,6 +62,13 @@ void VisibleSet::Sort(Int left, Int right)
 {
 	QuickSort(mKeys, mVisible.GetArray(), mTransformations.GetArray(), left,
 		right);
+}
+
+//----------------------------------------------------------------------------
+void VisibleSet::SortUnwrapped(Int left, Int right)
+{
+	QuickSort(mKeysUnwrapped, mVisibleUnwrapped.GetArray(),
+		mTransformationsUnwrapped.GetArray(), left,	right);
 }
 
 //----------------------------------------------------------------------------
@@ -117,8 +124,14 @@ void VisibleSet::QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 }
 
 //----------------------------------------------------------------------------
-void VisibleSet::Sort()
+void VisibleSet::Sort(Bool unwrap)
 {
+	if (unwrap)
+	{
+		UnwrapEffectStackAndSort();
+		return;
+	}
+
 	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
 	indexStack[0][0] = 0;
 	indexStack[0][1] = 0;
@@ -134,9 +147,9 @@ void VisibleSet::Sort()
 			if (pTransformations[i] == NULL)
 			{
 				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
-				if (indexStack[0][0] < indexStack[0][1])
+				if (top == 0 && indexStack[0][0] < indexStack[0][1])
 				{
-					WIRE_ASSERT(i == indexStack[0][1]); // TODO check
+					WIRE_ASSERT(i == indexStack[0][1]);
 					// Sort leaves with no effect
 					Sort(indexStack[0][0], i-1);
 				}
@@ -180,4 +193,104 @@ void VisibleSet::Sort()
 	{
 		Sort(indexStack[0][0], indexStack[0][1]-1);
 	}
+}
+
+//----------------------------------------------------------------------------
+void VisibleSet::UnwrapEffectStackAndSort()
+{
+	mVisibleUnwrapped.SetQuantity(0, false);
+	mTransformationsUnwrapped.SetQuantity(0, false);
+	mKeysUnwrapped.SetQuantity(0, false);
+
+	const UInt visibleMaxQuantity = mVisible.GetMaxQuantity();
+	// The destination set will have at least the size of the source set.
+	if (mVisibleUnwrapped.GetMaxQuantity() < visibleMaxQuantity)
+	{
+		mVisibleUnwrapped.SetMaxQuantity(visibleMaxQuantity);
+		mTransformationsUnwrapped.SetMaxQuantity(visibleMaxQuantity);
+		mKeysUnwrapped.SetMaxQuantity(visibleMaxQuantity);
+	}
+
+	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
+	indexStack[0][0] = 0;
+	indexStack[0][1] = 0;
+	UInt top = 0;
+	UInt left;
+
+	const UInt visibleQuantity = mVisible.GetQuantity();
+	Object** pVisible = mVisible.GetArray();
+	Transformation** pTransformations = mTransformations.GetArray();
+
+	for (UInt i = 0; i < visibleQuantity; i++)
+	{
+		if (pVisible[i])
+		{
+			if (pTransformations[i] == NULL)
+			{
+				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
+				if (top == 0 && indexStack[0][0] < indexStack[0][1])
+				{
+					WIRE_ASSERT(i == indexStack[0][1]);
+					// Sort leaves with no effect
+					SortUnwrapped(indexStack[0][0], i-1);
+				}
+
+				// Begin the scope of an effect.
+				top++;
+				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
+				indexStack[top][0] = i;
+				indexStack[top][1] = i;
+			}
+			else
+			{
+				// Found a leaf object.
+				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
+				if (top == 0)
+				{
+					InsertUnwrapped(pVisible[i], pTransformations[i], mKeys[i]);
+				}
+
+				indexStack[top][1]++;
+			}
+		}
+		else
+		{
+			// End the scope of an effect.
+			UInt min = indexStack[top][0];
+			UInt max = indexStack[top][1];
+
+			WIRE_ASSERT(pTransformations[min] == NULL);
+			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
+			InsertUnwrapped(pVisible[min], NULL);
+			left = mVisibleUnwrapped.GetQuantity();
+
+			for (UInt j = min+1; j <= max; j++)
+			{
+				RenderObject* pRenderObject = DynamicCast<RenderObject>(
+					pVisible[j]);
+				if (pRenderObject)
+				{
+					InsertUnwrapped(pRenderObject, pTransformations[j], mKeys[j]);
+				}
+			}
+
+			SortUnwrapped(left, mVisibleUnwrapped.GetQuantity()-1);
+			InsertUnwrapped(NULL, NULL);
+
+			WIRE_ASSERT(top > 0 /* More 'ends' than 'starts'*/);
+			--top;
+			indexStack[top][1] = max + 1;
+			indexStack[0][0] = mVisibleUnwrapped.GetQuantity();
+			indexStack[0][1] = mVisibleUnwrapped.GetQuantity();
+		}
+	}
+
+	WIRE_ASSERT(top == 0);
+	UInt dstQty = mVisibleUnwrapped.GetQuantity();
+	if ((dstQty > 0) && (indexStack[0][0] < dstQty-1))
+	{
+		SortUnwrapped(indexStack[0][0], dstQty-1);
+	}
+
+	mIsUnwrapped = true;
 }
