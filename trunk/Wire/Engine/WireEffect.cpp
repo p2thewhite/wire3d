@@ -26,18 +26,26 @@ Effect::~Effect()
 }
 
 //----------------------------------------------------------------------------
-void Effect::Draw(Renderer* pRenderer, Object* pVisible[], Transformation*
-	pTransformations[], UInt min, UInt max,	Bool restoreState)
+void Effect::Draw(Renderer* pRenderer, Object* const pVisible[],
+	Transformation* const pTransformations[], UInt min, UInt max,
+	Bool restoreState)
 {
 	// The default drawing function for effects. Essentially, this draws
 	// all the RenderObjects, as if no effect was applied. Override to obtain
 	// a different behavior.
 	for (UInt i = min; i <= max; i++)
 	{
-		RenderObject* pRenderObject = DynamicCast<RenderObject>(pVisible[i]);
-		if (pRenderObject)
+		// NULL transformation means start or end of a nested Effect
+		if (pTransformations[i])
 		{
+			WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
+			RenderObject* pRenderObject = StaticCast<RenderObject>(pVisible[i]);
 			pRenderer->Draw(pRenderObject, *(pTransformations[i]), restoreState);
 		}
 	}
+
+	// For draw call batching the following approach can be used:
+// 	RenderObject* const* pRenderObjects = reinterpret_cast<RenderObject*
+// 		const*>(pVisible);
+// 	pRenderer->Draw(pRenderObjects, pTransformations, min, max+1);
 }

@@ -33,8 +33,8 @@ void CullerSorting::ComputeVisibleSet(Spatial* pScene)
 	Culler::ComputeVisibleSet(pScene);
 
 	WIRE_ASSERT(mVisibleSets.GetQuantity() >= 2);
-	mVisibleSets[0]->Sort(true);
-	mVisibleSets[1]->Sort(true);
+	mVisibleSets[0]->Sort();
+	mVisibleSets[1]->Sort();
 }
 
 //----------------------------------------------------------------------------

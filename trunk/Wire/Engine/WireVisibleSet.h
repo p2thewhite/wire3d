@@ -41,7 +41,7 @@ public:
 		UInt key = 0);
 
 	void Clear();
-	void Sort(Bool unwrap = true);
+	void Sort(Bool unwrap = false);
 
 	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,

@@ -128,16 +128,21 @@ void Sample10::OnIdle()
 	mspText->SetPen(0, GetHeightF()-mspText->GetFontHeight()-32.0F);
 #ifdef WIRE_DEBUG
 	mspText->Append("WARNING: RUNNING DEBUG MODE... (FPS do not represent "
-		"potential performance)\n\n", ColorRGB(1.0F, 1.0F, 0.0));
+		"performance)\n\n", ColorRGB(1.0F, 1.0F, 0.0));
 #endif
 	mspText->SetColor(Color32::WHITE);
+
+	TArray<VisibleSet*>* pVisibleSets = &(pCuller->GetVisibleSets());
+	TArray<VisibleSet*> sets(1);
+	sets.Append(&mVisibleSet);
 
 	if (useScenario1)
 	{
 		mspText->Append("Scenario 1:\n");
 		mspLight->Ambient = ColorRGB::BLACK;
 		pCuller->SetFrustum(mspCamera->GetFrustum());
-		pCuller->Clear();
+		mVisibleSet.Clear();
+
 		for (UInt i = 0; i < mScenario1Objects.GetQuantity(); i++)
 		{
 			Transformation* pTransformation = &(mTransformations[i]);
@@ -145,14 +150,15 @@ void Sample10::OnIdle()
 				*pTransformation, mspBound);
 			if (pCuller->IsVisible(mspBound))
 			{
-				pCuller->Insert(mScenario1Objects[i], pTransformation,
-					pTransformation->GetTranslate());
+				mVisibleSet.Insert(mScenario1Objects[i], pTransformation,
+					mScenario1Objects[i]->GetStateSetID());
 			}
 		}
 
-		if (pCuller == &mCullerSorting)
+		pVisibleSets = &sets;
+		if (usesSorting)
 		{
-			mCullerSorting.Sort();
+			mVisibleSet.Sort();
 		}
 	}
 	else
@@ -165,7 +171,7 @@ void Sample10::OnIdle()
 	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
 	GetRenderer()->PreDraw(mspCamera);
-	GetRenderer()->Draw(pCuller->GetVisibleSets());
+	GetRenderer()->Draw(*pVisibleSets);
 	DrawFPS(elapsedTime, usesSorting);
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
@@ -289,10 +295,10 @@ void Sample10::CreateCylinderFront()
 	mspCylinderFront->GetStates()[State::ZBUFFER] = pZBufferState;
 
 	StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
-	pMaterialState->Ambient = ColorRGBA(0.9F, 1, 1, 1);
+	pMaterialState->Ambient = ColorRGBA(0.9F, 1, 1, 0.5F);
 	mspCylinderFront->GetStates()[State::MATERIAL] = pMaterialState;
 
-	mspCylinderFront->SetStateSetID(2);
+	mspCylinderFront->SetStateSetID(3);
 }
 
 //----------------------------------------------------------------------------
@@ -316,7 +322,7 @@ void Sample10::CreateCylinderBack()
 	pMaterialState->Ambient = ColorRGBA(0.5F, 0.6F, 0.6F, 1);
 	mspCylinderBack->GetStates()[State::MATERIAL] = pMaterialState;
 
-	mspCylinderBack->SetStateSetID(3);
+	mspCylinderBack->SetStateSetID(2);
 }
 
 //----------------------------------------------------------------------------

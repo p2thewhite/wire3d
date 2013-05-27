@@ -132,13 +132,9 @@ void VisibleSet::Sort(Bool unwrap)
 		return;
 	}
 
-	UInt indexStack[Effect::MAX_SIMULTANEOUS_EFFECTS][2];
-	indexStack[0][0] = 0;
-	indexStack[0][1] = 0;
-	UInt top = 0;
-
 	Object** pVisible = mVisible.GetArray();
 	Transformation** pTransformations = mTransformations.GetArray();
+	UInt min = 0;
 
 	for (UInt i = 0; i < GetQuantity(); i++)
 	{
@@ -147,51 +143,30 @@ void VisibleSet::Sort(Bool unwrap)
 			if (pTransformations[i] == NULL)
 			{
 				WIRE_ASSERT(DynamicCast<Effect>(pVisible[i]));
-				if (top == 0 && indexStack[0][0] < indexStack[0][1])
+				if (min < i)
 				{
-					WIRE_ASSERT(i == indexStack[0][1]);
-					// Sort leaves with no effect
-					Sort(indexStack[0][0], i-1);
+					Sort(min, i-1);
 				}
 
 				// Begin the scope of an effect.
-				top++;
-				WIRE_ASSERT(top < Effect::MAX_SIMULTANEOUS_EFFECTS);
-				indexStack[top][0] = i;
-				indexStack[top][1] = i;
-			}
-			else
-			{
-				// Found a leaf object.
-				WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[i]));
-				indexStack[top][1]++;
+				min = i+1;
 			}
 		}
 		else
 		{
-			// End the scope of an effect.
- 			UInt min = indexStack[top][0];
- 			UInt max = indexStack[top][1];
- 			WIRE_ASSERT(pTransformations[min] == NULL);
- 			WIRE_ASSERT(DynamicCast<Effect>(pVisible[min]));
+ 			WIRE_ASSERT(pTransformations[i] == NULL);
+			if (min < i)			
+			{
+				Sort(min, i-1);
+			}
 
-			if (--top > 0)
-			{
-				indexStack[top][1] = max + 1;
-			}
-			else
-			{
-				indexStack[0][0] = max + 2;
-				indexStack[0][1] = max + 2;
-			}
+			min = i+1;
 		}
 	}
 
-	WIRE_ASSERT(top == 0);
-	WIRE_ASSERT(indexStack[0][1] == GetQuantity());
-	if (indexStack[0][0] != indexStack[0][1])
+	if (min < GetQuantity())
 	{
-		Sort(indexStack[0][0], indexStack[0][1]-1);
+		Sort(min, GetQuantity()-1);
 	}
 }
 
@@ -266,10 +241,10 @@ void VisibleSet::UnwrapEffectStackAndSort()
 
 			for (UInt j = min+1; j <= max; j++)
 			{
-				RenderObject* pRenderObject = DynamicCast<RenderObject>(
-					pVisible[j]);
-				if (pRenderObject)
+				if (pTransformations[j])
 				{
+					WIRE_ASSERT(DynamicCast<RenderObject>(pVisible[j]));
+					RenderObject* pRenderObject = StaticCast<RenderObject>(pVisible[j]);
 					InsertUnwrapped(pRenderObject, pTransformations[j], mKeys[j]);
 				}
 			}
