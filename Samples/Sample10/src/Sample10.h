@@ -30,6 +30,7 @@ private:
 	TArray<RenderObjectPtr> mScenario1Objects;
 	TArray<Transformation> mTransformations;
 	SphereBVPtr mspBound;
+	VisibleSet mVisibleSet;
 
 	// Scenario 2 uses a scene graph of more than 2500 objects.
 	// draw call count is high, overdraw is low

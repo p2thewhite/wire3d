@@ -1008,9 +1008,15 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 		UInt idx = min;
 		const UInt maxStreams = mBatchedVertexBuffers.GetQuantity();
 
+		const Transformation* pAT = pTransformations[idx];
+		if (!pAT)
+		{
+			min++;
+			continue;		// skip the start/end marker of an effect
+		}
+
 		WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx])));
 		const RenderObject* pA = pVisible[idx];
-		const Transformation* pAT = pTransformations[idx];
 		Bool hasIdenticalVBOs = pAT->IsIdentity();
 		const Mesh* pMeshA = pA->GetMesh();
 		WIRE_ASSERT(pMeshA);
@@ -1018,9 +1024,14 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 
 		for (; idx < max-1; idx++)
 		{
+			const Transformation* pBT = pTransformations[idx+1];
+			if (!pBT)
+			{
+				continue;	// skip the start/end marker of an effect
+			}
+
 			WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[idx+1])));
 			const RenderObject* pB = StaticCast<RenderObject>(pVisible[idx+1]);
-			const Transformation* pBT = pTransformations[idx+1];
 			Bool hadIdenticalVBOs = hasIdenticalVBOs && pBT->IsIdentity();
 
 			const Mesh* pMeshB = pB->GetMesh();
@@ -1070,13 +1081,22 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 			Set(pA->GetStates());
 			Set(pA->GetMaterial(), pA->GetLights());
 			Set(pMeshA->GetVertexBuffers());
+			mspMesh = NULL;
 
 			if (hasIdenticalVBOs)
 			{
-				for (UInt i = 0; i < pMeshA->GetVertexBuffers().GetQuantity();
-					i++)
+				const UInt vboCount = pMeshA->GetVertexBuffers().GetQuantity();
+				for (UInt i = 0; i < vboCount; i++)
 				{
 					Set(pMeshA->GetVertexBuffer(i), i);
+				}
+
+				for (UInt i = vboCount; i < mVertexBuffers.GetQuantity(); i++)
+				{
+					if (mVertexBuffers[i])
+					{
+						Disable(mVertexBuffers[i], i);
+					}
 				}
 
 				DrawStaticBatches(pVisible, pTransformations, min, idx+1);
@@ -1108,6 +1128,11 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 
 	for (UInt i = min; i < max; i++)
 	{
+		if (!pTransformations[i])
+		{
+			continue; // skip the start/end marker of an effect
+		}
+
 		RenderObject* pRenderObject = pVisible[i];
 		Transformation& rTransformation = *(pTransformations[i]);
 		Mesh* const pMesh = pRenderObject->GetMesh();
@@ -1191,8 +1216,14 @@ void Renderer::DrawDynamicBatches(RenderObject* const pVisible[],
 
 	for (UInt i = min; i < max; i++)
 	{
-		RenderObject* pRenderObject = pVisible[i];
+		if (!pTransformations[i])
+		{
+			continue; // skip the start/end marker of an effect
+		}
+
+		WIRE_ASSERT(DynamicCast<RenderObject>((Object*)(pVisible[i])));
 		Transformation& rTransformation = *(pTransformations[i]);
+		RenderObject* pRenderObject = pVisible[i];
 		Mesh* const pMesh = pRenderObject->GetMesh();
 
 		WIRE_ASSERT(vbCount <= mBatchedVertexBuffers.GetQuantity());
