@@ -162,36 +162,87 @@ void Camera::GetViewport(Float& rLeft, Float& rRight, Float& rTop,
 //----------------------------------------------------------------------------
 Matrix4F Camera::GetProjectionMatrix() const
 {
-	Float n = mFrustum[0];
-	Float f = mFrustum[1];
-	Float b = mFrustum[2];
-	Float t = mFrustum[3];
-	Float l = mFrustum[4];
-	Float r = mFrustum[5];
-	return Matrix4F(2 * n / (r - l),	0,					(r + l) / (r - l),		0,
-		            0,					2 * n / (t - b),	(t + b) / (t - b),		0,
-					0,					0,					-(f + n) / (f - n),		-(2 * n * f) / (f - n),
-					0,					0,					-1,						0 );
+	Float n = mFrustum[VF_DMIN];
+	Float f = mFrustum[VF_DMAX];
+	Float b = mFrustum[VF_UMIN];
+	Float t = mFrustum[VF_UMAX];
+	Float l = mFrustum[VF_RMIN];
+	Float r = mFrustum[VF_RMAX];
+
+	Float w = 1.0F/(r-l);
+	Float h = 1.0F/(t-b);
+	Float d = 1.0F/(f-n);
+
+	if (mIsPerspective)
+	{
+		return Matrix4F(
+			2*n*w,  0,      -(r+l)*w,  0,
+			0,      2*n*h,  -(t+b)*h,  0,
+			0,      0,       f*d,      -n*f*d,
+			0,      0,       1,        0);
+	}
+
+	return Matrix4F(
+		2*w,  0,    0,  -(r+l)*w,
+		0,    2*h,  0,  -(t+b)*h,
+		0,    0,    d,  -n*d,
+		0,    0,    0,  1);
 }
 
 //----------------------------------------------------------------------------
 Matrix4F Camera::GetViewMatrix() const
 {
-	return Matrix4F(mRVector.X(), mUVector.X(), mDVector.X(),	0,
-					mRVector.Y(), mUVector.Y(), mDVector.Y(),	0,
-					mRVector.Z(), mUVector.Z(), mDVector.Z(),	0,
-					0,			  0,			0,				1);
+	const Vector3F& rEye = mLocation;
+	return Matrix4F(
+		mRVector.X(), mRVector.Y(), mRVector.Z(), -mRVector.Dot(rEye),
+		mUVector.X(), mUVector.Y(), mUVector.Z(), -mUVector.Dot(rEye),
+		mDVector.X(), mDVector.Y(), mDVector.Z(), -mDVector.Dot(rEye),
+		0.0F, 0.0F, 0.0F, 1.0F);
 }
 
 //----------------------------------------------------------------------------
-Vector3F Camera::ScreenToWorldPoint(const Vector2F& rScreenPoint) const
+Matrix4F Camera::GetViewMatrixInverse() const
 {
-	Vector4F worldPoint = (GetProjectionMatrix() * GetViewMatrix()).Inverse() * Vector4F(rScreenPoint.X(), rScreenPoint.Y(), 0, 1);
-	return Vector3F(worldPoint.X(), worldPoint.Y(), worldPoint.Z());
+	return Matrix4F(
+		mRVector.X(), mUVector.X(), mDVector.X(), mLocation.X(),
+		mRVector.Y(), mUVector.Y(), mDVector.Y(), mLocation.Y(),
+		mRVector.Z(), mUVector.Z(), mDVector.Z(), mLocation.Z(),
+		0.0F, 0.0F, 0.0F, 1.0F);
 }
 
 //----------------------------------------------------------------------------
-void Camera::LookAtScreenPoint(const Vector2F& rScreenPoint)
+Matrix34F Camera::GetViewMatrix34() const
 {
-	LookAt(mLocation, ScreenToWorldPoint(rScreenPoint), mUVector);
+	const Vector3F& rEye = mLocation;
+	return Matrix34F(
+		mRVector.X(), mRVector.Y(), mRVector.Z(), -mRVector.Dot(rEye),
+		mUVector.X(), mUVector.Y(), mUVector.Z(), -mUVector.Dot(rEye),
+		mDVector.X(), mDVector.Y(), mDVector.Z(), -mDVector.Dot(rEye));
+}
+
+//----------------------------------------------------------------------------
+Matrix34F Camera::GetViewMatrixInverse34() const
+{
+	return Matrix34F(
+		mRVector.X(), mUVector.X(), mDVector.X(), mLocation.X(),
+		mRVector.Y(), mUVector.Y(), mDVector.Y(), mLocation.Y(),
+		mRVector.Z(), mUVector.Z(), mDVector.Z(), mLocation.Z());
+}
+
+//----------------------------------------------------------------------------
+Vector3F Camera::GetPickDirection(const Vector2F& rPosition)
+{
+	WIRE_ASSERT(rPosition.X() >= -1.0F && rPosition.X() <= 1.0F);
+	WIRE_ASSERT(rPosition.Y() >= -1.0F && rPosition.Y() <= 1.0F);
+	Matrix4F projectionMatrix = GetProjectionMatrix();
+	Vector3F v(rPosition.X() / projectionMatrix(0, 0),
+		rPosition.Y() / projectionMatrix(1, 1), 1);
+
+	Vector3F pickDir;
+	// multiply with 3x3 part of inverse view matrix
+	// TODO: implement matrix34 3x3 only multiplication?
+	pickDir.X() = v.X() * mRVector.X() + v.Y() * mUVector.X() + v.Z() * mDVector.X();
+	pickDir.Y() = v.X() * mRVector.Y() + v.Y() * mUVector.Y() + v.Z() * mDVector.Y();
+	pickDir.Z() = v.X() * mRVector.Z() + v.Y() * mUVector.Z() + v.Z() * mDVector.Z();
+	return pickDir;
 }

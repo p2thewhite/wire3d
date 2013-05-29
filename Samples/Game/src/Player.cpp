@@ -2,6 +2,7 @@
 
 #include "ProbeRobot.h"
 #include "PhysicsWorld.h"
+#include "WireApplication.h"
 #include "WireStandardMesh.h"
 #include "WireStateWireframe.h"
 
@@ -16,11 +17,11 @@ Player::Player(Camera* pCamera)
 	mMaximumShootingDistance(1000.0F),
 	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
 	mLookUpDeadZone(Vector2F(50, 50)),
-	mMoveSpeed(5.0F),
-	mRotateSpeed(MathF::PI / 9),
 	mCharacterWidth(1.7F),
 	mCharacterHeight(1.5F),
 	mStepHeight(0.5F),
+	mMoveSpeed(5.0F),
+	mRotateSpeed(MathF::PI / 9),
 	mPitch(0),
 	mYaw(0),
 	mPitchIncrement(0),
@@ -63,28 +64,26 @@ Bool Player::Update(Double appTime)
 	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 
 	// Calculate rotation matrices
-	mRotationX.FromAxisAngle(Vector3F::UNIT_X, mPitch);
-	mRotationY.FromAxisAngle(Vector3F::UNIT_Y, mYaw);
+	Matrix3F rotationX(Vector3F::UNIT_X, mPitch);
+	Matrix3F rotationY(Vector3F::UNIT_Y, mYaw);
+	Matrix3F rotationYX = rotationY * rotationX;
 
 	// Calculate up, gunDirection and lookup
-	mEyeDirection = mRotationY * mRotationX * Vector3F::UNIT_Z;
-	mUp = mRotationY * mRotationX * Vector3F::UNIT_Y;
-	mForward = mRotationY * Vector3F::UNIT_Z;
-
-	Matrix34F rotation;
-	rotation.FromAxisAngle(Vector3F::UNIT_Y, -(MathF::PI / 2));
-	mRight = rotation * mForward;
-
-	DoShooting();
+	Vector3F eyeDirection = rotationYX.GetColumn(2);
+	Vector3F up = rotationYX.GetColumn(1);
+	mForward = rotationY.GetColumn(2);
+	mRight = eyeDirection.Cross(up);
 
 	// update player node
 	mpNode->Local.SetTranslate(GetPosition());
-	mpNode->Local.SetRotate(mRotationY * mRotationX);
-
-	UpdateGunRotation();
+	mpNode->Local.SetRotate(rotationYX);
 
 	// update camera
-	mspCamera->SetFrame(GetPosition(), mEyeDirection, mUp, mRight);
+	mspCamera->SetFrame(GetPosition(), eyeDirection, up, mRight);
+
+	UpdateGunRotation(rotationY);
+
+	DoShooting(eyeDirection);
 
 	// move physics entity
 	if (mJump)
@@ -99,6 +98,7 @@ Bool Player::Update(Double appTime)
 	mPitchIncrement = 0;
 	mYawIncrement = 0;
 	mJump = false;
+
 
 	return true;
 }
@@ -131,10 +131,6 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 	WIRE_ASSERT(mpNode);
 
 	mpGun = mpNode->GetChildByName("Gun");
-	if (mpGun)
-	{
-		mGunStartingRotation = mpGun->World.GetRotate();
-	}
 
 	// Set camera position
 	Vector3F cameraPosition = mpNode->World.GetTranslate();
@@ -221,30 +217,33 @@ Vector3F Player::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdateGunRotation()
+void Player::UpdateGunRotation(Matrix3F& rRotation)
 {
 	if (mpGun == NULL)
 	{
 		return;
 	}
 
-	Vector3F lookAtWorldSpace = mspCamera->ScreenToWorldPoint(mLookAt);
-	// Increase the z to a slighter gunRotation
-	lookAtWorldSpace.Z() = 400;
+	Float width = Application::GetApplication()->GetWidthF();
+	Float height = Application::GetApplication()->GetHeightF();
+	Vector2F cursorPosition(mLookAt.X()*2/width, mLookAt.Y()*2/height);
 
-	Vector3F gunDirection = mpGun->Local.GetRotate() * Vector3F::UNIT_Z;
+	Matrix4F projectionMatrix = mspCamera->GetProjectionMatrix();
+	Vector3F pickDirection(-cursorPosition.X() / projectionMatrix(0, 0),
+		cursorPosition.Y() / projectionMatrix(1, 1), 1);
 
-	// Calculate look gunRotation from look coordinates in world space
-	Vector3F axis = gunDirection.Cross(lookAtWorldSpace);
-	Float angle = gunDirection.Angle(lookAtWorldSpace);
-
-	Matrix3F gunRotation;
-	gunRotation.FromAxisAngle(axis, angle);
-	mpGun->Local.SetRotate(mpGun->Local.GetRotate() * gunRotation);
+	Vector3F tempUp(0, 1, 0);
+	Vector3F right = pickDirection.Cross(tempUp);
+	Vector3F up = right.Cross(pickDirection);
+	pickDirection.Normalize();
+	right.Normalize();
+	up.Normalize();
+	Matrix3F mat(-right, up, pickDirection, true);
+	mpGun->Local.SetRotate(mat);
 }
 
 //----------------------------------------------------------------------------
-void Player::DoShooting()
+void Player::DoShooting(const Vector3F& rDirection)
 {
 	// Remove previous ray
 	Spatial* pRay = mpNode->GetChildByName("Ray");
@@ -261,7 +260,7 @@ void Player::DoShooting()
 	}
 
 	btVector3 rayStart = PhysicsWorld::Convert(GetPosition());
-	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(mEyeDirection * mMaximumShootingDistance);
+	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(rDirection * mMaximumShootingDistance);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 

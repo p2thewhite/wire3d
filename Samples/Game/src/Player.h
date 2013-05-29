@@ -29,30 +29,26 @@ public:
 
 private:
 	Wire::Vector3F GetPosition();
-	void UpdateGunRotation();
-	void DoShooting();
+	void UpdateGunRotation(Wire::Matrix3F& rRotation);
+	void DoShooting(const Wire::Vector3F& rDirection);
 	void CreateRay(Float size);
 
-	Float mHeadHeight;
-	Float mMaximumShootingDistance;
-	Float mMaximumVerticalAngle;
-	Wire::Vector2F mLookUpDeadZone;
+	const Float mHeadHeight;
+	const Float mMaximumShootingDistance;
+	const Float mMaximumVerticalAngle;
+	const Wire::Vector2F mLookUpDeadZone;
+	const Float mCharacterWidth;
+	const Float mCharacterHeight;
+	const Float mStepHeight;
+
 	Float mMoveSpeed;
 	Float mRotateSpeed;
-	Float mCharacterWidth;
-	Float mCharacterHeight;
-	Float mStepHeight;
-	Wire::Vector3F mEyeDirection;
-	Wire::Vector3F mUp;
 	Wire::Vector3F mForward;
 	Wire::Vector3F mRight;
 	Float mPitch;
 	Float mYaw;
 	Float mPitchIncrement;
 	Float mYawIncrement;
-	Wire::Matrix3F mRotationX;
-	Wire::Matrix3F mRotationY;
-	Wire::Matrix3F mGunStartingRotation;
 	Wire::Vector3F mMove;
 	Wire::Vector2F mLookAt;
 	Wire::Node* mpNode;
@@ -66,3 +62,4 @@ private:
 };
 
 #endif
+	
