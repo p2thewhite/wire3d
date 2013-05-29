@@ -57,8 +57,6 @@ public:
 	void LookAt(const Vector3F& rLocation, const Vector3F& rLookAt,
 		const Vector3F& rUp);
 
-	void LookAtScreenPoint(const Vector2F& rScreenPoint);
-
 	void SetAxes(const Vector3F& rDVector, const Vector3F& rUVector,
 		const Vector3F& rRVector);
 
@@ -109,9 +107,49 @@ public:
 
 	inline Bool IsPerspective() const;
 
+	// The frustum values are N (near), F (far), B (bottom), T (top),
+	// L (left), and R (right).
+	// perspective, depth [0,1]
+	//   +-                                               -+
+	//   | 2*N/(R-L)  0           -(R+L)/(R-L)  0          |
+	//   | 0          2*N/(T-B)   -(T+B)/(T-B)  0          |
+	//   | 0          0           F/(F-N)       -N*F/(F-N) |
+	//   | 0          0           1             0          |
+	//   +-                                               -+
+	//
+	// orthographic, depth [0,1]
+	//   +-                                       -+
+	//   | 2/(R-L)  0  0              -(R+L)/(R-L) |
+	//   | 0        2/(T-B)  0        -(T+B)/(T-B) |
+	//   | 0        0        1/(F-N)  -N/(F-N)  0  |
+	//   | 0        0        0        1            |
+	//   +-                                       -+
+	// projects left-bottom (0,0) to (-1,-1) and right-top to (1,1)
+	//
+	// The projection matrix multiplies vectors on its right, matrix*vector4.
 	Matrix4F GetProjectionMatrix() const;
+
+	// Access the view matrix of the camera.
+	// If Location is P, D = (d0,d1,d2), U = (u0,u1,u2) and R = (r0,r1,r2),
+	// then the view matrix is
+	//   +-                     -+
+	//   | r0  r1  r2  -Dot(R,P) |
+	//   | u0  u1  u2  -Dot(U,P) |
+	//   | d0  d1  d2  -Dot(D,P) |
+	//   |  0   0   0          1 |
+	//   +-                     -+
+	// The view matrix multiplies vectors on its right, matrix*vector.
+
+	// 4x4 view matrix
 	Matrix4F GetViewMatrix() const;
-	Vector3F ScreenToWorldPoint(const Vector2F& rScreenPoint) const;
+	Matrix4F GetViewMatrixInverse() const; // faster than matrix.Inverse()
+
+	// 3x4 view matrix with implicit 4th row, can be multiplied with Vector3F
+	Matrix34F GetViewMatrix34() const;
+	Matrix34F GetViewMatrixInverse34() const; // faster than matrix.Inverse()
+
+	// Position [-1,1], returns world direction of the picking ray
+	Vector3F GetPickDirection(const Vector2F& rPosition);
 
 private:
 	// world coordinate frame
