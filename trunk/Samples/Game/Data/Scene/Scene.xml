@@ -682,7 +682,7 @@
     <Camera Fov="60" Near="0.01" Far="1000" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50">
-    <Node Name="Gun" Pos="0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
+    <Node Name="Gun" Pos="-0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Assault Rifle" />
