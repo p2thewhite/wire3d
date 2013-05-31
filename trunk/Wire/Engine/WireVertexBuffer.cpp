@@ -163,8 +163,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 	}
 
 	const VertexAttributes& rAttr = mAttributes;
-	const Vector3F& translate = rTransformation.GetTranslate();
-	const Matrix34F& rotate = rTransformation.GetMatrix();
+	const Matrix34F& transform = rTransformation.GetMatrix();
 	const Vector3F& scale = rTransformation.GetScale();
 
 	// positions only vertex buffer
@@ -185,7 +184,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 				v.Z() *= scale.Z();
 			}
 
-			v = rotate * v + translate;
+			v = transform * v;
 
 			*pDst++ = v.X();
 			*pDst++ = v.Y();
@@ -214,7 +213,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 				n.Z() *= scale.Z();
 			}
 
-			n = rotate * n;
+			n = transform.Times3(n);
 
 			*pDst++ = n.X();
 			*pDst++ = n.Y();
@@ -239,7 +238,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 				v.Z() *= scale.Z();
 			}
 
-			v = rotate * v + translate;
+			v = transform * v;
 
 			*pDst++ = v.X();
 			*pDst++ = v.Y();
@@ -263,7 +262,7 @@ void VertexBuffer::ApplyForward(const Transformation& rTransformation,
 				n.Z() *= scale.Z();
 			}
 
-			n = rotate * n;
+			n = transform.Times3(n);
 
 			*pDst++ = n.X();
 			*pDst++ = n.Y();

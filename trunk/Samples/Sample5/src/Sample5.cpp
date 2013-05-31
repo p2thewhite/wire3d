@@ -145,8 +145,8 @@ void Sample5::OnIdle()
 	// rotate the red light about the y axis
 	Node* pLightNode2 = DynamicCast<Node>(mspRoot->GetChild(2));
 	WIRE_ASSERT(pLightNode2);
-	Matrix34F rotateLight2(Vector3F::UNIT_Y, mAngle);
-	Vector3F lightPos2 = Vector3F(5, 0, 0) * rotateLight2;
+	Matrix34F rotateLight2(Vector3F::UNIT_Y, -mAngle);
+	Vector3F lightPos2 = rotateLight2 * Vector3F(5, 0, 0);
 	pLightNode2->Local.SetTranslate(lightPos2);
 
 	mspRoot->UpdateGS(time);

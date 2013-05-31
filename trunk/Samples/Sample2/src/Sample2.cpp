@@ -86,7 +86,7 @@ void Sample2::OnIdle()
 	// position and rotate the helicopter
 	Matrix34F rot(Vector3F::UNIT_Y, mAngle);
 	mspRoot->Local.SetRotate(rot);
-	Vector3F pos = Vector3F(-10, 0 ,0) * Matrix34F(Vector3F::UNIT_Y, -mAngle);
+	Vector3F pos = Matrix34F(Vector3F::UNIT_Y, mAngle) * Vector3F(-10, 0 ,0);
 	mspRoot->Local.SetTranslate(pos);
 
 	// rotate the rear rotor
