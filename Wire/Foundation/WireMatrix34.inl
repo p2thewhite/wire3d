@@ -92,6 +92,44 @@ Matrix34<Real>::Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
 
 //----------------------------------------------------------------------------
 template <class Real>
+Matrix34<Real>::Matrix34(const Vector4<Real>& rU, const Vector4<Real>& rV,
+	const Vector4<Real>& rW)
+{
+	mEntry[0][0] = rU[0];
+	mEntry[0][1] = rU[1];
+	mEntry[0][2] = rU[2];
+	mEntry[0][3] = rU[3];
+	mEntry[1][0] = rV[0];
+	mEntry[1][1] = rV[1];
+	mEntry[1][2] = rV[2];
+	mEntry[1][3] = rV[3];
+	mEntry[2][0] = rW[0];
+	mEntry[2][1] = rW[1];
+	mEntry[2][2] = rW[2];
+	mEntry[2][3] = rW[3];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+Matrix34<Real>::Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
+	const Vector3<Real>& rW, const Vector3<Real>& rT)
+{
+	mEntry[0][0] = rU[0];
+	mEntry[0][1] = rV[0];
+	mEntry[0][2] = rW[0];
+	mEntry[0][3] = rT[0];
+	mEntry[1][0] = rU[1];
+	mEntry[1][1] = rV[1];
+	mEntry[1][2] = rW[1];
+	mEntry[1][3] = rT[1];
+	mEntry[2][0] = rU[2];
+	mEntry[2][1] = rV[2];
+	mEntry[2][2] = rW[2];
+	mEntry[2][3] = rT[2];
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Matrix34<Real>::Matrix34(const Matrix3<Real>& rM, const Vector3<Real>& rV)
 {
 	mEntry[0][0] = rM[0][0];
@@ -168,8 +206,7 @@ template <class Real>
 void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
 {
-	Vector3<Real> axis = rAxis;
-	Vector3<Real> u = axis / axis.Length();
+	Vector3<Real> u = rAxis / rAxis.Length();
 	Real c = Math<Real>::Cos(angle);
 	Real s = Math<Real>::Sin(angle);
 	Real t = (static_cast<Real>(1.0)) - c;
@@ -227,7 +264,7 @@ void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 template <class Real>
 inline Matrix34<Real>::operator Real4* ()
 {
-	return &mEntry;
+	return mEntry;
 }
 
 //----------------------------------------------------------------------------
@@ -299,8 +336,7 @@ Vector3<Real> Matrix34<Real>::GetColumn(UInt col) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix)
-const
+inline Matrix34<Real> Matrix34<Real>::operator* (const Matrix34& rMatrix) const
 {
 	const Real4* a = mEntry;
 	const Real4* b = rMatrix.mEntry;
@@ -324,21 +360,99 @@ const
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Matrix34<Real> Matrix34<Real>::operator* (Real scalar) const
+inline Matrix4<Real> Matrix34<Real>::operator* (const Matrix4<Real>& rMatrix) const
 {
-	return Matrix34<Real>(
-		scalar * mEntry[0][0], scalar * mEntry[0][1], scalar * mEntry[0][2],
-			mEntry[0][3],
-		scalar * mEntry[1][0], scalar * mEntry[1][1], scalar * mEntry[1][2],
-			mEntry[1][3],
-		scalar * mEntry[2][0], scalar * mEntry[2][1], scalar * mEntry[2][2],
-			mEntry[2][3]);
+	return Matrix4<Real>(
+		mEntry[0][0] * rMatrix[0][0] +
+		mEntry[0][1] * rMatrix[1][0] +
+		mEntry[0][2] * rMatrix[2][0] +
+		mEntry[0][3] * rMatrix[3][0],
+
+		mEntry[0][0] * rMatrix[0][1] +
+		mEntry[0][1] * rMatrix[1][1] +
+		mEntry[0][2] * rMatrix[2][1] +
+		mEntry[0][3] * rMatrix[3][1],
+
+		mEntry[0][0] * rMatrix[0][2] +
+		mEntry[0][1] * rMatrix[1][2] +
+		mEntry[0][2] * rMatrix[2][2] +
+		mEntry[0][3] * rMatrix[3][2],
+
+		mEntry[0][0] * rMatrix[0][3] +
+		mEntry[0][1] * rMatrix[1][3] +
+		mEntry[0][2] * rMatrix[2][3] +
+		mEntry[0][3] * rMatrix[3][3],
+
+		mEntry[1][0] * rMatrix[0][0] +
+		mEntry[1][1] * rMatrix[1][0] +
+		mEntry[1][2] * rMatrix[2][0] +
+		mEntry[1][3] * rMatrix[3][0],
+
+		mEntry[1][0] * rMatrix[0][1] +
+		mEntry[1][1] * rMatrix[1][1] +
+		mEntry[1][2] * rMatrix[2][1] +
+		mEntry[1][3] * rMatrix[3][1],
+
+		mEntry[1][0] * rMatrix[0][2] +
+		mEntry[1][1] * rMatrix[1][2] +
+		mEntry[1][2] * rMatrix[2][2] +
+		mEntry[1][3] * rMatrix[3][2],
+
+		mEntry[1][0] * rMatrix[0][3] +
+		mEntry[1][1] * rMatrix[1][3] +
+		mEntry[1][2] * rMatrix[2][3] +
+		mEntry[1][3] * rMatrix[3][3],
+
+		mEntry[2][0] * rMatrix[0][0] +
+		mEntry[2][1] * rMatrix[1][0] +
+		mEntry[2][2] * rMatrix[2][0] +
+		mEntry[2][3] * rMatrix[3][0],
+
+		mEntry[2][0] * rMatrix[0][1] +
+		mEntry[2][1] * rMatrix[1][1] +
+		mEntry[2][2] * rMatrix[2][1] +
+		mEntry[2][3] * rMatrix[3][1],
+
+		mEntry[2][0] * rMatrix[0][2] +
+		mEntry[2][1] * rMatrix[1][2] +
+		mEntry[2][2] * rMatrix[2][2] +
+		mEntry[2][3] * rMatrix[3][2],
+
+		mEntry[2][0] * rMatrix[0][3] +
+		mEntry[2][1] * rMatrix[1][3] +
+		mEntry[2][2] * rMatrix[2][3] +
+		mEntry[2][3] * rMatrix[3][3],
+
+		rMatrix[3][0],
+		rMatrix[3][1],
+		rMatrix[3][2],
+		rMatrix[3][3]);
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV)
-const
+inline Vector3<Real> Matrix34<Real>::operator* (const Vector3<Real>& rV) const
+{
+	return Vector3<Real>(
+		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2] + mEntry[0][3],
+		mEntry[1][0] * rV[0] + mEntry[1][1] * rV[1] + mEntry[1][2] * rV[2] + mEntry[1][3],
+		mEntry[2][0] * rV[0] + mEntry[2][1] * rV[1] + mEntry[2][2] * rV[2] + mEntry[2][3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector4<Real> Matrix34<Real>::operator* (const Vector4<Real>& rV) const
+{
+	return Vector4<Real>(
+		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2] + mEntry[0][3] * rV[3],
+		mEntry[1][0] * rV[0] + mEntry[1][1] * rV[1] + mEntry[1][2] * rV[2] + mEntry[1][3] * rV[3],
+		mEntry[2][0] * rV[0] + mEntry[2][1] * rV[1] + mEntry[2][2] * rV[2] + mEntry[2][3] * rV[3],
+		rV[3]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
+inline Vector3<Real> Matrix34<Real>::Times3(const Vector3<Real>& rV) const
 {
 	return Vector3<Real>(
 		mEntry[0][0] * rV[0] + mEntry[0][1] * rV[1] + mEntry[0][2] * rV[2],
@@ -348,76 +462,97 @@ const
 
 //----------------------------------------------------------------------------
 template <class Real>
+inline Vector3<Real> Matrix34<Real>::Times3Row(const Vector3<Real>& rV) const
+{
+	return Vector3<Real>(
+		rV[0] * mEntry[0][0] + rV[1] * mEntry[1][0] + rV[2] * mEntry[2][0],
+		rV[0] * mEntry[0][1] + rV[1] * mEntry[1][1] + rV[2] * mEntry[2][1],
+		rV[0] * mEntry[0][2] + rV[1] * mEntry[1][2] + rV[2] * mEntry[2][2]);
+}
+
+//----------------------------------------------------------------------------
+template <class Real>
 Matrix34<Real> Matrix34<Real>::TimesDiagonal(const Vector3<Real>& rDiag) const
 {
 	return Matrix34<Real>(
 		mEntry[0][0]*rDiag[0], mEntry[0][1]*rDiag[1], mEntry[0][2]*rDiag[2],
-		mEntry[0][3],
+			mEntry[0][3],
 		mEntry[1][0]*rDiag[0], mEntry[1][1]*rDiag[1], mEntry[1][2]*rDiag[2],
-		mEntry[1][3],
+			mEntry[1][3],
 		mEntry[2][0]*rDiag[0], mEntry[2][1]*rDiag[1], mEntry[2][2]*rDiag[2],
-		mEntry[2][3]);
+			mEntry[2][3]);
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
 Matrix34<Real> Matrix34<Real>::Inverse() const
 {
-    // Invert a 3x3 using cofactors. This is faster than using a generic
-    // Gaussian elimination because of the loop overhead of such a method.
+	Real a0 = mEntry[0][0] * mEntry[1][1] - mEntry[0][1] * mEntry[1][0];
+	Real a1 = mEntry[0][0] * mEntry[1][2] - mEntry[0][2] * mEntry[1][0];
+	Real a2 = mEntry[0][0] * mEntry[1][3] - mEntry[0][3] * mEntry[1][0];
+	Real a3 = mEntry[0][1] * mEntry[1][2] - mEntry[0][2] * mEntry[1][1];
+	Real a4 = mEntry[0][1] * mEntry[1][3] - mEntry[0][3] * mEntry[1][1];
+	Real a5 = mEntry[0][2] * mEntry[1][3] - mEntry[0][3] * mEntry[1][2];
 
-    Matrix34<Real> inverse;
+	Real det = a0 * mEntry[2][2] - a1 * mEntry[2][1] + a3 * mEntry[2][0];
+	if (Math<Real>::FAbs(det) <= Math<Real>::ZERO_TOLERANCE)
+	{
+		return Matrix34<Real>::ZERO;
+	}
 
-	inverse.mEntry[0][0] = mEntry[1][1]*mEntry[2][2] - 
-		mEntry[1][2]*mEntry[2][1];
-    inverse.mEntry[0][1] = mEntry[0][2]*mEntry[2][1] - 
-		mEntry[0][1]*mEntry[2][2];
-    inverse.mEntry[0][2] = mEntry[0][1]*mEntry[1][2] - 
-		mEntry[0][2]*mEntry[1][1];
-    inverse.mEntry[1][0] = mEntry[1][2]*mEntry[2][0] - 
-		mEntry[1][0]*mEntry[2][2];
-    inverse.mEntry[1][1] = mEntry[0][0]*mEntry[2][2] - 
-		mEntry[0][2]*mEntry[2][0];
-    inverse.mEntry[1][2] = mEntry[0][2]*mEntry[1][0] - 
-		mEntry[0][0]*mEntry[1][2];
-    inverse.mEntry[2][0] = mEntry[1][0]*mEntry[2][1] - 
-		mEntry[1][1]*mEntry[2][0];
-    inverse.mEntry[2][1] = mEntry[0][1]*mEntry[2][0] - 
-		mEntry[0][0]*mEntry[2][1];
-    inverse.mEntry[2][2] = mEntry[0][0]*mEntry[1][1] - 
-		mEntry[0][1]*mEntry[1][0];
+	Matrix34 inv;
+	inv.mEntry[0][0] = + mEntry[1][1] * mEntry[2][2] - mEntry[1][2] * mEntry[2][1];
+	inv.mEntry[1][0] = - mEntry[1][0] * mEntry[2][2] + mEntry[1][2] * mEntry[2][0];
+	inv.mEntry[2][0] = + mEntry[1][0] * mEntry[2][1] - mEntry[1][1] * mEntry[2][0];
+	inv.mEntry[0][1] = - mEntry[0][1] * mEntry[2][2] + mEntry[0][2] * mEntry[2][1];
+	inv.mEntry[1][1] = + mEntry[0][0] * mEntry[2][2] - mEntry[0][2] * mEntry[2][0];
+	inv.mEntry[2][1] = - mEntry[0][0] * mEntry[2][1] + mEntry[0][1] * mEntry[2][0];
+	inv.mEntry[0][2] = + a3;
+	inv.mEntry[1][2] = - a1;
+	inv.mEntry[2][2] = + a0;
+	inv.mEntry[0][3] = - mEntry[2][1] * a5 + mEntry[2][2] * a4 - mEntry[2][3] * a3;
+	inv.mEntry[1][3] = + mEntry[2][0] * a5 - mEntry[2][2] * a2 + mEntry[2][3] * a1;
+	inv.mEntry[2][3] = - mEntry[2][0] * a4 + mEntry[2][1] * a2 - mEntry[2][3] * a0;
 
-    Real det =
-        mEntry[0][0]*inverse.mEntry[0][0] +
-        mEntry[0][1]*inverse.mEntry[1][0] +
-        mEntry[0][2]*inverse.mEntry[2][0];
+	Real invDet = static_cast<Real>(1.0) / det;
+	inv.mEntry[0][0] *= invDet;
+	inv.mEntry[0][1] *= invDet;
+	inv.mEntry[0][2] *= invDet;
+	inv.mEntry[0][3] *= invDet;
+	inv.mEntry[1][0] *= invDet;
+	inv.mEntry[1][1] *= invDet;
+	inv.mEntry[1][2] *= invDet;
+	inv.mEntry[1][3] *= invDet;
+	inv.mEntry[2][0] *= invDet;
+	inv.mEntry[2][1] *= invDet;
+	inv.mEntry[2][2] *= invDet;
+	inv.mEntry[2][3] *= invDet;
 
-    if (Math<Real>::FAbs(det) <= Math<Real>::ZERO_TOLERANCE)
-    {
-        return ZERO;
-    }
-
-	Real invDet = (static_cast<Real>(1.0)) / det;
-    inverse.mEntry[0][0] *= invDet;
-    inverse.mEntry[0][1] *= invDet;
-    inverse.mEntry[0][2] *= invDet;
-    inverse.mEntry[1][0] *= invDet;
-    inverse.mEntry[1][1] *= invDet;
-    inverse.mEntry[1][2] *= invDet;
-    inverse.mEntry[2][0] *= invDet;
-    inverse.mEntry[2][1] *= invDet;
-    inverse.mEntry[2][2] *= invDet;
-
-	return inverse;
+	return inv;
 }
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Vector3<Real> operator* (const Vector3<Real>& rV,
-	const Matrix34<Real>& rM)
+inline Matrix4<Real> operator* (const Matrix4<Real>& rM4, const Matrix34<Real>& rM34)
 {
-	return Vector3<Real>(
-		rV[0]*rM[0][0] + rV[1]*rM[1][0] + rV[2]*rM[2][0],
-		rV[0]*rM[0][1] + rV[1]*rM[1][1] + rV[2]*rM[2][1],
-		rV[0]*rM[0][2] + rV[1]*rM[1][2] + rV[2]*rM[2][2]);
+	return Matrix4<Real>(
+	rM4[0][0] * rM34[0][0] + rM4[0][1] * rM34[1][0] + rM4[0][2] * rM34[2][0],
+	rM4[0][0] * rM34[0][1] + rM4[0][1] * rM34[1][1] + rM4[0][2] * rM34[2][1],
+	rM4[0][0] * rM34[0][2] + rM4[0][1] * rM34[1][2] + rM4[0][2] * rM34[2][2],
+	rM4[0][0] * rM34[0][3] + rM4[0][1] * rM34[1][3] + rM4[0][2] * rM34[2][3] + rM4[0][3],
+
+	rM4[1][0] * rM34[0][0] + rM4[1][1] * rM34[1][0] + rM4[1][2] * rM34[2][0],
+	rM4[1][0] * rM34[0][1] + rM4[1][1] * rM34[1][1] + rM4[1][2] * rM34[2][1],
+	rM4[1][0] * rM34[0][2] + rM4[1][1] * rM34[1][2] + rM4[1][2] * rM34[2][2],
+	rM4[1][0] * rM34[0][3] + rM4[1][1] * rM34[1][3] + rM4[1][2] * rM34[2][3] + rM4[1][3],
+
+	rM4[2][0] * rM34[0][0] + rM4[2][1] * rM34[1][0] + rM4[2][2] * rM34[2][0],
+	rM4[2][0] * rM34[0][1] + rM4[2][1] * rM34[1][1] + rM4[2][2] * rM34[2][1],
+	rM4[2][0] * rM34[0][2] + rM4[2][1] * rM34[1][2] + rM4[2][2] * rM34[2][2],
+	rM4[2][0] * rM34[0][3] + rM4[2][1] * rM34[1][3] + rM4[2][2] * rM34[2][3] + rM4[2][3],
+
+	rM4[3][0] * rM34[0][0] + rM4[3][1] * rM34[1][0] + rM4[3][2] * rM34[2][0],
+	rM4[3][0] * rM34[0][1] + rM4[3][1] * rM34[1][1] + rM4[3][2] * rM34[2][1],
+	rM4[3][0] * rM34[0][2] + rM4[3][1] * rM34[1][2] + rM4[3][2] * rM34[2][2],
+	rM4[3][0] * rM34[0][3] + rM4[3][1] * rM34[1][3] + rM4[3][2] * rM34[2][3] + rM4[3][3]);
 }

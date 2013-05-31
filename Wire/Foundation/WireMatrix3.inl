@@ -116,8 +116,7 @@ template <class Real>
 void Matrix3<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	Real angle)
 {
-	Vector3<Real> axis = rAxis;
-	Vector3<Real> u = axis / axis.Length();
+	Vector3<Real> u = rAxis / rAxis.Length();
 	Real c = Math<Real>::Cos(angle);
 	Real s = Math<Real>::Sin(angle);
 	Real t = (static_cast<Real>(1.0)) - c;

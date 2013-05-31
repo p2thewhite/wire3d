@@ -418,6 +418,7 @@ void Node::Unbind(Renderer* pRenderer)
 //----------------------------------------------------------------------------
 void Node::WarmUpRendering(Renderer* pRenderer)
 {
+#ifndef WIRE_WII // Wii does not need to warm up by submitting draw calls
 	WIRE_ASSERT(pRenderer);
 	UpdateGS(0, true, false);
 
@@ -482,6 +483,7 @@ void Node::WarmUpRendering(Renderer* pRenderer)
 	}
 
 	pRenderer->PostDraw();
+#endif
 }
 
 //----------------------------------------------------------------------------

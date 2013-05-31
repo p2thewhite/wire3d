@@ -238,11 +238,5 @@ Vector3F Camera::GetPickDirection(const Vector2F& rPosition)
 	Vector3F v(rPosition.X() / projectionMatrix(0, 0),
 		rPosition.Y() / projectionMatrix(1, 1), 1);
 
-	Vector3F pickDir;
-	// multiply with 3x3 part of inverse view matrix
-	// TODO: implement matrix34 3x3 only multiplication?
-	pickDir.X() = v.X() * mRVector.X() + v.Y() * mUVector.X() + v.Z() * mDVector.X();
-	pickDir.Y() = v.X() * mRVector.Y() + v.Y() * mUVector.Y() + v.Z() * mDVector.Y();
-	pickDir.Z() = v.X() * mRVector.Z() + v.Y() * mUVector.Z() + v.Z() * mDVector.Z();
-	return pickDir;
+	return GetViewMatrixInverse34().Times3(v);
 }

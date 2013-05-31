@@ -556,7 +556,7 @@ Matrix4<Real> Matrix4<Real>::TimesTranspose(const Matrix4& rM) const
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix4<Real> Matrix4<Real>::Inverse () const
+Matrix4<Real> Matrix4<Real>::Inverse() const
 {
 	Real a0 = mEntry[ 0] * mEntry[ 5] - mEntry[ 1] * mEntry[ 4];
 	Real a1 = mEntry[ 0] * mEntry[ 6] - mEntry[ 2] * mEntry[ 4];

@@ -11,7 +11,8 @@
 #define WIREMATRIX34_H
 
 // Matrix34 is a 4x4 matrix with an implicit 4th row of (0, 0, 0, 1).
-// It is a row-major matrix, thus it is indexed as Matrix[row][column]
+// It is a row-major matrix, thus it is indexed as Matrix[row][column].
+// Vector3 is treated as (x, y, z, 1).
 
 // Matrix operations are applied on the left. For example, given a matrix M
 // and a vector V, matrix-times-vector is M*V. That is, V is treated as a
@@ -22,7 +23,7 @@
 // (M1*M0)*V = M1*(M0*V). Some graphics APIs use M0*M1, but again these
 // matrices are the transpose of those as represented in Wire. You must
 // therefore be careful about how you interface the transformation code with
-// graphics APIS.
+// graphics APIs.
 
 // The (x,y,z) coordinate system is assumed to be right-handed. Coordinate
 // axis rotation matrices are of the form
@@ -41,7 +42,9 @@
 
 #include "WireTypes.h"
 #include "WireMatrix3.h"
+#include "WireMatrix4.h"
 #include "WireVector3.h"
+#include "WireVector4.h"
 
 namespace Wire
 {
@@ -59,18 +62,27 @@ public:
 	Matrix34(Bool zero);
 
 	// input mRC is in row R, column C
-	Matrix34(Real m00, Real m01, Real m02, Real m03,
+	Matrix34(
+		Real m00, Real m01, Real m02, Real m03,
 		Real m10, Real m11, Real m12, Real m13,
 		Real m20, Real m21, Real m22, Real m23);
 
-	// Create rotation matrices (positive angle - counterclockwise). The
+	// Create rotation matrix (positive angle - counterclockwise). The
 	// angle must be in radians, not degrees.
 	Matrix34(const Vector3<Real>& rAxis, Real angle);
 
-	// Create matrices based on row or column vector input.
+	// Create matrix based on row or column vector input.
 	// 4th column is initialized to (0,0,0).
 	Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
 		const Vector3<Real>& rW, Bool isColumn);
+
+	// Create matrix based on row vector input.
+	Matrix34(const Vector4<Real>& rU, const Vector4<Real>& rV,
+		const Vector4<Real>& rW);
+
+	// Create matrix based on column vector input.
+	Matrix34(const Vector3<Real>& rU, const Vector3<Real>& rV,
+		const Vector3<Real>& rW, const Vector3<Real>& rT);
 
 	// Create the matrix using a Matrix3 and a Vector3 as the 4th column.
 	Matrix34(const Matrix3<Real>& rM, const Vector3<Real>& rV);
@@ -81,6 +93,8 @@ public:
 	// create various matrices
 	void MakeZero();
 	void MakeIdentity();
+
+	// 4th column is set to (0, 0, 0, 1)
 	void FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
 
 	// member access
@@ -96,11 +110,18 @@ public:
 	Vector3<Real> GetColumn(UInt col) const;
 
 	// arithmetic operations
-	inline Matrix34 operator* (const Matrix34& rMatrix) const;
-	inline Matrix34 operator* (Real scalar) const;
+	inline Matrix34<Real> operator* (const Matrix34<Real>& rMatrix) const;
+	inline Matrix4<Real> operator* (const Matrix4<Real>& rMatrix) const; // M34 * M4;
 
 	// matrix times vector
 	inline Vector3<Real> operator* (const Vector3<Real>& rV) const;	// M * v
+	inline Vector4<Real> operator* (const Vector4<Real>& rV) const;	// M * v
+
+	// 3x3 submatrix M * v
+	inline Vector3<Real> Times3(const Vector3<Real>& rV) const;
+
+	// 3x3 submatrix v^T * M
+	inline Vector3<Real> Times3Row(const Vector3<Real>& rV) const;
 
 	// other operations
 	Matrix34 TimesDiagonal(const Vector3<Real>& rDiag) const;
@@ -114,10 +135,10 @@ private:
 	Real mEntry[3][4];
 };
 
-// v^T * M
+// M4 * M34
 template <class Real>
-inline Vector3<Real> operator* (const Vector3<Real>& rV,
-	const Matrix34<Real>& rM);
+inline Matrix4<Real> operator* (const Matrix4<Real>& rM4,
+	const Matrix34<Real>& rM34);
 
 #ifdef WIRE_WII
 #include "Wii/WireMatrix34Wii.inl"

@@ -254,8 +254,8 @@ void Sample7::GeneratePositions(VertexBuffer* pVBuffer, Float radiusAngle)
 	Float angle = 0;
 	for (UInt i = 0; i < (shapeCount-1); i++)
 	{
-		Matrix34F rot(Vector3F(0, 0, 1), angle);
-		shape.SetElement(i, pos * rot);
+		Matrix34F rot(Vector3F(0, 0, -1), angle);
+		shape.SetElement(i, rot * pos);
 		angle += angleStride;
 	}
 

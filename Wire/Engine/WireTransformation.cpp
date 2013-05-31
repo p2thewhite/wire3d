@@ -192,7 +192,7 @@ void Transformation::Product(const Transformation& rA,
 			SetRotate(rA.mMatrix * rB.mMatrix);
 
 			SetTranslate(rA.GetUniformScale() * (
-				rA.mMatrix * rB.GetTranslate()) + rA.GetTranslate());
+				rA.mMatrix.Times3(rB.GetTranslate())) + rA.GetTranslate());
 
 			if (rB.IsUniformScale())
 			{
@@ -215,7 +215,6 @@ void Transformation::Product(const Transformation& rA,
 		rB.GetMatrix().TimesDiagonal(rB.GetScale()) : rB.GetMatrix());
 
 	SetMatrix(A * B);
-	SetTranslate(A * rB.GetTranslate() + rA.GetTranslate());
 }
 
 //----------------------------------------------------------------------------
@@ -232,13 +231,11 @@ Vector3F Transformation::ApplyForward(const Vector3F& rInput) const
 		// Y = R*S*X + T
 		Vector3F output(mScale.X() * rInput.X(), mScale.Y() * rInput.Y(),
 			mScale.Z() * rInput.Z());
-		output = mMatrix * output + GetTranslate();
-		return output;
+		return mMatrix * output;
 	}
 
-	// Y = M*X + T
-	Vector3F output = mMatrix * rInput + GetTranslate();
-	return output;
+	// Y = M*X (i.e. R*S*X + T)
+	return mMatrix * rInput;
 }
 
 //----------------------------------------------------------------------------
@@ -299,11 +296,11 @@ Vector3F Transformation::ApplyInverse(const Vector3F& rInput) const
         return rInput;
     }
 
-    Vector3F output = rInput - GetTranslate();
     if (mIsRSMatrix)
     {
         // X = S^{-1}*R^t*(Y - T)
-		output = output * GetMatrix();
+		Vector3F output = rInput - GetTranslate();
+		output = GetMatrix().Times3Row(output);
         if (mIsUniformScale)
         {
             output /= GetUniformScale();
@@ -326,12 +323,10 @@ Vector3F Transformation::ApplyInverse(const Vector3F& rInput) const
             output.Y() *= invDet * sxz;
             output.Z() *= invDet * sxy;
         }
-    }
-    else
-    {
-        // X = M^{-1}*(Y - T)
-        output = GetMatrix().Inverse() * output;
+
+		return output;
     }
 
-    return output;
+    // X = M^{-1}*Y  (i.e. (R*S)^{-1}*(Y - T))
+	return GetMatrix().Inverse() * rInput;
 }
