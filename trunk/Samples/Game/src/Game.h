@@ -20,7 +20,6 @@ public:
 	virtual Bool OnInitialize();
 	virtual void OnTerminate();
 	virtual void OnIdle();
-	virtual void OnInput();
 
 private:
 	enum AppState
@@ -35,31 +34,42 @@ private:
 	Wire::Node* LoadAndInitializeScene();
 	Wire::Node* LoadAndInitializeGUI();
 
-	void MoveCrosshairTo(const Wire::Vector2F& rScreenPoint);
+	void ProcessInput();
 	void InitializePhysics();
 	void UpdatePhysics(Double deltaTime);
 	void TerminatePhysics();
 
 	Double mLastApplicationTime;
 	UInt mAppState;
-	Bool mShowFps;
-	Wire::Vector3F mStartingPoint;
+
+	// loading screen
+	Wire::NodePtr mspLogo;
+	Wire::CameraPtr mspLogoCamera;
+
+	// cursor
+	Wire::NodePtr mspGUI;
+	Wire::CameraPtr mspGUICamera;
+
+	// scene
+	Wire::NodePtr mspScene;
+	Wire::CameraPtr mspSceneCamera;
+	Wire::SpatialPtr mspCrosshair;
+	PhysicsWorldPtr mspPhysicsWorld;
+
 	Wire::Pointer<ProbeRobot> mspProbeRobot;
 	Wire::Pointer<Player> mspPlayer;
-	Wire::NodePtr mspLogo;
-	Wire::NodePtr mspScene;
-	Wire::NodePtr mspGUI;
-	Wire::TArray<Wire::CameraPtr> mLogoCameras;
-	Wire::TArray<Wire::CameraPtr> mSceneCameras;
-	Wire::TArray<Wire::CameraPtr> mGUICameras;
-	Wire::Culler mLogoCuller;
-	Wire::CullerSorting mSceneCuller;
-	Wire::Culler mGUICuller;
-	Wire::SpatialPtr mspCrosshair;
-	Wire::TextPtr mspText;
-	Bool mShowColliders;
 
-	PhysicsWorldPtr mspPhysicsWorld;
+	Wire::Culler mCuller;
+	Wire::CullerSorting mSortingCuller;
+
+	// render statistics text
+	Wire::TextPtr mspText;
+
+	Wire::Vector2F mCursorPosition;
+	Bool mShowColliders;
+	Bool mShowFps;
+	Bool mWasButton1Pressed;
+	Bool mWasButton2Pressed;
 };
 
 WIRE_REGISTER_INITIALIZE(Game);

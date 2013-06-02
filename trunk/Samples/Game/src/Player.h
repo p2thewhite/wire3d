@@ -18,18 +18,21 @@ public:
 
 	virtual Bool Update(Double appTime);
 	void Register(btDynamicsWorld* pDynamicsWorld);
+	void LookAt(const Wire::Vector2F& rLookAt);
+
+private:
+	void ProcessInput(Double appTime);
+
 	void SetMoveSpeed(Float moveSpeed);
 	void MoveForward();
 	void MoveBackward();
 	void StrafeLeft();
 	void StrafeRight();
-	void LookAt(const Wire::Vector2F& rLookAt);
 	void Jump();
 	void Shoot();
 
-private:
 	Wire::Vector3F GetPosition();
-	void UpdateGunRotation(Wire::Matrix3F& rRotation);
+	void UpdateGunRotation();
 	void DoShooting(const Wire::Vector3F& rDirection);
 	void CreateRay(Float size);
 
@@ -40,22 +43,26 @@ private:
 	const Float mCharacterWidth;
 	const Float mCharacterHeight;
 	const Float mStepHeight;
+	const Float mRotateSpeed;
 
 	Float mMoveSpeed;
-	Float mRotateSpeed;
 	Wire::Vector3F mForward;
 	Wire::Vector3F mRight;
 	Float mPitch;
 	Float mYaw;
 	Float mPitchIncrement;
 	Float mYawIncrement;
+	Float mRoll;
 	Wire::Vector3F mMove;
 	Wire::Vector2F mLookAt;
 	Wire::Node* mpNode;
 	Wire::Spatial* mpGun;
 	Wire::CameraPtr mspCamera;
+
 	Bool mJump;
 	Bool mShoot;
+	Bool mWasButtonAPressed;
+
 	btDynamicsWorld* mpPhysicsWorld;
 	btPairCachingGhostObject* mpGhostObject;
 	btKinematicCharacterController* mpPhysicsEntity;

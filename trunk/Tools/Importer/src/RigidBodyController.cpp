@@ -59,35 +59,29 @@ Bool RigidBodyController::Update(Double appTime)
 		return false;
 	}
 
-	if (mpRigidBody->getMotionState())
+	if (mpRigidBody->getMotionState() && (!mIsStaticCollider || mspDebugShape)) 
 	{
-		Matrix3F mat;
 		btTransform trans;
-		Vector3F pos;
-		QuaternionF quat;
+		mpRigidBody->getMotionState()->getWorldTransform(trans);
+		Vector3F pos = PhysicsWorld::Convert(trans.getOrigin());
+		QuaternionF quat = PhysicsWorld::Convert(trans.getRotation());
+		Matrix3F mat;
+		quat.ToRotationMatrix(mat);
 
-		if (!mIsStaticCollider || mspDebugShape)
+		if (!mIsStaticCollider)
 		{
-			mpRigidBody->getMotionState()->getWorldTransform(trans);
-			pos = PhysicsWorld::Convert(trans.getOrigin());
-			quat = PhysicsWorld::Convert(trans.getRotation());
-			quat.ToRotationMatrix(mat);
+			WIRE_ASSERT(DynamicCast<Spatial>(mpSceneObject));
+			Spatial* pSpatial = StaticCast<Spatial>(mpSceneObject);
+			pSpatial->World.SetTranslate(pos);
+			pSpatial->World.SetRotate(mat);
+			pSpatial->WorldIsCurrent = true;
+		}
 
-			if (!mIsStaticCollider)
-			{
-				WIRE_ASSERT(DynamicCast<Spatial>(mpSceneObject));
-				Spatial* pSpatial = StaticCast<Spatial>(mpSceneObject);
-				pSpatial->World.SetTranslate(pos);
-				pSpatial->World.SetRotate(mat);
-				pSpatial->WorldIsCurrent = true;
-			}
-
-			if (mspDebugShape)
-			{
-				mspDebugShape->World.SetTranslate(pos);
-				mspDebugShape->World.SetRotate(mat);
-				mspDebugShape->WorldIsCurrent = true;
-			}
+		if (mspDebugShape)
+		{
+			mspDebugShape->World.SetTranslate(pos);
+			mspDebugShape->World.SetRotate(mat);
+			mspDebugShape->WorldIsCurrent = true;
 		}
 	}
 

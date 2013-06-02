@@ -9,7 +9,11 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Game::Game() 
 	:
-	mShowColliders(false)
+	mCursorPosition(Vector2F::ZERO),
+	mShowColliders(false),
+	mShowFps(false),
+	mWasButton1Pressed(false),
+	mWasButton2Pressed(false)
 {
 }
 
@@ -32,7 +36,6 @@ Bool Game::OnInitialize()
 
 	mAppState = AS_LOADING;
 	mLastApplicationTime = System::GetTime();
-	mShowFps = false;
 
 	// Font for render statistics debug text
 	mspText = Importer::CreateText("Data/Logo/font.ttf", 12, 12);
@@ -59,7 +62,7 @@ void Game::OnIdle()
 	Double deltaTime = appTime - mLastApplicationTime;
 	mLastApplicationTime = appTime;
 
-	mLogoCameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
+	mspLogoCamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 
 	switch (mAppState)
 	{
@@ -77,19 +80,8 @@ void Game::OnIdle()
 }
 
 //----------------------------------------------------------------------------
-void Game::OnInput()
+void Game::ProcessInput()
 {
-	static Double lastButton1PressTime = 0;
-	static Float oldX = 0;
-	static Float oldY = 0;
-	Double appTime = System::GetTime();
-	static Bool buttonAReleased = true;
-
-	if (mspPlayer == NULL)
-	{
-		return;
-	}
-
 	if (GetInputSystem()->GetMainDevicesCount() == 0)
 	{
 		return;
@@ -114,182 +106,98 @@ void Game::OnInput()
 		return;
 	}
 
-	// ---
-	// Processing analog/digital pad
-
-	if (pInputDevice->HasCapability(AnalogPad::TYPE, true))
-	{
-		const AnalogPad* pAnalogPad = DynamicCast<const AnalogPad>(pInputDevice->
-			GetCapability(AnalogPad::TYPE, true));
-		WIRE_ASSERT(pAnalogPad);
-
-		if (pAnalogPad->GetUp() > 0)
-		{
-			mspPlayer->MoveForward();
-		}
-		else if (pAnalogPad->GetDown() > 0)
-		{
-			mspPlayer->MoveBackward();
-		}
-
-		if (pAnalogPad->GetRight() > 0)
-		{
-			mspPlayer->StrafeRight();
-		}
-		else if (pAnalogPad->GetLeft() > 0)
-		{
-			mspPlayer->StrafeLeft();
-		}
-	}
-	else 
-	{
-		const DigitalPad* pDigitalPad = DynamicCast<const DigitalPad>(pInputDevice->
-			GetCapability(DigitalPad::TYPE, false));
-		WIRE_ASSERT(pDigitalPad);
-
-		if (pDigitalPad->GetUp())
-		{
-			mspPlayer->MoveForward();
-		}
-		else if (pDigitalPad->GetDown())
-		{
-			mspPlayer->MoveBackward();
-		}
-
-		if (pDigitalPad->GetLeft())
-		{
-			mspPlayer->StrafeLeft();
-		}
-		else if (pDigitalPad->GetRight())
-		{
-			mspPlayer->StrafeRight();
-		}
-	}
-
-	// ---
 	// Processing IR
-
+	//
 	const IR* pIR = DynamicCast<const IR>(pInputDevice->GetCapability(IR::TYPE, false));
 	WIRE_ASSERT(pIR);
 
-	Float x = pIR->GetRight();
-	Float y = pIR->GetUp();
+	Vector2F cursorPosition(pIR->GetRight(), pIR->GetUp());
 
 	// If the IR is pointing outside of the capture area, set the lookAt vector to the previous captured position
 	// TODO: fix inconsistent Win32/Wii behavior/handling
-	if (x == MathF::MAX_REAL || y == MathF::MAX_REAL)
+	if (cursorPosition.X() == MathF::MAX_REAL || cursorPosition.Y() == MathF::MAX_REAL)
 	{
-		x = oldX;
-		y = oldY;
+		cursorPosition = mCursorPosition;
 	}
 	else
 	{
 		// Height correction
-		y = GetHeightF() - y;
+		cursorPosition.Y() = GetHeightF() - cursorPosition.Y();
 	}
 
-	oldX = x;
-	oldY = y;
-
-	MoveCrosshairTo(Vector2F(x, y));
+	mCursorPosition = cursorPosition;
+	if (mspCrosshair)
+	{
+		mspCrosshair->Local.SetTranslate(Vector3F(cursorPosition.X() - 16,
+			cursorPosition.Y() - 16, 0));
+	}
 
 	// Converting from (top, left) to (horizontal screen center, vertical screen center) coordinate system
-	x -= GetWidthF() * 0.5F;
-	y -= GetHeightF() * 0.5F;
+	cursorPosition.X() -= GetWidthF() * 0.5F;
+	cursorPosition.Y() -= GetHeightF() * 0.5F;
 
-	mspPlayer->LookAt(Vector2F(x, y));
+	if (mspPlayer)
+	{
+		mspPlayer->LookAt(cursorPosition);
+	}
 
-	// ---
-	// Processing buttons
-
+	// Processing buttons/keys
+	//
 	const Buttons* pButtons = DynamicCast<const Buttons>(pInputDevice->
 		GetCapability(Buttons::TYPE, false));
 	WIRE_ASSERT(pButtons);
 
-	// 'HOME' button exit the game
-	if (pButtons->GetButton(Buttons::BUTTON_HOME))
+	// '1' button/key toggles display of renderer statistics
+	if (pButtons->GetButton(Buttons::BUTTON_1))
 	{
-		Close();
-		return;
-	}
-
-	// 'PLUS' button displays renderer statistics
-	if (pButtons->GetButton(Buttons::BUTTON_PLUS))
-	{
-		mShowFps = true;
-	}
-	else if (pButtons->GetButton(Buttons::BUTTON_MINUS))
-	{
-		mShowFps = false;
-	}
-
-	// 'A' button makes the player shoot
-	if (pButtons->GetButton(Buttons::BUTTON_A))
-	{
-		if (buttonAReleased) 
+		if (!mWasButton1Pressed)
 		{
-			mspPlayer->Shoot();
-			buttonAReleased = false;
+			mShowFps = !mShowFps;
+			mWasButton1Pressed = true;
 		}
 	}
 	else
 	{
-		buttonAReleased = true;
+		mWasButton1Pressed = false;
 	}
 
-	// 'B' button makes the player jump
-	if (pButtons->GetButton(Buttons::BUTTON_B))
+	// '2' button/key toggles debug draw of physics collision shapes
+	if (pButtons->GetButton(Buttons::BUTTON_2))
 	{
-		mspPlayer->Jump();
-	}
-
-	if (pButtons->GetButton(Buttons::BUTTON_1) && (appTime - lastButton1PressTime) > 0.5)
-	{
-		mShowColliders = !mShowColliders;
-		mspPhysicsWorld->ToggleDebugShapes(mShowColliders, true);
-
-		lastButton1PressTime = appTime;
-	}
-
-	// If there's a nunchuk, start reading its buttons instead
-	if (pInputDevice->HasExtension(Nunchuk::TYPE))
-	{
-		pButtons = DynamicCast<const Buttons>(pInputDevice->GetExtension(Nunchuk::TYPE)->
-			GetCapability(Buttons::TYPE));
-		WIRE_ASSERT(pButtons);
-	}
-
-	// 'Z' button makes the player run
-	if (pButtons->GetButton(Buttons::BUTTON_Z))
-	{
-		mspPlayer->SetMoveSpeed(10.0F);
+		if (!mWasButton2Pressed)
+		{
+			mShowColliders = !mShowColliders;
+			mspPhysicsWorld->ToggleDebugShapes(mShowColliders);
+			mWasButton2Pressed = true;
+		}
 	}
 	else
 	{
-		mspPlayer->SetMoveSpeed(5.0F);
+		mWasButton2Pressed = false;
 	}
 }
 
 //----------------------------------------------------------------------------
 void Game::OnRunning(Double time, Double deltaTime)
 {
-	// Update physics simulation
+	ProcessInput();
 	UpdatePhysics(deltaTime);
 
 	mspScene->UpdateGS(time);
-	mSceneCuller.ComputeVisibleSet(mspScene);
+	mSortingCuller.ComputeVisibleSet(mspScene);
 
-	mGUICameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	mspGUI->UpdateGS(time);
-	mGUICuller.ComputeVisibleSet(mspGUI);
+	mspGUICamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
+	mCuller.SetCamera(mspGUICamera);
+	mCuller.ComputeVisibleSet(mspGUI);
 
 	GetRenderer()->GetStatistics()->Reset();
 	GetRenderer()->ClearBuffers();
-	GetRenderer()->PreDraw(mSceneCameras[0]);
-	GetRenderer()->Draw(mSceneCuller.GetVisibleSets());
+	GetRenderer()->PreDraw(mspSceneCamera);
+	GetRenderer()->Draw(mSortingCuller.GetVisibleSets());
 
-	GetRenderer()->SetCamera(mGUICameras[0]);
-	GetRenderer()->Draw(mGUICuller.GetVisibleSets());
+	GetRenderer()->SetCamera(mspGUICamera);
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 
 	if (mShowFps)
 	{
@@ -309,10 +217,11 @@ void Game::OnLoading(Double time, Double deltaTime)
 
 	if (pLoading)
 	{
-		StateMaterial* pMaterialState = DynamicCast<StateMaterial>(pLoading->GetState(State::MATERIAL));
+		StateMaterial* pMaterialState = DynamicCast<StateMaterial>(pLoading->
+			GetState(State::MATERIAL));
 		if (pMaterialState)
 		{
-			pMaterialState->Ambient.A() += static_cast<Float>(deltaTime) * 0.5F;
+			pMaterialState->Ambient.A() += static_cast<Float>(deltaTime);
 
 			if (pMaterialState->Ambient.A() > 1.0F)
 			{
@@ -322,12 +231,14 @@ void Game::OnLoading(Double time, Double deltaTime)
 		}
 	}
 
-	mspLogo->UpdateGS();
-	mLogoCuller.ComputeVisibleSet(mspLogo);
+	mspLogo->UpdateGS(time);
+
+	mCuller.SetCamera(mspLogoCamera);
+	mCuller.ComputeVisibleSet(mspLogo);
 
 	GetRenderer()->ClearBuffers();
-	GetRenderer()->PreDraw(mLogoCameras[0]);
-	GetRenderer()->Draw(mLogoCuller.GetVisibleSets());
+	GetRenderer()->PreDraw(mspLogoCamera);
+	GetRenderer()->Draw(mCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
 
@@ -358,22 +269,21 @@ void Game::OnLoading(Double time, Double deltaTime)
 Node* Game::LoadAndInitializeLoading()
 {
 	Importer importer("Data/Logo/");
-	Node* pRoot = importer.LoadSceneFromXml("logo.xml", &mLogoCameras);
-
+	TArray<CameraPtr> cameras;
+	Node* pRoot = importer.LoadSceneFromXml("logo.xml", &cameras);
 	if (!pRoot)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in logo.xml */);
+	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in logo.xml */);
+	mspLogoCamera = cameras[0];
 
-	mLogoCuller.SetCamera(mLogoCameras[0]);
-
+	// center 512x256 logo on screen
 	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
 		(GetHeightF() - 256.0F)  * 0.5F, 0));
 
 	pRoot->Bind(GetRenderer());
-
 	return pRoot;
 }
 
@@ -381,16 +291,15 @@ Node* Game::LoadAndInitializeLoading()
 Node* Game::LoadAndInitializeGUI()
 {
 	Importer importer("Data/GUI/");
-	Node* pRoot = importer.LoadSceneFromXml("GUI.xml", &mGUICameras);
-
+	TArray<CameraPtr> cameras;
+	Node* pRoot = importer.LoadSceneFromXml("GUI.xml", &cameras);
 	if (!pRoot)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mGUICameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
-
-	mGUICuller.SetCamera(mGUICameras[0]);
+	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
+	mspGUICamera = cameras[0];
 
 	mspCrosshair = pRoot->GetChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
@@ -404,28 +313,18 @@ Node* Game::LoadAndInitializeGUI()
 Node* Game::LoadAndInitializeScene()
 {
 	Importer importer("Data/Scene/");
-	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &mSceneCameras,
+	TArray<CameraPtr> cameras;
+	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &cameras,
 		mspPhysicsWorld);
-
 	if (!pScene)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in scene.xml */);
-	mSceneCameras[0]->SetAspectRatio(GetWidthF() / GetHeightF());
-	mSceneCuller.SetCamera(mSceneCameras[0]);
-
-	Spatial* pStartingPoint = pScene->GetChildByName("Starting Point");
-
-	if (pStartingPoint)
-	{
-		mStartingPoint = pStartingPoint->World.GetTranslate();
-	}
-	else
-	{
-		mStartingPoint = Vector3F::ZERO;
-	}
+	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in scene.xml */);
+	mspSceneCamera = cameras[0];
+	mspSceneCamera->SetAspectRatio(GetWidthF() / GetHeightF());
+	mSortingCuller.SetCamera(mspSceneCamera);
 
 	// The maximum number of objects that are going to be culled is the
 	// number of objects we imported. If we don't set the size of the set now,
@@ -433,7 +332,7 @@ Node* Game::LoadAndInitializeScene()
 	// a big deal, however it is better to avoid memory allocations during the
 	// render loop.
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
-	mSceneCuller.SetMaxQuantity(renderObjectCount);
+	mSortingCuller.SetMaxQuantity(renderObjectCount);
 
 	Spatial* pProbeRobotSpatial = pScene->GetChildByName("Probe Robot");
 	Spatial* pPlayerSpatial = pScene->GetChildByName("Player");
@@ -449,7 +348,7 @@ Node* Game::LoadAndInitializeScene()
 	mspProbeRobot->Register(mspPhysicsWorld->Get());
 
 	// Create and configure player controller
-	mspPlayer = WIRE_NEW Player(mSceneCameras[0]);
+	mspPlayer = WIRE_NEW Player(mspSceneCamera);
 	pPlayerSpatial->AttachController(mspPlayer);
 	mspPlayer->Register(mspPhysicsWorld->Get());
 
@@ -457,12 +356,6 @@ Node* Game::LoadAndInitializeScene()
 	pScene->WarmUpRendering(GetRenderer());
 
 	return pScene;
-}
-
-//----------------------------------------------------------------------------
-void Game::MoveCrosshairTo(const Vector2F& rScreenPosition)
-{
-	mspCrosshair->Local.SetTranslate(Vector3F(rScreenPosition.X() - 16, rScreenPosition.Y() - 16, 0));
 }
 
 //----------------------------------------------------------------------------
