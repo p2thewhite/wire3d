@@ -20,17 +20,19 @@ Player::Player(Camera* pCamera)
 	mCharacterWidth(1.7F),
 	mCharacterHeight(1.5F),
 	mStepHeight(0.5F),
-	mMoveSpeed(5.0F),
 	mRotateSpeed(MathF::PI / 9),
+	mMoveSpeed(5.0F),
 	mPitch(0),
 	mYaw(0),
 	mPitchIncrement(0),
 	mYawIncrement(0),
+	mRoll(0),
 	mMove(Vector3F::ZERO),
 	mLookAt(Vector2F::ZERO),
 	mpNode(NULL),
 	mJump(false),
-	mShoot(false)
+	mShoot(false),
+	mWasButtonAPressed(false)
 {
 	WIRE_ASSERT(pCamera);
 	mspCamera = pCamera;
@@ -46,6 +48,8 @@ Bool Player::Update(Double appTime)
 	}
 
 	mLastApplicationTime = appTime;
+
+	ProcessInput(appTime);
 
 	// Apply accumulators
 	mMove *= deltaTime;
@@ -81,7 +85,7 @@ Bool Player::Update(Double appTime)
 	// update camera
 	mspCamera->SetFrame(GetPosition(), eyeDirection, up, mRight);
 
-	UpdateGunRotation(rotationY);
+	UpdateGunRotation();
 
 	DoShooting(eyeDirection);
 
@@ -89,6 +93,7 @@ Bool Player::Update(Double appTime)
 	if (mJump)
 	{
 		mpPhysicsEntity->jump();
+		mJump = false;
 	}
 
 	mpPhysicsEntity->setWalkDirection(PhysicsWorld::Convert(mMove));
@@ -97,10 +102,146 @@ Bool Player::Update(Double appTime)
 	mMove = Vector3F::ZERO;
 	mPitchIncrement = 0;
 	mYawIncrement = 0;
-	mJump = false;
-
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+void Player::ProcessInput(Double appTime)
+{
+	Application* pApplication = Application::GetApplication();
+	InputSystem* pInputSystem = pApplication->GetInputSystem();
+	if (!pInputSystem)
+	{
+		return;
+	}
+
+	if (pInputSystem->GetMainDevicesCount() == 0)
+	{
+		return;
+	}
+
+	const MainInputDevice* pInputDevice = pInputSystem->GetMainDevice(0);
+
+	// Checking minimum capabilities
+	if (!pInputDevice->HasCapability(AnalogPad::TYPE, true) && !pInputDevice->
+		HasCapability(DigitalPad::TYPE, true))
+	{
+		return;
+	}
+
+	if (!pInputDevice->HasCapability(IR::TYPE, true))
+	{
+		return;
+	}
+
+	if (!pInputDevice->HasCapability(Buttons::TYPE, true))
+	{
+		return;
+	}
+
+	// Processing analog/digital pad
+	//
+	if (pInputDevice->HasCapability(AnalogPad::TYPE, true))
+	{
+		const AnalogPad* pAnalogPad = DynamicCast<const AnalogPad>(pInputDevice->
+			GetCapability(AnalogPad::TYPE, true));
+		WIRE_ASSERT(pAnalogPad);
+
+		if (pAnalogPad->GetUp() > 0)
+		{
+			MoveForward();
+		}
+		else if (pAnalogPad->GetDown() > 0)
+		{
+			MoveBackward();
+		}
+
+		if (pAnalogPad->GetRight() > 0)
+		{
+			StrafeRight();
+		}
+		else if (pAnalogPad->GetLeft() > 0)
+		{
+			StrafeLeft();
+		}
+	}
+	else 
+	{
+		const DigitalPad* pDigitalPad = DynamicCast<const DigitalPad>(pInputDevice->
+			GetCapability(DigitalPad::TYPE, false));
+		WIRE_ASSERT(pDigitalPad);
+
+		if (pDigitalPad->GetUp())
+		{
+			MoveForward();
+		}
+		else if (pDigitalPad->GetDown())
+		{
+			MoveBackward();
+		}
+
+		if (pDigitalPad->GetLeft())
+		{
+			StrafeLeft();
+		}
+		else if (pDigitalPad->GetRight())
+		{
+			StrafeRight();
+		}
+	}
+
+	// Processing buttons
+	//
+	const Buttons* pButtons = DynamicCast<const Buttons>(pInputDevice->
+		GetCapability(Buttons::TYPE, false));
+	WIRE_ASSERT(pButtons);
+
+	// 'A' button makes the player shoot
+	if (pButtons->GetButton(Buttons::BUTTON_A))
+	{
+		if (!mWasButtonAPressed) 
+		{
+			Shoot();
+			mWasButtonAPressed = true;
+		}
+	}
+	else
+	{
+		mWasButtonAPressed = false;
+	}
+
+	// 'B' button makes the player jump
+	if (pButtons->GetButton(Buttons::BUTTON_B))
+	{
+		Jump();
+	}
+
+	// If there's a nunchuk, start reading its buttons instead
+	if (pInputDevice->HasExtension(Nunchuk::TYPE))
+	{
+		pButtons = DynamicCast<const Buttons>(pInputDevice->GetExtension(Nunchuk::TYPE)->
+			GetCapability(Buttons::TYPE));
+		WIRE_ASSERT(pButtons);
+	}
+
+	// 'Z' button makes the player run
+	if (pButtons->GetButton(Buttons::BUTTON_Z))
+	{
+		SetMoveSpeed(8.0F);
+	}
+	else
+	{
+		SetMoveSpeed(4.0F);
+	}
+
+	// get the main device tilt (win32: mouse wheel) (in degrees)
+	const Tilt* pTilt = DynamicCast<const Tilt>(pInputDevice->
+		GetCapability(Tilt::TYPE, false));
+	if (pTilt)
+	{
+		mRoll = MathF::DEG_TO_RAD * (pTilt->GetLeft());
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -133,8 +274,8 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 	mpGun = mpNode->GetChildByName("Gun");
 
 	// Set camera position
-	Vector3F cameraPosition = mpNode->World.GetTranslate();
-	mspCamera->SetFrame(cameraPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
+// 	Vector3F cameraPosition = mpNode->World.GetTranslate();
+// 	mspCamera->SetFrame(cameraPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
 
 	// Set physics entity position
 	btTransform transform;
@@ -217,7 +358,7 @@ Vector3F Player::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdateGunRotation(Matrix3F& rRotation)
+void Player::UpdateGunRotation()
 {
 	if (mpGun == NULL)
 	{
@@ -239,7 +380,8 @@ void Player::UpdateGunRotation(Matrix3F& rRotation)
 	right.Normalize();
 	up.Normalize();
 	Matrix3F mat(-right, up, pickDirection, true);
-	mpGun->Local.SetRotate(mat);
+	Matrix3F roll(Vector3F(0, 0, 1), mRoll);
+	mpGun->Local.SetRotate(mat * roll);
 }
 
 //----------------------------------------------------------------------------

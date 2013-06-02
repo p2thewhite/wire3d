@@ -65,6 +65,9 @@ void Sample11::OnIdle()
 //----------------------------------------------------------------------------
 void Sample11::OnInput()
 {
+	// Override base class to change default behavior.
+	// InputSystem can be accessed anywhere.
+
 	UInt playerCount = GetInputSystem()->GetMainDevicesCount();
 	playerCount = playerCount > 4 ? 4 : playerCount; // maximum of 4 players
 

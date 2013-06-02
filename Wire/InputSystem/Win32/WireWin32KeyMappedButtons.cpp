@@ -41,10 +41,10 @@ Bool Win32KeyMappedButtons::GetButton(Button button) const
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ESCAPE);
 	case BUTTON_MINUS:
 		// '-' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_SUBTRACT);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_OEM_MINUS);
 	case BUTTON_PLUS:
 		// '+' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_ADD);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_OEM_PLUS);
 	case BUTTON_Z:
 		// 'z' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x5A);

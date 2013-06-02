@@ -68,9 +68,8 @@ void Sample1::OnIdle()
 	mAngle += static_cast<Float>(elapsedTime);
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
-	// If the camera's viewing frustum changed, we need to update the culler
-	// (we know we don't change it, so it's commented out here)
-//	mCuller.SetFrustum(mspCamera->GetFrustum());
+	// When the camera's viewing frustum changes, we need to update the culler
+	mCuller.SetFrustum(mspCamera->GetFrustum());
 
 	// Clear the framebuffer and the z-buffer.
 	GetRenderer()->ClearBuffers();
@@ -265,7 +264,7 @@ RenderObject* Sample1::CreateCube()
 
 	// Indices provide connectivity information and define the triangle mesh.
 	// Every side of the cube consists of 2 triangles.
-	const UInt indices[] =
+	const UShort indices[] =
 	{
 		// side 1
 		0, 1, 2,
@@ -328,7 +327,7 @@ RenderObject* Sample1::CreateCube()
  	Material* pMaterial = WIRE_NEW Material;
  	pMaterial->AddTexture(CreateTexture(), Material::BM_MODULATE);
 
-	// Geometric objects consist of a Vertex-, an IndexBuffer and optionally
+	// A render objects consist of a vertex-, an index buffer and optionally
 	// a material
 	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, pMaterial);
 

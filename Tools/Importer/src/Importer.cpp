@@ -785,6 +785,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		WIRE_ASSERT(0 < pValue->GetQuantity());
 		Mesh* pMesh = (*pValue)[0];
 
+		// Bullet recommends to use less than 100 vertices in a convex mesh
+		WIRE_ASSERT(pMesh->GetVertexCount() < 100);
 		pTriangleIndexVertexArray = PhysicsWorld::Convert(pMesh);
 	}
 	else
