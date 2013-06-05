@@ -25,21 +25,13 @@ ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
 //----------------------------------------------------------------------------
 Bool ProbeRobot::Update(Double appTime)
 {
-	Float elapsedTime = static_cast<Float>(appTime - mLastApplicationTime);
-	if (mLastApplicationTime == -MathD::MAX_REAL)
-	{
-		elapsedTime = 0.0F;
-	}
-
-	mLastApplicationTime = appTime;
-
 	if (mHealth <= 0)
 	{
 		Die();
 		return true;
 	}
 
-	CalculateMovementAndRotation(elapsedTime);
+	CalculateMovementAndRotation();
 
 	// update the red health bar
 	Float healthRatio = mHealth / mTotalHealth;
@@ -109,7 +101,7 @@ void ProbeRobot::TakeDamage(Float damage)
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
+void ProbeRobot::CalculateMovementAndRotation()
 {
 	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
 	const Vector3F probeRobotPosition(origin.x(), origin.y(), origin.z());
@@ -133,7 +125,7 @@ void ProbeRobot::CalculateMovementAndRotation(Float deltaTime)
 
 	if (squaredDistance > mMaximumPlayerDistanceSquared)
 	{
-		move = direction * mSpeed * deltaTime;
+		move = direction * mSpeed * 1/60.0F;	// physics time step, TODO: get from physics world;
 	}
 
 	// update the scene object

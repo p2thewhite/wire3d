@@ -20,7 +20,7 @@ public:
 	void TakeDamage(Float damage);
 
 private:
-	void CalculateMovementAndRotation(Float deltaTime);
+	void CalculateMovementAndRotation();
 	void Die();
 
 	Wire::SpatialPtr mspPlayerSpatial;

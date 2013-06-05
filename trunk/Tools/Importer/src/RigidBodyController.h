@@ -44,8 +44,6 @@ private:
 	btRigidBody* mpRigidBody;
 
 	Wire::NodePtr mspDebugShape;
-
-	Bool mIsStaticCollider;
 };
 
 typedef Wire::Pointer<RigidBodyController> RigidBodyControllerPtr;

@@ -21,7 +21,7 @@ public:
 	void LookAt(const Wire::Vector2F& rLookAt);
 
 private:
-	void ProcessInput(Double appTime);
+	void ProcessInput();
 
 	void SetMoveSpeed(Float moveSpeed);
 	void MoveForward();

@@ -186,18 +186,33 @@ btTriangleIndexVertexArray* PhysicsWorld::Convert(Mesh* pMesh)
 	System::Memcpy(pTriangleIndexBase, size, pIndexBuffer->GetData(), size);
 
 	VertexBuffer* pVertexBuffer = pMesh->GetVertexBuffer();
-	btScalar* pVertexBase = WIRE_NEW btScalar[pVertexBuffer->GetQuantity()*3];
+	Vector3F* pVertexBase = WIRE_NEW Vector3F[pVertexBuffer->GetQuantity()];
 	size = pVertexBuffer->GetQuantity() * sizeof(Vector3F);
-	System::Memcpy(pVertexBase, size, pVertexBuffer->GetPosition(), size);
+
+	const VertexAttributes& rAttr = pVertexBuffer->GetAttributes();
+	if (rAttr.GetChannelQuantity() == rAttr.GetPositionChannels())
+	{
+		System::Memcpy(pVertexBase, size, pVertexBuffer->GetPosition(), size);
+	}
+	else
+	{
+		for (UInt i = 0; i < pVertexBuffer->GetQuantity(); i++)
+		{
+			pVertexBase[i] = pVertexBuffer->Position3(i);
+		}
+	}
+
+	// TODO: use stride and raw pointer from mesh for bullet
 
 	btIndexedMesh indexedMesh;
 	WIRE_ASSERT((pIndexBuffer->GetQuantity() % 3) == 0);
 	indexedMesh.m_numTriangles = pIndexBuffer->GetQuantity() / 3;
-	indexedMesh.m_triangleIndexBase = (const UChar*)pTriangleIndexBase;
+	indexedMesh.m_triangleIndexBase = reinterpret_cast<const UChar*>(
+		pTriangleIndexBase);
 	indexedMesh.m_triangleIndexStride = sizeof(UShort) * 3;
 	indexedMesh.m_numVertices = pVertexBuffer->GetQuantity();
-	indexedMesh.m_vertexBase = (const UChar*)pVertexBase;
-	indexedMesh.m_vertexStride = sizeof(btScalar);
+	indexedMesh.m_vertexBase = reinterpret_cast<const UChar*>(pVertexBase);
+	indexedMesh.m_vertexStride = sizeof(Vector3F);
 
 	btTriangleIndexVertexArray* pTriangleIndexVertexArray =
 		WIRE_NEW btTriangleIndexVertexArray();

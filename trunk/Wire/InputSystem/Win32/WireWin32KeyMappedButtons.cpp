@@ -47,7 +47,7 @@ Bool Win32KeyMappedButtons::GetButton(Button button) const
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_OEM_PLUS);
 	case BUTTON_Z:
 		// 'z' key
-		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x5A);
+		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(VK_SHIFT);
 	case BUTTON_1:
 		// '1' key
 		return static_cast<const Win32InputDataBuffer*>(GetParent()->GetDataBuffer())->GetKey(0x31);

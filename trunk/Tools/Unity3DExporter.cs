@@ -650,6 +650,11 @@ public class Unity3DExporter : EditorWindow
         List<Transform> rootTransforms = GetRootTransforms();
         foreach (Transform transform in rootTransforms)
         {
+            if (mIgnoreUnderscore && transform.gameObject.name.StartsWith("_"))
+            {
+                continue;
+            }
+
             Light[] lights = transform.gameObject.GetComponentsInChildren<Light>();
             foreach (Light light in lights)
             {
@@ -693,6 +698,11 @@ public class Unity3DExporter : EditorWindow
         while (stack.Count > 0)
         {
             Transform t = stack.Pop();
+            if (mIgnoreUnderscore && t.gameObject.name.StartsWith("_"))
+            {
+                continue;
+            }
+
             for (int i = t.GetChildCount()-1; i >= 0; i--)
             {
                 stack.Push(t.GetChild(i));
@@ -704,7 +714,7 @@ public class Unity3DExporter : EditorWindow
             {
                 MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
-                if (meshFilter == null)
+                if (meshFilter == null && collisionMesh == null)
                 {
                     continue;
                 }

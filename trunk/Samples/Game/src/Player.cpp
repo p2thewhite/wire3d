@@ -49,12 +49,13 @@ Bool Player::Update(Double appTime)
 
 	mLastApplicationTime = appTime;
 
-	ProcessInput(appTime);
+	ProcessInput();
 
 	// Apply accumulators
-	mMove *= deltaTime;
+	mMove *= 1/60.0F;		// physics time step, TODO: get from physics world
+	mPitch += (mPitchIncrement * deltaTime);
+	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 	mYaw += mYawIncrement * deltaTime;
-
 	if (mYaw > MathF::TWO_PI) 
 	{
 		mYaw = mYaw - MathF::TWO_PI;
@@ -63,9 +64,6 @@ Bool Player::Update(Double appTime)
 	{
 		mYaw = MathF::TWO_PI - mYaw;
 	}
-
-	mPitch += (mPitchIncrement * deltaTime);
-	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 
 	// Calculate rotation matrices
 	Matrix3F rotationX(Vector3F::UNIT_X, mPitch);
@@ -107,7 +105,7 @@ Bool Player::Update(Double appTime)
 }
 
 //----------------------------------------------------------------------------
-void Player::ProcessInput(Double appTime)
+void Player::ProcessInput()
 {
 	Application* pApplication = Application::GetApplication();
 	InputSystem* pInputSystem = pApplication->GetInputSystem();
@@ -272,10 +270,6 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 	WIRE_ASSERT(mpNode);
 
 	mpGun = mpNode->GetChildByName("Gun");
-
-	// Set camera position
-// 	Vector3F cameraPosition = mpNode->World.GetTranslate();
-// 	mspCamera->SetFrame(cameraPosition, Vector3F(0, 0, -1), Vector3F::UNIT_Y, Vector3F::UNIT_X);
 
 	// Set physics entity position
 	btTransform transform;
