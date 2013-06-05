@@ -92,7 +92,14 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
 		{
 			WIRE_ASSERT(mStaticSpatials[i]);
 			WIRE_ASSERT(mStaticSpatials[i]->WorldIsCurrent);
-			mStaticSpatials[i]->WorldBoundIsCurrent = true;
+			Node* pStaticNode = DynamicCast<Node>(mStaticSpatials[i]);
+			if (pStaticNode)
+			{
+				if (pStaticNode->GetQuantity() == 0)
+				{
+					mStaticSpatials[i]->WorldBoundIsCurrent = true;
+				}
+			}
 		}
 	}
 
@@ -887,18 +894,13 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 	Transformation& rWorld = pSpatial->World;
 	Transformation& rLocal = pSpatial->Local;
-
-	// Setting position
 	btTransform transform;
 	transform.setIdentity();
 	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
-
-	// Setting rotation
 	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
 
 	// Setting scale
 	pCollisionShape->setLocalScaling(PhysicsWorld::Convert(rLocal.GetScale()));
-//	pCollisionShape->setMargin(0.01F);
 
 	// rigid body is dynamic if and only if mass is non zero
 	btVector3 localInertia(0, 0, 0);

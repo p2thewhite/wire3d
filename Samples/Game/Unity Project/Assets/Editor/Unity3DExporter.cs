@@ -719,6 +719,11 @@ public class Unity3DExporter : EditorWindow
         List<Transform> rootTransforms = GetRootTransforms();
         foreach (Transform transform in rootTransforms)
         {
+            if (mIgnoreUnderscore && transform.gameObject.name.StartsWith("_"))
+            {
+                continue;
+            }
+
             Light[] lights = transform.gameObject.GetComponentsInChildren<Light>();
             foreach (Light light in lights)
             {
@@ -762,6 +767,11 @@ public class Unity3DExporter : EditorWindow
         while (stack.Count > 0)
         {
             Transform t = stack.Pop();
+            if (mIgnoreUnderscore && t.gameObject.name.StartsWith("_"))
+            {
+                continue;
+            }
+
             for (int i = t.GetChildCount()-1; i >= 0; i--)
             {
                 stack.Push(t.GetChild(i));
@@ -773,7 +783,7 @@ public class Unity3DExporter : EditorWindow
             {
                 MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
-                if (meshFilter == null)
+                if (meshFilter == null && collisionMesh == null)
                 {
                     continue;
                 }
@@ -1013,7 +1023,8 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteMeshColliderAttributes(MeshCollider meshCollider, StreamWriter outFile, string indent)
     {
-        outFile.Write("Mesh=\"" + meshCollider.sharedMesh.name + "\"");
+        string convex = meshCollider.convex ? " Convex=\"1\"" : "";
+        outFile.Write("Mesh=\"" + meshCollider.sharedMesh.name + "\"" + convex);
     }
 
     private void WriteRigidbody(GameObject gameObject, StreamWriter outFile, string indent)

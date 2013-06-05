@@ -16,17 +16,8 @@ RigidBodyController::RigidBodyController(PhysicsWorld* pPhysicsWorld,
 	btRigidBody* pRigidBody)
 	:
 	mpPhysicsWorld(pPhysicsWorld),
-	mpRigidBody(pRigidBody),
-	mIsStaticCollider(true)
+	mpRigidBody(pRigidBody)
 {
-	if (mpRigidBody)
-	{
-		btVector3 gravity = mpRigidBody->getGravity();
-		if (gravity.length2() > 0)
-		{
-			mIsStaticCollider = false;
-		}
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -59,7 +50,8 @@ Bool RigidBodyController::Update(Double appTime)
 		return false;
 	}
 
-	if (mpRigidBody->getMotionState() && (!mIsStaticCollider || mspDebugShape)) 
+	const Bool isStatic = mpRigidBody->isStaticObject();
+	if (mpRigidBody->getMotionState() && (!isStatic || mspDebugShape)) 
 	{
 		btTransform trans;
 		mpRigidBody->getMotionState()->getWorldTransform(trans);
@@ -68,7 +60,7 @@ Bool RigidBodyController::Update(Double appTime)
 		Matrix3F mat;
 		quat.ToRotationMatrix(mat);
 
-		if (!mIsStaticCollider)
+		if (!isStatic)
 		{
 			WIRE_ASSERT(DynamicCast<Spatial>(mpSceneObject));
 			Spatial* pSpatial = StaticCast<Spatial>(mpSceneObject);
@@ -112,6 +104,7 @@ void RigidBodyController::ToggleDebugShape(Bool show, Bool destroyOnHide,
 		if (show)
 		{
 			pOwner->AttachChild(mspDebugShape);
+			pOwner->WorldBoundIsCurrent = false;
 		}
 		else if (destroyOnHide)
 		{
@@ -256,11 +249,11 @@ RenderObject* RigidBodyController::CreateDebugMesh(btStridingMeshInterface*
 		indexType);
 
 	WIRE_ASSERT(type == PHY_FLOAT);
-	WIRE_ASSERT(stride == 4);
-	WIRE_ASSERT(triangleStride == 6);
+	WIRE_ASSERT(stride == sizeof(Vector3F));
+	WIRE_ASSERT(triangleStride == 3*sizeof(UShort));
 	WIRE_ASSERT(indexType == PHY_SHORT);
-	if (type != PHY_FLOAT || stride != 4 || triangleStride != 6 ||
-		indexType != PHY_SHORT)
+	if (type != PHY_FLOAT || stride != sizeof(Vector3F) ||
+		triangleStride != 3*sizeof(UShort) || indexType != PHY_SHORT)
 	{
 		return NULL;
 	}

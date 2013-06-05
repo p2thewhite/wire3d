@@ -315,7 +315,7 @@ RenderObject* Sample1::CreateCube()
 	}
 
 	// Fill the IndexBuffer with data.
-	UInt indexQuantity = sizeof(indices) / sizeof(UInt);
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
 	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
 	for	(UInt i = 0; i < indexQuantity; i++)
 	{
@@ -327,7 +327,7 @@ RenderObject* Sample1::CreateCube()
  	Material* pMaterial = WIRE_NEW Material;
  	pMaterial->AddTexture(CreateTexture(), Material::BM_MODULATE);
 
-	// A render objects consist of a vertex-, an index buffer and optionally
+	// Render objects consist of a vertex-, an index buffer and optionally
 	// a material
 	RenderObject* pCube = WIRE_NEW RenderObject(pVBuffer, pIBuffer, pMaterial);
 
