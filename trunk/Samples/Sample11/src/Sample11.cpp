@@ -179,12 +179,12 @@ void Sample11::UpdateInputDevicesInformationText()
 	const UInt TextArraySize = 4000;
 	Char text[TextArraySize];
 	System::Sprintf(text, TextArraySize, "Number of Input Devices: %d\n",
-		mpInputSystem->GetDevicesCount());
+		GetInputSystem()->GetDevicesCount());
 	pText->Append(text);
 
-	for (UInt i = 0; i < mpInputSystem->GetDevicesCount(); i++)
+	for (UInt i = 0; i < GetInputSystem()->GetDevicesCount(); i++)
 	{
-		const InputDevice* pInputDevice = mpInputSystem->GetDevice(i);
+		const InputDevice* pInputDevice = GetInputSystem()->GetDevice(i);
 		const Rtti& rType = pInputDevice->GetType();
 		
 		System::Sprintf(text, TextArraySize, "\nInput Device Number: %d - "

@@ -3,6 +3,9 @@
 #define PHYSICSWORLD_H
 
 #include "btBulletDynamicsCommon.h"
+// TODO
+#include "BulletCollision/Gimpact/btGImpactShape.h"
+#include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "RigidBodyController.h"
 #include "WireColor32.h"
 #include "WireMatrix3.h"
@@ -25,8 +28,17 @@ public:
 
 	inline btDynamicsWorld* Get();
 
+	Int StepSimulation(Double deltaTime, Int maxSubSteps = 1,
+		Double fixedTimeStep = 1.0/60.0);
+
+	inline Double GetFixedTimeStep();
+
+	void AddCollisionShape(btCollisionShape* pShape,
+		Object* pReferencedObject0 = NULL, Object* pReferencedObject1 = NULL);
 	void AddRigidBody(btRigidBody* pRigidBody);
+
 	RigidBodyController* GetController(btRigidBody* pRigidBody);
+	RigidBodyController* AddController(btRigidBody* pRigidBody);
 	void RemoveController(RigidBodyController* pController,
 		Bool destroyRigidBody = true);
 
@@ -37,8 +49,7 @@ public:
 	static inline Wire::Vector3F Convert(const btVector3& rIn);
 	static inline btMatrix3x3 Convert(const Wire::Matrix3F& rIn);
 	static inline Wire::QuaternionF Convert(const btQuaternion& rIn);
-
-	static btTriangleIndexVertexArray* Convert(Wire::Mesh* pMesh);
+	static btTriangleIndexVertexArray* Convert(Wire::Mesh* pMesh, Bool copy = true);
 
 private:
 	void DestroyCollisionObject(btCollisionObject* pCollisionObject);
@@ -49,10 +60,22 @@ private:
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 
-	// Keep track of the collision shapes, we release memory at exit.
-	btAlignedObjectArray<btCollisionShape*> mCollisionShapes;
-
 	Wire::THashTable<btRigidBody*, RigidBodyController*> mControllerMap;
+
+	struct CollisionShapeItem
+	{
+		CollisionShapeItem(btCollisionShape* pShape = NULL)
+			:
+			CollisionShape(pShape) {}
+
+		btCollisionShape* CollisionShape;
+		Wire::ObjectPtr ReferencedObject0;
+		Wire::ObjectPtr ReferencedObject1;
+	};
+
+	Wire::TArray<CollisionShapeItem> mCollisionShapes;
+
+	Double mFixedTimeStep;
 };
 
 typedef Wire::Pointer<PhysicsWorld> PhysicsWorldPtr;

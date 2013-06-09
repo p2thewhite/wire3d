@@ -5,6 +5,12 @@ inline btDynamicsWorld* PhysicsWorld::Get()
 }
 
 //----------------------------------------------------------------------------
+inline Double PhysicsWorld::GetFixedTimeStep()
+{
+	return mFixedTimeStep;
+}
+
+//----------------------------------------------------------------------------
 inline btVector3 PhysicsWorld::Convert(const Wire::Vector3F& rIn)
 {
 	return btVector3(rIn.X(), rIn.Y(), rIn.Z());

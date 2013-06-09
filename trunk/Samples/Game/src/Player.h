@@ -5,6 +5,8 @@
 #include "WireCamera.h"
 #include "WireNode.h"
 
+#include "PhysicsWorld.h"
+
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
@@ -17,7 +19,7 @@ public:
 	Player(Wire::Camera* pCamera);
 
 	virtual Bool Update(Double appTime);
-	void Register(btDynamicsWorld* pDynamicsWorld);
+	void Register(PhysicsWorld* pPhysicsWorld);
 	void LookAt(const Wire::Vector2F& rLookAt);
 
 private:
@@ -63,7 +65,7 @@ private:
 	Bool mShoot;
 	Bool mWasButtonAPressed;
 
-	btDynamicsWorld* mpPhysicsWorld;
+	PhysicsWorldPtr mspPhysicsWorld;
 	btPairCachingGhostObject* mpGhostObject;
 	btKinematicCharacterController* mpPhysicsEntity;
 };

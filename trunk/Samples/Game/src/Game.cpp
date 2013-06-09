@@ -8,7 +8,15 @@ using namespace Wire;
 
 //----------------------------------------------------------------------------
 Game::Game() 
-	:
+ 	:
+// 	WIREAPPLICATION(
+// 		ColorRGBA(0.0F, 0.0F, 0.0F, 1.0F),	// background color
+// 		// The following parameters are PC only:
+// 		"Game",	// title of the window,
+// 		0, 0,		// window position
+// 		640, 480,	// window size; (use (0,0) for current desktop resolution)
+// 		false,
+// 		false),		// fullscreen
 	mCursorPosition(Vector2F::ZERO),
 	mShowColliders(false),
 	mShowFps(false),
@@ -350,7 +358,7 @@ Node* Game::LoadAndInitializeScene()
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mspSceneCamera);
 	pPlayerSpatial->AttachController(mspPlayer);
-	mspPlayer->Register(mspPhysicsWorld->Get());
+	mspPlayer->Register(mspPhysicsWorld);
 
 	pScene->Bind(GetRenderer());
 	pScene->WarmUpRendering(GetRenderer());
@@ -371,7 +379,7 @@ void Game::InitializePhysics()
 //----------------------------------------------------------------------------
 void Game::UpdatePhysics(Double deltaTime)
 {
-	mspPhysicsWorld->Get()->stepSimulation(btScalar(deltaTime), 10);
+	mspPhysicsWorld->StepSimulation(deltaTime, 10);
 }
 
 //----------------------------------------------------------------------------
