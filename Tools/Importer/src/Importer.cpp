@@ -777,10 +777,25 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
 	WIRE_ASSERT(pShapeName);
 
+	// Rigid body parameters
+	Float mass = 0;
+	Bool isKinematic = false;
+	rapidxml::xml_node<>* pXmlParent = pXmlNode->parent();
+	for (rapidxml::xml_node<>* pChild = pXmlParent->first_node(); pChild;
+		pChild = pChild->next_sibling())
+	{
+		if (Is("RigidBody", pChild->name()))
+		{
+			mass = GetFloat(pChild, "Mass");
+			isKinematic = GetBool(pChild, "Kinematic");
+		}
+	}
+
 	// TODO: Make sure to re-use shapes among rigid bodies whenever possible!
 	btCollisionShape* pCollisionShape = NULL;
-	btTriangleIndexVertexArray* pTriangleIndexVertexArray = NULL;
 	Vector3F center = Vector3F::ZERO;
+	VertexBuffer* pMeshVB = NULL;
+	IndexBuffer* pMeshIB = NULL;
 
 	if (Is("Mesh", pShapeName))
 	{
@@ -794,7 +809,34 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 		// Bullet recommends to use less than 100 vertices in a convex mesh
 		WIRE_ASSERT(pMesh->GetVertexCount() < 100);
-		pTriangleIndexVertexArray = PhysicsWorld::Convert(pMesh);
+
+
+// TODO: convex hull
+		btTriangleIndexVertexArray* pTriangleIndexVertexArray =
+			PhysicsWorld::Convert(pMesh, false);
+ 		pMeshVB = pMesh->GetPositionBuffer();
+ 		pMeshIB = pMesh->GetIndexBuffer();
+
+		if (pTriangleIndexVertexArray)
+		{
+			if (mass != 0)
+			{
+				pCollisionShape = WIRE_NEW btConvexTriangleMeshShape(
+					pTriangleIndexVertexArray, true);
+// 				btGImpactMeshShape* pGImpactMeshShape = WIRE_NEW
+// 					btGImpactMeshShape(pTriangleIndexVertexArray);
+// 				pGImpactMeshShape->updateBound();
+// 				pCollisionShape = pGImpactMeshShape;
+// 
+// 				btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(mspPhysicsWorld->Get()->getDispatcher());
+// 				btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+			}
+			else
+			{
+				pCollisionShape = WIRE_NEW btBvhTriangleMeshShape(
+					pTriangleIndexVertexArray, true);
+			}
+		}
 	}
 	else
 	{
@@ -861,34 +903,9 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		}
 	}
 
-	// Rigid body parameters
-	Float mass = 0;
-	rapidxml::xml_node<>* pXmlParent = pXmlNode->parent();
-	for (rapidxml::xml_node<>* pChild = pXmlParent->first_node(); pChild;
-		pChild = pChild->next_sibling())
-	{
-		if (Is("RigidBody", pChild->name()))
-		{
-			mass = GetFloat(pChild, "Mass");
-		}
-	}
-
-	if (pTriangleIndexVertexArray)
-	{
-		if (mass != 0)
-		{
-			pCollisionShape = WIRE_NEW btConvexTriangleMeshShape(
-				pTriangleIndexVertexArray, true);
-		}
-		else
-		{
-			pCollisionShape = WIRE_NEW btBvhTriangleMeshShape(
-				pTriangleIndexVertexArray, true);
-		}
-	}
-
 	if (!pCollisionShape)
 	{
+		WIRE_ASSERT(false /* unsupported collision shape */);
 		return;
 	}
 
@@ -913,6 +930,12 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
 		pMotionState, pCollisionShape, localInertia);
 	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
+
+	if (isKinematic)
+	{
+		pRigidBody->setCollisionFlags(pRigidBody->getCollisionFlags() |
+			btCollisionObject::CF_KINEMATIC_OBJECT);
+	}
 	
 	// TODO: find values that correspond to PhysX in Bullet?
 // 	if (mass != 0.0F)
@@ -926,9 +949,11 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	//Experimental: better estimation of CCD Time of Impact.
 //	pRigidBody->setCcdSweptSphereRadius(0.2F);
 
+	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pMeshVB, pMeshIB);
 	mspPhysicsWorld->AddRigidBody(pRigidBody);
 	
-	pSpatial->AttachController(mspPhysicsWorld->GetController(pRigidBody));
+	RigidBodyController* pController = mspPhysicsWorld->AddController(pRigidBody);
+	pSpatial->AttachController(pController);
 
 	mStatistics.ColliderCount++;
 #endif

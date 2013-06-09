@@ -52,7 +52,7 @@ Bool Player::Update(Double appTime)
 	ProcessInput();
 
 	// Apply accumulators
-	mMove *= 1/60.0F;		// physics time step, TODO: get from physics world
+	mMove *= static_cast<Float>(mspPhysicsWorld->GetFixedTimeStep());
 	mPitch += (mPitchIncrement * deltaTime);
 	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 	mYaw += mYawIncrement * deltaTime;
@@ -243,10 +243,10 @@ void Player::ProcessInput()
 }
 
 //----------------------------------------------------------------------------
-void Player::Register(btDynamicsWorld* pPhysicsWorld)
+void Player::Register(PhysicsWorld* pPhysicsWorld)
 {
 	WIRE_ASSERT(pPhysicsWorld);
-	mpPhysicsWorld = pPhysicsWorld;
+	mspPhysicsWorld = pPhysicsWorld;
 
 	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
 
@@ -260,10 +260,11 @@ void Player::Register(btDynamicsWorld* pPhysicsWorld)
 	// Create physics entity
 	mpPhysicsEntity = WIRE_NEW btKinematicCharacterController(mpGhostObject, pConvexShape, mStepHeight);
 
-	mpPhysicsWorld->addCollisionObject(mpGhostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 
+	mspPhysicsWorld->Get()->addCollisionObject(mpGhostObject,
+		btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 
 		btBroadphaseProxy::CharacterFilter | 
 		btBroadphaseProxy::DefaultFilter);
-	mpPhysicsWorld->addAction(mpPhysicsEntity);
+	mspPhysicsWorld->Get()->addAction(mpPhysicsEntity);
 
 
 	mpNode = DynamicCast<Node>(GetSceneObject());
@@ -400,7 +401,7 @@ void Player::DoShooting(const Vector3F& rDirection)
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
-	mpPhysicsWorld->rayTest(rayStart, rayEnd, hitCallback);
+	mspPhysicsWorld->Get()->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 
 	{
 		Vector3F hitPoint = PhysicsWorld::Convert(hitCallback.m_hitPointWorld);

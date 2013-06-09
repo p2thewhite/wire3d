@@ -643,9 +643,17 @@ public class Unity3DExporter : EditorWindow
     private void WriteAssets(StreamWriter outFile)
     {
         outFile.WriteLine("<Assets>");
-
         string indent = "    ";
 
+        WriteLightAssets(outFile, indent);
+        WriteMeshAssets(outFile, indent);
+        WriteMaterialAssets(outFile, indent);
+
+        outFile.WriteLine("</Assets>");
+    }
+
+    private void WriteLightAssets(StreamWriter outFile, string indent)
+    {
         bool foundLight = false;
         List<Transform> rootTransforms = GetRootTransforms();
         foreach (Transform transform in rootTransforms)
@@ -674,19 +682,98 @@ public class Unity3DExporter : EditorWindow
                 }
             }
         }
-        
+
         if (foundLight)
         {
             outFile.WriteLine("  </Lights>");
         }
-
-        WriteAssets(outFile, indent, "Meshes");
-        WriteAssets(outFile, indent, "Materials");
-
-        outFile.WriteLine("</Assets>");
     }
 
-    private void WriteAssets(StreamWriter outFile, string indent, string assetTypeName)
+
+    private struct MeshAndMeshRenderer
+    {
+        public Mesh mesh;
+        public MeshRenderer renderer;
+    }
+
+    private void WriteMeshAssets(StreamWriter outFile, string indent)
+    {
+        Stack<Transform> stack = new Stack<Transform>();
+        foreach (Transform transform in GetRootTransforms())
+        {
+            stack.Push(transform);
+        }
+
+        List<MeshAndMeshRenderer> renderMeshes = new List<MeshAndMeshRenderer>();
+        List<MeshAndMeshRenderer> collisionMeshes = new List<MeshAndMeshRenderer>();
+        
+        while (stack.Count > 0)
+        {
+            Transform t = stack.Pop();
+            if (mIgnoreUnderscore && t.gameObject.name.StartsWith("_"))
+            {
+                continue;
+            }
+
+            for (int i = t.GetChildCount() - 1; i >= 0; i--)
+            {
+                stack.Push(t.GetChild(i));
+            }
+
+            MeshCollider meshCollider = t.gameObject.GetComponent<MeshCollider>();
+            Mesh collisionMesh = (meshCollider != null) ? meshCollider.sharedMesh : null;
+            if (HasRenderObject(t) || collisionMesh != null)
+            {
+                MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
+                if (meshFilter == null && collisionMesh == null)
+                {
+                    continue;
+                }
+
+                MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
+                Mesh renderMesh = meshFilter != null ? meshFilter.sharedMesh : null; 
+
+                if (meshFilter != null)
+                {
+                    MeshAndMeshRenderer mmr = new MeshAndMeshRenderer();
+                    mmr.mesh = renderMesh;
+                    mmr.renderer = meshRenderer;
+                    renderMeshes.Add(mmr);
+                }
+
+                if (collisionMesh != null && collisionMesh != renderMesh)
+                {
+                    MeshAndMeshRenderer mmr = new MeshAndMeshRenderer();
+                    mmr.mesh = collisionMesh;
+                    mmr.renderer = null;
+                    collisionMeshes.Add(mmr);
+                }
+            }
+        }
+
+        bool foundAsset = renderMeshes.Count > 0 || collisionMeshes.Count > 0;
+        if (foundAsset)
+        {
+            outFile.WriteLine("  <Meshes>");
+        }
+
+        foreach (MeshAndMeshRenderer mmr in renderMeshes)
+        {
+            WriteMeshAsset(mmr.mesh, mmr.renderer, outFile, indent);
+        }
+
+        foreach (MeshAndMeshRenderer mmr in collisionMeshes)
+        {
+            WriteMeshAsset(mmr.mesh, mmr.renderer, outFile, indent, true);
+        }
+
+        if (foundAsset)
+        {
+            outFile.WriteLine("  </Meshes>");
+        }
+    }
+
+    private void WriteMaterialAssets(StreamWriter outFile, string indent)
     {
         Stack<Transform> stack = new Stack<Transform>();
         foreach (Transform transform in GetRootTransforms())
@@ -708,50 +795,21 @@ public class Unity3DExporter : EditorWindow
                 stack.Push(t.GetChild(i));
             }
 
-            MeshCollider meshCollider = t.gameObject.GetComponent<MeshCollider>();
-            Mesh collisionMesh = (meshCollider != null) ? meshCollider.sharedMesh : null;
-            if (HasRenderObject(t) || collisionMesh != null)
+            if (HasRenderObject(t))
             {
-                MeshFilter meshFilter = t.gameObject.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = t.gameObject.GetComponent<MeshRenderer>();
-                if (meshFilter == null && collisionMesh == null)
+                foreach (Material material in meshRenderer.sharedMaterials)
                 {
-                    continue;
-                }
-
-                if (assetTypeName.Equals("Meshes"))
-                {
-                    if (meshFilter != null)
+                    string materialAssetName = GetMaterialAssetName(material, meshRenderer);
+                    if (!mMaterialAssetsProcessed.Contains(materialAssetName))
                     {
-                        WriteMeshAsset(meshFilter.sharedMesh, meshRenderer, ref foundAsset, outFile, indent);
-                    }
-
-                    if (collisionMesh != null)
-                    {
-                        WriteMeshAsset(collisionMesh, meshRenderer, ref foundAsset, outFile, indent);
-                    }
-                }
-
-                if (meshRenderer == null)
-                {
-                    continue;
-                }
-
-                if (assetTypeName.Equals("Materials"))
-                {
-                    foreach (Material material in meshRenderer.sharedMaterials)
-                    {
-                        string materialAssetName = GetMaterialAssetName(material, meshRenderer);
-                        if (!mMaterialAssetsProcessed.Contains(materialAssetName))
+                        if (!foundAsset)
                         {
-                            if (!foundAsset)
-                            {
-                                foundAsset = true;
-                                outFile.WriteLine("  <" + assetTypeName + ">");
-                            }
-
-                            WriteMaterial(meshRenderer, material, outFile, indent);
+                            foundAsset = true;
+                            outFile.WriteLine("  <Materials>");
                         }
+
+                        WriteMaterial(meshRenderer, material, outFile, indent);
                     }
                 }
             }
@@ -759,24 +817,19 @@ public class Unity3DExporter : EditorWindow
 
         if (foundAsset)
         {
-            outFile.WriteLine("  </" + assetTypeName + ">");
+            outFile.WriteLine("  </Materials>");
         }
     }
 
-    private void WriteMeshAsset(Mesh mesh, MeshRenderer meshRenderer, ref bool foundAsset, StreamWriter outFile, string indent)
+    private void WriteMeshAsset(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent,
+        bool isCollisionMesh = false)
     {
         if (mesh != null)
         {
             string meshAssetName = GetMeshAssetName(mesh, GetLightmapTilingOffset(meshRenderer));
             if (!mMeshAssetsProcessed.Contains(meshAssetName))
             {
-                if (!foundAsset)
-                {
-                    foundAsset = true;
-                    outFile.WriteLine("  <Meshes>");
-                }
-
-                WriteMesh(mesh, meshRenderer, outFile, indent);
+                WriteMesh(mesh, meshRenderer, outFile, indent, -1, isCollisionMesh);
             }
         }
     }
@@ -954,7 +1007,8 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteMeshColliderAttributes(MeshCollider meshCollider, StreamWriter outFile, string indent)
     {
-        outFile.Write("Mesh=\"" + meshCollider.sharedMesh.name + "\"");
+        string convex = meshCollider.convex ? " Convex=\"1\"" : "";
+        outFile.Write("Mesh=\"" + meshCollider.sharedMesh.name + "\"" + convex);
     }
 
     private void WriteRigidbody(GameObject gameObject, StreamWriter outFile, string indent)
@@ -965,7 +1019,9 @@ public class Unity3DExporter : EditorWindow
             return;
         }
 
-        outFile.Write(indent + "  " + "<RigidBody Mass=\"" + rigidbody.mass + "\" />\n");
+        string kinematic = rigidbody.isKinematic ? " Kinematic=\"1\"" : "";
+        outFile.Write(indent + "  " + "<RigidBody Mass=\"" + rigidbody.mass + "\"" +
+            kinematic + " />\n");
     }
 
     private void WriteCamera(Camera camera, StreamWriter outFile, string indent)
@@ -1241,7 +1297,7 @@ public class Unity3DExporter : EditorWindow
     }
 
 	private void WriteMesh(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent,
-        int subMeshIndex = -1)
+        int subMeshIndex = -1, bool isCollisionMesh = false)
 	{
 		if (mesh == null)
         {
@@ -1321,7 +1377,8 @@ public class Unity3DExporter : EditorWindow
             SaveIndices(mesh.triangles, idxName, is16Bit);
 		}
 
-		if (mesh.normals.Length > 0) {
+		if (mesh.normals.Length > 0 && !isCollisionMesh)
+        {
             string nmName = meshName + ".nm";
 			outFile.WriteLine (indent + "  <Normals Name=\"" + nmName + "\"" + le + " />");
 			if (!alreadyProcessed) {
@@ -1329,7 +1386,8 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 
-		if (mesh.colors.Length > 0) {
+        if (mesh.colors.Length > 0 && !isCollisionMesh)
+        {
             string is32BitString = mWriteColorsAs32Bit ? " 32bit=\"1\"" : string.Empty;
             string colName = meshName + ".col";
 			outFile.WriteLine (indent + "  <Colors Name=\"" + colName + "\"" + le + is32BitString + " />");
@@ -1338,7 +1396,8 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 
-		if (mesh.uv.Length > 0) {
+        if (mesh.uv.Length > 0 && !isCollisionMesh)
+        {
             string uv0Name = meshName + ".uv0";
 			outFile.WriteLine (indent + "  <Uv0 Name=\"" + uv0Name + "\"" + le + " />");
 			if (!alreadyProcessed) {
@@ -1346,7 +1405,8 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 
-		if (mesh.uv2.Length > 0) {
+        if (mesh.uv2.Length > 0 && !isCollisionMesh)
+        {
             string uv1Name = meshName + ".uv1";
 			outFile.WriteLine (indent + "  <Uv1 Name=\"" + uv1Name + "\"" + le + " />");
 			if (!alreadyProcessed) {

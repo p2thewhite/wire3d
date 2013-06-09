@@ -249,11 +249,10 @@ RenderObject* RigidBodyController::CreateDebugMesh(btStridingMeshInterface*
 		indexType);
 
 	WIRE_ASSERT(type == PHY_FLOAT);
-	WIRE_ASSERT(stride == sizeof(Vector3F));
 	WIRE_ASSERT(triangleStride == 3*sizeof(UShort));
 	WIRE_ASSERT(indexType == PHY_SHORT);
-	if (type != PHY_FLOAT || stride != sizeof(Vector3F) ||
-		triangleStride != 3*sizeof(UShort) || indexType != PHY_SHORT)
+	if (type != PHY_FLOAT || triangleStride != 3*sizeof(UShort) ||
+		indexType != PHY_SHORT)
 	{
 		return NULL;
 	}
@@ -262,11 +261,14 @@ RenderObject* RigidBodyController::CreateDebugMesh(btStridingMeshInterface*
 		vertexCount);
 	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(triangleCount*3);
 
-	Float* pVertexData = reinterpret_cast<Float*>(pVertexBase);
 	for (Int i = 0; i < vertexCount; i++)
 	{
-		pVertexBuffer->Position3(i) = Vector3F(pVertexData[i*3],
-			pVertexData[i*3+1], pVertexData[i*3+2]);
+		Float* pVertexData = reinterpret_cast<Float*>(pVertexBase + i * stride);
+		Vector3F v;
+		v.X() = *pVertexData++;
+		v.Y() = *pVertexData++;
+		v.Z() = *pVertexData++;
+		pVertexBuffer->Position3(i) = v;
 		pVertexBuffer->Color4(i) = rColor;
 	}
 

@@ -59,7 +59,7 @@ Renderer::Renderer(PdrRendererInput& rInput, UInt width, UInt height,
 	{
 		rPresent.Windowed = FALSE;
 		rPresent.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-		rPresent.BackBufferFormat = D3DFMT_A8R8G8B8;
+		rPresent.BackBufferFormat = D3DFMT_X8R8G8B8;
 	}
 	else
 	{
