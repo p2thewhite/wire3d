@@ -6,19 +6,17 @@
 #include "WireRenderer.h"
 #include "WireVertexBuffer.h"
 
-using namespace Wire;
-
-class ConveyorBelt : public Controller
+class ConveyorBelt : public Wire::Controller
 {
 public:
-	ConveyorBelt(RenderObject* pRenderObject, Renderer* pRenderer);
+	ConveyorBelt(Wire::RenderObject* pRenderObject, Wire::Renderer* pRenderer);
 
 	virtual Bool Update(Double appTime);
-	virtual Bool OnGetVisibleUpdate(const Camera* pCamera);
+	virtual Bool OnGetVisibleUpdate(const Wire::Camera* pCamera);
 
 private:
-	VertexBufferPtr mspVertexBufferCopy;
-	Renderer* mpRenderer;
+	Wire::VertexBufferPtr mspVertexBufferCopy;
+	Wire::Renderer* mpRenderer;
 
 	Float mOffset;
 };

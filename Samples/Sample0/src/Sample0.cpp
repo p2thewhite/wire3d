@@ -4,6 +4,8 @@
 
 #include "Sample0.h"
 
+using namespace Wire;
+
 WIRE_APPLICATION(Sample0);		// This macro creates our user application.
 
 //----------------------------------------------------------------------------

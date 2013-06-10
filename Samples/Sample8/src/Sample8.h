@@ -5,7 +5,8 @@
 #include "WireApplication.h"
 #include "btBulletDynamicsCommon.h"
 
-using namespace Wire;
+namespace Wire
+{
 
 class Sample8 : public WIREAPPLICATION
 {
@@ -94,5 +95,7 @@ private:
 };
 
 WIRE_REGISTER_INITIALIZE(Sample8);
+
+}
 
 #endif

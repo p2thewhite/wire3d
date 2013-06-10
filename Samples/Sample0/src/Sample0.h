@@ -4,7 +4,8 @@
 
 #include "WireApplication.h"
 
-using namespace Wire;
+namespace Wire
+{
 
 // User applications are derived from WIREAPPLICATION, which handles
 // platform dependent setup and provides virtual functions for the user
@@ -41,5 +42,7 @@ private:
 };
 
 WIRE_REGISTER_INITIALIZE(Sample0);
+
+}
 
 #endif

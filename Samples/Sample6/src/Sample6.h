@@ -5,7 +5,8 @@
 #include "WireApplication.h"
 #include "LensflareNode.h"
 
-using namespace Wire;
+namespace Wire
+{
 
 class Sample6 : public WIREAPPLICATION
 {
@@ -31,5 +32,7 @@ private:
 };
 
 WIRE_REGISTER_INITIALIZE(Sample6);
+
+}
 
 #endif
