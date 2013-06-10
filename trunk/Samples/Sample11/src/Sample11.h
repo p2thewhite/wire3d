@@ -5,7 +5,8 @@
 #include "WireApplication.h"
 #include "Cursors.h"
 
-using namespace Wire;
+namespace Wire
+{
 
 class Sample11 : public WIREAPPLICATION
 {
@@ -35,5 +36,7 @@ private:
 };
 
 WIRE_REGISTER_INITIALIZE(Sample11);
+
+}
 
 #endif

@@ -4,9 +4,7 @@
 
 #include "WireController.h"
 
-using namespace Wire;
-
-class FanRotator : public Controller
+class FanRotator : public Wire::Controller
 {
 public:
 	FanRotator(Float speed = 1.0F);

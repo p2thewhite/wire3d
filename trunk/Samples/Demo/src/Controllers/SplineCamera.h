@@ -7,23 +7,21 @@
 #include "WireNode.h"
 #include "WireQuaternion.h"
 
-using namespace Wire;
-
-class SplineCamera : public Controller
+class SplineCamera : public Wire::Controller
 {
 public:
-	SplineCamera(Node* pSplineRoot, Camera* pCamera);
+	SplineCamera(Wire::Node* pSplineRoot, Wire::Camera* pCamera);
 
 	virtual Bool Update(Double appTime);
 
 private:
-	Vector3F GetHermite(TArray<Transformation*>& rControlPoints, UInt idx,
-		Float t);
-	QuaternionF GetSquad(TArray<Transformation*>& rControlPoints, UInt idx,
-		Float t);
+	Wire::Vector3F GetHermite(Wire::TArray<Wire::Transformation*>& rControlPoints,
+		UInt idx, Float t);
+	Wire::QuaternionF GetSquad(Wire::TArray<Wire::Transformation*>& rControlPoints,
+		UInt idx, Float t);
 
-	TArray<Transformation*> mSplinePoints;
-	CameraPtr mspCamera;
+	Wire::TArray<Wire::Transformation*> mSplinePoints;
+	Wire::CameraPtr mspCamera;
 	Float mT;
 	UInt mSplinePointIndex;
 };

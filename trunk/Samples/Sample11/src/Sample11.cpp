@@ -3,6 +3,8 @@
 
 #include "Sample11.h"
 
+using namespace Wire;
+
 WIRE_APPLICATION(Sample11);
 
 //----------------------------------------------------------------------------

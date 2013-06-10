@@ -4,9 +4,7 @@
 
 #include "WireController.h"
 
-using namespace Wire;
-
-class LogoFader : public Controller
+class LogoFader : public Wire::Controller
 {
 public:
 	LogoFader();

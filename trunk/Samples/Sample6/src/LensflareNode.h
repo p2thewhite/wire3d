@@ -4,7 +4,8 @@
 
 #include "WireEngine.h"
 
-using namespace Wire;
+namespace Wire
+{
 
 // To implement your own custom nodes for the scene graph and culling system,
 // you need to derive your class from Wire::Node.
@@ -58,5 +59,7 @@ private:
 };
 
 typedef Pointer<LensflareNode> LensflareNodePtr;
+
+}
 
 #endif
