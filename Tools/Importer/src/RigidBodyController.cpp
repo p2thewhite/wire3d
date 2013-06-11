@@ -140,6 +140,15 @@ RenderObject* RigidBodyController::CreateDebugShape(btCollisionShape* pShape,
 		return CreateDebugMesh(static_cast<btConvexTriangleMeshShape*>(
 			pShape)->getMeshInterface(), rColor);
 	}
+	else if (pShape->getShapeType() == CONVEX_HULL_SHAPE_PROXYTYPE)
+	{
+		// TODO: implement debug shape
+		return NULL;
+	}
+	else if (pShape->getShapeType() == EMPTY_SHAPE_PROXYTYPE)
+	{
+		return NULL;
+	}
 
 	WIRE_ASSERT(false /* collision shape not supported */);
 	return NULL;

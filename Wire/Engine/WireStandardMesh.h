@@ -72,6 +72,9 @@ public:
 		Float radius, const UInt uvQuantity = 0,
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
+	static RenderObject* CreateIcosahedron(Float radius, UInt subdivisons = 0,
+		const UInt vertexColorChannels = 0, const Bool useNormals = false);
+
 	// text using the built-in font
 	static Text* CreateText(UInt maxLength = 4000);
 

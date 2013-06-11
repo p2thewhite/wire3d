@@ -34,8 +34,8 @@ private:
 	void Shoot();
 
 	Wire::Vector3F GetPosition();
-	void UpdateGunRotation();
-	void DoShooting(const Wire::Vector3F& rDirection);
+	void UpdateGun();
+	void DoShooting(const Wire::Vector2F& rCursorPosition);
 	void CreateRay(Float size);
 
 	const Float mHeadHeight;

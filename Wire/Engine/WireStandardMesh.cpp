@@ -14,6 +14,7 @@
 #include "WireImage2D.h"
 #include "WireIndexBuffer.h"
 #include "WireNode.h"
+#include "WireRandom.h"
 #include "WireText.h"
 
 using namespace Wire;
@@ -894,6 +895,76 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
 	pSphere->GetMesh()->GetModelBound()->SetCenter(Vector3F::ZERO);
 	pSphere->GetMesh()->GetModelBound()->SetRadius(radius);
 	return pSphere;
+}
+
+//----------------------------------------------------------------------------
+RenderObject* StandardMesh::CreateIcosahedron(Float radius, UInt subdivisons,
+	const UInt vertexColorChannels, const Bool useNormals)
+{
+	Float t = (1 + MathF::Sqrt(5)) * 0.5F;
+
+	const Vector3F vertices[] = {
+		Vector3F(-1, t, 0), Vector3F( 1, t, 0), Vector3F(-1,-t, 0),
+		Vector3F( 1,-t, 0), Vector3F( 0,-1, t), Vector3F( 0, 1, t),
+		Vector3F( 0,-1,-t), Vector3F( 0, 1,-t), Vector3F( t, 0,-1),
+		Vector3F( t, 0, 1), Vector3F(-t, 0,-1), Vector3F(-t, 0, 1) };
+
+	const UShort indices[] = {
+		0, 5, 11, 0, 1, 5, 0, 7, 1, 0, 10, 7, 0, 11, 10, 1, 9, 5, 5, 4, 11, 
+		11, 2, 10, 10, 6, 7, 7, 8, 1, 3, 4, 9, 3, 2, 4, 3, 6, 2, 3, 8, 6, 
+		3, 9, 8, 4, 5, 9, 2, 11, 4, 6, 10, 2, 8, 7, 6, 9, 1, 8 };
+
+	VertexAttributes attr;
+	attr.SetPositionChannels(3);  // channels: X, Y, Z
+
+	if (vertexColorChannels > 0)
+	{
+		WIRE_ASSERT(vertexColorChannels == 3 || vertexColorChannels == 4);
+		attr.SetColorChannels(vertexColorChannels);	// RGB(A)
+	}
+
+	if (useNormals)
+	{
+		attr.SetNormalChannels(3);	// channels: X, Y, Z
+	}
+
+	Random rnd;
+	UInt vertexQuantity = sizeof(vertices) / sizeof(Vector3F);
+	VertexBuffer* pVBuffer = WIRE_NEW VertexBuffer(attr, vertexQuantity);
+
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
+	{
+		pVBuffer->Position3(i) = vertices[i];
+
+		if (vertexColorChannels == 3)
+		{
+			pVBuffer->Color3(i) = ColorRGB(rnd.GetFloat(), rnd.GetFloat(),
+				rnd.GetFloat());
+		}
+		else if (vertexColorChannels == 4)
+		{
+			pVBuffer->Color4(i) = ColorRGBA(rnd.GetFloat(), rnd.GetFloat(),
+				rnd.GetFloat(), rnd.GetFloat());
+		}
+
+		if (useNormals)
+		{
+			// use platonic normal as default
+			Vector3F normal = vertices[i];
+			normal.Normalize();
+			pVBuffer->Normal3(i) =  normal;
+		}
+	}
+
+	UInt indexQuantity = sizeof(indices) / sizeof(UShort);
+	IndexBuffer* pIBuffer = WIRE_NEW IndexBuffer(indexQuantity);
+	for	(UInt i = 0; i < indexQuantity; i++)
+	{
+		(*pIBuffer)[i] = indices[i];
+	}
+
+	RenderObject* pIcosahedron = WIRE_NEW RenderObject(pVBuffer, pIBuffer, NULL);
+	return pIcosahedron;
 }
 
 //----------------------------------------------------------------------------

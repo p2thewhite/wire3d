@@ -83,9 +83,7 @@ Bool Player::Update(Double appTime)
 	// update camera
 	mspCamera->SetFrame(GetPosition(), eyeDirection, up, mRight);
 
-	UpdateGunRotation();
-
-	DoShooting(eyeDirection);
+	UpdateGun();
 
 	// move physics entity
 	if (mJump)
@@ -353,7 +351,7 @@ Vector3F Player::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdateGunRotation()
+void Player::UpdateGun()
 {
 	if (mpGun == NULL)
 	{
@@ -377,14 +375,16 @@ void Player::UpdateGunRotation()
 	Matrix3F mat(-right, up, pickDirection, true);
 	Matrix3F roll(Vector3F(0, 0, 1), mRoll);
 	mpGun->Local.SetRotate(mat * roll);
+
+	DoShooting(cursorPosition);
 }
 
+
 //----------------------------------------------------------------------------
-void Player::DoShooting(const Vector3F& rDirection)
+void Player::DoShooting(const Vector2F& rCursorPosition)
 {
 	// Remove previous ray
 	Spatial* pRay = mpNode->GetChildByName("Ray");
-
 	if (pRay) 
 	{
 		mpNode->DetachChild(pRay);
@@ -396,19 +396,36 @@ void Player::DoShooting(const Vector3F& rDirection)
 		return;
 	}
 
-	btVector3 rayStart = PhysicsWorld::Convert(GetPosition());
-	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(rDirection * mMaximumShootingDistance);
+	Vector3F origin;
+	Vector3F direction;
+	mspCamera->GetPickRay(rCursorPosition, origin, direction);
+	direction.Normalize();
+	btVector3 rayStart = PhysicsWorld::Convert(origin);
+	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(direction * mMaximumShootingDistance);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
 	mspPhysicsWorld->Get()->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 
 	{
+		btCollisionObject* pColObj = hitCallback.m_collisionObject;
+ 		if (!pColObj->isStaticOrKinematicObject())
+ 		{
+			btRigidBody* pRigidBody = btRigidBody::upcast(pColObj);
+			if (pRigidBody)
+			{
+				btVector3 y = pRigidBody->getCenterOfMassPosition() - hitCallback.m_hitPointWorld;
+				y.normalize();
+				y *= 10;
+				pColObj->activate(true);
+				pRigidBody->applyCentralImpulse(y);
+			}
+ 		}
+
 		Vector3F hitPoint = PhysicsWorld::Convert(hitCallback.m_hitPointWorld);
 		CreateRay(GetPosition().Distance(hitPoint));
 
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
-
 		if (pProbeRobotController) 
 		{
 			pProbeRobotController->TakeDamage(5.0F);

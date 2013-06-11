@@ -230,7 +230,8 @@ Matrix34F Camera::GetViewMatrixInverse34() const
 }
 
 //----------------------------------------------------------------------------
-Vector3F Camera::GetPickDirection(const Vector2F& rPosition)
+void Camera::GetPickRay(const Vector2F& rPosition, Vector3F& rRayOrigin,
+	Vector3F& rRayDirection)
 {
 	WIRE_ASSERT(rPosition.X() >= -1.0F && rPosition.X() <= 1.0F);
 	WIRE_ASSERT(rPosition.Y() >= -1.0F && rPosition.Y() <= 1.0F);
@@ -238,5 +239,6 @@ Vector3F Camera::GetPickDirection(const Vector2F& rPosition)
 	Vector3F v(rPosition.X() / projectionMatrix(0, 0),
 		rPosition.Y() / projectionMatrix(1, 1), 1);
 
-	return GetViewMatrixInverse34().Times3(v);
+	rRayDirection = GetViewMatrixInverse34().Times3(v);
+	rRayOrigin = GetViewMatrixInverse34().GetColumn(3);
 }
