@@ -46,7 +46,8 @@ public:
 		UInt MeshCount;
 		UInt VertexBufferCount;
 		UInt IndexBufferCount;
-		UInt ColliderCount;
+		UInt ColliderCount;	 // btCollisionShape excluding btEmptyShape
+		UInt RigidBodyCount; // btRigidBody
 	};
 
 	Importer(const Char* pPath = "", Options* pOptions = NULL);
@@ -110,7 +111,6 @@ private:
 	void ParseComponents(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	void ParseCamera(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	Wire::Light* ParseLight(rapidxml::xml_node<>* pXmlNode);
-	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	Wire::State* ParseRenderStates(rapidxml::xml_node<>* pXmlNode);
 	void ParseTransformationAndComponents(rapidxml::xml_node<>* pXmlNode,
 		Wire::Spatial* pSpatial);
@@ -142,6 +142,12 @@ private:
 	Options* mpOptions;
 
 #ifndef NO_BULLET_PHYSICS_LIB
+	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseRigidBody(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void AddRigidBodyController(Wire::Spatial* pSpatial, btCollisionShape* pCollisionShape,
+		Float mass, Bool isKinematic, const Wire::Vector3F& rCenter = Wire::Vector3F::ZERO,
+		Wire::Object* pObjRef0 = NULL, Wire::Object* pObjRef1 = NULL);
+
 	PhysicsWorldPtr mspPhysicsWorld;
 #endif
 };

@@ -3,9 +3,6 @@
 #define PHYSICSWORLD_H
 
 #include "btBulletDynamicsCommon.h"
-// TODO
-#include "BulletCollision/Gimpact/btGImpactShape.h"
-#include "BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h"
 #include "RigidBodyController.h"
 #include "WireColor32.h"
 #include "WireMatrix3.h"
@@ -56,7 +53,7 @@ private:
 
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
-	btAxisSweep3* mpOverlappingPairCache;
+	btBroadphaseInterface* mpOverlappingPairCache;
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 

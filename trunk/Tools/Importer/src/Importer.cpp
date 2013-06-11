@@ -498,6 +498,7 @@ void Importer::ResetStatistics()
 	mStatistics.VertexBufferCount = 0;
 	mStatistics.IndexBufferCount = 0;
 	mStatistics.ColliderCount = 0;
+	mStatistics.RigidBodyCount = 0;
 }
 
 //----------------------------------------------------------------------------
@@ -763,16 +764,100 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 	}
 }
 
-//----------------------------------------------------------------------------
-void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
-{
 #ifndef NO_BULLET_PHYSICS_LIB
+//----------------------------------------------------------------------------
+void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
+	pCollisionShape, Float mass, Bool isKinematic, const Vector3F& rCenter,
+	Object* pObjRef0, Object* pObjRef1)
+{
+	UpdateWorldTransformation(pSpatial);
+	Transformation& rWorld = pSpatial->World;
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + rCenter));
+	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
+
+	// radius of sphere was already scaled by maximum component of local scale
+	if (pCollisionShape->getShapeType() != SPHERE_SHAPE_PROXYTYPE)
+	{
+		pCollisionShape->setLocalScaling(PhysicsWorld::Convert(pSpatial->Local.GetScale()));
+	}
+
+	// rigid body is dynamic if and only if mass is non zero
+	btVector3 localInertia(0, 0, 0);
+	if (mass != 0.0F && pCollisionShape->getShapeType() != EMPTY_SHAPE_PROXYTYPE)
+	{
+		pCollisionShape->calculateLocalInertia(mass, localInertia);
+	}
+
+	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
+		pMotionState, pCollisionShape, localInertia);
+	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
+	mStatistics.RigidBodyCount++;
+
+	if (isKinematic)
+	{
+		pRigidBody->setCollisionFlags(pRigidBody->getCollisionFlags() |
+			btCollisionObject::CF_KINEMATIC_OBJECT);
+	}
+
+//	pRigidBody->setContactProcessingThreshold(BT_LARGE_FLOAT);
+
+// Only do CCD if  motion in one timestep (1/60) exceeds 
+//	pRigidBody->setCcdMotionThreshold(0.5F);
+
+//Experimental: better estimation of CCD Time of Impact.
+//	pRigidBody->setCcdSweptSphereRadius(0.2F);
+
+	// TODO: find values that correspond to PhysX in Bullet?
+	// 	if (mass != 0.0F)
+	// 	{
+	// 		pRigidBody->setDamping(0.1F, 0);
+	// 	}
+
+	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pObjRef0, pObjRef1);
+	mspPhysicsWorld->AddRigidBody(pRigidBody);
+
+	RigidBodyController* pController = mspPhysicsWorld->AddController(pRigidBody);
+	pSpatial->AttachController(pController);
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseRigidBody(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+{
+	// Parse a rigid body that does NOT have a collider.
+	// Rigid bodies with colliders are treated in ParseCollider().
+
 	if (!mspPhysicsWorld)
 	{
 		return;
 	}
 
-	UpdateWorldTransformation(pSpatial);
+	rapidxml::xml_node<>* pXmlParent = pXmlNode->parent();
+	for (rapidxml::xml_node<>* pChild = pXmlParent->first_node(); pChild;
+		pChild = pChild->next_sibling())
+	{
+		if (Is("Collider", pChild->name()))
+		{
+			return;
+		}
+	}
+
+	Float mass = GetFloat(pXmlNode, "Mass");
+	Bool isKinematic = GetBool(pXmlNode, "Kinematic");
+	btCollisionShape* pCollisionShape = WIRE_NEW btEmptyShape;
+
+	AddRigidBodyController(pSpatial, pCollisionShape, mass, isKinematic);
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
+{
+	if (!mspPhysicsWorld)
+	{
+		return;
+	}
 
 	Char* pShapeName = GetValue(pXmlNode, "Shape");
 	WIRE_ASSERT(pShapeName);
@@ -806,12 +891,11 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		WIRE_ASSERT(pValue);
 		WIRE_ASSERT(0 < pValue->GetQuantity());
 		Mesh* pMesh = (*pValue)[0];
+		Bool isConvex = GetBool(pXmlNode, "Convex");
 
 		// Bullet recommends to use less than 100 vertices in a convex mesh
 		WIRE_ASSERT(pMesh->GetVertexCount() < 100);
 
-
-// TODO: convex hull
 		btTriangleIndexVertexArray* pTriangleIndexVertexArray =
 			PhysicsWorld::Convert(pMesh, false);
  		pMeshVB = pMesh->GetPositionBuffer();
@@ -821,15 +905,43 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		{
 			if (mass != 0)
 			{
-				pCollisionShape = WIRE_NEW btConvexTriangleMeshShape(
-					pTriangleIndexVertexArray, true);
-// 				btGImpactMeshShape* pGImpactMeshShape = WIRE_NEW
-// 					btGImpactMeshShape(pTriangleIndexVertexArray);
-// 				pGImpactMeshShape->updateBound();
-// 				pCollisionShape = pGImpactMeshShape;
+				if (isConvex)
+				{
+					btConvexHullShape* pHull = WIRE_NEW btConvexHullShape();
+					pCollisionShape = pHull;
+
+					for (UInt i = 0; i < pMeshVB->GetQuantity(); i++)
+					{
+						Vector3F v = pMeshVB->Position3(i);
+						Bool isDuplicate = false;
+						for (UInt j = 0; j < i; j++)
+						{
+							if (v == pMeshVB->Position3(j))
+							{
+								isDuplicate = true;
+								break;
+							}
+						}
+
+						if (!isDuplicate)
+						{
+							pHull->addPoint(PhysicsWorld::Convert(v));
+						}
+					}
+				}
+				else
+				{
+					pCollisionShape = WIRE_NEW btConvexTriangleMeshShape(
+						pTriangleIndexVertexArray, true);
+
+// 					btGImpactMeshShape* pGImpactMeshShape = WIRE_NEW
+// 						btGImpactMeshShape(pTriangleIndexVertexArray);
+// 					pGImpactMeshShape->updateBound();
+// 					pCollisionShape = pGImpactMeshShape;
 // 
-// 				btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(mspPhysicsWorld->Get()->getDispatcher());
-// 				btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+// 					btCollisionDispatcher * dispatcher = static_cast<btCollisionDispatcher *>(mspPhysicsWorld->Get()->getDispatcher());
+// 					btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+				}
 			}
 			else
 			{
@@ -909,55 +1021,12 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		return;
 	}
 
-	Transformation& rWorld = pSpatial->World;
-	Transformation& rLocal = pSpatial->Local;
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
-	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
-
-	// Setting scale
-	pCollisionShape->setLocalScaling(PhysicsWorld::Convert(rLocal.GetScale()));
-
-	// rigid body is dynamic if and only if mass is non zero
-	btVector3 localInertia(0, 0, 0);
-	if (mass != 0.0F)
-	{
-		pCollisionShape->calculateLocalInertia(mass, localInertia);
-	}
-
-	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
-		pMotionState, pCollisionShape, localInertia);
-	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
-
-	if (isKinematic)
-	{
-		pRigidBody->setCollisionFlags(pRigidBody->getCollisionFlags() |
-			btCollisionObject::CF_KINEMATIC_OBJECT);
-	}
-	
-	// TODO: find values that correspond to PhysX in Bullet?
-// 	if (mass != 0.0F)
-// 	{
-// 		pRigidBody->setDamping(0.1F, 0);
-// 	}
-
-	// Only do CCD if  motion in one timestep (1/60) exceeds 
-//	pRigidBody->setCcdMotionThreshold(0.5F);
-
-	//Experimental: better estimation of CCD Time of Impact.
-//	pRigidBody->setCcdSweptSphereRadius(0.2F);
-
-	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pMeshVB, pMeshIB);
-	mspPhysicsWorld->AddRigidBody(pRigidBody);
-	
-	RigidBodyController* pController = mspPhysicsWorld->AddController(pRigidBody);
-	pSpatial->AttachController(pController);
+	AddRigidBodyController(pSpatial, pCollisionShape, mass, isKinematic,
+		center, pMeshVB, pMeshIB);
 
 	mStatistics.ColliderCount++;
-#endif
 }
+#endif
 
 //----------------------------------------------------------------------------
 Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
@@ -1384,10 +1453,16 @@ void Importer::ParseComponent(rapidxml::xml_node<>* pXmlNode, Spatial*
 			pSpatial->AttachLight(pLight);
 		}
 	}
+#ifndef NO_BULLET_PHYSICS_LIB
 	else if (Is("Collider", pXmlNode->name()))
 	{
 		ParseCollider(pXmlNode, pSpatial);
 	}
+	else if (Is("RigidBody", pXmlNode->name()))
+	{
+		ParseRigidBody(pXmlNode, pSpatial);
+	}
+#endif
 }
 
 //----------------------------------------------------------------------------

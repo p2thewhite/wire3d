@@ -148,8 +148,9 @@ public:
 	Matrix34F GetViewMatrix34() const;
 	Matrix34F GetViewMatrixInverse34() const; // faster than matrix.Inverse()
 
-	// Position [-1,1], returns world direction of the picking ray
-	Vector3F GetPickDirection(const Vector2F& rPosition);
+	// Position [-1,1], returns world coordinates of the pick ray
+	void GetPickRay(const Vector2F& rPosition, Vector3F& rRayOrigin,
+		Vector3F& rRayDirection);
 
 private:
 	// world coordinate frame

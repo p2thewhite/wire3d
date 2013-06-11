@@ -39,6 +39,8 @@ private:
 		pCapsuleShape, const Wire::Color32& rColor);
 	static Wire::RenderObject* CreateDebugMesh(btStridingMeshInterface*
 		pMeshInterface, const Wire::Color32& rColor);
+// 	static Wire::RenderObject* CreateDebugHull(btConvexHullShape*
+// 		pConvexHullShape, const Wire::Color32& rColor);
 
 	PhysicsWorld* mpPhysicsWorld;
 	btRigidBody* mpRigidBody;
