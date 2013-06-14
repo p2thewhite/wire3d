@@ -330,7 +330,7 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 }
 
 //----------------------------------------------------------------------------
-Spatial* Node::GetChildByName(const String& rName) const
+Spatial* Node::FindChildByName(const String& rName) const
 {
 	Spatial* pFound = NULL;
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
@@ -345,7 +345,7 @@ Spatial* Node::GetChildByName(const String& rName) const
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pFound = pNode->GetChildByName(rName);
+				pFound = pNode->FindChildByName(rName);
 				if (pFound)
 				{
 					return pFound;
@@ -358,7 +358,7 @@ Spatial* Node::GetChildByName(const String& rName) const
 }
 
 //----------------------------------------------------------------------------
-void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
+void Node::FindAllChildrenByName(const String& rName, TArray<Spatial*>&
 	rChildren) const
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
@@ -373,7 +373,7 @@ void Node::GetAllChildrenByName(const String& rName, TArray<Spatial*>&
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pNode->GetAllChildrenByName(rName, rChildren);
+				pNode->FindAllChildrenByName(rName, rChildren);
 			}
 		}
 	}
@@ -737,8 +737,8 @@ Node::Node(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material* pMaterial,
 	Init(quantity, growBy);
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVBuffer, pIBuffer);
-	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
-	InitRenderObject();
+	RenderObject* pRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
+	SetRenderObject(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -746,8 +746,8 @@ Node::Node(Mesh* pMesh, Material* pMaterial, UInt quantity, UInt growBy)
 {
 	Init(quantity, growBy);
 
-	mspRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
-	InitRenderObject();
+	RenderObject* pRenderObject = WIRE_NEW RenderObject(pMesh, pMaterial);
+	SetRenderObject(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -755,8 +755,7 @@ Node::Node(RenderObject* pRenderObject, UInt quantity, UInt growBy)
 {
 	Init(quantity, growBy);
 
-	mspRenderObject = pRenderObject;
-	InitRenderObject();
+	SetRenderObject(pRenderObject);
 }
 
 //----------------------------------------------------------------------------
@@ -886,7 +885,7 @@ UInt Node::GetStateSetKey()
 	{
 		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
 			State::MATERIAL]);
-			key += pState->ID * offset;
+		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateMaterial>::GetMaxID()+1;
@@ -894,7 +893,7 @@ UInt Node::GetStateSetKey()
 	{
 		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
 			State::WIREFRAME]);
-			key += pState->ID * offset;
+		key += pState->ID * offset;
 	}
 
 	offset *= TInstanceID<StateWireframe>::GetMaxID()+1;
@@ -902,7 +901,7 @@ UInt Node::GetStateSetKey()
 	{
 		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
 			State::ZBUFFER]);
-			key += pState->ID * offset;
+		key += pState->ID * offset;
 	}
 
 	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
@@ -910,12 +909,11 @@ UInt Node::GetStateSetKey()
 	{
 		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
 			TInstanceID<Light>::GetMaxID()+1;
-	WIRE_ASSERT((*pLights)[i]);
-	key += (*pLights)[i]->ID * offset;
+		WIRE_ASSERT((*pLights)[i]);
+		key += (*pLights)[i]->ID * offset;
 	}
 
 	WIRE_ASSERT(VerifyKey(key, offset));
-
 	return key;
 }
 
@@ -1032,10 +1030,12 @@ Bool Node::VerifyKey(UInt key, UInt offset)
 }
 
 //----------------------------------------------------------------------------
-void Node::InitRenderObject()
+void Node::SetRenderObject(RenderObject* pRenderObject)
 {
+	mspRenderObject = pRenderObject;
 	if (!mspRenderObject)
 	{
+		mspRenderObjectWorldBound = NULL;
 		return;
 	}
 

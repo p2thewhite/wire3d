@@ -38,8 +38,16 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	VertexBuffer* pVertexBuffer = WIRE_NEW VertexBuffer(attr, maxLength*4,
 		Buffer::UT_DYNAMIC_WRITE_ONLY);
 
-	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(maxLength*3*2,
-		Buffer::UT_DYNAMIC_WRITE_ONLY);
+	IndexBuffer* pIndexBuffer = WIRE_NEW IndexBuffer(maxLength*3*2);
+	for (UShort i = 0; i < maxLength; i++)
+	{
+		(*pIndexBuffer)[i*6] = 0 + i*4;
+		(*pIndexBuffer)[i*6+1] = 1 + i*4;
+		(*pIndexBuffer)[i*6+2] = 2 + i*4;
+		(*pIndexBuffer)[i*6+3] = 0 + i*4;
+		(*pIndexBuffer)[i*6+4] = 2 + i*4;
+		(*pIndexBuffer)[i*6+5] = 3 + i*4;
+	}
 
 	Mesh* pMesh = WIRE_NEW Mesh(pVertexBuffer, pIndexBuffer);
 	SetMesh(pMesh);
@@ -130,8 +138,6 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 
 	VertexBuffer* pVertexBuffer = GetMesh()->GetVertexBuffer();
 	WIRE_ASSERT(pVertexBuffer && pVertexBuffer->GetAttributes().HasTCoord());
-	IndexBuffer* pIndexBuffer = GetMesh()->GetIndexBuffer();
-	WIRE_ASSERT(pIndexBuffer);
 	const UInt offset = GetMesh()->GetIndexCount()/6;
 
 	const UInt maxLength = pVertexBuffer->GetQuantity() / 4;
@@ -207,15 +213,6 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 		pVertexBuffer->TCoord2(i+2) = mUvs[c4+2];
 		pVertexBuffer->TCoord2(i+3) = mUvs[c4+3];
 
-		UInt k = (indexCount + offset) * 6;
-		UShort l = static_cast<UShort>(indexCount + offset)*4;
-		(*pIndexBuffer)[k] = 0 + l;
-		(*pIndexBuffer)[k+1] = 1 + l;
-		(*pIndexBuffer)[k+2] = 2 + l;
-		(*pIndexBuffer)[k+3] = 0 + l;
-		(*pIndexBuffer)[k+4] = 2 + l;
-		(*pIndexBuffer)[k+5] = 3 + l;
-
 		x+= cStride;
 		indexCount++;
 	}
@@ -251,8 +248,6 @@ void Text::Update(Renderer* pRenderer)
 	const UInt indexCount = GetMesh()->GetIndexCount();
 	WIRE_ASSERT(indexCount % 6 == 0);
 	pRenderer->Update(GetMesh()->GetVertexBuffer(), indexCount/6*4);
-
-	pRenderer->Update(GetMesh()->GetIndexBuffer(), indexCount);
 
 	mIsPdrBufferOutOfDate = false;
 }

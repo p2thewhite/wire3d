@@ -695,7 +695,7 @@ Quaternion<Real>& Quaternion<Real>::Slerp(Real t, const Quaternion& rP,
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Quaternion<Real>& Quaternion<Real>::Intermediate(const Quaternion& rQ0,
 	const Quaternion& rQ1, const Quaternion& rQ2)
 {
@@ -710,7 +710,7 @@ Quaternion<Real>& Quaternion<Real>::Intermediate(const Quaternion& rQ0,
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Quaternion<Real>& Quaternion<Real>::Squad(Real t, const Quaternion& rQ0,
 	const Quaternion& rA0, const Quaternion& rA1, const Quaternion& rQ1)
 {

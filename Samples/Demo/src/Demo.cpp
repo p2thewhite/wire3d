@@ -164,7 +164,7 @@ Node* Demo::LoadAndInitLogo()
 	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in Logo.xml */);
 	mLogoCuller.SetCamera(mLogoCameras[0]);
 
-	Spatial* pLogo = pRoot->GetChildByName("Logo");
+	Spatial* pLogo = pRoot->FindChildByName("Logo");
 	if (pLogo)
 	{
 		pLogo->AttachController(WIRE_NEW LogoFader);
@@ -197,18 +197,18 @@ Node* Demo::LoadAndInitScene()
 	mSceneCuller.SetMaxQuantity(renderObjectCount);
 
 	TArray<Spatial*> fans;
-	pScene->GetAllChildrenByName("ceilingFan", fans);
+	pScene->FindAllChildrenByName("ceilingFan", fans);
 	for (UInt i = 0; i < fans.GetQuantity(); i++)
 	{
 		Float f = static_cast<Float>(i+1);
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
 	}
 
-	Node* pSplineRoot = DynamicCast<Node>(pScene->GetChildByName("Spline"));
+	Node* pSplineRoot = DynamicCast<Node>(pScene->FindChildByName("Spline"));
 	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot,
 		mSceneCameras[0]));
 
-	Node* pConveyorBelt = DynamicCast<Node>(pScene->GetChildByName(
+	Node* pConveyorBelt = DynamicCast<Node>(pScene->FindChildByName(
 		"polySurface437"));
 	if (pConveyorBelt)
 	{

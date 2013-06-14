@@ -11,6 +11,7 @@
 #include "WireRenderObject.h"
 #include "WireTHashTable.h"
 #include "WireVector3.h"
+#include "WireStateWireframe.h"
 
 class PhysicsWorld : public Wire::Object
 {
@@ -39,8 +40,7 @@ public:
 	void RemoveController(RigidBodyController* pController,
 		Bool destroyRigidBody = true);
 
-	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false,
-		const Wire::Color32& rColor = Wire::Color32(127, 255, 127, 255));
+	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false);
 
 	static inline btVector3 Convert(const Wire::Vector3F& rIn);
 	static inline Wire::Vector3F Convert(const btVector3& rIn);
@@ -48,8 +48,18 @@ public:
 	static inline Wire::QuaternionF Convert(const btQuaternion& rIn);
 	static btTriangleIndexVertexArray* Convert(Wire::Mesh* pMesh, Bool copy = true);
 
+	Wire::Node* CreateDebugShape(btCollisionShape* pShape);
+
 private:
 	void DestroyCollisionObject(btCollisionObject* pCollisionObject);
+
+	Wire::Node* CreateDebugBox(btBoxShape* pBox);
+	Wire::Node* CreateDebugSphere(btSphereShape* pSphereShape);
+	Wire::Node* CreateDebugCapsule(btCapsuleShape* pCapsuleShape);
+	Wire::Node* CreateDebugMesh(btStridingMeshInterface* pMeshInterface);
+//	Wire::Node* CreateDebugHull(btConvexHullShape* pConvexHullShape);
+	void ApplyVertexColor(const Wire::Color32& rColor, Wire::RenderObject*
+		pRenderObject);
 
 	btDefaultCollisionConfiguration* mpCollisionConfiguration;
 	btCollisionDispatcher* mpDispatcher;
@@ -73,6 +83,11 @@ private:
 	Wire::TArray<CollisionShapeItem> mCollisionShapes;
 
 	Double mFixedTimeStep;
+
+	Wire::RenderObjectPtr mspDebugBox;
+	Wire::RenderObjectPtr mspDebugSphere;
+	Wire::StateWireframePtr mspDebugWireframe;
+	Wire::Color32 mDebugColor;
 };
 
 typedef Wire::Pointer<PhysicsWorld> PhysicsWorldPtr;

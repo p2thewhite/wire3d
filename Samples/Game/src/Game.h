@@ -36,8 +36,6 @@ private:
 
 	void ProcessInput();
 	void InitializePhysics();
-	void UpdatePhysics(Double deltaTime);
-	void TerminatePhysics();
 
 	Double mLastApplicationTime;
 	UInt mAppState;

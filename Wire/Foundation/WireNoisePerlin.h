@@ -29,7 +29,7 @@ protected:
 WIRE_REGISTER_INITIALIZE(NoisePerlinBase);
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 class NoisePerlin : public NoisePerlinBase
 {
 public:

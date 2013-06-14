@@ -8,8 +8,6 @@
 
 #include "WireSceneObject.h"
 
-#include "WireController.h"
-
 using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, SceneObject, Object);
