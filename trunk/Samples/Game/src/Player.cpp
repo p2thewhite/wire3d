@@ -268,7 +268,7 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	mpNode = DynamicCast<Node>(GetSceneObject());
 	WIRE_ASSERT(mpNode);
 
-	mpGun = mpNode->GetChildByName("Gun");
+	mpGun = mpNode->FindChildByName("Gun");
 
 	// Set physics entity position
 	btTransform transform;
@@ -379,12 +379,11 @@ void Player::UpdateGun()
 	DoShooting(cursorPosition);
 }
 
-
 //----------------------------------------------------------------------------
 void Player::DoShooting(const Vector2F& rCursorPosition)
 {
 	// Remove previous ray
-	Spatial* pRay = mpNode->GetChildByName("Ray");
+	Spatial* pRay = mpNode->FindChildByName("Ray");
 	if (pRay) 
 	{
 		mpNode->DetachChild(pRay);

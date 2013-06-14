@@ -898,7 +898,7 @@ RenderObject* StandardMesh::CreateSphere(Int zSampleCount,
 }
 
 //----------------------------------------------------------------------------
-RenderObject* StandardMesh::CreateIcosahedron(Float radius, UInt subdivisons,
+RenderObject* StandardMesh::CreateIcosahedron(Float radius,
 	const UInt vertexColorChannels, const Bool useNormals)
 {
 	Float t = (1 + MathF::Sqrt(5)) * 0.5F;
@@ -934,7 +934,9 @@ RenderObject* StandardMesh::CreateIcosahedron(Float radius, UInt subdivisons,
 
 	for (UInt i = 0; i < pVBuffer->GetQuantity(); i++)
 	{
-		pVBuffer->Position3(i) = vertices[i];
+		Vector3F v = vertices[i];
+		v.Normalize();
+		pVBuffer->Position3(i) = v * radius;
 
 		if (vertexColorChannels == 3)
 		{
@@ -944,7 +946,7 @@ RenderObject* StandardMesh::CreateIcosahedron(Float radius, UInt subdivisons,
 		else if (vertexColorChannels == 4)
 		{
 			pVBuffer->Color4(i) = ColorRGBA(rnd.GetFloat(), rnd.GetFloat(),
-				rnd.GetFloat(), rnd.GetFloat());
+				rnd.GetFloat(), 1.0F);
 		}
 
 		if (useNormals)

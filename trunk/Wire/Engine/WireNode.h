@@ -68,9 +68,9 @@ public:
  	SpatialPtr GetChild(UInt i);
 
 	// returns the first (top/down, left-to-right) Spatial using that name
-	Spatial* GetChildByName(const String& rName) const;
+	Spatial* FindChildByName(const String& rName) const;
 
-	void GetAllChildrenByName(const String& rName, TArray<Spatial*>&
+	void FindAllChildrenByName(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
 	// geometric update
@@ -124,6 +124,11 @@ private:
 	void MergeMeshes(MergeArray* pMergeArray);
 
 	// RenderObject handling
+	// NOTE: although RenderObjects can be shared amongst nodes, it is not
+	//   advisable to do so, since the node's state is pushed on to the
+	//   RenderObject potentially overwriting state from other nodes that are
+	//   sharing it. If you want to share resources create shallow copies of
+	//   the RenderObject
 public:
 	Node(VertexBuffer* pVBuffer, IndexBuffer* pIBuffer, Material*
 		pMaterial = NULL, UInt quantity = 0, UInt growBy = 1);
@@ -133,6 +138,7 @@ public:
 
 	inline RenderObject* GetRenderObject();
 	inline const RenderObject* GetRenderObject() const;
+	void SetRenderObject(RenderObject* pRenderObject);
 
 	// If World(Bound)IsCurrent or forceWorldIsCurrent is true, apply World
 	// transformation to the vertices and set World to identity.
@@ -149,9 +155,6 @@ protected:
 
 	UInt GetStateSetKey();
 	Bool VerifyKey(UInt key, UInt offset);
-
-private:
-	void InitRenderObject();
 
 	Pointer<RenderObject> mspRenderObject;
 	Pointer<BoundingVolume> mspRenderObjectWorldBound;

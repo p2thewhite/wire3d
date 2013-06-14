@@ -7,7 +7,7 @@
 // that agreement.
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Real NoisePerlin<Real>::Noise(Real x, Real y)
 {
 	Int X = static_cast<Int>(Math<Real>::Floor(x)) & 255;
@@ -30,7 +30,7 @@ Real NoisePerlin<Real>::Noise(Real x, Real y)
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Real NoisePerlin<Real>::Noise(Real x, Real y, Real z) 
 {
 	Int X = static_cast<Int>(Math<Real>::Floor(x)) & 255; /* FIND CUBE THAT */
@@ -60,21 +60,21 @@ Real NoisePerlin<Real>::Noise(Real x, Real y, Real z)
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Real NoisePerlin<Real>::Fade(Real t)
 {
 	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Real NoisePerlin<Real>::Lerp(Real t, Real a, Real b)
 {
 	return a + t * (b - a);
 }
 
 //----------------------------------------------------------------------------
-template <typename Real>
+template <class Real>
 Real NoisePerlin<Real>::Grad(Int hash, Real x, Real y, Real z) 
 {
 	Int h = hash & 15;                    /* CONVERT LO 4 BITS OF HASH CODE */

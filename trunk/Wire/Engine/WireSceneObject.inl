@@ -30,3 +30,52 @@ inline const String& SceneObject::GetName() const
 {
 	return mName;
 }
+
+//----------------------------------------------------------------------------
+template <class ControllerType>
+ControllerType* SceneObject::FindController(Bool findDerivedTypes)
+{
+	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
+	{
+		if (findDerivedTypes)
+		{
+			if (mControllers[i]->IsDerived(ControllerType::TYPE))
+			{
+				return StaticCast<ControllerType>(mControllers[i]);
+			}
+		}
+		else if (mControllers[i]->IsExactly(ControllerType::TYPE))
+		{
+			return StaticCast<ControllerType>(mControllers[i]);
+		}
+	}
+
+	return NULL;
+}
+
+//----------------------------------------------------------------------------
+template <class ControllerType>
+void SceneObject::FindControllers(TArray<ControllerType*>& rControllers,
+	Bool findDerivedTypes)
+{
+	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
+	{
+		Bool isType = false;
+		if (findDerivedTypes)
+		{
+			if (mControllers[i]->IsDerived(ControllerType::TYPE))
+			{
+				isType = true;
+			}
+		}
+		else if (mControllers[i]->IsExactly(ControllerType::TYPE))
+		{
+			isType = true;
+		}
+
+		if (isType)
+		{
+			rControllers.Append(StaticCast<ControllerType>(mControllers[i]));
+		}
+	}
+}

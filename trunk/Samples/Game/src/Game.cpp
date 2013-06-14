@@ -50,7 +50,7 @@ Bool Game::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
-	GetRenderer()->CreateBatchingBuffers(100000);
+	GetRenderer()->CreateBatchingBuffers(50*1024, 50*1024);
 	GetRenderer()->SetDynamicBatchingThreshold(300, 100);
 	GetRenderer()->SetStaticBatchingThreshold(700);
 
@@ -60,7 +60,7 @@ Bool Game::OnInitialize()
 //----------------------------------------------------------------------------
 void Game::OnTerminate()
 {
-	TerminatePhysics();
+	mspPhysicsWorld = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -185,11 +185,31 @@ void Game::ProcessInput()
 	}
 }
 
+#include "RigidBodyController.h"
+
 //----------------------------------------------------------------------------
 void Game::OnRunning(Double time, Double deltaTime)
 {
 	ProcessInput();
-	UpdatePhysics(deltaTime);
+
+// 	Node* pPlatform = (Node*)mspScene->FindChildByName("Platform");
+// 
+// 	TArray<RigidBodyController*> rbcs;
+// 	pPlatform->FindControllers<RigidBodyController>(rbcs);
+// 
+// 	RigidBodyController* pRBC =	pPlatform->FindController<RigidBodyController>();
+// 	btRigidBody* pRB = pRBC->Get();
+// 
+// 	btTransform trans;
+// 	pRB->getMotionState()->getWorldTransform(trans);
+// 	btVector3 origin = trans.getOrigin();
+// 	static Float yCoord = origin.y();
+// 	Float angle = MathF::Sin(time) *3 + 3;
+// 	origin[1] = yCoord + angle;
+// 	trans.setOrigin(origin);
+// 	pRB->getMotionState()->setWorldTransform(trans);
+
+	mspPhysicsWorld->StepSimulation(deltaTime, 10);
 
 	mspScene->UpdateGS(time);
 	mSortingCuller.ComputeVisibleSet(mspScene);
@@ -220,7 +240,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 //----------------------------------------------------------------------------
 void Game::OnLoading(Double time, Double deltaTime)
 {
-	Spatial* pLoading = mspLogo->GetChildByName("Loading");
+	Spatial* pLoading = mspLogo->FindChildByName("Loading");
 	Bool isFadedIn = false;
 
 	if (pLoading)
@@ -309,7 +329,7 @@ Node* Game::LoadAndInitializeGUI()
 	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
 	mspGUICamera = cameras[0];
 
-	mspCrosshair = pRoot->GetChildByName("Crosshair");
+	mspCrosshair = pRoot->FindChildByName("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
 	pRoot->Bind(GetRenderer());
@@ -342,11 +362,11 @@ Node* Game::LoadAndInitializeScene()
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 	mSortingCuller.SetMaxQuantity(renderObjectCount);
 
-	Spatial* pProbeRobotSpatial = pScene->GetChildByName("Probe Robot");
-	Spatial* pPlayerSpatial = pScene->GetChildByName("Player");
+	Spatial* pProbeRobotSpatial = pScene->FindChildByName("Probe Robot");
+	Spatial* pPlayerSpatial = pScene->FindChildByName("Player");
 
 	// Create and configure probe robot controller
-	Spatial* pRedHealthBar = mspGUI->GetChildByName("RedHealthBar");
+	Spatial* pRedHealthBar = mspGUI->FindChildByName("RedHealthBar");
 	WIRE_ASSERT(pRedHealthBar /* No RedHealthBar in GUI.xml */);
 	pRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
 	mspGUI->UpdateGS();
@@ -374,16 +394,4 @@ void Game::InitializePhysics()
 
 	mspPhysicsWorld->Get()->getPairCache()->setInternalGhostPairCallback(
 		WIRE_NEW btGhostPairCallback());
-}
-
-//----------------------------------------------------------------------------
-void Game::UpdatePhysics(Double deltaTime)
-{
-	mspPhysicsWorld->StepSimulation(deltaTime, 10);
-}
-
-//----------------------------------------------------------------------------
-void Game::TerminatePhysics()
-{
-	mspPhysicsWorld = NULL;
 }

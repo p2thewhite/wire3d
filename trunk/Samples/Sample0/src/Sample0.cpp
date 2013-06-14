@@ -42,6 +42,7 @@ Bool Sample0::OnInitialize()
 	// and no other references to the object exist. In this case deletion
 	// will happen when Sample0 is being destructed.
 	// Creation of Wire::RenderObject is explained in detail in Sample1.
+	// StandardMesh is just a helper class creating various geometric objects.
 	mspCube = StandardMesh::CreateCube8(/* number of RGB(A) channels */ 4);
 
 	// Create a camera for rendering

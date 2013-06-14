@@ -10,7 +10,7 @@
 #ifndef WIRESCENEOBJECT_H
 #define WIRESCENEOBJECT_H
 
-#include "WireObject.h"
+#include "WireController.h"
 #include "WireString.h"
 #include "WireTArray.h"
 
@@ -38,6 +38,13 @@ public:
 
 	Bool UpdateControllers(Double appTime);
 	Bool OnGetVisibleUpdateControllers(const Camera* pCamera);
+
+	template <class ControllerType>
+	ControllerType* FindController(Bool findDerivedTypes = true);
+
+	template <class ControllerType>
+	void FindControllers(TArray<ControllerType*>& rControllers,
+		Bool findDerivedTypes = true);
 
 protected:
 	SceneObject();

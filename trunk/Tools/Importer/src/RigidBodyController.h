@@ -21,26 +21,11 @@ public:
 
 	inline btRigidBody* Get() { return mpRigidBody; }
 
-	void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false,
-		const Wire::Color32& rColor = Wire::Color32(127, 255, 127, 255));
-
-	static Wire::RenderObject* CreateDebugShape(btCollisionShape* pShape,
-		const Wire::Color32& rColor);
+	void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false);
 
 private:
 	friend class PhysicsWorld;
 	void Unbind();
-
-	static Wire::RenderObject* CreateDebugBox(btBoxShape* pBox, const Wire::
-		Color32& rColor);
-	static Wire::RenderObject* CreateDebugSphere(btSphereShape* pSphereShape,
-		const Wire::Color32& rColor);
-	static Wire::RenderObject* CreateDebugCapsule(btCapsuleShape*
-		pCapsuleShape, const Wire::Color32& rColor);
-	static Wire::RenderObject* CreateDebugMesh(btStridingMeshInterface*
-		pMeshInterface, const Wire::Color32& rColor);
-// 	static Wire::RenderObject* CreateDebugHull(btConvexHullShape*
-// 		pConvexHullShape, const Wire::Color32& rColor);
 
 	PhysicsWorld* mpPhysicsWorld;
 	btRigidBody* mpRigidBody;
