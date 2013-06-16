@@ -1024,6 +1024,10 @@ public class Unity3DExporter : EditorWindow
         {
             WriteMeshColliderAttributes(collider as MeshCollider, outFile, indent);
         }
+        else if (collider is CharacterController)
+        {
+            WriteCharacterControllerAttributes(collider as CharacterController, outFile, indent);
+        }
         else
         {
 			Debug.Log("Collider shape not supported: '" + shape + "'.", gameObject);
@@ -1042,9 +1046,17 @@ public class Unity3DExporter : EditorWindow
 	private string GetColliderShapeName (Collider collider)
 	{
 		string typeName = collider.GetType ().Name;
+        typeName = typeName.Replace("Controller", "");
 		return typeName.Replace ("Collider", "");
 	}
-	
+
+    private void WriteCharacterControllerAttributes(CharacterController characterController, StreamWriter outFile, string indent)
+    {
+        Vector3 center = characterController.center;
+        outFile.Write("Height=\"" + characterController.height + "\" Radius=\"" + characterController.radius + "\" Slope=\"" + characterController.slopeLimit +
+            "\" Step=\"" + characterController.stepOffset + "\" Center=\"" + (-center.x) + ", " + center.y + ", " + center.z + "\"");
+    }
+
 	private void WriteBoxColliderAttributes (BoxCollider boxCollider, StreamWriter outFile, string indent)
 	{
 		Vector3 center = boxCollider.center;

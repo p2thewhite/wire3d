@@ -672,6 +672,22 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
+Vector3F Importer::GetVector3(rapidxml::xml_node<>* pXmlNode, const Char*
+	pName)
+{
+	Vector3F v = Vector3F::ZERO;
+	Char* pCol = GetValue(pXmlNode, pName);
+	if (pCol)
+	{
+		Int n;
+		n = sscanf(pCol, "%f, %f, %f", &v.X(), &v.Y(), &v.Z());
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
+	}
+
+	return v;
+}
+
+//----------------------------------------------------------------------------
 ColorRGB Importer::GetColorRGB(rapidxml::xml_node<>* pXmlNode, const Char*
 	pName, Bool& rHasValue)
 {
@@ -766,17 +782,28 @@ void Importer::ParseAssets(rapidxml::xml_node<>* pXmlNode)
 
 #ifndef NO_BULLET_PHYSICS_LIB
 //----------------------------------------------------------------------------
+btTransform Importer::GetBtTransform(Spatial* pSpatial, const Vector3F& rCenter)
+{
+	WIRE_ASSERT(pSpatial);
+
+	UpdateWorldTransformation(pSpatial);
+	Vector3F center = rCenter;
+	center.X() *= pSpatial->Local.GetScale().X();
+	center.Y() *= pSpatial->Local.GetScale().Y();
+	center.Z() *= pSpatial->Local.GetScale().Z();
+	Transformation& rWorld = pSpatial->World;
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
+	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
+	return transform;
+}
+
+//----------------------------------------------------------------------------
 void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 	pCollisionShape, Float mass, Bool isKinematic, const Vector3F& rCenter,
 	Object* pObjRef0, Object* pObjRef1)
 {
-	UpdateWorldTransformation(pSpatial);
-	Transformation& rWorld = pSpatial->World;
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + rCenter));
-	transform.setBasis(PhysicsWorld::Convert(rWorld.GetRotate()));
-
 	// radius of sphere was already scaled by maximum component of local scale
 	if (pCollisionShape->getShapeType() != SPHERE_SHAPE_PROXYTYPE)
 	{
@@ -790,6 +817,8 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 		pCollisionShape->calculateLocalInertia(mass, localInertia);
 	}
 
+	// TODO: scale center?
+	btTransform transform = GetBtTransform(pSpatial, rCenter);
 	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
 		pMotionState, pCollisionShape, localInertia);
@@ -819,7 +848,7 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pObjRef0, pObjRef1);
 	mspPhysicsWorld->AddRigidBody(pRigidBody);
 
-	RigidBodyController* pController = mspPhysicsWorld->AddController(pRigidBody);
+	RigidBodyController* pController = mspPhysicsWorld->CreateController(pRigidBody);
 	pSpatial->AttachController(pController);
 }
 
@@ -846,6 +875,8 @@ void Importer::ParseRigidBody(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 	Float mass = GetFloat(pXmlNode, "Mass");
 	Bool isKinematic = GetBool(pXmlNode, "Kinematic");
+
+	// TODO: Make sure to re-use shapes among rigid bodies whenever possible!
 	btCollisionShape* pCollisionShape = WIRE_NEW btEmptyShape;
 
 	AddRigidBodyController(pSpatial, pCollisionShape, mass, isKinematic);
@@ -952,32 +983,39 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	}
 	else
 	{
-		for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
-			attr; attr = attr->next_attribute())
+		center = GetVector3(pXmlNode, "Center");
+
+		if (Is("Character", pShapeName))
 		{
-			if (Is("Center", attr->name()))
-			{
-				Int n;
-				n = sscanf(attr->value(), "%f, %f, %f", &center.X(), &center.Y(), &center.Z());
-				WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
-			}
+			Float height = GetFloat(pXmlNode, "Height");
+			Float radius = GetFloat(pXmlNode, "Radius");
+			Float slope = GetFloat(pXmlNode, "Slope");
+			Float step = GetFloat(pXmlNode, "Step");
+
+			btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(radius, height);
+			pConvexShape->setLocalScaling(PhysicsWorld::Convert(pSpatial->Local.GetScale()));
+			btPairCachingGhostObject* pGhostObject = WIRE_NEW btPairCachingGhostObject();
+			pGhostObject->setCollisionShape(pConvexShape);
+			pGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+
+			btKinematicCharacterController* pCharacter = WIRE_NEW
+				btKinematicCharacterController(pGhostObject, pConvexShape, step);
+			pCharacter->setMaxSlope(slope * MathF::DEG_TO_RAD);
+
+			mspPhysicsWorld->Get()->addCollisionObject(pGhostObject,
+				btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 
+				btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter);
+			mspPhysicsWorld->Get()->addAction(pCharacter);
+
+			pGhostObject->setWorldTransform(GetBtTransform(pSpatial, center));
+			mspPhysicsWorld->AddCollisionShape(pConvexShape);
+			Controller* pController = mspPhysicsWorld->CreateController(pGhostObject, pCharacter);
+			pSpatial->AttachController(pController);
+			return;
 		}
-
-		if (Is("Box", pShapeName))
+		else if (Is("Box", pShapeName))
 		{
-			Vector3F size = Vector3F::ONE;
-
-			for (rapidxml::xml_attribute<>* attr = pXmlNode->first_attribute();
-				attr; attr = attr->next_attribute())
-			{
-				if (Is("Size", attr->name()))
-				{
-					Int n;
-					n = sscanf(attr->value(), "%f, %f, %f", &size.X(), &size.Y(), &size.Z());
-					WIRE_ASSERT_NO_SIDEEFFECTS(n == 3);
-				}
-			}
-
+			Vector3F size = GetVector3(pXmlNode, "Size");
 			pCollisionShape = WIRE_NEW btBoxShape(PhysicsWorld::Convert(size * 0.5f));
 		}
 		else if (Is("Sphere", pShapeName))

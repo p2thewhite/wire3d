@@ -2,13 +2,11 @@
 #ifndef RIGIDBODYCONTROLLER_H
 #define RIGIDBODYCONTROLLER_H
 
-#include "btBulletDynamicsCommon.h"
-#include "WireController.h"
-#include "WireNode.h"
+#include "CollisionObjectController.h"
 
 class PhysicsWorld;
 
-class RigidBodyController : public Wire::Controller
+class RigidBodyController : public CollisionObjectController
 {
 	WIRE_DECLARE_RTTI;
 
@@ -19,18 +17,7 @@ public:
 	// geometric update called by UpdateGS()
 	virtual Bool Update(Double appTime);
 
-	inline btRigidBody* Get() { return mpRigidBody; }
-
-	void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false);
-
-private:
-	friend class PhysicsWorld;
-	void Unbind();
-
-	PhysicsWorld* mpPhysicsWorld;
-	btRigidBody* mpRigidBody;
-
-	Wire::NodePtr mspDebugShape;
+	inline btRigidBody* Get() { return (btRigidBody*)mpCollisionObject; }
 };
 
 typedef Wire::Pointer<RigidBodyController> RigidBodyControllerPtr;

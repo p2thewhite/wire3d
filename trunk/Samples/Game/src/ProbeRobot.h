@@ -3,10 +3,7 @@
 
 #include "WireController.h"
 #include "WireSpatial.h"
-
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision/CollisionDispatch/btGhostObject.h"
-#include "BulletDynamics/Character/btKinematicCharacterController.h"
+#include "PhysicsWorld.h"
 
 class ProbeRobot : public Wire::Controller
 {
@@ -32,8 +29,7 @@ private:
 	Float mSpeed;
 	Float mMaximumPlayerDistanceSquared;
 
-	btPairCachingGhostObject* mpGhostObject;
-	btKinematicCharacterController* mpPhysicsEntity;
+	CharacterControllerPtr mspCharacter;
 };
 
 #endif

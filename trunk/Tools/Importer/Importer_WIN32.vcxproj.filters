@@ -5,6 +5,8 @@
     <ClCompile Include="src\PicoPNG.cpp" />
     <ClCompile Include="src\PhysicsWorld.cpp" />
     <ClCompile Include="src\RigidBodyController.cpp" />
+    <ClCompile Include="src\CollisionObjectController.cpp" />
+    <ClCompile Include="src\CharacterController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Importer.h" />
@@ -12,6 +14,8 @@
     <ClInclude Include="src\rapidxml.hpp" />
     <ClInclude Include="src\PhysicsWorld.h" />
     <ClInclude Include="src\RigidBodyController.h" />
+    <ClInclude Include="src\CollisionObjectController.h" />
+    <ClInclude Include="src\CharacterController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PhysicsWorld.inl" />

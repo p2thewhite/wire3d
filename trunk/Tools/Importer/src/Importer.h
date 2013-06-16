@@ -85,6 +85,7 @@ private:
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	UInt GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	Wire::Vector3F GetVector3(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Wire::ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode,
 		const Char* pName, Bool& rHasValue);
 	Wire::ColorRGBA GetColorRGBA(rapidxml::xml_node<>* pXmlNode,
@@ -147,6 +148,7 @@ private:
 	void AddRigidBodyController(Wire::Spatial* pSpatial, btCollisionShape* pCollisionShape,
 		Float mass, Bool isKinematic, const Wire::Vector3F& rCenter = Wire::Vector3F::ZERO,
 		Wire::Object* pObjRef0 = NULL, Wire::Object* pObjRef1 = NULL);
+	btTransform GetBtTransform(Wire::Spatial* pSpatial, const Wire::Vector3F& rCenter);
 
 	PhysicsWorldPtr mspPhysicsWorld;
 #endif

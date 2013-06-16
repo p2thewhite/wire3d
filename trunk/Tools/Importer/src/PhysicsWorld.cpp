@@ -46,12 +46,11 @@ PhysicsWorld::PhysicsWorld(const Vector3F& rWorldAabbMin, const Vector3F&
 PhysicsWorld::~PhysicsWorld()
 {
 	//cleanup in the reverse order of creation/initialization
-	
 	while (mControllerMap.GetQuantity() > 0)
 	{
-		THashTable<btRigidBody*, RigidBodyController*>::Iterator it(&mControllerMap);
-		btRigidBody* pKey = NULL;
-		RigidBodyController** pValue = it.GetFirst(&pKey);
+		THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(&mControllerMap);
+		btCollisionObject* pKey = NULL;
+		CollisionObjectController** pValue = it.GetFirst(&pKey);
 		WIRE_ASSERT(pValue && *pValue);
 		(*pValue)->Unbind();
 	}
@@ -123,17 +122,18 @@ void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, Object*
 //----------------------------------------------------------------------------
 RigidBodyController* PhysicsWorld::GetController(btRigidBody* pRigidBody)
 {
-	RigidBodyController** pValue =	mControllerMap.Find(pRigidBody);
+	CollisionObjectController** pValue = mControllerMap.Find(pRigidBody);
 	if (pValue)
 	{
-		return *pValue;
+		WIRE_ASSERT(DynamicCast<RigidBodyController>(*pValue));
+		return StaticCast<RigidBodyController>(*pValue);
 	}
 
 	return NULL;
 }
 
 //----------------------------------------------------------------------------
-RigidBodyController* PhysicsWorld::AddController(btRigidBody* pRigidBody)
+RigidBodyController* PhysicsWorld::CreateController(btRigidBody* pRigidBody)
 {
 	WIRE_ASSERT(mControllerMap.Find(pRigidBody) == NULL);
 
@@ -144,14 +144,26 @@ RigidBodyController* PhysicsWorld::AddController(btRigidBody* pRigidBody)
 }
 
 //----------------------------------------------------------------------------
-void PhysicsWorld::RemoveController(RigidBodyController* pController,
-	Bool destroyRigidBody)
+CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
+	btKinematicCharacterController* pCharacter)
 {
-	THashTable<btRigidBody*, RigidBodyController*>::Iterator it(
-		&mControllerMap);
-	btRigidBody* pKey = NULL;
+	WIRE_ASSERT(mControllerMap.Find(pGhost) == NULL);
 
-	for (RigidBodyController** pValue = it.GetFirst(&pKey); pValue;
+	CharacterController* pController = WIRE_NEW CharacterController(this,
+		pGhost, pCharacter);
+	mControllerMap.Insert(pGhost, pController);
+	return pController;
+}
+
+//----------------------------------------------------------------------------
+void PhysicsWorld::RemoveController(CollisionObjectController* pController,
+	Bool destroyCollisionObject)
+{
+	THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(
+		&mControllerMap);
+	btCollisionObject* pKey = NULL;
+
+	for (CollisionObjectController** pValue = it.GetFirst(&pKey); pValue;
 		pValue = it.GetNext(&pKey))
 	{
 		WIRE_ASSERT(pValue && *pValue);
@@ -162,7 +174,7 @@ void PhysicsWorld::RemoveController(RigidBodyController* pController,
 		}
 	}
 
-	if (pKey && destroyRigidBody)
+	if (pKey && destroyCollisionObject)
 	{
 		btCollisionObjectArray& rArray = mpDynamicsWorld->
 			getCollisionObjectArray();
@@ -207,11 +219,11 @@ void PhysicsWorld::DestroyCollisionObject(btCollisionObject* pCollisionObject)
 //----------------------------------------------------------------------------
 void PhysicsWorld::ToggleDebugShapes(Bool show, Bool destroyOnHide)
 {
-	THashTable<btRigidBody*, RigidBodyController*>::Iterator it(
+	THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(
 		&mControllerMap);
-	btRigidBody* pKey;
+	btCollisionObject* pKey;
 
-	for (RigidBodyController** pValue = it.GetFirst(&pKey); pValue;
+	for (CollisionObjectController** pValue = it.GetFirst(&pKey); pValue;
 		pValue = it.GetNext(&pKey))
 	{
 		WIRE_ASSERT(pValue && *pValue);
@@ -317,6 +329,7 @@ Node* PhysicsWorld::CreateDebugShape(btCollisionShape* pShape)
 
 	WIRE_ASSERT(pNode);
 	pNode->AttachState(mspDebugWireframe);
+	pNode->UpdateRS();
 	return pNode;
 }
 

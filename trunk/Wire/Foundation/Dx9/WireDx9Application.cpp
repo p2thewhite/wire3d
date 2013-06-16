@@ -36,7 +36,8 @@ Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor,
 	UInt height, Bool isFullscreen, Bool useVSync)
 	:
 	Application(rBackgroundColor, pWindowTitle, xPosition, yPosition, width,
-		height, isFullscreen, useVSync), mWindowID(0)
+		height, isFullscreen, useVSync),
+	mWindowID(0)
 {
 	_set_error_mode (_OUT_TO_MSGBOX);
 

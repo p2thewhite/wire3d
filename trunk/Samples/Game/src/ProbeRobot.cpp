@@ -45,50 +45,25 @@ Bool ProbeRobot::Update(Double appTime)
 //----------------------------------------------------------------------------
 void ProbeRobot::Die()
 {
+	if (!GetSceneObject())
+	{
+		return;
+	}
+
 	// DEBUG:
 	//System::Print("Probe robot has died\n");
-
-	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
-	WIRE_ASSERT(pSpatial);
-	pSpatial->DetachController(this);
-	mpGhostObject->setUserPointer(NULL);
+	
+	GetSceneObject()->DetachController(this);
+	mspCharacter->Get()->setUserPointer(NULL);
 }
 
 //----------------------------------------------------------------------------
 void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 {
-	WIRE_ASSERT(pPhysicsWorld);
-	if (!pPhysicsWorld)
-	{
-		return;
-	}
-
-	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
-
-	btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(2.0F, 3.0F);
-	mpGhostObject->setCollisionShape(pConvexShape);
-	mpGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+	mspCharacter = GetSceneObject()->FindController<CharacterController>();
 
 	// Add a reference to the controller in the physics object
-	mpGhostObject->setUserPointer(this);
-
-	// Create physics entity
-	mpPhysicsEntity = WIRE_NEW btKinematicCharacterController(mpGhostObject,
-		pConvexShape, 0.35f);
-
-	// Collide only with static objects (for now)
-	pPhysicsWorld->addCollisionObject(mpGhostObject,
-		btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter |
-		btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter);
-	pPhysicsWorld->addAction(mpPhysicsEntity);
-
-	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
-	WIRE_ASSERT(pSpatial);
-	// Set physics entity position
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(PhysicsWorld::Convert(pSpatial->Local.GetTranslate()));
-	mpGhostObject->setWorldTransform(transform);
+	mspCharacter->Get()->setUserPointer(this);
 }
 
 //----------------------------------------------------------------------------
@@ -103,7 +78,7 @@ void ProbeRobot::TakeDamage(Float damage)
 //----------------------------------------------------------------------------
 void ProbeRobot::CalculateMovementAndRotation()
 {
-	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
+	btVector3 origin = mspCharacter->Get()->getWorldTransform().getOrigin();
 	const Vector3F probeRobotPosition(origin.x(), origin.y(), origin.z());
 
 	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
@@ -135,5 +110,5 @@ void ProbeRobot::CalculateMovementAndRotation()
 	pSpatial->Local.SetRotate(rotation);
 
 	// update the physics object
-	mpPhysicsEntity->setWalkDirection(PhysicsWorld::Convert(move));
+	mspCharacter->GetCharacter()->setWalkDirection(PhysicsWorld::Convert(move));
 }

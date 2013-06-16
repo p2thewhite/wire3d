@@ -17,9 +17,6 @@ Player::Player(Camera* pCamera)
 	mMaximumShootingDistance(1000.0F),
 	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
 	mLookUpDeadZone(Vector2F(50, 50)),
-	mCharacterWidth(1.7F),
-	mCharacterHeight(1.5F),
-	mStepHeight(0.5F),
 	mRotateSpeed(MathF::PI / 9),
 	mMoveSpeed(5.0F),
 	mPitch(0),
@@ -88,11 +85,11 @@ Bool Player::Update(Double appTime)
 	// move physics entity
 	if (mJump)
 	{
-		mpPhysicsEntity->jump();
+		mspCharacter->GetCharacter()->jump();
 		mJump = false;
 	}
 
-	mpPhysicsEntity->setWalkDirection(PhysicsWorld::Convert(mMove));
+	mspCharacter->GetCharacter()->setWalkDirection(PhysicsWorld::Convert(mMove));
 
 	// Reset accumulators
 	mMove = Vector3F::ZERO;
@@ -246,35 +243,17 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	WIRE_ASSERT(pPhysicsWorld);
 	mspPhysicsWorld = pPhysicsWorld;
 
-	mpGhostObject = WIRE_NEW btPairCachingGhostObject();
-
-	btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(mCharacterWidth, mCharacterHeight);
-	mpGhostObject->setCollisionShape(pConvexShape);
-	mpGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-
-	// Add a reference to the controller in the physics object
-	mpGhostObject->setUserPointer(this);
-
-	// Create physics entity
-	mpPhysicsEntity = WIRE_NEW btKinematicCharacterController(mpGhostObject, pConvexShape, mStepHeight);
-
-	mspPhysicsWorld->Get()->addCollisionObject(mpGhostObject,
-		btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 
-		btBroadphaseProxy::CharacterFilter | 
-		btBroadphaseProxy::DefaultFilter);
-	mspPhysicsWorld->Get()->addAction(mpPhysicsEntity);
-
-
 	mpNode = DynamicCast<Node>(GetSceneObject());
 	WIRE_ASSERT(mpNode);
 
 	mpGun = mpNode->FindChildByName("Gun");
+	WIRE_ASSERT(mpGun);
 
-	// Set physics entity position
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(PhysicsWorld::Convert(mspCamera->GetLocation()));
-	mpGhostObject->setWorldTransform(transform);
+	mspCharacter = mpNode->FindController<CharacterController>();
+	WIRE_ASSERT(mspCharacter);
+
+	// Add a reference to Player in the physics object
+	mspCharacter->Get()->setUserPointer(this);
 }
 
 //----------------------------------------------------------------------------
@@ -346,18 +325,13 @@ void Player::LookAt(const Vector2F& rLookAt)
 //----------------------------------------------------------------------------
 Vector3F Player::GetPosition()
 {
-	btVector3 origin = mpGhostObject->getWorldTransform().getOrigin();
+	btVector3 origin = mspCharacter->Get()->getWorldTransform().getOrigin();
 	return Vector3F(origin.x(), origin.y() + mHeadHeight, origin.z());
 }
 
 //----------------------------------------------------------------------------
 void Player::UpdateGun()
 {
-	if (mpGun == NULL)
-	{
-		return;
-	}
-
 	Float width = Application::GetApplication()->GetWidthF();
 	Float height = Application::GetApplication()->GetHeightF();
 	Vector2F cursorPosition(mLookAt.X()*2/width, mLookAt.Y()*2/height);

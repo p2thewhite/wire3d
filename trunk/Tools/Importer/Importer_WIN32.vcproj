@@ -149,6 +149,22 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\src\CharacterController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\CharacterController.h"
+			>
+		</File>
+		<File
+			RelativePath=".\src\CollisionObjectController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\CollisionObjectController.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\Importer.cpp"
 			>
 		</File>

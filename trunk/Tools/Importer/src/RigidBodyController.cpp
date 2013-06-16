@@ -1,58 +1,36 @@
 #include "RigidBodyController.h"
 
 #include "PhysicsWorld.h"
-#include "WireIndexBuffer.h"
-#include "WireQuaternion.h"
-#include "WireSpatial.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(RigidBodyController, Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(RigidBodyController, CollisionObjectController);
 
 //----------------------------------------------------------------------------
 RigidBodyController::RigidBodyController(PhysicsWorld* pPhysicsWorld,
 	btRigidBody* pRigidBody)
 	:
-	mpPhysicsWorld(pPhysicsWorld),
-	mpRigidBody(pRigidBody)
+	CollisionObjectController(pPhysicsWorld, pRigidBody)
 {
 }
 
 //----------------------------------------------------------------------------
 RigidBodyController::~RigidBodyController()
 {
-	if (mpPhysicsWorld)
-	{
-		mpPhysicsWorld->RemoveController(this);
-	}
 }
-
-//----------------------------------------------------------------------------
-void RigidBodyController::Unbind()
-{
-	if (mpPhysicsWorld)
-	{
-		mpPhysicsWorld->RemoveController(this);
-		mpPhysicsWorld = NULL;
-	}
-
-	mpRigidBody = NULL;
-}
-
 //----------------------------------------------------------------------------
 Bool RigidBodyController::Update(Double appTime)
 {
 	WIRE_ASSERT(DynamicCast<Spatial>(mpSceneObject));
-	if (!mpRigidBody || !Controller::Update(appTime))
+	if (!mpCollisionObject || !Controller::Update(appTime))
 	{
 		return false;
 	}
 
-	const Bool isStatic = mpRigidBody->isStaticObject();
-	if (mpRigidBody->getMotionState() && (!isStatic || mspDebugShape)) 
+	const Bool isStatic = mpCollisionObject->isStaticObject();
+	if (!isStatic || mspDebugShape)
 	{
-		btTransform trans;
-		mpRigidBody->getMotionState()->getWorldTransform(trans);
+		btTransform trans = mpCollisionObject->getWorldTransform();
 		Vector3F pos = PhysicsWorld::Convert(trans.getOrigin());
 		QuaternionF quat = PhysicsWorld::Convert(trans.getRotation());
 		Matrix3F mat;
@@ -78,36 +56,3 @@ Bool RigidBodyController::Update(Double appTime)
 	return true;
 }
 
-//----------------------------------------------------------------------------
-void RigidBodyController::ToggleDebugShape(Bool show, Bool destroyOnHide)
-{
-	if (!mspDebugShape && show && mpRigidBody && mpPhysicsWorld)
-	{
-		mspDebugShape = mpPhysicsWorld->CreateDebugShape(mpRigidBody->
-			getCollisionShape());
-	}
-
-	Node* pOwner = DynamicCast<Node>(mpSceneObject);
-	if (pOwner && mspDebugShape)
-	{
-		pOwner->DetachChild(mspDebugShape);
-		if (show)
-		{
-			pOwner->AttachChild(mspDebugShape);
-
-			// TODO: fix this
-			Spatial* pRoot = pOwner;
-			while (pRoot->GetParent())
-			{
-				pRoot = pRoot->GetParent();
-			}
-
-			pRoot->UpdateRS();
-			pOwner->WorldBoundIsCurrent = false;
-		}
-		else if (destroyOnHide)
-		{
-			mspDebugShape = NULL;
-		}
-	}
-}
