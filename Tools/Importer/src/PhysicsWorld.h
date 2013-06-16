@@ -3,6 +3,9 @@
 #define PHYSICSWORLD_H
 
 #include "btBulletDynamicsCommon.h"
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
+#include "BulletDynamics/Character/btKinematicCharacterController.h"
+#include "CharacterController.h"
 #include "RigidBodyController.h"
 #include "WireColor32.h"
 #include "WireMatrix3.h"
@@ -33,12 +36,14 @@ public:
 
 	void AddCollisionShape(btCollisionShape* pShape,
 		Object* pReferencedObject0 = NULL, Object* pReferencedObject1 = NULL);
-	void AddRigidBody(btRigidBody* pRigidBody);
 
+	void AddRigidBody(btRigidBody* pRigidBody);
 	RigidBodyController* GetController(btRigidBody* pRigidBody);
-	RigidBodyController* AddController(btRigidBody* pRigidBody);
-	void RemoveController(RigidBodyController* pController,
-		Bool destroyRigidBody = true);
+	RigidBodyController* CreateController(btRigidBody* pRigidBody);
+	CharacterController* CreateController(btCollisionObject* pGhost,
+		btKinematicCharacterController* pCharacter);
+	void RemoveController(CollisionObjectController* pController,
+		Bool destroyCollisionObject = true);
 
 	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false);
 
@@ -67,7 +72,7 @@ private:
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 
-	Wire::THashTable<btRigidBody*, RigidBodyController*> mControllerMap;
+	Wire::THashTable<btCollisionObject*, CollisionObjectController*> mControllerMap;
 
 	struct CollisionShapeItem
 	{

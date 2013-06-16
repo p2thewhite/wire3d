@@ -593,21 +593,12 @@ RenderObject* StandardMesh::CreateCapsule(Int zSampleCount,
 		radius, uvQuantity, vertexColorChannels, useNormals);
 
 	VertexBuffer* pVBuffer = pCapsule->GetMesh()->GetVertexBuffer();
-	Int startVertex = (zSampleCount/2) * radialSampleCount;
-	Int endVertex = startVertex + radialSampleCount*2;
-	Int numVertices = pVBuffer->GetQuantity();
 	Float halfHeight = height * 0.5F - radius;
+	halfHeight = halfHeight < 0 ? 0 : halfHeight;
 
-	for (Int i = 0; i < numVertices; ++i)
+	for (UInt i = 0; i < pVBuffer->GetQuantity(); ++i)
 	{
 		Vector3F& rPos = pVBuffer->Position3(i);
-		if (i >= startVertex && i < endVertex)
-		{
-			Float adjust = radius*MathF::InvSqrt(rPos[0]*rPos[0] + rPos[1]*rPos[1]);
-			rPos[0] *= adjust;
-			rPos[1] *= adjust;
-		}
-
 		rPos[2] = rPos[2] > 0 ? rPos[2] + halfHeight : rPos[2] - halfHeight; 
 	}
 

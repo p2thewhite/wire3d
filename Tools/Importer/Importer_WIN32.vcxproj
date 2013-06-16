@@ -90,12 +90,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CharacterController.cpp" />
+    <ClCompile Include="src\CollisionObjectController.cpp" />
     <ClCompile Include="src\Importer.cpp" />
     <ClCompile Include="src\PhysicsWorld.cpp" />
     <ClCompile Include="src\PicoPNG.cpp" />
     <ClCompile Include="src\RigidBodyController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CharacterController.h" />
+    <ClInclude Include="src\CollisionObjectController.h" />
     <ClInclude Include="src\Importer.h" />
     <ClInclude Include="src\PhysicsWorld.h" />
     <ClInclude Include="src\PicoPNG.h" />

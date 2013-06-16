@@ -4,12 +4,7 @@
 #include "WireController.h"
 #include "WireCamera.h"
 #include "WireNode.h"
-
 #include "PhysicsWorld.h"
-
-#include "btBulletDynamicsCommon.h"
-#include "BulletCollision/CollisionDispatch/btGhostObject.h"
-#include "BulletDynamics/Character/btKinematicCharacterController.h"
 
 class Player : public Wire::Controller
 {
@@ -42,9 +37,6 @@ private:
 	const Float mMaximumShootingDistance;
 	const Float mMaximumVerticalAngle;
 	const Wire::Vector2F mLookUpDeadZone;
-	const Float mCharacterWidth;
-	const Float mCharacterHeight;
-	const Float mStepHeight;
 	const Float mRotateSpeed;
 
 	Float mMoveSpeed;
@@ -66,8 +58,7 @@ private:
 	Bool mWasButtonAPressed;
 
 	PhysicsWorldPtr mspPhysicsWorld;
-	btPairCachingGhostObject* mpGhostObject;
-	btKinematicCharacterController* mpPhysicsEntity;
+	CharacterControllerPtr mspCharacter;
 };
 
 #endif
