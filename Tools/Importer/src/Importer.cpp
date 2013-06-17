@@ -788,10 +788,10 @@ btTransform Importer::GetBtTransform(Spatial* pSpatial, const Vector3F& rCenter)
 
 	UpdateWorldTransformation(pSpatial);
 	Vector3F center = rCenter;
-	center.X() *= pSpatial->Local.GetScale().X();
-	center.Y() *= pSpatial->Local.GetScale().Y();
-	center.Z() *= pSpatial->Local.GetScale().Z();
 	Transformation& rWorld = pSpatial->World;
+	center.X() *= rWorld.GetScale().X();
+	center.Y() *= rWorld.GetScale().Y();
+	center.Z() *= rWorld.GetScale().Z();
 	btTransform transform;
 	transform.setIdentity();
 	transform.setOrigin(PhysicsWorld::Convert(rWorld.GetTranslate() + center));
@@ -804,10 +804,12 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 	pCollisionShape, Float mass, Bool isKinematic, const Vector3F& rCenter,
 	Object* pObjRef0, Object* pObjRef1)
 {
+	btTransform transform = GetBtTransform(pSpatial, rCenter);
+
 	// radius of sphere was already scaled by maximum component of local scale
 	if (pCollisionShape->getShapeType() != SPHERE_SHAPE_PROXYTYPE)
 	{
-		pCollisionShape->setLocalScaling(PhysicsWorld::Convert(pSpatial->Local.GetScale()));
+		pCollisionShape->setLocalScaling(PhysicsWorld::Convert(pSpatial->World.GetScale()));
 	}
 
 	// rigid body is dynamic if and only if mass is non zero
@@ -817,8 +819,6 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 		pCollisionShape->calculateLocalInertia(mass, localInertia);
 	}
 
-	// TODO: scale center?
-	btTransform transform = GetBtTransform(pSpatial, rCenter);
 	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
 		pMotionState, pCollisionShape, localInertia);

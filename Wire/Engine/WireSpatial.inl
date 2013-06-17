@@ -61,3 +61,20 @@ inline void Spatial::DetachAllLights()
 {
 	mLights.RemoveAll();
 }
+
+//----------------------------------------------------------------------------
+template<class T>
+T* Spatial::GetState() const
+{
+	// check if type of state already exists
+	for (UInt i = 0; i < mStates.GetQuantity(); i++)
+	{
+		if (mStates[i]->IsExactly(T::TYPE))
+		{
+			// type of state exists, return it
+			return StaticCast<T>(mStates[i]);
+		}
+	}
+
+	return NULL;
+}

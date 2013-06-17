@@ -60,7 +60,7 @@ void ProbeRobot::Die()
 //----------------------------------------------------------------------------
 void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
 {
-	mspCharacter = GetSceneObject()->FindController<CharacterController>();
+	mspCharacter = GetSceneObject()->GetController<CharacterController>();
 
 	// Add a reference to the controller in the physics object
 	mspCharacter->Get()->setUserPointer(this);

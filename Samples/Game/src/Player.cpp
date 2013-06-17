@@ -13,7 +13,7 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Controller);
 //----------------------------------------------------------------------------
 Player::Player(Camera* pCamera)
 	:
-	mHeadHeight(0.5F),
+	mHeadHeight(1.0F),
 	mMaximumShootingDistance(1000.0F),
 	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
 	mLookUpDeadZone(Vector2F(50, 50)),
@@ -27,9 +27,8 @@ Player::Player(Camera* pCamera)
 	mMove(Vector3F::ZERO),
 	mLookAt(Vector2F::ZERO),
 	mpNode(NULL),
-	mJump(false),
-	mShoot(false),
-	mWasButtonAPressed(false)
+	mShoot(0),
+	mJump(false)
 {
 	WIRE_ASSERT(pCamera);
 	mspCamera = pCamera;
@@ -80,7 +79,7 @@ Bool Player::Update(Double appTime)
 	// update camera
 	mspCamera->SetFrame(GetPosition(), eyeDirection, up, mRight);
 
-	UpdateGun();
+	UpdateGun(deltaTime);
 
 	// move physics entity
 	if (mJump)
@@ -193,15 +192,7 @@ void Player::ProcessInput()
 	// 'A' button makes the player shoot
 	if (pButtons->GetButton(Buttons::BUTTON_A))
 	{
-		if (!mWasButtonAPressed) 
-		{
-			Shoot();
-			mWasButtonAPressed = true;
-		}
-	}
-	else
-	{
-		mWasButtonAPressed = false;
+		ShootGun();
 	}
 
 	// 'B' button makes the player jump
@@ -246,10 +237,40 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	mpNode = DynamicCast<Node>(GetSceneObject());
 	WIRE_ASSERT(mpNode);
 
-	mpGun = mpNode->FindChildByName("Gun");
+	// Init gun
+	mpGun = DynamicCast<Node>(mpNode->FindChildByName("Gun"));
 	WIRE_ASSERT(mpGun);
+	Node* pMuzzleFlash = DynamicCast<Node>(mpGun->FindChildByName("muzzleFlash"));
+	WIRE_ASSERT(pMuzzleFlash);
 
-	mspCharacter = mpNode->FindController<CharacterController>();
+	mspMaterialState = pMuzzleFlash->GetState<StateMaterial>();
+	WIRE_ASSERT(mspMaterialState);
+
+	StateCull* pCullState = WIRE_NEW StateCull;
+	pCullState->CullFace = StateCull::CM_OFF;
+	pMuzzleFlash->AttachState(pCullState);
+
+	StateAlpha* pAlphaState = WIRE_NEW StateAlpha;
+	pAlphaState->BlendEnabled = true;
+	pAlphaState->SrcBlend = StateAlpha::SBM_SRC_ALPHA;
+	pAlphaState->DstBlend = StateAlpha::DBM_ONE;
+	pMuzzleFlash->AttachState(pAlphaState);
+
+	StateZBuffer* pZBufferState = WIRE_NEW StateZBuffer;
+	pZBufferState->Writable = false;
+	pMuzzleFlash->AttachState(pZBufferState);
+
+	pMuzzleFlash->UpdateRS();
+
+	// TODO: use NodeLight
+	WIRE_ASSERT(pMuzzleFlash->GetRenderObject());
+	pMuzzleFlash->GetRenderObject()->GetLights()->RemoveAll();
+	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
+	pLight->Ambient = ColorRGB::WHITE;
+	pMuzzleFlash->GetRenderObject()->GetLights()->Append(pLight);
+	pMuzzleFlash->AttachChild(WIRE_NEW NodeLight(pLight));
+
+	mspCharacter = mpNode->GetController<CharacterController>();
 	WIRE_ASSERT(mspCharacter);
 
 	// Add a reference to Player in the physics object
@@ -293,9 +314,14 @@ void Player::Jump()
 }
 
 //----------------------------------------------------------------------------
-void Player::Shoot()
+void Player::ShootGun()
 {
-	mShoot = true;
+	if (mShoot > -1.0F)
+	{
+		return;
+	}
+
+	mShoot = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -330,7 +356,7 @@ Vector3F Player::GetPosition()
 }
 
 //----------------------------------------------------------------------------
-void Player::UpdateGun()
+void Player::UpdateGun(Double deltaTime)
 {
 	Float width = Application::GetApplication()->GetWidthF();
 	Float height = Application::GetApplication()->GetHeightF();
@@ -350,24 +376,23 @@ void Player::UpdateGun()
 	Matrix3F roll(Vector3F(0, 0, 1), mRoll);
 	mpGun->Local.SetRotate(mat * roll);
 
-	DoShooting(cursorPosition);
+	UpdateShot(deltaTime, cursorPosition);
 }
 
 //----------------------------------------------------------------------------
-void Player::DoShooting(const Vector2F& rCursorPosition)
+void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 {
-	// Remove previous ray
-	Spatial* pRay = mpNode->FindChildByName("Ray");
-	if (pRay) 
-	{
-		mpNode->DetachChild(pRay);
-	}
-
 	// If not shooting, exit
-	if (!mShoot) 
+	if (mShoot < 1) 
 	{
+		Float alpha = mShoot < 0 ? 0 : mShoot;
+		mspMaterialState->Ambient.A() = alpha;
+
+		mShoot -= static_cast<Float>(deltaTime)*10.0F;
 		return;
 	}
+
+	mShoot -= static_cast<Float>(deltaTime)*10.0F;
 
 	Vector3F origin;
 	Vector3F direction;
@@ -395,30 +420,10 @@ void Player::DoShooting(const Vector2F& rCursorPosition)
 			}
  		}
 
-		Vector3F hitPoint = PhysicsWorld::Convert(hitCallback.m_hitPointWorld);
-		CreateRay(GetPosition().Distance(hitPoint));
-
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
 		if (pProbeRobotController) 
 		{
-			pProbeRobotController->TakeDamage(5.0F);
+			pProbeRobotController->TakeDamage(2.0F);
 		}
 	}
-
-	mShoot = false;
-}
-
-//----------------------------------------------------------------------------
-void Player::CreateRay(Float size)
-{
-	RenderObject* pRenderObject = StandardMesh::CreateCylinder(5, 0.1F, size, 0, 4);
-	Node* pRay = WIRE_NEW Node(pRenderObject);
-	pRay->SetName("Ray");
-	mpNode->AttachChild(pRay);
-	mpNode->UpdateRS();
-
-	Vector3F gunEnd = mpGun->Local.GetTranslate() + (mpGun->Local.GetRotate()
-		* Vector3F(0, 0, 1.2F)) * (size * 0.5F);
-	pRay->Local.SetTranslate(gunEnd);
-	pRay->Local.SetRotate(mpGun->Local.GetRotate());
 }

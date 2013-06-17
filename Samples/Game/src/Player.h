@@ -4,6 +4,7 @@
 #include "WireController.h"
 #include "WireCamera.h"
 #include "WireNode.h"
+#include "WireStateMaterial.h"
 #include "PhysicsWorld.h"
 
 class Player : public Wire::Controller
@@ -26,12 +27,11 @@ private:
 	void StrafeLeft();
 	void StrafeRight();
 	void Jump();
-	void Shoot();
+	void ShootGun();
 
 	Wire::Vector3F GetPosition();
-	void UpdateGun();
-	void DoShooting(const Wire::Vector2F& rCursorPosition);
-	void CreateRay(Float size);
+	void UpdateGun(Double deltaTime);
+	void UpdateShot(Double deltaTime, const Wire::Vector2F& rCursorPosition);
 
 	const Float mHeadHeight;
 	const Float mMaximumShootingDistance;
@@ -50,12 +50,12 @@ private:
 	Wire::Vector3F mMove;
 	Wire::Vector2F mLookAt;
 	Wire::Node* mpNode;
-	Wire::Spatial* mpGun;
+	Wire::Node* mpGun;
 	Wire::CameraPtr mspCamera;
+	Wire::StateMaterialPtr mspMaterialState;
 
+	Float mShoot;
 	Bool mJump;
-	Bool mShoot;
-	Bool mWasButtonAPressed;
 
 	PhysicsWorldPtr mspPhysicsWorld;
 	CharacterControllerPtr mspCharacter;

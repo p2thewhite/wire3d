@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 50a14d436ab7d3049b932b14453d4409
+guid: 2bfb5f3085ffa6343aa33cccdc036ee9
 ModelImporter:
   fileIDToRecycleName:
-    4300000: Sphere002
+    4300000: polySurface6
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .0253999997
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0
@@ -35,7 +35,7 @@ ModelImporter:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 2
   textMetaNamesToFileIDs:
     //RootNode:
       data:

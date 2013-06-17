@@ -50,7 +50,7 @@ Bool Game::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
-	GetRenderer()->CreateBatchingBuffers(50*1024, 50*1024);
+	GetRenderer()->CreateBatchingBuffers(50*1024, 0*1024);
 	GetRenderer()->SetDynamicBatchingThreshold(300, 100);
 	GetRenderer()->SetStaticBatchingThreshold(700);
 
@@ -185,29 +185,27 @@ void Game::ProcessInput()
 	}
 }
 
-#include "RigidBodyController.h"
-
 //----------------------------------------------------------------------------
 void Game::OnRunning(Double time, Double deltaTime)
 {
 	ProcessInput();
 
-// 	Node* pPlatform = (Node*)mspScene->FindChildByName("Platform");
-// 
-// 	TArray<RigidBodyController*> rbcs;
-// 	pPlatform->FindControllers<RigidBodyController>(rbcs);
-// 
-// 	RigidBodyController* pRBC =	pPlatform->FindController<RigidBodyController>();
-// 	btRigidBody* pRB = pRBC->Get();
-// 
-// 	btTransform trans;
-// 	pRB->getMotionState()->getWorldTransform(trans);
-// 	btVector3 origin = trans.getOrigin();
-// 	static Float yCoord = origin.y();
-// 	Float angle = MathF::Sin(time) *3 + 3;
-// 	origin[1] = yCoord + angle;
-// 	trans.setOrigin(origin);
-// 	pRB->getMotionState()->setWorldTransform(trans);
+	Node* pPlatform = (Node*)mspScene->FindChildByName("Platform");
+
+	TArray<RigidBodyController*> rbcs;
+	pPlatform->GetControllers<RigidBodyController>(rbcs);
+
+	RigidBodyController* pRBC =	pPlatform->GetController<RigidBodyController>();
+	btRigidBody* pRB = pRBC->Get();
+
+	btTransform trans;
+	pRB->getMotionState()->getWorldTransform(trans);
+	btVector3 origin = trans.getOrigin();
+	static Float yCoord = origin.y();
+	Float angle = MathF::Sin((float)time) * 6 + 6;
+	origin[1] = yCoord + angle;
+	trans.setOrigin(origin);
+	pRB->getMotionState()->setWorldTransform(trans);
 
 	mspPhysicsWorld->StepSimulation(deltaTime, 10);
 
