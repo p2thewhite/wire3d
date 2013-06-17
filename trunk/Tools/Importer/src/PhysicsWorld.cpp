@@ -381,7 +381,7 @@ Node* PhysicsWorld::CreateDebugSphere(btSphereShape* pSphereShape)
 Node* PhysicsWorld::CreateDebugCapsule(btCapsuleShape* pCapsuleShape)
 {
 	RenderObject* pDebugCapsule = StandardMesh::CreateCapsule(10, 10,
-		pCapsuleShape->getRadius(), pCapsuleShape->getHalfHeight()*2, 0, 4);
+		pCapsuleShape->getRadius(), pCapsuleShape->getHalfHeight()*4, 0, 4);
 
 	Int axis = pCapsuleShape->getUpAxis();
 	Transformation transformation;

@@ -16,6 +16,20 @@
       <Normals Name="Assault Rifle.nm" />
       <Uv0 Name="Assault Rifle.uv0" />
     </Mesh>
+    <Mesh Name="polySurface6">
+      <Vertices Name="polySurface6.vtx" />
+      <Indices Name="polySurface6.idx" 16bit="1" />
+      <Normals Name="polySurface6.nm" />
+      <Uv0 Name="polySurface6.uv0" />
+      <Uv1 Name="polySurface6.uv1" />
+    </Mesh>
+    <Mesh Name="Cube">
+      <Vertices Name="Cube.vtx" />
+      <Indices Name="Cube.idx" 16bit="1" />
+      <Normals Name="Cube.nm" />
+      <Uv0 Name="Cube.uv0" />
+      <Uv1 Name="Cube.uv1" />
+    </Mesh>
     <Mesh Name="Combined Mesh (root Courtyard)">
       <SubMeshes>
         <SubMesh Index="0" StartIndex="0" IndexCount="1146" />
@@ -93,6 +107,18 @@
       <Uv0 Name="Combined Mesh (root Courtyard).uv0" />
       <Uv1 Name="Combined Mesh (root Courtyard).uv1" />
     </Mesh>
+    <Mesh Name="polySurface673">
+      <Vertices Name="polySurface673.vtx" />
+      <Indices Name="polySurface673.idx" 16bit="1" />
+    </Mesh>
+    <Mesh Name="polySurface674">
+      <Vertices Name="polySurface674.vtx" />
+      <Indices Name="polySurface674.idx" 16bit="1" />
+    </Mesh>
+    <Mesh Name="polySurface675">
+      <Vertices Name="polySurface675.vtx" />
+      <Indices Name="polySurface675.idx" 16bit="1" />
+    </Mesh>
   </Meshes>
   <Materials>
     <Material Name="Probe Robot_lit">
@@ -101,6 +127,14 @@
     </Material>
     <Material Name="Assault Rifle_lit">
       <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="muzzleFlash_lit">
+      <Texture Name="muzzleFlash.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="0.4715799, 0.4127963, 0.3343862, 0.5882353" />
+    </Material>
+    <Material Name="mainsqr_floor_big_diff3_layersTGA_lit">
+      <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house1_column_diff_layerstga_0">
@@ -197,141 +231,62 @@
 </Assets>
 <Node Name="Scene">
   <FogState Enabled="1" Color="0.5921569, 0.7333333, 0.5686275" Start="0" End="300" Mode="EXPSQR" />
-  <Node Name="Colliders" >
-    <Node Name="Collider for Eastern Building 3 (Low)" >
+  <Node Name="Colliders" Static="1">
+    <Node Name="Collider for Eastern Building 3 (Low)" Static="1">
       <Collider Shape="Box" Center="57.1, 8, 3.9" Size="12.71072, 6, 34" />
     </Node>
-    <Node Name="Collider for Eastern Building 2 (North)" Pos="49.41477, 15.23038, -27.7">
+    <Node Name="Collider for Eastern Building 2 (North)" Pos="49.41477, 15.23038, -27.7" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="12.71072, 21.61729, 27.7" />
     </Node>
-    <Node Name="Collider for Eastern Building 2 (South)" Pos="51.5, 15.23038, -56.5">
+    <Node Name="Collider for Eastern Building 2 (South)" Pos="51.5, 15.23038, -56.5" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="8.3, 21.61729, 30.1" />
     </Node>
-    <Node Name="Collider for Eastern Stairs (1)" Pos="38.8, 8.518629, -28.58608">
+    <Node Name="Collider for Eastern Stairs (1)" Pos="38.8, 8.518629, -28.58608" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="1.3, 7.288703, 24.00212" />
     </Node>
-    <Node Name="Collider for Eastern Stairs (2)" Pos="41.21, 5.15, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.8, 0.35, 22.4" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (3)" Pos="41.24, 5.5, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 21" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (4)" Pos="41.24, 5.85, -28.67">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 19.6" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (5)" Pos="41.24, 6.2, -29">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 17.6" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (6)" Pos="41.24, 6.55, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 16.6" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (7)" Pos="41.24, 6.9, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 15.4" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (8)" Pos="41.24, 7.25, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 14.1" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (9)" Pos="41.24, 7.6, -28.6">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 12.4" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (10)" Pos="41.24, 7.95, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 10.8" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (11)" Pos="41.24, 8.3, -28.64">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 10.07" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (12)" Pos="41.24, 8.65, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 8.75" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (13)" Pos="41.24, 9, -28.7">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 7.3" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (14)" Pos="41.24, 9.35, -28.8">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 6" />
-    </Node>
-    <Node Name="Collider for Eastern Stairs (15)" Pos="41.24, 9.7, -28.8">
-      <Collider Shape="Box" Center="0, 0, 0" Size="3.9, 0.35, 4" />
-    </Node>
-    <Node Name="Collider for Fountain (1)" Pos="0, 5.07, -23.65023">
-      <Collider Shape="Box" Center="0, 0, 0" Size="20.6307, 0.1, 20.6307" />
-    </Node>
-    <Node Name="Collider for Fountain (2)" Pos="0, 5.33, -23.65023">
-      <Collider Shape="Box" Center="0, 0, 0" Size="17.83, 0.35, 17.96" />
-    </Node>
-    <Node Name="Collider for Fountain (3)" Pos="0, 5.66, -23.65023">
-      <Collider Shape="Box" Center="0, 0, 0" Size="16.5, 0.35, 16.7" />
-    </Node>
-    <Node Name="Collider for Fountain (4)" Pos="0, 5.95, -23.65023">
-      <Collider Shape="Box" Center="0, 0, 0" Size="15.3, 0.32, 15.5" />
-    </Node>
-    <Node Name="Collider for Fountain (5)" Pos="0, 6.28, -23.65023">
-      <Collider Shape="Box" Center="0, 0, 0" Size="13.9, 0.36, 14.19" />
-    </Node>
-    <Node Name="Collider for Fountain (6)" Pos="0, 7.01, -23.65023">
+    <Node Name="Collider for Fountain (6)" Pos="0, 7.01, -23.65023" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="10, 1.2, 10" />
     </Node>
-    <Node Name="Collider for Fountain (7)" Pos="0, 7.6, -23.65023">
+    <Node Name="Collider for Fountain (7)" Pos="0, 7.6, -23.65023" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="1.68, 1.6, 2.14" />
     </Node>
-    <Node Name="Collider for Northern Building 2 (Lower)" Pos="15.7543, 8.2, -84.3">
+    <Node Name="Collider for Northern Building 2 (Lower)" Pos="15.7543, 8.2, -84.3" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="50.1, 6.25, 17.2" />
     </Node>
-    <Node Name="Collider for Northern Building 2 (Upper)" Pos="15.7543, 23.1, -83.01181">
+    <Node Name="Collider for Northern Building 2 (Upper)" Pos="15.7543, 23.1, -83.01181" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="52.59677, 26, 22.37" />
     </Node>
-    <Node Name="Collider for Sourthern Stairs (1)" Pos="0, 5.083, 15.05">
-      <Collider Shape="Box" Center="0, 0, 0" Size="38.07, 0.165, 13.2" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (2)" Pos="0, 5.265, 15.25">
-      <Collider Shape="Box" Center="0, 0, 0" Size="37.43, 0.2, 12.9" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (5)" Pos="0, 5.88, 15.8">
-      <Collider Shape="Box" Center="0, 0, 0" Size="35.6, 0.2, 11.9" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (4)" Pos="0, 5.68, 15.65">
-      <Collider Shape="Box" Center="0, 0, 0" Size="36.22, 0.2, 12.29" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (3)" Pos="0, 5.465, 15.45">
-      <Collider Shape="Box" Center="0, 0, 0" Size="36.8, 0.2, 12.6" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (6)" Pos="0, 6.08, 16">
-      <Collider Shape="Box" Center="0, 0, 0" Size="35, 0.2, 11.6" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (7)" Pos="0, 6.28, 16.2">
-      <Collider Shape="Box" Center="0, 0, 0" Size="34.4, 0.2, 11.3" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (8)" Pos="0, 6.48, 16.3">
-      <Collider Shape="Box" Center="0, 0, 0" Size="33.79, 0.2, 10.8" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (9)" Pos="0, 6.68, 16.45">
-      <Collider Shape="Box" Center="0, 0, 0" Size="33.16, 0.2, 10.4" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (10)" Pos="0, 6.88, 16.71">
-      <Collider Shape="Box" Center="0, 0, 0" Size="32.55, 0.2, 10.2" />
-    </Node>
-    <Node Name="Collider for Sourthern Stairs (11)" Pos="0, 7.08, 16.86">
-      <Collider Shape="Box" Center="0, 0, 0" Size="31.95, 0.2, 9.8" />
-    </Node>
-    <Node Name="Collider for Southern Building (Behind)" Pos="0, 37.74085, 27.5">
+    <Node Name="Collider for Southern Building (Behind)" Pos="0, 37.74085, 27.5" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="25.1, 67.35164, 13.7" />
     </Node>
-    <Node Name="Collider for Southern Building (Front)" Pos="0, 37.74085, 19.85">
+    <Node Name="Collider for Southern Building (Front)" Pos="0, 37.74085, 19.85" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="21.9, 67.35164, 2" />
     </Node>
-    <Node Name="Collider for Southern Wall (Left)" Pos="10, 20, 22.6">
+    <Node Name="Collider for Southern Wall (Left)" Pos="10, 20, 22.6" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="104.3, 30.00002, 3.27" />
     </Node>
-    <Node Name="Collider for Southern Wall (In Between)" Pos="-42.9, 20, 17">
+    <Node Name="Collider for Southern Wall (In Between)" Pos="-42.9, 20, 17" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="2.5, 30, 10.8" />
     </Node>
-    <Node Name="Collider for Southern Wall (Right)" Pos="-53, 20, 12.78">
+    <Node Name="Collider for Southern Wall (Right)" Pos="-53, 20, 12.78" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="18, 30, 2.5" />
     </Node>
-    <Node Name="Collider for Western Building 2 (Upper)" Pos="-47.58213, 24.5, -13.66149">
+    <Node Name="Collider for Western Building 2 (Upper)" Pos="-47.58213, 24.5, -13.66149" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="25.62226, 26, 42.28049" />
     </Node>
-    <Node Name="Collider for Western Building 2 (Lower)" Pos="-50.9, 8.2, -17.2">
+    <Node Name="Collider for Western Building 2 (Lower)" Pos="-50.9, 8.2, -17.2" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="17.6, 6.3, 34.6" />
+    </Node>
+    <Node Name="Courtyard Stair Colliders" Static="1">
+      <Node Name="polySurface673" Pos="0, 6.061055, 16.60201" Static="1">
+        <Collider Shape="Mesh" Mesh="polySurface673" />
+      </Node>
+      <Node Name="polySurface674" Pos="0, 5.798523, -23.65024" Static="1">
+        <Collider Shape="Mesh" Mesh="polySurface674" />
+      </Node>
+      <Node Name="polySurface675" Pos="40.99108, 7.857093, -28.69081" Static="1">
+        <Collider Shape="Mesh" Mesh="polySurface675" />
+      </Node>
     </Node>
   </Node>
   <Node Name="Courtyard" Static="1">
@@ -529,7 +484,7 @@
       </Node>
     </Node>
     <Node Name="North Eastern Pillar" Static="1">
-      <Collider Shape="Box" Center="17.56022, 15.98359, -41.30874" Size="6.28529, 22.05539, 6.285282" />
+      <Collider Shape="Box" Center="17.56022, 15.98359, -41.30874" Size="5.28529, 22.05539, 5.285282" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="66" />
       <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Node>
@@ -539,7 +494,7 @@
       <Material Name="house2_diff_layersTGA_0" />
     </Node>
     <Node Name="North Western Pillar" Static="1">
-      <Collider Shape="Box" Center="-17.47567, 15.98359, -41.30874" Size="6.285281, 22.05539, 6.285282" />
+      <Collider Shape="Box" Center="-17.47567, 15.98359, -41.30874" Size="5.285281, 22.05539, 5.285282" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="67" />
       <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Node>
@@ -553,12 +508,10 @@
       <Material Name="house4_diff_layersTGA_0" />
     </Node>
     <Node Name="Northern Ornament 1" Static="1">
-      <Collider Shape="Box" Center="7.391493, 22.04415, 19.00666" Size="2.114805, 11.5635, 0.4785004" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="41" />
       <Material Name="wall_deco1_diff_layersTGA_0" />
     </Node>
     <Node Name="Northern Ornament 2" Static="1">
-      <Collider Shape="Box" Center="-7.444077, 22.04415, 19.00666" Size="2.114805, 11.5635, 0.4785004" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="43" />
       <Material Name="wall_deco1_diff_layersTGA_0" />
     </Node>
@@ -572,7 +525,6 @@
       <Material Name="passage_diff_layersTGA_0" />
     </Node>
     <Node Name="Object016" Static="1">
-      <Collider Shape="Box" Center="32.24255, 4.791835, 3.755066" Size="5.48214, 0, 5.350082" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="36" />
       <Material Name="mainsq_floor_bases_diff_layersTGA_0" />
     </Node>
@@ -611,12 +563,12 @@
       <Material Name="stairs_diff_layersTGA_0" />
     </Node>
     <Node Name="South Eastern Pillar" Static="1">
-      <Collider Shape="Box" Center="17.56022, 15.98359, -5.536584" Size="6.28529, 22.05539, 6.285285" />
+      <Collider Shape="Box" Center="17.56022, 15.98359, -5.536584" Size="5.28529, 22.05539, 5.285285" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="65" />
       <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Node>
     <Node Name="South Western Pillar" Static="1">
-      <Collider Shape="Box" Center="-17.72328, 15.98359, -5.589886" Size="6.28529, 22.05539, 6.285285" />
+      <Collider Shape="Box" Center="-17.72328, 15.98359, -5.589886" Size="5.28529, 22.05539, 5.285285" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="64" />
       <Material Name="mainsquare_column_diff_layersTGA_0" />
     </Node>
@@ -643,7 +595,6 @@
       <Material Name="house1_diff_layerstga_0" />
     </Node>
     <Node Name="Western Ornament 1" Static="1">
-      <Collider Shape="Box" Center="42.99295, 21.34039, -28.64652" Size="0.5296402, 3.84478, 2.494061" />
       <Mesh Name="Combined Mesh (root Courtyard)" SubMesh="44" />
       <Material Name="wall_deco1_diff_layersTGA_0" />
     </Node>
@@ -678,24 +629,41 @@
       <Light Name="Directional Light Yellow" />
     </LightNode>
   </Node>
-  <Node Name="Main Camera" Pos="0, 10, -50">
-    <Camera Fov="60" Near="0.01" Far="1000" />
+  <Node Name="Platform" Pos="32.225, 4.925, 3.75" Scale="5, 0.15, 4.9">
+    <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+    <RigidBody Mass="1" Kinematic="1" />
+    <Light Name="Directional Light Blue" />
+    <Light Name="Directional Light Yellow" />
+    <Mesh Name="Cube" />
+    <Material Name="mainsqr_floor_big_diff3_layersTGA_lit" />
   </Node>
   <Node Name="Player" Pos="0, 10, -50">
+    <Camera Fov="60" Near="0.15" Far="1000" />
+    <Collider Shape="Character" Height="0" Radius="1.5" Slope="45" Step="0.5" Center="0, 0, 0" />
     <Node Name="Gun" Pos="-0.5, -0.5, 0.75" Rot="0.9952466, -0.0434534, -0.08707278, -0.00380168" Scale="0.0254, 0.0254, 0.0254">
-      <Light Name="Directional Light Blue" />
-      <Light Name="Directional Light Yellow" />
-      <Mesh Name="Assault Rifle" />
-      <Material Name="Assault Rifle_lit" />
+      <Node Name="Gun">
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Assault Rifle" />
+        <Material Name="Assault Rifle_lit" />
+      </Node>
+      <Node Name="muzzleFlash" Pos="0.01292884, 4.708735, 39.29217" Scale="30, 30, 30">
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="polySurface6" />
+        <Material Name="muzzleFlash_lit" />
+      </Node>
     </Node>
   </Node>
-  <Node Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0" Scale="0.0254, 0.0254, 0.0254">
+  <Node Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0">
+    <Collider Shape="Character" Height="2.1" Radius="1.41" Slope="45" Step="0.3" Center="0, -1.15, 0.3" />
     <Light Name="Directional Light Blue" />
     <Light Name="Directional Light Yellow" />
     <Mesh Name="Sphere002" />
     <Material Name="Probe Robot_lit" />
   </Node>
   <Skybox>
+    <MaterialState Ambient="0.5, 0.5, 0.5, 0.5" />
     <PosZ>
       <Texture Name="Front.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
     </PosZ>

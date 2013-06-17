@@ -156,6 +156,8 @@ public class Unity3DExporter : EditorWindow
 	protected void OnDestroy()
 	{
 		mIsWindowOpen = false;
+        mTextureToName.Clear();
+        mLightToName.Clear();
 	}
 
 	protected virtual void OnGUI()
@@ -215,7 +217,7 @@ public class Unity3DExporter : EditorWindow
             "Prepares static meshes for drawcall batching."));
         mExportStateMaterial = GUILayout.Toggle(mExportStateMaterial, new GUIContent(
             "Try to export StateMaterial from shader",
-            "The 'Main Color' (if available) of a shader will be exported as the StateMaterial's ambient color."));
+            "The 'Main Color', 'Tint Color' or 'Tint' (if available) of a shader will be exported as the StateMaterial's ambient color."));
         mDontGenerateMipmapsForLightmaps = GUILayout.Toggle(mDontGenerateMipmapsForLightmaps, new GUIContent(
             "Do not generate mipmaps for lightmaps",
             "Reduces size of lightmaps by 33%"));
@@ -562,6 +564,8 @@ public class Unity3DExporter : EditorWindow
 		Texture2D negYTexture2D = GetTextureFromMaterial (skyboxMaterial, "_DownTex");
 
 		outFile.WriteLine (indent + "<Skybox>");
+
+        WriteMaterialState(skyboxMaterial, outFile, indent);
 
 		outFile.WriteLine (indent + "  " + "<PosZ>");
 		WriteTexture (posZTexture2D, outFile, indent + "  ");
@@ -1053,7 +1057,10 @@ public class Unity3DExporter : EditorWindow
     private void WriteCharacterControllerAttributes(CharacterController characterController, StreamWriter outFile, string indent)
     {
         Vector3 center = characterController.center;
-        outFile.Write("Height=\"" + characterController.height + "\" Radius=\"" + characterController.radius + "\" Slope=\"" + characterController.slopeLimit +
+        float height = characterController.height;
+        height = height - 2 * characterController.radius;
+        height = height < 0 ? 0 : height;
+        outFile.Write("Height=\"" + height + "\" Radius=\"" + characterController.radius + "\" Slope=\"" + characterController.slopeLimit +
             "\" Step=\"" + characterController.stepOffset + "\" Center=\"" + (-center.x) + ", " + center.y + ", " + center.z + "\"");
     }
 
@@ -1079,6 +1086,8 @@ public class Unity3DExporter : EditorWindow
         Vector3 center = capsuleCollider.center;
         float radius = capsuleCollider.radius;
         float height = capsuleCollider.height;
+        height = height - 2 * radius;
+        height = height < 0 ? 0 : height;
         char direction = capsuleCollider.direction < 1 ? 'X' : 'Y';
         direction = capsuleCollider.direction > 1 ? 'Z' : direction;
 
@@ -1220,6 +1229,20 @@ public class Unity3DExporter : EditorWindow
 			outFile.WriteLine (indent + "  " + "<MaterialState Ambient=\"" +
                 color.r + ", " + color.g + ", " + color.b + ", " + color.a + "\" />");
 		}
+        else if (materialState.HasProperty("_TintColor"))
+        {
+            Color color = materialState.GetColor("_TintColor");
+
+            outFile.WriteLine(indent + "  " + "<MaterialState Ambient=\"" +
+                color.r + ", " + color.g + ", " + color.b + ", " + color.a + "\" />");
+        }
+        else if (materialState.HasProperty("_Tint"))
+        {
+            Color color = materialState.GetColor("_Tint");
+
+            outFile.WriteLine(indent + "  " + "<MaterialState Ambient=\"" +
+                color.r + ", " + color.g + ", " + color.b + ", " + color.a + "\" />");
+        }
 	}
 
 	private void WriteTexture(Texture2D texture, StreamWriter outFile, string indent, bool isLightmap = false, bool isRealtimeLit = false)

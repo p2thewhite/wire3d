@@ -97,6 +97,8 @@ public:
 	inline UInt GetStateQuantity() const;
 	inline State* GetState(UInt i) const;
 	State* GetState(State::StateType type) const;
+	template<class T> T* GetState() const;
+
 	void AttachState(State* pState);
 	void DetachState(State::StateType type);
 	inline void DetachAllStates();
