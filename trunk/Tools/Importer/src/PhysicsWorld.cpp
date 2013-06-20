@@ -12,7 +12,8 @@ PhysicsWorld::PhysicsWorld(const Vector3F& rWorldAabbMin, const Vector3F&
 	rWorldAabbMax, const Vector3F& rGravity)
 	:
 	mCollisionShapes(10, 10),
-	mDebugColor(Color32(127, 255, 127, 255))
+	mDebugColor(Color32(127, 255, 127, 255)),
+	mpGhostPairCallback(NULL)
 {
 	///collision configuration contains default setup for memory.
 	// Advanced users can create their own configuration.
@@ -65,27 +66,33 @@ PhysicsWorld::~PhysicsWorld()
 	for (UInt i = 0; i < mCollisionShapes.GetQuantity(); i++)
 	{
 		btCollisionShape* pShape = mCollisionShapes[i].CollisionShape;
-		if (pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE &&
-			!mCollisionShapes[i].ReferencedObject0 &&
-			!mCollisionShapes[i].ReferencedObject1)
+		if (pShape->getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE)
 		{
 			btBvhTriangleMeshShape* pMeshShape = static_cast<btBvhTriangleMeshShape*>(pShape);
 			btTriangleIndexVertexArray* pMeshInterface = static_cast<btTriangleIndexVertexArray*>(
 				pMeshShape->getMeshInterface());
 			IndexedMeshArray& rMeshArray = pMeshInterface->getIndexedMeshArray();
-			for (Int k = 0; k < rMeshArray.size(); k++)
+
+			if (!mCollisionShapes[i].ReferencedObject0 &&
+				!mCollisionShapes[i].ReferencedObject1)
 			{
-				WIRE_DELETE[] rMeshArray[k].m_triangleIndexBase;
-				rMeshArray[k].m_triangleIndexBase = NULL;
-				WIRE_DELETE[] rMeshArray[k].m_vertexBase;
-				rMeshArray[k].m_vertexBase = NULL;
+				for (Int k = 0; k < rMeshArray.size(); k++)
+				{
+					WIRE_DELETE[] rMeshArray[k].m_triangleIndexBase;
+					rMeshArray[k].m_triangleIndexBase = NULL;
+					WIRE_DELETE[] rMeshArray[k].m_vertexBase;
+					rMeshArray[k].m_vertexBase = NULL;
+				}
 			}
+
+			WIRE_DELETE pMeshInterface;
 		}
 
 		WIRE_DELETE pShape;
 		mCollisionShapes[i] = CollisionShapeItem();
 	}
 
+	WIRE_DELETE mpGhostPairCallback;
 	WIRE_DELETE mpDynamicsWorld;
 	WIRE_DELETE mpSolver;
 	WIRE_DELETE mpOverlappingPairCache;
@@ -148,6 +155,13 @@ CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
 	btKinematicCharacterController* pCharacter)
 {
 	WIRE_ASSERT(mControllerMap.Find(pGhost) == NULL);
+
+	if (!mpGhostPairCallback)
+	{
+		mpGhostPairCallback = WIRE_NEW btGhostPairCallback();
+		mpDynamicsWorld->getPairCache()->setInternalGhostPairCallback(
+			mpGhostPairCallback);
+	}
 
 	CharacterController* pController = WIRE_NEW CharacterController(this,
 		pGhost, pCharacter);

@@ -33,7 +33,9 @@ Bool Game::OnInitialize()
 		return false;
 	}
 
-	InitializePhysics();
+	mspPhysicsWorld = WIRE_NEW PhysicsWorld(Vector3F(-120, -120, -120),
+		Vector3F(120, 120, 120));
+
 	mspLogo = LoadAndInitializeLoading();
 
 	if (!mspLogo)
@@ -381,14 +383,4 @@ Node* Game::LoadAndInitializeScene()
 	pScene->WarmUpRendering(GetRenderer());
 
 	return pScene;
-}
-
-//----------------------------------------------------------------------------
-void Game::InitializePhysics()
-{
-	mspPhysicsWorld = WIRE_NEW PhysicsWorld(Vector3F(-120, -120, -120),
-		Vector3F(120, 120, 120));
-
-	mspPhysicsWorld->Get()->getPairCache()->setInternalGhostPairCallback(
-		WIRE_NEW btGhostPairCallback());
 }

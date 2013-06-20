@@ -35,7 +35,6 @@ private:
 	Wire::Node* LoadAndInitializeGUI();
 
 	void ProcessInput();
-	void InitializePhysics();
 
 	Double mLastApplicationTime;
 	UInt mAppState;

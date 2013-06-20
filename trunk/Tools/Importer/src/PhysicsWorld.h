@@ -71,6 +71,7 @@ private:
 	btBroadphaseInterface* mpOverlappingPairCache;
 	btSequentialImpulseConstraintSolver* mpSolver;
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
+	btGhostPairCallback* mpGhostPairCallback;
 
 	Wire::THashTable<btCollisionObject*, CollisionObjectController*> mControllerMap;
 
