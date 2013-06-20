@@ -49,6 +49,8 @@ public:
 	Float Angle;		// default: Math::PI
 	Float Exponent;		// default: 1
 
+	UInt Mask;			// default: 0xFFFFFFFF
+
 	Bool Enabled;		// default: true
 };
 

@@ -642,6 +642,32 @@ Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 }
 
 //----------------------------------------------------------------------------
+void Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName,
+	Float& rFloat)
+{
+	Char* pFloat = GetValue(pXmlNode, pName);
+	if (pFloat)
+	{
+		Int n;
+		n = sscanf(pFloat, "%f", &rFloat);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+	}
+}
+
+//----------------------------------------------------------------------------
+void Importer::GetHex(rapidxml::xml_node<>* pXmlNode, const Char* pName,
+	UInt& rHex)
+{
+	Char* pHex = GetValue(pXmlNode, pName);
+	if (pHex)
+	{
+		Int n;
+		n = sscanf(pHex, "%x", &rHex);
+		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+	}
+}
+
+//----------------------------------------------------------------------------
 UInt Importer::GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
 	Char* pUInt = GetValue(pXmlNode, pName);
@@ -1133,6 +1159,10 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 		pLight->Color = color;
 	}
 
+	UInt cullingMask = static_cast<UInt>(~0);
+	GetHex(pXmlNode, "Mask", cullingMask);
+	pLight->Mask = cullingMask;
+
 	if (pName)
 	{
 		mLights.Insert(pName, pLight);
@@ -1169,8 +1199,26 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		pCam->SetFrame(cameraLocation, viewDirection, up, right);
 	}
 
-	// TODO: aspect ratio?
-	pCam->SetFrustum(fov, 640.0F / 480.0F , near, far);
+	Float leftV = 0;
+	Float rightV = 1;
+	Float topV = 1;
+	Float bottomV = 0;
+	GetFloat(pXmlNode, "Left", leftV);
+	GetFloat(pXmlNode, "Right", rightV);
+	GetFloat(pXmlNode, "Top", topV);
+	GetFloat(pXmlNode, "Bottom", bottomV);
+
+	Float aspectRatio = 640.0F / 480.0F;
+	Float div = topV - bottomV;
+	WIRE_ASSERT(div != 0);
+	aspectRatio *= (rightV-leftV) / div;
+	pCam->SetFrustum(fov, aspectRatio, near, far);
+	pCam->SetViewport(leftV, rightV, topV, bottomV);
+
+	UInt cullingMask = static_cast<UInt>(~0);
+	GetHex(pXmlNode, "Mask", cullingMask);
+	pCam->SetLayerMask(cullingMask);
+
 	mpCameras->Append(pCam);
 }
 
@@ -1282,6 +1330,10 @@ Node* Importer::ParseNode(rapidxml::xml_node<>* pXmlNode, Node* pParent)
 	{
 		pNode->SetName(pName);
 	}
+
+	UInt layer = GetUInt(pXmlNode, "Layer");
+	WIRE_ASSERT(layer < 32);
+	pNode->SetLayerMask(1 << layer);
 
 	ParseTransformationAndComponents(pXmlNode, pNode);
 

@@ -72,13 +72,13 @@ void VisibleSet::SortUnwrapped(Int left, Int right)
 }
 
 //----------------------------------------------------------------------------
-//void VisibleSet::QuickSort(UInt* const pKeys, Object** const pVisible,
-void VisibleSet::QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
+//void VisibleSet::QuickSort(UInt64* const pKeys, Object** const pVisible,
+void VisibleSet::QuickSort(TPODArray<UInt64>& rKeys, Object** const pVisible,
 	Transformation** pTrafo, Int left, Int right)
 {
 	Int i = left;
 	Int j = right;
-	UInt pivot = rKeys[(left + right) / 2];
+	UInt64 pivot = rKeys[(left + right) / 2];
 
 	while (i <= j)
 	{
@@ -94,7 +94,7 @@ void VisibleSet::QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
 
 		if (i <= j)
 		{
-			UInt tmp = rKeys[i];
+			UInt64 tmp = rKeys[i];
 			rKeys[i] = rKeys[j];
 			rKeys[j] = tmp;
 

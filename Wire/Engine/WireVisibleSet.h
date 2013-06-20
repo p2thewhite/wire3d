@@ -38,12 +38,12 @@ public:
 		rTransformationPtr);
 
 	inline void Insert(Object* pObject, Transformation* pTransformation,
-		UInt key = 0);
+		UInt64 key = 0);
 
 	void Clear();
 	void Sort(Bool unwrap = false);
 
-	static void QuickSort(TPODArray<UInt>& rKeys, Object** const pVisible,
+	static void QuickSort(TPODArray<UInt64>& rKeys, Object** const pVisible,
 		//	static void QuickSort(UInt* const pKeys, Object** const pVisible,
 		Transformation** const pTrafo, Int left, Int right);
 
@@ -52,15 +52,15 @@ private:
 	void Sort(Int left, Int right);
 	void SortUnwrapped(Int left, Int right);
 	inline void InsertUnwrapped(Object* pObject, Transformation*
-		pTransformation, UInt key = 0);
+		pTransformation, UInt64 key = 0);
 
 	TPODArray<Object*> mVisible;
 	TPODArray<Transformation*> mTransformations;
-	TPODArray<UInt> mKeys;
+	TPODArray<UInt64> mKeys;
 
 	TPODArray<Object*> mVisibleUnwrapped;
 	TPODArray<Transformation*> mTransformationsUnwrapped;
-	TPODArray<UInt> mKeysUnwrapped;
+	TPODArray<UInt64> mKeysUnwrapped;
 	Bool mIsUnwrapped;
 };
 

@@ -349,7 +349,6 @@ Node* Game::LoadAndInitializeScene()
 
 	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in scene.xml */);
 	mspSceneCamera = cameras[0];
-	mspSceneCamera->SetAspectRatio(GetWidthF() / GetHeightF());
 	mSortingCuller.SetCamera(mspSceneCamera);
 
 	// The maximum number of objects that are going to be culled is the

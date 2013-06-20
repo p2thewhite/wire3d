@@ -22,6 +22,7 @@ typedef unsigned char UChar;
 typedef unsigned int UInt;
 typedef unsigned long ULong;
 typedef unsigned long long ULongLong;
+typedef unsigned long long UInt64;
 typedef unsigned short UShort;
 
 #endif

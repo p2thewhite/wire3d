@@ -83,7 +83,7 @@ public:
 	// nodes and render objects. Calculates state keys for render objects to
 	// indicate identical render states and lights of render objects.
 	virtual void UpdateRS(TArray<State*>* pStateStacks = NULL, TArray<Light*>*
-		pLightStack = NULL, THashTable<UInt, UInt>* pStateKeys = NULL);
+		pLightStack = NULL);
 
 	// parent access (Node calls this during attach/detach of children)
 	inline void SetParent(Spatial* pParent);
@@ -128,11 +128,10 @@ protected:
 	// render state updates
 	typedef TArray<State*> States;
 	typedef TArray<Light*> Lights;
-	typedef THashTable<UInt, UInt> Keys;
-	void PropagateStateFromRoot(States* pStates, Lights* pLights, Keys* pKeys);
+	void PropagateStateFromRoot(States* pStates, Lights* pLights);
 	void PushState(States* pStates, Lights* pLights);
 	void PopState(States* pStates, Lights* pLights);
-	virtual void UpdateState(States* pStates, Lights* pLights, Keys* pKeys) = 0;
+	virtual void UpdateState(States* pStates, Lights* pLights) = 0;
 
 protected:
 	// support for hierarchical scene graph

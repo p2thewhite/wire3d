@@ -22,6 +22,7 @@ Light::Light(LightType type)
 	Direction(-Vector3F::UNIT_Z),
 	Angle(MathF::PI),
 	Exponent(1.0F),
+	Mask(static_cast<UInt>(~0)),
 	Enabled(true)
 {
 }

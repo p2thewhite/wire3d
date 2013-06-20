@@ -112,3 +112,24 @@ Bool SceneObject::OnGetVisibleUpdateControllers(const Camera* pCamera)
 
 	return wasUpdated;
 }
+
+//----------------------------------------------------------------------------
+Controller* SceneObject::GetController(const Rtti& rType, Bool findDerivedTypes)
+{
+	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
+	{
+		if (findDerivedTypes)
+		{
+			if (mControllers[i]->IsDerived(rType))
+			{
+				return mControllers[i];
+			}
+		}
+		else if (mControllers[i]->IsExactly(rType))
+		{
+			return mControllers[i];
+		}
+	}
+
+	return NULL;
+}
