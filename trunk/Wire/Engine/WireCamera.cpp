@@ -17,8 +17,7 @@ Camera::Camera(Bool isPerspective)
 	:
 	mIsPerspective(isPerspective)
 {
-	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
-	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
+	Init();
 	SetFrame(Vector3F::ZERO, -Vector3F::UNIT_Z, Vector3F::UNIT_Y,
 		Vector3F::UNIT_X);
 }
@@ -29,8 +28,7 @@ Camera::Camera(const Vector3F& location, const Vector3F& direction,
 	:
 	mIsPerspective(isPerspective)
 {
-	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
-	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
+	Init();
 	Vector3F right = direction.Cross(up);
 	SetFrame(location, direction, up, right);
 }
@@ -38,6 +36,14 @@ Camera::Camera(const Vector3F& location, const Vector3F& direction,
 //----------------------------------------------------------------------------
 Camera::~Camera()
 {
+}
+
+//----------------------------------------------------------------------------
+void Camera::Init()
+{
+	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
+	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
+	mLayerMask = static_cast<UInt>(~0);
 }
 
 //----------------------------------------------------------------------------

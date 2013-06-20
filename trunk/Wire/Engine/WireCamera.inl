@@ -83,3 +83,15 @@ inline Bool Camera::IsPerspective() const
 {
 	return mIsPerspective;
 }
+
+//----------------------------------------------------------------------------
+inline void Camera::SetLayerMask(UInt layerMask)
+{
+	mLayerMask = layerMask;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Camera::GetLayerMask() const
+{
+	return mLayerMask;
+}

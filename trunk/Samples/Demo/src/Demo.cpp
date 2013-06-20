@@ -185,7 +185,6 @@ Node* Demo::LoadAndInitScene()
 	}
 
 	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
-	mSceneCameras[0]->SetAspectRatio(GetWidthF() / GetHeightF());
 	mSceneCuller.SetCamera(mSceneCameras[0]);
 
 	// The maximum number of objects that are going to be culled is the

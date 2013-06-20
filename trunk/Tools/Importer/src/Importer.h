@@ -83,6 +83,8 @@ private:
 	Char* GetValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool HasValue(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Float GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	void GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName, Float& rFloat);
+	void GetHex(rapidxml::xml_node<>* pXmlNode, const Char* pName, UInt& rHex);
 	UInt GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Wire::Vector3F GetVector3(rapidxml::xml_node<>* pXmlNode, const Char* pName);

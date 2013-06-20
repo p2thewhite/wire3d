@@ -70,6 +70,7 @@ public:
 	// returns the first (top/down, left-to-right) Spatial using that name
 	Spatial* FindChildByName(const String& rName) const;
 
+	// returns all Spatials using that name
 	void FindAllChildrenByName(const String& rName, TArray<Spatial*>&
 		rChildren) const;
 
@@ -92,6 +93,10 @@ public:
 	inline void DetachEffect(Effect* pEffect);
 	inline void DetachAllEffects();
 
+	// LayerMask to be used with Camera's and Light's cullingMask
+	inline void SetLayerMask(UInt layerMask);
+	inline UInt GetLayerMask() const;
+
 	// Prepare subtree for static/dynamic batching
 	// (see comments below)
 	void PrepareForDynamicBatching(Bool forceWorldIsCurrent = false,
@@ -105,12 +110,13 @@ protected:
 	virtual void UpdateWorldData(Double appTime, Bool updateControllers);
 
 	// render state updates
-	virtual void UpdateState(States* pStates, Lights* pLights, Keys* pKeys);
+	virtual void UpdateState(States* pStates, Lights* pLights);
 
 	// culling
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 	TArray<SpatialPtr> mChildren;
+	UInt mLayerMask;
 
 	// Effect state.
 	// Attached effects apply to the RenderObject of this Node and all
@@ -150,11 +156,8 @@ public:
 
 protected:
 	Bool UpdateWorldBoundRenderObject();
-	void UpdateStateRenderObject(States* pStates, Lights* pLights, Keys* pKeys);
+	void UpdateStateRenderObject(States* pStates, Lights* pLights);
 	void GetVisibleSetRenderObject(Culler& rCuller, Bool noCull);
-
-	UInt GetStateSetKey();
-	Bool VerifyKey(UInt key, UInt offset);
 
 	Pointer<RenderObject> mspRenderObject;
 	Pointer<BoundingVolume> mspRenderObjectWorldBound;

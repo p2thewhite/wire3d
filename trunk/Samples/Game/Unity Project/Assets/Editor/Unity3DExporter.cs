@@ -407,7 +407,8 @@ public class Unity3DExporter : EditorWindow
             {
                 indent = indent + "  ";
                 string isStatic = go.isStatic ? " Static=\"1\"" : "";
-                outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\"" + isStatic + ">");
+                string layer = go.layer == 0 ? "" : " Layer=\"" + go.layer + "\"";
+                outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\"" + isStatic + layer + ">");
                 extraNode = true;
             }
 
@@ -461,6 +462,7 @@ public class Unity3DExporter : EditorWindow
 
         Mesh mesh = meshFilter.sharedMesh;
         string isStatic = gameObject.isStatic ? " Static=\"1\"" : "";
+        string layer = gameObject.layer == 0 ? "" : " Layer=\"" + gameObject.layer + "\"";
         
         SerializedObject so = new SerializedObject(meshRenderer);
         SerializedProperty sp = so.FindProperty("m_SubsetIndices");
@@ -471,7 +473,7 @@ public class Unity3DExporter : EditorWindow
                 for (int j = 0; j < sp.arraySize; j++)
                 {
                     int i = sp.GetArrayElementAtIndex(j).intValue;
-                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + ">");
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + layer + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ", i);
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[j], outFile, indent + "  ");
                     outFile.WriteLine(indent + "</Node>");
@@ -482,7 +484,7 @@ public class Unity3DExporter : EditorWindow
                 int submeshCount = mesh.subMeshCount;
                 for (int i = 0; i < submeshCount; i++)
                 {
-                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + ">");
+                    outFile.WriteLine(indent + "<Node Name=\"" + gameObject.name + "\"" + isStatic + layer + ">");
                     WriteMesh(mesh, meshRenderer, outFile, indent + "  ", i);
                     WriteMaterial(meshRenderer, meshRenderer.sharedMaterials[i], outFile, indent + "  ");
                     outFile.WriteLine(indent + "</Node>");
@@ -512,8 +514,10 @@ public class Unity3DExporter : EditorWindow
         isEmpty = isEmpty && (components == null || components.Length < 2);
         string slash = isEmpty ? " /" : "";
 
-        outFile.WriteLine(indent + "<Node Name=\"" + transform.gameObject.name + "\" " +
-             trafo + isStatic + slash + ">");
+        string layer = go.layer == 0 ? "" : " Layer=\"" + go.layer + "\"";
+
+        outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\" " +
+             trafo + isStatic + layer + slash + ">");
 
         WriteLightNode(go.GetComponent<Light>(), outFile, indent);
 
@@ -995,9 +999,11 @@ public class Unity3DExporter : EditorWindow
                 direction = " Direction=\"0, 0, 1\"";
             }
 
-		    outFile.WriteLine (indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
+            string mask = light.cullingMask == ~0 ? "" : " Mask=\"" + light.cullingMask.ToString("X") + "\"";
+            
+            outFile.WriteLine(indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
                 "\"" + direction + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
-			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\" />");
+			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + " />");
         }
 	}
 	
@@ -1125,8 +1131,25 @@ public class Unity3DExporter : EditorWindow
 			fieldOfView = 0;
 		}
 
+        string viewport = string.Empty;
+        float left = camera.rect.xMin;
+        float bottom = camera.rect.yMin;
+        float right = camera.rect.xMax;
+        float top = camera.rect.yMax;
+
+        right = right > 1 ? 1 : right;
+        top = top > 1 ? 1 : top;
+
+        if (left != 0 || right != 1 || bottom != 0 || top != 1)
+        {
+            viewport = "Left=\"" + left + "\" Right=\"" + right + "\" Top=\"" + top + "\" Bottom=\"" + bottom + "\" ";
+            Debug.Log("not std: " + left + ", " + right + ", " + top + ", " + bottom);
+        }
+
+        string mask = camera.cullingMask == ~0 ? "" : " Mask=\"" + camera.cullingMask.ToString("X") + "\" ";
+
 		outFile.WriteLine (indent + "  " + "<Camera Fov=\"" + fieldOfView + "\" Near=\"" +
-            camera.nearClipPlane + "\" Far=\"" + camera.farClipPlane + "\" />");
+            camera.nearClipPlane + "\" Far=\"" + camera.farClipPlane + "\" " + viewport + mask + "/>");
 	}
 
     private string GetMaterialName(Material material, MeshRenderer meshRenderer)

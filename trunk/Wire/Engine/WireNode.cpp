@@ -54,6 +54,7 @@ Node::Node(const Node* pNode)
 	}	
 
 	Init(pNode->mChildren.GetMaxQuantity(), pNode->mChildren.GetGrowBy());
+	mLayerMask = pNode->mLayerMask;
 }
 
 //----------------------------------------------------------------------------
@@ -283,16 +284,16 @@ void Node::AttachEffect(Effect* pEffect)
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateState(States* pStates, Lights* pLights, Keys* pKeys)
+void Node::UpdateState(States* pStates, Lights* pLights)
 {
-	UpdateStateRenderObject(pStates, pLights, pKeys);
+	UpdateStateRenderObject(pStates, pLights);
 
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		Spatial* pChild = mChildren[i];
 		if (pChild)
 		{
-			pChild->UpdateRS(pStates, pLights, pKeys);
+			pChild->UpdateRS(pStates, pLights);
 		}
 	}
 }
@@ -629,14 +630,14 @@ void Node::MergeMeshes(MergeArray* pMergeArray)
 	}
 
 	TPODArray<Transformation*> transformations(pMergeArray->GetQuantity());
-	TPODArray<UInt> keys(pMergeArray->GetQuantity());
+	TPODArray<UInt64> keys(pMergeArray->GetQuantity());
 	for (UInt i = 0; i < pMergeArray->GetQuantity(); i++)
 	{
-		UInt key = 0;
+		UInt64 key = 0;
 		enum
 		{
-			STATESET = 16,
-			MATERIAL = 16,
+			STATESET = 32,
+			MATERIAL = 32,
 		};
 
 		WIRE_ASSERT((STATESET + MATERIAL) <= sizeof(key) * 8);
@@ -645,14 +646,12 @@ void Node::MergeMeshes(MergeArray* pMergeArray)
 		Material* pMaterial = pRenderObject->GetMaterial();
 		if (pMaterial)
 		{
-			WIRE_ASSERT(pMaterial->ID < (1<<MATERIAL));
 			key |= pMaterial->ID;
 		}
 
 		// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS()
 		// once or initialize manually)
-		WIRE_ASSERT(pRenderObject->GetStateSetID() < (1<<STATESET));
-		key |= pRenderObject->GetStateSetID() << (MATERIAL);
+		key |= static_cast<UInt64>(pRenderObject->GetStateSetID()) << (MATERIAL);
 
 		keys.Append(key);
 	}
@@ -728,6 +727,7 @@ void Node::Init(UInt quantity, UInt growBy)
 {
 	mChildren.SetMaxQuantity(quantity);
 	mChildren.SetGrowBy(growBy);
+	mLayerMask = static_cast<UInt>(~0);
 }
 
 //----------------------------------------------------------------------------
@@ -777,8 +777,7 @@ Bool Node::UpdateWorldBoundRenderObject()
 }
 
 //----------------------------------------------------------------------------
-void Node::UpdateStateRenderObject(States* pStates, Lights* pLights,
-	Keys* pKeys)
+void Node::UpdateStateRenderObject(States* pStates, Lights* pLights)
 {
 	if (!mspRenderObject)
 	{
@@ -801,33 +800,27 @@ void Node::UpdateStateRenderObject(States* pStates, Lights* pLights,
 	}
 
 	pRenderObjectLights->RemoveAll();
-	pRenderObjectLights->SetQuantity(pLights->GetQuantity());
+	pRenderObjectLights->SetMaxQuantity(pLights->GetQuantity());
 	for (UInt i = 0; i < pLights->GetQuantity(); i++)
 	{
-		(*pRenderObjectLights)[i] = (*pLights)[i];
+		if (((*pLights)[i]->Mask & mLayerMask) != 0)
+		{
+			pRenderObjectLights->Append((*pLights)[i]);
+		}
 	}
 
-	// check if other RenderObjects share the same states
-	UInt key = GetStateSetKey();
-	UInt* pStateSetID = pKeys->Find(key);
-	if (pStateSetID)
-	{
-		mspRenderObject->SetStateSetID(*pStateSetID);
-	}
-	else
-	{
-		UInt id = pKeys->GetQuantity()+1;
-		pKeys->Insert(key, id);
-		mspRenderObject->SetStateSetID(id);
-	}
+	UInt key = State::GetStateSetID(mspRenderObject->GetStates());
+	mspRenderObject->SetStateSetID(key);
 }
 
 //----------------------------------------------------------------------------
 void Node::GetVisibleSetRenderObject(Culler& rCuller, Bool noCull)
 {
+	const Camera* pCamera = rCuller.GetCamera();
+
 	// Add this RenderObject if it's not culled. (Its bounding volume is
 	// smaller or equal the bounding volume of this node).
-	if (mspRenderObject)
+	if (mspRenderObject && ((pCamera->GetLayerMask() & mLayerMask) != 0))
 	{
 		if (GetQuantity() == 0)
 		{
@@ -850,183 +843,6 @@ void Node::GetVisibleSetRenderObject(Culler& rCuller, Bool noCull)
 			rCuller.SetPlaneState(savePlaneState);
 		}
 	}
-}
-
-//----------------------------------------------------------------------------
-UInt Node::GetStateSetKey()
-{
-	WIRE_ASSERT(mspRenderObject);
-	UInt key = 0;
-	UInt offset = 0;
-
-	StatePtr* rStates = mspRenderObject->GetStates();
-	if (rStates[State::ALPHA])
-	{
-		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
-		key = pState->ID;
-	}
-
-	offset = TInstanceID<StateAlpha>::GetMaxID()+1;
-	if (rStates[State::CULL])
-	{
-		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
-		key += pState->ID * offset;
-	}
-
-	offset *= TInstanceID<StateCull>::GetMaxID()+1;
-	if (rStates[State::FOG])
-	{
-		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
-		key += pState->ID * offset;
-	}
-
-	offset *= TInstanceID<StateFog>::GetMaxID()+1;
-	if (rStates[State::MATERIAL])
-	{
-		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
-			State::MATERIAL]);
-		key += pState->ID * offset;
-	}
-
-	offset *= TInstanceID<StateMaterial>::GetMaxID()+1;
-	if (rStates[State::WIREFRAME])
-	{
-		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
-			State::WIREFRAME]);
-		key += pState->ID * offset;
-	}
-
-	offset *= TInstanceID<StateWireframe>::GetMaxID()+1;
-	if (rStates[State::ZBUFFER])
-	{
-		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
-			State::ZBUFFER]);
-		key += pState->ID * offset;
-	}
-
-	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
-	for (UInt i = 0; pLights && (i < pLights->GetQuantity()); i++)
-	{
-		offset *= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
-			TInstanceID<Light>::GetMaxID()+1;
-		WIRE_ASSERT((*pLights)[i]);
-		key += (*pLights)[i]->ID * offset;
-	}
-
-	WIRE_ASSERT(VerifyKey(key, offset));
-	return key;
-}
-
-//----------------------------------------------------------------------------
-Bool Node::VerifyKey(UInt key, UInt offset)
-{
-	WIRE_ASSERT(mspRenderObject);
-	TArray<LightPtr>* pLights = mspRenderObject->GetLights();
-	if (pLights)
-	{
-		for (Int i = (pLights->GetQuantity()-1); i >= 0; i--)
-		{
-			UInt id = key / offset;
-			if (id != (*pLights)[i]->ID)
-			{
-				WIRE_ASSERT(false /* Light state id calculation error */);
-				return false;
-			}
-
-			key -= id * offset;
-			offset /= (i == 0) ? TInstanceID<StateZBuffer>::GetMaxID()+1 :
-				TInstanceID<Light>::GetMaxID()+1;
-		}
-	}
-
-	StatePtr* rStates = mspRenderObject->GetStates();
-	if (rStates[State::ZBUFFER])
-	{
-		StateZBuffer* pState = StaticCast<StateZBuffer>(rStates[
-			State::ZBUFFER]);
-			UInt id = key / offset;
-			if (id != pState->ID)
-			{
-				WIRE_ASSERT(false /* ZBuffer state id calculation error */);
-				return false;
-			}
-
-			key -= id * offset;
-	}
-
-	offset /= TInstanceID<StateWireframe>::GetMaxID()+1;
-	if (rStates[State::WIREFRAME])
-	{
-		StateWireframe* pState = StaticCast<StateWireframe>(rStates[
-			State::WIREFRAME]);
-			UInt id = key / offset;
-			if (id != pState->ID)
-			{
-				WIRE_ASSERT(false /* Wireframe state id calculation error */);
-				return false;
-			}
-
-			key -= id * offset;
-	}
-
-	offset /= TInstanceID<StateMaterial>::GetMaxID()+1;
-	if (rStates[State::MATERIAL])
-	{
-		StateMaterial* pState = StaticCast<StateMaterial>(rStates[
-			State::MATERIAL]);
-			UInt id = key / offset;
-			if (id != pState->ID)
-			{
-				WIRE_ASSERT(false /* Material state id calculation error */);
-				return false;
-			}
-
-			key -= id * offset;
-	}
-
-	offset /= TInstanceID<StateFog>::GetMaxID()+1;
-	if (rStates[State::FOG])
-	{
-		StateFog* pState = StaticCast<StateFog>(rStates[State::FOG]);
-		UInt id = key / offset;
-		if (id != pState->ID)
-		{
-			WIRE_ASSERT(false /* Fog state id calculation error */);
-			return false;
-		}
-
-		key -= id * offset;
-	}
-
-	offset /= TInstanceID<StateCull>::GetMaxID()+1;
-	if (rStates[State::CULL])
-	{
-		StateCull* pState = StaticCast<StateCull>(rStates[State::CULL]);
-		UInt id = key / offset;
-		if (id != pState->ID)
-		{
-			WIRE_ASSERT(false /* Cull state id calculation error */);
-			return false;
-		}
-
-		key -= id * offset;
-	}
-
-	offset /= TInstanceID<StateAlpha>::GetMaxID()+1;
-	if (rStates[State::ALPHA])
-	{
-		StateAlpha* pState = StaticCast<StateAlpha>(rStates[State::ALPHA]);
-		UInt id = key / offset;
-		if (id != pState->ID)
-		{
-			WIRE_ASSERT(false /* Alpha state id calculation error */);
-			return false;
-		}
-
-		key -= id * offset;
-	}
-
-	return true;
 }
 
 //----------------------------------------------------------------------------

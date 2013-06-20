@@ -12,6 +12,7 @@
 
 #include "WireMain.h"
 #include "WireObject.h"
+#include "WireTHashTable.h"
 
 namespace Wire
 {
@@ -39,9 +40,13 @@ public:
 	virtual StateType GetStateType() const = 0;
 
 	static Pointer<State> Default[MAX_STATE_TYPE];
+	static UInt GetStateSetID(Pointer<State> states[MAX_STATE_TYPE]);
 
 protected:
 	State();
+
+private:
+	static THashTable<UInt64, UInt> mStateSetIDs;
 };
 
 typedef Pointer<State> StatePtr;

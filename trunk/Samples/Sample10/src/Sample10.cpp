@@ -152,8 +152,20 @@ void Sample10::OnIdle()
 				*pTransformation, mspBound);
 			if (pCuller->IsVisible(mspBound))
 			{
-				mVisibleSet.Insert(mScenario1Objects[i], pTransformation,
-					mScenario1Objects[i]->GetStateSetID());
+				// generate a sorting key from z distance to camera and
+				// the state set id of the render object.
+				Float z = pCuller->GetCamera()->GetDVector().Dot(
+					pTransformation->GetTranslate());		
+				const Float far = pCuller->GetCamera()->GetDMax();
+				z += far;
+				z /= far*3;
+				z = z < 0 ? 0 : z;
+				z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
+				UInt64 zKey = static_cast<UInt64>(z * (1<<24));
+				UInt64 key = mScenario1Objects[i]->GetStateSetID();
+				key = key << 24 | zKey;
+
+				mVisibleSet.Insert(mScenario1Objects[i], pTransformation, key);
 			}
 		}
 

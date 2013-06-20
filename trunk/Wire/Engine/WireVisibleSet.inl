@@ -23,7 +23,7 @@ inline void VisibleSet::SetMaxQuantity(UInt maxQuantity)
 
 //----------------------------------------------------------------------------
 inline void VisibleSet::Insert(Object* pObject, Transformation*
-	pTransformation, UInt key)
+	pTransformation, UInt64 key)
 {
 	mVisible.Append(pObject);
 	mTransformations.Append(pTransformation);
@@ -32,7 +32,7 @@ inline void VisibleSet::Insert(Object* pObject, Transformation*
 
 //----------------------------------------------------------------------------
 inline void VisibleSet::InsertUnwrapped(Object* pObject, Transformation*
-	pTransformation, UInt key)
+	pTransformation, UInt64 key)
 {
 	mVisibleUnwrapped.Append(pObject);
 	mTransformationsUnwrapped.Append(pTransformation);

@@ -152,7 +152,12 @@ public:
 	void GetPickRay(const Vector2F& rPosition, Vector3F& rRayOrigin,
 		Vector3F& rRayDirection);
 
+	inline void SetLayerMask(UInt layerMask);
+	inline UInt GetLayerMask() const;
+
 private:
+	void Init();
+
 	// world coordinate frame
 	Vector3F mLocation;
 	Vector3F mDVector;
@@ -167,6 +172,8 @@ private:
 	Float mPortRight;
 	Float mPortTop;
 	Float mPortBottom;
+
+	UInt mLayerMask;
 
 	// perspective or orthographic
 	Bool mIsPerspective;

@@ -48,9 +48,15 @@ inline const RenderObject* Node::GetRenderObject() const
 {
 	return mspRenderObject;
 }
-// 
-// //----------------------------------------------------------------------------
-// inline Mesh* Node::GetMesh()
-// {
-// 	return mspRenderObject ? mspRenderObject->GetMesh() : NULL;
-// }
+
+//----------------------------------------------------------------------------
+inline void Node::SetLayerMask(UInt layerMask)
+{
+	mLayerMask = layerMask;
+}
+
+//----------------------------------------------------------------------------
+inline UInt Node::GetLayerMask() const
+{
+	return mLayerMask;
+}

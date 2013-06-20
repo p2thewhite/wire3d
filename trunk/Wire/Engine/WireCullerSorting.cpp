@@ -51,7 +51,7 @@ void CullerSorting::Insert(Object* pObject, Transformation* pTransformation,
 		return;
 	}
 
-	UInt key = GetKey(pRenderObject, rPosition);
+	UInt64 key = GetKey(pRenderObject, rPosition);
 	StateAlpha* pAlpha = StaticCast<StateAlpha>(pRenderObject->GetStates()[
 		State::ALPHA]);
 	if (pAlpha)
@@ -72,18 +72,18 @@ void CullerSorting::Insert(Object* pObject, Transformation* pTransformation,
 }
 
 //----------------------------------------------------------------------------
-UInt CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
+UInt64 CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
 	rPosition)
 {
 	WIRE_ASSERT(pRenderObject);
-	UInt key = 0;
+	UInt64 key = 0;
 
 	// number of bits we use for the sorting key (MSB to LSB)
 	enum
 	{
-		STATESET = 8,
-		MATERIAL = 8,
-		DEPTH = 16
+		STATESET = 16,
+		MATERIAL = 16,
+		DEPTH = 24
 	};
 	
 	 // The sum of the ranges must fit in the key
@@ -91,13 +91,12 @@ UInt CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
 
 	Float z = GetCamera()->GetDVector().Dot(rPosition);
 	const Float far = GetCamera()->GetDMax();
-	const Float far3 = far*3;
 	z += far;
-	z /= far3;
+	z /= far*3;
 	z = z < 0 ? 0 : z;
 	z = z >= 1.0F ? 1.0F - MathF::ZERO_TOLERANCE : z;
 
-	key = static_cast<UInt>(z * (1<<DEPTH));
+	key = static_cast<UInt64>(z * (1<<DEPTH));
 	StateAlpha* pStateAlpha = StaticCast<StateAlpha>(pRenderObject->
 		GetStates()[State::ALPHA]);
 	if (pStateAlpha && pStateAlpha->BlendEnabled)
@@ -119,7 +118,7 @@ UInt CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
 	// If StateSetID is MAX_UINT, it wasn't initialized (call UpdateRS() once,
 	// or initialize manually)
 	WIRE_ASSERT(pRenderObject->GetStateSetID() < (1<<STATESET));
-	key |= pRenderObject->GetStateSetID() << (MATERIAL + DEPTH);
+	key |= static_cast<UInt64>(pRenderObject->GetStateSetID()) << (MATERIAL + DEPTH);
 
 	return key;
 }

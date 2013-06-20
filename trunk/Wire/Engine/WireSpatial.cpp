@@ -202,7 +202,7 @@ void Spatial::AttachLight(Light* pLight)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::UpdateRS(States* pStates, Lights*	pLights, Keys* pKeys)
+void Spatial::UpdateRS(States* pStates, Lights*	pLights)
 {
 	Bool isInitiator = (pStates == NULL);
 
@@ -230,11 +230,8 @@ void Spatial::UpdateRS(States* pStates, Lights*	pLights, Keys* pKeys)
         // stack has no lights initially
         pLights = WIRE_NEW TArray<Light*>(0, growBy);
 
-		// RenderObject identifies sets of identical states and shares the ID
-		pKeys = WIRE_NEW THashTable<UInt, UInt>;
-
 		// traverse to root and push states from root to this node
-		PropagateStateFromRoot(pStates, pLights, pKeys);
+		PropagateStateFromRoot(pStates, pLights);
 	}
 	else
 	{
@@ -243,13 +240,12 @@ void Spatial::UpdateRS(States* pStates, Lights*	pLights, Keys* pKeys)
 	}
 
 	// propagate the new state to the subtree rooted here
-	UpdateState(pStates, pLights, pKeys);
+	UpdateState(pStates, pLights);
 
 	if (isInitiator)
 	{
 		WIRE_DELETE[] pStates;
 		WIRE_DELETE pLights;
-		WIRE_DELETE pKeys;
 	}
 	else
 	{
@@ -259,13 +255,12 @@ void Spatial::UpdateRS(States* pStates, Lights*	pLights, Keys* pKeys)
 }
 
 //----------------------------------------------------------------------------
-void Spatial::PropagateStateFromRoot(States* pStates, Lights* pLights,
-	Keys* pKeys)
+void Spatial::PropagateStateFromRoot(States* pStates, Lights* pLights)
 {
 	// traverse to root to allow downward state propagation
 	if (mpParent)
 	{
-		mpParent->PropagateStateFromRoot(pStates, pLights, pKeys);
+		mpParent->PropagateStateFromRoot(pStates, pLights);
 	}
 
 	// push states onto current render state stack
