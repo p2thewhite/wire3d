@@ -347,7 +347,7 @@
     </Node>
   </Node>
   <Node Name="Main Camera" >
-    <Camera Fov="55" Near="0.25" Far="50" />
+    <Camera Fov="55" Near="0.25" Far="50" Enabled="0" />
   </Node>
   <Node Name="outGoingLight" Pos="-4.709517, 9.836785, -17.07615" Static="1">
     <LightNode>

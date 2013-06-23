@@ -53,12 +53,9 @@ public:
 	Importer(const Char* pPath = "", Options* pOptions = NULL);
 
 #ifndef NO_BULLET_PHYSICS_LIB
-	Wire::Node* LoadSceneFromXml(const Char* pFilename,
-		Wire::TArray<Wire::CameraPtr>* pCameras = NULL,
-		PhysicsWorld* pPhysicsWorld = NULL);
+	Wire::Node* LoadSceneFromXml(const Char* pFilename, PhysicsWorld* pPhysicsWorld = NULL);
 #else
-	Wire::Node* LoadSceneFromXml(const Char* pFilename,
-		Wire::TArray<Wire::CameraPtr>* pCameras = NULL);
+	Wire::Node* LoadSceneFromXml(const Char* pFilename);
 #endif
 
 	static Wire::Image2D* DecodePNG(const UChar* pPngInMem, size_t pngSize, Bool filterMipmaps,
@@ -87,6 +84,7 @@ private:
 	void GetHex(rapidxml::xml_node<>* pXmlNode, const Char* pName, UInt& rHex);
 	UInt GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Bool GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName);
+	void GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName, Bool& rBool);
 	Wire::Vector3F GetVector3(rapidxml::xml_node<>* pXmlNode, const Char* pName);
 	Wire::ColorRGB GetColorRGB(rapidxml::xml_node<>* pXmlNode,
 		const Char* pName, Bool& rHasValue);
@@ -131,7 +129,6 @@ private:
 		Wire::VertexAttributes& rAttributes);
 
 	const Char* mpPath;
-	Wire::TArray<Wire::CameraPtr>* mpCameras;
 
 	Wire::THashTable<Wire::String, Wire::MaterialPtr> mMaterials;
 	Wire::THashTable<Wire::Material*, Wire::TArray<Wire::StatePtr> > mMaterialStates;

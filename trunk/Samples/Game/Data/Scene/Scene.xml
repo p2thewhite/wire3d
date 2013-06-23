@@ -131,7 +131,7 @@
     </Material>
     <Material Name="muzzleFlash_lit">
       <Texture Name="muzzleFlash.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
-      <MaterialState Ambient="0.4715799, 0.4127963, 0.3343862, 0.5882353" />
+      <MaterialState Ambient="0.9411765, 0.8235294, 0.6666667, 1" />
     </Material>
     <Material Name="mainsqr_floor_big_diff3_layersTGA_lit">
       <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />

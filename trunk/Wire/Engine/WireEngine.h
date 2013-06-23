@@ -24,6 +24,7 @@
 #include "WireMesh.h"
 #include "WireNode.h"
 #include "WireNodeBillboard.h"
+#include "WireNodeCamera.h"
 #include "WireNodeDLod.h"
 #include "WireNodeLight.h"
 #include "WireNodeSkybox.h"

@@ -30,12 +30,12 @@ private:
 
 	Node* LoadAndInitLogo();
 	NodePtr mspLogo;
-	TArray<CameraPtr> mLogoCameras;
+	CameraPtr mspLogoCamera;
 	Culler mLogoCuller;
 
 	Node* LoadAndInitScene();
 	NodePtr mspScene;
-	TArray<CameraPtr> mSceneCameras;
+	CameraPtr mspSceneCamera;
 	CullerSorting mSceneCuller;
 
 	Double mLastTime;

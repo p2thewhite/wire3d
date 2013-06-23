@@ -11,9 +11,9 @@ WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(PhysicsWorld, Object);
 PhysicsWorld::PhysicsWorld(const Vector3F& rWorldAabbMin, const Vector3F&
 	rWorldAabbMax, const Vector3F& rGravity)
 	:
+	mpGhostPairCallback(NULL),
 	mCollisionShapes(10, 10),
-	mDebugColor(Color32(127, 255, 127, 255)),
-	mpGhostPairCallback(NULL)
+	mDebugColor(Color32(127, 255, 127, 255))
 {
 	///collision configuration contains default setup for memory.
 	// Advanced users can create their own configuration.

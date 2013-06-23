@@ -238,9 +238,9 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	WIRE_ASSERT(mpNode);
 
 	// Init gun
-	mpGun = DynamicCast<Node>(mpNode->FindChildByName("Gun"));
+	mpGun = DynamicCast<Node>(mpNode->FindChild("Gun"));
 	WIRE_ASSERT(mpGun);
-	Node* pMuzzleFlash = DynamicCast<Node>(mpGun->FindChildByName("muzzleFlash"));
+	Node* pMuzzleFlash = DynamicCast<Node>(mpGun->FindChild("muzzleFlash"));
 	WIRE_ASSERT(pMuzzleFlash);
 
 	mspMaterialState = pMuzzleFlash->GetState<StateMaterial>();

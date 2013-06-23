@@ -331,7 +331,7 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 }
 
 //----------------------------------------------------------------------------
-Spatial* Node::FindChildByName(const String& rName) const
+Spatial* Node::FindChild(const String& rName) const
 {
 	Spatial* pFound = NULL;
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
@@ -346,7 +346,7 @@ Spatial* Node::FindChildByName(const String& rName) const
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pFound = pNode->FindChildByName(rName);
+				pFound = pNode->FindChild(rName);
 				if (pFound)
 				{
 					return pFound;
@@ -359,8 +359,47 @@ Spatial* Node::FindChildByName(const String& rName) const
 }
 
 //----------------------------------------------------------------------------
-void Node::FindAllChildrenByName(const String& rName, TArray<Spatial*>&
-	rChildren) const
+Spatial* Node::FindChild(const Rtti& rType, Bool findDerivedTypes) const
+{
+	WIRE_ASSERT(rType.IsDerived(Spatial::TYPE));
+
+	Spatial* pFound = NULL;
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		if (mChildren[i])
+		{
+			if (findDerivedTypes)
+			{
+				if (mChildren[i]->IsDerived(rType))
+				{
+					return mChildren[i];
+				}
+			}
+			else
+			{
+				if (mChildren[i]->IsExactly(rType))
+				{
+					return mChildren[i];
+				}
+			}
+
+			const Node* pNode = DynamicCast<Node>(mChildren[i]);
+			if (pNode)
+			{
+				pFound = pNode->FindChild(rType, findDerivedTypes);
+				if (pFound)
+				{
+					return pFound;
+				}
+			}
+		}
+	}
+
+	return pFound;
+}
+
+//----------------------------------------------------------------------------
+void Node::FindChildren(const String& rName, TArray<Spatial*>& rChildren) const
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
@@ -374,10 +413,39 @@ void Node::FindAllChildrenByName(const String& rName, TArray<Spatial*>&
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pNode->FindAllChildrenByName(rName, rChildren);
+				pNode->FindChildren(rName, rChildren);
 			}
 		}
 	}
+}
+
+//----------------------------------------------------------------------------
+Controller* Node::FindController(const Rtti& rType, Bool findDerivedTypes) const
+{
+	Controller* pController = GetController(rType, findDerivedTypes);
+	if (pController)
+	{
+		return pController;
+	}
+
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		const Node* pNode = DynamicCast<Node>(mChildren[i]);
+		if (pNode)
+		{
+			pController = pNode->FindController(rType, findDerivedTypes);
+			if (pController)
+			{
+				return pController;
+			}
+		}
+		else if (mChildren[i])
+		{
+			return mChildren[i]->GetController(rType, findDerivedTypes);
+		}
+	}
+
+	return pController;
 }
 
 //----------------------------------------------------------------------------

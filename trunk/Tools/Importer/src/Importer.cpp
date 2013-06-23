@@ -11,6 +11,7 @@
 #include "WireImage2D.h"
 #include "WireLight.h"
 #include "WireMesh.h"
+#include "WireNodeCamera.h"
 #include "WireNodeLight.h"
 #include "WireQuaternion.h"
 #include "WireStandardMesh.h"
@@ -36,17 +37,14 @@ Importer::Importer(const Char* pPath, Options* pOptions)
 
 //----------------------------------------------------------------------------
 #ifndef NO_BULLET_PHYSICS_LIB
-Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
-	pCameras, PhysicsWorld* pPhysicsWorld)
+Node* Importer::LoadSceneFromXml(const Char* pFilename, PhysicsWorld* pPhysicsWorld)
 {
 	mspPhysicsWorld = pPhysicsWorld;
 #else
-Node* Importer::LoadSceneFromXml(const Char* pFilename, TArray<CameraPtr>*
-	pCameras)
+Node* Importer::LoadSceneFromXml(const Char* pFilename)
 {
 #endif
 	ResetStatistics();
-	mpCameras = pCameras;
 
 	String path = String(mpPath) + String(pFilename);
 	Int xmlSize;
@@ -629,15 +627,8 @@ Buffer::UsageType Importer::GetUsageType(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 Float Importer::GetFloat(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
-	Char* pFloat = GetValue(pXmlNode, pName);
 	Float f = 0;
-	if (pFloat)
-	{
-		Int n;
-		n = sscanf(pFloat, "%f", &f);
-		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
-	}
-
+	GetFloat(pXmlNode, pName, f);
 	return f;
 }
 
@@ -685,6 +676,15 @@ UInt Importer::GetUInt(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 //----------------------------------------------------------------------------
 Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 {
+	Bool b = false;
+	GetBool(pXmlNode, pName, b);
+	return b;
+}
+
+//----------------------------------------------------------------------------
+void Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName,
+	Bool& rBool)
+{
 	Char* pBool = GetValue(pXmlNode, pName);
 	UInt b = 0;
 	if (pBool)
@@ -692,9 +692,8 @@ Bool Importer::GetBool(rapidxml::xml_node<>* pXmlNode, const Char* pName)
 		Int n;
 		n = sscanf(pBool, "%d", &b);
 		WIRE_ASSERT_NO_SIDEEFFECTS(n == 1);
+		rBool = (b != 0);
 	}
-
-	return (b != 0);
 }
 
 //----------------------------------------------------------------------------
@@ -1163,6 +1162,10 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 	GetHex(pXmlNode, "Mask", cullingMask);
 	pLight->Mask = cullingMask;
 
+	Bool enabled = true;
+	GetBool(pXmlNode, "Enabled", enabled);
+	pLight->Enabled = enabled;
+
 	if (pName)
 	{
 		mLights.Insert(pName, pLight);
@@ -1174,7 +1177,7 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 //----------------------------------------------------------------------------
 void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 {
-	if (mpCameras == NULL)
+	if (DynamicCast<Node>(pSpatial) == NULL)
 	{
 		return;
 	}
@@ -1182,12 +1185,6 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	Vector3F cameraLocation(0, 0, 0);
 	Vector3F viewDirection(0.0F, 0.0F, 1.0F);
 	Vector3F up(0.0F, 1.0F, 0.0F);
-
-	UpdateWorldTransformation(pSpatial);
-	cameraLocation = pSpatial->World.GetTranslate();
-	Matrix34F rot = pSpatial->World.GetMatrix();
-	viewDirection = rot.GetColumn(2);
-	up = rot.GetColumn(1);
 	Vector3F right = viewDirection.Cross(up);
 
 	Float fov = GetFloat(pXmlNode, "Fov");
@@ -1219,7 +1216,11 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	GetHex(pXmlNode, "Mask", cullingMask);
 	pCam->SetLayerMask(cullingMask);
 
-	mpCameras->Append(pCam);
+	NodeCamera* pCameraNode = WIRE_NEW NodeCamera(pCam);
+	Bool isEnabled = true;
+	GetBool(pXmlNode, "Enabled", isEnabled);
+	pCameraNode->SetEnabled(isEnabled);
+	StaticCast<Node>(pSpatial)->AttachChild(pCameraNode);
 }
 
 //----------------------------------------------------------------------------

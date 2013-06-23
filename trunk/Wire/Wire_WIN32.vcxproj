@@ -91,6 +91,7 @@
     <ClInclude Include="Engine\WireMaterial.h" />
     <ClInclude Include="Engine\WireMesh.h" />
     <ClInclude Include="Engine\WireNodeBillboard.h" />
+    <ClInclude Include="Engine\WireNodeCamera.h" />
     <ClInclude Include="Engine\WireNodeDLod.h" />
     <ClInclude Include="Engine\WireNodeLight.h" />
     <ClInclude Include="Engine\WireNodeSkybox.h" />
@@ -230,6 +231,7 @@
     <None Include="Engine\WireMaterial.inl" />
     <None Include="Engine\WireMesh.inl" />
     <None Include="Engine\WireNodeBillboard.inl" />
+    <None Include="Engine\WireNodeCamera.inl" />
     <None Include="Engine\WireNodeDLod.inl" />
     <None Include="Engine\WireNodeLight.inl" />
     <None Include="Engine\WireNodeSwitch.inl" />
@@ -301,6 +303,7 @@
     <ClCompile Include="Engine\WireMaterial.cpp" />
     <ClCompile Include="Engine\WireMesh.cpp" />
     <ClCompile Include="Engine\WireNodeBillboard.cpp" />
+    <ClCompile Include="Engine\WireNodeCamera.cpp" />
     <ClCompile Include="Engine\WireNodeDLod.cpp" />
     <ClCompile Include="Engine\WireNodeLight.cpp" />
     <ClCompile Include="Engine\WireNodeSkybox.cpp" />

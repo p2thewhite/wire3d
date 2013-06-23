@@ -114,11 +114,14 @@ Bool SceneObject::OnGetVisibleUpdateControllers(const Camera* pCamera)
 }
 
 //----------------------------------------------------------------------------
-Controller* SceneObject::GetController(const Rtti& rType, Bool findDerivedTypes)
+Controller* SceneObject::GetController(const Rtti& rType, Bool getDerivedTypes)
+	const
 {
+	WIRE_ASSERT(rType.IsDerived(Controller::TYPE));
+
 	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
 	{
-		if (findDerivedTypes)
+		if (getDerivedTypes)
 		{
 			if (mControllers[i]->IsDerived(rType))
 			{
@@ -132,4 +135,26 @@ Controller* SceneObject::GetController(const Rtti& rType, Bool findDerivedTypes)
 	}
 
 	return NULL;
+}
+
+//----------------------------------------------------------------------------
+void SceneObject::GetControllers(TArray<Controller*>& rControllers,
+	const Rtti& rType, Bool getDerivedTypes) const
+{
+	WIRE_ASSERT(rType.IsDerived(Controller::TYPE));
+
+	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
+	{
+		if (getDerivedTypes)
+		{
+			if (mControllers[i]->IsDerived(rType))
+			{
+				rControllers.Append(mControllers[i]);
+			}
+		}
+		else if (mControllers[i]->IsExactly(rType))
+		{
+			rControllers.Append(mControllers[i]);
+		}
+	}
 }

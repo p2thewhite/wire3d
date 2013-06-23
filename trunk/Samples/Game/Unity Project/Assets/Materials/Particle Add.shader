@@ -55,7 +55,7 @@ Category {
 			
 			fixed4 frag (v2f i) : COLOR
 			{			
-				return 2.0f * _TintColor * tex2D(_MainTex, i.texcoord);
+				return _TintColor * tex2D(_MainTex, i.texcoord);
 			}
 			ENDCG 
 		}
@@ -69,7 +69,7 @@ Category {
 				combine constant * primary
 			}
 			SetTexture [_MainTex] {
-				combine texture * previous DOUBLE
+				combine texture * previous
 			}
 		}
 	}

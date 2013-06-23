@@ -6,54 +6,58 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-#include "WireNodeLight.h"
+#include "WireNodeCamera.h"
+
+#include "WireCamera.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, NodeLight, Node);
+WIRE_IMPLEMENT_RTTI(Wire, NodeCamera, Node);
 
 //----------------------------------------------------------------------------
-NodeLight::NodeLight(Light* pLight)
+NodeCamera::NodeCamera(Camera* pCamera)
 	:
-	mspLight(pLight)
+	mspCamera(pCamera),
+	mEnabled(true)
 {
-	LightToLocalTransform();
+	CameraToLocalTransform();
 }
 
 //----------------------------------------------------------------------------
-NodeLight::~NodeLight()
+NodeCamera::~NodeCamera()
 {
 }
 
 //----------------------------------------------------------------------------
-void NodeLight::Set(Light* pLight)
+void NodeCamera::Set(Camera* pCamera)
 {
-	mspLight = pLight;
+	mspCamera = pCamera;
 
-	LightToLocalTransform();
+	CameraToLocalTransform();
 }
 
 //----------------------------------------------------------------------------
-void NodeLight::UpdateWorldData(Double appTime, Bool updateControllers)
+void NodeCamera::UpdateWorldData(Double appTime, Bool updateControllers)
 {
 	Node::UpdateWorldData(appTime, updateControllers);
 
-	if (mspLight && mspLight->Enabled)
+	if (mspCamera && mEnabled)
 	{
-		mspLight->Position = World.GetTranslate();
-		mspLight->Direction = World.GetMatrix().GetColumn(0);
+		mspCamera->SetFrame(World.GetTranslate(),
+			World.GetRotate().GetColumn(0),
+			World.GetRotate().GetColumn(1),
+			World.GetRotate().GetColumn(2));
 	}
 }
 
 //----------------------------------------------------------------------------
-void NodeLight::LightToLocalTransform()
+void NodeCamera::CameraToLocalTransform()
 {
-	if (mspLight)
+	if (mspCamera)
 	{
-		Local.SetTranslate(mspLight->Position);
-		Vector3F u;
-		Vector3F v;
-		Vector3F::GenerateOrthonormalBasis(u, v, mspLight->Direction);
-		Local.SetRotate(Matrix34F(mspLight->Direction, u, v, true));
+		Local.SetTranslate(mspCamera->GetLocation());
+		Matrix3F rotation(mspCamera->GetDVector(), mspCamera->GetUVector(),
+			mspCamera->GetRVector(), true);
+		Local.SetRotate(rotation);
 	}
 }
