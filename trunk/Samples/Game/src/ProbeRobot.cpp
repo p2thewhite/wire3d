@@ -95,9 +95,7 @@ void ProbeRobot::CalculateMovementAndRotation()
 		angle = -angle;
 	}
 
-	Matrix3F rotation(Vector3F::UNIT_Y, angle);
 	Vector3F move = Vector3F::ZERO;
-
 	if (squaredDistance > mMaximumPlayerDistanceSquared)
 	{
 		move = direction * mSpeed * 1/60.0F;	// physics time step, TODO: get from physics world;
@@ -106,8 +104,8 @@ void ProbeRobot::CalculateMovementAndRotation()
 	// update the scene object
 	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
 	WIRE_ASSERT(pSpatial);
-	pSpatial->Local.SetTranslate(probeRobotPosition);
-	pSpatial->Local.SetRotate(rotation);
+	Matrix34F matrix(Vector3F::UNIT_Y, angle, probeRobotPosition);
+	pSpatial->Local.SetMatrix(matrix, false);
 
 	// update the physics object
 	mspCharacter->GetCharacter()->setWalkDirection(PhysicsWorld::Convert(move));

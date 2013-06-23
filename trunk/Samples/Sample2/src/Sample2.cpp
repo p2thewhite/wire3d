@@ -86,17 +86,16 @@ void Sample2::OnIdle()
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	// position and rotate the helicopter
-	Matrix34F rot(Vector3F::UNIT_Y, mAngle);
-	mspRoot->Local.SetRotate(rot);
 	Vector3F pos = Matrix34F(Vector3F::UNIT_Y, mAngle) * Vector3F(-10, 0 ,0);
-	mspRoot->Local.SetTranslate(pos);
+	Matrix34F trafo(Vector3F::UNIT_Y, mAngle, pos);
+	mspRoot->Local.SetMatrix(trafo, false);
 
 	// rotate the rear rotor
-	Matrix34F rearRot(Vector3F::UNIT_Z, MathF::FMod(mAngle*16, MathF::TWO_PI));
+	Matrix3F rearRot(Vector3F::UNIT_Z, MathF::FMod(mAngle*16, MathF::TWO_PI));
 	mspRearRotor->Local.SetRotate(rearRot);
 
 	// rotate the top rotor
-	Matrix34F topRot(Vector3F::UNIT_Y, MathF::FMod(mAngle*16, MathF::TWO_PI));
+	Matrix3F topRot(Vector3F::UNIT_Y, MathF::FMod(mAngle*16, MathF::TWO_PI));
 	mspTopRotor->Local.SetRotate(topRot);
 
 	// Since the local transformations of the helicopter and its child objects

@@ -55,9 +55,8 @@ void NodeCamera::CameraToLocalTransform()
 {
 	if (mspCamera)
 	{
-		Local.SetTranslate(mspCamera->GetLocation());
-		Matrix3F rotation(mspCamera->GetDVector(), mspCamera->GetUVector(),
-			mspCamera->GetRVector(), true);
-		Local.SetRotate(rotation);
+		Matrix34F matrix(mspCamera->GetDVector(), mspCamera->GetUVector(),
+			mspCamera->GetRVector(), mspCamera->GetLocation());
+		Local.SetMatrix(matrix, false);
 	}
 }

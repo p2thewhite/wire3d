@@ -87,7 +87,7 @@ void Sample7::OnIdle()
 	GetRenderer()->PreDraw(mspCamera);
 
 	// render centered torus knot
-	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
+	Matrix3F rotate(Vector3F(1, 1, 0), mAngle);
 	Transformation transformation;
 	transformation.SetRotate(rotate);
 	StateMaterial* pMaterial = StaticCast<StateMaterial>(mspTorus->

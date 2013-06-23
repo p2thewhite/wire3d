@@ -22,7 +22,7 @@ Bool FanRotator::Update(Double appTime)
 	}
 
 	Double angle = MathD::FMod(appTime, 1) * MathD::TWO_PI;
-	Matrix34F rotate(Vector3F::UNIT_Y, static_cast<Float>(angle));
+	Matrix3F rotate(Vector3F::UNIT_Y, static_cast<Float>(angle));
 	pSpatial->Local.SetRotate(rotate);
 
 	return true;

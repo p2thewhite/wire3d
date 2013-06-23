@@ -50,9 +50,10 @@ Matrix34<Real>::Matrix34(
 
 //----------------------------------------------------------------------------
 template <class Real>
-Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle)
+Matrix34<Real>::Matrix34(const Vector3<Real>& rAxis, Real angle,
+	const Vector3<Real>& rTranslate)
 {
-	FromAxisAngle(rAxis, angle);
+	FromAxisAngle(rAxis, angle, rTranslate);
 }
 
 //----------------------------------------------------------------------------
@@ -204,7 +205,7 @@ void Matrix34<Real>::MakeIdentity()
 //----------------------------------------------------------------------------
 template <class Real>
 void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
-	Real angle)
+	Real angle, const Vector3<Real>& rTranslate)
 {
 	Vector3<Real> u = rAxis / rAxis.Length();
 	Real c = Math<Real>::Cos(angle);
@@ -218,17 +219,17 @@ void Matrix34<Real>::FromAxisAngle(const Vector3<Real>& rAxis,
 	mEntry[0][0] = t*u.X()*u.X() + c;
 	mEntry[0][1] = tuxuy - s*u.Z();
 	mEntry[0][2] = tuxuz + s*u.Y();
-	mEntry[0][3] = static_cast<Real>(0.0);
+	mEntry[0][3] = rTranslate.X();
 	
 	mEntry[1][0] = tuxuy + s*u.Z();
 	mEntry[1][1] = t*u.Y()*u.Y() + c;
 	mEntry[1][2] = tuyuz - s*u.X();
-	mEntry[1][3] = static_cast<Real>(0.0);
+	mEntry[1][3] = rTranslate.Y();
 
 	mEntry[2][0] = tuxuz - s*u.Y();
 	mEntry[2][1] = tuyuz + s*u.X();
 	mEntry[2][2] = t*u.Z()*u.Z() + c;
-	mEntry[2][3] = static_cast<Real>(0.0);
+	mEntry[2][3] = rTranslate.Z();
 
 // alternative approach without Length/Sqrt()
 // 	Real cos = Math<Real>::Cos(angle);

@@ -56,9 +56,9 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	const Camera* pCam = rCuller.GetCamera();
 
 	Transformation camTrafo;
-	camTrafo.SetTranslate(pCam->GetLocation());
-	camTrafo.SetRotate(Matrix3F(pCam->GetRVector(), pCam->GetUVector(),
-		pCam->GetDVector(), true));
+	Matrix34F matrix(pCam->GetRVector(), pCam->GetUVector(),
+		pCam->GetDVector(), pCam->GetLocation());
+	camTrafo.SetMatrix(matrix, false);
 
 	const Vector3F& rCamPosition = camTrafo.GetTranslate();
 	Vector3F lightPosWorld = mspLightSource->World.GetTranslate();
@@ -78,7 +78,7 @@ void LensflareNode::GetVisibleSet(Culler& rCuller, Bool noCull)
 	projectionMatrix.SetColumn(1, col1);
 	projectionMatrix.SetColumn(2, col2);
 	projectionMatrix.SetColumn(3, col3);
-		
+
 	// transform to camera space
 	Vector3F lightPosCamSpace = camTrafo.ApplyInverse(lightPosWorld);
 

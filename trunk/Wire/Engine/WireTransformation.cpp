@@ -67,12 +67,16 @@ void Transformation::SetRotate(const Matrix34F& rMatrix)
 }
 
 //----------------------------------------------------------------------------
-void Transformation::SetMatrix(const Matrix34F& rMatrix)
+void Transformation::SetMatrix(const Matrix34F& rMatrix, Bool containsScale)
 {
 	mMatrix = rMatrix;
 	mIsIdentity = false;
-	mIsRSMatrix = false;
-	mIsUniformScale = false;
+
+	if (containsScale)
+	{
+		mIsRSMatrix = false;
+		mIsUniformScale = false;
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -214,7 +218,7 @@ void Transformation::Product(const Transformation& rA,
 	Matrix34F B = (rB.IsRSMatrix() ?
 		rB.GetMatrix().TimesDiagonal(rB.GetScale()) : rB.GetMatrix());
 
-	SetMatrix(A * B);
+	SetMatrix(A * B, true);
 }
 
 //----------------------------------------------------------------------------

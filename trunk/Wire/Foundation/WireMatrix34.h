@@ -69,7 +69,8 @@ public:
 
 	// Create rotation matrix (positive angle - counterclockwise). The
 	// angle must be in radians, not degrees.
-	Matrix34(const Vector3<Real>& rAxis, Real angle);
+	Matrix34(const Vector3<Real>& rAxis, Real angle,
+		const Vector3<Real>& rTranslate = Vector3<Real>::ZERO);
 
 	// Create matrix based on row or column vector input.
 	// 4th column is initialized to (0,0,0).
@@ -94,8 +95,8 @@ public:
 	void MakeZero();
 	void MakeIdentity();
 
-	// 4th column is set to (0, 0, 0, 1)
-	void FromAxisAngle(const Vector3<Real>& rAxis, Real angle);
+	void FromAxisAngle(const Vector3<Real>& rAxis, Real angle,
+		const Vector3<Real>& rTranslate = Vector3<Real>::ZERO);
 
 	// member access
 	inline operator Real4* ();

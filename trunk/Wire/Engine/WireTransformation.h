@@ -38,7 +38,7 @@ public:
 	void SetRotate(const Matrix3F& rMatrix);
 	Matrix3F GetRotate() const;
 	void SetRotate(const Matrix34F& rMatrix);
-	void SetMatrix(const Matrix34F& rMatrix);
+	void SetMatrix(const Matrix34F& rMatrix, Bool containsScale);
 	inline const Matrix34F& GetMatrix() const;
 	void SetTranslate(const Vector3F& rTranslate);
 	inline Vector3F GetTranslate() const;
