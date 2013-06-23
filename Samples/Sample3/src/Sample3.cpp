@@ -77,15 +77,15 @@ void Sample3::OnIdle()
 	mAngle = MathF::FMod(mAngle, MathF::TWO_PI);
 
 	// rotate and zoom the torus knots
-	Matrix34F rotate(Vector3F(1, 1, 0), mAngle);
+	Matrix34F trafo(Vector3F(1, 1, 0), mAngle,
+		Vector3F(-2, 0, MathF::Sin(mAngle) * 7));
 
 	Spatial* pLeft = mspRoot->GetChild(0);
-	pLeft->Local.SetRotate(rotate);
-	pLeft->Local.SetTranslate(Vector3F(-2, 0, MathF::Sin(mAngle) * 7));
+	pLeft->Local.SetMatrix(trafo, false);
 
 	Spatial* pRight = mspRoot->GetChild(1);
-	pRight->Local.SetRotate(rotate);
-	pRight->Local.SetTranslate(Vector3F(2, 0, MathF::Sin(mAngle) * 7));
+	trafo.SetColumn(3, Vector3F(2, 0, MathF::Sin(mAngle) * 7));
+	pRight->Local.SetMatrix(trafo, false);
 
  	mspRoot->UpdateGS(time);
  	mCuller.ComputeVisibleSet(mspRoot);

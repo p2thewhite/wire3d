@@ -138,9 +138,9 @@ Node* Sample6::CreateTerrain()
 	pPlane->GetMesh()->GenerateNormals();
 
 	Node* pPlaneNode = WIRE_NEW Node(pPlane);
-	Matrix3F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F);
-	pPlaneNode->Local.SetTranslate(Vector3F(0, -0.25F, 0));
-	pPlaneNode->Local.SetRotate(mat);
+	Matrix34F mat(Vector3F(1, 0, 0), MathF::DEG_TO_RAD * -90.0F,
+		Vector3F(0, -0.25F, 0));
+	pPlaneNode->Local.SetMatrix(mat, false);
 
 	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
 	pPlaneNode->AttachLight(pLight);

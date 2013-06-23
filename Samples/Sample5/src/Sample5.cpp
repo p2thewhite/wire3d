@@ -129,11 +129,11 @@ void Sample5::OnIdle()
 	WIRE_ASSERT(pLitGroup);
 
 	// rotate the 2 cubes
-	Matrix34F rotate1(Vector3F(0.75F, 0.25F, 0.5F), -mAngle * 0.5F);
+	Matrix3F rotate1(Vector3F(0.75F, 0.25F, 0.5F), -mAngle * 0.5F);
 	Spatial* pCube1 = pLitGroup->GetChild(0);
 	pCube1->Local.SetRotate(rotate1);
 
-	Matrix34F rotate2(Vector3F(-0.75F, -0.25F, -0.5F), -mAngle * 0.5F);
+	Matrix3F rotate2(Vector3F(-0.75F, -0.25F, -0.5F), -mAngle * 0.5F);
 	Spatial* pCube2 = pLitGroup->GetChild(1);
 	pCube2->Local.SetRotate(rotate2);
 
@@ -183,9 +183,8 @@ void Sample5::OnIdle()
 	// render the white cube representing the spot light
 	GetRenderer()->Draw(mspWhiteCube, transformation);
 
-	Matrix34F rotate(Vector3F(1.0F, 0, 0), -1.0F);
-	transformation.SetRotate(rotate);
-	transformation.SetTranslate(Vector3F(0, -2.5F, 0));
+	Matrix34F matrix(Vector3F(1.0F, 0, 0), -1.0F, Vector3F(0, -2.5F, 0));
+	transformation.SetMatrix(matrix, false);
 	transformation.SetUniformScale(1);
 
 	// render the bottom plane which is being lit by the spot light

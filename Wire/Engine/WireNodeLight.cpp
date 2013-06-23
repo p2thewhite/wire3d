@@ -50,10 +50,10 @@ void NodeLight::LightToLocalTransform()
 {
 	if (mspLight)
 	{
-		Local.SetTranslate(mspLight->Position);
 		Vector3F u;
 		Vector3F v;
 		Vector3F::GenerateOrthonormalBasis(u, v, mspLight->Direction);
-		Local.SetRotate(Matrix34F(mspLight->Direction, u, v, true));
+		Matrix34F matrix(mspLight->Direction, u, v, mspLight->Position);
+		Local.SetMatrix(matrix, false);
 	}
 }

@@ -51,10 +51,8 @@ void Cursors::SetCursor(Float x, Float y, CursorMode mode, UInt playerNo,
 		WIRE_ASSERT(false);
 	}
 
-	Vector3F pos(x, y, 0);
-	pCursors->Local.SetTranslate(pos);
-	Matrix3F roll(Vector3F::UNIT_Z, zRollInRadian);
-	pCursors->Local.SetRotate(roll);
+	Matrix34F roll(Vector3F::UNIT_Z, zRollInRadian, Vector3F(x, y, 0));
+	pCursors->Local.SetMatrix(roll, false);
 }
 
 //----------------------------------------------------------------------------
