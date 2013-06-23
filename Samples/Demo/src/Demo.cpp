@@ -48,7 +48,7 @@ void Demo::OnIdle()
 	Double elapsedTime = time - mLastTime;
 	mLastTime = time;
 
-	mLogoCameras[0]->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
+	mspLogoCamera->SetFrustum(0, GetWidthF(), 0, GetHeightF(), 0, 1);
 	Vector3F centered((GetWidthF()-512)*0.5F, (GetHeightF()-256)*0.5F, 0);
 	mspLogo->Local.SetTranslate(centered);
 
@@ -109,10 +109,10 @@ void Demo::StateRunning(Double time)
 	GetRenderer()->GetStatistics()->Reset();
 
 	GetRenderer()->ClearBuffers();
-	GetRenderer()->PreDraw(mSceneCameras[0]);
+	GetRenderer()->PreDraw(mspSceneCamera);
 	GetRenderer()->Draw(mSceneCuller.GetVisibleSets());
 
-	GetRenderer()->SetCamera(mLogoCameras[0]);
+	GetRenderer()->SetCamera(mspLogoCamera);
 	GetRenderer()->Draw(mLogoCuller.GetVisibleSets());
 
 	static Double lastTime = 0.0F;
@@ -137,7 +137,7 @@ void Demo::StateLoading(Double elapsedTime)
 	mLogoCuller.ComputeVisibleSet(mspLogo);
 
 	GetRenderer()->ClearBuffers();
-	GetRenderer()->PreDraw(mLogoCameras[0]);
+	GetRenderer()->PreDraw(mspLogoCamera);
 	GetRenderer()->Draw(mLogoCuller.GetVisibleSets());
 	GetRenderer()->PostDraw();
 	GetRenderer()->DisplayBackBuffer();
@@ -155,16 +155,18 @@ void Demo::StateLoading(Double elapsedTime)
 Node* Demo::LoadAndInitLogo()
 {
 	Importer importer("Data/Logo/");
-	Node* pRoot = importer.LoadSceneFromXml("logo.xml", &mLogoCameras);
+	Node* pRoot = importer.LoadSceneFromXml("logo.xml");
 	if (!pRoot)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mLogoCameras.GetQuantity() > 0 /* No Camera in Logo.xml */);
-	mLogoCuller.SetCamera(mLogoCameras[0]);
+	NodeCamera* pCameraNode = pRoot->FindChild<NodeCamera>();
+	WIRE_ASSERT(pCameraNode /* No Camera in Logo.xml */);
+	mspLogoCamera = pCameraNode->Get();
+	mLogoCuller.SetCamera(mspLogoCamera);
 
-	Spatial* pLogo = pRoot->FindChildByName("Logo");
+	Spatial* pLogo = pRoot->FindChild("Logo");
 	if (pLogo)
 	{
 		pLogo->AttachController(WIRE_NEW LogoFader);
@@ -178,14 +180,16 @@ Node* Demo::LoadAndInitLogo()
 Node* Demo::LoadAndInitScene()
 {
 	Importer importer("Data/");
-	Node* pScene = importer.LoadSceneFromXml("scene.xml", &mSceneCameras);
+	Node* pScene = importer.LoadSceneFromXml("scene.xml");
 	if (!pScene)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(mSceneCameras.GetQuantity() > 0 /* No Camera in Scene.xml */);
-	mSceneCuller.SetCamera(mSceneCameras[0]);
+	NodeCamera* pCameraNode = pScene->FindChild<NodeCamera>();
+	WIRE_ASSERT(pCameraNode /* No Camera in Scene.xml */);
+	mspSceneCamera = pCameraNode->Get();
+	mSceneCuller.SetCamera(mspSceneCamera);
 
 	// The maximum number of objects that are going to be culled is the
 	// number of objects we imported. If we don't set the size of the set now,
@@ -196,18 +200,17 @@ Node* Demo::LoadAndInitScene()
 	mSceneCuller.SetMaxQuantity(renderObjectCount);
 
 	TArray<Spatial*> fans;
-	pScene->FindAllChildrenByName("ceilingFan", fans);
+	pScene->FindChildren("ceilingFan", fans);
 	for (UInt i = 0; i < fans.GetQuantity(); i++)
 	{
 		Float f = static_cast<Float>(i+1);
 		fans[i]->AttachController(WIRE_NEW FanRotator(f));
 	}
 
-	Node* pSplineRoot = DynamicCast<Node>(pScene->FindChildByName("Spline"));
-	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot,
-		mSceneCameras[0]));
+	Node* pSplineRoot = DynamicCast<Node>(pScene->FindChild("Spline"));
+	pScene->AttachController(WIRE_NEW SplineCamera(pSplineRoot, mspSceneCamera));
 
-	Node* pConveyorBelt = DynamicCast<Node>(pScene->FindChildByName(
+	Node* pConveyorBelt = DynamicCast<Node>(pScene->FindChild(
 		"polySurface437"));
 	if (pConveyorBelt)
 	{

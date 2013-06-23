@@ -39,10 +39,15 @@ public:
 	Bool UpdateControllers(Double appTime);
 	Bool OnGetVisibleUpdateControllers(const Camera* pCamera);
 
-	Controller* GetController(const Rtti& rType, Bool findDerivedTypes = true);
-	template <class T> T* GetController(Bool findDerivedTypes = true);
+	// iterates over attached controllers, returns the first one of given type
+	Controller* GetController(const Rtti& rType, Bool getDerivedTypes = true) const;
+	template <class T> T* GetController(Bool getDerivedTypes = true) const;
+
+	// iterates over attached controllers, adds all of given type to array
+	void GetControllers(TArray<Controller*>& rControllers, const Rtti& rType,
+		Bool getDerivedTypes = true) const;
 	template <class T> void GetControllers(TArray<T*>& rControllers,
-		Bool findDerivedTypes = true);
+		Bool getDerivedTypes = true) const;
 
 protected:
 	SceneObject();

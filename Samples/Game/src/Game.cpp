@@ -192,10 +192,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 {
 	ProcessInput();
 
-	Node* pPlatform = (Node*)mspScene->FindChildByName("Platform");
-
-	TArray<RigidBodyController*> rbcs;
-	pPlatform->GetControllers<RigidBodyController>(rbcs);
+	Node* pPlatform = (Node*)mspScene->FindChild("Platform");
 
 	RigidBodyController* pRBC =	pPlatform->GetController<RigidBodyController>();
 	btRigidBody* pRB = pRBC->Get();
@@ -240,7 +237,7 @@ void Game::OnRunning(Double time, Double deltaTime)
 //----------------------------------------------------------------------------
 void Game::OnLoading(Double time, Double deltaTime)
 {
-	Spatial* pLoading = mspLogo->FindChildByName("Loading");
+	Spatial* pLoading = mspLogo->FindChild("Loading");
 	Bool isFadedIn = false;
 
 	if (pLoading)
@@ -297,15 +294,15 @@ void Game::OnLoading(Double time, Double deltaTime)
 Node* Game::LoadAndInitializeLoading()
 {
 	Importer importer("Data/Logo/");
-	TArray<CameraPtr> cameras;
-	Node* pRoot = importer.LoadSceneFromXml("logo.xml", &cameras);
+	Node* pRoot = importer.LoadSceneFromXml("logo.xml");
 	if (!pRoot)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in logo.xml */);
-	mspLogoCamera = cameras[0];
+	NodeCamera* pCameraNode = pRoot->FindChild<NodeCamera>();
+	WIRE_ASSERT(pCameraNode /* No Camera in logo.xml */);
+	mspLogoCamera = pCameraNode->Get();
 
 	// center 512x256 logo on screen
 	pRoot->Local.SetTranslate(Vector3F((GetWidthF()-512.0F) * 0.5F,
@@ -319,17 +316,17 @@ Node* Game::LoadAndInitializeLoading()
 Node* Game::LoadAndInitializeGUI()
 {
 	Importer importer("Data/GUI/");
-	TArray<CameraPtr> cameras;
-	Node* pRoot = importer.LoadSceneFromXml("GUI.xml", &cameras);
+	Node* pRoot = importer.LoadSceneFromXml("GUI.xml");
 	if (!pRoot)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in GUI.xml */);
-	mspGUICamera = cameras[0];
+	NodeCamera* pCameraNode = pRoot->FindChild<NodeCamera>();
+	WIRE_ASSERT(pCameraNode /* No Camera in GUI.xml */);
+	mspGUICamera = pCameraNode->Get();
 
-	mspCrosshair = pRoot->FindChildByName("Crosshair");
+	mspCrosshair = pRoot->FindChild("Crosshair");
 	WIRE_ASSERT(mspCrosshair /* No Crosshair in GUI.xml */);
 
 	pRoot->Bind(GetRenderer());
@@ -341,16 +338,15 @@ Node* Game::LoadAndInitializeGUI()
 Node* Game::LoadAndInitializeScene()
 {
 	Importer importer("Data/Scene/");
-	TArray<CameraPtr> cameras;
-	Node* pScene = importer.LoadSceneFromXml("Scene.xml", &cameras,
-		mspPhysicsWorld);
+	Node* pScene = importer.LoadSceneFromXml("Scene.xml", mspPhysicsWorld);
 	if (!pScene)
 	{
 		return NULL;
 	}
 
-	WIRE_ASSERT(cameras.GetQuantity() > 0 /* No Camera in scene.xml */);
-	mspSceneCamera = cameras[0];
+	NodeCamera* pCameraNode = pScene->FindChild<NodeCamera>();
+	WIRE_ASSERT(pCameraNode /* No Camera in scene.xml */);
+	mspSceneCamera = pCameraNode->Get();
 	mSortingCuller.SetCamera(mspSceneCamera);
 
 	// The maximum number of objects that are going to be culled is the
@@ -361,11 +357,11 @@ Node* Game::LoadAndInitializeScene()
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 	mSortingCuller.SetMaxQuantity(renderObjectCount);
 
-	Spatial* pProbeRobotSpatial = pScene->FindChildByName("Probe Robot");
-	Spatial* pPlayerSpatial = pScene->FindChildByName("Player");
+	Spatial* pProbeRobotSpatial = pScene->FindChild("Probe Robot");
+	Spatial* pPlayerSpatial = pScene->FindChild("Player");
 
 	// Create and configure probe robot controller
-	Spatial* pRedHealthBar = mspGUI->FindChildByName("RedHealthBar");
+	Spatial* pRedHealthBar = mspGUI->FindChild("RedHealthBar");
 	WIRE_ASSERT(pRedHealthBar /* No RedHealthBar in GUI.xml */);
 	pRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
 	mspGUI->UpdateGS();

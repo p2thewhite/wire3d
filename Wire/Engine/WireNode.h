@@ -68,11 +68,24 @@ public:
  	SpatialPtr GetChild(UInt i);
 
 	// returns the first (top/down, left-to-right) Spatial using that name
-	Spatial* FindChildByName(const String& rName) const;
+	Spatial* FindChild(const String& rName) const;
+
+	// returns the first (top/down, left-to-right) Spatial of given type
+	Spatial* FindChild(const Rtti& rType, Bool findDerivedTypes = true) const;
+	template <class T> T* FindChild(Bool findDerivedTypes = true) const;
 
 	// returns all Spatials using that name
-	void FindAllChildrenByName(const String& rName, TArray<Spatial*>&
-		rChildren) const;
+	void FindChildren(const String& rName, TArray<Spatial*>& rChildren) const;
+	template <class T> void FindChildren(TArray<T*>& rChildren,
+		Bool findDerivedTypes = true) const;
+
+	// returns the first (top/down, left-to-right) controller of given type
+	Controller* FindController(const Rtti& rType, Bool findDerivedTypes = true) const;
+	template <class T> T* FindController(Bool findDerivedTypes = true) const;
+
+	// returns all controllers of given type
+	template <class T> void FindControllers(TArray<T*>& rControllers,
+		Bool findDerivedTypes = true) const;
 
 	// geometric update
 	virtual void UpdateWorldBound();

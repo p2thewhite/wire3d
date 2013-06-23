@@ -252,6 +252,9 @@
     <ClInclude Include="Engine\WireNodeBillboard.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\WireNodeCamera.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\WireNodeDLod.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -638,6 +641,9 @@
     <None Include="Engine\WireNodeBillboard.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
+    <None Include="Engine\WireNodeCamera.inl">
+      <Filter>Engine\Inline Files</Filter>
+    </None>
     <None Include="Engine\WireNodeDLod.inl">
       <Filter>Engine\Inline Files</Filter>
     </None>
@@ -830,6 +836,9 @@
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireNodeBillboard.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireNodeCamera.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireNodeDLod.cpp">

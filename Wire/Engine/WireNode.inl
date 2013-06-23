@@ -13,6 +13,74 @@ inline UInt Node::GetQuantity() const
 }
 
 //----------------------------------------------------------------------------
+template <class T>
+T* Node::FindChild(Bool findDerivedTypes) const
+{
+	return StaticCast<T>(FindChild(T::TYPE, findDerivedTypes));
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+void Node::FindChildren(TArray<T*>& rChildren, Bool findDerivedTypes) const
+{
+	WIRE_ASSERT(T::TYPE.IsDerived(Spatial::TYPE));
+
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		if (mChildren[i])
+		{
+			if (findDerivedTypes)
+			{
+				if (mChildren[i]->IsDerived(T::TYPE))
+				{
+					rChildren.Append(StaticCast<T>(mChildren[i]));
+				}
+			}
+			else
+			{
+				if (mChildren[i]->IsExactly(T::TYPE))
+				{
+					rChildren.Append(StaticCast<T>(mChildren[i]));
+				}
+			}
+
+			const Node* pNode = DynamicCast<Node>(mChildren[i]);
+			if (pNode)
+			{
+				pNode->FindChildren(rChildren, findDerivedTypes);
+			}
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+T* Node::FindController(Bool findDerivedTypes) const
+{
+	return StaticCast<T>(FindController(T::TYPE, findDerivedTypes));
+}
+
+//----------------------------------------------------------------------------
+template <class T>
+void Node::FindControllers(TArray<T*>& rControllers, Bool findDerivedTypes) const
+{
+	GetControllers<T>(rControllers, findDerivedTypes);
+
+	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
+	{
+		const Node* pNode = DynamicCast<Node>(mChildren[i]);
+		if (pNode)
+		{
+			pNode->FindControllers<T>(rControllers, findDerivedTypes);
+		}
+		else if (mChildren[i])
+		{
+			return mChildren[i]->GetControllers<T>(rControllers, findDerivedTypes);
+		}
+	}
+}
+
+//----------------------------------------------------------------------------
 inline UInt Node::GetEffectQuantity() const
 {
 	return mEffects.GetQuantity();

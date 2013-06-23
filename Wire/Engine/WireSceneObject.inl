@@ -33,32 +33,28 @@ inline const String& SceneObject::GetName() const
 
 //----------------------------------------------------------------------------
 template <class T>
-T* SceneObject::GetController(Bool findDerivedTypes)
+T* SceneObject::GetController(Bool getDerivedTypes) const
 {
-	return StaticCast<T>(GetController(T::TYPE, findDerivedTypes));
+	return StaticCast<T>(GetController(T::TYPE, getDerivedTypes));
 }
 
 //----------------------------------------------------------------------------
 template <class T>
 void SceneObject::GetControllers(TArray<T*>& rControllers,
-	Bool findDerivedTypes)
+	Bool getDerivedTypes) const
 {
+	WIRE_ASSERT(T::TYPE.IsDerived(Controller::TYPE));
+
 	for (UInt i = 0; i < mControllers.GetQuantity(); i++)
 	{
-		Bool isType = false;
-		if (findDerivedTypes)
+		if (getDerivedTypes)
 		{
 			if (mControllers[i]->IsDerived(T::TYPE))
 			{
-				isType = true;
+				rControllers.Append(StaticCast<T>(mControllers[i]));
 			}
 		}
 		else if (mControllers[i]->IsExactly(T::TYPE))
-		{
-			isType = true;
-		}
-
-		if (isType)
 		{
 			rControllers.Append(StaticCast<T>(mControllers[i]));
 		}

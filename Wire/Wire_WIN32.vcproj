@@ -1148,6 +1148,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireNodeCamera.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNodeDLod.h"
 					>
 				</File>
@@ -1304,6 +1308,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Engine\WireNodeCamera.inl"
+					>
+				</File>
+				<File
 					RelativePath=".\Engine\WireNodeDLod.inl"
 					>
 				</File>
@@ -1433,6 +1441,10 @@
 				</File>
 				<File
 					RelativePath=".\Engine\WireNodeBillboard.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Engine\WireNodeCamera.cpp"
 					>
 				</File>
 				<File

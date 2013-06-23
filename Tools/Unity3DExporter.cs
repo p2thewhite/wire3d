@@ -678,7 +678,7 @@ public class Unity3DExporter : EditorWindow
                 SerializedProperty lightmapProp = serialObj.FindProperty("m_Lightmapping");
                 const int bakedOnly = 2;
 
-                if (light.enabled == true && lightmapProp.intValue != bakedOnly)
+                if (lightmapProp.intValue != bakedOnly)
                 {
                     if (!foundLight)
                     {
@@ -889,7 +889,7 @@ public class Unity3DExporter : EditorWindow
 
     private void WriteLightNode(Light light, StreamWriter outFile, string indent)
     {
-        if (light == null || !light.enabled)
+        if (light == null)
         {
             return;
         }
@@ -931,10 +931,11 @@ public class Unity3DExporter : EditorWindow
             }
 
             string mask = light.cullingMask == ~0 ? "" : " Mask=\"" + light.cullingMask.ToString("X") + "\"";
+            string enabled = light.enabled ? "" : " Enabled=\"0\"";
             
             outFile.WriteLine(indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
                 "\"" + direction + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
-			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + " />");
+			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + enabled + " />");
         }
 	}
 	
