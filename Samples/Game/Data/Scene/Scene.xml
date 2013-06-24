@@ -242,10 +242,6 @@
       <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
-    <Material Name="flowerpots2_diff_layersTGA_lit">
-      <Texture Name="house1_column_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
-      <MaterialState Ambient="1, 1, 1, 1" />
-    </Material>
   </Materials>
 </Assets>
 <Node Name="Scene">
@@ -289,7 +285,7 @@
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Sphere" />
-      <Material Name="flowerpots2_diff_layersTGA_lit" />
+      <Material Name="mainsq_floor_bases_diff_layersTGA_lit" />
     </Node>
   </Node>
   <Node Name="Boxstacks South" Pos="4, 15.89625, 27.86">
@@ -389,7 +385,7 @@
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Sphere" />
-      <Material Name="flowerpots2_diff_layersTGA_lit" />
+      <Material Name="mainsq_floor_bases_diff_layersTGA_lit" />
     </Node>
   </Node>
   <Node Name="Colliders" Static="1">
