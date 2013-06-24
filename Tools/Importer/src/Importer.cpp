@@ -826,7 +826,7 @@ btTransform Importer::GetBtTransform(Spatial* pSpatial, const Vector3F& rCenter)
 
 //----------------------------------------------------------------------------
 void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
-	pCollisionShape, Float mass, Bool isKinematic, const Vector3F& rCenter,
+	pCollisionShape, RigidBodyInfo& rInfo, const Vector3F& rCenter,
 	Object* pObjRef0, Object* pObjRef1)
 {
 	btTransform transform = GetBtTransform(pSpatial, rCenter);
@@ -839,18 +839,18 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 
 	// rigid body is dynamic if and only if mass is non zero
 	btVector3 localInertia(0, 0, 0);
-	if (mass != 0.0F && pCollisionShape->getShapeType() != EMPTY_SHAPE_PROXYTYPE)
+	if (rInfo.Mass != 0.0F && pCollisionShape->getShapeType() != EMPTY_SHAPE_PROXYTYPE)
 	{
-		pCollisionShape->calculateLocalInertia(mass, localInertia);
+		pCollisionShape->calculateLocalInertia(rInfo.Mass, localInertia);
 	}
 
 	btDefaultMotionState* pMotionState = WIRE_NEW btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(mass,
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyInformation(rInfo.Mass,
 		pMotionState, pCollisionShape, localInertia);
 	btRigidBody* pRigidBody = WIRE_NEW btRigidBody(rigidBodyInformation);
 	mStatistics.RigidBodyCount++;
 
-	if (isKinematic)
+	if (rInfo.IsKinematic)
 	{
 		pRigidBody->setCollisionFlags(pRigidBody->getCollisionFlags() |
 			btCollisionObject::CF_KINEMATIC_OBJECT);
@@ -864,17 +864,25 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 //Experimental: better estimation of CCD Time of Impact.
 //	pRigidBody->setCcdSweptSphereRadius(0.2F);
 
-	// TODO: find values that correspond to PhysX in Bullet?
-	// 	if (mass != 0.0F)
-	// 	{
-	// 		pRigidBody->setDamping(0.1F, 0);
-	// 	}
+	if (rInfo.Mass != 0.0F)
+	{
+		pRigidBody->setDamping(rInfo.Damping, rInfo.AngularDamping);
+	}
 
 	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pObjRef0, pObjRef1);
 	mspPhysicsWorld->AddRigidBody(pRigidBody);
 
 	RigidBodyController* pController = mspPhysicsWorld->CreateController(pRigidBody);
 	pSpatial->AttachController(pController);
+}
+
+//----------------------------------------------------------------------------
+void Importer::ParseRigidBodyInfo(RigidBodyInfo& rInfo, rapidxml::xml_node<>* pXmlNode)
+{
+	rInfo.Mass = GetFloat(pXmlNode, "Mass");
+	rInfo.IsKinematic = GetBool(pXmlNode, "Kinematic");
+	rInfo.Damping = GetFloat(pXmlNode, "Drag");
+	rInfo.AngularDamping = GetFloat(pXmlNode, "AngularDrag");
 }
 
 //----------------------------------------------------------------------------
@@ -898,13 +906,12 @@ void Importer::ParseRigidBody(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		}
 	}
 
-	Float mass = GetFloat(pXmlNode, "Mass");
-	Bool isKinematic = GetBool(pXmlNode, "Kinematic");
-
 	// TODO: Make sure to re-use shapes among rigid bodies whenever possible!
 	btCollisionShape* pCollisionShape = WIRE_NEW btEmptyShape;
 
-	AddRigidBodyController(pSpatial, pCollisionShape, mass, isKinematic);
+	RigidBodyInfo info;
+	ParseRigidBodyInfo(info, pXmlNode);
+	AddRigidBodyController(pSpatial, pCollisionShape, info);
 }
 
 //----------------------------------------------------------------------------
@@ -919,16 +926,14 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	WIRE_ASSERT(pShapeName);
 
 	// Rigid body parameters
-	Float mass = 0;
-	Bool isKinematic = false;
+	RigidBodyInfo info;
 	rapidxml::xml_node<>* pXmlParent = pXmlNode->parent();
 	for (rapidxml::xml_node<>* pChild = pXmlParent->first_node(); pChild;
 		pChild = pChild->next_sibling())
 	{
 		if (Is("RigidBody", pChild->name()))
 		{
-			mass = GetFloat(pChild, "Mass");
-			isKinematic = GetBool(pChild, "Kinematic");
+			ParseRigidBodyInfo(info, pChild);
 		}
 	}
 
@@ -959,7 +964,7 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 		if (pTriangleIndexVertexArray)
 		{
-			if (mass != 0)
+			if (info.Mass != 0)
 			{
 				if (isConvex)
 				{
@@ -1084,8 +1089,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 		return;
 	}
 
-	AddRigidBodyController(pSpatial, pCollisionShape, mass, isKinematic,
-		center, pMeshVB, pMeshIB);
+	AddRigidBodyController(pSpatial, pCollisionShape, info, center,
+		pMeshVB, pMeshIB);
 
 	mStatistics.ColliderCount++;
 }

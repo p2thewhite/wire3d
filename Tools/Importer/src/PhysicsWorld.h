@@ -21,10 +21,7 @@ class PhysicsWorld : public Wire::Object
 	WIRE_DECLARE_RTTI;
 
 public:
-	PhysicsWorld(
-		const Wire::Vector3F& rWorldAabbMin = Wire::Vector3F(-100, -100, -100),
-		const Wire::Vector3F& rWorldAabbMax = Wire::Vector3F(100, 100, 100),
-		const Wire::Vector3F& rGravity = Wire::Vector3F(0, -9.81F, 0));
+	PhysicsWorld(const Wire::Vector3F& rGravity = Wire::Vector3F(0, -9.81F, 0));
 	virtual ~PhysicsWorld();
 
 	inline btDynamicsWorld* Get();

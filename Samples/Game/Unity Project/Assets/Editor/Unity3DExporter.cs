@@ -65,14 +65,6 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 	}
-	
-	[MenuItem("Wire3D/Generate Box Colliders")]
-	protected static void GenerateBoxColliders ()
-	{
-		foreach (Transform transform in GetRootTransforms ()) {
-			GenerateBoxColliderTraverse (transform);
-		}
-	}
 
     private static List<Transform> GetRootTransforms()
 	{
@@ -91,67 +83,6 @@ public class Unity3DExporter : EditorWindow
             (meshRenderer != null && meshRenderer.enabled);
 	}
 	
-	private static void GenerateAABBFromVertices (Vector3[] vertices, out Vector3 aabbMin, out Vector3 aabbMax)
-	{
-		aabbMin = new Vector3 (vertices [0].x, vertices [0].y, vertices [0].z);
-		aabbMax = new Vector3 (aabbMin.x, aabbMin.y, aabbMin.z);
-		
-		foreach (Vector3 vertex in vertices) {
-			if (vertex.x < aabbMin.x) {
-				aabbMin.x = vertex.x;
-			}
-			if (vertex.x > aabbMax.x) {
-				aabbMax.x = vertex.x;
-			} 
-			if (vertex.y < aabbMin.y) {
-				aabbMin.y = vertex.y;
-			}
-			if (vertex.y > aabbMax.y) {
-				aabbMax.y = vertex.y;
-			}
-			if (vertex.z < aabbMin.z) {
-				aabbMin.z = vertex.z;
-			}
-			if (vertex.z > aabbMax.z) {
-				aabbMax.z = vertex.z;
-			}
-		}
-	}
-	
-	private static void GenerateBoxColliderTraverse (Transform transform)
-	{
-		if (HasRenderObject (transform))
-        {
-			GenerateBoxCollider (transform);
-		}
-
-		if (transform.GetChildCount () > 0)
-        {
-			for (int i = 0; i < transform.GetChildCount(); i++)
-            {
-				GenerateBoxColliderTraverse (transform.GetChild (i));
-			}
-		}
-	}
-
-	private static void GenerateBoxCollider (Transform transform)
-	{
-		MeshFilter meshFilter = transform.GetComponent<MeshFilter> ();
-		Mesh mesh = meshFilter.sharedMesh;
-		
-		Vector3 aabbMin;
-		Vector3 aabbMax;
-		GenerateAABBFromVertices (mesh.vertices, out aabbMin, out aabbMax);
-			
-		GameObject colliderGameObject = new GameObject ("Collider for " + transform.gameObject.name);
-		
-		Vector3 aabbSize = new Vector3 (aabbMax.x - aabbMin.x, aabbMax.y - aabbMin.y, aabbMax.z - aabbMin.z);
-		Vector3 aabbCenter = aabbMin + (aabbSize * 0.5f);
-		
-		colliderGameObject.transform.position = aabbCenter;
-		BoxCollider boxCollider = colliderGameObject.AddComponent<BoxCollider> ();
-		boxCollider.size = aabbSize;
-	}
 
 	protected void OnDestroy()
 	{
@@ -1117,8 +1048,13 @@ public class Unity3DExporter : EditorWindow
         }
 
         string kinematic = rigidbody.isKinematic ? " Kinematic=\"1\"" : "";
+
+        // TODO: find a way to map PhysX values to Bullet values
+        string damping = rigidbody.drag != 0 ? " Drag=\"" + rigidbody.drag + "\"" : "";
+        string angularDamping = " AngularDrag=\"" + rigidbody.angularDrag + "\"";
+
         outFile.Write(indent + "  " + "<RigidBody Mass=\"" + rigidbody.mass + "\"" +
-            kinematic + " />\n");
+            kinematic + damping + angularDamping + " />\n");
     }
 
     private void WriteCamera(Camera camera, StreamWriter outFile, string indent)

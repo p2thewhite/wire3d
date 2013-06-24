@@ -412,11 +412,9 @@ void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 			btRigidBody* pRigidBody = btRigidBody::upcast(pColObj);
 			if (pRigidBody)
 			{
-				btVector3 y = pRigidBody->getCenterOfMassPosition() - hitCallback.m_hitPointWorld;
-				y.normalize();
-				y *= 10;
+				btVector3 y = hitCallback.m_hitPointWorld - pRigidBody->getCenterOfMassPosition();
 				pColObj->activate(true);
-				pRigidBody->applyCentralImpulse(y);
+				pRigidBody->applyImpulse(PhysicsWorld::Convert(direction)*5, y);
 			}
  		}
 

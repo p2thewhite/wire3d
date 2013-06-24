@@ -107,6 +107,13 @@
       <Uv0 Name="Combined Mesh (root Courtyard).uv0" />
       <Uv1 Name="Combined Mesh (root Courtyard).uv1" />
     </Mesh>
+    <Mesh Name="Sphere">
+      <Vertices Name="Sphere.vtx" />
+      <Indices Name="Sphere.idx" 16bit="1" />
+      <Normals Name="Sphere.nm" />
+      <Uv0 Name="Sphere.uv0" />
+      <Uv1 Name="Sphere.uv1" />
+    </Mesh>
     <Mesh Name="polySurface673">
       <Vertices Name="polySurface673.vtx" />
       <Indices Name="polySurface673.idx" 16bit="1" />
@@ -227,10 +234,164 @@
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
+    <Material Name="mainsq_floor_small_diff_layersTGA_lit">
+      <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="mainsq_floor_bases_diff_layersTGA_lit">
+      <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
+    <Material Name="flowerpots2_diff_layersTGA_lit">
+      <Texture Name="house1_column_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+      <MaterialState Ambient="1, 1, 1, 1" />
+    </Material>
   </Materials>
 </Assets>
 <Node Name="Scene">
   <FogState Enabled="1" Color="0.5921569, 0.7333333, 0.5686275" Start="0" End="300" Mode="EXPSQR" />
+  <Node Name="Boxstack North" Pos="0.7351524, 13.36697, -24.2028">
+    <Node Name="Cube" Pos="-8.66, -7.856319, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.46, -6.856319, -14.72396">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -5.856319, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.46, -4.856319, -14.72396">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Sphere" Pos="-8.46, -3.856319, -14.72396">
+      <Collider Shape="Sphere" Center="-5.960464E-08, 0, -8.940697E-08" Radius="0.5000001" />
+      <RigidBody Mass="5" Drag="0.3" AngularDrag="0.8" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Sphere" />
+      <Material Name="flowerpots2_diff_layersTGA_lit" />
+    </Node>
+  </Node>
+  <Node Name="Boxstacks South" Pos="4, 15.89625, 27.86">
+    <Node Name="Boxes" Pos="9.2, 0, 0">
+      <Node Name="Cube" Pos="-8.66, -8.22455, -14.92419">
+        <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+        <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Cube" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+      </Node>
+      <Node Name="Cube" Pos="-8.66, -7.22455, -14.92419">
+        <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+        <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Cube" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+      </Node>
+      <Node Name="Cube" Pos="-8.66, -5.22455, -14.92419">
+        <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+        <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Cube" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+      </Node>
+      <Node Name="Cube" Pos="-8.66, -6.22455, -14.92419">
+        <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+        <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Cube" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+      </Node>
+      <Node Name="Cube" Pos="-8.66, -4.224549, -14.92419">
+        <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+        <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+        <Light Name="Directional Light Blue" />
+        <Light Name="Directional Light Yellow" />
+        <Mesh Name="Cube" />
+        <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+      </Node>
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -8.22455, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -7.22455, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -6.22455, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -5.22455, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Long Cube" Pos="-4.05, -3.624549, -14.92419" Scale="10, 0.2, 0.5">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="10" Drag="0.8" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_bases_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Cube" Pos="-8.66, -4.224549, -14.92419">
+      <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
+      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Cube" />
+      <Material Name="mainsq_floor_small_diff_layersTGA_lit" />
+    </Node>
+    <Node Name="Sphere" Pos="-4, -3.024549, -14.92419">
+      <Collider Shape="Sphere" Center="-5.960464E-08, 0, -8.940697E-08" Radius="0.5000001" />
+      <RigidBody Mass="5" Drag="0.3" AngularDrag="0.8" />
+      <Light Name="Directional Light Blue" />
+      <Light Name="Directional Light Yellow" />
+      <Mesh Name="Sphere" />
+      <Material Name="flowerpots2_diff_layersTGA_lit" />
+    </Node>
+  </Node>
   <Node Name="Colliders" Static="1">
     <Node Name="Collider for Eastern Building 3 (Low)" Static="1">
       <Collider Shape="Box" Center="57.1, 8, 3.9" Size="12.71072, 6, 34" />
@@ -631,7 +792,7 @@
   </Node>
   <Node Name="Platform" Pos="32.225, 4.925, 3.75" Scale="5, 0.15, 4.9">
     <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-    <RigidBody Mass="1" Kinematic="1" />
+    <RigidBody Mass="1" Kinematic="1" AngularDrag="0.05" />
     <Light Name="Directional Light Blue" />
     <Light Name="Directional Light Yellow" />
     <Mesh Name="Cube" />

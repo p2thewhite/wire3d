@@ -33,8 +33,7 @@ Bool Game::OnInitialize()
 		return false;
 	}
 
-	mspPhysicsWorld = WIRE_NEW PhysicsWorld(Vector3F(-120, -120, -120),
-		Vector3F(120, 120, 120));
+	mspPhysicsWorld = WIRE_NEW PhysicsWorld();
 
 	mspLogo = LoadAndInitializeLoading();
 
@@ -52,7 +51,7 @@ Bool Game::OnInitialize()
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
 
-	GetRenderer()->CreateBatchingBuffers(50*1024, 0*1024);
+	GetRenderer()->CreateBatchingBuffers(50*1024, 10*1024);
 	GetRenderer()->SetDynamicBatchingThreshold(300, 100);
 	GetRenderer()->SetStaticBatchingThreshold(700);
 

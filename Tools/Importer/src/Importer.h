@@ -142,10 +142,21 @@ private:
 	Options* mpOptions;
 
 #ifndef NO_BULLET_PHYSICS_LIB
+	struct RigidBodyInfo
+	{
+		RigidBodyInfo()	: Mass(0), Damping(0), AngularDamping(0.5F), IsKinematic(false) {}
+
+		Float Mass;
+		Float Damping;
+		Float AngularDamping;
+		Bool IsKinematic;
+	};
+
 	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
 	void ParseRigidBody(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);
+	void ParseRigidBodyInfo(RigidBodyInfo& rInfo, rapidxml::xml_node<>* pXmlNode);
 	void AddRigidBodyController(Wire::Spatial* pSpatial, btCollisionShape* pCollisionShape,
-		Float mass, Bool isKinematic, const Wire::Vector3F& rCenter = Wire::Vector3F::ZERO,
+		RigidBodyInfo& rInfo, const Wire::Vector3F& rCenter = Wire::Vector3F::ZERO,
 		Wire::Object* pObjRef0 = NULL, Wire::Object* pObjRef1 = NULL);
 	btTransform GetBtTransform(Wire::Spatial* pSpatial, const Wire::Vector3F& rCenter);
 
