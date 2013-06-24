@@ -1048,8 +1048,13 @@ public class Unity3DExporter : EditorWindow
         }
 
         string kinematic = rigidbody.isKinematic ? " Kinematic=\"1\"" : "";
+
+        // TODO: find a way to map PhysX values to Bullet values
+        string damping = rigidbody.drag != 0 ? " Drag=\"" + rigidbody.drag + "\"" : "";
+        string angularDamping = " AngularDrag=\"" + rigidbody.angularDrag + "\"";
+
         outFile.Write(indent + "  " + "<RigidBody Mass=\"" + rigidbody.mass + "\"" +
-            kinematic + " />\n");
+            kinematic + damping + angularDamping + " />\n");
     }
 
     private void WriteCamera(Camera camera, StreamWriter outFile, string indent)

@@ -8,8 +8,7 @@ using namespace Wire;
 WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(PhysicsWorld, Object);
 
 //----------------------------------------------------------------------------
-PhysicsWorld::PhysicsWorld(const Vector3F& rWorldAabbMin, const Vector3F&
-	rWorldAabbMax, const Vector3F& rGravity)
+PhysicsWorld::PhysicsWorld(const Vector3F& rGravity)
 	:
 	mpGhostPairCallback(NULL),
 	mCollisionShapes(10, 10),
@@ -23,15 +22,7 @@ PhysicsWorld::PhysicsWorld(const Vector3F& rWorldAabbMin, const Vector3F&
 	// can use a different dispatcher (see Extras/BulletMultiThreaded)
 	mpDispatcher = WIRE_NEW btCollisionDispatcher(mpCollisionConfiguration);
 
-	///the maximum size of the collision world. Make sure objects stay
-	// within these boundaries
-	///Don't make the world AABB size too large, it will harm simulation
-	// quality and performance
-	btVector3 worldAabbMin = Convert(rWorldAabbMin);
-	btVector3 worldAabbMax = Convert(rWorldAabbMax);
-	UShort maxProxies = 1024; // TODO: review
-	mpOverlappingPairCache = WIRE_NEW btAxisSweep3(worldAabbMin, worldAabbMax,
-		maxProxies);
+	mpOverlappingPairCache = WIRE_NEW btDbvtBroadphase();
 
 	///the default constraint solver. For parallel processing you can use
 	// a different solver (see Extras/BulletMultiThreaded)
