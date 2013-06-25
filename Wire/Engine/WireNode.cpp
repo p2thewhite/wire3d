@@ -877,7 +877,19 @@ void Node::UpdateStateRenderObject(States* pStates, Lights* pLights)
 		}
 	}
 
-	UInt key = State::GetStateSetID(mspRenderObject->GetStates());
+	enum
+	{
+		STATEKEYBITS = 12,
+		LIGHTKEYBITS = 12,
+	};
+
+	UInt stateKey = State::GetSetID(mspRenderObject->GetStates());
+	WIRE_ASSERT(stateKey < (1 << STATEKEYBITS));
+
+	UInt lightKey = Light::GetSetID(mspRenderObject->GetLights());
+	WIRE_ASSERT(stateKey < (1 << LIGHTKEYBITS));
+
+	UInt key = (lightKey << STATEKEYBITS) | stateKey;
 	mspRenderObject->SetStateSetID(key);
 }
 

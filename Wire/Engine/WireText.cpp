@@ -60,6 +60,8 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	pMaterial->AddTexture(pFontTexture);
 	SetMaterial(pMaterial);
 
+	State::Init(GetStates());
+
 	StateAlpha* pAlpha = WIRE_NEW StateAlpha;
 	pAlpha->BlendEnabled = true;
 	GetStates()[State::ALPHA] = pAlpha;

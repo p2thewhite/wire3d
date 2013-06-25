@@ -44,6 +44,7 @@ void Renderer::Initialize(UInt width, UInt height)
 
 	mVertexFormatKey = 0;
 
+	mIdentityNonRS.SetMatrix(Matrix34F::IDENTITY, true);
 	mBatchedIndexBuffer = NULL;
 	mStaticBatchingMaxIndexCount = 0;
 	mDynamicBatchingMaxVertexCount = 0;
@@ -1081,7 +1082,6 @@ void Renderer::Draw(RenderObject* const pVisible[], Transformation* const
 			Set(pA->GetStates());
 			Set(pA->GetMaterial(), pA->GetLights());
 			Set(pMeshA->GetVertexBuffers());
-			mspMesh = NULL;
 
 			if (hasIdenticalVBOs)
 			{
@@ -1165,8 +1165,10 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 
 			pIBPdr->Unlock();
 			WIRE_ASSERT(maxIndex < 65535);
-			DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
-				pVisible[min]->GetMesh()->HasNormal());
+
+			SetTransformation(Transformation::IDENTITY, pVisible[min]->
+				GetMesh()->HasNormal(), mspVertexShader);
+			DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex);
 			pIBRaw = pIBPdr->Lock(Buffer::LM_WRITE_ONLY);
 
 			maxIndex = 0;
@@ -1191,8 +1193,9 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 	if (batchedIndexCount > 0)
 	{
 		WIRE_ASSERT(maxIndex < 65535);
-		DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex,
-			pVisible[min]->GetMesh()->HasNormal());
+		SetTransformation(Transformation::IDENTITY, pVisible[min]->
+			GetMesh()->HasNormal(), mspVertexShader);
+		DrawBatch(pIBPdr, maxIndex-minIndex+1, batchedIndexCount, minIndex);
 	}
 }
 
@@ -1354,7 +1357,8 @@ void Renderer::DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 		}
 	}
 
-	DrawBatch(pIBPdr, vertexCount, indexCount, 0, pMesh->HasNormal());
+	SetTransformation(mIdentityNonRS, pMesh->HasNormal(), mspVertexShader);
+	DrawBatch(pIBPdr, vertexCount, indexCount, 0);
 	for (UInt i = 0; i < rVertexBuffers.GetQuantity(); i++)
 	{
 		rVBsPdr[i]->Disable(this, i);
@@ -1368,8 +1372,10 @@ void Renderer::DrawDynamicBatch(const Mesh* pMesh, PdrIndexBuffer* const pIBPdr,
 
 //----------------------------------------------------------------------------
 void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
-	UInt indexCount, UShort minIndex, Bool hasNormals)
+	UInt indexCount, UShort minIndex)
 {
+	mspMesh = NULL;
+
 	if (mspIndexBuffer)
 	{
 		Disable(mspIndexBuffer);
@@ -1377,7 +1383,7 @@ void Renderer::DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
 	}
 
 	pIBPdr->Enable(this);
-	SetTransformation(Transformation::IDENTITY, hasNormals, mspVertexShader);
+
 	if (mspVertexShader)
 	{
 		PdrShader* pPdrShader = GetResource(mspVertexShader);

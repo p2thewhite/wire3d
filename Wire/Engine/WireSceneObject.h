@@ -41,7 +41,7 @@ public:
 
 	// iterates over attached controllers, returns the first one of given type
 	Controller* GetController(const Rtti& rType, Bool getDerivedTypes = true) const;
-	template <class T> T* GetController(Bool getDerivedTypes = true) const;
+	template <class T> inline T* GetController(Bool getDerivedTypes = true) const;
 
 	// iterates over attached controllers, adds all of given type to array
 	void GetControllers(TArray<Controller*>& rControllers, const Rtti& rType,

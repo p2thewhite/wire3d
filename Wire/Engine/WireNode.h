@@ -72,7 +72,7 @@ public:
 
 	// returns the first (top/down, left-to-right) Spatial of given type
 	Spatial* FindChild(const Rtti& rType, Bool findDerivedTypes = true) const;
-	template <class T> T* FindChild(Bool findDerivedTypes = true) const;
+	template <class T> inline T* FindChild(Bool findDerivedTypes = true) const;
 
 	// returns all Spatials using that name
 	void FindChildren(const String& rName, TArray<Spatial*>& rChildren) const;
@@ -81,7 +81,7 @@ public:
 
 	// returns the first (top/down, left-to-right) controller of given type
 	Controller* FindController(const Rtti& rType, Bool findDerivedTypes = true) const;
-	template <class T> T* FindController(Bool findDerivedTypes = true) const;
+	template <class T> inline T* FindController(Bool findDerivedTypes = true) const;
 
 	// returns all controllers of given type
 	template <class T> void FindControllers(TArray<T*>& rControllers,

@@ -14,7 +14,7 @@ inline UInt Node::GetQuantity() const
 
 //----------------------------------------------------------------------------
 template <class T>
-T* Node::FindChild(Bool findDerivedTypes) const
+inline T* Node::FindChild(Bool findDerivedTypes) const
 {
 	return StaticCast<T>(FindChild(T::TYPE, findDerivedTypes));
 }
@@ -55,7 +55,7 @@ void Node::FindChildren(TArray<T*>& rChildren, Bool findDerivedTypes) const
 
 //----------------------------------------------------------------------------
 template <class T>
-T* Node::FindController(Bool findDerivedTypes) const
+inline T* Node::FindController(Bool findDerivedTypes) const
 {
 	return StaticCast<T>(FindController(T::TYPE, findDerivedTypes));
 }

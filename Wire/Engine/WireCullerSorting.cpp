@@ -81,7 +81,7 @@ UInt64 CullerSorting::GetKey(RenderObject* pRenderObject, const Vector3F&
 	// number of bits we use for the sorting key (MSB to LSB)
 	enum
 	{
-		STATESET = 16,
+		STATESET = 24,
 		MATERIAL = 16,
 		DEPTH = 24
 	};

@@ -12,6 +12,8 @@ using namespace Wire;
 
 WIRE_IMPLEMENT_RTTI(Wire, Light, Object);
 
+THashTable<UInt64, UInt> Light::mSetIDs;
+
 //----------------------------------------------------------------------------
 Light::Light(LightType type)
 	:
@@ -30,4 +32,36 @@ Light::Light(LightType type)
 //----------------------------------------------------------------------------
 Light::~Light()
 {
+}
+
+//----------------------------------------------------------------------------
+UInt Light::GetSetID(TArray<LightPtr>* pLights)
+{
+	enum
+	{
+		BITSPERLIGHT = 8,
+		MAXLIGHTS = 8,
+	};
+
+	WIRE_ASSERT((BITSPERLIGHT * MAXLIGHTS) <= (sizeof(UInt64)*8));
+	WIRE_ASSERT(pLights->GetQuantity() <= MAXLIGHTS);
+
+	UInt64 setID = 0;
+	for (UInt i = 0; i < pLights->GetQuantity(); i++)
+	{
+		UInt64 id = (*pLights)[i]->ID;
+		WIRE_ASSERT(id < (1 << BITSPERLIGHT));
+		id = id << (BITSPERLIGHT*i);
+		setID |= id;
+	}
+
+	UInt* pValue = mSetIDs.Find(setID);
+	if (pValue)
+	{
+		return *pValue;
+	}
+
+	UInt value = mSetIDs.GetQuantity();
+	mSetIDs.Insert(setID, value);
+	return value;
 }
