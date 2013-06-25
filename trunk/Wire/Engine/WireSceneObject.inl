@@ -33,7 +33,7 @@ inline const String& SceneObject::GetName() const
 
 //----------------------------------------------------------------------------
 template <class T>
-T* SceneObject::GetController(Bool getDerivedTypes) const
+inline T* SceneObject::GetController(Bool getDerivedTypes) const
 {
 	return StaticCast<T>(GetController(T::TYPE, getDerivedTypes));
 }

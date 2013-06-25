@@ -21,7 +21,7 @@ WIRE_IMPLEMENT_RTTI(Wire, State, Object);
 
 StatePtr State::Default[MAX_STATE_TYPE];
 
-THashTable<UInt64, UInt> State::mStateSetIDs;
+THashTable<UInt64, UInt> State::mSetIDs;
 
 //----------------------------------------------------------------------------
 State::State()
@@ -34,7 +34,16 @@ State::~State()
 }
 
 //----------------------------------------------------------------------------
-UInt State::GetStateSetID(StatePtr states[MAX_STATE_TYPE])
+void State::Init(Pointer<State> states[State::MAX_STATE_TYPE])
+{
+	for (UInt i = 0; i < MAX_STATE_TYPE; i++)
+	{
+		states[i] = Default[i];
+	}
+}
+
+//----------------------------------------------------------------------------
+UInt State::GetSetID(StatePtr states[MAX_STATE_TYPE])
 {
 	enum
 	{
@@ -73,13 +82,13 @@ UInt State::GetStateSetID(StatePtr states[MAX_STATE_TYPE])
 	setID |= zbufferID << (ALPHABITS + CULLBITS + FOGBITS + MATERIALBITS +
 		WIREFRAMEBITS);
 
-	UInt* pValue = mStateSetIDs.Find(setID);
+	UInt* pValue = mSetIDs.Find(setID);
 	if (pValue)
 	{
 		return *pValue;
 	}
 
-	UInt value = mStateSetIDs.GetQuantity();
-	mStateSetIDs.Insert(setID, value);
+	UInt value = mSetIDs.GetQuantity();
+	mSetIDs.Insert(setID, value);
 	return value;
 }

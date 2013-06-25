@@ -40,13 +40,14 @@ public:
 	virtual StateType GetStateType() const = 0;
 
 	static Pointer<State> Default[MAX_STATE_TYPE];
-	static UInt GetStateSetID(Pointer<State> states[MAX_STATE_TYPE]);
+	static void Init(Pointer<State> states[State::MAX_STATE_TYPE]);
+	static UInt GetSetID(Pointer<State> states[MAX_STATE_TYPE]);
 
 protected:
 	State();
 
 private:
-	static THashTable<UInt64, UInt> mStateSetIDs;
+	static THashTable<UInt64, UInt> mSetIDs;
 };
 
 typedef Pointer<State> StatePtr;

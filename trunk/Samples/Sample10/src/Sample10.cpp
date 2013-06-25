@@ -231,10 +231,7 @@ void Sample10::CreateCube()
 	pLights->Append(mspLight);
 	mspCube->SetLights(pLights);
 
-	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
-	{
-		mspCube->GetStates()[i] = State::Default[i];
-	}
+	State::Init(mspCube->GetStates());
 
 	StateMaterial* pMaterialState = WIRE_NEW StateMaterial;
 	pMaterialState->Ambient = ColorRGBA(1, 1, 0.9F, 1);
@@ -287,10 +284,7 @@ RenderObject* Sample10::CreateCylinder() const
 	pLights->Append(mspLight);
 	pCylinder->SetLights(pLights);
 
-	for (UInt i = 0; i < State::MAX_STATE_TYPE; i++)
-	{
-		pCylinder->GetStates()[i] = State::Default[i];
-	}
+	State::Init(pCylinder->GetStates());
 
 	return pCylinder;
 }

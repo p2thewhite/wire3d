@@ -287,7 +287,7 @@ private:
 		TArray<PdrVertexBuffer*>& rVBsPdr, UInt vertexCount,
 		UInt indexCount);
 	void DrawBatch(PdrIndexBuffer* const pIBPdr, UInt vertexCount,
-		UInt indexCount, UShort minIndex, Bool hasNormals);
+		UInt indexCount, UShort minIndex);
 
 	// The main entry point to drawing in the derived-class renderers
 	void DrawElements(UInt vertexCount, UInt indexCount, UInt startIndex,
@@ -393,6 +393,7 @@ private:
 	static Renderer* s_pRenderer;
 
 	// Batching
+	Transformation mIdentityNonRS; // xformed batching needs to renormalize
 	PdrIndexBuffer* mBatchedIndexBuffer;
 	TArray<PdrVertexBuffer*> mBatchedVertexBuffers;
 	TArray<void*> mRawBatchedVertexBuffers;

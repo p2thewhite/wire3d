@@ -137,9 +137,6 @@ void Sample3::DrawLodTextLabel()
 	Transformation transformation;
 	Vector3F textPosition(offsetX, offsetY, 0);
 	transformation.SetTranslate(textPosition);
-
-	GetRenderer()->SetState(StaticCast<StateWireframe>(State::Default[
-		State::WIREFRAME]));
 	GetRenderer()->Draw(mspText, transformation);
 }
 

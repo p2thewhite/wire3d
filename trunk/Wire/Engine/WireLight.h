@@ -12,6 +12,7 @@
 
 #include "WireColorRGB.h"
 #include "WireObject.h"
+#include "WireTHashTable.h"
 #include "WireTInstanceID.h"
 #include "WireVector3.h"
 
@@ -52,6 +53,11 @@ public:
 	UInt Mask;			// default: 0xFFFFFFFF
 
 	Bool Enabled;		// default: true
+
+	static UInt GetSetID(TArray<Pointer<Light> >* pLights);
+
+private:
+	static THashTable<UInt64, UInt> mSetIDs;
 };
 
 typedef Pointer<Light> LightPtr;
