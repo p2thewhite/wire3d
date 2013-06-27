@@ -282,54 +282,6 @@ inline Real Vector3<Real>::Normalize()
 
 //----------------------------------------------------------------------------
 template <class Real>
-inline Bool Vector3<Real>::IsNormalized() const
-{
-	Real length = SquaredLength();
-
-	return
-		(length < (static_cast<Real>(1.0) + Math<Real>::ZERO_TOLERANCE)) &&
-		(length > (static_cast<Real>(1.0) - Math<Real>::ZERO_TOLERANCE));
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Real Vector3<Real>::Distance(const Vector3& rVector) const
-{
-	Vector3<Real> difference(
-		rVector.mTuple[0] - mTuple[0],
-		rVector.mTuple[1] - mTuple[1],
-		rVector.mTuple[2] - mTuple[2]);
-
-	return Math<Real>::Sqrt(
-		difference.mTuple[0] * difference.mTuple[0] +
-		difference.mTuple[1] * difference.mTuple[1] +
-		difference.mTuple[2] * difference.mTuple[2]);
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-inline Real Vector3<Real>::SquaredDistance(const Vector3& rVector) const
-{
-	Vector3<Real> difference(
-		rVector.mTuple[0] - mTuple[0],
-		rVector.mTuple[1] - mTuple[1],
-		rVector.mTuple[2] - mTuple[2]);
-
-	return
-		difference.mTuple[0] * difference.mTuple[0] +
-		difference.mTuple[1] * difference.mTuple[1] +
-		difference.mTuple[2] * difference.mTuple[2];
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
-Real Vector3<Real>::Angle(const Vector3& rVector) const
-{
-	return Math<Real>::ACos(Dot(rVector) / (Length () * rVector.Length()));
-}
-
-//----------------------------------------------------------------------------
-template <class Real>
 inline Vector3<Real> Vector3<Real>::Cross(const Vector3& rVector) const
 {
 	return Vector3(

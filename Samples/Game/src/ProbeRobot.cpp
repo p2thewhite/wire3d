@@ -14,7 +14,7 @@ ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
 	mTotalHealth(100.0F),
 	mHealth(100.0F),
 	mSpeed(7.5F),
-	mMaximumPlayerDistanceSquared(100.0F)
+	mMaximumPlayerDistanceSquared(10*10)
 {
 	WIRE_ASSERT(mspPlayerSpatial);
 	WIRE_ASSERT(mspHealthBar);
@@ -55,6 +55,7 @@ void ProbeRobot::Die()
 	
 	GetSceneObject()->DetachController(this);
 	mspCharacter->Get()->setUserPointer(NULL);
+	mspCharacter->GetCharacter()->setWalkDirection(btVector3(0, 0, 0));
 }
 
 //----------------------------------------------------------------------------
@@ -82,29 +83,30 @@ void ProbeRobot::CalculateMovementAndRotation()
 	const Vector3F probeRobotPosition(origin.x(), origin.y(), origin.z());
 
 	Vector3F playerPosition = mspPlayerSpatial->Local.GetTranslate();
-	Float squaredDistance = playerPosition.SquaredDistance(probeRobotPosition);
-
 	Vector3F direction = playerPosition - probeRobotPosition;
+	Vector3F distance = direction;
+	distance.Y() = 0;
 	direction.Normalize();
 
-	Float angle = direction.Angle(Vector3F::UNIT_Z);
-
-	// Correcting angle sign
-	if (playerPosition.Cross(probeRobotPosition).Z() < 0)
-	{
-		angle = -angle;
-	}
-
 	Vector3F move = Vector3F::ZERO;
-	if (squaredDistance > mMaximumPlayerDistanceSquared)
+	Float distanceSquared = distance.SquaredLength();
+	if (distanceSquared > mMaximumPlayerDistanceSquared)
 	{
-		move = direction * mSpeed * 1/60.0F;	// physics time step, TODO: get from physics world;
+		distanceSquared -= mMaximumPlayerDistanceSquared;
+		const Float range = 60;
+		distanceSquared = MathF::Min(distanceSquared, range);
+		Float speed = mSpeed * distanceSquared / range;
+		move = direction * speed * 1/60.0F;	// physics time step, TODO: get from physics world;
 	}
 
 	// update the scene object
 	Spatial* pSpatial = DynamicCast<Spatial>(GetSceneObject());
 	WIRE_ASSERT(pSpatial);
-	Matrix34F matrix(Vector3F::UNIT_Y, angle, probeRobotPosition);
+	distance.Normalize();
+
+	Vector3F right = distance.Cross(Vector3F::UNIT_Y);
+	right.Normalize();
+	Matrix34F matrix(-right, Vector3F::UNIT_Y, distance, probeRobotPosition);
 	pSpatial->Local.SetMatrix(matrix, false);
 
 	// update the physics object

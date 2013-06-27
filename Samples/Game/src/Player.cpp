@@ -414,14 +414,14 @@ void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 			{
 				btVector3 y = hitCallback.m_hitPointWorld - pRigidBody->getCenterOfMassPosition();
 				pColObj->activate(true);
-				pRigidBody->applyImpulse(PhysicsWorld::Convert(direction)*5, y);
+				pRigidBody->applyImpulse(PhysicsWorld::Convert(direction)*7.5F, y);
 			}
  		}
 
 		ProbeRobot* pProbeRobotController = static_cast<ProbeRobot*>(hitCallback.m_collisionObject->getUserPointer());
 		if (pProbeRobotController) 
 		{
-			pProbeRobotController->TakeDamage(2.0F);
+			pProbeRobotController->TakeDamage(5.0F);
 		}
 	}
 }

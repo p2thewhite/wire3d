@@ -1,7 +1,8 @@
 <Assets>
   <Lights>
-      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.2662745, 0.3019608, 0.2635294" />
-      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.1215686, 0.1372549, 0.1215686" Color="0.8268235, 0.8367059, 0.7807059" />
+      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.2662745, 0.3019608, 0.2635294" Mask="FFFFFEFF" />
+      <Light Name="Directional Light Platform only" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.9843137, 0.9960784, 0.9294118" Mask="100" />
+      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.8268235, 0.8367059, 0.7807059" Mask="FFFFFEFF" />
   </Lights>
   <Meshes>
     <Mesh Name="Sphere002">
@@ -249,7 +250,7 @@
   <Node Name="Boxstack North" Pos="0.7351524, 13.36697, -24.2028">
     <Node Name="Cube" Pos="-8.66, -7.856319, -14.92419">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -257,7 +258,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.46, -6.856319, -14.72396">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -265,7 +266,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.66, -5.856319, -14.92419">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -273,7 +274,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.46, -4.856319, -14.72396">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="15" Drag="0.3" AngularDrag="0.05" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.99" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -281,7 +282,7 @@
     </Node>
     <Node Name="Sphere" Pos="-8.46, -3.856319, -14.72396">
       <Collider Shape="Sphere" Center="-5.960464E-08, 0, -8.940697E-08" Radius="0.5000001" />
-      <RigidBody Mass="5" Drag="0.3" AngularDrag="0.8" />
+      <RigidBody Mass="3.5" Drag="0.3" AngularDrag="0.8" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Sphere" />
@@ -407,7 +408,7 @@
     <Node Name="Collider for Fountain (7)" Pos="0, 7.6, -23.65023" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="1.68, 1.6, 2.14" />
     </Node>
-    <Node Name="Collider for Northern Building 2 (Lower)" Pos="15.7543, 8.2, -84.3" Static="1">
+    <Node Name="Collider for Northern Building 2 (Lower)" Pos="15.7543, 8.2, -84.1" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="50.1, 6.25, 17.2" />
     </Node>
     <Node Name="Collider for Northern Building 2 (Upper)" Pos="15.7543, 23.1, -83.01181" Static="1">
@@ -431,7 +432,7 @@
     <Node Name="Collider for Western Building 2 (Upper)" Pos="-47.58213, 24.5, -13.66149" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="25.62226, 26, 42.28049" />
     </Node>
-    <Node Name="Collider for Western Building 2 (Lower)" Pos="-50.9, 8.2, -17.2" Static="1">
+    <Node Name="Collider for Western Building 2 (Lower)" Pos="-50.6, 8.2, -17.2" Static="1">
       <Collider Shape="Box" Center="0, 0, 0" Size="17.6, 6.3, 34.6" />
     </Node>
     <Node Name="Courtyard Stair Colliders" Static="1">
@@ -781,16 +782,20 @@
       <Light Name="Directional Light Blue" />
     </LightNode>
   </Node>
+  <Node Name="Directional Light Platform only" Pos="0, 10, 0" Rot="0.8473976, 0.4317706, -0.2753362, 0.1402908" Scale="1, 1, 1" Static="1">
+    <LightNode>
+      <Light Name="Directional Light Platform only" />
+    </LightNode>
+  </Node>
   <Node Name="Directional Light Yellow" Pos="0, 10, 0" Rot="0.8473976, 0.4317706, -0.2753362, 0.1402908" Scale="1, 1, 1" Static="1">
     <LightNode>
       <Light Name="Directional Light Yellow" />
     </LightNode>
   </Node>
-  <Node Name="Platform" Pos="32.225, 4.925, 3.75" Scale="5, 0.15, 4.9">
+  <Node Name="Platform" Pos="32.225, 4.925, 3.75" Scale="5, 0.15, 4.9" Layer="8">
     <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
     <RigidBody Mass="1" Kinematic="1" AngularDrag="0.05" />
-    <Light Name="Directional Light Blue" />
-    <Light Name="Directional Light Yellow" />
+    <Light Name="Directional Light Platform only" />
     <Mesh Name="Cube" />
     <Material Name="mainsqr_floor_big_diff3_layersTGA_lit" />
   </Node>

@@ -60,11 +60,6 @@ public:
 	inline Real Dot(const Vector3& rVector) const;
 
 	inline Real Normalize();
-	inline Bool IsNormalized() const;
-
-	inline Real Distance(const Vector3& rVector) const;
-	inline Real SquaredDistance(const Vector3& rVector) const;
-	inline Real Angle(const Vector3& rVector) const;
 
 	// The cross products are computed using the right-handed rule. Be aware
 	// that some graphics APIs use a left-handed rule. If you have to compute
