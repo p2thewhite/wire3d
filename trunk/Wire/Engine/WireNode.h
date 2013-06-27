@@ -68,14 +68,14 @@ public:
  	SpatialPtr GetChild(UInt i);
 
 	// returns the first (top/down, left-to-right) Spatial using that name
-	Spatial* FindChild(const String& rName) const;
+	Spatial* FindChild(const Char* pName) const;
 
 	// returns the first (top/down, left-to-right) Spatial of given type
 	Spatial* FindChild(const Rtti& rType, Bool findDerivedTypes = true) const;
 	template <class T> inline T* FindChild(Bool findDerivedTypes = true) const;
 
 	// returns all Spatials using that name
-	void FindChildren(const String& rName, TArray<Spatial*>& rChildren) const;
+	void FindChildren(const Char* pName, TArray<Spatial*>& rChildren) const;
 	template <class T> void FindChildren(TArray<T*>& rChildren,
 		Bool findDerivedTypes = true) const;
 

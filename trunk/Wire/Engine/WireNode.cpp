@@ -331,14 +331,15 @@ void Node::GetVisibleSet(Culler& rCuller, Bool noCull)
 }
 
 //----------------------------------------------------------------------------
-Spatial* Node::FindChild(const String& rName) const
+Spatial* Node::FindChild(const Char* pName) const
 {
 	Spatial* pFound = NULL;
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		if (mChildren[i])
 		{
-			if (rName == mChildren[i]->GetName())
+			if (System::Strcmp(pName, static_cast<const Char*>(mChildren[i]->
+				GetName())) == 0)
 			{
 				return mChildren[i];
 			}
@@ -346,7 +347,7 @@ Spatial* Node::FindChild(const String& rName) const
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pFound = pNode->FindChild(rName);
+				pFound = pNode->FindChild(pName);
 				if (pFound)
 				{
 					return pFound;
@@ -399,13 +400,14 @@ Spatial* Node::FindChild(const Rtti& rType, Bool findDerivedTypes) const
 }
 
 //----------------------------------------------------------------------------
-void Node::FindChildren(const String& rName, TArray<Spatial*>& rChildren) const
+void Node::FindChildren(const Char* pName, TArray<Spatial*>& rChildren) const
 {
 	for (UInt i = 0; i < mChildren.GetQuantity(); i++)
 	{
 		if (mChildren[i])
 		{
-			if (rName == mChildren[i]->GetName())
+			if (System::Strcmp(pName, static_cast<const Char*>(mChildren[i]->
+				GetName())) == 0)
 			{
 				rChildren.Append(mChildren[i]);
 			}
@@ -413,7 +415,7 @@ void Node::FindChildren(const String& rName, TArray<Spatial*>& rChildren) const
 			const Node* pNode = DynamicCast<Node>(mChildren[i]);
 			if (pNode)
 			{
-				pNode->FindChildren(rName, rChildren);
+				pNode->FindChildren(pName, rChildren);
 			}
 		}
 	}
