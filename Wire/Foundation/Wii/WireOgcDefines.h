@@ -34,6 +34,7 @@ typedef guVector Vec;
 #define GXEndDisplayList GX_EndDispList
 #define GXGetYScaleFactor GX_GetYScaleFactor
 #define GXInit GX_Init
+#define GXInitLightAttnK GX_InitLightAttnK
 #define GXInitLightColor GX_InitLightColor
 #define GXInitLightDir GX_InitLightDir
 #define GXInitLightDirv GX_InitLightDirv

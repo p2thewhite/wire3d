@@ -22,7 +22,6 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	Bool useLight = pLight ? pLight->Enabled : false;
 	if (!useLight)
 	{
-		GXSetNumChans(1);
 		mpData->LightsMask &= ~(1<<unit);
 		GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX,
 			mpData->LightsMask, GX_DF_NONE, GX_AF_NONE);
@@ -33,6 +32,7 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	const ColorRGB& rCol = pLight->Color;
 	const GXColor diffuse = { rCol.R()*255, rCol.G()*255, rCol.B()*255,
 		255 };
+	GXInitLightColor(&gxLight, diffuse);
 
 	switch (pLight->Type)
 	{
@@ -44,7 +44,9 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 		MTXMultVec(mpData->View, pLightPos, &lightViewPos);
 		GXInitLightPosv(&gxLight, &lightViewPos);
 		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);
-		GXInitLightDistAttn(&gxLight, 20, 1, GX_DA_OFF);
+		Float range = 1.0F/pLight->Range;
+		GXInitLightAttnK(&gxLight, pLight->Constant, pLight->Linear*range,
+			pLight->Quadric*range*range);
 		break;
 	}
 
@@ -68,19 +70,21 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	{
 		Light* pL = const_cast<Light*>(pLight);
 
-		Vec* pLightDir = reinterpret_cast<Vec*>(&pL->Direction);
-		Vec lightViewDir;
-		MTXMultVecSR(mpData->View, pLightDir, &lightViewDir);
-		GXInitLightDirv(&gxLight, &lightViewDir);
-
 		Vec* pLightPos = reinterpret_cast<Vec*>(&pL->Position);
 		Vec lightViewPos;
 		MTXMultVec(mpData->View, pLightPos, &lightViewPos);
 		GXInitLightPosv(&gxLight, &lightViewPos);
+
+		Vec* pLightDir = reinterpret_cast<Vec*>(&pL->Direction);
+		Vec lightViewDir;
+		MTXMultVecSR(mpData->View, pLightDir, &lightViewDir);
+		GXInitLightDirv(&gxLight, &lightViewDir);
 		
 		Float angle = pL->Angle * MathF::RAD_TO_DEG * 0.5F;
 		GXInitLightSpot(&gxLight, angle, GX_SP_COS2);
-		GXInitLightDistAttn(&gxLight, 20, 1, GX_DA_OFF);
+		Float range = 1.0F/pLight->Range;
+		GXInitLightAttnK(&gxLight, pLight->Constant, pLight->Linear*range,
+			pLight->Quadric*range*range);
 		break;
 	}
 
@@ -96,10 +100,8 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 // 		GXInitLightShininess(&gxLight, 4);
 //		GXInitLightSpot(&gxLight, 0.0F, GX_SP_OFF);
 
-	GXInitLightColor(&gxLight, diffuse);
 	GXLoadLightObjImm(&gxLight, 1 << unit);
 
-	GXSetNumChans(1); // number of color channels
 	mpData->LightsMask |= 1<<unit;
 	GXSetChanCtrl(GX_COLOR0A0, GX_ENABLE, GX_SRC_REG, GX_SRC_REG, mpData->
 		LightsMask, GX_DF_CLAMP, GX_AF_SPOT);

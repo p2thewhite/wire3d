@@ -49,15 +49,17 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	d3dLight.Specular.b = 1.0F;
 	d3dLight.Specular.a = 1.0F;
 
-	d3dLight.Attenuation0 = 1.0F;
-	d3dLight.Attenuation1 = 0.0F;
-	d3dLight.Attenuation2 = 0.0F;
+	Float invRange = 1.0F / pLight->Range;
+	d3dLight.Attenuation0 = pLight->Constant;
+	d3dLight.Attenuation1 = pLight->Linear * invRange;
+	d3dLight.Attenuation2 = pLight->Quadric * invRange * invRange;
 
 	static Float sqrtMaxReal = MathF::Sqrt(MathF::MAX_REAL);
+	d3dLight.Range = sqrtMaxReal;
+
 	d3dLight.Falloff = 1.0F;
 	d3dLight.Theta = 0.0F;
 	d3dLight.Phi = 0.0F;
-	d3dLight.Range = sqrtMaxReal;
 
 	switch (pLight->Type)
 	{

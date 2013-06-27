@@ -46,6 +46,16 @@ public:
 	Vector3F Position;	// default: ZERO
 	Vector3F Direction;	// default: -UNIT_Z
 
+	// Distance attenuation, typically specified as a modulator
+	//   m = 1/(C + L/R*d + Q/(R*R)*d*d)
+	// where C is the constant coefficient, L is the linear coefficient,
+	// Q is the quadratic coefficient, R is the reference distance (range)
+	// and d is the distance from the light position to the vertex position. 
+	Float Constant;		// default: 1
+	Float Linear;		// default: 0
+	Float Quadric;		// default: 0
+	Float Range;		// default: Sqrt(MathF::MAX_REAL)
+
 	// parameters for spot lights
 	Float Angle;		// default: Math::PI
 	Float Exponent;		// default: 1
