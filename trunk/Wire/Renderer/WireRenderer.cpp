@@ -1630,7 +1630,9 @@ void Renderer::Set(const Lights* pLights)
 			SetLight(rLights[unit], unit);
 		}
 
-		ambient += rLights[unit]->Ambient;
+		ambient.R() = MathF::Max(ambient.R(), rLights[unit]->Ambient.R());
+		ambient.G() = MathF::Max(ambient.G(), rLights[unit]->Ambient.G());
+		ambient.B() = MathF::Max(ambient.B(), rLights[unit]->Ambient.B());
 	}
 
 	for (; unit < mLights.GetQuantity(); unit++)
@@ -1643,7 +1645,6 @@ void Renderer::Set(const Lights* pLights)
 
 	if (lightCount > 0)
 	{
-		ambient.Saturate();
 		EnableLighting(ambient);
 	}
 	else
