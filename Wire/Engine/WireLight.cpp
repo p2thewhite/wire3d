@@ -25,7 +25,6 @@ Light::Light(LightType type)
 	Constant(1),
 	Linear(0),
 	Quadric(0),
-	Range(MathF::Sqrt(MathF::MAX_REAL)),
 	Angle(MathF::PI),
 	Exponent(1.0F),
 	Mask(static_cast<UInt>(~0)),

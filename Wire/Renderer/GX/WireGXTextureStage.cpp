@@ -18,14 +18,37 @@ const UChar PdrRendererData::TEX_BLEND[Material::BM_QUANTITY] =
 	GX_MODULATE,		// Material::BM_MODULATE
 	GX_PASSCLR,			// Material::BM_PASS
 	GX_BLEND,			// Material::BM_BLEND
-	GX_DECAL			// Material::BM_DECAL
+	GX_DECAL,			// Material::BM_DECAL
+	0,					// Material::BM_ADD
 };
 
 //----------------------------------------------------------------------------
 void Renderer::EnableTextureStage(Material::BlendMode blendMode, UInt unit,
 	Bool hasAlpha)
 {
-	GXSetTevOp(GX_TEVSTAGE0 + unit, PdrRendererData::TEX_BLEND[blendMode]);
+	UInt stage = GX_TEVSTAGE0 + unit;
+	if (blendMode != Material::BM_ADD)
+	{
+		GXSetTevOp(stage, PdrRendererData::TEX_BLEND[blendMode]);
+	}
+	else
+	{
+		UChar defColor = GX_CC_RASC;
+		UChar defAlpha = GX_CA_RASA;
+
+		if (stage != GX_TEVSTAGE0)
+		{
+			defColor = GX_CC_CPREV;
+			defAlpha = GX_CA_APREV;
+		}
+
+		GXSetTevColorIn(stage, GX_CC_ZERO, GX_CC_TEXC, GX_CC_ONE, defColor);
+ 		GXSetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, defAlpha);
+		GXSetTevKAlphaSel(stage, GX_TEV_KASEL_1);
+
+		GXSetTevColorOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
+		GXSetTevAlphaOp(stage, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_ENABLE, GX_TEVPREV);
+	}
 }
 
 //----------------------------------------------------------------------------

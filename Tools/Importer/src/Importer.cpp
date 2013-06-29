@@ -1118,6 +1118,9 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 	Light* pLight = WIRE_NEW Light;
 	Light::LightType lt = Light::LT_POINT;
 
+	Float range = GetFloat(pXmlNode, "Range");
+	Float intensity = GetFloat(pXmlNode, "Intensity");
+
 	if (Is("Point", pType))
 	{
 		lt = Light::LT_POINT;
@@ -1150,6 +1153,14 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 	}
 
 	pLight->Type = lt;
+
+	if (range > 0.0F && intensity > 0.0F)
+	{
+		pLight->Constant = 1.0F / intensity;
+		pLight->Linear = 0;
+		pLight->Quadric = (1.0F/(range*range)) * (1.0F/intensity);
+	}
+
 	Bool hasValue;
 	ColorRGB ambient = GetColorRGB(pXmlNode, "Ambient", hasValue); 
 	if (hasValue)
@@ -2088,6 +2099,11 @@ Texture2D* Importer::ParseTexture(rapidxml::xml_node<>* pXmlNode,
 			else if (Is("Decal", attr->value()))
 			{
 				rBlendMode = Material::BM_DECAL;
+				break;
+			}
+			else if (Is("Add", attr->value()))
+			{
+				rBlendMode = Material::BM_ADD;
 				break;
 			}
 		}
