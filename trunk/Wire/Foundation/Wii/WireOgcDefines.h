@@ -87,6 +87,11 @@ typedef guVector Vec;
 #define GXSetViewportJitter GX_SetViewportJitter
 #define GXSetVtxAttrFmt GX_SetVtxAttrFmt
 #define GXSetVtxDesc GX_SetVtxDesc
+#define GXSetTevAlphaIn GX_SetTevAlphaIn
+#define GXSetTevAlphaOp GX_SetTevAlphaOp
+#define GXSetTevColorIn GX_SetTevColorIn
+#define GXSetTevColorOp GX_SetTevColorOp
+#define GXSetTevKAlphaSel GX_SetTevKAlphaSel
 #define GXSetTevOp GX_SetTevOp
 #define GXSetTevOrder GX_SetTevOrder
 #define GXTexCoord1x16 GX_TexCoord1x16

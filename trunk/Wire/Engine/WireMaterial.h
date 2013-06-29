@@ -36,6 +36,7 @@ public:
 		BM_PASS,		// C=Cf, A=Af
 		BM_BLEND,		// C=Ct+(1-Ct)*Cf, Ct=C1, Cf=C3, A=At*Af, At=A1, Af=A2
 		BM_DECAL,		// C=At*Ct+(1-At)*Cf, Ct=C1, Cf=C2, A=Af, Af=A1
+		BM_ADD,			// C=Ct+Cf, Ct=C1, Cf=C2, A=At+Af, At=C1, Af=A2
 		BM_QUANTITY
 	};
 	

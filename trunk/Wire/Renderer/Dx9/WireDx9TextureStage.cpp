@@ -34,11 +34,11 @@ const DWORD PdrRendererData::StateTextureStage::TEX_BLEND[
 
 	// Material::BM_DECAL
 	2, D3DTOP_BLENDTEXTUREALPHA, D3DTA_TEXTURE, 0,
-	1, D3DTOP_SELECTARG1, D3DTA_CURRENT, 0
+	1, D3DTOP_SELECTARG1, D3DTA_CURRENT, 0,
 
 	// Material::BM_ADD
-	// 	2, D3DTOP_ADD, D3DTA_TEXTURE, 0,
-	// 	2, D3DTOP_ADD, D3DTA_TEXTURE, 0
+ 	2, D3DTOP_ADD, D3DTA_TEXTURE, 0,
+ 	2, D3DTOP_ADD, D3DTA_TEXTURE, 0
 };
 
 //----------------------------------------------------------------------------
