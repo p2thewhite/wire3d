@@ -107,8 +107,8 @@ public:
 	inline void DetachAllEffects();
 
 	// LayerMask to be used with Camera's and Light's cullingMask
-	inline void SetLayerMask(UInt layerMask);
-	inline UInt GetLayerMask() const;
+	inline void SetLayerMask(UInt64 layerMask);
+	inline UInt64 GetLayerMask() const;
 
 	// Prepare subtree for static/dynamic batching
 	// (see comments below)
@@ -129,7 +129,8 @@ protected:
 	virtual void GetVisibleSet(Culler& rCuller, Bool noCull);
 
 	TArray<SpatialPtr> mChildren;
-	UInt mLayerMask;
+
+	UInt64 mLayerMask;	// default: 1
 
 	// Effect state.
 	// Attached effects apply to the RenderObject of this Node and all

@@ -43,7 +43,7 @@ void Camera::Init()
 {
 	SetFrustum(-0.5F, 0.5F, -0.4F, 0.4F, 1.0F, 100.0F);
 	SetViewport(0.0F, 1.0F, 1.0F, 0.0F);
-	mLayerMask = static_cast<UInt>(~0);
+	mLayerMask = static_cast<UInt64>(~0);
 }
 
 //----------------------------------------------------------------------------
