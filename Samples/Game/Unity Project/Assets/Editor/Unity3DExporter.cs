@@ -336,9 +336,8 @@ public class Unity3DExporter : EditorWindow
             subMeshIndex = 0;
         }
 
-        // TODO: no need for extra nodes when using layer masks
-        bool extraNode = false;
         List<Light> lights = GetLightsForRenderer(meshRenderer);
+        bool extraNode = false;
         if (lights.Count > 0 && transform.GetChildCount() > 0)
         {
             indent = indent + "  ";
