@@ -52,7 +52,9 @@ private:
 	Wire::Node* mpNode;
 	Wire::Node* mpGun;
 	Wire::CameraPtr mspCamera;
-	Wire::StateMaterialPtr mspMaterialState;
+	Wire::StateMaterialPtr mspMuzzleflashMaterialState;
+	Wire::LightPtr mspMuzzleflashLight;
+	Wire::ColorRGBA mMuzzleflashLightColor;
 
 	Float mShoot;
 	Bool mJump;

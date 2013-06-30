@@ -243,8 +243,13 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	Node* pMuzzleFlash = DynamicCast<Node>(mpGun->FindChild("muzzleFlash"));
 	WIRE_ASSERT(pMuzzleFlash);
 
-	mspMaterialState = pMuzzleFlash->GetState<StateMaterial>();
-	WIRE_ASSERT(mspMaterialState);
+	mspMuzzleflashMaterialState = pMuzzleFlash->GetState<StateMaterial>();
+	WIRE_ASSERT(mspMuzzleflashMaterialState);
+
+	NodeLight* pLightNode = mpNode->FindChild<NodeLight>();
+	WIRE_ASSERT(pLightNode);
+	mspMuzzleflashLight = pLightNode->Get();
+	mMuzzleflashLightColor = mspMuzzleflashLight->Color;
 
 	// since render state cannot be extracted from Unity materials, we have
 	// to set the appropriate states manually for the muzzle flash
@@ -384,10 +389,12 @@ void Player::UpdateGun(Double deltaTime)
 void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 {
 	// If not shooting, exit
-	if (mShoot < 1) 
+	if (mShoot < 1)
 	{
 		Float alpha = mShoot < 0 ? 0 : mShoot;
-		mspMaterialState->Ambient.A() = alpha;
+		mspMuzzleflashMaterialState->Ambient.A() = alpha;
+
+		mspMuzzleflashLight->Color = mMuzzleflashLightColor * alpha;
 
 		mShoot -= static_cast<Float>(deltaTime)*10.0F;
 		return;
