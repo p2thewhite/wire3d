@@ -1,8 +1,8 @@
 <Assets>
   <Lights>
-      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.2662745, 0.3019608, 0.2635294" Mask="FFFFFEFF" />
-      <Light Name="Directional Light Platform only" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.9843137, 0.9960784, 0.9294118" Mask="100" />
-      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.8268235, 0.8367059, 0.7807059" Mask="FFFFFEFF" />
+      <Light Name="Directional Light Blue" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.2662745, 0.3019608, 0.2635294" Mask="FFFFFCFF" Baked="1" />
+      <Light Name="Directional Light Platform only" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.9843137, 0.9960784, 0.9294118" Mask="100" Baked="1" />
+      <Light Name="Directional Light Yellow" Type="Directional" Direction="0, 0, 1" Ambient="0.2224375, 0.2509804, 0.2225965" Color="0.8268235, 0.8367059, 0.7807059" Mask="FFFFFCFF" Baked="1" />
   </Lights>
   <Meshes>
     <Mesh Name="Sphere002">
@@ -137,8 +137,8 @@
       <Texture Name="Assault Rifle.png" FilterMode="Trilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="11" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
-    <Material Name="muzzleFlash_lit">
-      <Texture Name="muzzleFlash.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" Usage="STATIC_DISCARD_ON_BIND" />
+    <Material Name="muzzleFlash">
+      <Texture Name="muzzleFlash.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="0.9411765, 0.8235294, 0.6666667, 1" />
     </Material>
     <Material Name="mainsqr_floor_big_diff3_layersTGA_lit">
@@ -146,93 +146,93 @@
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house1_column_diff_layerstga_0">
-      <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsquare_column2_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="8" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house6_diff_layerstga_0">
-      <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="house5_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsq_floor_bases_diff_layersTGA_0">
-      <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsq_floor_bases_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="arc01_diff_layersTGA_0">
-      <Texture Name="arc01_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="arc01_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="passage_diff_layersTGA_0">
-      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="stairs_diff_layersTGA_0">
-      <Texture Name="stairs_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="stairs_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsquare_column2_diff_layersTGA_0">
-      <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="flowerpots2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="airvent_diff_0">
-      <Texture Name="airvent_diff.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="airvent_diff.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsq_floor_small_diff_layersTGA_0">
-      <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsqr_floor_big_diff3_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsqr_floor_big_diff3_layersTGA_0">
-      <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsq_floor_small_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsquare_column_diff_layersTGA_0">
-      <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsquare_column_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house2_diff_layersTGA_0">
-      <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="scnd_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house1_diff_layerstga_0">
-      <Texture Name="house1_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="house1_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house4_diff_layersTGA_0">
-      <Texture Name="house4_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="house4_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="wall_deco1_diff_layersTGA_0">
-      <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="wall_deco1_diff_layersTGA.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="passage_diff_layersTGA_1">
-      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-1.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="passage_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsquare_wall_diff_layersTGA_0">
-      <Texture Name="mainsquare_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="mainsquare_wall_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="house7_diff_layersTGA_0">
-      <Texture Name="house2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <Texture Name="LightmapFar-0.png" FilterMode="Bilinear" AnisoLevel="3" WrapMode="Clamp" Mipmaps="1" Usage="STATIC_DISCARD_ON_BIND" />
+      <Texture Name="house2_diff_layersTGA.png" FilterMode="Trilinear" AnisoLevel="4" WrapMode="Repeat" Mipmaps="10" Usage="STATIC_DISCARD_ON_BIND" />
       <MaterialState Ambient="1, 1, 1, 1" />
     </Material>
     <Material Name="mainsq_floor_small_diff_layersTGA_lit">
@@ -250,7 +250,7 @@
   <Node Name="Boxstack North" Pos="0.7351524, 13.36697, -24.2028">
     <Node Name="Cube" Pos="-8.66, -7.856319, -14.92419">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.05" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -258,7 +258,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.46, -6.856319, -14.72396">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.05" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -266,7 +266,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.66, -5.856319, -14.92419">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.01" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.05" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -274,7 +274,7 @@
     </Node>
     <Node Name="Cube" Pos="-8.46, -4.856319, -14.72396">
       <Collider Shape="Box" Center="0, 0, 0" Size="1, 1, 1" />
-      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.99" />
+      <RigidBody Mass="7.5" Drag="0.3" AngularDrag="0.05" />
       <Light Name="Directional Light Blue" />
       <Light Name="Directional Light Yellow" />
       <Mesh Name="Cube" />
@@ -809,11 +809,9 @@
         <Mesh Name="Assault Rifle" />
         <Material Name="Assault Rifle_lit" />
       </Node>
-      <Node Name="muzzleFlash" Pos="0.01292884, 4.708735, 39.29217" Scale="30, 30, 30">
-        <Light Name="Directional Light Blue" />
-        <Light Name="Directional Light Yellow" />
+      <Node Name="muzzleFlash" Pos="0.01292884, 4.708735, 39.29217" Scale="30, 30, 30" Layer="9">
         <Mesh Name="polySurface6" />
-        <Material Name="muzzleFlash_lit" />
+        <Material Name="muzzleFlash" />
       </Node>
     </Node>
   </Node>

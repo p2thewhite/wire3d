@@ -246,6 +246,8 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	mspMaterialState = pMuzzleFlash->GetState<StateMaterial>();
 	WIRE_ASSERT(mspMaterialState);
 
+	// since render state cannot be extracted from Unity materials, we have
+	// to set the appropriate states manually for the muzzle flash
 	StateCull* pCullState = WIRE_NEW StateCull;
 	pCullState->CullFace = StateCull::CM_OFF;
 	pMuzzleFlash->AttachState(pCullState);
@@ -259,16 +261,15 @@ void Player::Register(PhysicsWorld* pPhysicsWorld)
 	StateZBuffer* pZBufferState = WIRE_NEW StateZBuffer;
 	pZBufferState->Writable = false;
 	pMuzzleFlash->AttachState(pZBufferState);
-
 	pMuzzleFlash->UpdateRS();
 
-	// TODO: use NodeLight
 	WIRE_ASSERT(pMuzzleFlash->GetRenderObject());
 	pMuzzleFlash->GetRenderObject()->GetLights()->RemoveAll();
 	Light* pLight = WIRE_NEW Light(Light::LT_POINT);
 	pLight->Ambient = ColorRGB::WHITE;
 	pMuzzleFlash->GetRenderObject()->GetLights()->Append(pLight);
 	pMuzzleFlash->AttachChild(WIRE_NEW NodeLight(pLight));
+	pMuzzleFlash->GetRenderObject()->GetMaterial()->SetBlendMode(Material::BM_MODULATE);
 
 	mspCharacter = mpNode->GetController<CharacterController>();
 	WIRE_ASSERT(mspCharacter);
