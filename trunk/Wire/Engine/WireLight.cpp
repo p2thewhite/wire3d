@@ -27,7 +27,7 @@ Light::Light(LightType type)
 	Quadric(0),
 	Angle(MathF::PI),
 	Exponent(1.0F),
-	Mask(static_cast<UInt>(~0)),
+	LayerMask(static_cast<UInt64>(~0)),
 	Enabled(true)
 {
 }

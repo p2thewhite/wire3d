@@ -1174,9 +1174,15 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 		pLight->Color = color;
 	}
 
-	UInt cullingMask = static_cast<UInt>(~0);
-	GetHex(pXmlNode, "Mask", cullingMask);
-	pLight->Mask = cullingMask;
+	UInt mask = static_cast<UInt>(~0);
+	GetHex(pXmlNode, "Mask", mask);
+	UInt64 layerMask = mask;
+	if (!GetBool(pXmlNode, "Lightmap"))
+	{
+		layerMask |= 0x100000000;
+	}
+
+	pLight->LayerMask = layerMask;
 
 	Bool enabled = true;
 	GetBool(pXmlNode, "Enabled", enabled);
@@ -1228,8 +1234,9 @@ void Importer::ParseCamera(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 	pCam->SetFrustum(fov, aspectRatio, near, far);
 	pCam->SetViewport(leftV, rightV, topV, bottomV);
 
-	UInt cullingMask = static_cast<UInt>(~0);
-	GetHex(pXmlNode, "Mask", cullingMask);
+	UInt mask = static_cast<UInt>(~0);
+	GetHex(pXmlNode, "Mask", mask);
+	UInt64 cullingMask = mask;
 	pCam->SetLayerMask(cullingMask);
 
 	NodeCamera* pCameraNode = WIRE_NEW NodeCamera(pCam);

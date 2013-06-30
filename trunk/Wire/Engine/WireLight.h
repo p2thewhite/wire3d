@@ -59,7 +59,8 @@ public:
 	Float Angle;		// default: Math::PI
 	Float Exponent;		// default: 1
 
-	UInt Mask;			// default: 0xFFFFFFFF
+	// default behavior is to light all layers
+	UInt64 LayerMask;	// default: 0xFFFFFFFFFFFFFFFF
 
 	Bool Enabled;		// default: true
 

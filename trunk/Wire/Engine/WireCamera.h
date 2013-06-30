@@ -152,8 +152,8 @@ public:
 	void GetPickRay(const Vector2F& rPosition, Vector3F& rRayOrigin,
 		Vector3F& rRayDirection);
 
-	inline void SetLayerMask(UInt layerMask);
-	inline UInt GetLayerMask() const;
+	inline void SetLayerMask(UInt64 layerMask);
+	inline UInt64 GetLayerMask() const;
 
 private:
 	void Init();
@@ -173,7 +173,8 @@ private:
 	Float mPortTop;
 	Float mPortBottom;
 
-	UInt mLayerMask;
+	// default behavior is to cull all layers
+	UInt64 mLayerMask;	// default: 0xFFFFFFFFFFFFFFFF
 
 	// perspective or orthographic
 	Bool mIsPerspective;

@@ -797,7 +797,7 @@ void Node::Init(UInt quantity, UInt growBy)
 {
 	mChildren.SetMaxQuantity(quantity);
 	mChildren.SetGrowBy(growBy);
-	mLayerMask = static_cast<UInt>(~0);
+	mLayerMask = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -873,7 +873,7 @@ void Node::UpdateStateRenderObject(States* pStates, Lights* pLights)
 	pRenderObjectLights->SetMaxQuantity(pLights->GetQuantity());
 	for (UInt i = 0; i < pLights->GetQuantity(); i++)
 	{
-		if (((*pLights)[i]->Mask & mLayerMask) != 0)
+		if (((*pLights)[i]->LayerMask & mLayerMask) != 0)
 		{
 			pRenderObjectLights->Append((*pLights)[i]);
 		}

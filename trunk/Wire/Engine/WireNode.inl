@@ -118,13 +118,13 @@ inline const RenderObject* Node::GetRenderObject() const
 }
 
 //----------------------------------------------------------------------------
-inline void Node::SetLayerMask(UInt layerMask)
+inline void Node::SetLayerMask(UInt64 layerMask)
 {
 	mLayerMask = layerMask;
 }
 
 //----------------------------------------------------------------------------
-inline UInt Node::GetLayerMask() const
+inline UInt64 Node::GetLayerMask() const
 {
 	return mLayerMask;
 }

@@ -923,7 +923,20 @@ public class Unity3DExporter : EditorWindow
         string lightName = mLightToName[light];
         
         Color ambient = RenderSettings.ambientLight;
-		Color color = light.color;       
+		Color color = light.color;
+
+        SerializedObject serialObj = new SerializedObject(light);
+        SerializedProperty lightmapProp = serialObj.FindProperty("m_Lightmapping");
+        const int realtimeOnly = 0;
+        string lightmap = string.Empty;
+        if (lightmapProp.intValue == realtimeOnly)
+        {
+            ambient = new Color(0, 0, 0, 0);
+        }
+        else
+        {
+            lightmap = " Lightmap=\"1\"";
+        }
 
         if (alreadyProcessed)
         {
@@ -947,14 +960,14 @@ public class Unity3DExporter : EditorWindow
                 float fIntensity = light.intensity == 0 ? 0.0001f : light.intensity;
                 intensity = " Intensity=\"" + fIntensity + "\"";
             }
-            
+
             string range = light.type != LightType.Directional ? " Range=\"" + light.range + "\"" : "";
             string mask = light.cullingMask == ~0 ? "" : " Mask=\"" + light.cullingMask.ToString("X") + "\"";
             string enabled = light.enabled ? "" : " Enabled=\"0\"";
             
             outFile.WriteLine(indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
                 "\"" + direction + range + intensity + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
-			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + enabled + " />");
+			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + enabled + lightmap + " />");
         }
 	}
 	
@@ -1479,26 +1492,55 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 
-        if (mesh.uv2.Length > 0 && !isCollisionMesh)
+        GameObject go = meshRenderer != null ? meshRenderer.gameObject : null;
+        bool isLightmapped = go && go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
+        if (isLightmapped)
         {
-            string uv1Name = meshName + ".uv0";
-            outFile.WriteLine(indent + "  <Uv0 Name=\"" + uv1Name + "\"" + le + " />");
-            if (!alreadyProcessed)
+            if (mesh.uv2.Length > 0 && !isCollisionMesh)
             {
-                SaveVector2s(mesh.uv2, uv1Name, lightmapTilingOffset);
+                string uv1Name = meshName + ".uv0";
+                outFile.WriteLine(indent + "  <Uv0 Name=\"" + uv1Name + "\"" + le + " />");
+                if (!alreadyProcessed)
+                {
+                    SaveVector2s(mesh.uv2, uv1Name, lightmapTilingOffset);
+                }
+            }
+
+            if (mesh.uv.Length > 0 && !isCollisionMesh)
+            {
+                bool hasUv2 = mesh.uv2.Length > 0;
+                string uv0Name = meshName + (hasUv2 ? ".uv1" : ".uv0");
+                string uvTag = hasUv2 ? "  <Uv1 Name=\"" : "  <Uv0 Name=\"";
+                outFile.WriteLine(indent + uvTag + uv0Name + "\"" + le + " />");
+                if (!alreadyProcessed)
+                {
+                    SaveVector2s(mesh.uv, uv0Name, new Vector4(1, 1, 0, 0));
+                }
             }
         }
-
-        if (mesh.uv.Length > 0 && !isCollisionMesh)
+        else
         {
-            bool hasUv2 = mesh.uv2.Length > 0;
-            string uv0Name = meshName + (hasUv2 ? ".uv1" : ".uv0");
-            string uvTag = hasUv2 ? "  <Uv1 Name=\"" : "  <Uv0 Name=\"";
-			outFile.WriteLine (indent + uvTag + uv0Name + "\"" + le + " />");
-			if (!alreadyProcessed) {
-				SaveVector2s (mesh.uv, uv0Name, new Vector4 (1, 1, 0, 0));
-			}
-		}
+            if (mesh.uv.Length > 0 && !isCollisionMesh)
+            {
+                string uv0Name = meshName + ".uv0";
+                outFile.WriteLine(indent + "  <Uv0 Name=\"" + uv0Name + "\"" + le + " />");
+                if (!alreadyProcessed)
+                {
+                    SaveVector2s(mesh.uv, uv0Name, new Vector4(1, 1, 0, 0));
+                }
+            }
+
+            if (mesh.uv2.Length > 0 && !isCollisionMesh)
+            {
+                string uv1Name = meshName + ".uv1";
+                outFile.WriteLine(indent + "  <Uv1 Name=\"" + uv1Name + "\"" + le + " />");
+                if (!alreadyProcessed)
+                {
+                    SaveVector2s(mesh.uv2, uv1Name, lightmapTilingOffset);
+                }
+            }
+        }
+        
        
 		outFile.WriteLine (indent + "</Mesh>");
 	}
