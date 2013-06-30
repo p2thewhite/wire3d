@@ -1119,7 +1119,6 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 	Light::LightType lt = Light::LT_POINT;
 
 	Float range = GetFloat(pXmlNode, "Range");
-	Float intensity = GetFloat(pXmlNode, "Intensity");
 
 	if (Is("Point", pType))
 	{
@@ -1154,11 +1153,9 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 
 	pLight->Type = lt;
 
-	if (range > 0.0F && intensity > 0.0F)
+	if (range > 0.0F)
 	{
-		pLight->Constant = 1.0F / intensity;
-		pLight->Linear = 0;
-		pLight->Quadric = (1.0F/(range*range)) * (1.0F/intensity);
+		pLight->Quadric = (1.0F/(0.01F*range*range));
 	}
 
 	Bool hasValue;
@@ -1177,7 +1174,7 @@ Light* Importer::ParseLight(rapidxml::xml_node<>* pXmlNode)
 	UInt mask = static_cast<UInt>(~0);
 	GetHex(pXmlNode, "Mask", mask);
 	UInt64 layerMask = mask;
-	if (!GetBool(pXmlNode, "Lightmap"))
+	if (!GetBool(pXmlNode, "Baked"))
 	{
 		layerMask |= 0x100000000;
 	}
