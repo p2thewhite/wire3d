@@ -18,6 +18,7 @@
 
 typedef guVector Vec;
 
+#define GX_LIGHT_NULL GX_LIGHTNULL
 #define GX_TEXCOORD_NULL GX_TEXCOORDNULL
 #define GX_COLOR_NULL GX_COLORNULL
 

@@ -298,6 +298,11 @@ void Renderer::DrawElements(UInt vertexCount, UInt indexCount,
 	mpData->IsFrameBufferDirty = true;
 
 	GXSetNumChans(1);
+	if (mpData->LightsMask)
+	{
+		GXSetChanCtrl(GX_COLOR0A0, GX_ENABLE, GX_SRC_REG, GX_SRC_REG,
+			mpData->LightsMask, GX_DF_CLAMP, GX_AF_SPOT);
+	}
 
 	Bool hasTextures = false;
 	if (mspMaterial)
