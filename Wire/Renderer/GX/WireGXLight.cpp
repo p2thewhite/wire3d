@@ -23,8 +23,6 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	if (!useLight)
 	{
 		mpData->LightsMask &= ~(1<<unit);
-		GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX,
-			mpData->LightsMask, GX_DF_NONE, GX_AF_NONE);
 		return;
 	}
 
@@ -99,8 +97,6 @@ void Renderer::SetLight(const Light* pLight, UInt unit)
 	GXLoadLightObjImm(&gxLight, 1 << unit);
 
 	mpData->LightsMask |= 1<<unit;
-	GXSetChanCtrl(GX_COLOR0A0, GX_ENABLE, GX_SRC_REG, GX_SRC_REG, mpData->
-		LightsMask, GX_DF_CLAMP, GX_AF_SPOT);
 }
 
 //----------------------------------------------------------------------------
@@ -116,9 +112,8 @@ void Renderer::EnableLighting(const ColorRGB& rAmbient)
 //----------------------------------------------------------------------------
 void Renderer::DisableLighting()
 {
-	GXSetNumChans(1);
-
 	mpData->LightsMask = 0;
-	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX, 0,
-		GX_DF_NONE, GX_AF_NONE);
+	GXSetNumChans(1);
+	GXSetChanCtrl(GX_COLOR0A0, GX_DISABLE, GX_SRC_VTX, GX_SRC_VTX,
+		GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
 }

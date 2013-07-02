@@ -869,7 +869,6 @@ void Renderer::Set(const Mesh* pMesh)
 void Renderer::Draw(const RenderObject* pRenderObject, const Transformation&
 	rTransformation, Bool restoreState)
 {
-	WIRE_ASSERT(pRenderObject);
 	// assert that this is really a RenderObject, not a cast Effect
 	WIRE_ASSERT(DynamicCast<RenderObject>(StaticCast<Object>(pRenderObject)));
 
