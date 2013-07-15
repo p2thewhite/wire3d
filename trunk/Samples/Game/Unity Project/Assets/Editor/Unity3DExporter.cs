@@ -1374,7 +1374,7 @@ public class Unity3DExporter : EditorWindow
     private bool IsLightmapped(Renderer renderer)
     {
         GameObject go = renderer != null ? renderer.gameObject : null;
-        return go && go.isStatic && (renderer.lightmapIndex < 254 && renderer.lightmapIndex != -1);
+        return go && (renderer.lightmapIndex < 254 && renderer.lightmapIndex != -1);
     }
 
     private int GetLightmapping(Light light)

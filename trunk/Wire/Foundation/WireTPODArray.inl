@@ -292,6 +292,7 @@ void TPODArray<T>::Insert(UInt i, const T& rElement)
 	WIRE_ASSERT(i <= mQuantity);
 	if (mQuantity == mMaxQuantity)
 	{
+		WIRE_ASSERT(mGrowBy > 0 /* cannot insert, not allowed to grow */);
 		SetMaxQuantity(mMaxQuantity+mGrowBy, true);
 	}
 

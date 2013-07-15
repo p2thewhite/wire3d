@@ -46,7 +46,7 @@ private:
 	Float mYaw;
 	Float mPitchIncrement;
 	Float mYawIncrement;
-	Float mRoll;
+	Wire::TArray<Float> mRolls;
 	Wire::Vector3F mMove;
 	Wire::Vector2F mLookAt;
 	Wire::Node* mpNode;

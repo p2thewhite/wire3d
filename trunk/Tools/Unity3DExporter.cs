@@ -336,24 +336,20 @@ public class Unity3DExporter : EditorWindow
             subMeshIndex = 0;
         }
 
+        List<Light> lights = GetLightsForRenderer(meshRenderer);
         bool extraNode = false;
-        bool isLightmapped = go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
-        if (!isLightmapped)
+        if (lights.Count > 0 && transform.GetChildCount() > 0)
         {
-            List<Light> lights = GetLightsForLayer(go.layer);
-            if (lights.Count > 0 && transform.GetChildCount() > 0)
-            {
-                indent = indent + "  ";
-                string isStatic = go.isStatic ? " Static=\"1\"" : "";
-                string layer = go.layer == 0 ? "" : " Layer=\"" + go.layer + "\"";
-                outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\"" + isStatic + layer + ">");
-                extraNode = true;
-            }
+            indent = indent + "  ";
+            string isStatic = go.isStatic ? " Static=\"1\"" : "";
+            string layer = go.layer == 0 ? "" : " Layer=\"" + go.layer + "\"";
+            outFile.WriteLine(indent + "<Node Name=\"" + go.name + "\"" + isStatic + layer + ">");
+            extraNode = true;
+        }
 
-            foreach (Light light in lights)
-            {
-                WriteLight(light, outFile, indent);
-            }
+        foreach (Light light in lights)
+        {
+            WriteLight(light, outFile, indent);
         }
 
         if (exportSubmeshes)
@@ -372,16 +368,20 @@ public class Unity3DExporter : EditorWindow
         }
 	}
 
-    private List<Light> GetLightsForLayer(int layer)
+    private List<Light> GetLightsForRenderer(Renderer renderer)
     {
         List<Light> lights = new List<Light>();
 
-        int layerMask = 1 << layer;
+        int layerMask = 1 << renderer.gameObject.layer;
         foreach (Light light in mLightToName.Keys)
         {
-            if ((layerMask & light.cullingMask) != 0)
+            const int realtimeOnly = 0;
+            if (!IsLightmapped(renderer) || (GetLightmapping(light) == realtimeOnly))
             {
-                lights.Add(light);
+                if ((layerMask & light.cullingMask) != 0)
+                {
+                    lights.Add(light);
+                }
             }
         }
 
@@ -681,11 +681,8 @@ public class Unity3DExporter : EditorWindow
             Light[] lights = transform.gameObject.GetComponentsInChildren<Light>();
             foreach (Light light in lights)
             {
-                SerializedObject serialObj = new SerializedObject(light);
-                SerializedProperty lightmapProp = serialObj.FindProperty("m_Lightmapping");
                 const int bakedOnly = 2;
-
-                if (lightmapProp.intValue != bakedOnly)
+                if (GetLightmapping(light) != bakedOnly)
                 {
                     if (!foundLight)
                     {
@@ -923,19 +920,17 @@ public class Unity3DExporter : EditorWindow
         string lightName = mLightToName[light];
         
         Color ambient = RenderSettings.ambientLight;
-		Color color = light.color;
+		Color color = light.color * light.intensity;
 
-        SerializedObject serialObj = new SerializedObject(light);
-        SerializedProperty lightmapProp = serialObj.FindProperty("m_Lightmapping");
-        const int realtimeOnly = 0;
         string lightmap = string.Empty;
-        if (lightmapProp.intValue == realtimeOnly)
+        const int realtimeOnly = 0;
+        if (GetLightmapping(light) == realtimeOnly)
         {
             ambient = new Color(0, 0, 0, 0);
         }
         else
         {
-            lightmap = " Lightmap=\"1\"";
+            lightmap = " Baked=\"1\"";
         }
 
         if (alreadyProcessed)
@@ -950,23 +945,12 @@ public class Unity3DExporter : EditorWindow
                 direction = " Direction=\"0, 0, 1\"";
             }
 
-            string intensity = string.Empty;
-            if (light.type == LightType.Directional)
-            {
-                color = color * light.intensity;
-            }
-            else
-            {
-                float fIntensity = light.intensity == 0 ? 0.0001f : light.intensity;
-                intensity = " Intensity=\"" + fIntensity + "\"";
-            }
-
             string range = light.type != LightType.Directional ? " Range=\"" + light.range + "\"" : "";
             string mask = light.cullingMask == ~0 ? "" : " Mask=\"" + light.cullingMask.ToString("X") + "\"";
             string enabled = light.enabled ? "" : " Enabled=\"0\"";
             
             outFile.WriteLine(indent + "  " + "<Light Name=\"" + lightName + "\" Type=\"" + light.type +
-                "\"" + direction + range + intensity + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
+                "\"" + direction + range + " Ambient=\"" + ambient.r + ", " + ambient.g + ", " + ambient.b +
 			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + enabled + lightmap + " />");
         }
 	}
@@ -1112,7 +1096,6 @@ public class Unity3DExporter : EditorWindow
         if (left != 0 || right != 1 || bottom != 0 || top != 1)
         {
             viewport = "Left=\"" + left + "\" Right=\"" + right + "\" Top=\"" + top + "\" Bottom=\"" + bottom + "\" ";
-            Debug.Log("not std: " + left + ", " + right + ", " + top + ", " + bottom);
         }
 
         string mask = camera.cullingMask == ~0 ? "" : " Mask=\"" + camera.cullingMask.ToString("X") + "\" ";
@@ -1126,15 +1109,13 @@ public class Unity3DExporter : EditorWindow
         string lightMapIndex = string.Empty;
         if (meshRenderer.lightmapIndex != -1)
         {
-            lightMapIndex = "_" + meshRenderer.lightmapIndex;
+            lightMapIndex += "_" + meshRenderer.lightmapIndex;
         }
-        else
+
+        List<Light> lights = GetLightsForRenderer(meshRenderer);
+        if (lights.Count > 0)
         {
-            List<Light> lights = GetLightsForLayer(meshRenderer.gameObject.layer);
-            if (lights.Count > 0)
-            {
-                lightMapIndex = "_lit";
-            }
+            lightMapIndex += "_lit";
         }
 
         return material.name + lightMapIndex;
@@ -1177,21 +1158,12 @@ public class Unity3DExporter : EditorWindow
 		Texture2D texture = material.mainTexture as Texture2D;
 
         bool usesLightmap = meshRenderer.lightmapIndex != -1 && meshRenderer.lightmapIndex != 254;
-        bool isRealtimeLit = false;
-        if (!usesLightmap)
-        {
-            List<Light> lights = GetLightsForLayer(meshRenderer.gameObject.layer);
-            if (lights.Count > 0)
-            {
-                isRealtimeLit = true;
-            }
-        }
-
+        bool isRealtimeLit = GetLightsForRenderer(meshRenderer).Count > 0;
 
         if (usesLightmap)
         {
             Texture2D lightmap = LightmapSettings.lightmaps[meshRenderer.lightmapIndex].lightmapFar;
-            WriteTexture(lightmap, outFile, indent, true);
+            WriteTexture(lightmap, outFile, indent, true, isRealtimeLit);
         }
 
         WriteTexture(texture, outFile, indent, false, isRealtimeLit);
@@ -1261,7 +1233,14 @@ public class Unity3DExporter : EditorWindow
 
         if (isRealtimeLit)
         {
-            textureXmlNode += "BlendMode=\"Modulate\" ";
+            if (isLightmap)
+            {
+                textureXmlNode += "BlendMode=\"Add\" ";
+            }
+            else
+            {
+                textureXmlNode += "BlendMode=\"Modulate\" ";
+            }
         }
 
 		if (mDiscardTexturesOnBind)
@@ -1392,6 +1371,19 @@ public class Unity3DExporter : EditorWindow
         return mesh.name + lightmapPostfix + "_" + mesh.GetInstanceID().ToString("X8");
     }
 
+    private bool IsLightmapped(Renderer renderer)
+    {
+        GameObject go = renderer != null ? renderer.gameObject : null;
+        return go && (renderer.lightmapIndex < 254 && renderer.lightmapIndex != -1);
+    }
+
+    private int GetLightmapping(Light light)
+    {
+        SerializedObject serialObj = new SerializedObject(light);
+        SerializedProperty lightmapProp = serialObj.FindProperty("m_Lightmapping");
+        return lightmapProp.intValue;
+    }
+
 	private void WriteMesh(Mesh mesh, MeshRenderer meshRenderer, StreamWriter outFile, string indent,
         int subMeshIndex = -1, bool isCollisionMesh = false)
 	{
@@ -1492,9 +1484,7 @@ public class Unity3DExporter : EditorWindow
 			}
 		}
 
-        GameObject go = meshRenderer != null ? meshRenderer.gameObject : null;
-        bool isLightmapped = go && go.isStatic && (meshRenderer.lightmapIndex < 254 && meshRenderer.lightmapIndex != -1);
-        if (isLightmapped)
+        if (IsLightmapped(meshRenderer))
         {
             if (mesh.uv2.Length > 0 && !isCollisionMesh)
             {
