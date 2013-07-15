@@ -23,7 +23,7 @@ Player::Player(Camera* pCamera)
 	mYaw(0),
 	mPitchIncrement(0),
 	mYawIncrement(0),
-	mRoll(0),
+	mRolls(3, 0),
 	mMove(Vector3F::ZERO),
 	mLookAt(Vector2F::ZERO),
 	mpNode(NULL),
@@ -224,7 +224,20 @@ void Player::ProcessInput()
 		GetCapability(Tilt::TYPE, false));
 	if (pTilt)
 	{
-		mRoll = MathF::DEG_TO_RAD * (pTilt->GetLeft());
+		Float tilt = MathF::DEG_TO_RAD * (pTilt->GetLeft());
+		if (mRolls.GetQuantity() == mRolls.GetMaxQuantity())
+		{
+			for (UInt i = 1; i < mRolls.GetQuantity(); i++)
+			{
+				mRolls[i-1] = mRolls[i];
+			}
+
+			mRolls[mRolls.GetQuantity()-1] = tilt;
+		}
+		else
+		{
+			mRolls.Append(tilt);
+		}
 	}
 }
 
@@ -379,7 +392,19 @@ void Player::UpdateGun(Double deltaTime)
 	right.Normalize();
 	up.Normalize();
 	Matrix3F mat(-right, up, pickDirection, true);
-	Matrix3F roll(Vector3F(0, 0, 1), mRoll);
+
+	// to reduce the Wiimote's tilt jitter we average the last few sampled
+	// tilt values
+	Float tilt = 0;
+	for (UInt i = 0; i < mRolls.GetQuantity(); i++)
+	{
+		tilt += mRolls[i];
+	}
+
+	WIRE_ASSERT(mRolls.GetQuantity() > 0);
+	tilt /= mRolls.GetQuantity();
+
+	Matrix3F roll(Vector3F(0, 0, 1), tilt);
 	mpGun->Local.SetRotate(mat * roll);
 
 	UpdateShot(deltaTime, cursorPosition);
