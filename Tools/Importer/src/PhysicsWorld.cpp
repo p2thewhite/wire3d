@@ -5,7 +5,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(PhysicsWorld, Object);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(PhysicsWorld, Wire::Object);
 
 //----------------------------------------------------------------------------
 PhysicsWorld::PhysicsWorld(const Vector3F& rGravity)
@@ -38,9 +38,9 @@ PhysicsWorld::PhysicsWorld(const Vector3F& rGravity)
 PhysicsWorld::~PhysicsWorld()
 {
 	//cleanup in the reverse order of creation/initialization
-	while (mControllerMap.GetQuantity() > 0)
+	while (mCollisionObjectMap.GetQuantity() > 0)
 	{
-		THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(&mControllerMap);
+		THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(&mCollisionObjectMap);
 		btCollisionObject* pKey = NULL;
 		CollisionObjectController** pValue = it.GetFirst(&pKey);
 		WIRE_ASSERT(pValue && *pValue);
@@ -64,8 +64,8 @@ PhysicsWorld::~PhysicsWorld()
 				pMeshShape->getMeshInterface());
 			IndexedMeshArray& rMeshArray = pMeshInterface->getIndexedMeshArray();
 
-			if (!mCollisionShapes[i].ReferencedObject0 &&
-				!mCollisionShapes[i].ReferencedObject1)
+			if (!mCollisionShapes[i].VBReference &&
+				!mCollisionShapes[i].IBReference)
 			{
 				for (Int k = 0; k < rMeshArray.size(); k++)
 				{
@@ -107,37 +107,36 @@ void PhysicsWorld::AddRigidBody(btRigidBody* pRigidBody)
 }
 
 //----------------------------------------------------------------------------
-void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, Object*
-	pReferencedObject0, Object* pReferencedObject1)
+void PhysicsWorld::AddController(PhysicsController* pController)
 {
-	CollisionShapeItem item;
-	item.CollisionShape = pShape;
-	item.ReferencedObject0 = pReferencedObject0;
-	item.ReferencedObject1 = pReferencedObject1;
-	mCollisionShapes.Append(item);
+	if (!pController)
+	{
+		return;
+	}
+
+	WIRE_ASSERT(!mPhysicsControllers.Find(pController));
+	mPhysicsControllers.Append(pController);
 }
 
 //----------------------------------------------------------------------------
-RigidBodyController* PhysicsWorld::GetController(btRigidBody* pRigidBody)
+void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, VertexBuffer*
+	pVBRef, IndexBuffer* pIBRef)
 {
-	CollisionObjectController** pValue = mControllerMap.Find(pRigidBody);
-	if (pValue)
-	{
-		WIRE_ASSERT(DynamicCast<RigidBodyController>(*pValue));
-		return StaticCast<RigidBodyController>(*pValue);
-	}
-
-	return NULL;
+	CollisionShapeItem item;
+	item.CollisionShape = pShape;
+	item.VBReference = pVBRef;
+	item.IBReference = pIBRef;
+	mCollisionShapes.Append(item);
 }
 
 //----------------------------------------------------------------------------
 RigidBodyController* PhysicsWorld::CreateController(btRigidBody* pRigidBody)
 {
-	WIRE_ASSERT(mControllerMap.Find(pRigidBody) == NULL);
+	WIRE_ASSERT(mCollisionObjectMap.Find(pRigidBody) == NULL);
 
 	RigidBodyController* pController = WIRE_NEW RigidBodyController(this,
 		pRigidBody);
-	mControllerMap.Insert(pRigidBody, pController);
+	mCollisionObjectMap.Insert(pRigidBody, pController);
 	return pController;
 }
 
@@ -145,7 +144,7 @@ RigidBodyController* PhysicsWorld::CreateController(btRigidBody* pRigidBody)
 CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
 	btKinematicCharacterController* pCharacter)
 {
-	WIRE_ASSERT(mControllerMap.Find(pGhost) == NULL);
+	WIRE_ASSERT(mCollisionObjectMap.Find(pGhost) == NULL);
 
 	if (!mpGhostPairCallback)
 	{
@@ -156,16 +155,21 @@ CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
 
 	CharacterController* pController = WIRE_NEW CharacterController(this,
 		pGhost, pCharacter);
-	mControllerMap.Insert(pGhost, pController);
+	mCollisionObjectMap.Insert(pGhost, pController);
 	return pController;
 }
 
 //----------------------------------------------------------------------------
-void PhysicsWorld::RemoveController(CollisionObjectController* pController,
+void PhysicsWorld::RemoveController(PhysicsController* pController,
 	Bool destroyCollisionObject)
 {
+	if (mPhysicsControllers.Find(pController))
+	{
+		mPhysicsControllers.Remove(pController);
+	}
+
 	THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(
-		&mControllerMap);
+		&mCollisionObjectMap);
 	btCollisionObject* pKey = NULL;
 
 	for (CollisionObjectController** pValue = it.GetFirst(&pKey); pValue;
@@ -174,7 +178,7 @@ void PhysicsWorld::RemoveController(CollisionObjectController* pController,
 		WIRE_ASSERT(pValue && *pValue);
 		if (*pValue == pController)
 		{
-			mControllerMap.Remove(pKey);
+			mCollisionObjectMap.Remove(pKey);
 			break;
 		}
 	}
@@ -225,7 +229,7 @@ void PhysicsWorld::DestroyCollisionObject(btCollisionObject* pCollisionObject)
 void PhysicsWorld::ToggleDebugShapes(Bool show, Bool destroyOnHide)
 {
 	THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(
-		&mControllerMap);
+		&mCollisionObjectMap);
 	btCollisionObject* pKey;
 
 	for (CollisionObjectController** pValue = it.GetFirst(&pKey); pValue;

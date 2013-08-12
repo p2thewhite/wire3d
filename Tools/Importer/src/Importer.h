@@ -157,7 +157,7 @@ private:
 	void ParseRigidBodyInfo(RigidBodyInfo& rInfo, rapidxml::xml_node<>* pXmlNode);
 	void AddRigidBodyController(Wire::Spatial* pSpatial, btCollisionShape* pCollisionShape,
 		RigidBodyInfo& rInfo, const Wire::Vector3F& rCenter = Wire::Vector3F::ZERO,
-		Wire::Object* pObjRef0 = NULL, Wire::Object* pObjRef1 = NULL);
+		Wire::VertexBuffer* pVBRef = NULL, Wire::IndexBuffer* pIBRef = NULL);
 	btTransform GetBtTransform(Wire::Spatial* pSpatial, const Wire::Vector3F& rCenter);
 
 	PhysicsWorldPtr mspPhysicsWorld;

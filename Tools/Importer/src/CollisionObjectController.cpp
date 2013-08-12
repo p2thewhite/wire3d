@@ -4,13 +4,13 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(CollisionObjectController, Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(CollisionObjectController, PhysicsController);
 
 //----------------------------------------------------------------------------
 CollisionObjectController::CollisionObjectController(PhysicsWorld* pPhysicsWorld,
 	btCollisionObject* pCollisionObject)
 	:
-	mpPhysicsWorld(pPhysicsWorld),
+	PhysicsController(pPhysicsWorld),
 	mpCollisionObject(pCollisionObject)
 {
 }
@@ -27,11 +27,7 @@ CollisionObjectController::~CollisionObjectController()
 //----------------------------------------------------------------------------
 void CollisionObjectController::Unbind()
 {
-	if (mpPhysicsWorld)
-	{
-		mpPhysicsWorld->RemoveController(this);
-		mpPhysicsWorld = NULL;
-	}
+	PhysicsController::Unbind();
 
 	mpCollisionObject = NULL;
 }

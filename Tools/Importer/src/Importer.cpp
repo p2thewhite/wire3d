@@ -827,7 +827,7 @@ btTransform Importer::GetBtTransform(Spatial* pSpatial, const Vector3F& rCenter)
 //----------------------------------------------------------------------------
 void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 	pCollisionShape, RigidBodyInfo& rInfo, const Vector3F& rCenter,
-	Object* pObjRef0, Object* pObjRef1)
+	VertexBuffer* pVBRef, IndexBuffer* pIBRef)
 {
 	btTransform transform = GetBtTransform(pSpatial, rCenter);
 
@@ -869,7 +869,7 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 		pRigidBody->setDamping(rInfo.Damping, rInfo.AngularDamping);
 	}
 
-	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pObjRef0, pObjRef1);
+	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pVBRef, pIBRef);
 	mspPhysicsWorld->AddRigidBody(pRigidBody);
 
 	RigidBodyController* pController = mspPhysicsWorld->CreateController(pRigidBody);

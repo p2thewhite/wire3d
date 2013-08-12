@@ -3,12 +3,12 @@
 #define COLLISIONOBJECTCONTROLLER_H
 
 #include "btBulletDynamicsCommon.h"
-#include "WireController.h"
+#include "PhysicsController.h"
 #include "WireNode.h"
 
 class PhysicsWorld;
 
-class CollisionObjectController : public Wire::Controller
+class CollisionObjectController : public PhysicsController
 {
 	WIRE_DECLARE_RTTI;
 
@@ -25,9 +25,8 @@ public:
 
 protected:
 	friend class PhysicsWorld;
-	void Unbind();
+	virtual void Unbind();
 
-	PhysicsWorld* mpPhysicsWorld;
 	btCollisionObject* mpCollisionObject;
 
 	Wire::NodePtr mspDebugShape;

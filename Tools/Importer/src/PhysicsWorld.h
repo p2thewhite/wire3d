@@ -8,12 +8,14 @@
 #include "CharacterController.h"
 #include "RigidBodyController.h"
 #include "WireColor32.h"
+#include "WireIndexBuffer.h"
 #include "WireMatrix3.h"
 #include "WireObject.h"
 #include "WireQuaternion.h"
 #include "WireRenderObject.h"
 #include "WireTHashTable.h"
 #include "WireVector3.h"
+#include "WireVertexBuffer.h"
 #include "WireStateWireframe.h"
 
 class PhysicsWorld : public Wire::Object
@@ -31,15 +33,15 @@ public:
 
 	inline Double GetFixedTimeStep();
 
+	void AddController(PhysicsController* pController);
 	void AddCollisionShape(btCollisionShape* pShape,
-		Object* pReferencedObject0 = NULL, Object* pReferencedObject1 = NULL);
+		Wire::VertexBuffer* pVBRef = NULL, Wire::IndexBuffer* pIBRef = NULL);
 
 	void AddRigidBody(btRigidBody* pRigidBody);
-	RigidBodyController* GetController(btRigidBody* pRigidBody);
 	RigidBodyController* CreateController(btRigidBody* pRigidBody);
 	CharacterController* CreateController(btCollisionObject* pGhost,
 		btKinematicCharacterController* pCharacter);
-	void RemoveController(CollisionObjectController* pController,
+	void RemoveController(PhysicsController* pController,
 		Bool destroyCollisionObject = true);
 
 	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false);
@@ -70,7 +72,8 @@ private:
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 	btGhostPairCallback* mpGhostPairCallback;
 
-	Wire::THashTable<btCollisionObject*, CollisionObjectController*> mControllerMap;
+	Wire::THashTable<btCollisionObject*, CollisionObjectController*> mCollisionObjectMap;
+	Wire::TArray<PhysicsController*> mPhysicsControllers;
 
 	struct CollisionShapeItem
 	{
@@ -79,8 +82,8 @@ private:
 			CollisionShape(pShape) {}
 
 		btCollisionShape* CollisionShape;
-		Wire::ObjectPtr ReferencedObject0;
-		Wire::ObjectPtr ReferencedObject1;
+		Wire::VertexBufferPtr VBReference;
+		Wire::IndexBufferPtr IBReference;
 	};
 
 	Wire::TArray<CollisionShapeItem> mCollisionShapes;

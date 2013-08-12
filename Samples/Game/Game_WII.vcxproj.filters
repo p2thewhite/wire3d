@@ -7,9 +7,6 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{b672413d-79bc-4f13-8b89-39568b340ecf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Inline Files">
-      <UniqueIdentifier>{1493315e-f73a-414a-a030-207a249564c1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -21,6 +18,9 @@
     <ClInclude Include="src\ProbeRobot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Elevator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -30,6 +30,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProbeRobot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Elevator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

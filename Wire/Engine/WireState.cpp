@@ -12,7 +12,7 @@
 #include "WireStateCull.h"
 #include "WireStateFog.h"
 #include "WireStateMaterial.h"
-#include "WireStateWireFrame.h"
+#include "WireStateWireframe.h"
 #include "WireStateZBuffer.h"
 
 using namespace Wire;

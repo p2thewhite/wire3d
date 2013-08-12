@@ -12,10 +12,10 @@ class Player : public Wire::Controller
 	WIRE_DECLARE_RTTI;
 
 public:
-	Player(Wire::Camera* pCamera);
+	Player(Wire::Camera* pCamera, PhysicsWorld* pPhysicsWorld);
 
 	virtual Bool Update(Double appTime);
-	void Register(PhysicsWorld* pPhysicsWorld);
+	virtual void OnAttach();
 	void LookAt(const Wire::Vector2F& rLookAt);
 
 private:
