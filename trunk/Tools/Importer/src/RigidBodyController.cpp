@@ -18,6 +18,7 @@ RigidBodyController::RigidBodyController(PhysicsWorld* pPhysicsWorld,
 RigidBodyController::~RigidBodyController()
 {
 }
+
 //----------------------------------------------------------------------------
 Bool RigidBodyController::Update(Double appTime)
 {
@@ -55,4 +56,3 @@ Bool RigidBodyController::Update(Double appTime)
 
 	return true;
 }
-

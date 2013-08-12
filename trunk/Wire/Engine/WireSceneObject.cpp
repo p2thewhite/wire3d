@@ -43,11 +43,13 @@ void SceneObject::AttachController(Controller* pController)
 		}
 	}
 
+	// Controller not in current list, add it.
+	mControllers.Append(pController);
+
 	// Bind the controller to the object.
 	pController->SetSceneObject(this);
 
-	// Controller not in current list, add it.
-	mControllers.Append(pController);
+	pController->OnAttach();
 }
 
 //----------------------------------------------------------------------------
@@ -57,6 +59,8 @@ void SceneObject::DetachController(Controller* pController)
 	{
 		if (pController == mControllers[i])
 		{
+			pController->OnDetach();
+
 			// Unbind the controller from the object.
 			pController->SetSceneObject(NULL);
 
@@ -75,6 +79,7 @@ void SceneObject::DetachAllControllers()
 	{
 		// Unbind the controller from the object.
 		Controller* pController = mControllers[i];
+		pController->OnDetach();
 		pController->SetSceneObject(NULL);
 	}
 

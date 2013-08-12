@@ -65,6 +65,10 @@
 			Name="Header Files"
 			>
 			<File
+				RelativePath=".\src\Elevator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Game.h"
 				>
 			</File>
@@ -81,6 +85,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath=".\src\Elevator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Game.cpp"
 				>
 			</File>
@@ -92,10 +100,6 @@
 				RelativePath=".\src\ProbeRobot.cpp"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Inline Files"
-			>
 		</Filter>
 	</Files>
 	<Globals>

@@ -17,3 +17,13 @@ inline SceneObject* Controller::GetSceneObject() const
 {
 	return mpSceneObject;
 }
+
+//----------------------------------------------------------------------------
+inline void Controller::OnAttach()
+{
+}
+
+//----------------------------------------------------------------------------
+inline void Controller::OnDetach()
+{
+}

@@ -188,6 +188,10 @@
 			Name="Header Files"
 			>
 			<File
+				RelativePath=".\src\Elevator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Game.h"
 				>
 			</File>
@@ -203,6 +207,10 @@
 		<Filter
 			Name="Source Files"
 			>
+			<File
+				RelativePath=".\src\Elevator.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\src\Game.cpp"
 				>

@@ -10,9 +10,6 @@
     <ClCompile Include="src\Importer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\PhysicsWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -20,6 +17,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RigidBodyController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,31 +33,31 @@
     <ClInclude Include="src\Importer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\PhysicsController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\PhysicsWorld.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\PicoPNG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rapidxml.hpp">
+    <ClInclude Include="src\RigidBodyController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\RigidBodyController.h">
+    <ClInclude Include="src\rapidxml.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PhysicsController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{c682005e-6211-47fd-89a7-cc834f65146a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{12cc83e8-30b4-4ed2-88ba-34fa0af598f4}</UniqueIdentifier>
+      <UniqueIdentifier>{ce4e2477-6a0a-42da-a8f9-507d53074cc1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Inline Files">
-      <UniqueIdentifier>{ae3dbeac-c3dd-4a43-8804-cb62c8f64529}</UniqueIdentifier>
+      <UniqueIdentifier>{7d54e60e-0cff-4412-8c6d-1c456eb36812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0ccdda54-31c7-43c4-9401-9d4a2b6d1454}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Game::Game() 
  	:
+// TODO: remove comment
 // 	WIREAPPLICATION(
 // 		ColorRGBA(0.0F, 0.0F, 0.0F, 1.0F),	// background color
 // 		// The following parameters are PC only:
@@ -367,12 +368,10 @@ Node* Game::LoadAndInitializeScene()
 
 	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, pRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
-	mspProbeRobot->Register(mspPhysicsWorld->Get());
 
 	// Create and configure player controller
-	mspPlayer = WIRE_NEW Player(mspSceneCamera);
+	mspPlayer = WIRE_NEW Player(mspSceneCamera, mspPhysicsWorld);
 	pPlayerSpatial->AttachController(mspPlayer);
-	mspPlayer->Register(mspPhysicsWorld);
 
 	pScene->Bind(GetRenderer());
 	pScene->WarmUpRendering(GetRenderer());

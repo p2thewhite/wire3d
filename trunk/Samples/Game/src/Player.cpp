@@ -8,10 +8,10 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Wire::Controller);
 
 //----------------------------------------------------------------------------
-Player::Player(Camera* pCamera)
+Player::Player(Camera* pCamera, PhysicsWorld* pPhysicsWorld)
 	:
 	mHeadHeight(1.0F),
 	mMaximumShootingDistance(1000.0F),
@@ -32,6 +32,9 @@ Player::Player(Camera* pCamera)
 {
 	WIRE_ASSERT(pCamera);
 	mspCamera = pCamera;
+
+	WIRE_ASSERT(pPhysicsWorld);
+	mspPhysicsWorld = pPhysicsWorld;
 }
 
 //----------------------------------------------------------------------------
@@ -242,11 +245,8 @@ void Player::ProcessInput()
 }
 
 //----------------------------------------------------------------------------
-void Player::Register(PhysicsWorld* pPhysicsWorld)
+void Player::OnAttach()
 {
-	WIRE_ASSERT(pPhysicsWorld);
-	mspPhysicsWorld = pPhysicsWorld;
-
 	mpNode = DynamicCast<Node>(GetSceneObject());
 	WIRE_ASSERT(mpNode);
 

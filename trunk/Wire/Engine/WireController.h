@@ -35,6 +35,12 @@ public:
 	// update called by culler only when the controlled object is visible
 	virtual Bool OnGetVisibleUpdate(const Camera* pCamera);
 
+	// called when the controller is attached to a SceneObject
+	inline virtual void OnAttach();
+
+	// called when the controller is detached from a SceneObject
+	inline virtual void OnDetach();
+
 protected:
 	// construction (abstract base class)
 	Controller();

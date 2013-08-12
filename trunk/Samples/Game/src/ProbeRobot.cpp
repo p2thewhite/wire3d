@@ -4,7 +4,7 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Wire::Controller);
 
 //----------------------------------------------------------------------------
 ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
@@ -59,9 +59,10 @@ void ProbeRobot::Die()
 }
 
 //----------------------------------------------------------------------------
-void ProbeRobot::Register(btDynamicsWorld* pPhysicsWorld)
+void ProbeRobot::OnAttach()
 {
 	mspCharacter = GetSceneObject()->GetController<CharacterController>();
+	WIRE_ASSERT(mspCharacter);
 
 	// Add a reference to the controller in the physics object
 	mspCharacter->Get()->setUserPointer(this);

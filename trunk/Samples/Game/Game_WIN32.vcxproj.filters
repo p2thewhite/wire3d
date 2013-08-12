@@ -7,9 +7,6 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{b947fcdf-a02e-4bde-b090-85be96536e08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Inline Files">
-      <UniqueIdentifier>{b1454a7a-8b68-45e0-9c98-df20c8d84bbe}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -21,6 +18,9 @@
     <ClInclude Include="src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Elevator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -30,6 +30,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Elevator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

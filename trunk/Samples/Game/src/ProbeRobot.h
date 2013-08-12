@@ -1,9 +1,9 @@
 #ifndef PROBEROBOTCONTROLLER_H
 #define PROBEROBOTCONTROLLER_H
 
-#include "WireController.h"
+#include "PhysicsController.h"
 #include "WireSpatial.h"
-#include "PhysicsWorld.h"
+#include "PhysicsWorld.h" // TODO
 
 class ProbeRobot : public Wire::Controller
 {
@@ -13,7 +13,7 @@ public:
 	ProbeRobot(Wire::Spatial* pPlayerSpatial, Wire::Spatial* pHealthBar);
 
 	virtual Bool Update(Double appTime);
-	void Register(btDynamicsWorld* pPhysicsWorld);
+	virtual void OnAttach();
 	void TakeDamage(Float damage);
 
 private:

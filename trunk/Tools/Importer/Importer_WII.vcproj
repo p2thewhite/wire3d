@@ -85,6 +85,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\src\PhysicsController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\PhysicsController.h"
+			>
+		</File>
+		<File
 			RelativePath=".\src\PhysicsWorld.cpp"
 			>
 		</File>
