@@ -39,7 +39,7 @@ Dx9Application::Dx9Application(const ColorRGBA& rBackgroundColor,
 		height, isFullscreen, useVSync),
 	mWindowID(0)
 {
-	_set_error_mode (_OUT_TO_MSGBOX);
+	_set_error_mode(_OUT_TO_MSGBOX);
 
 	DEVMODE mode;
 	mode.dmSize = sizeof(DEVMODE);

@@ -10,7 +10,7 @@
       <Uv0 Name="Quad_0001E0FA.uv0" LittleEndian="1" />
     </Mesh>
     <Material Name="CrosshairMaterial">
-      <Texture Name="crosshair.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Modulate" />
+      <Texture Name="crosshair.png" FilterMode="Bilinear" AnisoLevel="1" WrapMode="Repeat" Mipmaps="1" BlendMode="Replace" />
     </Material>
   </Node>
   <Node Name="RedHealthBar" Pos="0, 0, 0" Rot="1, 0, 0, 0" Scale="0.5, 0.0625, 1" Static="0">

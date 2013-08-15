@@ -16,8 +16,8 @@ Player::Player(Camera* pCamera, PhysicsWorld* pPhysicsWorld)
 	mHeadHeight(1.0F),
 	mMaximumShootingDistance(1000.0F),
 	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
-	mLookUpDeadZone(Vector2F(50, 50)),
-	mRotateSpeed(MathF::PI / 9),
+	mLookUpDeadZone(Vector2F(0.5F, 0.5F)),
+	mRotateSpeed(MathF::PI),
 	mMoveSpeed(5.0F),
 	mPitch(0),
 	mYaw(0),
@@ -347,23 +347,30 @@ void Player::ShootGun()
 void Player::LookAt(const Vector2F& rLookAt)
 {
 	mLookAt = rLookAt;
+	Application* pApp = Application::GetApplication();
 
-	if (rLookAt.X() > mLookUpDeadZone.X())
+	const Float width = pApp->GetWidthF() * 0.5F;
+	Float deadZoneX = width * mLookUpDeadZone.X();
+	Float xB = width - deadZoneX;
+	if (rLookAt.X() > deadZoneX)
 	{
-		mYawIncrement -= mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
+		mYawIncrement -= mRotateSpeed * (rLookAt.X() - deadZoneX) / xB;
 	}
-	else if (rLookAt.X() < -mLookUpDeadZone.X())
+	else if (rLookAt.X() < -deadZoneX)
 	{
-		mYawIncrement -= mRotateSpeed * (rLookAt.X() / mLookUpDeadZone.X());
+		mYawIncrement -= mRotateSpeed * (rLookAt.X() + deadZoneX) / xB;
 	}
 
-	if (rLookAt.Y() > mLookUpDeadZone.Y())
+	const Float height = pApp->GetHeightF() * 0.5F;
+	Float deadZoneY = height * mLookUpDeadZone.Y();
+	Float yB = height - deadZoneY;
+	if (rLookAt.Y() > deadZoneY)
 	{
-		mPitchIncrement -= mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
+		mPitchIncrement -= mRotateSpeed * (rLookAt.Y() - deadZoneY) / yB;
 	}
-	else if (rLookAt.Y() < -mLookUpDeadZone.Y())
+	else if (rLookAt.Y() < -deadZoneY)
 	{
-		mPitchIncrement -= mRotateSpeed * (rLookAt.Y() / mLookUpDeadZone.Y());
+		mPitchIncrement -= mRotateSpeed * (rLookAt.Y() + deadZoneY) / yB;
 	}
 }
 
