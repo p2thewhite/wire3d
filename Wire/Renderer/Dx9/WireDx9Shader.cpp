@@ -98,17 +98,19 @@ PdrShader::PdrShader(Renderer* pRenderer, const Shader* pShader)
 
 		if (isPixelShader)
 		{
-			hr = D3DXCompileShader(DefaultPixelProgram,
-				strlen(DefaultPixelProgram), NULL, NULL, "main", "ps_2_0",
-				dwShaderFlags, &pCode, &pBufferErrors, &mpConstantTable);
+			UINT srcDataLen = static_cast<UINT>(strlen(DefaultPixelProgram));
+			hr = D3DXCompileShader(DefaultPixelProgram, srcDataLen, NULL,
+				NULL, "main", "ps_2_0", dwShaderFlags, &pCode, &pBufferErrors,
+				&mpConstantTable);
 			WIRE_ASSERT(SUCCEEDED(hr));
 		}
 		else
 		{
 			WIRE_ASSERT(pShader->GetProfile()[0] == 'v');
-			hr = D3DXCompileShader(DefaultVertexProgram,
-				strlen(DefaultVertexProgram), NULL, NULL, "main", "vs_2_0",
-				dwShaderFlags, &pCode, &pBufferErrors, &mpConstantTable);
+			UINT srcDataLen = static_cast<UINT>(strlen(DefaultVertexProgram));
+			hr = D3DXCompileShader(DefaultVertexProgram, srcDataLen, NULL,
+				NULL, "main", "vs_2_0", dwShaderFlags, &pCode, &pBufferErrors,
+				&mpConstantTable);
 			WIRE_ASSERT(SUCCEEDED(hr));
 		}
 	}

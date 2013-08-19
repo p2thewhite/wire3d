@@ -170,7 +170,7 @@ Int String::Find(const String& rSubString, UInt from) const
 		return -1;
 	}
 
-	return p - mpText;
+	return static_cast<Int>(p - mpText);
 }
 
 //----------------------------------------------------------------------------
