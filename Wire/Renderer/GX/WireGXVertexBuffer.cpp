@@ -92,7 +92,7 @@ void PdrVertexBuffer::Enable(Renderer* pRenderer, UInt vertexSize,
 		if (rDeclaration[i].StreamIndex == streamIndex)
 		{
 			void* pArray = reinterpret_cast<void*>((rDeclaration[i].Offset +
-				reinterpret_cast<UInt>(mpBuffer)));
+				reinterpret_cast<UChar*>(mpBuffer)));
 			GXSetArray(rDeclaration[i].Attr, pArray, vertexSize);
 		}
 	}
