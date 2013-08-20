@@ -1180,7 +1180,7 @@ void Renderer::DrawStaticBatches(RenderObject* const pVisible[],
 		IndexBuffer* const pIndexBuffer = pMesh->GetIndexBuffer();
 		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), 0,
 			pMesh->GetIndexCount(), pMesh->GetStartIndex());
-		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
+		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UChar*>(
 			pIBRaw));
 
 		mStatistics.mBatchedStatic++;
@@ -1288,7 +1288,7 @@ void Renderer::DrawDynamicBatches(RenderObject* const pVisible[],
 		const UShort offset = batchedVertexCount - minIndex;
 		pIndexBuffer->Copy(static_cast<UShort*>(pIBRaw), offset, pMesh->
 			GetIndexCount(), pMesh->GetStartIndex());
-		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UInt>(
+		pIBRaw = reinterpret_cast<void*>(ibSize + reinterpret_cast<UChar*>(
 			pIBRaw));
 
 		for (UInt j = 0; j < vbCount; j++)
@@ -1300,7 +1300,7 @@ void Renderer::DrawDynamicBatches(RenderObject* const pVisible[],
 			UInt vertexSize = pVertexBuffer->GetAttributes().GetVertexSize();
 			UInt vbSize = vertexCount * vertexSize;
 			mRawBatchedVertexBuffers[j] = reinterpret_cast<void*>(vbSize +
-				reinterpret_cast<UInt>(mRawBatchedVertexBuffers[j]));
+				reinterpret_cast<UChar*>(mRawBatchedVertexBuffers[j]));
 		}
 
 		if (rTransformation.IsIdentity())
