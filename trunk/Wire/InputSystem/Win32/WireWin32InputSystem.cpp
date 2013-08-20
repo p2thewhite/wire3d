@@ -110,10 +110,10 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 
 		return true;
 	case WM_KEYDOWN:
-		mpBackBuffer->SetKeyDown((UInt) wordParameter);
+		mpBackBuffer->SetKeyDown(wordParameter);
 		return true;
 	case WM_KEYUP:
-		mpBackBuffer->SetKeyUp((UInt) wordParameter);
+		mpBackBuffer->SetKeyUp(wordParameter);
 		return true;
 	}
 
