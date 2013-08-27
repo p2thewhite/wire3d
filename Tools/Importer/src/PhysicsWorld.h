@@ -33,15 +33,14 @@ public:
 
 	inline Double GetFixedTimeStep();
 
-	void AddController(PhysicsController* pController);
 	void AddCollisionShape(btCollisionShape* pShape,
 		Wire::VertexBuffer* pVBRef = NULL, Wire::IndexBuffer* pIBRef = NULL);
 
-	void AddRigidBody(btRigidBody* pRigidBody);
-	RigidBodyController* CreateController(btRigidBody* pRigidBody);
-	CharacterController* CreateController(btCollisionObject* pGhost,
+	void AddController(PhysicsController* pController);
+	void AddController(RigidBodyController* pController, btRigidBody* pRigidBody);
+	void AddController(CharacterController* pController, btCollisionObject* pGhost,
 		btKinematicCharacterController* pCharacter);
-	void RemoveController(PhysicsController* pController,
+	btCollisionObject* RemoveController(PhysicsController* pController,
 		Bool destroyCollisionObject = true);
 
 	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false);

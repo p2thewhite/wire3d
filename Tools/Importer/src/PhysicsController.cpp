@@ -16,6 +16,11 @@ PhysicsController::PhysicsController(PhysicsWorld* pPhysicsWorld)
 //----------------------------------------------------------------------------
 PhysicsController::~PhysicsController()
 {
+	if (mpPhysicsWorld)
+	{
+		mpPhysicsWorld->RemoveController(this);
+		mpPhysicsWorld = NULL;
+	}
 }
 
 //----------------------------------------------------------------------------

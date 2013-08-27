@@ -1,16 +1,20 @@
-#ifndef PROBEROBOTCONTROLLER_H
-#define PROBEROBOTCONTROLLER_H
+#ifndef PROBEROBOT_H
+#define PROBEROBOT_H
 
 #include "PhysicsController.h"
+#include "CharacterController.h"
 #include "WireSpatial.h"
-#include "PhysicsWorld.h" // TODO
 
-class ProbeRobot : public Wire::Controller
+class PhysicsWorld;
+
+class ProbeRobot : public PhysicsController
 {
 	WIRE_DECLARE_RTTI;
 
 public:
-	ProbeRobot(Wire::Spatial* pPlayerSpatial, Wire::Spatial* pHealthBar);
+	ProbeRobot(PhysicsWorld* pPhysicsWorld, Wire::Spatial* pPlayerSpatial,
+		Wire::Spatial* pHealthBar);
+	virtual ~ProbeRobot();
 
 	virtual Bool Update(Double appTime);
 	virtual void OnAttach();

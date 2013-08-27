@@ -37,6 +37,11 @@ PhysicsWorld::PhysicsWorld(const Vector3F& rGravity)
 //----------------------------------------------------------------------------
 PhysicsWorld::~PhysicsWorld()
 {
+	while (mPhysicsControllers.GetQuantity() > 0)
+	{
+		mPhysicsControllers[0]->Unbind();
+	}
+
 	//cleanup in the reverse order of creation/initialization
 	while (mCollisionObjectMap.GetQuantity() > 0)
 	{
@@ -96,14 +101,14 @@ Int PhysicsWorld::StepSimulation(Double deltaTime, Int maxSubSteps,
 	Double fixedTimeStep)
 {
 	mFixedTimeStep = fixedTimeStep;
+
+	for (UInt i = 0; i < mPhysicsControllers.GetQuantity(); i++)
+	{
+		mPhysicsControllers[i]->PhysicsUpdate(deltaTime);
+	}
+
 	return mpDynamicsWorld->stepSimulation(btScalar(deltaTime), maxSubSteps,
 		btScalar(fixedTimeStep));
-}
-
-//----------------------------------------------------------------------------
-void PhysicsWorld::AddRigidBody(btRigidBody* pRigidBody)
-{
-	mpDynamicsWorld->addRigidBody(pRigidBody);
 }
 
 //----------------------------------------------------------------------------
@@ -114,7 +119,7 @@ void PhysicsWorld::AddController(PhysicsController* pController)
 		return;
 	}
 
-	WIRE_ASSERT(!mPhysicsControllers.Find(pController));
+	WIRE_ASSERT(!mPhysicsControllers.Contains(pController));
 	mPhysicsControllers.Append(pController);
 }
 
@@ -130,19 +135,18 @@ void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, VertexBuffer*
 }
 
 //----------------------------------------------------------------------------
-RigidBodyController* PhysicsWorld::CreateController(btRigidBody* pRigidBody)
+void PhysicsWorld::AddController(RigidBodyController* pController,
+	btRigidBody* pRigidBody)
 {
 	WIRE_ASSERT(mCollisionObjectMap.Find(pRigidBody) == NULL);
 
-	RigidBodyController* pController = WIRE_NEW RigidBodyController(this,
-		pRigidBody);
+	mpDynamicsWorld->addRigidBody(pRigidBody);
 	mCollisionObjectMap.Insert(pRigidBody, pController);
-	return pController;
 }
 
 //----------------------------------------------------------------------------
-CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
-	btKinematicCharacterController* pCharacter)
+void PhysicsWorld::AddController(CharacterController* pController,
+	btCollisionObject* pGhost, btKinematicCharacterController* pCharacter)
 {
 	WIRE_ASSERT(mCollisionObjectMap.Find(pGhost) == NULL);
 
@@ -153,19 +157,17 @@ CharacterController* PhysicsWorld::CreateController(btCollisionObject* pGhost,
 			mpGhostPairCallback);
 	}
 
-	CharacterController* pController = WIRE_NEW CharacterController(this,
-		pGhost, pCharacter);
 	mCollisionObjectMap.Insert(pGhost, pController);
-	return pController;
 }
 
 //----------------------------------------------------------------------------
-void PhysicsWorld::RemoveController(PhysicsController* pController,
-	Bool destroyCollisionObject)
+btCollisionObject* PhysicsWorld::RemoveController(PhysicsController*
+	pController, Bool destroyCollisionObject)
 {
-	if (mPhysicsControllers.Find(pController))
+	if (mPhysicsControllers.Contains(pController))
 	{
 		mPhysicsControllers.Remove(pController);
+		return NULL;
 	}
 
 	THashTable<btCollisionObject*, CollisionObjectController*>::Iterator it(
@@ -183,16 +185,20 @@ void PhysicsWorld::RemoveController(PhysicsController* pController,
 		}
 	}
 
-	if (pKey && destroyCollisionObject)
+	if (pKey)
 	{
-		btCollisionObjectArray& rArray = mpDynamicsWorld->
-			getCollisionObjectArray();
-		if (rArray.findLinearSearch(pKey) != rArray.size())
+		WIRE_ASSERT(mpDynamicsWorld->getCollisionObjectArray().findLinearSearch(
+			pKey) != mpDynamicsWorld->getCollisionObjectArray().size());
+		mpDynamicsWorld->removeCollisionObject(pKey);
+
+		if (destroyCollisionObject)
 		{
 			DestroyCollisionObject(pKey);
 			pKey = NULL;
 		}
 	}
+
+	return pKey;
 }
 
 //----------------------------------------------------------------------------
@@ -221,7 +227,6 @@ void PhysicsWorld::DestroyCollisionObject(btCollisionObject* pCollisionObject)
 		WIRE_DELETE pBody->getMotionState();
 	}
 
-	mpDynamicsWorld->removeCollisionObject(pCollisionObject);
 	WIRE_DELETE pCollisionObject;
 }
 

@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "Importer.h"
+#include "Elevator.h"
 
 WIRE_APPLICATION(Game);
 
@@ -192,20 +193,6 @@ void Game::OnRunning(Double time, Double deltaTime)
 {
 	ProcessInput();
 
-	Node* pPlatform = (Node*)mspScene->FindChild("Platform");
-
-	RigidBodyController* pRBC =	pPlatform->GetController<RigidBodyController>();
-	btRigidBody* pRB = pRBC->Get();
-
-	btTransform trans;
-	pRB->getMotionState()->getWorldTransform(trans);
-	btVector3 origin = trans.getOrigin();
-	static Float yCoord = origin.y();
-	Float angle = MathF::Sin((float)time) * 6 + 6;
-	origin[1] = yCoord + angle;
-	trans.setOrigin(origin);
-	pRB->getMotionState()->setWorldTransform(trans);
-
 	mspPhysicsWorld->StepSimulation(deltaTime, 10);
 
 	mspScene->UpdateGS(time);
@@ -366,12 +353,17 @@ Node* Game::LoadAndInitializeScene()
 	pRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
 	mspGUI->UpdateGS();
 
-	mspProbeRobot = WIRE_NEW ProbeRobot(pPlayerSpatial, pRedHealthBar);
+	mspProbeRobot = WIRE_NEW ProbeRobot(mspPhysicsWorld, pPlayerSpatial,
+		pRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
 
 	// Create and configure player controller
 	mspPlayer = WIRE_NEW Player(mspSceneCamera, mspPhysicsWorld);
 	pPlayerSpatial->AttachController(mspPlayer);
+
+ 	Spatial* pPlatform = pScene->FindChild("Platform");
+  	WIRE_ASSERT(pPlatform /* Platform object missing in scene */);
+  	pPlatform->AttachController(WIRE_NEW Elevator(mspPhysicsWorld));
 
 	pScene->Bind(GetRenderer());
 	pScene->WarmUpRendering(GetRenderer());
