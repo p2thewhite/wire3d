@@ -3,16 +3,15 @@
 #include "ProbeRobot.h"
 #include "PhysicsWorld.h"
 #include "WireApplication.h"
-#include "WireStandardMesh.h"
-#include "WireStateWireframe.h"
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, Wire::Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(Player, PhysicsController);
 
 //----------------------------------------------------------------------------
 Player::Player(Camera* pCamera, PhysicsWorld* pPhysicsWorld)
 	:
+	PhysicsController(pPhysicsWorld),
 	mHeadHeight(1.0F),
 	mMaximumShootingDistance(1000.0F),
 	mMaximumVerticalAngle(MathF::DEG_TO_RAD * 45.0F),
@@ -27,14 +26,19 @@ Player::Player(Camera* pCamera, PhysicsWorld* pPhysicsWorld)
 	mMove(Vector3F::ZERO),
 	mLookAt(Vector2F::ZERO),
 	mpNode(NULL),
+	mspCamera(pCamera),
 	mShoot(0),
 	mJump(false)
 {
-	WIRE_ASSERT(pCamera);
-	mspCamera = pCamera;
-
 	WIRE_ASSERT(pPhysicsWorld);
-	mspPhysicsWorld = pPhysicsWorld;
+	WIRE_ASSERT(pCamera);
+
+	pPhysicsWorld->AddController(this);
+}
+
+//----------------------------------------------------------------------------
+Player::~Player()
+{
 }
 
 //----------------------------------------------------------------------------
@@ -51,7 +55,8 @@ Bool Player::Update(Double appTime)
 	ProcessInput();
 
 	// Apply accumulators
-	mMove *= static_cast<Float>(mspPhysicsWorld->GetFixedTimeStep());
+	WIRE_ASSERT(mpPhysicsWorld);
+	mMove *= static_cast<Float>(mpPhysicsWorld->GetFixedTimeStep());
 	mPitch += (mPitchIncrement * deltaTime);
 	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 	mYaw += mYawIncrement * deltaTime;
@@ -443,7 +448,7 @@ void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
 
-	mspPhysicsWorld->Get()->rayTest(rayStart, rayEnd, hitCallback);
+	mpPhysicsWorld->Get()->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 
 	{
 		btCollisionObject* pColObj = hitCallback.m_collisionObject;

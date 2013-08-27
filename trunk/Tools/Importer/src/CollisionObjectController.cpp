@@ -18,10 +18,7 @@ CollisionObjectController::CollisionObjectController(PhysicsWorld* pPhysicsWorld
 //----------------------------------------------------------------------------
 CollisionObjectController::~CollisionObjectController()
 {
-	if (mpPhysicsWorld)
-	{
-		mpPhysicsWorld->RemoveController(this);
-	}
+	mpCollisionObject = NULL;
 }
 
 //----------------------------------------------------------------------------

@@ -18,14 +18,6 @@
 using namespace Wire;
 
 // These are in the VC7.1 basetsd.h, but not the VC6 basetsd.h.
-#ifndef IntToPtr
-#define IntToPtr(i) ((VOID*)(INT_PTR)((int)i))
-#endif
-
-#ifndef PtrToUint
-#define PtrToUint(p) ((UINT)(UINT_PTR)(p))
-#endif
-
 #ifndef PtrToInt
 #define PtrToInt(p)  ((INT)(INT_PTR)(p))
 #endif

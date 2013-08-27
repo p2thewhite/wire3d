@@ -1,18 +1,19 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "WireController.h"
+#include "PhysicsController.h"
 #include "WireCamera.h"
 #include "WireNode.h"
 #include "WireStateMaterial.h"
 #include "PhysicsWorld.h"
 
-class Player : public Wire::Controller
+class Player : public PhysicsController
 {
 	WIRE_DECLARE_RTTI;
 
 public:
 	Player(Wire::Camera* pCamera, PhysicsWorld* pPhysicsWorld);
+	virtual ~Player();
 
 	virtual Bool Update(Double appTime);
 	virtual void OnAttach();
@@ -59,7 +60,6 @@ private:
 	Float mShoot;
 	Bool mJump;
 
-	PhysicsWorldPtr mspPhysicsWorld;
 	CharacterControllerPtr mspCharacter;
 };
 

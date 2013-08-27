@@ -4,11 +4,13 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, Wire::Controller);
+WIRE_IMPLEMENT_RTTI_NO_NAMESPACE(ProbeRobot, PhysicsController);
 
 //----------------------------------------------------------------------------
-ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
+ProbeRobot::ProbeRobot(PhysicsWorld* pPhysicsWorld, Spatial* pPlayerSpatial,
+	Spatial* pHealthBar)
 	:
+	PhysicsController(pPhysicsWorld),
 	mspPlayerSpatial(pPlayerSpatial),
 	mspHealthBar(pHealthBar),
 	mTotalHealth(100.0F),
@@ -18,8 +20,15 @@ ProbeRobot::ProbeRobot(Spatial* pPlayerSpatial, Spatial* pHealthBar)
 {
 	WIRE_ASSERT(mspPlayerSpatial);
 	WIRE_ASSERT(mspHealthBar);
+	WIRE_ASSERT(pPhysicsWorld);
 
 	mHealthBarScale = mspHealthBar->Local.GetScale();
+	pPhysicsWorld->AddController(this);
+}
+
+//----------------------------------------------------------------------------
+ProbeRobot::~ProbeRobot()
+{
 }
 
 //----------------------------------------------------------------------------
@@ -97,7 +106,9 @@ void ProbeRobot::CalculateMovementAndRotation()
 		const Float range = 60;
 		distanceSquared = MathF::Min(distanceSquared, range);
 		Float speed = mSpeed * distanceSquared / range;
-		move = direction * speed * 1/60.0F;	// physics time step, TODO: get from physics world;
+		WIRE_ASSERT(mpPhysicsWorld);
+		move = direction * speed * static_cast<Float>(mpPhysicsWorld->
+			GetFixedTimeStep());
 	}
 
 	// update the scene object

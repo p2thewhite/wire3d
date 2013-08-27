@@ -870,9 +870,10 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 	}
 
 	mspPhysicsWorld->AddCollisionShape(pCollisionShape, pVBRef, pIBRef);
-	mspPhysicsWorld->AddRigidBody(pRigidBody);
 
-	RigidBodyController* pController = mspPhysicsWorld->CreateController(pRigidBody);
+	RigidBodyController* pController = WIRE_NEW RigidBodyController(
+		mspPhysicsWorld, pRigidBody);
+	mspPhysicsWorld->AddController(pController, pRigidBody);
 	pSpatial->AttachController(pController);
 }
 
@@ -1039,7 +1040,10 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 			pGhostObject->setWorldTransform(GetBtTransform(pSpatial, center));
 			mspPhysicsWorld->AddCollisionShape(pConvexShape);
-			Controller* pController = mspPhysicsWorld->CreateController(pGhostObject, pCharacter);
+
+			CharacterController* pController = WIRE_NEW CharacterController(
+				mspPhysicsWorld, pGhostObject, pCharacter);
+			mspPhysicsWorld->AddController(pController, pGhostObject, pCharacter);
 			pSpatial->AttachController(pController);
 			return;
 		}
