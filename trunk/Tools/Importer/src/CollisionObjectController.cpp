@@ -18,7 +18,34 @@ CollisionObjectController::CollisionObjectController(PhysicsWorld* pPhysicsWorld
 //----------------------------------------------------------------------------
 CollisionObjectController::~CollisionObjectController()
 {
+	// TODO: fix (parent) destructor if !mIsEnabled
 	mpCollisionObject = NULL;
+}
+
+//----------------------------------------------------------------------------
+Bool CollisionObjectController::SetEnabled(Bool isEnabled)
+{
+	if (mIsEnabled == isEnabled)
+	{
+		return false;
+	}
+
+	mIsEnabled = isEnabled;
+	if (!mpPhysicsWorld)
+	{
+		return false;
+	}
+
+	if (mIsEnabled)
+	{
+		mpPhysicsWorld->AddController(this, mpCollisionObject);
+	}
+	else
+	{
+		mpPhysicsWorld->RemoveController(this, false);
+	}
+
+	return true;
 }
 
 //----------------------------------------------------------------------------

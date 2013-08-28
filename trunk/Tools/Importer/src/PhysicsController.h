@@ -17,11 +17,18 @@ public:
  	// update called by PhysicsWorld::StepSimulation()
  	virtual void PhysicsUpdate(Double appTime) {}
 
+	// can be used to draw debug information
+	virtual void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false) {}
+
+	// add/remove from the physics world
+	virtual Bool SetEnabled(Bool isEnabled);
+
 protected:
 	friend class PhysicsWorld;
 	virtual void Unbind();
 
 	PhysicsWorld* mpPhysicsWorld;
+	Bool mIsEnabled;
 };
 
 typedef Wire::Pointer<PhysicsController> PhysicsControllerPtr;

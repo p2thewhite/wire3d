@@ -873,7 +873,7 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 
 	RigidBodyController* pController = WIRE_NEW RigidBodyController(
 		mspPhysicsWorld, pRigidBody);
-	mspPhysicsWorld->AddController(pController, pRigidBody);
+	pController->SetEnabled(true);
 	pSpatial->AttachController(pController);
 }
 
@@ -1025,25 +1025,20 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 
 			btConvexShape* pConvexShape = WIRE_NEW btCapsuleShape(radius, height);
 			pConvexShape->setLocalScaling(PhysicsWorld::Convert(pSpatial->Local.GetScale()));
+			mspPhysicsWorld->AddCollisionShape(pConvexShape);
+
 			btPairCachingGhostObject* pGhostObject = WIRE_NEW btPairCachingGhostObject();
 			pGhostObject->setCollisionShape(pConvexShape);
 			pGhostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+			pGhostObject->setWorldTransform(GetBtTransform(pSpatial, center));
 
 			btKinematicCharacterController* pCharacter = WIRE_NEW
 				btKinematicCharacterController(pGhostObject, pConvexShape, step);
 			pCharacter->setMaxSlope(slope * MathF::DEG_TO_RAD);
 
-			mspPhysicsWorld->Get()->addCollisionObject(pGhostObject,
-				btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 
-				btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter);
-			mspPhysicsWorld->Get()->addAction(pCharacter);
-
-			pGhostObject->setWorldTransform(GetBtTransform(pSpatial, center));
-			mspPhysicsWorld->AddCollisionShape(pConvexShape);
-
 			CharacterController* pController = WIRE_NEW CharacterController(
 				mspPhysicsWorld, pGhostObject, pCharacter);
-			mspPhysicsWorld->AddController(pController, pGhostObject, pCharacter);
+			pController->SetEnabled(true);
 			pSpatial->AttachController(pController);
 			return;
 		}

@@ -16,6 +16,9 @@ public:
 		btKinematicCharacterController* pCharacter);
 	virtual ~CharacterController();
 
+	// add/remove from the physics world
+	virtual Bool SetEnabled(Bool isEnabled);
+
 	inline btKinematicCharacterController* GetCharacter() { return mpCharacter; }
 
 private:

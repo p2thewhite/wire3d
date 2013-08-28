@@ -20,10 +20,9 @@ ProbeRobot::ProbeRobot(PhysicsWorld* pPhysicsWorld, Spatial* pPlayerSpatial,
 {
 	WIRE_ASSERT(mspPlayerSpatial);
 	WIRE_ASSERT(mspHealthBar);
-	WIRE_ASSERT(pPhysicsWorld);
 
 	mHealthBarScale = mspHealthBar->Local.GetScale();
-	pPhysicsWorld->AddController(this);
+	SetEnabled(true);
 }
 
 //----------------------------------------------------------------------------
