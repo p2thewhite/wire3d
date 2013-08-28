@@ -30,10 +30,9 @@ Player::Player(Camera* pCamera, PhysicsWorld* pPhysicsWorld)
 	mShoot(0),
 	mJump(false)
 {
-	WIRE_ASSERT(pPhysicsWorld);
 	WIRE_ASSERT(pCamera);
 
-	pPhysicsWorld->AddController(this);
+	SetEnabled(true);
 }
 
 //----------------------------------------------------------------------------

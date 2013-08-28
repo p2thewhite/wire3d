@@ -33,15 +33,12 @@ public:
 
 	inline Double GetFixedTimeStep();
 
-	void AddCollisionShape(btCollisionShape* pShape,
-		Wire::VertexBuffer* pVBRef = NULL, Wire::IndexBuffer* pIBRef = NULL);
-
-	void AddController(PhysicsController* pController);
-	void AddController(RigidBodyController* pController, btRigidBody* pRigidBody);
-	void AddController(CharacterController* pController, btCollisionObject* pGhost,
-		btKinematicCharacterController* pCharacter);
+	void AddController(PhysicsController* pController, btCollisionObject* pCollisionObject = NULL);
 	btCollisionObject* RemoveController(PhysicsController* pController,
 		Bool destroyCollisionObject = true);
+
+	void AddCollisionShape(btCollisionShape* pShape, Wire::VertexBuffer* pVBRef = NULL,
+		Wire::IndexBuffer* pIBRef = NULL);
 
 	void ToggleDebugShapes(Bool show = true, Bool destroyOnHide = false);
 
@@ -71,8 +68,7 @@ private:
 	btDiscreteDynamicsWorld* mpDynamicsWorld;
 	btGhostPairCallback* mpGhostPairCallback;
 
-	Wire::THashTable<btCollisionObject*, CollisionObjectController*> mCollisionObjectMap;
-	Wire::TArray<PhysicsController*> mPhysicsControllers;
+	Wire::THashTable<PhysicsController*, btCollisionObject*> mCollisionObjectMap;
 
 	struct CollisionShapeItem
 	{

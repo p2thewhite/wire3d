@@ -18,7 +18,10 @@ public:
 
 	inline btCollisionObject* Get() { return mpCollisionObject; }
 
-	void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false);
+	// add/remove from the physics world
+	virtual Bool SetEnabled(Bool isEnabled);
+
+	virtual void ToggleDebugShape(Bool show = true, Bool destroyOnHide = false);
 
 	// geometric update called by UpdateGS()
 	virtual Bool Update(Double appTime);

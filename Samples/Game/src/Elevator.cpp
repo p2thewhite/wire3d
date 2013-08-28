@@ -12,10 +12,7 @@ Elevator::Elevator(PhysicsWorld* pPhysicsWorld)
 	PhysicsController(pPhysicsWorld),
 	mTime(0)
 {
-	if (pPhysicsWorld)
-	{
-		pPhysicsWorld->AddController(this);
-	}
+	SetEnabled(true);
 }
 
 //----------------------------------------------------------------------------
