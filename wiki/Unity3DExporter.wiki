@@ -45,23 +45,28 @@ The following data is handled by the exporter:
   * Drag (Bullet Physics value, does not correspond to Unity's PhysX)
   * Angular Drag (Bullet Physics value, does not correspond to Unity's PhysX)
 *Character controller*
+  * Enabled
   * Slope Limit
   * Step Offset
   * Center
   * Radius
   * Height
 *Box collider*
+  * Enabled
   * Center
   * Size
 *Sphere collider*
+  * Enabled
   * Center
   * Radius
 *Capsule collider*
+  * Enabled
   * Center
   * Radius
   * Height
   * Direction
 *Mesh collider*
+  * Enabled
   * Mesh
   * Convex
 	
