@@ -34,8 +34,7 @@ public:
 	inline Double GetFixedTimeStep();
 
 	void AddController(PhysicsController* pController, btCollisionObject* pCollisionObject = NULL);
-	btCollisionObject* RemoveController(PhysicsController* pController,
-		Bool destroyCollisionObject = true);
+	void RemoveController(PhysicsController* pController);
 
 	void AddCollisionShape(btCollisionShape* pShape, Wire::VertexBuffer* pVBRef = NULL,
 		Wire::IndexBuffer* pIBRef = NULL);
@@ -51,7 +50,7 @@ public:
 	Wire::Node* CreateDebugShape(btCollisionShape* pShape);
 
 private:
-	void DestroyCollisionObject(btCollisionObject* pCollisionObject);
+	void SaveCollisionShapes(btCollisionObject* pCollisionObject);
 
 	Wire::Node* CreateDebugBox(btBoxShape* pBox);
 	Wire::Node* CreateDebugSphere(btSphereShape* pSphereShape);

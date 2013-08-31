@@ -23,10 +23,10 @@ public:
 	// add/remove from the physics world
 	virtual Bool SetEnabled(Bool isEnabled);
 
+	Bool IsEnabled() { return mIsEnabled; }
+
 protected:
 	friend class PhysicsWorld;
-	virtual void Unbind();
-
 	PhysicsWorld* mpPhysicsWorld;
 	Bool mIsEnabled;
 };

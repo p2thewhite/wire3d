@@ -18,8 +18,12 @@ CollisionObjectController::CollisionObjectController(PhysicsWorld* pPhysicsWorld
 //----------------------------------------------------------------------------
 CollisionObjectController::~CollisionObjectController()
 {
-	// TODO: fix (parent) destructor if !mIsEnabled
-	mpCollisionObject = NULL;
+	if (mpPhysicsWorld && mIsEnabled)
+	{
+		mpPhysicsWorld->Get()->removeCollisionObject(mpCollisionObject);
+	}
+
+	WIRE_DELETE mpCollisionObject;
 }
 
 //----------------------------------------------------------------------------
@@ -42,18 +46,11 @@ Bool CollisionObjectController::SetEnabled(Bool isEnabled)
 	}
 	else
 	{
-		mpPhysicsWorld->RemoveController(this, false);
+		mpPhysicsWorld->RemoveController(this);
+		mpPhysicsWorld->Get()->removeCollisionObject(mpCollisionObject);
 	}
 
 	return true;
-}
-
-//----------------------------------------------------------------------------
-void CollisionObjectController::Unbind()
-{
-	PhysicsController::Unbind();
-
-	mpCollisionObject = NULL;
 }
 
 //----------------------------------------------------------------------------

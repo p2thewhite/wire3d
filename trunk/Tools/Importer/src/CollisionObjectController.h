@@ -13,7 +13,6 @@ class CollisionObjectController : public PhysicsController
 	WIRE_DECLARE_RTTI;
 
 public:
-	CollisionObjectController(PhysicsWorld* pPhysicsWorld, btCollisionObject* pCollisionObject);
 	virtual ~CollisionObjectController();
 
 	inline btCollisionObject* Get() { return mpCollisionObject; }
@@ -27,8 +26,7 @@ public:
 	virtual Bool Update(Double appTime);
 
 protected:
-	friend class PhysicsWorld;
-	virtual void Unbind();
+	CollisionObjectController(PhysicsWorld* pPhysicsWorld, btCollisionObject* pCollisionObject);
 
 	btCollisionObject* mpCollisionObject;
 

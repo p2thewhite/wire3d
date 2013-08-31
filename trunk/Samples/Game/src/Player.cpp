@@ -54,8 +54,11 @@ Bool Player::Update(Double appTime)
 	ProcessInput();
 
 	// Apply accumulators
-	WIRE_ASSERT(mpPhysicsWorld);
-	mMove *= static_cast<Float>(mpPhysicsWorld->GetFixedTimeStep());
+	if (mpPhysicsWorld)
+	{
+		mMove *= static_cast<Float>(mpPhysicsWorld->GetFixedTimeStep());
+	}
+
 	mPitch += (mPitchIncrement * deltaTime);
 	mPitch = MathF::Clamp(-mMaximumVerticalAngle, mPitch, mMaximumVerticalAngle);
 	mYaw += mYawIncrement * deltaTime;
@@ -446,6 +449,11 @@ void Player::UpdateShot(Double deltaTime, const Vector2F& rCursorPosition)
 	btVector3 rayEnd = rayStart + PhysicsWorld::Convert(direction * mMaximumShootingDistance);
 
 	btCollisionWorld::ClosestRayResultCallback hitCallback(rayStart, rayEnd);
+
+	if (!mpPhysicsWorld)
+	{
+		return;
+	}
 
 	mpPhysicsWorld->Get()->rayTest(rayStart, rayEnd, hitCallback);
 	if (hitCallback.hasHit()) 

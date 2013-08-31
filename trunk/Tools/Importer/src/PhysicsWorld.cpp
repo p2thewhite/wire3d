@@ -44,13 +44,14 @@ PhysicsWorld::~PhysicsWorld()
 		PhysicsController* pKey = NULL;
 		btCollisionObject** pValue = it.GetFirst(&pKey);
 		WIRE_ASSERT(pValue && pKey);
-		pKey->Unbind();
+		pKey->SetEnabled(false);
+		pKey->mpPhysicsWorld = NULL;
 	}
 
 	//remove the rigid bodies from the dynamics world and delete them
 	for (Int i = mpDynamicsWorld->getNumCollisionObjects()-1; i >= 0; i--)
 	{
-		DestroyCollisionObject(mpDynamicsWorld->getCollisionObjectArray()[i]);
+		SaveCollisionShapes(mpDynamicsWorld->getCollisionObjectArray()[i]);
 	}
 
 	//delete collision shapes
@@ -128,21 +129,11 @@ void PhysicsWorld::AddController(PhysicsController* pController,
 		}
 	}
 
-	if (pCollisionObject)
-	{
-		btRigidBody* pRigidBody = btRigidBody::upcast(pCollisionObject);
-		if (pRigidBody)
-		{
-			mpDynamicsWorld->addRigidBody(pRigidBody);
-		}
-	}
-
 	mCollisionObjectMap.Insert(pController, pCollisionObject);
 }
 
 //----------------------------------------------------------------------------
-btCollisionObject* PhysicsWorld::RemoveController(PhysicsController*
-	pController, Bool destroyCollisionObject)
+void PhysicsWorld::RemoveController(PhysicsController* pController)
 {
 	WIRE_ASSERT(pController);
 
@@ -153,18 +144,8 @@ btCollisionObject* PhysicsWorld::RemoveController(PhysicsController*
 
 	if (pCollisionObject)
 	{
-		WIRE_ASSERT(mpDynamicsWorld->getCollisionObjectArray().findLinearSearch(
-			pCollisionObject) != mpDynamicsWorld->getCollisionObjectArray().size());
-		mpDynamicsWorld->removeCollisionObject(pCollisionObject);
-
-		if (destroyCollisionObject)
-		{
-			DestroyCollisionObject(pCollisionObject);
-			pCollisionObject = NULL;
-		}
+		SaveCollisionShapes(pCollisionObject);
 	}
-
-	return pCollisionObject;
 }
 
 //----------------------------------------------------------------------------
@@ -179,7 +160,7 @@ void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, VertexBuffer*
 }
 
 //----------------------------------------------------------------------------
-void PhysicsWorld::DestroyCollisionObject(btCollisionObject* pCollisionObject)
+void PhysicsWorld::SaveCollisionShapes(btCollisionObject* pCollisionObject)
 {
 	btCollisionShape* pShape = pCollisionObject->getCollisionShape();
 	Bool found = false;
@@ -197,14 +178,6 @@ void PhysicsWorld::DestroyCollisionObject(btCollisionObject* pCollisionObject)
 		CollisionShapeItem item(pShape);
 		mCollisionShapes.Append(item);
 	}
-
-	btRigidBody* pBody = btRigidBody::upcast(pCollisionObject);
-	if (pBody && pBody->getMotionState())
-	{
-		WIRE_DELETE pBody->getMotionState();
-	}
-
-	WIRE_DELETE pCollisionObject;
 }
 
 //----------------------------------------------------------------------------
