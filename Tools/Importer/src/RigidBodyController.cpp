@@ -17,6 +17,7 @@ RigidBodyController::RigidBodyController(PhysicsWorld* pPhysicsWorld,
 //----------------------------------------------------------------------------
 RigidBodyController::~RigidBodyController()
 {
+	WIRE_DELETE Get()->getMotionState();
 }
 
 //----------------------------------------------------------------------------
@@ -55,4 +56,20 @@ Bool RigidBodyController::Update(Double appTime)
 	}
 
 	return true;
+}
+
+//----------------------------------------------------------------------------
+Bool RigidBodyController::SetEnabled(Bool isEnabled)
+{
+	if (CollisionObjectController::SetEnabled(isEnabled))
+	{
+		if (isEnabled)
+		{
+			mpPhysicsWorld->Get()->addRigidBody(Get());
+		}
+
+		return true;
+	}
+
+	return false;
 }

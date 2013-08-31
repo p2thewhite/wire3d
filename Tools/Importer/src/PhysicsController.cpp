@@ -18,10 +18,10 @@ PhysicsController::PhysicsController(PhysicsWorld* pPhysicsWorld)
 //----------------------------------------------------------------------------
 PhysicsController::~PhysicsController()
 {
-	if (mpPhysicsWorld)
+	if (mpPhysicsWorld && mIsEnabled)
 	{
 		mpPhysicsWorld->RemoveController(this);
-		mpPhysicsWorld = NULL;
+		mIsEnabled = false;
 	}
 }
 
@@ -45,18 +45,8 @@ Bool PhysicsController::SetEnabled(Bool isEnabled)
 	}
 	else
 	{
-		mpPhysicsWorld->RemoveController(this, false);
+		mpPhysicsWorld->RemoveController(this);
 	}
 
 	return true;
-}
-
-//----------------------------------------------------------------------------
-void PhysicsController::Unbind()
-{
-	if (mpPhysicsWorld)
-	{
-		mpPhysicsWorld->RemoveController(this);
-		mpPhysicsWorld = NULL;
-	}
 }

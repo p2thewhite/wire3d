@@ -18,7 +18,11 @@ CharacterController::CharacterController(PhysicsWorld* pPhysicsWorld,
 //----------------------------------------------------------------------------
 CharacterController::~CharacterController()
 {
-	// TODO: fix (parent) destructor if !mIsEnabled
+	if (mpPhysicsWorld && mIsEnabled)
+	{
+		mpPhysicsWorld->Get()->removeAction(mpCharacter);
+	}
+
 	WIRE_DELETE mpCharacter;
 }
 
@@ -27,7 +31,7 @@ Bool CharacterController::SetEnabled(Bool isEnabled)
 {
 	if (CollisionObjectController::SetEnabled(isEnabled))
 	{
-		if (mIsEnabled)
+		if (isEnabled)
 		{
 			mpPhysicsWorld->Get()->addCollisionObject(mpCollisionObject,
 				btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter | 

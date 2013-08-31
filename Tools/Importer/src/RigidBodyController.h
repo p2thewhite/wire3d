@@ -17,6 +17,9 @@ public:
 	// geometric update called by UpdateGS()
 	virtual Bool Update(Double appTime);
 
+	// add/remove from the physics world
+	virtual Bool SetEnabled(Bool isEnabled);
+
 	inline btRigidBody* Get() { return (btRigidBody*)mpCollisionObject; }
 };
 

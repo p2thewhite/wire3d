@@ -241,7 +241,7 @@ public class Unity3DExporter : EditorWindow
                     gos.Add(t.gameObject);
                 }
 
-                for (int i = t.GetChildCount()-1; i >= 0; i--)
+                for (int i = t.childCount-1; i >= 0; i--)
                 {
                     stack.Push(t.GetChild(i));
                 }
@@ -338,7 +338,7 @@ public class Unity3DExporter : EditorWindow
 
         List<Light> lights = GetLightsForRenderer(meshRenderer);
         bool extraNode = false;
-        if (lights.Count > 0 && transform.GetChildCount() > 0)
+        if (lights.Count > 0 && transform.childCount > 0)
         {
             indent = indent + "  ";
             string isStatic = go.isStatic ? " Static=\"1\"" : "";
@@ -447,7 +447,7 @@ public class Unity3DExporter : EditorWindow
             isStatic += "Static=\"1\"";
         }
 
-        bool isEmpty = go.transform.GetChildCount() == 0;
+        bool isEmpty = go.transform.childCount == 0;
         Component[] components = go.GetComponents<Component>();
         isEmpty = isEmpty && (components == null || components.Length < 2);
         string slash = isEmpty ? " /" : "";
@@ -468,12 +468,9 @@ public class Unity3DExporter : EditorWindow
             WriteRenderObject(transform, outFile, indent);
         }
 
-		if (transform.GetChildCount () > 0)
-        {   	
-			for (int i = 0; i < transform.GetChildCount(); i++)
-            {
-				Traverse(transform.GetChild (i), outFile, indent + "  ");
-			}
+		for (int i = 0; i < transform.childCount; i++)
+        {
+			Traverse(transform.GetChild (i), outFile, indent + "  ");
 		}
     	
         if (!isEmpty)
@@ -727,7 +724,7 @@ public class Unity3DExporter : EditorWindow
                 continue;
             }
 
-            for (int i = t.GetChildCount() - 1; i >= 0; i--)
+            for (int i = t.childCount - 1; i >= 0; i--)
             {
                 stack.Push(t.GetChild(i));
             }
@@ -802,7 +799,7 @@ public class Unity3DExporter : EditorWindow
                 continue;
             }
 
-            for (int i = t.GetChildCount()-1; i >= 0; i--)
+            for (int i = t.childCount-1; i >= 0; i--)
             {
                 stack.Push(t.GetChild(i));
             }
@@ -958,13 +955,14 @@ public class Unity3DExporter : EditorWindow
 	private void WriteCollider (GameObject gameObject, StreamWriter outFile, string indent)
 	{
 		Collider collider = gameObject.GetComponent<Collider>();
-		if (collider == null || !collider.enabled)
+		if (collider == null)
         {
 			return;
 		}
 		
         string shape = GetColliderShapeName(collider);
-		outFile.Write (indent + "  " + "<Collider Shape=\"" + shape + "\" ");
+        string isEnabled = collider.enabled ? string.Empty : "Enabled=\"0\" ";
+		outFile.Write (indent + "  " + "<Collider " + isEnabled + "Shape=\"" + shape + "\" ");
 		
 		if (collider is BoxCollider)
         {

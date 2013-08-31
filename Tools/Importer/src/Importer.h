@@ -144,12 +144,14 @@ private:
 #ifndef NO_BULLET_PHYSICS_LIB
 	struct RigidBodyInfo
 	{
-		RigidBodyInfo()	: Mass(0), Damping(0), AngularDamping(0.5F), IsKinematic(false) {}
+		RigidBodyInfo()	: Mass(0), Damping(0), AngularDamping(0.5F), IsKinematic(false),
+			IsEnabled(true) {}
 
 		Float Mass;
 		Float Damping;
 		Float AngularDamping;
 		Bool IsKinematic;
+		Bool IsEnabled;
 	};
 
 	void ParseCollider(rapidxml::xml_node<>* pXmlNode, Wire::Spatial* pSpatial);

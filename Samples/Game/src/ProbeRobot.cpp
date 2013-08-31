@@ -105,9 +105,11 @@ void ProbeRobot::CalculateMovementAndRotation()
 		const Float range = 60;
 		distanceSquared = MathF::Min(distanceSquared, range);
 		Float speed = mSpeed * distanceSquared / range;
-		WIRE_ASSERT(mpPhysicsWorld);
-		move = direction * speed * static_cast<Float>(mpPhysicsWorld->
-			GetFixedTimeStep());
+		if (mpPhysicsWorld)
+		{
+			move = direction * speed * static_cast<Float>(mpPhysicsWorld->
+				GetFixedTimeStep());
+		}
 	}
 
 	// update the scene object

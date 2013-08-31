@@ -873,8 +873,12 @@ void Importer::AddRigidBodyController(Spatial* pSpatial, btCollisionShape*
 
 	RigidBodyController* pController = WIRE_NEW RigidBodyController(
 		mspPhysicsWorld, pRigidBody);
-	pController->SetEnabled(true);
 	pSpatial->AttachController(pController);
+
+	if (rInfo.IsEnabled)
+	{
+		pController->SetEnabled(true);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -937,6 +941,8 @@ void Importer::ParseCollider(rapidxml::xml_node<>* pXmlNode, Spatial* pSpatial)
 			ParseRigidBodyInfo(info, pChild);
 		}
 	}
+
+	GetBool(pXmlNode, "Enabled", info.IsEnabled);
 
 	// TODO: Make sure to re-use shapes among rigid bodies whenever possible!
 	btCollisionShape* pCollisionShape = NULL;
