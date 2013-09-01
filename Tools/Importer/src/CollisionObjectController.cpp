@@ -81,6 +81,11 @@ void CollisionObjectController::ToggleDebugShape(Bool show, Bool destroyOnHide)
 //----------------------------------------------------------------------------
 Bool CollisionObjectController::Update(Double appTime)
 {
+	if (!mIsEnabled)
+	{
+		return false;
+	}
+
 	if (!mpCollisionObject || !Controller::Update(appTime))
 	{
 		return false;

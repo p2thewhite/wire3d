@@ -460,7 +460,7 @@ public class Unity3DExporter : EditorWindow
         WriteLightNode(go.GetComponent<Light>(), outFile, indent);
 
         WriteCamera(go.GetComponent<Camera>(), outFile, indent);
-        WriteCollider(go, outFile, indent);
+        WriteColliders(go, outFile, indent);
         WriteRigidbody(go, outFile, indent);
 
         if (HasRenderObject(transform))
@@ -951,10 +951,18 @@ public class Unity3DExporter : EditorWindow
 			    "\" Color=\"" + color.r + ", " + color.g + ", " + color.b + "\"" + mask + enabled + lightmap + " />");
         }
 	}
-	
-	private void WriteCollider (GameObject gameObject, StreamWriter outFile, string indent)
+
+    private void WriteColliders(GameObject gameObject, StreamWriter outFile, string indent)
+    {
+        Collider[] colliders = gameObject.GetComponents<Collider>();
+        foreach (Collider collider in colliders)
+        {
+            WriteCollider(collider, gameObject, outFile, indent);
+        }
+    }
+
+	private void WriteCollider(Collider collider, GameObject gameObject, StreamWriter outFile, string indent)
 	{
-		Collider collider = gameObject.GetComponent<Collider>();
 		if (collider == null)
         {
 			return;

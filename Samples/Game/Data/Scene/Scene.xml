@@ -907,6 +907,8 @@
   </Node>
   <Node Name="Probe Robot" Pos="0, 10, 10" Rot="1, 2.185569E-08, 0, 0">
     <Collider Shape="Character" Height="2.1" Radius="1.41" Slope="45" Step="0.3" Center="0, -1.15, 0.3" />
+    <Collider Enabled="0" Shape="Capsule" Center="0, -1.15, 0.3" Radius="1.41" Height="2.1" Direction="Y" />
+    <RigidBody Mass="10" AngularDrag="0.05" />
     <Light Name="Directional Light Blue" />
     <Light Name="Directional Light Yellow" />
     <Light Name="Point light" />
