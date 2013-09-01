@@ -36,3 +36,9 @@ inline Wire::QuaternionF PhysicsWorld::Convert(const btQuaternion& rIn)
 {
 	return Wire::QuaternionF(rIn.getW(), rIn.getX(), rIn.getY(), rIn.getZ());
 }
+
+//----------------------------------------------------------------------------
+inline btQuaternion PhysicsWorld::Convert(const Wire::QuaternionF& rIn)
+{
+	return btQuaternion(rIn.X(), rIn.Y(), rIn.Z(), rIn.W());
+}

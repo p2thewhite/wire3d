@@ -45,6 +45,7 @@ public:
 	static inline Wire::Vector3F Convert(const btVector3& rIn);
 	static inline btMatrix3x3 Convert(const Wire::Matrix3F& rIn);
 	static inline Wire::QuaternionF Convert(const btQuaternion& rIn);
+	static inline btQuaternion Convert(const Wire::QuaternionF& rIn);
 	static btTriangleIndexVertexArray* Convert(Wire::Mesh* pMesh, Bool copy = true);
 
 	Wire::Node* CreateDebugShape(btCollisionShape* pShape);

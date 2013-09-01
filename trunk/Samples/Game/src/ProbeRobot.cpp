@@ -58,12 +58,22 @@ void ProbeRobot::Die()
 		return;
 	}
 
-	// DEBUG:
-	//System::Print("Probe robot has died\n");
-	
-	GetSceneObject()->DetachController(this);
+	// probe robot is dead, disable character controller
+	mspCharacter->SetEnabled(false);
+	btTransform worldTrafo = mspCharacter->Get()->getWorldTransform();
 	mspCharacter->Get()->setUserPointer(NULL);
 	mspCharacter->GetCharacter()->setWalkDirection(btVector3(0, 0, 0));
+
+	// enable robot corpse, i.e. rigid body
+	RigidBodyController* pRigidBodyController = GetSceneObject()->
+		GetController<RigidBodyController>();
+	if (pRigidBodyController)
+	{
+		pRigidBodyController->Get()->setWorldTransform(worldTrafo);
+		pRigidBodyController->SetEnabled(true);
+	}
+
+	GetSceneObject()->DetachController(this);
 }
 
 //----------------------------------------------------------------------------
@@ -119,9 +129,12 @@ void ProbeRobot::CalculateMovementAndRotation()
 
 	Vector3F right = distance.Cross(Vector3F::UNIT_Y);
 	right.Normalize();
-	Matrix34F matrix(-right, Vector3F::UNIT_Y, distance, probeRobotPosition);
-	pSpatial->Local.SetMatrix(matrix, false);
+	Matrix3F rotation(-right, Vector3F::UNIT_Y, distance, true);
+	pSpatial->Local.SetRotate(rotation);
+	pSpatial->Local.SetTranslate(probeRobotPosition);
 
 	// update the physics object
 	mspCharacter->GetCharacter()->setWalkDirection(PhysicsWorld::Convert(move));
+	QuaternionF q(rotation);
+	mspCharacter->Get()->getWorldTransform().setRotation(PhysicsWorld::Convert(q));
 }

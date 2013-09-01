@@ -23,6 +23,11 @@ RigidBodyController::~RigidBodyController()
 //----------------------------------------------------------------------------
 Bool RigidBodyController::Update(Double appTime)
 {
+	if (!mIsEnabled)
+	{
+		return false;
+	}
+
 	WIRE_ASSERT(DynamicCast<Spatial>(mpSceneObject));
 	if (!mpCollisionObject || !Controller::Update(appTime))
 	{
