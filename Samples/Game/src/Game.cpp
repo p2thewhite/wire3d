@@ -344,17 +344,26 @@ Node* Game::LoadAndInitializeScene()
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 	mSortingCuller.SetMaxQuantity(renderObjectCount);
 
-	Spatial* pProbeRobotSpatial = pScene->FindChild("Probe Robot");
-	Spatial* pPlayerSpatial = pScene->FindChild("Player");
-
 	// Create and configure probe robot controller
-	Spatial* pRedHealthBar = mspGUI->FindChild("RedHealthBar");
-	WIRE_ASSERT(pRedHealthBar /* No RedHealthBar in GUI.xml */);
-	pRedHealthBar->Local.SetTranslate(Vector3F(276, GetHeightF() - 26.0F, 0));
-	mspGUI->UpdateGS();
+	SpatialPtr spRedHealthBar = mspGUI->FindChild("RedHealthBar");
+	WIRE_ASSERT(spRedHealthBar /* No RedHealthBar in GUI.xml */);
+
+	Node* pProbeRobotSpatial = DynamicCast<Node>(pScene->FindChild("Probe Robot"));
+	WIRE_ASSERT(pProbeRobotSpatial /* No Probe Robot in Scene.xml */);
+
+	// Detach red energy/health bar and attach it robot probe as a billboard
+	NodeBillboard* pBillboard = WIRE_NEW NodeBillboard;
+	pProbeRobotSpatial->AttachChild(pBillboard);
+	Node* pParent = DynamicCast<Node>(spRedHealthBar->GetParent());
+	WIRE_ASSERT(pParent);
+	pParent->DetachChild(spRedHealthBar);
+	pBillboard->AttachChild(spRedHealthBar);
+
+	Spatial* pPlayerSpatial = pScene->FindChild("Player");
+	WIRE_ASSERT(pPlayerSpatial /* No Player in Scene.xml */);
 
 	mspProbeRobot = WIRE_NEW ProbeRobot(mspPhysicsWorld, pPlayerSpatial,
-		pRedHealthBar);
+		spRedHealthBar);
 	pProbeRobotSpatial->AttachController(mspProbeRobot);
 
 	// Create and configure player controller

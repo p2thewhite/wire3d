@@ -53,7 +53,8 @@ Bool ProbeRobot::Update(Double appTime)
 //----------------------------------------------------------------------------
 void ProbeRobot::Die()
 {
-	if (!GetSceneObject())
+	Node* pNode = DynamicCast<Node>(GetSceneObject());
+	if (!pNode)
 	{
 		return;
 	}
@@ -64,16 +65,27 @@ void ProbeRobot::Die()
 	mspCharacter->Get()->setUserPointer(NULL);
 	mspCharacter->GetCharacter()->setWalkDirection(btVector3(0, 0, 0));
 
+	// cull left over energy bar
+	for (UInt i = 0; i < pNode->GetQuantity(); i++)
+	{
+		pNode->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
+	}
+
 	// enable robot corpse, i.e. rigid body
-	RigidBodyController* pRigidBodyController = GetSceneObject()->
-		GetController<RigidBodyController>();
+	RigidBodyController* pRigidBodyController = pNode->GetController<
+		RigidBodyController>();
 	if (pRigidBodyController)
 	{
 		pRigidBodyController->Get()->setWorldTransform(worldTrafo);
+		worldTrafo.setOrigin(btVector3(0, 0, 0));
+		btVector3 velocity(-3, 0.7F, 0.3F);
+		velocity = worldTrafo * velocity;	
+		pRigidBodyController->Get()->setAngularVelocity(velocity);
 		pRigidBodyController->SetEnabled(true);
 	}
 
-	GetSceneObject()->DetachController(this);
+	// detach this controller, no more Updates() will be received.
+	pNode->DetachController(this);
 }
 
 //----------------------------------------------------------------------------
@@ -89,9 +101,6 @@ void ProbeRobot::OnAttach()
 //----------------------------------------------------------------------------
 void ProbeRobot::TakeDamage(Float damage)
 {
-	// DEBUG:
-	//System::Print("Probe robot has taken %.1f point of damage\n", damage);
-
 	mHealth -= damage;
 }
 

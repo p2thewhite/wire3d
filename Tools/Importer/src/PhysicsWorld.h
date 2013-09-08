@@ -81,6 +81,7 @@ private:
 		Wire::IndexBufferPtr IBReference;
 	};
 
+	// TODO: ownership of shapes?
 	Wire::TArray<CollisionShapeItem> mCollisionShapes;
 
 	Double mFixedTimeStep;
