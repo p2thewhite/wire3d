@@ -43,7 +43,7 @@ void NodeBillboard::UpdateWorldData(Double appTime, Bool updateControllers)
 
         // To align the billboard, the projection of the camera to the
         // xz-plane of the billboard's model space determines the angle of
-        // rotation about the billboard's model y-axis.  If the projected
+        // rotation about the billboard's model y-axis. If the projected
         // camera is on the model axis (x = 0 and z = 0), ATan2 returns zero
         // (rather than NaN), so there is no need to trap this degenerate
         // case and handle it separately.

@@ -81,7 +81,7 @@ Node* Importer::LoadSceneFromXml(const Char* pFilename)
 	mTextures.RemoveAll();
 	mLights.RemoveAll();
 
-	pRoot->UpdateGS(0, true, false);
+	pRoot->UpdateGS(-MathD::MAX_REAL, true, false);
 	pRoot->UpdateRS();
 
 	if (mStaticSpatials.GetQuantity() > 0)
