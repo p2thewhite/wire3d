@@ -75,5 +75,10 @@ This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSampl
 
 === Sample11 - Input ===
 This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FSample11%2Fsrc Source]) demonstrates how to process inputs from the Wiimote and Nunchuk on the Wii or their emulated counterparts on the PC. In particular the sample shows creation and/or usage of:
-  * Input devices and extensions
-  * Handling connection and disconnection of devices and extensions during runtime
+  * input devices and extensions
+  * handling connection and disconnection of devices and extensions during runtime
+
+=== Demo ===
+This sample ([http://code.google.com/p/wire3d/source/browse/#svn%2Ftrunk%2FSamples%2FDemo%2Fsrc Source]/[http://www.youtube.com/watch?v=ec_3FjXzKoo Video]) demonstrates how to load and manipulate a scene. In particular the sample shows creation and/or usage of:
+  * Importer library to load a scene
+  * controllers attaching to scene objects to access and manipulate them
