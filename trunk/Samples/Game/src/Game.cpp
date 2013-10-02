@@ -10,15 +10,6 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Game::Game() 
  	:
-// TODO: remove comment
-// 	WIREAPPLICATION(
-// 		ColorRGBA(0.0F, 0.0F, 0.0F, 1.0F),	// background color
-// 		// The following parameters are PC only:
-// 		"Game",	// title of the window,
-// 		0, 0,		// window position
-// 		640, 480,	// window size; (use (0,0) for current desktop resolution)
-// 		false,
-// 		false),		// fullscreen
 	mCursorPosition(Vector2F::ZERO),
 	mShowColliders(false),
 	mShowFps(false),
@@ -124,16 +115,24 @@ void Game::ProcessInput()
 
 	Vector2F cursorPosition(pIR->GetRight(), pIR->GetUp());
 
-	// If the IR is pointing outside of the capture area, set the lookAt vector to the previous captured position
-	// TODO: fix inconsistent Win32/Wii behavior/handling
+	// If the IR/mouse is pointing outside of the capture area,
+	// set the lookAt vector to the center of the screen.
 	if (cursorPosition.X() == MathF::MAX_REAL || cursorPosition.Y() == MathF::MAX_REAL)
 	{
-		cursorPosition = mCursorPosition;
+		cursorPosition = Vector2F(GetWidthF() * 0.5F, GetHeightF() * 0.5F);
+		if (mspCrosshair)
+		{
+			mspCrosshair->Culling = Spatial::CULL_ALWAYS;
+		}
 	}
 	else
 	{
 		// Height correction
 		cursorPosition.Y() = GetHeightF() - cursorPosition.Y();
+		if (mspCrosshair)
+		{
+			mspCrosshair->Culling = Spatial::CULL_DYNAMIC;
+		}
 	}
 
 	mCursorPosition = cursorPosition;

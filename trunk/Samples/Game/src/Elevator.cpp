@@ -31,7 +31,6 @@ void Elevator::PhysicsUpdate(Double appTime)
 		return;
 	}
 
-	// TODO: physics time vs render time?
 	btTransform trans;
 	pRigidBodyController->Get()->getMotionState()->getWorldTransform(trans);
 	btVector3 origin = trans.getOrigin();

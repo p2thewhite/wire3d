@@ -199,6 +199,12 @@ Node* Demo::LoadAndInitScene()
 	UInt renderObjectCount = importer.GetStatistics()->RenderObjectCount;
 	mSceneCuller.SetMaxQuantity(renderObjectCount);
 
+	// Use controllers to animate scene objects (rotating fan,
+	// moving conveyor belt and spline camera).
+	// Controllers are attached to scene objects and receive calls,
+	// e.g. Update() durings the scene's UpdateGS(), OnGetVisibleUpdate()
+	// from the culler for visible objects, etc.
+	// See WireController.h for details.
 	TArray<Spatial*> fans;
 	pScene->FindChildren("ceilingFan", fans);
 	for (UInt i = 0; i < fans.GetQuantity(); i++)

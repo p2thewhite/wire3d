@@ -67,7 +67,7 @@ LRESULT CALLBACK WireMsWindowEventHandler(HWND hWnd, UINT msg, WPARAM wParam, LP
 	Win32InputSystem* pInputSystem = static_cast<Win32InputSystem*>(pApp->GetInputSystem());
 
 	// It this call returns true it means that the given system message was handled by the broker.
-	if (pInputSystem->OnSystemMessage(msg, static_cast<UInt>(wParam), static_cast<Long>(lParam)))
+	if (pInputSystem->OnSystemMessage(msg, static_cast<UInt>(wParam), static_cast<Long>(lParam), hWnd))
 	{
 		return 0;
 	}
