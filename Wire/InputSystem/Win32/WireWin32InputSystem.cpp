@@ -11,10 +11,15 @@
 #include "WireWin32EmulatedNunchuk.h"
 #include <Windows.h>
 #include <Windowsx.h>
+#include <CommCtrl.h>
+
+#pragma comment(lib, "Comctl32.lib")
 
 using namespace Wire;
 
 Win32InputSystem::Win32InputSystem()
+	:
+	mIsMouseOver(false)
 {
 	mpFrontBuffer = WIRE_NEW Win32InputDataBuffer;
 	mpBackBuffer = WIRE_NEW Win32InputDataBuffer;
@@ -71,7 +76,7 @@ void Win32InputSystem::SwapBuffers()
 	mpBackBuffer->CopyFrom(mpFrontBuffer);
 }
 
-Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter)
+Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter, HWND hWnd)
 {
 	Int x; 
 	Int y;
@@ -102,11 +107,21 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 		mpBackBuffer->IncrementMouseWheel(static_cast<Float>(mouseWheelDelta)/WHEEL_DELTA);
 		return true;
 	case WM_MOUSEMOVE:
-		x = GET_X_LPARAM(longParameter); 
-		y = GET_Y_LPARAM(longParameter);
+			x = GET_X_LPARAM(longParameter); 
+			y = GET_Y_LPARAM(longParameter);
 
-		mpBackBuffer->SetMouseX(static_cast<Float>(x));
-		mpBackBuffer->SetMouseY(static_cast<Float>(y));
+			mpBackBuffer->SetMouseX(static_cast<Float>(x));
+			mpBackBuffer->SetMouseY(static_cast<Float>(y));
+
+		if (!mIsMouseOver)
+		{
+			mIsMouseOver = true;
+			TRACKMOUSEEVENT tme;
+			tme.cbSize = sizeof(tme);
+			tme.dwFlags = TME_LEAVE;
+			tme.hwndTrack = hWnd;
+			_TrackMouseEvent(&tme);
+		}
 
 		return true;
 	case WM_KEYDOWN:
@@ -114,6 +129,11 @@ Bool Win32InputSystem::OnSystemMessage(UInt messageType, UInt wordParameter, Lon
 		return true;
 	case WM_KEYUP:
 		mpBackBuffer->SetKeyUp(wordParameter);
+		return true;
+	case WM_MOUSELEAVE:
+		mIsMouseOver = false;
+		mpBackBuffer->SetMouseX(MathF::MAX_REAL);
+		mpBackBuffer->SetMouseY(MathF::MAX_REAL);
 		return true;
 	}
 

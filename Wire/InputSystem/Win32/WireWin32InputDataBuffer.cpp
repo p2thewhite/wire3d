@@ -7,12 +7,14 @@
 // that agreement.
 
 #include "WireWin32InputDataBuffer.h"
+
+#include "WireMath.h"
 #include "WireSystem.h"
 
 using namespace Wire;
 
 Win32InputDataBuffer::Win32InputDataBuffer()
-	: mMouseX(0), mMouseY(0), mMouseWheel(0)
+	: mMouseX(MathF::MAX_REAL), mMouseY(MathF::MAX_REAL), mMouseWheel(0)
 {
 	const UInt keysCount = 256;
 	mpKeys = WIRE_NEW Bool[keysCount];

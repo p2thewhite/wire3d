@@ -12,6 +12,7 @@
 
 #include "WireInputSystem.h"
 #include "WireWin32InputDataBuffer.h"
+#include <Windows.h>
 
 namespace Wire
 {
@@ -26,13 +27,14 @@ public:
 	virtual void Capture();
 	virtual Bool DiscoverDevices();
 
-	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter);
+	Bool OnSystemMessage(UInt messageType, UInt wordParameter, Long longParameter, HWND hWnd);
 
 private:
 	void SwapBuffers();
 
 	Win32InputDataBuffer* mpFrontBuffer;
 	Win32InputDataBuffer* mpBackBuffer;
+	Bool mIsMouseOver;
 };
 
 }

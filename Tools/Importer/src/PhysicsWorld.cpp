@@ -48,12 +48,6 @@ PhysicsWorld::~PhysicsWorld()
 		pKey->mpPhysicsWorld = NULL;
 	}
 
-	//remove the rigid bodies from the dynamics world and delete them
-	for (Int i = mpDynamicsWorld->getNumCollisionObjects()-1; i >= 0; i--)
-	{
-		SaveCollisionShapes(mpDynamicsWorld->getCollisionObjectArray()[i]);
-	}
-
 	//delete collision shapes
 	for (UInt i = 0; i < mCollisionShapes.GetQuantity(); i++)
 	{
@@ -136,16 +130,8 @@ void PhysicsWorld::AddController(PhysicsController* pController,
 void PhysicsWorld::RemoveController(PhysicsController* pController)
 {
 	WIRE_ASSERT(pController);
-
-	btCollisionObject** pCollisionObjectPtr = mCollisionObjectMap.Find(pController);
-	WIRE_ASSERT(pCollisionObjectPtr);
-	btCollisionObject* pCollisionObject = *pCollisionObjectPtr;
+	WIRE_ASSERT(mCollisionObjectMap.Find(pController));
 	mCollisionObjectMap.Remove(pController);
-
-	if (pCollisionObject)
-	{
-		SaveCollisionShapes(pCollisionObject);
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -157,27 +143,6 @@ void PhysicsWorld::AddCollisionShape(btCollisionShape* pShape, VertexBuffer*
 	item.VBReference = pVBRef;
 	item.IBReference = pIBRef;
 	mCollisionShapes.Append(item);
-}
-
-//----------------------------------------------------------------------------
-void PhysicsWorld::SaveCollisionShapes(btCollisionObject* pCollisionObject)
-{
-	btCollisionShape* pShape = pCollisionObject->getCollisionShape();
-	Bool found = false;
-	for (UInt i = 0; i < mCollisionShapes.GetQuantity(); i++)
-	{
-		if (mCollisionShapes[i].CollisionShape == pShape)
-		{
-			found = true;
-			break;
-		}
-	}
-
-	if (!found)
-	{
-		CollisionShapeItem item(pShape);
-		mCollisionShapes.Append(item);
-	}
 }
 
 //----------------------------------------------------------------------------

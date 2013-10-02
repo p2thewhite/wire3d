@@ -36,6 +36,7 @@ public:
 	void AddController(PhysicsController* pController, btCollisionObject* pCollisionObject = NULL);
 	void RemoveController(PhysicsController* pController);
 
+	// transfer ownership to PhysicsWorld. Shapes are destroyed in its destructor
 	void AddCollisionShape(btCollisionShape* pShape, Wire::VertexBuffer* pVBRef = NULL,
 		Wire::IndexBuffer* pIBRef = NULL);
 
@@ -51,8 +52,6 @@ public:
 	Wire::Node* CreateDebugShape(btCollisionShape* pShape);
 
 private:
-	void SaveCollisionShapes(btCollisionObject* pCollisionObject);
-
 	Wire::Node* CreateDebugBox(btBoxShape* pBox);
 	Wire::Node* CreateDebugSphere(btSphereShape* pSphereShape);
 	Wire::Node* CreateDebugCapsule(btCapsuleShape* pCapsuleShape);
@@ -81,7 +80,6 @@ private:
 		Wire::IndexBufferPtr IBReference;
 	};
 
-	// TODO: ownership of shapes?
 	Wire::TArray<CollisionShapeItem> mCollisionShapes;
 
 	Double mFixedTimeStep;
