@@ -42,8 +42,8 @@ PhysicsWorld::~PhysicsWorld()
 	{
 		THashTable<PhysicsController*, btCollisionObject*>::Iterator it(&mCollisionObjectMap);
 		PhysicsController* pKey = NULL;
-		btCollisionObject** pValue = it.GetFirst(&pKey);
-		WIRE_ASSERT(pValue && pKey);
+		it.GetFirst(&pKey);
+		WIRE_ASSERT(pKey);
 		pKey->SetEnabled(false);
 		pKey->mpPhysicsWorld = NULL;
 	}

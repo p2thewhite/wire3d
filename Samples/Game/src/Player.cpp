@@ -202,7 +202,10 @@ void Player::ProcessInput()
 	// 'A' button makes the player shoot
 	if (pButtons->GetButton(Buttons::BUTTON_A))
 	{
-		ShootGun();
+		if (mpGun && mpGun->Culling == Spatial::CULL_DYNAMIC)
+		{
+			ShootGun();
+		}
 	}
 
 	// 'B' button makes the player jump
@@ -382,6 +385,24 @@ void Player::LookAt(const Vector2F& rLookAt)
 }
 
 //----------------------------------------------------------------------------
+void Player::ShowGun()
+{
+	if (mpGun)
+	{
+		mpGun->Culling = Spatial::CULL_DYNAMIC;
+	}
+}
+
+//----------------------------------------------------------------------------
+void Player::HideGun()
+{
+	if (mpGun)
+	{
+		mpGun->Culling = Spatial::CULL_ALWAYS;
+	}
+}
+
+//----------------------------------------------------------------------------
 Vector3F Player::GetPosition()
 {
 	btVector3 origin = mspCharacter->Get()->getWorldTransform().getOrigin();
@@ -410,13 +431,15 @@ void Player::UpdateGun(Double deltaTime)
 	// to reduce the Wiimote's tilt jitter we average the last few sampled
 	// tilt values
 	Float tilt = 0;
-	for (UInt i = 0; i < mRolls.GetQuantity(); i++)
+	if (mRolls.GetQuantity() > 0)
 	{
-		tilt += mRolls[i];
-	}
+		for (UInt i = 0; i < mRolls.GetQuantity(); i++)
+		{
+			tilt += mRolls[i];
+		}
 
-	WIRE_ASSERT(mRolls.GetQuantity() > 0);
-	tilt /= mRolls.GetQuantity();
+		tilt /= mRolls.GetQuantity();
+	}
 
 	Matrix3F roll(Vector3F(0, 0, 1), tilt);
 	mpGun->Local.SetRotate(mat * roll);
