@@ -10,6 +10,7 @@ using namespace Wire;
 //----------------------------------------------------------------------------
 Game::Game() 
  	:
+	mShowWarning(false),
 	mCursorPosition(Vector2F::ZERO),
 	mShowColliders(false),
 	mShowFps(false),
@@ -43,6 +44,10 @@ Bool Game::OnInitialize()
 	mspText = Importer::CreateText("Data/Logo/font.ttf", 12, 12);
 	WIRE_ASSERT(mspText);
 	GetRenderer()->Bind(mspText);
+
+	mspWarningText = Importer::CreateText("Data/Logo/font.ttf", 24, 24);
+	WIRE_ASSERT(mspWarningText);
+	GetRenderer()->Bind(mspWarningText);
 
 	GetRenderer()->CreateBatchingBuffers(50*1024, 10*1024);
 	GetRenderer()->SetDynamicBatchingThreshold(300, 100);
@@ -119,19 +124,32 @@ void Game::ProcessInput()
 	// set the lookAt vector to the center of the screen.
 	if (cursorPosition.X() == MathF::MAX_REAL || cursorPosition.Y() == MathF::MAX_REAL)
 	{
+		// outside the screen
+		mShowWarning = true;
 		cursorPosition = Vector2F(GetWidthF() * 0.5F, GetHeightF() * 0.5F);
 		if (mspCrosshair)
 		{
 			mspCrosshair->Culling = Spatial::CULL_ALWAYS;
 		}
+
+		if (mspPlayer)
+		{
+			mspPlayer->HideGun();
+		}
 	}
 	else
 	{
+		mShowWarning = false;
 		// Height correction
 		cursorPosition.Y() = GetHeightF() - cursorPosition.Y();
 		if (mspCrosshair)
 		{
 			mspCrosshair->Culling = Spatial::CULL_DYNAMIC;
+		}
+
+		if (mspPlayer)
+		{
+			mspPlayer->ShowGun();
 		}
 	}
 
@@ -209,6 +227,11 @@ void Game::OnRunning(Double time, Double deltaTime)
 
 	GetRenderer()->SetCamera(mspGUICamera);
 	GetRenderer()->Draw(mCuller.GetVisibleSets());
+
+	if (mShowWarning)
+	{
+		DrawWarning(time);
+	}
 
 	if (mShowFps)
 	{
@@ -377,4 +400,24 @@ Node* Game::LoadAndInitializeScene()
 	pScene->WarmUpRendering(GetRenderer());
 
 	return pScene;
+}
+
+//----------------------------------------------------------------------------
+void Game::DrawWarning(Double time)
+{
+	GetRenderer()->DisableLighting();
+	Float f = (MathF::Sin(MathF::FMod(static_cast<Float>(time*5),
+		MathF::TWO_PI)) + 1) * 0.5F;
+	ColorRGB color(1, f, f);
+	mspWarningText->Clear(color);
+	mspWarningText->Append("Aim at the screen!");
+	mspWarningText->Update(GetRenderer());
+
+	Vector3F center = mspWarningText->GetMesh()->GetModelBound()->GetCenter();
+	center.Y() -= static_cast<Float>(mpRenderer->GetHeight()) * 0.5F;
+	center.X() -= static_cast<Float>(mpRenderer->GetWidth()) * 0.5F;
+	Transformation translate;
+	translate.SetTranslate(-center);
+
+	GetRenderer()->Draw(mspWarningText, translate);
 }

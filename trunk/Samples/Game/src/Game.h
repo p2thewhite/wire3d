@@ -36,6 +36,8 @@ private:
 
 	void ProcessInput();
 
+	void DrawWarning(Double time);
+
 	Double mLastApplicationTime;
 	UInt mAppState;
 
@@ -59,8 +61,10 @@ private:
 	Wire::Culler mCuller;
 	Wire::CullerSorting mSortingCuller;
 
-	// render statistics text
-	Wire::TextPtr mspText;
+	Wire::TextPtr mspText;		// render statistics text
+
+	Wire::TextPtr mspWarningText;
+	Bool mShowWarning;
 
 	Wire::Vector2F mCursorPosition;
 	Bool mShowColliders;

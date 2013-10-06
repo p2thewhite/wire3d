@@ -68,7 +68,10 @@ void ProbeRobot::Die()
 	// cull left over energy bar
 	for (UInt i = 0; i < pNode->GetQuantity(); i++)
 	{
-		pNode->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
+		if (pNode->GetChild(i))
+		{
+			pNode->GetChild(i)->Culling = Spatial::CULL_ALWAYS;
+		}
 	}
 
 	// enable robot corpse, i.e. rigid body

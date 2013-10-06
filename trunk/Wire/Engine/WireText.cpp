@@ -21,15 +21,46 @@ WIRE_IMPLEMENT_RTTI(Wire, Text, RenderObject);
 Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	TArray<Vector4F>& rCharSizes, UInt maxLength)
 	:
+	mUvs(rUvs),
+	mCharSizes(rCharSizes),
 	mColor(Color32::WHITE),
+	mFontHeight(static_cast<Float>(fontHeight)),
+	mLineWidth(MathF::MAX_REAL),
+	mWhitespaceWidth(mCharSizes[' '].Z()),
 	mIsPdrBufferOutOfDate(true)
 {
-	WIRE_ASSERT(rUvs.GetQuantity() == rCharSizes.GetQuantity()*4);
-	WIRE_ASSERT(maxLength < (0x10000/4));
+	Init(pFontTexture, maxLength);
+}
 
-	mFontHeight = static_cast<Float>(fontHeight);
-	mUvs = rUvs;
-	mCharSizes = rCharSizes;
+//----------------------------------------------------------------------------
+Text::Text(const Text* pText, UInt maxLength)
+	:
+	mUvs(pText->mUvs),
+	mCharSizes(pText->mCharSizes),
+	mColor(pText->mColor),
+	mFontHeight(pText->mFontHeight),
+	mLineWidth(pText->mLineWidth),
+	mPenX(pText->mPenX),
+	mPenY(pText->mPenY),
+	mWhitespaceWidth(pText->mWhitespaceWidth),
+	mIsPdrBufferOutOfDate(true)
+{
+	WIRE_ASSERT(pText);
+	Texture2D* pFontTexture = NULL;
+	const Material* pMaterial = pText->GetMaterial();
+	if (pMaterial && pMaterial->GetTextureQuantity() > 0)
+	{
+		pFontTexture = pMaterial->GetTexture();
+	}
+
+	Init(pFontTexture, maxLength);
+}
+
+//----------------------------------------------------------------------------
+void Text::Init(Texture2D* pFontTexture, UInt maxLength)
+{
+	WIRE_ASSERT(mUvs.GetQuantity() == mCharSizes.GetQuantity()*4);
+	WIRE_ASSERT(maxLength < (0x10000/4));
 
 	VertexAttributes attr;
 	attr.SetPositionChannels(3);
@@ -53,8 +84,6 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 	SetMesh(pMesh);
 
 	Clear();
-	mWhitespaceWidth = mCharSizes[' '].Z();
-	mLineWidth = MathF::MAX_REAL;
 
 	Material* pMaterial = WIRE_NEW Material;
 	pMaterial->AddTexture(pFontTexture);

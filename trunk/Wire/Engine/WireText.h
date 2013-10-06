@@ -26,6 +26,9 @@ class Text : public RenderObject
 public:
 	Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 		TArray<Vector4F>& rCharSizes, UInt maxLength);
+	// Shallow copy of pVertexBuffer
+	Text(const Text* pText, UInt maxLength);
+
 	virtual ~Text();
 
 	void Clear();
@@ -57,6 +60,8 @@ public:
 	void Update(Renderer* pRenderer);
 
 private:
+	void Init(Texture2D* pFontTexture, UInt maxLength);
+
 	TArray<Vector2F> mUvs;			// 4 per font character
 	TArray<Vector4F> mCharSizes;	// 1 (width, height, stride x, offset y)
 	Color32 mColor;

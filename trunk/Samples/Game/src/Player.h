@@ -18,6 +18,8 @@ public:
 	virtual Bool Update(Double appTime);
 	virtual void OnAttach();
 	void LookAt(const Wire::Vector2F& rLookAt);
+	void ShowGun();
+	void HideGun();
 
 private:
 	void ProcessInput();
