@@ -20,7 +20,7 @@ class Image2D;
 class Mesh;
 class PdrDisplayList;
 class PdrIndexBuffer;
-class Text;
+class RenderText;
 
 class PdrRendererData
 {
@@ -49,7 +49,7 @@ public:
 		UInt startIndex);
 
 	// Platform dependent renderer statistics (e.g. display lists allocated)
-	void AppendStatistics(Text* pText);
+	void AppendStatistics(RenderText* pText);
 	void ResetStatistics();
 
 	// internally used by System::Assert

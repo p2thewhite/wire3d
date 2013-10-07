@@ -17,7 +17,7 @@ namespace Wire
 {
 
 class Renderer;
-class Text;
+class RenderText;
 
 class RendererStatistics
 {
@@ -50,13 +50,13 @@ public:
 	inline UInt GetVertexFormatCount() const;
 
 	void Reset();
-	void AppendToText(Text* pText);
-	void AppendToText(Text* pText, Float fps, Bool useAverageFps = true);
+	void AppendToText(RenderText* pText);
+	void AppendToText(RenderText* pText, Float fps, Bool useAverageFps = true);
 
 	// NOTE: If a Camera is supplied, Text layout is omitted and should be
 	// handled by the caller. Draw() requires that Renderer::PreDraw() has
 	// been called beforehand.
-	void Draw(Text* pText, const Transformation& rTransformation, Float fps,
+	void Draw(RenderText* pText, const Transformation& rTransformation, Float fps,
 		Camera* pCamera = NULL, Bool useAverageFps = true,
 		Bool restoreState = false);
 

@@ -15,7 +15,7 @@
 #include "WireIndexBuffer.h"
 #include "WireNode.h"
 #include "WireRandom.h"
-#include "WireText.h"
+#include "WireRenderText.h"
 
 using namespace Wire;
 
@@ -961,7 +961,7 @@ RenderObject* StandardMesh::CreateIcosahedron(Float radius,
 }
 
 //----------------------------------------------------------------------------
-Text* StandardMesh::CreateText(UInt maxLength)
+RenderText* StandardMesh::CreateText(UInt maxLength)
 {
 	if (!s_spFontTexture)
 	{
@@ -1042,7 +1042,7 @@ Text* StandardMesh::CreateText(UInt maxLength)
 		pos.Y() += 8.0F;
 	}
 
-	Text* pText = WIRE_NEW Text(8, s_spFontTexture, uvs, charSizes,
+	RenderText* pText = WIRE_NEW RenderText(8, s_spFontTexture, uvs, charSizes,
 		maxLength);
 	return pText;
 }

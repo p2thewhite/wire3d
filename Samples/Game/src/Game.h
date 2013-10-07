@@ -61,9 +61,9 @@ private:
 	Wire::Culler mCuller;
 	Wire::CullerSorting mSortingCuller;
 
-	Wire::TextPtr mspText;		// render statistics text
+	Wire::RenderTextPtr mspText;		// render statistics text
 
-	Wire::TextPtr mspWarningText;
+	Wire::RenderTextPtr mspWarningText;
 	Bool mShowWarning;
 
 	Wire::Vector2F mCursorPosition;

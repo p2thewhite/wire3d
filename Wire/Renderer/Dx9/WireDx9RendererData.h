@@ -20,7 +20,7 @@ namespace Wire
 {
 
 class Renderer;
-class Text;
+class RenderText;
 
 class PdrRendererData
 {
@@ -28,7 +28,7 @@ public:
 	PdrRendererData(Renderer* pRenderer);
 
 	// Platform dependent renderer statistics
-	inline void AppendStatistics(Text*) {}
+	inline void AppendStatistics(RenderText*) {}
 	inline void ResetStatistics() {}
 
 	// Platform-dependent data

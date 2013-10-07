@@ -9,8 +9,8 @@
 #include "WireMesh.h"
 #include "WireNode.h"
 #include "WireNodeSkybox.h"
+#include "WireRenderText.h"
 #include "WireString.h"
-#include "WireText.h"
 #include "WireVector2.h"
 #include "WireVertexBuffer.h"
 #include "WireIndexBuffer.h"
@@ -64,7 +64,7 @@ public:
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC, UInt mipmapCount = 0);
 	static Wire::Texture2D* LoadTexture2D(const Char* pFilename, Bool filterMipmaps,
 		Wire::Buffer::UsageType usage = Wire::Buffer::UT_STATIC, UInt mipmapCount = 0);
-	static Wire::Text* CreateText(const Char* pFilename, UInt width,
+	static Wire::RenderText* CreateText(const Char* pFilename, UInt width,
 		UInt height, UInt maxLength = 4000);
 
 	const Statistics* GetStatistics();

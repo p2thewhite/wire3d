@@ -17,7 +17,7 @@
 #include "WireGXVertexBuffer.h"
 #include "WireMatrix4.h"
 #include "WireRenderTarget.h"
-#include "WireText.h"
+#include "WireRenderText.h"
 
 #include <malloc.h>		// for memalign
 #include <string.h>		// for memset
@@ -853,7 +853,7 @@ void PdrRendererData::DrawWireframe(const TArray<PdrVertexFormat::
 }
 
 //----------------------------------------------------------------------------
-void PdrRendererData::AppendStatistics(Text* pText)
+void PdrRendererData::AppendStatistics(RenderText* pText)
 {
 	if (Statistics.DisplayListCount == 0)
 	{

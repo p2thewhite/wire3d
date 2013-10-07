@@ -61,7 +61,7 @@ private:
 	// frames per second text
 	void DrawFPS(Double elapsed, Bool usesSorting);
 	CameraPtr mspTextCamera;
-	TextPtr mspText;
+	RenderTextPtr mspText;
 	Double mLastTime;
 };
 
