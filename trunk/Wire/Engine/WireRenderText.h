@@ -7,8 +7,8 @@
 // that agreement.
 
 #pragma once
-#ifndef WIRETEXT_H
-#define WIRETEXT_H
+#ifndef WIRERENDERTEXT_H
+#define WIRERENDERTEXT_H
 
 #include "WireRenderObject.h"
 #include "WireVector2.h"
@@ -19,23 +19,23 @@ namespace Wire
 class Renderer;
 class Texture2D;
 
-class Text : public RenderObject
+class RenderText : public RenderObject
 {
 	WIRE_DECLARE_RTTI
 
 public:
-	Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
+	RenderText(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 		TArray<Vector4F>& rCharSizes, UInt maxLength);
 	// Shallow copy of pVertexBuffer
-	Text(const Text* pText, UInt maxLength);
+	RenderText(const RenderText* pText, UInt maxLength);
 
-	virtual ~Text();
+	virtual ~RenderText();
 
 	void Clear();
 	void Clear(const Color32& rColor);
 
-	// Wire::Text coordinates use the OpenGL convention of (0,0) being the
-	// bottom left corner with ascending Y going towards the top. Same as
+	// Wire::RenderText coordinates use the OpenGL convention of (0,0) being
+	// the bottom left corner with ascending Y going towards the top. Same as
 	// orthogonal projection of Wire::Camera
 	void SetPen(Float x, Float y);
 	void SetColor(const Color32& rColor);
@@ -73,7 +73,7 @@ private:
 	Bool mIsPdrBufferOutOfDate;
 };
 
-typedef Pointer<Text> TextPtr;
+typedef Pointer<RenderText> RenderTextPtr;
 
 }
 

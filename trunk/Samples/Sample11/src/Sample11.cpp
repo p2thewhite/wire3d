@@ -165,8 +165,8 @@ void Sample11::OnResize(UInt width, UInt height)
 //----------------------------------------------------------------------------
 void Sample11::UpdateInputDevicesInformationText()
 {
-	WIRE_ASSERT(DynamicCast<Text>(mspTextNode->GetRenderObject()));
-	Text* pText = StaticCast<Text>(mspTextNode->GetRenderObject());
+	WIRE_ASSERT(DynamicCast<RenderText>(mspTextNode->GetRenderObject()));
+	RenderText* pText = StaticCast<RenderText>(mspTextNode->GetRenderObject());
 	if (!pText)
 	{
 		return;

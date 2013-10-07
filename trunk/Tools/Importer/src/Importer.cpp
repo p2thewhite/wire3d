@@ -168,7 +168,7 @@ Image2D* Importer::DecodePNG(const UChar* pPNG, size_t pngSize,
 }
 
 //----------------------------------------------------------------------------
-Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
+RenderText* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 	UInt maxLength)
 {
 #ifndef NO_FREETYPE2_LIB
@@ -365,13 +365,13 @@ Text* Importer::CreateText(const Char* pFilename, UInt width, UInt height,
 		texHeight, pDst, false, Buffer::UT_STATIC, 1);
 	Texture2D* pTexture = WIRE_NEW Texture2D(pImage);
 	pTexture->SetFilterType(Texture2D::FT_NEAREST);
- 	Text* pText = WIRE_NEW Text(height, pTexture, uvs, charSizes, maxLength);
+ 	RenderText* pText = WIRE_NEW RenderText(height, pTexture, uvs, charSizes, maxLength);
 
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 	WIRE_DELETE[] pMemFile;
 #else
-	Text* pText = StandardMesh::CreateText(maxLength);
+	RenderText* pText = StandardMesh::CreateText(maxLength);
 #endif
 
 	return pText;
@@ -1455,7 +1455,7 @@ Node* Importer::ParseText(rapidxml::xml_node<>* pXmlNode)
 		maxLength = System::Strlen(pString);
 	}
 
-	Text* pText = NULL;
+	RenderText* pText = NULL;
 	Char* pFontName = GetValue(pXmlNode, "Font");
 	if (pFontName)
 	{

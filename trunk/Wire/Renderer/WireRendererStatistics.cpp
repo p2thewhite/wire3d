@@ -10,7 +10,7 @@
 
 #include "WireMesh.h"
 #include "WireRenderer.h"
-#include "WireText.h"
+#include "WireRenderText.h"
 
 #ifdef WIRE_WII
 #include "WireGXRendererData.h"
@@ -81,7 +81,7 @@ void RendererStatistics::Reset()
 }
 
 //----------------------------------------------------------------------------
-void RendererStatistics::AppendToText(Text* pText)
+void RendererStatistics::AppendToText(RenderText* pText)
 {
 	const UInt textArraySize = 512;
 	Char text[textArraySize];
@@ -150,7 +150,7 @@ void RendererStatistics::AppendToText(Text* pText)
 }
 
 //----------------------------------------------------------------------------
-void RendererStatistics::AppendToText(Text* pText, Float fps,
+void RendererStatistics::AppendToText(RenderText* pText, Float fps,
 	Bool useAverageFps)
 {
 	const UInt textArraySize = 32;
@@ -164,7 +164,7 @@ void RendererStatistics::AppendToText(Text* pText, Float fps,
 }
 
 //----------------------------------------------------------------------------
-void RendererStatistics::Draw(Text* pText, const Transformation&
+void RendererStatistics::Draw(RenderText* pText, const Transformation&
 	rTransformation, Float fps, Camera* pCamera, Bool useAverageFps,
 	Bool restoreState)
 {

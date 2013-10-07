@@ -344,9 +344,6 @@
     <ClInclude Include="Foundation\WireColor32.h">
       <Filter>Foundation\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\WireText.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputSystem\Win32\WireWin32EmulatedNunchuk.h">
       <Filter>InputSystem\Platforms\Win32\Header Files</Filter>
     </ClInclude>
@@ -540,6 +537,9 @@
       <Filter>Renderer\Platforms\GX\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\WireNodeCamera.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\WireRenderText.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -924,9 +924,6 @@
     <ClCompile Include="Foundation\WireColor32.cpp">
       <Filter>Foundation\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\WireText.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputSystem\Win32\WireWin32EmulatedNunchuk.cpp">
       <Filter>InputSystem\Platforms\Win32\Source Files</Filter>
     </ClCompile>
@@ -1150,6 +1147,9 @@
       <Filter>Renderer\Platforms\GX\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\WireNodeCamera.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\WireRenderText.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

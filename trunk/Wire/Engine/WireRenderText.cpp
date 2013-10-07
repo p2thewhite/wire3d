@@ -6,7 +6,7 @@
 // may not be copied or disclosed except in accordance with the terms of
 // that agreement.
 
-#include "WireText.h"
+#include "WireRenderText.h"
 
 #include "WireBoundingVolume.h"
 #include "WireIndexBuffer.h"
@@ -15,11 +15,11 @@
 
 using namespace Wire;
 
-WIRE_IMPLEMENT_RTTI(Wire, Text, RenderObject);
+WIRE_IMPLEMENT_RTTI(Wire, RenderText, RenderObject);
 
 //----------------------------------------------------------------------------
-Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
-	TArray<Vector4F>& rCharSizes, UInt maxLength)
+RenderText::RenderText(UInt fontHeight, Texture2D* pFontTexture,
+	TArray<Vector2F>& rUvs, TArray<Vector4F>& rCharSizes, UInt maxLength)
 	:
 	mUvs(rUvs),
 	mCharSizes(rCharSizes),
@@ -33,7 +33,7 @@ Text::Text(UInt fontHeight, Texture2D* pFontTexture, TArray<Vector2F>& rUvs,
 }
 
 //----------------------------------------------------------------------------
-Text::Text(const Text* pText, UInt maxLength)
+RenderText::RenderText(const RenderText* pText, UInt maxLength)
 	:
 	mUvs(pText->mUvs),
 	mCharSizes(pText->mCharSizes),
@@ -57,7 +57,7 @@ Text::Text(const Text* pText, UInt maxLength)
 }
 
 //----------------------------------------------------------------------------
-void Text::Init(Texture2D* pFontTexture, UInt maxLength)
+void RenderText::Init(Texture2D* pFontTexture, UInt maxLength)
 {
 	WIRE_ASSERT(mUvs.GetQuantity() == mCharSizes.GetQuantity()*4);
 	WIRE_ASSERT(maxLength < (0x10000/4));
@@ -97,12 +97,12 @@ void Text::Init(Texture2D* pFontTexture, UInt maxLength)
 }
 
 //----------------------------------------------------------------------------
-Text::~Text()
+RenderText::~RenderText()
 {
 }
 
 //----------------------------------------------------------------------------
-void Text::Clear()
+void RenderText::Clear()
 {
 	WIRE_ASSERT(GetMesh());
 	GetMesh()->SetIndexCount(0);
@@ -113,54 +113,54 @@ void Text::Clear()
 }
 
 //----------------------------------------------------------------------------
-void Text::Clear(const Color32& rColor)
+void RenderText::Clear(const Color32& rColor)
 {
 	mColor = rColor;
 	Clear();
 }
 
 //----------------------------------------------------------------------------
-void Text::SetPen(Float x, Float y)
+void RenderText::SetPen(Float x, Float y)
 {
 	mPenX = x;
 	mPenY = y;
 }
 
 //----------------------------------------------------------------------------
-void Text::SetColor(const Color32& rColor)
+void RenderText::SetColor(const Color32& rColor)
 {
 	mColor = rColor;
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Set(const Char* pText, Float x, Float y)
+Bool RenderText::Set(const Char* pText, Float x, Float y)
 {
 	Clear();
 	return Append(pText, x, y);
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Set(const Char* pText, const Color32& rColor, Float x, Float y)
+Bool RenderText::Set(const Char* pText, const Color32& rColor, Float x, Float y)
 {
 	mColor = rColor;
 	return Set(pText, x, y);
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Append(const Char* pText)
+Bool RenderText::Append(const Char* pText)
 {
 	return Append(pText, mPenX, mPenY);
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Append(const Char* pText, const Color32& rColor)
+Bool RenderText::Append(const Char* pText, const Color32& rColor)
 {
 	mColor = rColor;
 	return Append(pText);
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Append(const Char* pText, Float x, Float y)
+Bool RenderText::Append(const Char* pText, Float x, Float y)
 {
 	if (!pText)
 	{
@@ -262,14 +262,15 @@ Bool Text::Append(const Char* pText, Float x, Float y)
 }
 
 //----------------------------------------------------------------------------
-Bool Text::Append(const Char* pText, const Color32& rColor, Float x, Float y)
+Bool RenderText::Append(const Char* pText, const Color32& rColor, Float x,
+	Float y)
 {
 	mColor = rColor;
 	return Append(pText, x, y);
 }
 
 //----------------------------------------------------------------------------
-void Text::Update(Renderer* pRenderer)
+void RenderText::Update(Renderer* pRenderer)
 {
 	if (!mIsPdrBufferOutOfDate)
 	{
@@ -284,25 +285,25 @@ void Text::Update(Renderer* pRenderer)
 }
 
 //----------------------------------------------------------------------------
-Float Text::GetFontHeight()
+Float RenderText::GetFontHeight()
 {
 	return mFontHeight;
 }
 
 //----------------------------------------------------------------------------
-void Text::SetLineWidth(Float lineWidth)
+void RenderText::SetLineWidth(Float lineWidth)
 {
 	mLineWidth = lineWidth;
 }
 
 //----------------------------------------------------------------------------
-void Text::SetLineWidth(UInt lineWidth)
+void RenderText::SetLineWidth(UInt lineWidth)
 {
 	mLineWidth = static_cast<Float>(lineWidth);
 }
 
 //----------------------------------------------------------------------------
-void Text::SetWhitespaceWidth(Float whitespaceWidth)
+void RenderText::SetWhitespaceWidth(Float whitespaceWidth)
 {
 	mWhitespaceWidth = whitespaceWidth;
 }

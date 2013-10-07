@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\WireNodeSwitch.h" />
     <ClInclude Include="Engine\WireRenderObject.h" />
     <ClInclude Include="Engine\WireRenderTarget.h" />
+    <ClInclude Include="Engine\WireRenderText.h" />
     <ClInclude Include="Engine\WireShader.h" />
     <ClInclude Include="Engine\WireShaderVariables.h" />
     <ClInclude Include="Engine\WireStandardMesh.h" />
@@ -108,7 +109,6 @@
     <ClInclude Include="Engine\WireStateMaterial.h" />
     <ClInclude Include="Engine\WireStateWireframe.h" />
     <ClInclude Include="Engine\WireStateZBuffer.h" />
-    <ClInclude Include="Engine\WireText.h" />
     <ClInclude Include="Foundation\WireColor32.h" />
     <ClInclude Include="Foundation\WireFoundation.h" />
     <ClInclude Include="Foundation\WireApplication.h" />
@@ -310,6 +310,7 @@
     <ClCompile Include="Engine\WireNodeSwitch.cpp" />
     <ClCompile Include="Engine\WireRenderObject.cpp" />
     <ClCompile Include="Engine\WireRenderTarget.cpp" />
+    <ClCompile Include="Engine\WireRenderText.cpp" />
     <ClCompile Include="Engine\WireShader.cpp" />
     <ClCompile Include="Engine\WireShaderVariables.cpp" />
     <ClCompile Include="Engine\WireStandardMesh.cpp" />
@@ -320,7 +321,6 @@
     <ClCompile Include="Engine\WireStateMaterial.cpp" />
     <ClCompile Include="Engine\WireStateWireframe.cpp" />
     <ClCompile Include="Engine\WireStateZBuffer.cpp" />
-    <ClCompile Include="Engine\WireText.cpp" />
     <ClCompile Include="Foundation\WireApplication.cpp" />
     <ClCompile Include="Foundation\WireColor32.cpp" />
     <ClCompile Include="Foundation\WireColorRGB.cpp" />

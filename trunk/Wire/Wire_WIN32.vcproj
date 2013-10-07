@@ -1240,7 +1240,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireText.h"
+					RelativePath=".\Engine\WireRenderText.h"
 					>
 				</File>
 				<File
@@ -1532,7 +1532,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Engine\WireText.cpp"
+					RelativePath=".\Engine\WireRenderText.cpp"
 					>
 				</File>
 				<File

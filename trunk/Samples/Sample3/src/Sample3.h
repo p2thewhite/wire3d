@@ -32,7 +32,7 @@ private:
 
 	// camera for GUI/text
 	CameraPtr mspOrthographic;
-	TextPtr mspText;
+	RenderTextPtr mspText;
 
 	Float mAngle;
 	Double mLastTime;

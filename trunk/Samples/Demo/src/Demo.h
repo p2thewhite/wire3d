@@ -42,7 +42,7 @@ private:
 	UInt mAppState;
 
 	// Renderer statistics debug text
-	TextPtr mspText;
+	RenderTextPtr mspText;
 	Bool mShowFps;
 };
 

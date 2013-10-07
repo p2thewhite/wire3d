@@ -18,7 +18,7 @@ namespace Wire
 
 class Node;
 class RenderObject;
-class Text;
+class RenderText;
 
 class StandardMesh
 {
@@ -76,7 +76,7 @@ public:
 		const UInt vertexColorChannels = 0, const Bool useNormals = false);
 
 	// text using the built-in font
-	static Text* CreateText(UInt maxLength = 4000);
+	static RenderText* CreateText(UInt maxLength = 4000);
 
 private:
 	static Texture2DPtr s_spFontTexture;
