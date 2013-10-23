@@ -7,14 +7,14 @@
     * added layer masks to nodes, lights and cameras
     * seperated Image (i.e. buffer) from Texture (i.e. properties)
     * seperated handling of vertex declarations from vertex buffers
-    * added usage type STATIC_DISCARD_ON_BIND for textures
+    * added usage type `STATIC_DISCARD_ON_BIND` for textures
     * removed `VisibleObject` in favour of `RenderObject`
     * removed scene graph dependency from Renderer
     * improved drawcall batching of static (sub)meshes
     * improved performance of drawing submeshes on PCs with software vertex processing
     * added camera node
     * added light attenuation
-    * added blending mode 'BM_ADD' to Material
+    * added blending mode `BM_ADD` to Material
     * (Wii) added support for submeshes to displaylist handling
     * (Wii) fixed vertex cache issue
     * (Wii) fixed a bug in handling lights
@@ -29,7 +29,7 @@
     * added option to export vertex colors as 32bit
     * exporting lights
     * exporting camera
-    * exporting fog from RenderSettings
+    * exporting fog from `RenderSettings`
     * added disk and memory statistics summary after export
     * using default values for undefined transformation parameters
     * fixed overwritten default color values in render state
