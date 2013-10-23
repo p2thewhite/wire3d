@@ -13,7 +13,7 @@
     * [Samples#Sample10_-_Material_Sorting_&_Batching Sample10 - Material Sorting & Batching]
     * [Samples#Sample11_-_Input Sample11 - Input]
     * [Samples#Demo Demo]
-  * [Demo Showcase]
+  * [Showcase Showcase]
   * [ChangeLog ChangeLog]
   * [Unity3DExporter Unity3D Exporter]
   * [FAQ Frequently Asked Questions]
