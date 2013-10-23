@@ -1,5 +1,49 @@
 #summary ChangeLog of released versions.
 
+== v1.2 (`r717`) ==
+  * Wire:
+    * added Input System
+    * added support for multiple vertex streams per mesh
+    * added layer masks to nodes, lights and cameras
+    * seperated Image (i.e. buffer) from Texture (i.e. properties)
+    * seperated handling of vertex declarations from vertex buffers
+    * added usage type STATIC_DISCARD_ON_BIND for textures
+    * removed VisibleObject in favour of RenderObject
+    * removed scene graph dependency from Renderer
+    * improved drawcall batching of static (sub)meshes
+    * improved performance of drawing submeshes on PCs with software vertex processing
+    * added camera node
+    * added light attenuation
+    * added blending mode 'BM_ADD' to Material
+    * (Wii) added support for submeshes to displaylist handling
+    * (Wii) fixed vertex cache issue
+    * (Wii) fixed a bug in handling lights
+    * (DX9) added support for HLSL shaders
+    * (DX9) added support for multiple render targets
+
+  * Importer/Unity3D exporter:
+    * added import/export of collision shapes, rigid bodies and character controller
+    * added import/export of skybox
+    * added import/export of submeshes
+    * added option to combine static meshes
+    * added option to export vertex colors as 32bit
+    * exporting lights
+    * exporting camera
+    * exporting fog from RenderSettings
+    * added disk and memory statistics summary after export
+    * using default values for undefined transformation parameters
+    * fixed overwritten default color values in render state
+    * fixed incorrect calculation of font texture size
+    * fixed text exceeding specified maximum length divided by 6
+    * fixed wrong filter mode being used when texture has no mipmaps
+    * fixed Importer header files polluting global namespace
+    * fixed memory leaks
+
+  * Samples:
+    * added Sample11 to show how to use the input system
+    * added Game sample to demonstrate new features
+    * rewrote Sample10 to better demonstrate batching
+
 == v1.0.2 (`r464`) ==
   * Wire
     * draw call batching of static and dynamic geometry
