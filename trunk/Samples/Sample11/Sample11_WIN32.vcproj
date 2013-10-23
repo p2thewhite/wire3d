@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Wired.lib"
-				OutputFile="Sample0d.exe"
+				OutputFile="Sample11d.exe"
 				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib&quot;;&quot;$(DXSDK_DIR)\Lib\x86&quot;;..\..\Wire\lib\debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
