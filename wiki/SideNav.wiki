@@ -15,5 +15,6 @@
     * [Samples#Sample11_-_Input Sample11 - Input]
     * [Samples#Demo Demo]
   * [Unity3DExporter Unity3D Exporter]
+  * [Downloads Downloads ]
   * [ChangeLog ChangeLog]
   * [FAQ Frequently Asked Questions]
