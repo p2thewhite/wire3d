@@ -1,4 +1,5 @@
 #summary Wire3D in action.
+#labels Featured
 
 [https://code.google.com/p/wire3d/wiki/Samples#Demo Demo]
 
