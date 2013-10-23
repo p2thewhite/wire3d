@@ -1,10 +1,10 @@
 #summary Wire3D in action.
 #labels Featured
 
-[https://code.google.com/p/wire3d/wiki/Samples#Demo Demo]
+== [https://code.google.com/p/wire3d/wiki/Samples#Demo Demo] ==
 
 <wiki:video url="http://www.youtube.com/watch?v=ec_3FjXzKoo" width="640" height="360" />
 
-[https://code.google.com/p/wire3d/wiki/Samples Samples]
+== [https://code.google.com/p/wire3d/wiki/Samples Samples] ==
 
 <wiki:video url="http://www.youtube.com/watch?v=OfqsWtdaqMc" width="640" height="360" />
