@@ -8,7 +8,7 @@
     * seperated Image (i.e. buffer) from Texture (i.e. properties)
     * seperated handling of vertex declarations from vertex buffers
     * added usage type STATIC_DISCARD_ON_BIND for textures
-    * removed VisibleObject in favour of RenderObject
+    * removed `VisibleObject` in favour of `RenderObject`
     * removed scene graph dependency from Renderer
     * improved drawcall batching of static (sub)meshes
     * improved performance of drawing submeshes on PCs with software vertex processing
