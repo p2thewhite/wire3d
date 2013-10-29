@@ -8,7 +8,7 @@ You can build Wire3D for the following target platforms:
   * Get the latest [http://code.google.com/p/wire3d/downloads/list release] (recommended) or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
   * Provided project files for Windows:
     * Visual Studio 2005/2008: `Wire3D_WII.sln`
-    * Visual Studio 2010: `Wire3D_WII_VS2010.sln`
+    * Visual Studio 2010/2012/2013: `Wire3D_WII_VS2010.sln`
     * Programmer's Notepad2 (optional part of the DevkitPPC installation): `Wire3D_WII.pnproj`
   * Compilation of Wire3D and its Samples:
     * Windows: use Visual Studio, Programmer's Notepad2 or `make`.
@@ -25,9 +25,9 @@ You can build Wire3D for the following target platforms:
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
     *  In Visual Studio 2005/2008 add DirectX SDK include and library directories to Visual Studio global directories (Tools -> Options -> Projects and Solutions -> VC++ Directories)
   * Get the latest [http://code.google.com/p/wire3d/downloads/list release] (recommended) or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
-  * Open `Wire3D_WIN32.sln` with Visual Studio 2005/2008 or `Wire3D_WIN32_VS2010.sln` with Visual Studio 2010
+  * Open `Wire3D_WIN32.sln` with Visual Studio 2005/2008 or `Wire3D_WIN32_VS2010.sln` with Visual Studio 2010/2012/2013
   * Compile and run any of the samples in the solution
 
-*Note*: If you are using Visual Studio 2008, open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings.
+*Note*: If you are using Visual Studio 2008, open the VS2005 solution and let Visual Studio convert the solution and project files for you. After that, it compiles without any warnings. If you are using VS2012 or VS2013, open the VS2010 solution.
 
 *Note*: If you are using Visual Studio Express, you will get a warning that solution folders are not supported. While the folders appear to be unloaded, they have just been moved to the root solution space, and compilation succeeds without further warnings.
