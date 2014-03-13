@@ -32,13 +32,15 @@ The following data is handled by the exporter:
   * Culling mask
   * Lightmapping (Baked only light will not be exported)
 *Camera*
+  * Clear Flags
+  * Background
+  * Culling mask
+  * Projection (orthographic exported as FOV is 0)
   * Field of view
   * Near clipping plane
   * Far clipping plane
-  * Projection (orthographic exported as FOV is 0)
-  * Normalized viewport rect
-  * Culling mask
-
+  * Viewport rect
+  * Depth
 *Rigid Body*
   * Mass
   * Is Kinematic
@@ -91,10 +93,13 @@ The following data is handled by the exporter:
   * Generate mipmaps
 
 === Settings ===
-*Skybox*
-  * Tint color
-*Fog*
-  * Color
-  * Mode
-  * Start
-  * End
+*Physics*
+  * Gravity
+*Render*
+  * Skybox
+    * Tint color
+  * Fog
+    * Color
+    * Mode
+    * Start
+    * End
