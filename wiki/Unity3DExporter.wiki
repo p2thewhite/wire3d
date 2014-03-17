@@ -18,6 +18,7 @@ The following data is handled by the exporter:
   * Scale
   * Hierarchy of child transforms
 *Mesh Renderer*
+  * Enabled
   * Materials
   * Lightmap index
   * Submesh index (via reflection)
