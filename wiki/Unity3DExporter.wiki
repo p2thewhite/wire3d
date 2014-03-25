@@ -42,6 +42,8 @@ The following data is handled by the exporter:
   * Far clipping plane
   * Viewport rect
   * Depth
+*Skybox*
+  * Material
 *Rigid Body*
   * Mass
   * Is Kinematic
