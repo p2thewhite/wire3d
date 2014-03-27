@@ -33,6 +33,7 @@ The following data is handled by the exporter:
   * Culling mask
   * Lightmapping (Baked only light will not be exported)
 *Camera*
+  * Enabled
   * Clear Flags
   * Background
   * Culling mask
