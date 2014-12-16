@@ -5,7 +5,7 @@ You can build Wire3D for the following target platforms:
 === Wii ===
   * Install the [http://wiibrew.org/wiki/Homebrew_setup Homebrew Channel] on your Wii
   * Install [http://wiibrew.org/wiki/DevkitPPC DevkitPPC] on your [http://wiibrew.org/wiki/Devkitppc_setup_%28Windows%29 Windows], [http://wiibrew.org/wiki/Devkitppc_setup_%28Mac_OS_X%29 Mac OSX] or [http://wiibrew.org/wiki/Devkitppc_setup_%28Linux%29 Linux] machine
-  * Get the latest [https://code.google.com/p/wire3d/wiki/Downloads release] (recommended) or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
+  * Get the latest [https://code.google.com/p/wire3d/wiki/Downloads release] or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
   * Provided Wii project files for Windows:
     * Visual Studio 2005 (2008), 2010, 2012, 2013: `Wire3D_Wii.sln` in its respective `builds` directory
   * Compilation of Wire3D and its Samples:
@@ -22,7 +22,7 @@ You can build Wire3D for the following target platforms:
 === Windows ===
   * Install [http://msdn.microsoft.com/en-us/directx/default.aspx DirectX SDK]
     *  In Visual Studio 2005/2008 add DirectX SDK include and library directories to Visual Studio global directories (Tools -> Options -> Projects and Solutions -> VC++ Directories)
-  * Get the latest [https://code.google.com/p/wire3d/wiki/Downloads release] (recommended) or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
+  * Get the latest [https://code.google.com/p/wire3d/wiki/Downloads release] or current [http://code.google.com/p/wire3d/source/checkout version] via SVN.
   * Open `Wire3D.sln` from `builds` directory that corresponds with your version of Visual Studio. Supported versions: 2005 (2008), 2010, 2012 or 2013
   * Compile and run any of the samples in the solution
 
