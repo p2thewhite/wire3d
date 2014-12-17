@@ -10,7 +10,7 @@
  Simply to keep dependencies at a minimum. The containers of Wire perfectly suit the job of the engine, however feel free to include and use the STL in your own Wire based projects.
 
 *Why did you roll your own smart pointers instead of using shared_ptr from [http://www.boost.org/ Boost]?*
- To keep dependencies at a minimum. Wire's smart pointers are also faster than shared_ptr, since they directly access the reference counter (reference linking) rather than having to look it up first. The drawback is that they can only reference objects derived from Wire::Object. Feel free to include Boost in your own projects, however do not use Boost smart pointers to reference Wire::Objects, as this will result in inconsistent reference counting.
+ To keep dependencies at a minimum. Wire's smart pointers are also faster than shared_ptr, since they directly access the reference counter (reference linking). The drawback is that they can only reference objects derived from Wire::Object. Feel free to include Boost in your own projects, however do not use Boost smart pointers to reference Wire::Objects, as this will result in inconsistent reference counting.
 
 *Why did you roll your own run time type information system instead of using the compiler's RTTI?*
  RTTI needs (very little) additional memory. In order to control that, Wire::Objects use their own RTTI (but other Wire classes that were not derived from Wire::Object don't!). Note: the Wire class hierarchy is a single inheritance class tree, therefore the RTTI system does not work with multiple inheritance.
